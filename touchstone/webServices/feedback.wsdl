@@ -1,0 +1,71 @@
+<?xml version ='1.0' encoding ='UTF-8' ?> 
+<definitions name='feedbackData' 
+  targetNamespace='https://touchstone.nottingham.ac.uk/touchstone/webServices/' 
+  xmlns:tns='https://touchstone.nottingham.ac.uk' 
+  xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' 
+  xmlns:xsd='http://www.w3.org/2001/XMLSchema' 
+  xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/' 
+  xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' 
+  xmlns='http://schemas.xmlsoap.org/wsdl/'> 
+
+<message name='getAvailableFeedback'> 
+  <part name='username' type='xsd:string'/> 
+  <part name='moduleID' type='xsd:string'/> 
+</message> 
+<message name='getAvailableFeedbackResponse'> 
+  <part name='Result' type='xsd:string'/> 
+</message> 
+
+<message name='getExamInformation'> 
+  <part name='paperID' type='xsd:string'/> 
+</message> 
+<message name='getExamInformationResponse'> 
+  <part name='Result' type='xsd:string'/> 
+</message> 
+
+
+<portType name='FeedbackPortType'> 
+  <operation name='getAvailableFeedback'> 
+    <input message='tns:getAvailableFeedback'/> 
+    <output message='tns:getAvailableFeedbackResponse'/> 
+  </operation> 
+  <operation name='getExamInformation'> 
+    <input message='tns:getExamInformation'/> 
+    <output message='tns:getExamInformationResponse'/> 
+  </operation> 
+</portType> 
+
+<binding name='FeedbackBinding' type='tns:FeedbackPortType'> 
+  <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/> 
+  <operation name='getAvailableFeedback'> 
+    <soap:operation soapAction='urn:get-Available-Feedback#getAvailableFeedback'/> 
+    <input> 
+      <soap:body use='encoded' namespace='urn:get-Available-Feedback' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </input> 
+    <output> 
+      <soap:body use='encoded' namespace='urn:get-Available-Feedback' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </output> 
+  </operation>   
+
+  <operation name='getExamInformation'> 
+    <soap:operation soapAction='urn:get-Exam-Information#getExamInformation'/> 
+    <input> 
+      <soap:body use='encoded' namespace='urn:get-Exam-Information' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </input> 
+    <output> 
+      <soap:body use='encoded' namespace='urn:get-Exam-Information' 
+        encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'/> 
+    </output> 
+  </operation>   
+
+</binding> 
+
+<service name='feedbackData'> 
+  <port name='feedbackDataPort' binding='FeedbackBinding'> 
+    <soap:address location='https://touchstone.nottingham.ac.uk/touchstone/webServices/feedback_data_server.php'/> 
+  </port> 
+</service> 
+</definitions>
