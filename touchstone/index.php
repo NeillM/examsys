@@ -15,9 +15,9 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * TouchStone hompage. Uses ./include/options_menu.inc for the sidebar menu.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2011 The University of Nottingham
@@ -27,7 +27,7 @@
   require './include/staff_student_auth.inc';
   require './include/sidebar_menu.inc';
   require './config/index.inc';
-  
+
   // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
   if(strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === false and strpos($userroles,'Admin') === false and strpos($userroles,'SysAdmin') === false) {
     header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/paper/available.php");
@@ -46,7 +46,7 @@ require './include/staff_auth.inc';
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone 2 <?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="./css/submenu.css" />
 
 <script src="./javascript/staff_help.js" type="text/javascript"></script>
@@ -68,7 +68,7 @@ require './include/staff_auth.inc';
     }
     event.returnValue = false;
   }
-  
+
   function newPaper(paperID) {
     notice = window.open("./paper/new_paper1.php?folder=","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
     if (window.focus) {
@@ -115,7 +115,7 @@ require './include/staff_auth.inc';
       }
     }
   }
-  
+
   function displayIcon($paper_type,$title,$initials,$surname,$shared,$locked) {
     switch ($paper_type) {
       case 0:
@@ -142,7 +142,7 @@ require './include/staff_auth.inc';
 
   function displayPaperIcon($row) {
     global $folder;
-	
+
     if (!isset($row['title'])) {
       $row['title'] = '';
     }
@@ -152,7 +152,7 @@ require './include/staff_auth.inc';
     if (!isset($row['surname'])) {
       $row['surname'] = '';
     }
-	
+
     echo '<div class="file">';
     echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
     $icon_type = $row['paper_type'];
@@ -181,7 +181,7 @@ require './include/staff_auth.inc';
     }
     echo "</td></tr></table></div>\n";
   }
-  
+
   //Update the last log in date in users.
   $stmt = $mysqli->prepare("UPDATE users SET last_login=NOW() WHERE id=?");
   $stmt->bind_param('i', $userID);
@@ -221,9 +221,9 @@ require './include/staff_auth.inc';
   // -- Display top 10 recent papers ----------------------------------
   $query_string = "SELECT paperID, paper_title, moduleID, accessed, paper_type FROM (recent_papers, properties) WHERE userID=$userID AND recent_papers.paperID=properties.property_id ORDER BY accessed DESC LIMIT 10";
   $results = $mysqli->query($query_string) or die("failed : ".$mysqli->error." $query_string");
-  
+
   echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>My Recent Papers (" . $results->num_rows . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-  
+
   while ($row = $results->fetch_assoc()) {
     echo "<div style=\"padding-left:12px\"><a href=\"./paper/details.php?paperID=" . $row['paperID'] . "&folder=&module=" . $row['moduleID'] . "\"><img src=\"./artwork/" . $icons[$row['paper_type']] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $row['paper_type'] . "\" /></a>&nbsp;<a class=\"recent\"";
     if (strpos($row['paper_title'],'[deleted') !== false) echo ' style="color:#808080"';
@@ -267,7 +267,7 @@ require './include/staff_auth.inc';
   foreach ($teams as $individual_team){
     $module_sql .= " OR team_name LIKE '%$individual_team%'";
   }
-  
+
   $folder_details = $mysqli->query("SELECT id, name, team_name, color FROM folders WHERE (ownerID=$userID $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
 
   echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>My Folders (" . ($folder_details->num_rows + 1) . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
@@ -275,7 +275,7 @@ require './include/staff_auth.inc';
     echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"./folder/details.php?folder=" . $row['id'] . "\"><img src=\"./artwork/" . $row['color'] . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"./folder/details.php?folder=" . $row['id'] . "\" class=\"blacklink\">" . $row['name'] . "</a></td></tr></table></div>\n";
   }
   $folder_details->close();
-  
+
   if (isset($_GET['newfolder']) AND $_GET['newfolder'] == 'y' or $duplicate_name == 1) {
     if ($_POST['submit'] and $duplicate_name == 1) {
       echo "<div class=\"f\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input style=\"background-color:#FFC0C0\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"Create\" /></div>\n";
@@ -283,7 +283,7 @@ require './include/staff_auth.inc';
       echo "<div class=\"f\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input type=\"text\" size=\"30\" name=\"folder_name\" value=\"New Folder\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"Create\" /></div>\n";
     }
   }
-  
+
   $deleted_details = $mysqli->query("SELECT COUNT(property_id) AS no_deleted FROM properties WHERE deleted IS NOT NULL AND paper_ownerID=$userID");
   $deleted = $deleted_details->fetch_assoc();
   if ($deleted['no_deleted'] > 0) {
@@ -300,9 +300,9 @@ require './include/staff_auth.inc';
     // -- Display module folders ------------------------------------
     $module_no = count($modules_array);
     if (strpos($userroles,'Admin') !== false) $module_no++;
-    
+
     echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>My Modules ($module_no)</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    if (strpos($userroles,'SysAdmin') !== false) { 
+    if (strpos($userroles,'SysAdmin') !== false) {
       echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"./folder/all.php\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"./folder/all.php\" class=\"blacklink\"><strong>All Modules...</strong></a><br /><span style=\"color:#C00000\">(SysAdmin only)</span></td></tr></table></div>\n";
     } elseif (strpos($userroles,'Admin') !== false) {
       echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"./folder/all.php\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"./folder/all.php\" class=\"blacklink\"><strong>All Modules in Faculty...</strong></a><br /><span style=\"color:#C00000\">(Admin only)</span></td></tr></table></div>\n";
@@ -312,9 +312,9 @@ require './include/staff_auth.inc';
 	    $title_parts = explode(' - ',$folder_title);
 	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"$url\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"$url\" class=\"blacklink\">" . $title_parts[0] . "</a><br /><span style=\"color:#808080\">" . $title_parts[1] . "</span></td></tr></table></div>\n";
     }
-    
+
     echo '<br clear="left" /><br />';
-    
+
     // -- Display papers not assigned to a module -------------------
     $paper_data = $mysqli->query("SELECT DISTINCT property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'%d/%m/%y %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE paper_ownerID=$userID AND moduleID='' AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
     if ($paper_data->num_rows > 0) {

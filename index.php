@@ -15,7 +15,7 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * This script is the homepage of Internet Explorer when GTZEXAM1 logs in.
 * It takes the user details of the student together with the IP address
 * for the log and redirects to the correct paper.
@@ -25,6 +25,7 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
+// New comment here
 
 require './touchstone/include/staff_student_auth.inc';
 
@@ -84,7 +85,7 @@ require './touchstone/include/staff_student_auth.inc';
         } else {
           $cal_sql = '';
         }
-        $moduleInfo = $mysqli->query("SELECT userID FROM student_modules WHERE userID=$userID $cal_sql AND moduleID IN ('" . str_replace(",","','",$row['moduleID']) . "')"); 
+        $moduleInfo = $mysqli->query("SELECT userID FROM student_modules WHERE userID=$userID $cal_sql AND moduleID IN ('" . str_replace(",","','",$row['moduleID']) . "')");
         if ($moduleInfo->num_rows > 0) $moduleOK = true;
         $moduleInfo->close();
       } else {
@@ -100,7 +101,7 @@ require './touchstone/include/staff_student_auth.inc';
       $paper_display[$paper_no]['bidirectional'] = $row['bidirectional'];
       $paper_display[$paper_no]['password'] = $row['password'];
       $paper_no++;
-    } 
+    }
   }
   $paper_query->close();
 
@@ -110,14 +111,14 @@ require './touchstone/include/staff_student_auth.inc';
     echo "<html>\n<head>\n<title>Exams</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
     echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"margin-left:60px\">TouchStone cannot find any Exams</h1>\n";
-    
+
     if (strpos($userroles,'Staff') !== false) {
       echo "<p style=\"margin-left:60px; color:#C00000\"><strong>Note:</strong> This is the summative exams screen for students, did you want the <img src=\"/touchstone/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/\" style=\"color:blue\"><strong>Staff management screens</strong></a>?</p>\n";
     }
-    
+
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Most likely cause is one or more security conflicts with:</p>\n<ul style=\"margin-left:80px\">\n";
-    
-    $ip_info = $mysqli->query("SELECT name FROM (labs, ip_addresses) WHERE labs.id=ip_addresses.lab AND address='" . get_ipaddress() . "'"); 
+
+    $ip_info = $mysqli->query("SELECT name FROM (labs, ip_addresses) WHERE labs.id=ip_addresses.lab AND address='" . get_ipaddress() . "'");
     if ($ip_info->num_rows > 0) {
       $ip_row = $ip_info->fetch_assoc();
       $computer_lab = '(' . $ip_row['name'] . ')';
