@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
-
-// Testing SVN 5
-
 /**
 * 
 * Looks up the next free temporary account and reserves it for the current user.
