@@ -509,7 +509,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
           if ($question_part == 1) $totalpos++;
           if ($posted_vars[$qid] <> $correct) $correct_rank = false;
         } elseif ($score_method == 'OrderNeighbours') {
-          if ($posted_vars[$qid] != 0) {
+          if ($posted_vars[$qid] != 0 and $correct != 0) {
             if ($posted_vars[$qid] == $correct) {
               $mark++;
             } elseif ($posted_vars[$qid] == ($correct + 1)) {

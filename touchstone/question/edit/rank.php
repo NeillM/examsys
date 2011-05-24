@@ -260,10 +260,39 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       echo "\t tinyMCE.triggerSave();";
     }
     ?>
-    if (edit_form.leadin.value == "") {
+    if (document.getElementById('leadin').value == "" || document.getElementById('leadin').value == "&nbsp;" || document.getElementById('leadin').value == "<p>&nbsp;</p>" || document.getElementById('leadin').value == "<div>&nbsp;</div>" || document.getElementById('leadin').value == "<br />") {
        alert ("Please enter a Leadin for the question.");
        return false;
      }
+
+    // Check all options with text have a value in the drop-down
+    var missingAnswers = [];
+    for(var i = 1; i <= 20; i++) {
+    	var text;
+    	var ddl;
+
+    	text = document.getElementById('new_option_text' + i);
+    	if(text != null) {
+				ddl = document.getElementById('answer' + i);
+				if(ddl != null && ddl.options[ddl.selectedIndex].value == '') {
+						missingAnswers[missingAnswers.length] = i;
+				}
+    	}
+    }
+
+    if(missingAnswers.length > 0) {
+        var answers = '';
+        var plural = (missingAnswers.length > 1) ? 's' : '';
+        for(i = 0; i < missingAnswers.length; i++) {
+            if(i > 0 && i == missingAnswers.length - 1) answers += ' and ';
+            answers += missingAnswers[i];
+            if(i < missingAnswers.length - 2) answers += ', ';
+        }
+        alert('Missing answer' + plural + ' for option' + plural + ' ' + answers + '. Please select a correct answer for all options. Use \'N/A\' for distractors.');
+        return false;
+    }
+
+    return true;
    }
    </script>
    <script language="JavaScript" src="../../javascript/edit_tabs.js"></script>
@@ -362,8 +391,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
          }
 
          echo "<tr>\n<td style=\"text-align: right\"><strong>" . $option_no . ".&nbsp;</strong></td>\n";
-         echo "<td><input type=\"text\" name=\"new_option_text" . $option_no . "\" size=\"73\" style=\"width:650px\" value=\"" . htmlentities($option_text,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"old_option_text" . $option_no . "\" value=\"" . htmlentities($option_text,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"optionid$option_no\" value=\"" . $id_num . "\" />&nbsp;";
-         echo "<input type=\"hidden\" name=\"old_answer" . $option_no . "\" value=\"$correct\" /><select name=\"answer" . $option_no . "\">\n<option value=\"\"></option>\n";
+         echo "<td><input type=\"text\" name=\"new_option_text" . $option_no . "\" id=\"new_option_text" . $option_no . "\" size=\"73\" style=\"width:650px\" value=\"" . htmlentities($option_text,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"old_option_text" . $option_no . "\" value=\"" . htmlentities($option_text,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"optionid$option_no\" value=\"" . $id_num . "\" />&nbsp;";
+         echo "<input type=\"hidden\" name=\"old_answer" . $option_no . "\" value=\"$correct\" /><select name=\"answer" . $option_no . "\" id=\"answer" . $option_no . "\">\n<option value=\"\"></option>\n";
          if ($correct == '0') {
            echo "<option value=\"0\" selected>N/A</option>\n";
          } else {

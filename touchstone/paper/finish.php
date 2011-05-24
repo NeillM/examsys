@@ -91,22 +91,24 @@
 
   function ordinal_suffix($number) {
     $suffix = $number;
-    switch($number) {
-      case 0:
-        $suffix = '';
-        break;
-      case 1:
-        $suffix .= 'st';
-        break;
-      case 2:
-        $suffix .= 'nd';
-        break;
-      case 3:
-        $suffix .= 'rd';
-        break;
-      default:
-        $suffix .= 'th';
-        break;
+    if($number !== '') {
+	    switch($number) {
+	      case 0:
+	        $suffix = 'N/A';
+	        break;
+	        case 1:
+	        $suffix .= 'st';
+	        break;
+	      case 2:
+	        $suffix .= 'nd';
+	        break;
+	      case 3:
+	        $suffix .= 'rd';
+	        break;
+	      default:
+	        $suffix .= 'th';
+	        break;
+	    }
     }
     return $suffix;
   }
@@ -292,7 +294,6 @@ table {font-size:100%}
   } else {
     $current_screen = 1;
   }
-  echo "Finish screen = " . $_POST['old_screen'] . "<br />";
   if ($current_screen > 1 and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
     // Record answers from the previous screen.
     record_marks($paperID,$_POST['old_screen'],$mysqli,$_POST,$userID,$_POST['previous_duration'],$paper_type,$grade,$year,$attempt);
@@ -1278,20 +1279,24 @@ table {font-size:100%}
               echo '<td></td>';
             }
 
-            if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0' and $rank_answers[$tmp_part_id-1] > 0) {
-              if ($paper[$question]['score_method'] == 'OrderNeighbours') {
-                if ($rank_answers[$tmp_part_id-1] > 0 and $rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1]) {
-                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
-                } elseif ($rank_answers[$tmp_part_id-1] > 0 and ($rank_answers[$tmp_part_id-1]+1 == $paper[$question]['correct'][$tmp_part_id-1] or $rank_answers[$tmp_part_id-1]-1 == $paper[$question]['correct'][$tmp_part_id-1])) {
-                  echo '<td>&nbsp;<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" /></td>';
-                } else {
-                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
-                }
-              } else {
-                if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'BonusMark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
-                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
-                } else {
-                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+            if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') {
+							if(($paper[$question]['score_method'] == 'BonusMark' or $paper[$question]['score_method'] == 'OrderNeighbours') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
+								echo '<td>&nbsp;</td>';
+							} else {
+	            	if ($paper[$question]['score_method'] == 'OrderNeighbours') {
+	                if ($rank_answers[$tmp_part_id-1] > 0 and $rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1]) {
+	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+	                } elseif ($rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0 and ($rank_answers[$tmp_part_id-1]+1 == $paper[$question]['correct'][$tmp_part_id-1] or $rank_answers[$tmp_part_id-1]-1 == $paper[$question]['correct'][$tmp_part_id-1])) {
+	                  echo '<td>&nbsp;<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" /></td>';
+	                } else {
+	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+	                }
+	              } else {
+              		if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'BonusMark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
+	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+	                } else {
+	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+                	}
                 }
               }
             } else {
@@ -1302,9 +1307,11 @@ table {font-size:100%}
             } else {
               echo "<td><select name=\"q" . $question . "_" . $tmp_part_id . "\">\n";
             }
-            if ($rank_answers[$tmp_part_id-1] == 0) echo "<option value=\"\" style=\"color:#808080\">N/A</option>\n";
-            for ($a=1; $a<=(count($paper[$question]['correct'])-$na_count); $a++) {
-              if ($a == $rank_answers[$tmp_part_id-1]) {
+            if ($rank_answers[$tmp_part_id-1] == 'u') echo "<option value=\"\" style=\"color:#808080\"></option>\n";
+//            if ($rank_answers[$tmp_part_id-1] == 0) echo "<option value=\"\" style=\"color:#808080\">N/A</option>\n";
+//            for ($a=1; $a<=(count($paper[$question]['correct'])-$na_count); $a++) {
+            for ($a=0; $a<=count($paper[$question]['correct']); $a++) {
+            	if ($rank_answers[$tmp_part_id-1] != 'u' and $a == $rank_answers[$tmp_part_id-1]) {
                 echo "<option value=\"" . $a . "\" selected>" . ordinal_suffix($a) . "</option>\n";
               } else {
                 echo "<option value=\"" . $a . "\">" . ordinal_suffix($a) . "</option>\n";;
