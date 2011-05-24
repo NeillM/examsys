@@ -22,24 +22,29 @@
 * @package
 */
 
+  if (isset($_GET['module'])) {
+    $module = $_GET['module'];
+  } else {
+    $module = '';
+  }
 ?>
 <script language="JavaScript">
   function newKeyword() {
-    keywordwin=window.open("/touchstone/folder/new_keyword.php?module=<?php echo $_GET['module']; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    keywordwin=window.open("/touchstone/folder/new_keyword.php?module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       keywordwin.focus();
     }
   }
 
   function editKeyword() {
-    keywordwin=window.open("/touchstone/folder/edit_keyword.php?keywordID=" + document.getElementById('keywordID').value + "&module=<?php echo $_GET['module']; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    keywordwin=window.open("/touchstone/folder/edit_keyword.php?keywordID=" + document.getElementById('keywordID').value + "&module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       keywordwin.focus();
     }
   }
 
   function deleteKeyword() {
-    keywordwin=window.open("/touchstone/delete/check_delete_team_keyword.php?keywordID=" + document.getElementById('keywordID').value + "&module=<?php echo $_GET['module']; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    keywordwin=window.open("/touchstone/delete/check_delete_team_keyword.php?keywordID=" + document.getElementById('keywordID').value + "&module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       keywordwin.focus();
     }
@@ -58,21 +63,21 @@
 <tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem">Edit Keyword</td></tr>
 <tr><td><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem">Delete Keyword</td></tr>
 <?php
-  if (count($keyword_list) > 0) {
-    echo "<tr><td><a href=\"export_keywords.php?module=" . $_GET['module'] . "\"><img src=\"../artwork/export_16.gif\" width=\"16\" height=\"16\" alt=\"Export\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"export_keywords.php?module=" . $_GET['module'] . "\">Export Keywords</a></td></tr>\n";
+  if (isset($keyword_list) and count($keyword_list) > 0) {
+    echo "<tr><td><a href=\"export_keywords.php?module=$module\"><img src=\"../artwork/export_16.gif\" width=\"16\" height=\"16\" alt=\"Export\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"export_keywords.php?module=$module\">Export Keywords</a></td></tr>\n";
   } else {
     echo "<tr><td><img src=\"../artwork/export_grey_16.gif\" width=\"16\" height=\"16\" alt=\"Export\" border=\"0\" /></td><td class=\"greymenuitem\">Export Keywords</td></tr>\n";
   }
 ?>
-<tr><td><a href="import_keywords.php?module=<?php echo $_GET['module']; ?>"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import" border="0" /></a></td><td class="menuitem"><a href="import_keywords.php?module=<?php echo $_GET['module']; ?>">Import Keywords</a></td></tr>
+<tr><td><a href="import_keywords.php?module=<?php echo $module; ?>"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import" border="0" /></a></td><td class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>">Import Keywords</a></td></tr>
 </table>
 
 <table style="display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
 <tr><td><img onclick="newKeyword()" src="../artwork/key.png" width="16" height="16" alt="key" border="0" /></a></td><td class="menuitem"><a href="#" onclick="newKeyword()">Create new Keyword</a></td></tr>
 <tr><td><img onclick="editKeyword()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editKeyword(); return false;">Edit Keyword</a></td></tr>
 <tr><td><img onclick="deleteKeyword()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteKeyword(); return false;">Delete Keyword</a></td></tr>
-<tr><td><a href="export_keywords.php?module=<?php echo $_GET['module']; ?>"><img src="../artwork/export_16.gif" width="16" height="16" alt="Export" border="0" /></a></td><td class="menuitem"><a href="export_keywords.php?module=<?php echo $_GET['module']; ?>">Export Keywords</a></td></tr>
-<tr><td><a href="import_keywords.php?module=<?php echo $_GET['module']; ?>"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import" border="0" /></a></td><td class="menuitem"><a href="import_keywords.php?module=<?php echo $_GET['module']; ?>">Import Keywords</a></td></tr>
+<tr><td><a href="export_keywords.php?module=<?php echo $module; ?>"><img src="../artwork/export_16.gif" width="16" height="16" alt="Export" border="0" /></a></td><td class="menuitem"><a href="export_keywords.php?module=<?php echo $module; ?>">Export Keywords</a></td></tr>
+<tr><td><a href="import_keywords.php?module=<?php echo $module; ?>"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import" border="0" /></a></td><td class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>">Import Keywords</a></td></tr>
 </table>
 </td></tr>
 </table>

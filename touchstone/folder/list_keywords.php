@@ -25,7 +25,6 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   
-  check_var('module', 'GET', true, false);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -81,14 +80,28 @@
 <body onclick="deselDeg()">
 <?php
   $keyword_list = array();
-  $result = $mysqli->prepare("SELECT keywords_user.id, keyword FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND keyword_type='team' AND moduleid=? ORDER BY keyword");
-  $result->bind_param('s', $_GET['module']);
-  $result->execute();
-  $result->bind_result($keywordID, $keyword);
-  while ($result->fetch()) {
-    $keyword_list[$keywordID] = $keyword;
+  
+  if (isset($_GET['module']) and $_GET['module'] != '') {
+    // Get team keywords
+    $result = $mysqli->prepare("SELECT keywords_user.id, keyword FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND keyword_type='team' AND moduleid=? ORDER BY keyword");
+    $result->bind_param('s', $_GET['module']);
+    $result->execute();
+    $result->bind_result($keywordID, $keyword);
+    while ($result->fetch()) {
+      $keyword_list[$keywordID] = $keyword;
+    }
+    $result->close();
+  } else {
+    // Get personal keywords
+    $result = $mysqli->prepare("SELECT keywords_user.id, keyword FROM keywords_user WHERE keyword_type='personal' AND userid=? ORDER BY keyword");
+    $result->bind_param('s', $userID);
+    $result->execute();
+    $result->bind_result($keywordID, $keyword);
+    while ($result->fetch()) {
+      $keyword_list[$keywordID] = $keyword;
+    }
+    $result->close();
   }
-  $result->close();
 
   require '../include/folder_keyword_options.inc';
 ?>
@@ -96,7 +109,13 @@
 
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr>
-<td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./details.php?module=<?php echo $_GET['module']; ?>"><?php echo $_GET['module']; ?></a></div><div style="margin-left:10px; font-size:200%"><strong><?php echo $_GET['module']; ?>: </strong>Keywords</td>
+<?php
+  if (isset($_GET['module']) and $_GET['module'] != '') {
+    echo "<td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . $_GET['module'] . "</a></div><div style=\"margin-left:10px; font-size:200%\"><strong>" . $_GET['module'] . ": </strong>Keywords</td>\n";
+  } else {
+    echo "<td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a></div><div style=\"margin-left:10px; font-size:200%\"><strong>My Personal: </strong>Keywords</td>\n";
+  }
+?>
 <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
 </tr>
 <tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>

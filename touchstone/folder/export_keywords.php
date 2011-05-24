@@ -26,8 +26,8 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 check_var('module', 'GET', true, false);
 
-header('Content-Type: application/download');
-header('Content-Disposition: filename=keywords.txt');
+header('Content-Type: text/plain');
+header('Content-Disposition: attachment; filename=keywords.txt');
 
 $result = $mysqli->prepare("SELECT keywords_user.id, keyword FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND keyword_type='team' AND moduleid=? ORDER BY keyword");
 $result->bind_param('s', $_GET['module']);

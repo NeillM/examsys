@@ -79,7 +79,6 @@
       $result->close();
     }
     
-    $thelist = '';
     $keyword_no = 0;
     $keywords = '';
 	
@@ -100,7 +99,6 @@
         }
         if (isset($question_keywords[$keywordID])) {
           $html .= "<div style=\"background-color:#B3C8E8\" id=\"divkeyword$keyword_no\"><input type=\"checkbox\" onclick=\"toggle('divkeyword$keyword_no'); updateList();\" id=\"keyword$keyword_no\" name=\"keyword$keyword_no\" value=\"$keywordID\" checked>&nbsp;$keyword</div>\n";
-          $thelist .= ";$keywordID";
           if ($keywords == '') {
             $keywords = $keywordID;
           } else {
@@ -108,7 +106,6 @@
           }
         } else {
           $html .= "<div style=\"background-color:white; color:black\" id=\"divkeyword$keyword_no\"><input type=\"checkbox\" onclick=\"toggle('divkeyword$keyword_no'); updateList();\" id=\"keyword$keyword_no\" name=\"keyword$keyword_no\" value=\"$keywordID\">&nbsp;$keyword</div>\n";
-          $thelist .= ";$keywordID";
         }
         $old_team = $moduleID;
         $keyword_no++;
@@ -125,7 +122,6 @@
     while ($result->fetch()) {
       if (isset($question_keywords[$keywordID])) {
         $html .= "<div style=\"background-color:#B3C8E8\" id=\"divkeyword$keyword_no\"><input type=\"checkbox\" onclick=\"toggle('divkeyword$keyword_no'); updateList();\" id=\"keyword$keyword_no\" name=\"keyword$keyword_no\" value=\"$keywordID\" checked>&nbsp;$keyword</div>\n";
-        $thelist .= ";$keywordID";
         if ($keywords == '') {
           $keywords = $keywordID;
         } else {
@@ -133,12 +129,11 @@
         }
       } else {
         $html .= "<div style=\"background-color:white; color:black\" id=\"divkeyword$keyword_no\"><input type=\"checkbox\" onclick=\"toggle('divkeyword$keyword_no'); updateList();\" id=\"keyword$keyword_no\" name=\"keyword$keyword_no\" value=\"$keywordID\">&nbsp;$keyword</div>\n";
-        $thelist .= ";$keywordID";
       }
       $keyword_no++;
     }
     $result->close();
-    $html .= "</div><div><input type=\"button\" name=\"new_keyword\" value=\"New...\" onclick=\"newKeyword(); return false;\" />&nbsp;<input type=\"button\" name=\"delete_keyword\" value=\"Rename/Delete...\" onclick=\"deleteKeyword(); return false;\" /></div><input type=\"hidden\" name=\"keyword_no\" id=\"keywordno\" value=\"$keyword_no\" /><textarea rows=\"0\" cols=\"0\" style=\"display:none\" name=\"old_keywords\">$keywords</textarea><textarea name=\"thelist\" rows=\"0\" cols=\"0\" style=\"display:none\" id=\"thelist\">$thelist</textarea>\n</td>\n";
+    $html .= "</div><input type=\"hidden\" name=\"keyword_no\" id=\"keywordno\" value=\"$keyword_no\" /><textarea rows=\"0\" cols=\"0\" style=\"display:none\" name=\"old_keywords\">$keywords</textarea></td>\n";
     
     // Teams
     $current_teams = explode(';',$team);

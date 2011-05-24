@@ -51,7 +51,7 @@
 <tr><td style="font-weight:bold">Individual Rating</td></tr>
 <tr><td style="margin:4px">
 <table cellpadding="3" cellspacing="0" border="0" id="menu1" style="margin-left:7px; font-size:90%">
-<tr><td width="16"><a href="#" onclick="launchHelp(); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(); return false;">About Standards Setting</a></td></tr>
+<tr><td width="16"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(97); return false;">About Standards Setting</a></td></tr>
 <tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Angoff Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>">Create new Modified Angoff</a></td></tr>
 <tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Ebel Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>">Create new Ebel method</a></td></tr>
 </table>
