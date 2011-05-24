@@ -25,7 +25,6 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-// New comment here
 
 require './touchstone/include/staff_student_auth.inc';
 
