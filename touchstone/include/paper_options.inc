@@ -385,8 +385,8 @@ if ($paper_ownerID == $userID or strpos($userroles,'Admin') !== false or strpos(
 <tr><td><img style="cursor:hand" onclick="editQuestion(); return false;" src="/touchstone/artwork/edit.png" width="16" height="16" alt="Edit" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#">Edit Question</a></td></tr>
 <tr><td><img style="cursor:hand" onclick="questionInfo(); return false;" src="/touchstone/artwork/information_icon.gif" width="16" height="16" alt="Information" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;">Information</a></td></tr>
 <tr><td><img style="cursor:hand" onclick="copyToPaper(); return false;" src="/touchstone/artwork/copy_icon.gif" width="16" height="16" alt="Copy" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;">Copy onto Paper X...</a></td></tr>
-<tr><td><img style="cursor:hand" onclick="promote(); return false;" id="promoteicon" src="/touchstone/artwork/promote.gif" width="16" height="16" alt="Up" /></td><td class="menuitem"><a id="promotetext" onclick="promote(); return false;">Move up2</a></td></tr>
-<tr><td><img style="cursor:hand" onclick="demote(); return false;" id="demoteicon" src="/touchstone/artwork/demote.gif" width="16" height="16" alt="Down" /></td><td class="menuitem"><a id="demotetext" onclick="demote(); return false;">Move down2</a></td></tr>
+<tr><td><img style="cursor:hand" onclick="promote(); return false;" id="promoteicon" src="/touchstone/artwork/promote.gif" width="16" height="16" alt="Up" /></td><td class="menuitem"><a id="promotetext" onclick="promote(); return false;">Move up</a></td></tr>
+<tr><td><img style="cursor:hand" onclick="demote(); return false;" id="demoteicon" src="/touchstone/artwork/demote.gif" width="16" height="16" alt="Down" /></td><td class="menuitem"><a id="demotetext" onclick="demote(); return false;">Move down</a></td></tr>
 <?php
 if ($paper_type == '4') {
   echo '<tr><td><img src="/touchstone/artwork/screen_icon_grey.png" width="16" height="16" alt="Screen" /></td><td class="greymenuitem">Change Screen No.</td></tr>';

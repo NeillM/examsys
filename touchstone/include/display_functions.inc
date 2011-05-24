@@ -231,7 +231,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($question['score_method'] == 'vertical' or $question['score_method'] == 'vertical_other') {
         echo '<table cellpadding="2" cellspacing="0" border="0">';
       } elseif ($question['score_method'] == 'dropdown') {
-        if ($user_answers[$current_screen][$q_id] == '0') {
+        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
           echo '<div class="option"><select class="unans" name="q' . $question_no . '" size="1">';
         } else {
           echo '<div class="option"><select name="q' . $question_no . '" size="1">';
