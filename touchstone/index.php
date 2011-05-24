@@ -46,7 +46,7 @@ require './include/staff_auth.inc';
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone 3<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="./css/submenu.css" />
 
 <script src="./javascript/staff_help.js" type="text/javascript"></script>
