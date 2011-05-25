@@ -403,14 +403,14 @@ class IE_touchstone_Load extends IE_Main
 			$optno++;
 		}
 		
-		// splite all stuff from q_row into arrays for processing
-		$feedbacks = split("\|",$q_row['correct_fback']);  
-		$medias = split("\|",$q_row['q_media']);  
-		$media_widths = split("\|",$q_row['q_media_width']);  
-		$media_heights = split("\|",$q_row['q_media_height']);  
-		$scenarios = split("\|",$q_row['scenario']);
-		$correct = split("\|",$o_rows[0]['correct']);
-
+		// split all stuff from q_row into arrays for processing
+		$feedbacks = explode("|",$q_row['correct_fback']);  
+		$medias = explode("|",$q_row['q_media']);  
+		$media_widths = explode("|",$q_row['q_media_width']);  
+		$media_heights = explode("|",$q_row['q_media_height']);  
+		$scenarios = explode("|",$q_row['scenario']);
+		$correct = explode("|",$o_rows[0]['correct']);
+		
 		// for all the arrays made, create scenarios
 		$scenariono = 1;
 		for ($i = 0 ; $i < count($scenarios) ; $i++)
@@ -422,7 +422,7 @@ class IE_touchstone_Load extends IE_Main
 			//$ems->media_height = $media_heights[$i];
 			$this->AddMedia($ems,$medias[$i+1],$media_widths[$i+1],$media_heights[$i+1]);
 			
-			$ems->feedback = $feedbacks[$i];
+			$ems->feedback = (empty($feedbacks[$i])) ? '' : $feedbacks[$i];
 			$ems->correctans = explode("$",$correct[$i]);
 			
 			$store->scenarios[$scenariono] = $ems;
