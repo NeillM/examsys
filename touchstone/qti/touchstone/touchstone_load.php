@@ -450,7 +450,7 @@ class IE_touchstone_Load extends IE_Main
 		$store->marks = $o_rows[0]['marks'];
 	}
 	
-	// TODO
+	// TODO - Does this deal with multi-layered hotspot questions?
 	function LoadQuestionHotspot($store,$q_row,$o_rows)
 	{
 		// TODO
@@ -461,7 +461,7 @@ class IE_touchstone_Load extends IE_Main
 		
 		$store->raw_option = $hotspots;
 		
-		$parts = explode(";",$hotspots);
+		$parts = explode("~",$hotspots);
 		//print_p($parts);
 		for ($i = 0 ; $i < count($parts) ; $i+=3)
 		{
@@ -549,7 +549,7 @@ class IE_touchstone_Load extends IE_Main
 		{
 			$label = explode("$",$label);
 			
-			if (!$label[4]) continue;
+			if (empty($label[4])) continue;
 			//echo $label[0] . " - " .$label[1] . " - " .$label[2] . " - " .$label[3] . " - " .$label[4] . "<br>";
 			$lc = new STQ_Labelling_Label();
 			
