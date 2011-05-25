@@ -555,8 +555,21 @@ if (isset($_GET['change_screen'])) {
         $editPaper->execute();
         $editPaper->close();
       }
+      
       // Unlock code - emergency use only!
       if (isset($_GET['unlock']) AND $_GET['unlock'] == '1' AND strpos($userroles,'SysAdmin') !== false) {
+        $tmp_date = new DateTime();
+        $tmp_date->modify('+28 day');
+        $tmp_start_date = $tmp_date->format('Ymd' . '100000');
+        $tmp_end_date = $tmp_date->format('Ymd' . '100000');        
+
+        // Update the paper date so that it does not immediately re-lock
+        $editPaper = $mysqli->prepare("UPDATE properties SET start_date=?, end_date=? WHERE property_id=?");
+        $editPaper->bind_param('ssi', $tmp_start_date, $tmp_end_date, $paperID);
+        $editPaper->execute();
+        $editPaper->close();
+        
+        // Update the questions to take lock off
         $editPaper = $mysqli->prepare("UPDATE questions SET locked=NULL WHERE q_id=?");
         $editPaper->bind_param('i', $q_id);
         $editPaper->execute();
@@ -676,7 +689,23 @@ if (isset($_GET['change_screen'])) {
   <?php
 
   if ($summative_lock == 1) {
-    echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><strong>Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified. <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">Click for more details.</a></td></tr>\n";
+    echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"3\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><strong>Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified. <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">Click for more details.</a></td><td style=\"text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\">";
+    if (strpos($userroles,'Admin') !== false) {
+      $record_no = 0;
+      $result = $mysqli->prepare("SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE paperID=? AND log_metadata.userID=users.id AND roles='Student'");
+      $result->bind_param('i', $paperID);
+      $result->execute();
+      $result->bind_result($record_no);
+      $result->fetch();
+      $result->close();
+   
+      if ($record_no == 0) {
+        echo '<span style="align:right"><input type="button" name="unlock" value="Unlock" onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" /></span>';
+      } else {
+        echo '<span style="align:right"><input type="button" name="unlock" value="Unlock" disabled /></span>';
+      }
+    }
+    echo "</td></tr>\n";
   } elseif ($paper_type == '2') {
     $tmp_hour = substr($display_start_date,0,2);
     if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
