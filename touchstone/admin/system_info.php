@@ -122,49 +122,56 @@ if ($cfg_use_ldap == true) {
 <tr><td colspan="2" style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold">Server Information</td></tr>
 <?php
 
-  // Try Linux command first
-  $results = shell_exec('cat /proc/cpuinfo');
-  if ($results != '') {
-    $lines = explode('<br />',nl2br($results));
-    $core_no = 0;
-    $processor = '';
-    foreach ($lines as $individual_line) {
-      $components = explode(':',$individual_line);
-      if (trim($components[0]) == 'model name') {
-        $core_no++;
-        $processor = trim($components[1]);
+   if (php_uname('s') != 'Windows NT') {
+    // Try Linux command first
+    $results = shell_exec('cat /proc/cpuinfo');
+    if ($results != '') {
+      $lines = explode('<br />',nl2br($results));
+      $core_no = 0;
+      $processor = '';
+      foreach ($lines as $individual_line) {
+        $components = explode(':',$individual_line);
+        if (trim($components[0]) == 'model name') {
+          $core_no++;
+          $processor = trim($components[1]);
+        }
+      }
+      echo "<tr><td>Processor</td><td>$processor</td></tr>\n";
+      echo "<tr><td>Cores</td><td>$core_no</td></tr>\n";
+    } else {
+      // Try Solaris command
+      $results = shell_exec('psrinfo -pv');
+      $lines = explode('<br />',nl2br($results));
+      $physical = 0;
+      $virtual = 0;
+      $processor = '';
+      foreach ($lines as $individual_line) {
+        if (strpos($individual_line,'The physical processor') !== false) {
+          $tmp_line = str_replace('The physical processor has ','',trim($individual_line));
+          $physical++;
+          $virtual += substr($tmp_line,0,1);
+        }
+        if (strpos($individual_line,'clock') !== false) {
+          $processor = trim($individual_line);
+          $processor_parts = explode("\(",$processor);
+          $speed_parts = explode('clock ',$processor_parts[1]);
+          $speed = str_replace(')','',$speed_parts[1]);
+        }
       }
     }
-    echo "<tr><td>Processor</td><td>$processor</td></tr>\n";
-    echo "<tr><td>Cores</td><td>$core_no</td></tr>\n";
+    if (isset($processor_parts[0])) {
+      echo "<tr><td>Processor</td><td>" . $processor_parts[0] . "($speed)</td></tr>\n";
+      echo "<tr><td>CPUs</td><td>$physical ($virtual virtual)</td></tr>\n";
+    }
   } else {
-    // Try Solaris command
-    $results = shell_exec('psrinfo -pv');
-    $lines = explode('<br />',nl2br($results));
-    $physical = 0;
-    $virtual = 0;
-    $processor = '';
-    foreach ($lines as $individual_line) {
-      if (strpos($individual_line,'The physical processor') !== false) {
-        $tmp_line = str_replace('The physical processor has ','',trim($individual_line));
-        $physical++;
-        $virtual += substr($tmp_line,0,1);
-      }
-      if (strpos($individual_line,'clock') !== false) {
-        $processor = trim($individual_line);
-        $processor_parts = explode("\(",$processor);
-        $speed_parts = explode('clock ',$processor_parts[1]);
-        $speed = str_replace(')','',$speed_parts[1]);
-      }
-    }
-    echo "<tr><td>Processor</td><td>" . $processor_parts[0] . "($speed)</td></tr>\n";
-    echo "<tr><td>CPUs</td><td>$physical ($virtual virtual)</td></tr>\n";
+    echo "<tr><td>Processor</td><td>" . php_uname('m') . "</td></tr>\n";
   }
       
   echo "<tr><td style=\"width:90px\">Server name</td><td>" . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
   echo "<tr><td>Host name</td><td>" . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
   echo "<tr><td>IP Address</td><td>" . apache_getenv("SERVER_ADDR") . "</td></tr>\n";
   echo "<tr><td>Clock</td><td>" . date('d F Y H:i:s') . "</td></tr>\n";;
+  echo "<tr><td>OS</td><td>" . php_uname('s') . "</td></tr>\n";;
   echo "<tr><td>Apache</td><td>" . apache_get_version() . "</td></tr>\n";
   echo "<tr><td>PHP</td><td>" . phpversion() . "</td></tr>\n";
   echo "<tr><td>MySQL</td><td>" . $mysqli->server_info . "</td></tr>\n";
@@ -180,20 +187,35 @@ if ($cfg_use_ldap == true) {
 
   echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
     
-  $master_array = array();
-  $results = shell_exec('df -h');
-  $lines = explode('<br />',nl2br($results));
-  $row_no = 0;
-  foreach ($lines as $individual_line) {
-    if ($row_no > 0) {
-      $cols = explode(' ',$individual_line);
-      foreach($cols as $individual_col) {
-        if ($individual_col != '') {
-          $master_array[$row_no][] = $individual_col;
+  if (php_uname('s') == 'Windows NT') {
+    $disks = `fsutil fsinfo drives`;
+    $disks = str_word_count($disks,1);
+    $i = 0;
+    foreach ($disks as $key=>$disk) {
+      if ($disk != 'Drives') {
+        $master_array[$i][3] = round(((@disk_free_space(strtoupper($disk) . ':') / 1024) / 1024) / 1024) . 'G';
+        $master_array[$i][1] = round(((@disk_total_space(strtoupper($disk) . ':') / 1024) / 1024) / 1024) . 'G';
+        $master_array[$i][5] = $disk . ':';
+      }
+      $i++;
+    }
+    $row_no = $i + 1;
+  } else {
+    $master_array = array();
+    $results = shell_exec('df -h');
+    $lines = explode('<br />',nl2br($results));
+    $row_no = 0;
+    foreach ($lines as $individual_line) {
+      if ($row_no > 0) {
+        $cols = explode(' ',$individual_line);
+        foreach($cols as $individual_col) {
+          if ($individual_col != '') {
+            $master_array[$row_no][] = $individual_col;
+          }
         }
       }
+      $row_no++;
     }
-    $row_no++;
   }
   for ($i=1; $i<($row_no-1);$i++) {
     if ($master_array[$i][5] != '' and $master_array[$i][1] != '0K') {
