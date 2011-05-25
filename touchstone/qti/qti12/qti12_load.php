@@ -579,6 +579,7 @@ class IE_qti12_Load extends IE_Main
 	
 	function GenerateQuestionInfo(&$question,$material,$title,$responsemat = '')
 	{
+		$notes = '';
 		foreach($material->chunks as &$chunk)
 		{
 			if ($chunk->label == "theme")
@@ -1136,7 +1137,7 @@ class IE_qti12_Load extends IE_Main
 					$option->value_false = $id;
 			}			
 			
-			if ($response->material->media)
+			if (!empty($response->material->media))
 			{
 				$option->media = $response->material->media;
 				$option->media_width = $response->material->media_width;
@@ -1266,7 +1267,7 @@ class IE_qti12_Load extends IE_Main
 			$stem->stem = MakeValidHTML(RemoveLoneP($response->material->GetHTML()));
 			$stem->base_response_id = $rid;
 			
-			if ($response->material->media)
+			if (!empty($response->material->media))
 			{
 				$stem->media = $response->material->media;
 				$stem->media_width = $response->material->media_width;
@@ -1357,7 +1358,7 @@ class IE_qti12_Load extends IE_Main
 		$response = reset($source->responses);
 		$this->GenerateQuestionInfo($dest,$source->material,$source->title,$response->material);
 
-		if ($response->material->media)
+		if (!empty($response->material->media))
 		{
 			$dest->media = $response->material->media;
 			$dest->media_width = $response->material->media_width;
@@ -1389,7 +1390,7 @@ class IE_qti12_Load extends IE_Main
 		// load in any raw option data when a touchstone export
 		if (array_key_exists("RAW_HOTSPOT",$source->params))
 		{
-			unset($dest->hotspots);
+			$dest->hotspots = array();
 			$dest->raw_option = $source->params['RAW_HOTSPOT'];		
 		}
 		
@@ -1434,7 +1435,7 @@ class IE_qti12_Load extends IE_Main
 		$max_height = 0;
 
 		// get main image for question
-		if ($response->material->media)
+		if (!empty($response->material->media))
 		{
 			$dest->media = $response->material->media;
 			$dest->media_width = $response->material->media_width;
@@ -1448,15 +1449,17 @@ class IE_qti12_Load extends IE_Main
 			{
 				$mylabel = new stdClass();
 				$mylabel->id = $label->id;
-				$mylabel->media = $label->material->media;
-				$mylabel->media_width = $label->material->media_width;
-				$mylabel->media_height = $label->material->media_height;
+				if(!empty($label->material->media)) {
+					$mylabel->media = $label->material->media;
+					$mylabel->media_width = $label->material->media_width;
+					$mylabel->media_height = $label->material->media_height;
 
-				if ($max_height < $mylabel->media_height)
-					$max_height = $mylabel->media_height;
-				
-				if ($max_width < $mylabel->media_width)
-					$max_width = $mylabel->media_width;
+					if ($max_height < $mylabel->media_height)
+						$max_height = $mylabel->media_height;
+					
+					if ($max_width < $mylabel->media_width)
+						$max_width = $mylabel->media_width;
+				}
 
 				$mylabel->text = $label->material->GetText();
 				
@@ -1491,7 +1494,7 @@ class IE_qti12_Load extends IE_Main
 		// remap coordinates to top left
 		foreach($labels as &$label)
 		{
-			if ($label->coords == "")
+			if (empty($label->coords))
 			{
 				$label->left = -1;
 				$label->top = -1;
@@ -1785,7 +1788,7 @@ class IE_qti12_Load extends IE_Main
 				$choice->base_id = $label->id;
 				
 
-				if ($label->material->media)
+				if (!empty($label->material->media))
 				{
 					$choice->media = $label->material->media;
 					$choice->media_width = $label->material->media_width;

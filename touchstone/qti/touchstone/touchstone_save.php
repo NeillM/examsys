@@ -175,15 +175,15 @@ class IE_touchstone_Save extends IE_Main
 				continue;
 			}
 
-			if (strcasecmp("<p>&nbsp;</p>",$this->q_row['scenario']) == 0)
-				$this->q_row['scenario'] = "";
+			if (!empty($this->q_row['scenario']) && strcasecmp("<p>&nbsp;</p>",$this->q_row['scenario']) == 0)
+				$this->q_row['scenario'] = '';
 
 			// create plain version of scenario and leadin
-			$this->q_row['scenario_plain'] = trim(strip_tags(stripslashes($this->q_row['scenario'])));
-			$this->q_row['leadin_plain'] = trim(strip_tags(stripslashes($this->q_row['leadin'])));
+			$this->q_row['scenario_plain'] = (empty($this->q_row['scenario'])) ? '' : trim(strip_tags(stripslashes($this->q_row['scenario'])));
+			$this->q_row['leadin_plain'] = (empty($this->q_row['leadin'])) ? '' : trim(strip_tags(stripslashes($this->q_row['leadin'])));
 			
-			if ($this->q_row['correct_fback'] != "" && $this->q_row['correct_fback'] == $this->q_row['incorrect_fback'])
-				$this->q_row['incorrect_fback'] = "";
+			if (!empty($this->q_row['correct_fback']) && !empty($this->q_row['incorrect_fback']) && $this->q_row['correct_fback'] == $this->q_row['incorrect_fback'])
+				$this->q_row['incorrect_fback'] = '';
 				
 			// if no o_row, create a blank one
 			if (count($this->o_rows) == 0)
@@ -206,7 +206,7 @@ class IE_touchstone_Save extends IE_Main
 			foreach($this->o_rows as &$o_row)
 			{
 				$o_row['o_id'] = $this->q_row['q_id'];
-				if ($o_row['feedback_right'] != "" && $o_row['feedback_right'] == $o_row['feedback_wrong'])
+				if (!empty($o_row['feedback_right']) && $o_row['feedback_right'] == $o_row['feedback_wrong'])
 					$o_row['feedback_wrong'] = "";
 				$this->db->InsertRow("options","id_num",$o_row);
 			}
@@ -536,14 +536,16 @@ class IE_touchstone_Save extends IE_Main
 			";" . $question->font_color  . ";" . $question->width   . ";" . $question->height   . ";" . $question->label_type . ";";
 			
 		$count = 0;
-		foreach($question->labels as $id => $label)
-		{
-			//print_p($label);
-			if ($label->left == -1 || $label->top == -1)
+		if(isset($question->labels)) {
+			foreach($question->labels as $id => $label)
 			{
-				$base[$id] .= $label->tag;
-			} else {
-				$base[$id] = $id."$0$".($label->left+220)."$".($label->top+25)."$".$label->tag;
+				//print_p($label);
+				if ($label->left == -1 || $label->top == -1)
+				{
+					$base[$id] .= $label->tag;
+				} else {
+					$base[$id] = $id."$0$".($label->left+220)."$".($label->top+25)."$".$label->tag;
+				}
 			}
 		}
 		
