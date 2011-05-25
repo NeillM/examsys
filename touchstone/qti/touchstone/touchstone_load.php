@@ -185,7 +185,7 @@ class IE_touchstone_Load extends IE_Main
 		$q_storage = "ST_Question_" . $q_type;
 		
 		//echo "Question type : $q_type, storage class : $q_storage\n";
-		
+
 		$store = new $q_storage;
 		$store->type = $q_type;
 		
@@ -766,6 +766,11 @@ class IE_touchstone_Load extends IE_Main
 	function LoadQuestionRandom($store,$q_row,$o_rows)
 	{
 		return "Error : Random questions cant be exported<br>";
+	}
+	
+	function LoadQuestionSct($store,$q_row,$o_rows)
+	{
+		return "Error : SCT questions cant be exported<br>";
 	}
 	
 	function AddMedia(&$question, $media, $width = 0, $height = 0)

@@ -341,3 +341,14 @@ class ST_Question_Timedate extends ST_Question
 	var $correct;
 	var $feedback = '';
 }
+
+class ST_Question_Sct extends ST_Question
+{
+	// NO EXTENSIONS
+}
+
+class ST_Question_Random extends ST_Question
+{
+	// NO EXTENSIONS
+}
+
