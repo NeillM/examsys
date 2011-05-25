@@ -762,7 +762,8 @@ table {font-size:100%}
           $answered = false;
           if (isset($paper[$question]['user_answer'])) {
             for ($i=0; $i<strlen($paper[$question]['user_answer']); $i++) {
-              if (substr($paper[$question]['user_answer'], $i, 1) == 'y' or substr($paper[$question]['user_answer'], $i, 1) == 'n') {
+            	$answer_part = substr($paper[$question]['user_answer'], $i, 1);
+              if ($answer_part == 't' or $answer_part == 'f') {
                 $answered = true;
               }
             }
