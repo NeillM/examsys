@@ -208,7 +208,7 @@
   
   $date_options = array("dont remember"=>"Don't remember","week"=>"Within the last week","month"=>"Past month","year"=>"Within the past year","specify"=>"Specify dates");
   foreach($date_options as $date_value=>$date_label) {
-    if (isset($_POST['question_date']) and $_POST['question_date'] == $date_value) {
+    if ((isset($_POST['question_date']) and $_POST['question_date'] == $date_value) or (!isset($_POST['question_date']) and $date_value == 'dont remember')) {
       echo "<tr><td colspan=\"2\"><input type=\"radio\" name=\"question_date\" value=\"$date_value\" checked />&nbsp;$date_label</td></tr>";
     } else {
       echo "<tr><td colspan=\"2\"><input type=\"radio\" name=\"question_date\" value=\"$date_value\" />&nbsp;$date_label</td></tr>";
