@@ -1563,12 +1563,12 @@ table {font-size:100%}
               $col_no = 1;
               foreach ($paper[$question]['option_text'] as $single_option) {
                 $tmp_col_no = $option_order[$col_no - 1] + 1;
-                if ($correct_answers[$row_no] == $tmp_col_no and $tmp_display_correct_answer == '1') {
+                if ($correct_answers[$row_no] == $tmp_col_no and $tmp_display_correct_answer == '1' and (!$hide_if_unanswered or !empty($user_answers[$row_no]))) {
                   echo '<td style="background-color:#C0FFC0">';
                 } else {
                   echo '<td>';
                 }
-                if (isset($user_answers[$row_no])) {
+                if (!empty($user_answers[$row_no])) {
                   echo '<div align="center"><img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" /><input type="radio" name="q' . $question . '_' . $row_no . '" value="' . $answer_no . '"';
                   if ($user_answers[$row_no] == $col_no) echo ' checked';
                   echo ' />';
@@ -1809,8 +1809,24 @@ table {font-size:100%}
             $paper[$question]['mark'] = 0;
           }
            if ($tmp_display_correct_answer == '0') {
-            $paper[$question]['correct'][0] = '';
-          }
+?>
+    <div>
+		<script language="JavaScript">
+			function swfLoaded<?php echo $question_no; ?>(message) {
+				var num = message.substring(5,message.length);
+				setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>','0');
+			}
+			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 300); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 2); ?>" align="middle">');
+			write_string('<param name="allowScriptAccess" value="always" />');
+			write_string('<param name="movie" value="/touchstone/paper/hotspot_question.swf" />');
+			write_string('<param name="quality" value="high" />');
+			write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+			write_string('<embed src="/touchstone/paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 300); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 2); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+			write_string('</object>');
+		</script>
+    </div>
+<?php
+          } else {
 ?>
     <div>
     <script language="JavaScript">
@@ -1828,6 +1844,7 @@ table {font-size:100%}
     </script>
     </div>
 <?php
+          }
 
           if ($tmp_display_correct_answer == '1') {
             echo '<br />';
