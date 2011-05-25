@@ -86,6 +86,11 @@
     $html .= "<div id=\"keywordarea\" style=\"width:300px; height:300px; background-color:white; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">\n";
 
     // Team keyword lists by module
+    if ($team == '') {
+      // No teams passed in, use all teams the current user is on.
+      $team = implode(';',$teams);
+    }
+    
     if ($team != '') {
       $old_team = '';
       $sql_team = str_replace(";","','",$team);
