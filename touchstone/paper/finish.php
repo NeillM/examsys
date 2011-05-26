@@ -1931,13 +1931,13 @@ table {font-size:100%}
           echo '<div align="center">';
           echo '<script language="JavaScript">';
           if ($tmp_display_correct_answer == '0' or $tmp_display_students_response == '0') {
-            $paper[$question]['user_answer'] = str_replace('"','&#034;',stripslashes($paper[$question]['user_answer']));
-            $paper[$question]['user_answer'] = str_replace("'",'&#039;',stripslashes($paper[$question]['user_answer']));
-              
+          	if(!empty($paper[$question]['user_answer'])) {
+	            $paper[$question]['user_answer'] = str_replace('"','&#034;',stripslashes($paper[$question]['user_answer']));
+	            $paper[$question]['user_answer'] = str_replace("'",'&#039;',stripslashes($paper[$question]['user_answer']));
+          	}
             $paper[$question]['correct'][0] = str_replace('"','&#034;',stripslashes($paper[$question]['correct'][0]));
             $paper[$question]['correct'][0] = str_replace("'",'&#039;',stripslashes($paper[$question]['correct'][0]));
 ?> 
-    <script language="JavaScript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
         setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>','');
@@ -1949,7 +1949,6 @@ table {font-size:100%}
       write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
       write_string('<embed src="/touchstone/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
-    </script>
 <?php
   } else {
     $tmp_std = '';
