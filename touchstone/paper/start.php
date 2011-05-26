@@ -170,7 +170,7 @@ function keywordQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,
     
     $try = 0;
     $unique = false;
-    while ($unique == false and $try < 9999) {
+    while ($unique == false and $try < count($question_ids)) {
       $selected_q_id = $question_ids[$try];
       if (!isset($used_questions[$selected_q_id])) $unique = true;
       $try++;
@@ -178,32 +178,42 @@ function keywordQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,
     $used_questions[$selected_q_id] = 1;
   }
   
-  // Look up selected question and overwrite data.
-  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
-  $question_data->bind_param('i', $selected_q_id);
-  $question_data->execute();
-  $question_data->store_result();
-  $question_data->bind_result($q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
-  while ($question_data->fetch()) {
-    if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
-      $question['theme'] = $theme;
-      $question['scenario'] = $scenario;
-      $question['leadin'] = $leadin;
-      $question['notes'] = $notes;
-      $question['q_type'] = $q_type;
-      $question['q_id'] = $q_id;
-      $question['display_pos'] = $q_no;
-      $question['score_method'] = $score_method;
-      $question['q_media'] = $q_media;
-      $question['q_media_width'] = $q_media_width;
-      $question['q_media_height'] = $q_media_height;
-      $question['q_option_order'] = $q_option_order;
-      $question['dismiss'] = '';
+  if($unique) {
+    // Look up selected question and overwrite data.
+    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+    $question_data->bind_param('i', $selected_q_id);
+    $question_data->execute();
+    $question_data->store_result();
+    $question_data->bind_result($q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+    while ($question_data->fetch()) {
+      if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
+        $question['theme'] = $theme;
+        $question['scenario'] = $scenario;
+        $question['leadin'] = $leadin;
+        $question['notes'] = $notes;
+        $question['q_type'] = $q_type;
+        $question['q_id'] = $q_id;
+        $question['display_pos'] = $q_no;
+        $question['score_method'] = $score_method;
+        $question['q_media'] = $q_media;
+        $question['q_media_width'] = $q_media_width;
+        $question['q_media_height'] = $q_media_height;
+        $question['q_option_order'] = $q_option_order;
+        $question['dismiss'] = '';
+      }
+      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
     }
-    $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+    echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+  } else {
+    $question['leadin'] = '<span style="color: #f00;">ERROR: unable to find unique question for supplied keywords</span>';
+    $question['q_type'] = 'keyword_based';
+    $question['q_id'] = -1;
+    $question['display_pos'] = $q_no;
+    $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
+    $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
+    $question['options'][] = array();
   }
   $questions[] = $question;
-  echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
 }
 
 if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
@@ -645,7 +655,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
       randomQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen,$tmp_q_no);
     } elseif ($question['q_type'] == 'branching') {
       branchingQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen);
-    } elseif ($question['q_type'] == 'keyword') {
+    } elseif ($question['q_type'] == 'keyword_based') {
       keywordQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen,$tmp_q_no);
     } else {
       $questions_array[] = $question;

@@ -453,29 +453,33 @@ table {font-size:100%}
     
     // Parse for random questions.
     for ($i=1; $i<=$q_no; $i++) {
-      if ($paper[$i]['q_type'] == 'random') {
-        $possible_array = array();
-        foreach ($paper[$i]['option_text'] as $checkID) {
-          $used = false;
-          for ($j = 1; $j <= $q_no; $j++) {
-            if ($paper[$j]['q_id'] == $checkID) {
-              $used = true;
-              break;
+      if ($paper[$i]['q_type'] == 'random' or $paper[$i]['q_type'] == 'keyword_based') {
+        if ($paper[$i]['q_type'] == 'keyword_based') {
+          $selected_q_id = $_POST["q" . $i . "_randomID"];
+        } else {
+          $possible_array = array();
+          foreach ($paper[$i]['option_text'] as $checkID) {
+            $used = false;
+            for ($j = 1; $j <= $q_no; $j++) {
+              if ($paper[$j]['q_id'] == $checkID) {
+                $used = true;
+                break;
+              }
+            }
+            if ($used == false) {
+              $possible_array[] = $checkID;
             }
           }
-          if ($used == false) {
-            $possible_array[] = $checkID;
-          }
+  
+          $possible_questions = implode(',',$possible_array);
+          $answer_data = $mysqli->prepare("SELECT q_id FROM log$log_type WHERE q_paper=? AND started=? AND userID=? AND screen=? AND q_id IN ($possible_questions) ORDER BY id");
+          $answer_data->bind_param('isii', $paperID, $sessionid, $temp_userID, $paper[$i]['screen']);
+          $answer_data->execute();
+          $answer_data->bind_result($selected_q_id); 
+          $answer_data->fetch();
+          $answer_data->close();
         }
-
-        $possible_questions = implode(',',$possible_array);
-        $answer_data = $mysqli->prepare("SELECT q_id FROM log$log_type WHERE q_paper=? AND started=? AND userID=? AND screen=? AND q_id IN ($possible_questions) ORDER BY id");
-        $answer_data->bind_param('isii', $paperID, $sessionid, $temp_userID, $paper[$i]['screen']);
-        $answer_data->execute();
-        $answer_data->bind_result($selected_q_id); 
-        $answer_data->fetch();
-        $answer_data->close();
-
+        
         // Look up selected question and overwrite data.
         $stems = 0;
         $question_data = $mysqli->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, marks, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks, status FROM (questions, options) WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");

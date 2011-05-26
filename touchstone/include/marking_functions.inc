@@ -105,8 +105,8 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
       $branch_no = 0;
       $random_on = false;
     }
-    if ($q_type == 'random' or $q_type == 'branching' or $q_type == 'keyword') {
-      if ($q_type == 'random' or $q_type == 'keyword') {
+    if ($q_type == 'random' or $q_type == 'branching' or $q_type == 'keyword_based') {
+      if ($q_type == 'random' or $q_type == 'keyword_based') {
         $selected_q_id[] = $posted_vars["q" . $tmp_question_no . "_randomID"];
       } else {
   	    if (isset($posted_vars['q' . $q_id . '_' . $branch_no . '_branchID'])) {

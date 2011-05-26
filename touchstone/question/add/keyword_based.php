@@ -33,7 +33,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   $keyword_parts = explode('|',$_POST['keyword']);
 
   // Insert into Questions
-  $question_id = insert_into_questions('keyword','','',$_POST['description'],'',$keyword_parts[1],'','',$userID,'',0,0,date("YmdHis"),date("YmdHis"),'',getTeams(),$_POST['status'],'display order');
+  $question_id = insert_into_questions('keyword_based','','',$_POST['description'],'',$keyword_parts[1],'','',$userID,'',0,0,date("YmdHis"),date("YmdHis"),'',getTeams(),$_POST['status'],'display order');
   
   // Insert into Options
   insert_into_options($question_id,$keyword_parts[0],'','','','','','','');
