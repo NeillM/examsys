@@ -871,7 +871,7 @@ if (isset($_GET['change_screen'])) {
       $temp_array[$x]['score_method'] = str_replace('|',',',$temp_array[$x]['score_method']);
       $temp_array[$x]['score_method'] = str_replace(',false','',$temp_array[$x]['score_method']);
       echo '<td style="text-align:right; vertical-align:top; color:#808080">' . $temp_array[$x]['score_method'] . '</td>';
-    } elseif ($temp_array[$x]['q_type'] == 'info') {
+    } elseif ($temp_array[$x]['q_type'] == 'info' or $temp_array[$x]['q_type'] == 'keyword_based') {
       echo '<td>&nbsp;</td>';
     } else {
       if ($temp_array[$x]['status'] !== 'Experimental' and $temp_array[$x]['marks'] === 'ERR') {
