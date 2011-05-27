@@ -36,7 +36,7 @@
       $answered = false;
       $new_answers= array();
       for ($i=0; $i<count($tmp_answer_parts); $i++) {
-        if (isset($tmp_answer_parts[$i]) and $tmp_answer_parts[$i] != '') {
+        if (isset($tmp_order[$tmp_answer_parts[$i-1]]) and $tmp_order[$tmp_answer_parts[$i-1]] != '') {
           $new_answers[] = $tmp_order[$tmp_answer_parts[$i-1]] + 1;
         } else {
           $new_answers[] = 'u';
