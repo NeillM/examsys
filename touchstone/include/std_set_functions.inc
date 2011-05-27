@@ -59,14 +59,16 @@ function reviewScale($q_type, $tmp_q_id, $q_no, $tmp_part_no, $set_method, $prev
   switch ($set_method) {
     case 'modified_angoff':
       $html = "<select name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>";
-      if ($q_type == 'mrq') {
+      if (isset($prev_reviews[$tmp_q_id]) and $prev_reviews[$tmp_q_id] != '') {
         $sub_reviews = explode(',', $prev_reviews[$tmp_q_id]);
+      } else {
+        $sub_reviews = array('','','','','','','','','','','','','','','');
+      }
+      if ($q_type == 'mrq') {
         $current_review = $sub_reviews[$mrq_part - 1];
       } elseif ($q_type == 'dichotomous' or $q_type == 'rank' or $q_type == 'extmatch' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'labelling') {
-        $sub_reviews = explode(',', $prev_reviews[$tmp_q_id]);
         $current_review = $sub_reviews[$tmp_part_no - 1];
       } elseif ($q_type == 'textbox') {
-        $sub_reviews = explode(',', $prev_reviews[$tmp_q_id]);
         $current_review = $sub_reviews[count($sub_reviews)-$tmp_part_no];
       } else {
         $current_review = $prev_reviews[$tmp_q_id];
