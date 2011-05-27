@@ -41,7 +41,7 @@ require '../include/staff_auth.inc';
   $result->close();
   
   header('Content-type: text/xml');
-  header("Content-Disposition: attachment; filename=" . $paper . ".xml");
+  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".xml");
 
   $log_array = array();
   $hits = 0;

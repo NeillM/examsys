@@ -60,7 +60,7 @@ require '../include/staff_auth.inc';
 
 
   header('Content-type: application/octet-stream');
-  header("Content-Disposition: attachment; filename=" . $paper . ".csv");
+  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".csv");
 
   $user_no = 0;
   $paper_string = $mysqli->query("SELECT COUNT(question) AS question_no FROM (papers, questions) WHERE papers.question=questions.q_id AND q_type!='info' AND paper=" . $_GET['paperID'],$link_id);

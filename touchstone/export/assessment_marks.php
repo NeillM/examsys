@@ -366,7 +366,7 @@
   $result->close();
 */
   header('Content-type: application/octet-stream');
-  header("Content-Disposition: attachment; filename=new_" . $paper . ".csv");
+  header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . ".csv");
   $row_written = 0;
   foreach ($user_results as $individual) {
     $tmp_user_ID = $individual['username'];

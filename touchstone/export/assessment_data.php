@@ -96,7 +96,7 @@
   $question_no++;
 
   header('Content-type: application/octet-stream');
-  header("Content-Disposition: attachment; filename=" . $paper_title . ".csv");
+  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
 
   $user_no = 0;
   $result = $mysqli->prepare("SELECT COUNT(question) AS question_no FROM (papers, questions) WHERE papers.question=questions.q_id AND q_type!='info' AND paper=?");
