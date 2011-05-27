@@ -30,34 +30,36 @@
     $tmp_answer_parts = explode('|',$old_answer);
     $tmp_order = explode(',',$option_order);
     
-    $new_answers = array(0=>'',1=>'',2=>'',3=>'',4=>'',5=>'',6=>'',7=>'',8=>'',9=>'',10=>'');
-    
-    $answered = false;
-    for ($i=0; $i<count($tmp_answer_parts); $i++) {
-      if (isset($tmp_answer_parts[$i])) {
-        $new_answers[$tmp_order[$i]] = $tmp_answer_parts[$i];
-      } else {
-        $new_answers[$tmp_order[$i]] = 'u';
-      }
-    }
-    
-    $new_answer = '';
-    for ($i=0; $i<=10; $i++) {
-      if ($new_answers[$i] != '') {
-        if ($new_answer == '') {
-          $new_answer = $new_answers[$i];
+    if (count($tmp_order) > 0) {
+      $new_answers = array(0=>'',1=>'',2=>'',3=>'',4=>'',5=>'',6=>'',7=>'',8=>'',9=>'',10=>'');
+      
+      $answered = false;
+      for ($i=0; $i<count($tmp_answer_parts); $i++) {
+        if (isset($tmp_answer_parts[$i])) {
+          $new_answers[$tmp_order[$i]] = $tmp_answer_parts[$i];
         } else {
-          $new_answer .= '|' . $new_answers[$i];
+          $new_answers[$tmp_order[$i]] = 'u';
         }
       }
+      
+      $new_answer = '';
+      for ($i=0; $i<=10; $i++) {
+        if ($new_answers[$i] != '') {
+          if ($new_answer == '') {
+            $new_answer = $new_answers[$i];
+          } else {
+            $new_answer .= '|' . $new_answers[$i];
+          }
+        }
+      }
+      
+      echo "<tr><td>$old_answer</td><td>$option_order</td><td>UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id</td></tr>\n";
+      /*
+      $adjust = $mysqli->prepare("UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id");
+      $adjust->execute();
+      $adjust->close();
+      */
     }
-    
-    echo "<tr><td>$old_answer</td><td>$option_order</td><td>UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id</td></tr>\n";
-    /*
-    $adjust = $mysqli->prepare("UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id");
-    $adjust->execute();
-    $adjust->close();
-    */
   }
   $result->close();
   
