@@ -18,7 +18,7 @@
 <title>Matrix Question Fix</title>
 </head>
 <body>
-<table>
+<table border="1">
 <?php
 
   // 07/09/2010
@@ -32,10 +32,18 @@
     
     $new_answer = '';
     for ($i=0; $i<count($tmp_order); $i++) {
-      if ($new_answer == '') {
-        $new_answer = $tmp_answer_parts[$tmp_order[$i]];
+      if ($i == 0) {
+        if (isset($tmp_answer_parts[$tmp_order[$i]])) {
+          $new_answer = $tmp_answer_parts[$tmp_order[$i]];
+        } else {
+          $new_answer = '';
+        }
       } else {
-        $new_answer .= '|' . $tmp_answer_parts[$tmp_order[$i]];
+        if (isset($tmp_answer_parts[$tmp_order[$i]])) {
+          $new_answer .= '|' . $tmp_answer_parts[$tmp_order[$i]];
+        } else {
+          $new_answer .= '|';
+        }
       }
     }
     
