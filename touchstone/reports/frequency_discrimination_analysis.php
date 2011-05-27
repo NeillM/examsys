@@ -972,7 +972,7 @@
             echo "<td style=\"font-weight:bold\">u=" . number_format(($top_log[$q_id][$i][$correct_answer]/$candidate_no)*100,0) . "%</td>";
             echo "<td style=\"font-weight:bold\">l=" . number_format(($bottom_log[$q_id][$i][$correct_answer]/$candidate_no)*100,0) . "%</td>";
             echo "<td style=\"font-weight:bold\">";
-            if (isset($tmp_std_array[$i-1])) ehco $tmp_std_array[$i-1];
+            if (isset($tmp_std_array[$i-1])) echo $tmp_std_array[$i-1];
             echo "</td>";
 
             echo "<td ";
