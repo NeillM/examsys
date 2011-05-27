@@ -249,11 +249,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
       }
       if (isset($user_answers[$current_screen][$q_id])) {
-        $len_answer = strlen($user_answers[$current_screen][$q_id]);
+        $answer_parts = explode(':', $user_answers[$current_screen][$q_id]);
+        $len_answer = strlen($answer_parts[0]);
       } else {
         $len_answer = 0;
       }
-      if (isset($user_answers[$current_screen][$q_id]) AND $user_answers[$current_screen][$q_id] == str_repeat('n', $len_answer) AND $screen_pre_submitted == 1) {
+      if (isset($answer_parts) AND $answer_parts[0] == str_repeat('n', $len_answer) AND $screen_pre_submitted == 1) {
         echo '<blockquote class="unans"><table cellpadding="2" cellspacing="0" border="0">';
       } else {
         echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -453,7 +454,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '<td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
         $scale_size = substr_count($question['score_method'],'|');
         if ($likert_display[$scale_size] == 'true') {
-          echo "<td style=\"background-color:#FFC0C0; text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
+          echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') echo ' checked';
           echo "/></td>";
         }

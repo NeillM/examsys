@@ -729,7 +729,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
     } elseif ($old_score_method == 'other') {
       $question_part++;
       $qid = 'q' . $question_no . '_' . $question_part;
-      $saved_response .= $posted_vars[$qid];
+      $saved_response .= (isset($posted_vars[$qid])) ? $posted_vars[$qid] : 'n';
       $qid = 'q' . $question_no . '_other';
       $saved_response .= ':' . $posted_vars[$qid];
     }
