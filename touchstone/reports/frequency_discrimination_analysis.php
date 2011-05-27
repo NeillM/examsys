@@ -127,7 +127,7 @@
     return number_format($top_ratio - $bottem_ratio,2);
   }
 
-  function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $mark, $totalpos, $analysis_type) {
+  function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $mark, $totalpos, $opt_order, $analysis_type) {
     global $stop_words;
     
     if (!isset($log_array[$qID]['mark'])) $log_array[$qID]['mark'] = 0;
@@ -286,22 +286,22 @@
         }
         break;
       case 'matrix':
-        $tmp_answer_parts = array();
         $tmp_answer_parts = explode('|',$answer);
-        $i = 0;
-        foreach ($tmp_answer_parts as $tmp_individual_answer) {
-          $i++;
-          if ($tmp_individual_answer == 'u') {
-            if (isset($log_array[$qID][$i]['u'])) {
-              $log_array[$qID][$i]['u']++;
+                
+        for ($i=0; $i<count($tmp_answer_parts); $i++) {
+          $tmp_individual_answer = $tmp_answer_parts[$i];
+          
+          if ($tmp_individual_answer == 'u' or $tmp_individual_answer == '') {
+            if (isset($log_array[$qID][$i+1]['u'])) {
+              $log_array[$qID][$i+1]['u']++;
             } else {
-              $log_array[$qID][$i]['u'] = 1;
+              $log_array[$qID][$i+1]['u'] = 1;
             }
           } else {
-            if (isset($log_array[$qID][$i][$tmp_individual_answer])) {
-              $log_array[$qID][$i][$tmp_individual_answer]++;
+            if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
+              $log_array[$qID][$i+1][$tmp_individual_answer]++;
             } else {
-              $log_array[$qID][$i][$tmp_individual_answer] = 1;
+              $log_array[$qID][$i+1][$tmp_individual_answer] = 1;
             }
           }
         }
@@ -1280,23 +1280,22 @@ p {margin-left:0px; margin-right:0px}
   $bottom_log_array = array();
   $top_log_array = array();
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT username, log0.userID, log0.q_id, user_answer, q_type, score_method, mark, totalpos FROM log0, questions, users WHERE log0.q_id=questions.q_id AND q_paper=? AND users.id=log0.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=? $student_modules_sql) UNION ALL (SELECT username, log1.userID, log1.q_id, user_answer, q_type, score_method, mark, totalpos FROM log1, questions,  users WHERE log1.q_id=questions.q_id AND q_paper=? AND users.id=log1.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=?) $student_modules_sql ");
+    $result = $mysqli->prepare("(SELECT username, log0.userID, log0.q_id, user_answer, q_type, score_method, mark, totalpos, option_order FROM log0, questions, users WHERE log0.q_id=questions.q_id AND q_paper=? AND users.id=log0.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=? $student_modules_sql) UNION ALL (SELECT username, log1.userID, log1.q_id, user_answer, q_type, score_method, mark, totalpos FROM log1, questions,  users WHERE log1.q_id=questions.q_id AND q_paper=? AND users.id=log1.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=?) $student_modules_sql ");
     $result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT username, log$paper_type.userID, log$paper_type.q_id, user_answer, q_type, score_method, mark, totalpos FROM log$paper_type, questions, users WHERE log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=? $student_modules_sql");
+    $result = $mysqli->prepare("SELECT username, log$paper_type.userID, log$paper_type.q_id, user_answer, q_type, score_method, mark, totalpos, option_order FROM log$paper_type, questions, users WHERE log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=? $student_modules_sql");
     $result->bind_param('iss', $paperID, $startdate, $enddate);
   }
   $result->execute();
-  $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos);
+  $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order);
   
   while ($row = $result->fetch()) {
-    storeData($freq_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, 'all');
+    storeData($freq_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order, 'all');
     if (isset($bottom_cohort[$username])) {
-      storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, 'bottom');
+      storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order, 'bottom');
     }
-    // RJI 20110512 - this used to be an elseif but in formative exams it is possible for a user to be in both the top and bottom cohorts
     if (isset($top_cohort[$username])) {
-      storeData($top_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, 'top');
+      storeData($top_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order, 'top');
     }
   }
   $result->close();
