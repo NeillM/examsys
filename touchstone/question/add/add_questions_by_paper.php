@@ -39,7 +39,7 @@ a:hover {color:black}
 </style>
 <script language="JavaScript">  
   function Qpreview(qID) {
-    parent.previewurl.location = 'view_question.php?q_id=' + qID;
+    parent.previewurl.location = '../view_question.php?q_id=' + qID;
   }
 
   function populateTicks() {
@@ -90,7 +90,7 @@ a:hover {color:black}
     } else {
       echo "<tr><td class=\"q_no\">$question_no.</td><td>";
     }
-    if ($locked != '') echo '<img src="../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
+    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
     echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td>";
     if ($parts == '') {
       echo '<td onclick="Qpreview(' . $q_id . ')">';

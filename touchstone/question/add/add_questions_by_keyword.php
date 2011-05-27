@@ -47,7 +47,7 @@ a:hover {color:black}
   }
   
   function Qpreview(qID) {
-    parent.parent.previewurl.location = 'view_question.php?q_id=' + qID;
+    parent.parent.previewurl.location = '../view_question.php?q_id=' + qID;
   }
   
   function populateTicks() {

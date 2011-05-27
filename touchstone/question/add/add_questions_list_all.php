@@ -34,7 +34,7 @@ require '../../include/question_types.inc';
 
 <script language="JavaScript">
   function Qpreview(qID) {
-    parent.previewurl.location = 'view_question.php?q_id=' + qID;
+    parent.previewurl.location = '../view_question.php?q_id=' + qID;
   }
   
   function populateTicks() {
