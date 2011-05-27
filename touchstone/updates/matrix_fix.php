@@ -45,13 +45,12 @@
       
       $new_answer = implode('|',$new_answers);
       
-      
       echo "<tr><td>$old_answer</td><td>$option_order</td><td>UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id</td></tr>\n";
-      /*
+      
       $adjust = $mysqli->prepare("UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id");
       $adjust->execute();
       $adjust->close();
-      */
+      
     }
   }
   $result->close();
