@@ -1574,7 +1574,7 @@ table {font-size:100%}
                 }
                 if (!empty($user_answers[$row_no])) {
                   echo '<div align="center"><img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" /><input type="radio" name="q' . $question . '_' . $row_no . '" value="' . $answer_no . '"';
-                  if ($user_answers[$row_no] == $option_order[$col_no-1]) echo ' checked';
+                  if ($user_answers[$row_no] == $option_order[$col_no-1]+1) echo ' checked';
                   echo ' />';
                   if ($correct_answers[$row_no] == $tmp_col_no and $user_answers[$row_no] == $col_no) {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
