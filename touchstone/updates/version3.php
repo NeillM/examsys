@@ -9,6 +9,7 @@
 
   //require '../include/sysadmin_auth.inc';
   require '../config/config.inc';
+  set_time_limit(0);
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
   ob_start();
 
@@ -641,7 +642,7 @@
     $adjust->close();
     echo "<div>ALTER TABLE properties ADD COLUMN hide_if_unanswered ENUM('0','1') AFTER display_feedback</div>\n";
     
-    $adjust = $mysqli->prepare("UPDATE questions SET q_option_order = 'display order'");
+    $adjust = $mysqli->prepare("UPDATE properties SET hide_if_unanswered = '0'");
     $adjust->execute();
     $adjust->close();
     echo "<div>UPDATE properties SET hide_if_unanswered = '0'</div>\n";
@@ -649,7 +650,6 @@
     flush();
   }
   $result->close();
-  
   
   if ($ts_version == '4.0') {
     // Do a conversion for the Image Hotspot question type.
