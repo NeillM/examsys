@@ -1252,9 +1252,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         foreach ($matching_options as $single_option) {
           $tmp_part_id = $question['option_order'][$answer_no-1] + 1;
           if (isset($matching_users_answers[$part_id-1]) AND $matching_users_answers[$part_id-1] == $answer_no) {
-            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" checked />1</div></td>';
+            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" checked /></div></td>';
           } else {
-            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" />1</div></td>';
+            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" /></div></td>';
           }
           $answer_no++;
         }
