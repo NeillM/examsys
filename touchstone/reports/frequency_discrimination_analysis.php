@@ -971,7 +971,9 @@
             echo "<td style=\"font-weight:bold\">t=" . number_format(($freq_log[$q_id][$i][$correct_answer]/$user_total)*100,0) . "%</td>";
             echo "<td style=\"font-weight:bold\">u=" . number_format(($top_log[$q_id][$i][$correct_answer]/$candidate_no)*100,0) . "%</td>";
             echo "<td style=\"font-weight:bold\">l=" . number_format(($bottom_log[$q_id][$i][$correct_answer]/$candidate_no)*100,0) . "%</td>";
-            echo "<td style=\"font-weight:bold\">" . $tmp_std_array[$i-1] . "</td>";
+            echo "<td style=\"font-weight:bold\">";
+            if (isset($tmp_std_array[$i-1])) ehco $tmp_std_array[$i-1];
+            echo "</td>";
 
             echo "<td ";
             if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' style="color:red; text-decoration:line-through"';
