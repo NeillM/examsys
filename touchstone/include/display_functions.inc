@@ -1148,13 +1148,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $marks = $display_option['marks'];
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['score_method'] == 'other') {
+      $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
       $part_id++;
-      if (substr($user_answers[$current_screen][$q_id],($part_id - 1),1) == 'y') {
+      if ($answer != '' and substr($answer,($part_id - 1),1) == 'y') {
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td>";
       } else {
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
       }
-      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($user_answers[$current_screen][$q_id],($part_id+1)) . "\" /></td></tr>\n";
+      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer,($part_id+1)) . "\" /></td></tr>\n";
     }
     echo '</table>';
   } elseif ($question['q_type'] == 'extmatch') {
