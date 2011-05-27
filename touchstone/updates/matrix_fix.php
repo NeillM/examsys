@@ -30,7 +30,7 @@
     $tmp_answer_parts = explode('|',$old_answer);
     $tmp_order = explode(',',$option_order);
     
-    if (empty($tmp_order)) {
+    if (count($tmp_order) > 1) {
       $new_answers = array(0=>'',1=>'',2=>'',3=>'',4=>'',5=>'',6=>'',7=>'',8=>'',9=>'',10=>'');
       
       $answered = false;
