@@ -31,10 +31,12 @@
     $tmp_order = explode(',',$option_order);
     
     $new_answer = '';
+    $answered = false;
     for ($i=0; $i<count($tmp_order); $i++) {
-      if ($i == 0) {
+      if ($answered == false) {
         if (isset($tmp_answer_parts[$tmp_order[$i]])) {
           $new_answer = $tmp_answer_parts[$tmp_order[$i]];
+          $answered = true;
         } else {
           $new_answer = '';
         }
@@ -42,7 +44,7 @@
         if (isset($tmp_answer_parts[$tmp_order[$i]])) {
           $new_answer .= '|' . $tmp_answer_parts[$tmp_order[$i]];
         } else {
-          $new_answer .= '|';
+          //$new_answer .= '|';
         }
       }
     }
