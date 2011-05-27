@@ -454,7 +454,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $scale_size = substr_count($question['score_method'],'|');
         if ($likert_display[$scale_size] == 'true') {
           echo "<td style=\"background-color:#FFC0C0; text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
-          if ($user_answers[$current_screen][$q_id] == 'n/a') echo ' checked';
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') echo ' checked';
           echo "/></td>";
         }
         for ($i=1; $i<=$scale_size; $i++) {
