@@ -1554,6 +1554,7 @@ table {font-size:100%}
           }
           echo "</tr>\n";
           $row_no = 0;
+          $part_id = 0;
           $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x');
           foreach ($matching_scenarios as $single_scenario) {
             if (trim($single_scenario) != '') {
@@ -1574,7 +1575,7 @@ table {font-size:100%}
                 }
                 if (!empty($user_answers[$row_no])) {
                   echo '<div align="center"><img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" /><input type="radio" name="q' . $question . '_' . $row_no . '" value="' . $answer_no . '"';
-                  if ($user_answers[$row_no] == $option_order[$col_no-1]+1) echo ' checked';
+                  if ($user_answers[$row_no] == $tmp_col_no) echo ' checked';
                   echo ' />';
                   if ($correct_answers[$row_no] == $tmp_col_no and $user_answers[$row_no] == $tmp_col_no) {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
