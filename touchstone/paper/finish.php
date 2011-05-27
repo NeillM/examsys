@@ -1579,7 +1579,7 @@ table {font-size:100%}
                   if ($correct_answers[$row_no] == $tmp_col_no and $user_answers[$row_no] == $tmp_col_no) {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                     if (substr($tmp_exclude,$row_no,1) == '0') $paper[$question]['mark']++;
-                  } elseif ($correct_answers[$row_no] != $tmp_col_no and $user_answers[$row_no] == $col_no) {
+                  } elseif ($correct_answers[$row_no] != $tmp_col_no and $user_answers[$row_no] == $tmp_col_no) {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                   } else {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';       
