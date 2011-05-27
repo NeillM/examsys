@@ -34,24 +34,17 @@
       $new_answers = array(0=>'',1=>'',2=>'',3=>'',4=>'',5=>'',6=>'',7=>'',8=>'',9=>'',10=>'');
       
       $answered = false;
+      $new_answers= array();
       for ($i=0; $i<count($tmp_answer_parts); $i++) {
         if (isset($tmp_answer_parts[$i]) and $tmp_answer_parts[$i] != '') {
-          $new_answers[$tmp_answer_parts[$i]] = $tmp_order[$i] + 1;
+          $new_answers[] = $tmp_order[$tmp_answer_parts[$i-1]] + 1;
         } else {
-          $new_answers[$tmp_answer_parts[$i]] = 'u';
+          $new_answers[] = 'u';
         }
       }
       
-      $new_answer = '';
-      for ($i=0; $i<=10; $i++) {
-        if ($new_answers[$i] != '') {
-          if ($new_answer == '') {
-            $new_answer = $new_answers[$i];
-          } else {
-            $new_answer .= '|' . $new_answers[$i];
-          }
-        }
-      }
+      $new_answer = implode('|',$new_answers);
+      
       
       echo "<tr><td>$old_answer</td><td>$option_order</td><td>UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id</td></tr>\n";
       /*
