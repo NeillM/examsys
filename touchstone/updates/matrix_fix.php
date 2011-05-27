@@ -38,7 +38,7 @@
     }
     
     $new_answer = '';
-    for ($=0; $i<=10; $i++) {
+    for ($i=0; $i<=10; $i++) {
       if ($new_answers[$i] != '') {
         if ($new_answer == '') {
           $new_answer = $new_answers[$i];
