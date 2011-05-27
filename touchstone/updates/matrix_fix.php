@@ -1,0 +1,59 @@
+<?php
+/**
+* 
+* @author Simon Wilkinson
+* @version 1.0
+* @copyright Copyright (c) 2011 The University of Nottingham
+* @package
+*/
+
+  //require '../include/sysadmin_auth.inc';
+  require '../config/config.inc';
+  set_time_limit(0);
+  $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
+  ob_start();
+?>
+<html>
+<head>
+<title>Matrix Question Fix</title>
+</head>
+<body>
+<table>
+<?php
+
+  // 07/09/2010
+  $result = $mysqli->prepare("SELECT id, user_answer, option_order FROM log2, questions WHERE log2.q_id=questions.q_id AND q_type='matrix' AND q_option_order='random'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($id, $old_answer, $option_order);
+  while ($result->fetch()) {
+    $tmp_answer_parts = explode('|',$old_answer);
+    $tmp_order = explode(',',$option_order);
+    
+    $new_answer = '';
+    for ($i=0; $i<count($tmp_order); $i++) {
+      if ($new_answer == '') {
+        $new_answer = $tmp_answer_parts[$tmp_order[$i]];
+      } else {
+        $new_answer .= '|' . $tmp_answer_parts[$tmp_order[$i]];
+      }
+    }
+    
+    echo "<tr><td>$old_answer</td><td>$option_order</td><td>UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id</td></tr>\n";
+    /*
+    $adjust = $mysqli->prepare("UPDATE log2 SET user_answer = '$new_answer' WHERE id=$id");
+    $adjust->execute();
+    $adjust->close();
+    */
+  }
+  $result->close();
+  
+  //Close the database
+  $mysqli->close();
+  ob_end_flush();
+  
+?>
+</table>
+<p>Finished!</p>
+</body>
+</html>
