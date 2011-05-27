@@ -840,7 +840,9 @@ if ($log_query->num_rows > 0) {
   } else {
     $absent = 0;
   }
-  $user_results = array_csort($user_results,$sortby,$ordering);
+  
+  $tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
+  $user_results = array_csort($user_results,$tmp_sort,$ordering);
 }
 
 if (substr($marking,0,1) == '2') {
