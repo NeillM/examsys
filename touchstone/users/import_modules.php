@@ -17,7 +17,7 @@
 /**
 *
 * Import student module registrations form SMS export
-*  
+*
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2011 The University of Nottingham
@@ -46,7 +46,7 @@
 <br />
 <br />
 <?php
-  if ($_POST['submit']) {
+  if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/cohort_update.csv"))  {
         echo 'Problem - ';
@@ -60,13 +60,13 @@
           echo("Value 3: File partialy uploaded.");
         } elseif ($_FILES['csvfile']['error'] == "4") {
           echo("Value 4: No file was uploaded.");
-        } else { 
+        } else {
           echo("Other problem: " . $_FILES['csvfile']['error']);
         }
         exit;
       } else {
-        ?>         
-        <br /><br /><br />    
+        ?>
+        <br /><br /><br />
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; font-size:120%">
         <tr>
@@ -74,7 +74,7 @@
         </tr>
         <tr>
         <td align="left" style="background-color:#DFE8FF">
-                        
+
         <?php
         //get a list of touchstone modules
         $SQL = "SELECT DISTINCT moduleid FROM touchstone.modules";
@@ -83,11 +83,11 @@
         while($row = $res->fetch_assoc()) {
           $touchstone_modules[] = $row['moduleid'];
         }
-        
+
         $modulesAdded = 0;
         $missing_users = Array();
         $lines = file("/tmp/cohort_update.csv");
-        
+
         // Build an array of unique student names.
         $students = array();
         foreach($lines as $separate_line) {
@@ -96,7 +96,7 @@
             $separate_line = str_replace('"','',$separate_line);
           } else {
             $separate_line = str_replace(',','~',$separate_line);
-          }          
+          }
           $fields = split('~',$separate_line);
           $email = trim($fields[12]);
           $username = split("@",$email);
@@ -106,20 +106,20 @@
           $students[$username]['session'] = $session;
           $students[$username]['modules'] = array();
         }
-        
+
         // Query the modules for each student
         foreach ($students as $student) {
-            
+
           $result = $mysqli->prepare("SELECT id FROM users WHERE username=?");
           $result->bind_param('s', $student['username']);
           $result->execute();
           $result->store_result();
           $result->bind_result($student_databaseID);
-          
+
           if ($result->num_rows() > 0) {
             $result->fetch();
             $students[$student['username']]['dbID'] = $student_databaseID;
-            
+
             $result2 = $mysqli->prepare("SELECT moduleid FROM student_modules WHERE userID=? AND calendar_year=?");
             $result2->bind_param('is', $student_databaseID, $student['session']);
             $result2->execute();
@@ -132,19 +132,19 @@
             }
             $result2->close();
           }
-          
+
           $result->close();
         }
-        
+
         foreach($lines as $separate_line) {
           if (strpos($separate_line,'"') !== false) {
             $separate_line = str_replace('","','~',$separate_line);
             $separate_line = str_replace('"','',$separate_line);
           } else {
             $separate_line = str_replace(',','~',$separate_line);
-          }          
+          }
           $fields = split('~',$separate_line);
-                      
+
           if (!stristr($fields[0],"Module Mnem")) {
             $sid = trim($fields[3]);
             $module = $fields[0];
@@ -152,7 +152,7 @@
             $email = trim($fields[12]);
             $username = split("@",$email);
             $username = $username[0];
-            if (in_array($module,$touchstone_modules)) {      
+            if (in_array($module,$touchstone_modules)) {
               if (!in_array($module,$students[$username]['modules'])) {
                 $tmp_userID = $students[$username]['dbID'];
                 if ($tmp_userID != '') {
@@ -176,7 +176,7 @@
       }
     }
     unlink("/tmp/cohort_update.csv");
-        
+
     echo "<h2>$modules Added Modules added</h2>";
     echo "<p>" . count($missing_users) . " Missing users</p>";
     foreach($missing_users as $sid => $module) {
@@ -185,7 +185,7 @@
         echo "<p style=\"margin-left:10px\">$moduleid</p>";
       }
     }
-     
+
     $mysqli->close();
     ?>
     </div>
@@ -230,6 +230,6 @@ to the school. (Data can be obtained from SATURN using 'Student Exports / Module
 </div>
 <?php
   }
-?>      
+?>
 </body>
 </html>

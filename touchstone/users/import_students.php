@@ -15,9 +15,9 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Load new users from SMS export
-* 
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2011 The University of Nottingham
@@ -41,7 +41,7 @@
 ?>
 <div id="content" class="content" style="font-size:80%">
 <?php
-  if ($_POST['submit']) {
+  if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/new_cohort.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
@@ -74,7 +74,7 @@
 
 <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; width:85%">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/users_icon_big.gif" width="32" height="26" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Import Students</span></td>
+<td valign="middle" align="left" style="background-color:white"><img src="../artwork/user_female_32.png" width="32" height="26" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Import Students</span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#DFE8FF">
