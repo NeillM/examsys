@@ -36,9 +36,9 @@
       $answered = false;
       for ($i=0; $i<count($tmp_answer_parts); $i++) {
         if (isset($tmp_answer_parts[$i]) and $tmp_answer_parts[$i] != '') {
-          $new_answers[$tmp_order[$i]] = $tmp_answer_parts[$i];
+          $new_answers[$tmp_answer_parts[$i]] = $tmp_order[$i] + 1;
         } else {
-          $new_answers[$tmp_order[$i]] = 'u';
+          $new_answers[$tmp_answer_parts[$i]] = 'u';
         }
       }
       
