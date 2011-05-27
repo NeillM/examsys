@@ -30,21 +30,20 @@
     $tmp_answer_parts = explode('|',$old_answer);
     $tmp_order = explode(',',$option_order);
     
-    $new_answer = '';
+    $new_answers = array(0=>'',1=>'',2=>'',3=>'',4=>'',5=>'',6=>'',7=>'',8=>'',9=>'',10=>'');
+    
     $answered = false;
-    for ($i=0; $i<count($tmp_order); $i++) {
-      if ($answered == false) {
-        if (isset($tmp_answer_parts[$tmp_order[$i]])) {
-          $new_answer = $tmp_answer_parts[$tmp_order[$i]];
-          $answered = true;
+    for ($i=0; $i<count($tmp_answer_parts); $i++) {
+      $new_answers[$tmp_order[$i]] = $tmp_answer_parts[$i];
+    }
+    
+    $new_answer = '';
+    for ($=0; $i<=10; $i++) {
+      if ($new_answers[$i] != '') {
+        if ($new_answer == '') {
+          $new_answer = $new_answers[$i];
         } else {
-          $new_answer = '';
-        }
-      } else {
-        if (isset($tmp_answer_parts[$tmp_order[$i]])) {
-          $new_answer .= '|' . $tmp_answer_parts[$tmp_order[$i]];
-        } else {
-          //$new_answer .= '|';
+          $new_answer .= '|' . $new_answers[$i];
         }
       }
     }
