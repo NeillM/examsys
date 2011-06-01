@@ -548,7 +548,6 @@ table {font-size:100%}
     // Add the user's log data into the above array.
     $tmp_q_id = 1;
     if ($paper_type == '5') {
-    echo "hi";
       $answer_data = $mysqli->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order FROM log5 WHERE q_paper=? AND started=? AND userID=? ORDER BY id");
     } else {
       $answer_data = $mysqli->prepare("SELECT screen, q_id, user_answer, mark, option_order FROM log$log_type WHERE q_paper=? AND started=? AND userID=? ORDER BY screen, id");
