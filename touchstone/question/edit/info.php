@@ -122,6 +122,29 @@ while ($row = $result->fetch()) {
 <?php echo $cfg_editor_javascript; ?>
 <script language="JavaScript" src="../../javascript/mapping_tab.js"></script>
 <script language="JavaScript" src="../../javascript/staff_help.js"></script>
+<script language="JavaScript">
+  var cancel = 0;
+  function formCancel() {
+    cancel = 1;
+  }
+
+  function checkForm() {
+
+    if (cancel != 0) {
+      return true;
+    }
+<?php
+    if($cfg_editor_name == 'tinymce') {
+      echo "\t tinyMCE.triggerSave();";
+    }
+?>
+    if (document.getElementById('leadin').value == "" || document.getElementById('leadin').value == "&nbsp;" || document.getElementById('leadin').value == "<p>&nbsp;</p>" || document.getElementById('leadin').value == "<div>&nbsp;</div>" || document.getElementById('leadin').value == "<br />") {
+      alert ("Please enter some information text.");
+      return false;
+    }
+    return true;
+  }
+</script>
 </head>
 
 <body style="background-color:white">

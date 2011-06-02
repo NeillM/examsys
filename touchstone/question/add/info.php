@@ -63,26 +63,19 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css">
 <script language="JavaScript">
-  var cancel = 0;
-  function formCancel() {
-    cancel = 1;
-  }
-
   function checkForm() {
-
-    if (cancel != 0) {
-      return true;
+<?php
+    if($cfg_editor_name == 'tinymce') {
+      echo "\t tinyMCE.triggerSave();";
     }
+?>
     if (document.getElementById('stem').value == "" || document.getElementById('stem').value == "&nbsp;" || document.getElementById('stem').value == "<p>&nbsp;</p>" || document.getElementById('stem').value == "<div>&nbsp;</div>" || document.getElementById('stem').value == "<br />") {
-      alert ("Please enter a Stem question.");
+      alert ("Please enter some information text.");
       return false;
     }
+    return true;
   }
-  <?php
-  if($cfg_editor_name == 'tinymce') {
-    echo "\t tinyMCE.triggerSave();";
-  }
-  ?>
+
   function showTab(tabID) {
     if (tabID == 'editortab') {
       document.getElementById('editortab').style.display = 'block';
