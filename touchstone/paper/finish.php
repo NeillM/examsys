@@ -1631,7 +1631,7 @@ table {font-size:100%}
               $tmp_answer = str_ireplace($single_answer, '<span style="background-color:#FFFF00">' . $single_answer . '</span>', $tmp_answer);
             }
           }
-          echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q$question\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $tmp_answer . "</textarea></blockquote>\n<br />\n";
+          echo "<blockquote><pre>" . $tmp_answer . "</pre></blockquote>\n<br />\n";
           if ($paper[$question]['correct_fback'] != '') {
             echo '<p class="feedback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
           }
