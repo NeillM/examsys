@@ -575,7 +575,7 @@ $current_screen = 1;
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
     $ebel = array();
-    if ($_GET['setterID'] != '') {
+    if (!empty($_GET['setterID'])) {
       $query_string = $mysqli->query("SELECT percentage FROM ebel WHERE setterID=" . $_GET['setterID'] . " AND date_set='" . $_GET['dateID'] . "' ORDER BY id");
       if ($query_string->num_rows > 0) {
         while ($row = $query_string->fetch_assoc()) {
