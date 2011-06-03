@@ -261,7 +261,8 @@ while ($row = $result->fetch()) {
       ?>
       <td><textarea name="correct_fback" cols="100" style="width:700px" rows="6" wrap="virtual"><?php echo $tmp_correct_fback; ?></textarea><input type="hidden" name="old_correct_fback" value="<?php echo $tmp_correct_fback; ?>" /></td>
     </tr>
-    <?php
+    <?php 
+      echo $q_group;
       echo echoMetadata($bloom, $q_id, $q_group, 1, $mysqli, true, $status, $disabled);
     ?>
     <tr>

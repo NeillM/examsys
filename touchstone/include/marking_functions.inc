@@ -188,7 +188,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
         } elseif ($old_score_method == 'other') {
           $question_part++;
           $qid = 'q' . $question_no . '_' . $question_part;
-          if ($posted_vars[$qid] == 'y') {
+          if (isset($posted_vars[$qid]) and $posted_vars[$qid] == 'y') {
             $saved_response .= 'y';
             $qid = 'q' . $question_no . '_other';
             $saved_response .= $posted_vars[$qid];
