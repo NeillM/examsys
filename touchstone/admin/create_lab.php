@@ -28,17 +28,26 @@
   if (isset($_POST['submit'])) {
     // Insert into Lab table.
     $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL,?,?,?,?,?,?,?)");
-    $result->bind_param('sssssss', stripslashes($_POST['lab_name']), stripslashes($_POST['campus']), stripslashes($_POST['building']), $_POST['room_no'], stripslashes($_POST['timetabling']), stripslashes($_POST['it_support']), stripslashes($_POST['plagarism']));
+    
+    $lab_name = stripslashes($_POST['lab_name']);
+    $campus = stripslashes($_POST['campus']);
+    $building = stripslashes($_POST['building']);
+    $room_no = stripslashes($_POST['room_no']);
+    $timetabling = stripslashes($_POST['timetabling']);
+    $it_support = stripslashes($_POST['it_support']);
+    $plagarism = stripslashes($_POST['plagarism']);
+    
+    $result->bind_param('sssssss', $lab_name,$campus,$building,$room_no,$timetabling,$it_support,$plagarism);
     $result->execute();  
     $labID = $mysqli->insert_id;
     $result->close();
 
     // Insert the new IP addresses.
-    $addresses = split('<br />',nl2br($_POST['addresses']));
+    $addresses = explode('<br />',nl2br($_POST['addresses']));
     foreach ($addresses as $individual_address) {
       $ip_address = trim($individual_address);
-      $hostname = gethostbyaddr($ip_address);
-      if ($ip_address != '') {
+      if($ip_address != '') {
+        $hostname = gethostbyaddr($ip_address);
         $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
         $result->bind_param('issi', $labID, $ip_address, $hostname, $_POST['low_bandwidth']);
         $result->execute();  
