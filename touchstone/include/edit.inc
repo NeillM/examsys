@@ -64,7 +64,7 @@ function check_fullSave($q_id, $mysqli) {
 function do_limitedSave($q_id, $mysqli, $userID) {
   $changes = false;
   
-  $part_names = array('bloom','keywords','status');
+  $part_names = array('bloom','status');
   foreach($part_names as $section_name) {
     if ($section_name != 'keywords') $$section_name = stripslashes($_POST["$section_name"]);
     $old_section_name = 'old_' . $section_name;
@@ -72,15 +72,14 @@ function do_limitedSave($q_id, $mysqli, $userID) {
     record_trackChanges('Edit Question', $q_id, $$old_section_name, $$section_name, $section_name, $userID, $changes);
   }
   
-  $keywords = getKeywords();
-  record_trackChanges('Edit Question', $q_id, $_POST['old_keywords'], $keywords, 'keywords', $userID, $changes);
+  saveKeywords($q_id, $userID, $changes, true, $mysqli);
     
   $question_teams = getTeams();
   record_trackChanges('Edit Question', $q_id, $_POST['old_teams'], $question_teams, 'teams', $userID, $changes);
 
   if ($changes == true) {
-    $result = $mysqli->prepare("UPDATE questions SET bloom=?, keywords=?, q_group=?, status=?, last_edited=NOW() WHERE q_id=?");
-    $result->bind_param('ssssi', $bloom, $keywords, $question_teams, $status, $q_id);
+    $result = $mysqli->prepare("UPDATE questions SET bloom=?, q_group=?, status=?, last_edited=NOW() WHERE q_id=?");
+    $result->bind_param('sssi', $bloom, $question_teams, $status, $q_id);
     $result->execute();  
     $result->close();
   }
