@@ -299,7 +299,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
           }
           $answer_equation = $correct;
           if($score_array[2] == 'Formula') {
-          //formula awnser just to a string comp on the useranswe and the correct one (replace with CAS system later)
+            // formula answer just do a string comp on the useranswer and the correct one (replace with CAS system later)
             if ($answer_equation != '') {
               eval ("\$answer = \"" . $answer_equation . "\";");
             }
