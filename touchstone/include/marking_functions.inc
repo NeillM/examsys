@@ -234,7 +234,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
       $mrq_options_selected = 0;
       $mark = 0;
       $totalpos = 0;
-      $saved_reponse = '';
+      $saved_response = '';
     }  
 
     $log_id = $q_id;
@@ -264,60 +264,65 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
         } else {
           $question_variables = '';
         }
-        
-        $variable_array = explode(',',$question_variables);
-        $var_no = 1;
-        foreach($variable_array as $individual_variable) {
-          switch ($var_no) {
-            case 1:
-              $A = $individual_variable;
-              break;
-            case 2:
-              $B = $individual_variable;
-              break;
-            case 3:
-              $C = $individual_variable;
-              break;
-            case 4:
-              $D = $individual_variable;
-              break;
-            case 5:
-              $E = $individual_variable;
-              break;
-            case 6:
-              $F = $individual_variable;
-              break;
-            case 7:
-              $G = $individual_variable;
-              break;
-            case 8:
-              $H = $individual_variable;
-              break;
+
+        if ($saved_response != '') {
+          $variable_array = explode(',',$question_variables);
+          $var_no = 1;
+          foreach($variable_array as $individual_variable) {
+            switch ($var_no) {
+              case 1:
+                $A = $individual_variable;
+                break;
+              case 2:
+                $B = $individual_variable;
+                break;
+              case 3:
+                $C = $individual_variable;
+                break;
+              case 4:
+                $D = $individual_variable;
+                break;
+              case 5:
+                $E = $individual_variable;
+                break;
+              case 6:
+                $F = $individual_variable;
+                break;
+              case 7:
+                $G = $individual_variable;
+                break;
+              case 8:
+                $H = $individual_variable;
+                break;
+            }
+            $var_no++;
           }
-          $var_no++;
-        }
-        $answer_equation = $correct;
-        if($score_array[2] == 'Formula') {
-        //formula awnser just to a string comp on the useranswe and the correct one (replace with CAS system later)
-          if ($answer_equation != '') {
-            eval ("\$answer = \"" . $answer_equation . "\";");
+          $answer_equation = $correct;
+          if($score_array[2] == 'Formula') {
+          //formula awnser just to a string comp on the useranswe and the correct one (replace with CAS system later)
+            if ($answer_equation != '') {
+              eval ("\$answer = \"" . $answer_equation . "\";");
+            }
+            if ($saved_response == $answer) {
+              $mark = $marks;
+            }
+          } else {
+            if ($answer_equation != '') {
+              eval ("\$answer = $answer_equation;");
+              $answer = round($answer, $score_array[0]);
+            }
+            if ($saved_response == $answer) {
+              $mark = $marks;
+            } elseif (abs($saved_response - $answer) <= $score_array[1]) {
+              $mark = $marks;
+            }
           }
-          if ($saved_response == $answer) {
-            $mark = $marks;
-          }
-          $saved_response .= '|' . $answer . '|' . $question_variables;
         } else {
-          if ($answer_equation != '') {
-            eval ("\$answer = $answer_equation;");
-            $answer = round($answer, $score_array[0]);
-          }
-          if ($saved_response == $answer) {
-            $mark = $marks;
-          } elseif (abs($saved_response - $answer) <= $score_array[1]) {
-            $mark = $marks;
-          }
-          $saved_response .= '|' . $answer . '|' . $question_variables;
+          $answer = '';
+          $mark = 0;
         }
+        
+        $saved_response .= '|' . $answer . '|' . $question_variables;
         $totalpos = $marks;
         break;
       case 'dichotomous':
