@@ -23,7 +23,11 @@
 */
 
   require '../include/staff_auth.inc';
-
+  require '../include/question_types.inc';
+  require '../include/errors.inc';
+  
+  $summative_lock = 0; 
+  
   function marks_from_file($fileName) {
     global $mysqli;
   
@@ -36,7 +40,7 @@
     $result->close();
     
     if ($property_id == '') {   // Paper could not be found, exit.
-      unlink('/tmp/' . $userID . '_spotter_marks.csv');
+      unlink('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
       exit;    
     }
     
@@ -117,14 +121,14 @@
     echo "</ol>\n";
   }
 
-  if ($_POST['submit']) {
+  if (isset($_POST['submit']) and $_POST['submit']) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/" . $userID . "_spotter_marks.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/" . $_SERVER['PHP_AUTH_USER'] . "_spotter_marks.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
-        marks_from_file('/tmp/' . $userID . '_spotter_marks.csv');
-        unlink('/tmp/' . $userID . '_spotter_marks.csv');
+        marks_from_file('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+        unlink('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
         ?>
         <html>
         <head>
@@ -151,7 +155,7 @@
 
 <body onclick="hideMenus()">
 <?php
-  include '../paper_options.inc';
+  include '../include/paper_options.inc';
 ?>
 
 <div id="content" class="content">
