@@ -91,9 +91,9 @@ function reviewScale($q_type, $tmp_q_id, $q_no, $tmp_part_no, $set_method, $prev
           $sub_reviews = array('','','','','','','','','','','','','','','');
         }
         if ($q_type == 'rank') {
-          $current_review = $sub_reviews[$mrq_part - 1];
+          $current_review = (empty($sub_reviews[$mrq_part - 1])) ? '' : $sub_reviews[$mrq_part - 1];
         } else {
-          $current_review = $sub_reviews[$tmp_part_no - 1];
+          $current_review = (empty($sub_reviews[$tmp_part_no - 1])) ? '' : $sub_reviews[$tmp_part_no - 1];
         }
       } else {
         if (isset($prev_reviews[$tmp_q_id])) {
