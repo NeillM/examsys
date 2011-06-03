@@ -783,7 +783,7 @@
           echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'rank':
-          $tmp_std_array = explode(',',$std);
+          $tmp_std_array = (!empty($std)) ? explode(',',$std) : array();
           $std_part = 0;
           $rank_no = 0;
           foreach ($correct_buf as $individual_correct) {
@@ -857,7 +857,8 @@
             $i++;
           }
           $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
-          echo "<tr><td><strong>u=" . number_format(($top_log[$q_id]['all_correct']/$candidate_no)*100,0) . "%</strong></td><td><strong>l=" . number_format(($bottom_log[$q_id]['all_correct']/$candidate_no)*100,0) . "%</strong></td><td style=\"font-weight:bold\">" . $tmp_std_array[$std_part] . "</td><td style=\"font-weight:bold\">All items correct</td></tr>\n";
+          $std_val = (isset($tmp_std_array[$std_part])) ? $tmp_std_array[$std_part] : '';
+          echo "<tr><td><strong>u=" . number_format(($top_log[$q_id]['all_correct']/$candidate_no)*100,0) . "%</strong></td><td><strong>l=" . number_format(($bottom_log[$q_id]['all_correct']/$candidate_no)*100,0) . "%</strong></td><td style=\"font-weight:bold\">" . $std_val . "</td><td style=\"font-weight:bold\">All items correct</td></tr>\n";
           echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'sct':
