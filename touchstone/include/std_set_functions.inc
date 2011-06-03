@@ -393,12 +393,12 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
           echo "<tr><td></td><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\">\n";
         }
         $mrq_part++;
-        echo $question . "<option value=\"u\"></option>\n";
+        echo "<option value=\"u\"></option>\n";
         if ($require_na) {
           if ($rank_answers[$part_id] == '0') {
-            echo $question . "<option value=\"0\" selected>N/A</option>\n";
+            echo "<option value=\"0\" selected>N/A</option>\n";
           } else {
-                  echo $question . "<option value=\"0\">N/A</option>\n";
+                  echo "<option value=\"0\">N/A</option>\n";
           }
         }
         for ($i=1; $i<=$total_rank_no; $i++) {

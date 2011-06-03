@@ -398,7 +398,7 @@ $current_screen = 1;
   echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\">\n";
 
   $reviews = array();
-  if ($_GET['setterID'] != '') {
+  if (!empty($_GET['setterID'])) {
     $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
     $result->bind_param('iss', $_GET['paperID'], $_GET['setterID'], $_GET['dateID']);
     $result->execute();
