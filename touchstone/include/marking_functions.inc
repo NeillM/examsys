@@ -147,7 +147,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
   $old_score_method = '';
   $correct_rank = true;
   $question_no = 0;
-  $question_type = '';
+  $q_type = '';
   $question_part = 0;
   $saved_response = '';
   $mrq_options_selected = 0;
@@ -202,7 +202,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
       } else {
         $option_order = '';
       }
-      if ($question_no > 0 and $question_type != 'info') {
+      if ($question_no > 0 and $q_type != 'info') {
         $tmp_duration = time_to_seconds($submit_time) - time_to_seconds($posted_vars['page_start']);
         if ($tmp_duration < 0) $tmp_duration += 86400;
         $tmp_duration += $extra_duration;
@@ -224,7 +224,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
         $saved_response = '';
         $dismiss = '';
       }      
-      if ($question_type != 'info') $question_no++;
+      if ($q_type != 'info') $question_no++;
       $question_part = 0;
       $old_q_id = $q_id;
       $old_type = $q_type;
