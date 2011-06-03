@@ -22,7 +22,7 @@
 * @package
 */
 
-require '../classes/dateutils.class.php';
+require_once '../classes/dateutils.class.php';
 
 // Calculate what the current academic session is.
 $session = DateUtils::get_current_academic_year();

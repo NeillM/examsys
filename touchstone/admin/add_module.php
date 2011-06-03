@@ -23,7 +23,7 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../classes/dateutils.class.php';
+require_once '../classes/dateutils.class.php';
 
 $unique_moduleid = true;
 if (isset($_POST['submit'])) {
