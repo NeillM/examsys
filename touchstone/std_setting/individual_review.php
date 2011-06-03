@@ -398,9 +398,11 @@ $current_screen = 1;
   echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\">\n";
 
   $reviews = array();
-  if (!empty($_GET['setterID'])) {
+  $setterID = (!empty($_GET['setterID'])) ? $_GET['setterID'] : '';
+  $date_id = (!empty($_GET['dateID'])) ? $_GET['dateID'] : '';
+  if ($setterID != '') {
     $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
-    $result->bind_param('iss', $_GET['paperID'], $_GET['setterID'], $_GET['dateID']);
+    $result->bind_param('iss', $_GET['paperID'], $setterID, $date_id);
     $result->execute();
     $result->bind_result($std_set, $rating, $questionID);
     while ($row = $result->fetch()) {
@@ -574,15 +576,13 @@ $current_screen = 1;
   echo "<tr><td colspan=\"2\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
-    $ebel = array();
-    if (!empty($_GET['setterID'])) {
-      $query_string = $mysqli->query("SELECT percentage FROM ebel WHERE setterID=" . $_GET['setterID'] . " AND date_set='" . $_GET['dateID'] . "' ORDER BY id");
+    $ebel = $ebel = array('','','','','','','','','','','','','','','','','','');
+    if ($setterID != '') {
+      $query_string = $mysqli->query("SELECT percentage FROM ebel WHERE setterID=" . $setterID . " AND date_set='" . $date_id . "' ORDER BY id");
       if ($query_string->num_rows > 0) {
         while ($row = $query_string->fetch_assoc()) {
           $ebel[] = $row['percentage'];
         }
-      } else {
-        $ebel = array('','','','','','','','','','','','','','','','','','');
       }
       $query_string->close(); 
     }
@@ -629,8 +629,8 @@ $current_screen = 1;
   echo '<input type="hidden" name="module" value="' . $module . '" />';
   echo '<input type="hidden" name="folder" value="' . $folder . '" />';
   echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';
-  echo '<input type="hidden" name="setterID" value="' . $_GET['setterID'] . '" />';
-  echo '<input type="hidden" name="dateID" value="' . $_GET['dateID'] . '" />';
+  echo '<input type="hidden" name="setterID" value="' . $setterID . '" />';
+  echo '<input type="hidden" name="dateID" value="' . $date_id . '" />';
   echo '<input type="hidden" name="stdIDNo" value="' . $stdID . '" />';
 ?>
 <div align="center">
