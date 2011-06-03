@@ -416,7 +416,7 @@ require '../include/staff_auth.inc';
   $result->execute();
   $result->bind_result($module_id, $module_name);
   while ($row = $result->fetch()) {
-    if ($_POST['module'] == $module_id) {
+    if (isset($_POST['module']) and $_POST['module'] == $module_id) {
       echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" checked />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
     } else {
       echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
