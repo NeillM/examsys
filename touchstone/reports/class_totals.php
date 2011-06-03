@@ -187,7 +187,7 @@ a.user:hover {color:white; background-color:#000080}
     document.getElementById('menudiv').style.display = 'none';
     var winwidth = screen.width-80;
     var winheight = screen.height-80;
-    window.open("../mapping/user_feedback.php?paperID=<?php echo $paperID; ?>&userID=" + document.getElementById('userID').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    window.open("../mapping/user_feedback.php?paperID=<?php echo $paperID; ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
   }
 
   function viewProfile() {
@@ -231,12 +231,12 @@ a.user:hover {color:white; background-color:#000080}
 
   function viewNote(userID, e) {
     if (!e) var e = window.event;
-	var currentX = e.clientX;
-	var currentY = e.clientY;
+	  var currentX = e.clientX;
+	  var currentY = e.clientY;
     var scrOfX = getScrollX();
-	var scrOfY = getScrollY();
+	  var scrOfY = getScrollY();
 	
-	var XMLHttpRequestObject = false; 
+	  var XMLHttpRequestObject = false; 
 
     if (window.XMLHttpRequest) {
       XMLHttpRequestObject = new XMLHttpRequest();

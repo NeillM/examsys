@@ -168,11 +168,16 @@
   //get users log data excluding exclued questions
   $qid_list = '';
   $question_data = Array();
-
+  
+  $startedSQL = '';
+  if(isset($_GET['started'])) {
+    $startedSQL = ' AND started = "' . $_GET['started'] . '"';;
+  }
+  
   if($paper_type == '4') {
-    $result = $mysqli->prepare("SELECT log4.q_id, rating as mark,score_method FROM log$paper_type LEFT JOIN questions ON log4.q_id = questions.q_id WHERE  log4.q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? ORDER BY  log4.q_id, started");
+    $result = $mysqli->prepare("SELECT log4.q_id, rating as mark,score_method FROM log$paper_type LEFT JOIN questions ON log4.q_id = questions.q_id WHERE  log4.q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? $startedSQL ORDER BY  log4.q_id, started");
   } else {
-    $result = $mysqli->prepare("SELECT q_id, mark, totalpos FROM log$paper_type WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? ORDER BY q_id, started");
+    $result = $mysqli->prepare("SELECT q_id, mark, totalpos FROM log$paper_type WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? $startedSQL ORDER BY q_id, started");
   }
 
   $result->bind_param('iii', $paperID, $userID, $paperID);
