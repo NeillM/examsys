@@ -78,18 +78,10 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
 
     // Upload Flash Answer onto server
     if ($_FILES['new_answer_swf']['name'] != $_POST['old_o_media'] and ($_FILES['new_answer_swf']['name'] != 'none' and $_FILES['new_answer_swf']['name'] != '')) {
-      if ($_POST['old_o_media'] != '') {
-        unlink("../media/" . $_POST['old_o_media']); 
+      if (isset($_POST['old_o_media']) and $_POST['old_o_media'] != '') {
+        deleteMedia($_POST['old_o_media']);
       }
-      $unique_answer_name = unique_filename($_FILES['new_answer_swf']['name']);
-      if (!move_uploaded_file($_FILES['new_answer_swf']['tmp_name'], "../media/$unique_answer_name"))  {
-        echo uploadError($_FILES['new_answer_swf']['error']);
-        exit;
-      } else {
-        $identifier_size = GetImageSize("../media/$unique_answer_name");
-        $tmp_o_width = $identifier_size[0];
-        $tmp_o_height = $identifier_size[1];
-      }
+      $unique_name = uploadFile('new_answer_swf',$tmp_media_width,$tmp_media_height);
       $changes = true;
       $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),'Feedback SWF')");
       $result->bind_param('iss', $q_id, $_POST['old_o_media'], $unique_answer_name);
