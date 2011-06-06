@@ -65,7 +65,7 @@ function checkVariables($number) {
 }
 
 function display_options($options,$q_id, $current_theme, $current_scenario, $current_leadin, $current_notes, $q_type, $std_method, $setter_username) {
-  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_answers, $users_confidence, $screen_pre_submitted, $question_type, $A, $B, $C, $D, $E, $F, $G, $H, $li_set, $bgcolor, $rater_names, $reviews;
+  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $screen_pre_submitted, $question_type, $A, $B, $C, $D, $E, $F, $G, $H, $li_set, $bgcolor, $rater_names, $reviews;
 
   $option_no = count($options);
   $part_id = 0;
@@ -94,11 +94,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       }
     }
   } elseif ($options[0]['q_type'] == 'mcq') {
-    if ($users_answers[$q_id] == '0' and $screen_pre_submitted == 1) {
-      echo '<blockquote style="background-color:#FFC0C0">';
-    } else {
-      echo '<blockquote>';
-    }
+    echo '<blockquote>';
     if ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other') {
       echo '<table cellpadding="2" cellspacing="0" border="0">';
     }
@@ -107,12 +103,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       echo '<option value=""></option>';
     }
   } elseif ($options[0]['q_type'] == 'mrq') {
-    $len_answer = strlen($users_answers[$q_id]);
-    if ($users_answers[$q_id] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
-      echo '<blockquote style="background-color:#FFC0C0"><table cellpadding="2" cellspacing="0" border="0">';
-    } else {
-      echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-    }
+    echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
   } elseif ($options[0]['q_type'] == 'rank') {
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
   } elseif ($options[0]['q_type'] == 'likert') {
@@ -161,26 +152,18 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
     $part_id++;
     switch ($options[0]['q_type']) {
       case 'dichotomous':
-        $tmp_user_answer = substr($users_answers[$q_id],$part_id-1,1);
-        if ($marking == 2) {
-          $confidence = true;
-          $tmp_user_con = substr($users_confidence[$q_id],$part_no-1,1);
-        }
+        $tmp_user_answer = $display_option['correct'];
         if (($options[0]['score_method'] == 'TF_NegativeAbstain') or ($options[0]['score_method'] == 'TF_PostiveAbstain') or ($options[0]['score_method'] == "YN_NegativeAbstain") or ($options[0]['score_method'] == "YN_PostiveAbstain")) $abstain = true;
 
-        if ($tmp_user_answer == 'u' and $screen_pre_submitted == 1) {
-          echo '<tr style="background-color:#FFC0C0"><td align="center">';
-        } else {
-          echo '<tr><td align="center">';
-        }
+        echo '<tr><td align="center">';
         if ($tmp_user_answer == 't') {
-          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" checked /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" /></td>' . confidence_abstain($confidence,$abstain,$question_no,$part_id,$tmp_user_con,$tmp_user_answer) . '<td>';
+          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" checked /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" /></td><td>';
         } elseif ($tmp_user_answer == 'f') {
-          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" checked /></td>' . confidence_abstain($confidence,$abstain,$question_no,$part_id,$tmp_user_con,$tmp_user_answer) . '<td>';
+          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" checked /></td><td>';
         } elseif ($tmp_user_answer == 'a') {
-          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" /></td>' . confidence_abstain($confidence,$abstain,$question_no,$part_id,$tmp_user_con,$tmp_user_answer) . '<td>';
+          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" /></td><td>';
         } else {
-          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" /></td>' . confidence_abstain($confidence,$abstain,$question_no,$part_id,$tmp_user_con,$tmp_user_answer) . '<td>';
+          echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" /></td><td>';
         }
         if ($display_option['option_text'] != '') echo $display_option['option_text'];
         if ($display_option['o_media'] != '') {
@@ -192,45 +175,32 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         $marks++;
         break;
       case 'calculation':
-        if ($users_answers[$q_id] == '') {
-          $figures = explode(',',$display_option['option_text']);
-          switch ($part_id) {
-            case 1:
-              $A = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-            case 2:
-              $B = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-            case 3:
-              $C = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-            case 4:
-              $D = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-            case 5:
-              $E = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-            case 6:
-              $F = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-            case 7:
-              $G = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-            case 8:
-              $H = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-              break;
-          }
-        } else {
-          $calc_answers = explode('|',$users_answers[$q_id]);
-          $variables = explode(',', $calc_answers[2]);
-          $A = $variables[0];
-          $B = $variables[1];
-          $C = $variables[2];
-          $D = $variables[3];
-          $E = $variables[4];
-          $F = $variables[5];
-          $G = $variables[6];
-          $H = $variables[7];        
+        $figures = explode(',',$display_option['option_text']);
+        switch ($part_id) {
+          case 1:
+            $A = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
+          case 2:
+            $B = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
+          case 3:
+            $C = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
+          case 4:
+            $D = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
+          case 5:
+            $E = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
+          case 6:
+            $F = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
+          case 7:
+            $G = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
+          case 8:
+            $H = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            break;
         }
         break;
       case 'mcq':
@@ -275,11 +245,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
             }
           }
         } else {
-          if ($part_id == $users_answers[$q_id]) {
-            echo "<option value=\"" . $part_id . "\" selected>" . $display_option['option_text'] . "</option>\n";
-          } else {
-            echo "<option value=\"" . $part_id . "\">" . $display_option['option_text'] . "</option>\n";
-          }
+          echo "<option value=\"" . $part_id . "\">" . $display_option['option_text'] . "</option>\n";
         }
         if ($part_id == $display_option['correct']) {
           $marks = $display_option['marks'];
@@ -287,23 +253,11 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         break;
       case 'mrq':
         if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No image
-          if (substr($users_answers[$q_id],$part_id-1,1) == 'y') {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span></td></tr>\n";
-          } else {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span></td></tr>\n";
-          }
+          echo "<tr><td><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span></td></tr>\n";
         } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and image
-          if (substr($users_answers[$q_id],$part_id-1,1) == 'y') {
-            echo "<div><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></div>\n";
-          } else {
-            echo "<div><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></div>\n";
-          }
+          echo "<div><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></div>\n";
         } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and image
-          if (substr($users_answers[$q_id],$part_id-1,1) == 'y') {
-            echo "<div><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . stripslashes($display_option['o_media_height']) . "\" border=\"0\"/></div>\n";
-          } else {
-            echo "<div><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . stripslashes($display_option['o_media_height']) . "\" border=\"0\"/></div>\n";
-          }
+          echo "<div><input type=\"checkbox\" onclick=\"itemClicked($question_no,$part_id);\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . stripslashes($display_option['o_media_height']) . "\" border=\"0\"/></div>\n";
         }
         if ($display_option['score_method'] == 'SelectedPositive') {
           if ($display_option['correct'] == 'y') $marks++;  // 1 mark for correct options only
@@ -318,7 +272,6 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         $matching_options[] = $display_option['option_text'];
         break;
       case 'rank':
-        $rank_answers = explode(',', $users_answers[$q_id]);
         $total_rank_no = 0;
         $require_na = false;
         for ($i=0; $i<$option_no; $i++) {
@@ -335,18 +288,10 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         echo "<tr><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\" onchange=\"itemSelected($question_no,$part_id);\">\n";
         echo $question . "<option value=\"9999\"></option>\n";
         if ($require_na) {
-          if ($rank_answers[$part_id] == '9990') {
-            echo $question . "<option value=\"9990\" selected>N/A</option>\n";
-          } else {
-                  echo $question . "<option value=\"9990\">N/A</option>\n";
-          }
+          echo $question . "<option value=\"9990\">N/A</option>\n";
         }
         for ($i=1; $i<=$total_rank_no; $i++) {
-          if ($i == $rank_answers[$part_id]) {
-                  echo "<option value=\"" . $i . "\" selected>" . $i;
-                } else {
-                  echo "<option value=\"" . $i . "\">" . $i;
-                }
+          echo "<option value=\"" . $i . "\">" . $i;
           if ($i == 1) {
             echo 'st';
           } elseif ($i == 2) {
@@ -376,29 +321,15 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         break;
       case 'timedate':
         $date_details = explode('|',$display_option['score_method']);
-        $answer_array = explode('/',$users_answers[$q_id]);
-        $answer_day = $answer_array[0];
-        $answer_month = $answer_array[1];
-        $answer_year = $answer_array[2];
         echo '<p>';
         if ($date_details[0] == 1 or $date_details[0] == 4) {
-          $answer_day = $answer_array[1];
-          $answer_month = $answer_array[0];
           echo '<select name="q' . $question_no . '_month">';
           echo "\n<option value=\"\"></option>\n";
           for ($tmp_month=1; $tmp_month<=12; $tmp_month++) {
             if ($tmp_month < 10) {
-              if (intval($answer_month) == $tmp_month) {
-                echo "<option value=\"0$tmp_month\" selected>0$tmp_month</option>\n";
-              } else {
-                echo "<option value=\"0$tmp_month\">0$tmp_month</option>\n";
-              }
+              echo "<option value=\"0$tmp_month\">0$tmp_month</option>\n";
             } else {
-              if (intval($answer_month) == $tmp_month) {
-                echo "<option value=\"$tmp_month\" selected>$tmp_month</option>\n";
-              } else {
-                echo "<option value=\"$tmp_month\">$tmp_month</option>\n";
-              }
+              echo "<option value=\"$tmp_month\">$tmp_month</option>\n";
             }
           }
           echo '</select> / ';
@@ -408,17 +339,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
           echo "\n<option value=\"\"></option>\n";
           for ($tmp_day=1; $tmp_day<=31; $tmp_day++) {
             if ($tmp_day < 10) {
-              if (intval($answer_day) == $tmp_day) {
-                echo "<option value=\"0$tmp_day\" selected>0$tmp_day</option>\n";
-              } else {
-                echo "<option value=\"0$tmp_day\">0$tmp_day</option>\n";
-              }
+              echo "<option value=\"0$tmp_day\">0$tmp_day</option>\n";
             } else {
-              if (intval($answer_day) == $tmp_day) {
-                echo "<option value=\"$tmp_day\" selected>$tmp_day</option>\n";
-              } else {
-                echo "<option value=\"$tmp_day\">$tmp_day</option>\n";
-              }
+              echo "<option value=\"$tmp_day\">$tmp_day</option>\n";
             }
           }
           echo '</select>';
@@ -427,17 +350,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
             echo "\n<option value=\"\"></option>\n";
             for ($tmp_month=1; $tmp_month<=12; $tmp_month++) {
               if ($tmp_month < 10) {
-                if (intval($answer_month) == $tmp_month) {
-                  echo "<option value=\"0$tmp_month\" selected>0$tmp_month</option>\n";
-                } else {
-                  echo "<option value=\"0$tmp_month\">0$tmp_month</option>\n";
-                }
+                echo "<option value=\"0$tmp_month\">0$tmp_month</option>\n";
               } else {
-                if (intval($answer_month) == $tmp_month) {
-                  echo "<option value=\"$tmp_month\" selected>$tmp_month</option>\n";
-                } else {
-                  echo "<option value=\"$tmp_month\">$tmp_month</option>\n";
-                }
+                echo "<option value=\"$tmp_month\">$tmp_month</option>\n";
               }
             }
             echo '</select>';
@@ -448,17 +363,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
             echo "\n<option value=\"\"></option>\n";
             foreach ($month_array as $individual_month) {
               if ($tmp_month < 10) {
-                if (intval($answer_month) == $tmp_month) {
-                  echo "<option value=\"0$tmp_month\" selected>$individual_month</option>\n";
-                } else {
-                  echo "<option value=\"0$tmp_month\">$individual_month</option>\n";
-                }
+                echo "<option value=\"0$tmp_month\">$individual_month</option>\n";
               } else {
-                if (intval($answer_month) == $tmp_month) {
-                  echo "<option value=\"$tmp_month\" selected>$individual_month</option>\n";
-                } else {
-                  echo "<option value=\"$tmp_month\">$individual_month</option>\n";
-                }
+                echo "<option value=\"$tmp_month\">$individual_month</option>\n";
               }
               $tmp_month++;
             }
@@ -467,11 +374,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
           echo ' / <select name="q' . $question_no . '_year">';
           echo "\n<option value=\"\"></option>\n";
           for ($tmp_year=$date_details[1]; $tmp_year<=$date_details[2]; $tmp_year++) {
-            if (intval($answer_year) == $tmp_year) {
-              echo "<option value=\"$tmp_year\" selected>$tmp_year</option>\n";
-            } else {
-              echo "<option value=\"$tmp_year\">$tmp_year</option>\n";
-            }
+            echo "<option value=\"$tmp_year\">$tmp_year</option>\n";
           }
           echo "</select>\n";
         }        
@@ -551,7 +454,6 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         } else {
           // Dropdown lists.
           $blank_details = explode('[blank',$display_option['option_text']);
-          $blank_user_answers = explode('|', $users_answers[$q_id]);
           $no_blanks = count($blank_details);
           echo '<p>' . $blank_details[0];
           $blank_count = 1;
@@ -565,11 +467,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
             $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
             $answer_list = explode(',',$answer_options[0]);
-            if ($blank_user_answers[$part_id] == 'u' and $screen_pre_submitted == 1) {
-              echo "<select name=\"q" . $question_no . "_" . $part_id . "\" style=\"background-color:#FFC0C0\">\n";
-            } else {
-              echo "<select name=\"q" . $question_no . "_" . $part_id . "\">\n";
-            }
+            echo "<select name=\"q" . $question_no . "_" . $part_id . "\">\n";
             echo "<option value=\"u\"></option>\n";
             $no_answers = count($answer_list);
           
@@ -585,11 +483,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
             }
           
             for ($i=1; $i<=$no_answers; $i++) {
-              if (trim($answer_list[$i-1]) == trim($blank_user_answers[$blank_count])) {
-                echo "<option value=\"" . trim($answer_list[$i-1]) . "\" selected>" . trim($answer_list[$i-1]) . "</option>\n";
-              } else {
-                echo "<option value=\"" . trim($answer_list[$i-1]) . "\">" . trim($answer_list[$i-1]) . "</option>\n";
-              }
+              echo "<option value=\"" . trim($answer_list[$i-1]) . "\">" . trim($answer_list[$i-1]) . "</option>\n";
             }
             echo '</select>';
             echo $answer_options[1]; // Bit after the closing [/blank] tag.
@@ -624,31 +518,22 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   </script>
  
  <?php
-    if ($users_answers[$q_id] == 'u' and  $screen_pre_submitted == 1) {
-      echo "<div align=\"center\" style=\"background-color:#FFC0C0\">\n";
-      $tmp_bgcolor = '#FFC0C0';
-    } else {
-      echo "<div align=\"center\">\n";
-      $tmp_bgcolor = $bgcolor;
-    }
+    echo "<div align=\"center\">\n";
+    $tmp_bgcolor = $bgcolor;
  ?>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="hotspot<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 8); ?>" height="<?php echo ($options[0]['q_media_height'] + 8); ?>" align="middle">
     <param name="allowScriptAccess" value="sameDomain" />
     <param name="movie" value="hotspot_question.swf" />
     <param name="quality" value="high" />
     <param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />
-    <param name="FlashVars" value="imageName=<?php echo $options[0]['q_media']; ?>&t&config=<?php echo $options[0]['correct']; ?>&user_answer=<?php echo $users_answers[$q_id]; ?>" />
-    <embed src="hotspot_question.swf" FlashVars="imageName=<?php echo $options[0]['q_media']; ?>&config=<?php echo $options[0]['correct']; ?>&user_answer=<?php echo $users_answers[$q_id]; ?>" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($options[0]['q_media_width'] + 8); ?>" height="<?php echo ($options[0]['q_media_height'] + 8); ?>" swLiveConnect=true id="hotspot<?php echo $question_no; ?>" name="hotspot<?php echo $question_no; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />
+    <param name="FlashVars" value="imageName=<?php echo $options[0]['q_media']; ?>&t&config=<?php echo $options[0]['correct']; ?>&user_answer=" />
+    <embed src="hotspot_question.swf" FlashVars="imageName=<?php echo $options[0]['q_media']; ?>&config=<?php echo $options[0]['correct']; ?>&user_answer=" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($options[0]['q_media_width'] + 8); ?>" height="<?php echo ($options[0]['q_media_height'] + 8); ?>" swLiveConnect=true id="hotspot<?php echo $question_no; ?>" name="hotspot<?php echo $question_no; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />
     </object>
     <br /><span style="color:#808080; font-size:80%">(<img src="./artwork/hotspot_cursor.gif" width="15" height="15" alt="cusor" border="0" /> Single click with the mouse to record your answer. Single click again if you need to change that answer.)</span>
   </div>
         
 <?php
-        if ($users_answers[$q_id] == '') {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"u\" />\n";
-        } else {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"" . $users_answers[$q_id] . "\" />\n";
-        }
+        echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"\" />\n";
         $marks = $display_option['marks'];
         break;
       case 'labelling':
@@ -679,30 +564,21 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   </script>
         
   <?php
-    if ($users_answers[$q_id] == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
-      echo "<div align=\"center\" style=\"background-color:#FFC0C0\">\n";
-      $tmp_bgcolor = '#FFC0C0';
-    } else {
-      echo "<div align=\"center\">\n";
-      $tmp_bgcolor = $bgcolor;
-    }
+    echo "<div align=\"center\">\n";
+    $tmp_bgcolor = $bgcolor;
   ?>
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="label_question<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">
     <param name="allowScriptAccess" value="sameDomain" />
     <param name="movie" value="label_question.swf" />
     <param name="quality" value="high" />
     <param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />
-    <param name="FlashVars" value="imageName=<?php echo $options[0]['q_media']; ?>&labels=<?php echo str_replace('|','&#124;',$options[0]['correct']); ?>&answers=<?php echo $users_answers[$q_id]; ?>" />
-    <embed src="label_question.swf" FlashVars="imageName=<?php echo $options[0]['q_media']; ?>&labels=<?php echo str_replace('|','&#124;',$options[0]['correct']); ?>&answers=<?php echo $users_answers[$q_id]; ?>" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($options[0]['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swLiveConnect=true id="label_question<?php echo $question_no; ?>" name="label_question<?php echo $question_no; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+    <param name="FlashVars" value="imageName=<?php echo $options[0]['q_media']; ?>&labels=<?php echo str_replace('|','&#124;',$options[0]['correct']); ?>&answers=" />
+    <embed src="label_question.swf" FlashVars="imageName=<?php echo $options[0]['q_media']; ?>&labels=<?php echo str_replace('|','&#124;',$options[0]['correct']); ?>&answers=" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($options[0]['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swLiveConnect=true id="label_question<?php echo $question_no; ?>" name="label_question<?php echo $question_no; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
     </object>
   </div>
   
 <?php
-        if ($users_answers[$q_id] == '') {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
-        } else {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"" . $users_answers[$q_id] . "\" />\n";
-        }
+        echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"\" />\n";
         break;
       case 'flash':
 ?>        
@@ -753,11 +629,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   if ($options[0]['q_type'] == 'mcq') {
     if ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other') {
       if ($options[0]['score_method'] == 'vertical_other') {
-        if (substr($users_answers[$q_id],0,5) == 'other') {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($users_answers[$q_id],6) . "\" /></td></tr>\n";
-        } else {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
-        }
+        echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
       }
       echo '</table></blockquote>';
       $rating_string = '';
@@ -802,15 +674,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
     }
     $new_leadin = "echo \"<p>$current_leadin</p>\"";
     eval("$new_leadin;");
-    if ($users_answers[$q_id] == '') {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[2] .  "</p>\n";
-    } else {
-      if ($calc_answers[0] == '') {
-        echo "<p><input type=\"text\" style=\"text-align:right; background-color:#FFC0C0\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $calc_answers[0] . "\" />" . $score_array[2] .  "</p>\n";
-      } else {
-        echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $calc_answers[0] . "\" />" . $score_array[2] .  "</p>\n";
-      }
-    }
+    echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[2] .  "</p>\n";
     $answer = "echo \"" . $options[0]['correct'] . "\"";
     echo '<input type="hidden" name="q' . $question_no . '_answer" value="';
     echo $A;
@@ -826,12 +690,8 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   } elseif ($options[0]['q_type'] == 'dichotomous' or $options[0]['q_type'] == 'mrq' or $options[0]['q_type'] == 'rank') {
     if ($options[0]['score_method'] == 'other') {
       $part_id++;
-      if (substr($users_answers[$q_id],($part_id - 1),1) == 'y') {
-        echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td>";
-      } else {
-        echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
-      }
-      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($users_answers[$q_id],($part_id+1)) . "\" /></td></tr>\n";
+      echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
+      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"\" /></td></tr>\n";
     }
     echo '</table>';
     if ($options[0]['q_type'] == 'mrq') {
