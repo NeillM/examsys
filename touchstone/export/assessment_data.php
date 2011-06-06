@@ -321,8 +321,11 @@
       }
       switch ($paper_buffer[$i]['type']) {
         case 'blank':
-          $tmp_answers = str_replace('|',',',$individual[$tmp_screen][$tmp_question_ID]);
-          echo ',' . substr($tmp_answers,1);
+          $tmp_answers = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
+          $correct_parts = explode(',',$paper_buffer[$i]['correct']);
+          for ($partID=1; $partID<count($correct_parts); $partID++) {
+            if (substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $tmp_answers[$partID];
+          }
           break;
         case 'calculation':
           if (isset($individual[$tmp_screen][$tmp_question_ID])) {
