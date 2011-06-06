@@ -201,12 +201,12 @@ li {margin-right:10px}
   echo "</ul>\n";
 
   if ($comment_flag == 0) {
-    echo "<div style=\"color:#808080\">&lt;No Comments&gt;</div>\n";
+    echo "<div class=\"comments\">&lt;No Comments&gt;</div>\n";
   } else {
     if (isset($_GET['keywords'])) {
-      echo "<div style=\"color:#808080\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
+      echo "<div class=\"comments\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
     } else {
-      echo "<div style=\"color:#808080\">$occurrence_comments comments.</div>\n";
+      echo "<div class=\"comments\">$occurrence_comments comments.</div>\n";
     }
   }
   $mysqli->close();
