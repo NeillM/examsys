@@ -34,15 +34,14 @@
     $result->close();
     
     // Check to see if the original paper name has been reused by any active papers.
-    $split_title = split('\[deleted',$deleted_paper_title);
+    $split_title = explode('[deleted',$deleted_paper_title);
     $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title=? and property_id!=?");
     $result->bind_param('si', trim($split_title[0]), $_GET['item_id']);
     $result->execute();  
     $result->store_result();
     $result->bind_result($paper_title);
     $result->fetch();
-    //echo 'title=' . trim($split_title[0]).',' .$result->num_rows;
-    //exit;
+    
     if ($result->num_rows == 0) {
       $new_title = trim($split_title[0]);
     } else {
