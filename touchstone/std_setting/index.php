@@ -334,7 +334,8 @@
       if ($old_date != $row['std_set'] and $old_date != '') {     // New review date
         $review_no++;
         if ($old_method == 'Modified Angoff') {
-          $pass_score = round($std_total/$question_no);
+          // $question_no can be 0 in some cases if questions have been excluded
+          $pass_score = ($question_no > 0) ? round($std_total/$question_no) : 0;
           $review_total = $angoff_review_marks;
           $distinction_score = 'n/a';
         } elseif ($old_method == 'Ebel') {
