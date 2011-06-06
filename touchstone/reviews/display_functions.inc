@@ -22,45 +22,6 @@
 * @package
 */
 
-function calcPreParse($inputVal, $user_answers, $tmp_vars) {
-  global $A, $B, $C, $D, $E, $F, $G, $H;
-  if (substr($inputVal,0,3) == 'ans') {
-    //its a question refrance get previous user answer          
-    $find_qid = intval(substr($inputVal,3));
-    $pre_user_answers = '';
-    foreach ($user_answers as $screen => $answers) {
-      foreach ($answers as $pre_qid => $ans) {
-        if ($pre_qid == $find_qid) {
-          list($pre_user_answers) = explode('|',$ans);
-          break 2;
-        }
-      }
-    }
-    if($pre_user_answers == '') return 'ERROR';
-    $pre_user_answers = preg_replace('/[^0-9\.\-]/','',$pre_user_answers);
-    $inputVal = str_replace('ans' . $find_qid, $pre_user_answers, $inputVal);
-  } else if (substr($inputVal,0,3) == 'var') {
-    //its a var refrance from a previous question
-    $find_var = substr($inputVal,3,1);
-    $find_qid = intval(substr($inputVal,4));
-    $pre_var_val = '';
-    foreach ($user_answers as $screen => $answers) {
-      foreach ($answers as $pre_qid => $ans) {
-        if($pre_qid == $find_qid) {
-          $pre_user_answers_array = explode('|',$ans);
-          $variables = explode(',', $pre_user_answers_array[2]);
-          $pre_var_val = $variables[array_search($find_var,$tmp_vars)-1];
-          break 2;
-        }
-      }
-    }
-    if($pre_var_val == '') return 'ERROR';
-    $inputVal = str_replace('var' . substr($inputVal,3,1) . $find_qid, $pre_var_val, $inputVal);
-  }
-  eval("\$inputVal = $inputVal;");
-  return $inputVal;
-}
-
 function gen_random_no($min, $max, $increment, $decimals) {
   if ($min == 'ERROR' or $max == 'ERROR') return 'ERROR';
   if ($decimals > 0) {
@@ -338,20 +299,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'likert':
-        if ($users_answers[$q_id] == 'u' and $screen_pre_submitted == 1) {
-          echo '<tr class="unanswered">';
-        } else {
-          echo '<tr>';
-        }
+        echo '<tr>';
         echo '<td class="question_no">' . (($question_no + $question_offset) - 1) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
         $scale_size = substr_count($question['score_method'],'|');
         if ($likert_display[$scale_size] == 'true') echo "<td style=\"background-color:#FFC0C0; text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\" /></td>";
         for ($i=1; $i<=$scale_size; $i++) {
-          if ($i == $users_answers[$q_id]) {
-            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"$i\" checked /></td>";
-          } else {
-            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"$i\" /></td>";
-          }
+          echo "<td class=\"likert_button\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"$i\" /></td>";
         }
         echo "</tr>\n";
         break;
@@ -419,7 +372,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $matching_options[] = $display_option['option_text'];
 	break;
       case 'rank':
-        $rank_answers = explode(',', $users_answers[$q_id]);
         $total_rank_no = 0;
         $require_na = false;
         for ($i=0; $i<$option_no; $i++) {
@@ -715,21 +667,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $textbox_size = explode('x',$question['score_method']);
         if ($display_option['option_text'] == 'plain') {
           if ($textbox_size[1] == 1) {
-            if ($users_answers[$q_id] == '' and $screen_pre_submitted == 1) {
-              echo "<blockquote><input style=\"font-family:Arial,sans-serif\" class=\"unanswered\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $users_answers[$q_id] . "\" />";
-            } else {
-              echo "<blockquote><input style=\"font-family:Arial,sans-serif\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $users_answers[$q_id] . "\" />";
-            }
+            echo "<blockquote><input style=\"font-family:Arial,sans-serif\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"\" />";
           } else {
-            if ($users_answers[$q_id] == '' and $screen_pre_submitted == 1) {
-              echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" class=\"unanswered\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $users_answers[$q_id] . "</textarea>";
-            } else {
-              echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $users_answers[$q_id] . "</textarea>";
-            }
+            echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\"></textarea>";
           }
         } else {
           include_once('wysiwyg_editor.inc');
-          echo "<p><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $users_answers[$q_id] . "</textarea></p>\n";
+          echo "<p><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\"></textarea></p>\n";
 	  echo "<script>\n";
 	  echo "var oEdit$question_no = new InnovaEditor(\"oEdit$question_no\");\n";
 	  echo "oEdit$question_no.mode=\"XHTMLBody\";\n";
@@ -854,11 +798,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   if ($question['q_type'] == 'mcq') {
     if ($question['score_method'] == 'vertical' or $question['score_method'] == 'vertical_other') {
       if ($question['score_method'] == 'vertical_other') {
-        if (substr($users_answers[$q_id],0,5) == 'other') {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($users_answers[$q_id],6) . "\" /></td></tr>\n";
-        } else {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
-        }
+        echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
       }
       echo '</table>';
     } elseif ($question['score_method'] == 'dropdown') {
@@ -912,12 +852,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['score_method'] == 'other') {
       $part_id++;
-      if (substr($users_answers[$q_id],($part_id - 1),1) == 'y') {
-        echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td>";
-      } else {
-        echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
-      }
-      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($users_answers[$q_id],($part_id+1)) . "\" /></td></tr>\n";
+      echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
+      echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"\" /></td></tr>\n";
     }
     echo '</table>';
   } elseif ($question['q_type'] == 'extmatch') {

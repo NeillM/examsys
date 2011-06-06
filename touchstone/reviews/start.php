@@ -233,7 +233,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
 ?>
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
-  <?
+  <?php
   if (isset($_POST['old_screen']) and $_POST['old_screen'] != '' and time() <= $review_deadline) {  
     record_comments($_GET['paperID'],$_POST['old_screen'],$mysqli,$_POST,$userID,$review_type);
   }
