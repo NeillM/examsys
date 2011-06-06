@@ -47,7 +47,7 @@ function checkVariables($number) {
 }
 
 function display_options($options,$q_id, $current_theme) {
-  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_answers, $users_confidence, $screen_pre_submitted;
+  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_confidence, $screen_pre_submitted, $bgcolor;
 
   $option_no = count($options);
   $part_id = 0;
@@ -74,11 +74,7 @@ function display_options($options,$q_id, $current_theme) {
       }
     }
   } elseif ($options[0]['q_type'] == 'mcq') {
-    if ($users_answers[$q_id] == 0 and $screen_pre_submitted == 1) {
-      echo '<blockquote style="background-color: #FFC0C0">';
-    } else {
-      echo '<blockquote>';
-    }
+    echo '<blockquote>';
     if ($options[0]['score_method'] == 'vertical') {
       echo '<table cellpadding="2" cellspacing="0" border="0">';
     }
@@ -87,15 +83,9 @@ function display_options($options,$q_id, $current_theme) {
       echo '<option value=""></option>';
     }
   } elseif ($options[0]['q_type'] == 'mrq') {
-    $len_answer = strlen($users_answers[$q_id]);
-    if ($users_answers[$q_id] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
-      echo '<blockquote style="background-color: #FFC0C0"><table cellpadding="2" cellspacing="0" border="0">';
-    } else {
-      echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-    }
+    echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
   } elseif ($options[0]['q_type'] == 'rank') {
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0"><tr>';
-    $rank_answers = explode(",", $users_answers[$q_id]);
     $total_rank_no = 0;
     for ($i=0; $i<$option_no; $i++) {
       if ($options[$i]['correct'] < 9990) {
@@ -142,7 +132,7 @@ function display_options($options,$q_id, $current_theme) {
       }
     }
     $old_likert_label = $str;
-  } elseif ($options[0]['q_type'] == 'extmatch') {
+  } elseif ($options[0]['q_type'] == 'extmatch' or $options[0]['q_type'] == 'matrix') {
     $matching_scenarios = array();
     $matching_scenarios = explode('|', $options[0]['scenario']);
     $matching_media = array();
@@ -152,8 +142,6 @@ function display_options($options,$q_id, $current_theme) {
     $matching_media_height = array();
     $matching_media_height = explode('|', $options[0]['q_media_height']);
     $matching_options = array();
-    $matching_users_answers = array();
-    $matching_users_answers = explode('|', $users_answers[$q_id]);
   } elseif ($options[0]['q_type'] == 'sct') {
     $sct_parts = explode('~',$options[0]['leadin']);
     $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
@@ -190,102 +178,30 @@ function display_options($options,$q_id, $current_theme) {
       case 'dichotomous':
         if ($marking == 2) {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
             echo "<td>" . $display_option['option_text'] . "</td></tr>\n";
           } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           }
           $marks += 3;
         } elseif (($options[0]['score_method'] == 'TF_NegativeAbstain') or ($options[0]['score_method'] == 'TF_PostiveAbstain') or ($options[0]['score_method'] == "YN_NegativeAbstain") or ($options[0]['score_method'] == "YN_PostiveAbstain")) {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
           } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           }
           $marks++;
         } else {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /><td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
-            } 
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "</td></tr>\n";
           } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
-            if (substr($users_answers[$q_id],$part_id-1,1) == 't') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'f') {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } elseif (substr($users_answers[$q_id],$part_id-1,1) == 'u' and $screen_pre_submitted == 1) {
-              echo "<tr style=\"background-color: #FFC0C0\"><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td align=\"center\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           }
           $marks++;
         }
@@ -297,11 +213,7 @@ function display_options($options,$q_id, $current_theme) {
           echo "<td style=\"background-color: #FFC0C0; text-align: center; width: 40px; vertical-align: top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\" /></td>";
         }
         for ($i=1; $i<=$scale_size; $i++) {
-          if ($i == $users_answers[$q_id]) {
-            echo "<td style=\"text-align: center; width: 40px; vertical-align: top\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
-          } else {
-            echo "<td style=\"text-align: center; width: 40px; vertical-align: top\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
-          }
+          echo "<td style=\"text-align: center; width: 40px; vertical-align: top\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
         }
         echo "<td>" . $display_option['leadin'] . "</td></tr>\n";
         $marks+=2;
@@ -317,23 +229,11 @@ function display_options($options,$q_id, $current_theme) {
           }
         } elseif ($options[0]['score_method'] == 'vertical') {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
-            if ($part_id == $users_answers[$q_id]) {
-              echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
-            } else {
-              echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
-            }
+            echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
           } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
-            if ($part_id == $users_answers[$q_id]) {
-              echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
-            if ($part_id == $users_answers[$q_id]) {
-              echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            } else {
-              echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
-            }
+            echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "</td></tr>\n";
           }
         }
         if ($part_id == $display_option['correct']) {
@@ -346,23 +246,11 @@ function display_options($options,$q_id, $current_theme) {
         break;
       case 'mrq':
         if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No image
-          if (substr($users_answers[$q_id],$part_id-1,1) == 'y') {
-            echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
-          } else {
-            echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
-          }
+          echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
         } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and image
-          if (substr($users_answers[$q_id],$part_id-1,1) == 'y') {
-            echo "<div><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" alt=\"image\" border=\"0\"/></div>\n";
-          } else {
-            echo "<div><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" alt=\"image\" border=\"0\"/></div>\n";
-          }
+          echo "<div><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" alt=\"image\" border=\"0\"/></div>\n";
         } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and image
-          if (substr($users_answers[$q_id],$part_id-1,1) == 'y') {
-            echo "<div><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" alt=\"image\" border=\"0\"/></div>\n";
-          } else {
-            echo "<div><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" alt=\"image\" border=\"0\"/></div>\n";
-          }
+          echo "<div><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" alt=\"image\" border=\"0\"/></div>\n";
         }
         if ($display_option['score_method'] == 'SelectedPositive') {
           if ($display_option['correct'] == 'y') $marks++;  // 1 mark for correct options only
@@ -373,11 +261,10 @@ function display_options($options,$q_id, $current_theme) {
         }
         break;
       case 'extmatch':
+      case 'matrix':
         $matching_options[] = $display_option['option_text'];
         break;
       case 'rank':
-        $rank_answers = array();
-        $rank_answers = explode(",", $users_answers[$q_id]);
         $total_rank_no = 0;
         for ($i=0; $i<$option_no; $i++) {
           if ($options[$i]['correct'] < 9990) {
@@ -413,28 +300,31 @@ function display_options($options,$q_id, $current_theme) {
         echo "<tr><td colspan=\"2\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" />&nbsp;" . $display_option['option_text'] . "</td></tr>\n";
         break;
       case 'blank':
+        $display_option['option_text'] = str_replace('&nbsp;',' ',$display_option['option_text']);
+        $blank_details = explode('[blank',$display_option['option_text']);
+        
         if ($display_option['score_method'] == 'textboxes') {
-          $blank_details = explode('<blank',$display_option['option_text']);
           $array_size = count($blank_details);
           $blank_count = 1;
           while ($blank_count < $array_size) {
-            $blank_details[$blank_count] = '<blank' . $blank_details[$blank_count];
+            $blank_details[$blank_count] = '[blank]' . $blank_details[$blank_count];
             $results = array();
-            $not_used = ereg("size=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
-	 
-            if ($results[1]) {
+            $not_used = preg_match("|size=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
+
+            if (isset($results[1]) and $results[1] != '') {
               $blank_size[$blank_count] = $results[1];
             } else {
               $blank_size[$blank_count] = 15;
             }
             $results=array();
-            $not_used = preg_match("/mark=\"([0-9]{1,3})\"/",$blank_details[$blank_count],$results);
-            if ($results[1]) {
+            $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
+            if (isset($results[1]) and $results[1] != '') {
               $blank_mark[$blank_count] = $results[1];
             } else {
               $blank_mark[$blank_count] = 1;
             }
-            $screen_output[$blank_count] = preg_replace("/<blank.*>.*</blank>/","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
+    
+            $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"\" size=\"$blank_size[$blank_count]\" style=\"border: 1px solid black\" />",$blank_details[$blank_count]);
             $blank_count++;
           }
           $screen_output_all = '';
@@ -442,115 +332,221 @@ function display_options($options,$q_id, $current_theme) {
             $screen_output_all .= $value;
           }
           echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n";
-          foreach ($blank_mark as $individual_mark) {
-            $marks += $individual_mark;
-          }	   
         } else {
-            $blank_details = array();
-            $blank_details = explode('<blank',$display_option['option_text']);
-            $blank_user_answers = array();
-            $blank_user_answers = explode('|', $users_answers[$q_id]);
-            $no_blanks = count($blank_details);
-            echo '<p>' . $blank_details[0];
-            $blank_count = 1;
-            while ($blank_count < $no_blanks) {
-            $not_used = preg_match("/mark=\"([0-9]{1,3})\"/",$blank_details[$blank_count],$results);
-            if ($results[1]) {
+          // Dropdown lists.
+          $no_blanks = count($blank_details);
+          echo '<p>' . $blank_details[0];
+          $blank_count = 1;
+          while ($blank_count < $no_blanks) {
+            $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
+            if (isset($results[1]) and $results[1] != '') {
               $blank_mark[$blank_count] = $results[1];
             } else {
               $blank_mark[$blank_count] = 1;
             }
-            $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],'>') + 1));
-            $answer_options = array();
-            $answer_options = explode("</blank>",$blank_details[$blank_count]);
-            $answer_list = array();
-            $answer_list = explode(",",$answer_options[0]);
-            if ($display_option['score_method'] == 'dropdown') {
-              if ($blank_user_answers[$part_id] == 'u' and $screen_pre_submitted == 1) {
-                echo "<select name=\"q" . $question_no . "_" . $part_id . "\" style=\"background-color: #FFC0C0\">\n";
-              } else {
-                echo "<select name=\"q" . $question_no . "_" . $part_id . "\">\n";
-              }
-              echo "<option value=\"u\"></option>\n";
-              $no_answers = count($answer_list);
-          
-              // Shuffle the answers up.
-              for ($i=1; $i<26; $i++) {
-                $pos1 = rand(0,$no_answers-1);
-                $pos2 = rand(0,$no_answers-1);
-                if ($pos1 != $pos2) {
-                  $postemp = $answer_list[$pos2];
-                  $answer_list[$pos2] = $answer_list[$pos1];
-                  $answer_list[$pos1] = $postemp;
-                }
-              }
-          
-              for ($i=1; $i<=$no_answers; $i++) {
-                if ($answer_list[$i-1] == $blank_user_answers[$blank_count]) {
-                  echo "<option value=\"" . $answer_list[$i-1] . "\" selected>" . $answer_list[$i-1]. "</option>\n";
-                } else {
-                  echo "<option value=\"" . $answer_list[$i-1] . "\">" . $answer_list[$i-1]. "</option>\n";
-                }
-              }
-              echo '</select>';
-            } else {
-              echo "<input type=\"text\" name=\"q" . $question_no . "_" . $part_id . "\" size=\"" . strlen($answer_list[0]) . "\" />";
+            $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
+            $answer_options = explode('[/blank]',$blank_details[$blank_count]);
+            $answer_list = explode(',',$answer_options[0]);
+            shuffle($answer_list);            // Shuffle the answers up.
+            for ($i=1; $i<=count($answer_list); $i++) {
+              echo "[" . htmlentities(trim($answer_list[$i-1])) . "] \n";
             }
-            echo $answer_options[1]; // Bit after the closing </blank> tag.
+            echo $answer_options[1]; // Bit after the closing [/blank] tag.
             $blank_count++;
             $part_id++;
           }
           echo '</p>';
-          foreach ($blank_mark as $individual_mark) {
-            $marks += $individual_mark;
-          }	   
+        }
+        if (count($blank_mark) > 0) {
+          foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
         }
         break;
+        
+        
+        
+        
+        
+//        if ($display_option['score_method'] == 'textboxes') {
+//          $blank_details = explode('<blank',$display_option['option_text']);
+//          $array_size = count($blank_details);
+//          $blank_count = 1;
+//          while ($blank_count < $array_size) {
+//            $blank_details[$blank_count] = '<blank' . $blank_details[$blank_count];
+//            $results = array();
+//            $not_used = ereg("size=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
+//	 
+//            if ($results[1]) {
+//              $blank_size[$blank_count] = $results[1];
+//            } else {
+//              $blank_size[$blank_count] = 15;
+//            }
+//            $results=array();
+//            $not_used = preg_match("/mark=\"([0-9]{1,3})\"/",$blank_details[$blank_count],$results);
+//            if ($results[1]) {
+//              $blank_mark[$blank_count] = $results[1];
+//            } else {
+//              $blank_mark[$blank_count] = 1;
+//            }
+//            $screen_output[$blank_count] = preg_replace("/<blank.*>.*</blank>/","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
+//            $blank_count++;
+//          }
+//          $screen_output_all = '';
+//          foreach ($screen_output as $value) {
+//            $screen_output_all .= $value;
+//          }
+//          echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n";
+//          foreach ($blank_mark as $individual_mark) {
+//            $marks += $individual_mark;
+//          }	   
+//        } else {
+//            $blank_details = array();
+//            $blank_details = explode('<blank',$display_option['option_text']);
+//            $no_blanks = count($blank_details);
+//            echo '<p>' . $blank_details[0];
+//            $blank_count = 1;
+//            while ($blank_count < $no_blanks) {
+//            $not_used = preg_match("/mark=\"([0-9]{1,3})\"/",$blank_details[$blank_count],$results);
+//            if ($results[1]) {
+//              $blank_mark[$blank_count] = $results[1];
+//            } else {
+//              $blank_mark[$blank_count] = 1;
+//            }
+//            $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],'>') + 1));
+//            $answer_options = array();
+//            $answer_options = explode("</blank>",$blank_details[$blank_count]);
+//            $answer_list = array();
+//            $answer_list = explode(",",$answer_options[0]);
+//            if ($display_option['score_method'] == 'dropdown') {
+//              echo "<select name=\"q" . $question_no . "_" . $part_id . "\">\n";
+//              echo "<option value=\"u\"></option>\n";
+//              $no_answers = count($answer_list);
+//          
+//              // Shuffle the answers up.
+//              for ($i=1; $i<26; $i++) {
+//                $pos1 = rand(0,$no_answers-1);
+//                $pos2 = rand(0,$no_answers-1);
+//                if ($pos1 != $pos2) {
+//                  $postemp = $answer_list[$pos2];
+//                  $answer_list[$pos2] = $answer_list[$pos1];
+//                  $answer_list[$pos1] = $postemp;
+//                }
+//              }
+//          
+//              for ($i=1; $i<=$no_answers; $i++) {
+//                echo "<option value=\"" . $answer_list[$i-1] . "\">" . $answer_list[$i-1]. "</option>\n";
+//              }
+//              echo '</select>';
+//            } else {
+//              echo "<input type=\"text\" name=\"q" . $question_no . "_" . $part_id . "\" size=\"" . strlen($answer_list[0]) . "\" />";
+//            }
+//            echo $answer_options[1]; // Bit after the closing </blank> tag.
+//            $blank_count++;
+//            $part_id++;
+//          }
+//          echo '</p>';
+//          foreach ($blank_mark as $individual_mark) {
+//            $marks += $individual_mark;
+//          }	   
+//        }
+//        break;
       case 'textbox':
         $textbox_size = explode('x',$display_option['score_method']);
         if ($textbox_size[1] == 1) {
-          echo "<blockquote><input type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $users_answers[$q_id] . "\" /></blockquote>\n";
+          echo "<blockquote><input type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"\" /></blockquote>\n";
         } else {
-          echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\" />" . $users_answers[$q_id] . "</textarea></blockquote>\n";
+          echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\" /></textarea></blockquote>\n";
         }
         break;
       case 'hotspot':
-?>        
-               
-  <script language="JavaScript">
-    var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
-    function hotspot<?php echo $question_no; ?>_DoFSCommand(command, args) {
-      var hotspot<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.hotspot<?php echo $question_no; ?> : document.hotspot<?php echo $question_no; ?>;
-      document.questions.q<?php echo $question_no; ?>.value = args;
-    }
-    if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
-      document.write('<script language=\"VBScript\"\>\n');
-      document.write('On Error Resume Next\n');
-      document.write('Sub hotspot<?php echo $question_no; ?>_FSCommand(ByVal command, ByVal args)\n');
-      document.write('	Call hotspot<?php echo $question_no; ?>_DoFSCommand(command, args)\n');
-      document.write('End Sub\n');
-      document.write('</script\>\n');
-    }
-  </script>
-        
-  <div align="center">
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="hotspot<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 8); ?>" height="<?php echo ($options[0]['q_media_height'] + 8); ?>" align="middle">
-    <param name="allowScriptAccess" value="sameDomain" />
-    <param name="movie" value="hotspot_question.swf" />
-    <param name="quality" value="high" />
-    <param name="bgcolor" value="#ffffff" />
-    <param name="FlashVars" value="flashWidth=<?php echo ($options[0]['q_media_width'] + 8); ?>&flashHeight=<?php echo ($options[0]['q_media_height'] + 8); ?>&imageName=<?php echo $options[0]['q_media']; ?>&type=<?php echo $options[0]['score_method']; ?>&config=<?php echo $options[0]['correct']; ?>&user_answer=<?php echo $users_answers[$q_id]; ?>" />
-    <embed src="hotspot_question.swf" FlashVars="imageName=<?php echo $options[0]['q_media']; ?>&config=<?php echo $options[0]['correct']; ?>&user_answer=<?php echo $users_answers[$q_id]; ?>" quality="high" bgcolor="#ffffff" width="<?php echo ($options[0]['q_media_width'] + 8); ?>" height="<?php echo ($options[0]['q_media_height'] + 8); ?>" swLiveConnect=true id="hotspot<?php echo $question_no; ?>" name="hotspot<?php echo $question_no; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />
-    </object>
-    <br /><span style="color: #808080; font-size: 80%">(<img src="../artwork/hotspot_cursor.gif" width="15" height="15" alt="cusor" border="0" /> Single click with the mouse to record your answer. Single click again if you need to change that answer.)</span>
-  </div>
-        
-<?php
-        if ($users_answers[$q_id] == '') {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"u\" />\n";
-        } else {
-          echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"" . $users_answers[$q_id] . "\" />\n";
+        $question = $options[0];
+        $marks = $question['marks'];
+        $hs_parts = explode(',',$options[0]['leadin']);
+        echo '<tr><td class="question_no">' . (($question_no + $question_offset) - 1) . '.&nbsp;</td><td>';
+        foreach ($hs_parts as $part) {
+          echo '<p>' . $part . '</p>';
+          if ($question['q_media'] != '' and $question['q_media'] != NULL) {
+            if (substr($question['q_media'], -4) == '.gif' or substr($question['q_media'], -4) == '.jpg' or substr($question['q_media'], -4) == 'jpeg' or substr($question['q_media'], -4) == '.png') {
+              echo "<p align=\"center\">" . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height'],$question_no) . "</p>\n";
+            } else {
+              echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
+              echo "<p>" . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height'],$question_no) . "</p>\n";
+            }
+          }
         }
+        echo "</td></tr>\n";
+        
+        
+        
+        
+        
+        
+//        echo "<div align=\"left\">";
+//        
+//        $hotspot_no = substr_count($question['correct'],'|') + 1;
+//        $tmp_height = $question['q_media_height'] + 30;
+//        if ($tmp_height < (($hotspot_no * 36) + 25)) $tmp_height = (($hotspot_no * 36) + 25);
+        ?>
+        <!--  <script language="JavaScript">
+          function swfLoaded<?php echo $question_no; ?>(message) {
+            var num = message.substring(5,message.length);
+            setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo $question['correct']; ?>', '','<?php echo $screen_pre_submitted; ?>');
+          }
+          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
+          write_string('<param name="allowScriptAccess" value="always" />');
+          write_string('<param name="movie" value="/touchstone/paper/hotspot_question.swf" />');
+          write_string('<param name="quality" value="high" />');
+          write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+          write_string('<embed src="/touchstone/paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+          write_string('</object>');
+        </script>
+        </div> -->
+<?php
+        echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"\" />\n";
+        break;
+      case 'labelling':
+        $question = $options[0];
+        $tmp_labels = 0;
+        $max_col1 = 0;
+        $max_col2 = 0;
+        $tmp_first_split = explode(";", $question['correct']);
+        $tmp_second_split = explode('|', $tmp_first_split[8]);
+        foreach ($tmp_second_split as $ind_label) {
+          $label_parts = explode('$', $ind_label);
+          if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
+            $tmp_labels++;
+            if ($label_parts[2] > 219) $marks++;
+            if ($label_parts[0] < 10) {
+              $max_col1 = $label_parts[0];
+            } else {
+              $max_col2 = $label_parts[0];
+            }
+          }
+        }
+        $max_col2-=10;
+        $max_label = max($max_col1,$max_col2);
+
+        $tmp_height = $question['q_media_height'];
+        if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
+  
+        "<div align=\"center\">\n";
+  ?>
+    <script language="javascript">
+      function swfLoaded<?php echo $question_no; ?>(message) {
+        var num = message.substring(5,message.length);
+        setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo $question['correct']; ?>', '');
+      }
+      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
+      write_string('<param name="allowScriptAccess" value="always" />');
+      write_string('<param name="movie" value="/touchstone/paper/label_question.swf" />');
+      write_string('<param name="quality" value="high" />');
+      write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+      write_string('<embed src="/touchstone/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('</object>');
+ 		</script>
+          
+          </div>
+        <?php
+        echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"\" />\n";
         break;
       case 'flash':
 ?>        
@@ -672,14 +668,7 @@ function display_options($options,$q_id, $current_theme) {
       echo "<br />\n";
       echo "<div class=\"option\">\n";
       $multi_answers = array();
-      if(isset($matching_users_answers[$part_id - 1])) $multi_answers = explode('$', $matching_users_answers[$part_id - 1]);
       foreach ($matching_options as $single_option) {
-        $tmp_answer_match = false;
-        foreach ($multi_answers as $separate_tmp_answer) {
-          if ($separate_tmp_answer == $single_option) {
-            $tmp_answer_match = true;
-          }
-        }
         echo "<img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" />&nbsp;&nbsp;$single_option<br />\n";
       }
       echo '</div><br /></li>';
@@ -689,6 +678,35 @@ function display_options($options,$q_id, $current_theme) {
     $matching_answers = explode('|', $options[0]['correct']);
     $marks += count($matching_answers);
     echo '</ol>';
+  } elseif ($options[0]['q_type'] == 'matrix') {
+    $part_id = 1;
+    if ($matching_media[0] != '') {
+      echo "<p align=\"center\">" . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0]) . "</p>\n";
+    }
+    echo '<table cellpadding="2" cellspacing="0" border="1">';
+    echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
+    foreach ($matching_options as $single_option) {
+      echo '<td>' . stripslashes($single_option) . '</td>';
+    }
+    echo "<tr>\n";
+    $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x');
+    foreach ($matching_scenarios as $single_scenario) {
+      if (trim($single_scenario) != '') {
+        if (isset($matching_users_answers[$part_id - 1]) AND $matching_users_answers[$part_id - 1] == '' AND $screen_pre_submitted == 1) {
+          echo "<tr class=\"unans\">\n";
+        } else {
+          echo "<tr>\n";
+        }
+        echo '<td align="right">' . $numerals[$part_id - 1] . '.</td><td>' . $single_scenario . '</td>';
+        foreach ($matching_options as $single_option) {
+          echo '<td><div align="center"><img src="../artwork/print_checkbox.gif" width="25" height="24" alt="checkbox" /></div></td>';
+        }
+        echo "</tr>\n";
+        $part_id++;
+      }
+    }
+    echo '</table>';
+    $marks = $part_id - 1;
   } elseif ($options[0]['q_type'] == 'sct') {
     echo "</table>\n</td></tr>\n";
   }
@@ -697,7 +715,7 @@ function display_options($options,$q_id, $current_theme) {
   if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert') echo '</blockquote>';
   if ($display_option['paper_type'] < 3) {
     if ($marks == 1) {
-      echo "<div style=\"color: #808080; font-size: 80%\">($marks&nbsp;Marks)</div>\n<br />\n";
+      echo "<div style=\"color: #808080; font-size: 80%\">($marks)</div>\n<br />\n";
     } elseif ($marks > 1) {
       if ($options[0]['q_type'] == 'dichotomous' and ($options[0]['score_method'] == 'TF_Negative' or $options[0]['score_method'] == 'TF_NegativeAbstain' or $options[0]['score_method'] == 'YN_Negative' or $options[0]['score_method'] == 'YN_NegativeAbstain')) {
         echo "<div class=\"no_marks\">($marks, negative marking)</div>\n<br />\n";
@@ -733,7 +751,7 @@ function old_display_options($options, $q_id, $current_theme) {
   $part_id = 0;
   $marks = 0;
 
-  if ($options[0]['q_type'] == 'extmatch') {
+  if ($options[0]['q_type'] == 'extmatch' or $options[0]['q_type'] == 'matrix') {
     echo ("<div class=\"option\"><select name=\"q" . $question_no . "\" multiple size=\"10\">\n");
   } elseif ($options[0]["q_type"] == "dichotomous") {
     echo ("<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n");
@@ -958,7 +976,7 @@ function old_display_options($options, $q_id, $current_theme) {
     $i++;
   }                    // End foreach loop
 
-  if ($options[0]['q_type'] == 'extmatch') {
+  if ($options[0]['q_type'] == 'extmatch' or $options[0]['q_type'] == 'extmatch') {
     echo ("</select></div></li>\n");
   } elseif ($options[0]["q_type"] == "mcq") {
     if ($options[0]["score_method"] == "vertical") {

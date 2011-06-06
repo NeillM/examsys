@@ -113,12 +113,13 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   .active {color:<?php echo $fgcolor; ?>}
   .inactive {color:#C0C0C0}
 </style>
-
+<script language="JavaScript" src="../javascript/start.js"></script>
+<script language="JavaScript" src="../javascript/flash_include.js"></script>
 </head>
 <body onload="javascript:window.print()">
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
-  <?
+  <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" width="100%">';
   echo '<tr><td class="raised_tbl"><div class="paper">' . $paper_title . '</div>';
   echo '<table cellspacing="1" cellpadding="1" border="0" style="font-family: Arial,sans-serif; font-weight:bold; color:white"><tr>';
@@ -167,7 +168,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
         echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td><p>' . $scenario . '</p>';
         $li_set = 1;
       }
-      if ($q_media != '' and $q_media != NULL and $q_type != 'sct' and $q_type != 'hotspot' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'matrix') {
+      if ($q_media != '' and $q_media != NULL and $q_type != 'sct' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'matrix') {
         if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
           if ($li_set == 0) echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
           $li_set = 1;
@@ -178,7 +179,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
           echo "<p>" . display_media($q_media,$q_media_width,$q_media_height,$question_no) . "</p>\n";
         }
       }
-      if ($q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info' and $q_type != 'sct') {
+      if ($q_type != 'hotspot' and $q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info' and $q_type != 'sct') {
         if ($li_set == 0) echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
         $li_set = 1;
         echo '<p>' . $leadin . '</p>';
