@@ -271,7 +271,6 @@
             
             $i = 0;
             foreach ($options as $individual_option) {
-              $i++;
               echo "<tr><td colspan=\"4\">$individual_option</td></tr>\n";
               for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
                 if (isset($log[$screen][$q_id][$i][$rank_position]) and  $log[$screen][$q_id][$i][$rank_position] == '') $log[$screen][$q_id][$i][$rank_position] = 0;
@@ -300,6 +299,7 @@
                 echo "<tr><td class=\"figures\">0</td><td>(0%)</td><td></td><td style=\"color:#808080\">&lt;unanswered&gt;</td><td style=\"width:50%\">&nbsp;</td></tr>";
               }
               echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+              $i++;
             }
             break;
           case 'timedate':
@@ -649,10 +649,9 @@ td {vertical-align:top}
         break;
       case 'rank':
         $tmp_answer_parts = array();
-        $tmp_answer_parts = explode(',',substr($tmp_answer,1));
+        $tmp_answer_parts = explode(',',$tmp_answer);
         $i = 0;
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
-          $i++;
           if ($tmp_individual_answer == '9999') {
             if (isset($log_array[$screen][$question_ID][$i]['u'])) {
               $log_array[$screen][$question_ID][$i]['u']++;
@@ -666,6 +665,7 @@ td {vertical-align:top}
               $log_array[$screen][$question_ID][$i][$tmp_individual_answer] = 1;
             }
           }
+          $i++;
         }
         break;
       case 'textbox':

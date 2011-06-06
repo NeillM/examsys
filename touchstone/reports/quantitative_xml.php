@@ -23,10 +23,13 @@
 */
 
   require '../include/staff_auth.inc';
+  require '../include/errors.inc';
+  check_var('paperID', 'GET', true, false);
+
   header('Content-disposition: attachment; filename=report.xml');
   header('Content-type: text/xml');
 
-  function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $question_number, $candidates, $o_media, $o_media_width, $o_media_height) {
+  function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $question_number, $candidates) {
     global $old_likert_scale, $old_score_method, $table_on;
 
     // Remove spaces
@@ -81,23 +84,9 @@
           foreach ($options as $individual_option) {
             $i++;
             if ($log[$screen][$q_id][1][$i] == '') {
-              if ($o_media[$i-1] != '') {
-                echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r>';
-                echo '<w:pict><v:shapetype id="_x0000_t' . $q_id . $i . '" coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f"><v:stroke joinstyle="miter"/><v:formulas><v:f eqn="if lineDrawn pixelLineWidth 0"/><v:f eqn="sum @0 1 0"/><v:f eqn="sum 0 0 @1"/><v:f eqn="prod @2 1 2"/><v:f eqn="prod @3 21600 pixelWidth"/><v:f eqn="prod @3 21600 pixelHeight"/><v:f eqn="sum @0 0 1"/><v:f eqn="prod @6 1 2"/><v:f eqn="prod @7 21600 pixelWidth"/><v:f eqn="sum @8 21600 0"/><v:f eqn="prod @7 21600 pixelHeight"/><v:f eqn="sum @10 21600 0"/></v:formulas><v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/><o:lock v:ext="edit" aspectratio="t"/></v:shapetype>';
-                echo '<v:shape id="_x0000_i' . $q_id . $i . '" type="#_x0000_t75" style="width:' . $o_media_width[$i-1] . 'px;height:' . $o_media_height[$i-1] . 'px"><v:imagedata src="wordml://0100000' . $q_id . $i . '.gif" o:title="smilie1"/><v:imagedata src="https://celsus.nottingham.ac.uk/touchstone/media/' . $o_media[$i-1] . '" /></v:shape></w:pict>';
-                echo '</w:r></w:p>';
-              } else {
-                echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-              }
+              echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
             } else {
-              if ($o_media[$i-1] != '') {
-                echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r>';
-                echo '<w:pict><v:shapetype id="_x0000_t' . $q_id . $i . '" coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f"><v:stroke joinstyle="miter"/><v:formulas><v:f eqn="if lineDrawn pixelLineWidth 0"/><v:f eqn="sum @0 1 0"/><v:f eqn="sum 0 0 @1"/><v:f eqn="prod @2 1 2"/><v:f eqn="prod @3 21600 pixelWidth"/><v:f eqn="prod @3 21600 pixelHeight"/><v:f eqn="sum @0 0 1"/><v:f eqn="prod @6 1 2"/><v:f eqn="prod @7 21600 pixelWidth"/><v:f eqn="sum @8 21600 0"/><v:f eqn="prod @7 21600 pixelHeight"/><v:f eqn="sum @10 21600 0"/></v:formulas><v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/><o:lock v:ext="edit" aspectratio="t"/></v:shapetype>';
-                echo '<v:shape id="_x0000_i' . $q_id . $i . '" type="#_x0000_t75" style="width:' . $o_media_width[$i-1] . 'px;height:' . $o_media_height[$i-1] . 'px"><v:imagedata src="wordml://0100000' . $q_id . $i . '.gif" o:title="smilie1"/><v:imagedata src="https://celsus.nottingham.ac.uk/touchstone/media/' . $o_media[$i-1] . '" /></v:shape></w:pict>';
-                echo '</w:r></w:p>';
-              } else {
-                echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-              }
+              echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
             }
           }
           if ($old_score_method == 'vertical_other') {
@@ -106,7 +95,7 @@
               echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . wordToUtf8($other_text) . '</w:t></w:r></w:p>';
             }
           }
-          if ($log[$screen][$q_id][1]['u'] == '') {
+          if (!isset($log[$screen][$q_id][1]['u'])) {
             echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>(unanswered)</w:t></w:r></w:p>';
           } else {
             $unanswered = $log[$screen][$q_id][1]['u'];
@@ -116,9 +105,10 @@
           $table_on = 0;
           break;
         case 'likert':
-          $old_properties = split("\|",$old_likert_scale);
+          $unanswered = 0;
+          $old_properties = explode('|',$old_likert_scale);
           $old_size = substr_count($old_likert_scale,'|');
-          $current_properties = split("\|",$old_score_method);
+          $current_properties = explode('|',$old_score_method);
           $new_size = substr_count($old_score_method,'|');
           $na = $current_properties[$new_size];
           if ($old_likert_scale != $old_score_method or $table_on == 0) {
@@ -138,18 +128,20 @@
           foreach ($options as $individual_option) {
             $i++;
             if ($i > 1 or $na == 'true') {
-              if ($log[$screen][$q_id][1][$individual_option] == '') {
+              if (!isset($log[$screen][$q_id][1][$individual_option])) {
                 echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc>';
               } else {
                 echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][1][$individual_option] . ' (' . round(($log[$screen][$q_id][1][$individual_option]/$candidates)*100) . '%)</w:t></w:r></w:p></w:tc>';
               }
               if ($individual_option >= 1 and $individual_option <= 10) {
-                $sub_total += $individual_option * $log[$screen][$q_id][1][$individual_option];
+                if (isset($log[$screen][$q_id][1][$individual_option])) {
+                  $sub_total += $individual_option * $log[$screen][$q_id][1][$individual_option];
+                }
               }
             }
           }
-          $unanswered = $log[$screen][$q_id][1]['n/a'];
-          if ($log[$screen][$q_id][1]['u'] == '') {
+          if (isset($log[$screen][$q_id][1]['n/a'])) $unanswered = $log[$screen][$q_id][1]['n/a'];
+          if (!isset($log[$screen][$q_id][1]['u'])) {
             echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc>';
           } else {
             $unanswered += $log[$screen][$q_id][1]['u'];
@@ -185,34 +177,42 @@
         case 'rank':
           if ($table_on == 1) echo '</w:tbl>';
           echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-          echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/></w:tblGrid>';
           $rank_no = 0;
           foreach ($correct_buf as $individual_correct) {
             if ($individual_correct > $rank_no and $individual_correct < 9990) $rank_no = $individual_correct;
           }
           $i = 0;
           foreach ($options as $individual_option) {
-            $i++;
-            echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="1500" w:type="dxa"/></w:tcPr><w:p><w:r><w:t> </w:t></w:r></w:p></w:tc></w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="1500" w:type="dxa"/></w:tcPr><w:p><w:r><w:t>' . wordToUtf8($individual_option) . '</w:t></w:r></w:p></w:tc></w:tr>';
+            echo "<w:p><w:r><w:t>" . wordToUtf8($individual_option) . "</w:t></w:r></w:p><w:p/>";
+            echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/></w:tblGrid>';
             for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
-              if ($log[$screen][$q_id][$i+1][$rank_position] == '') $log[$screen][$q_id][$i+1][$rank_position] = 0;
-              if ($correct_buf[$i-1] == $rank_position) {
-                echo "<tr><td class=\"figures\" style=\"font-weight: bold\">" . $log[$screen][$q_id][$i+1][$rank_position] . "</w:t></w:r></w:p></w:tc></w:tr><td style=\"font-weight: bold\">$rank_position</w:t></w:r></w:p></w:tc></w:tr></w:tr>";
+              if (!isset($log[$screen][$q_id][$i][$rank_position])) $log[$screen][$q_id][$i][$rank_position] = 0;
+              echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][$i][$rank_position] . '</w:t></w:r></w:p></w:tc>';
+              echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>(' . number_format(($log[$screen][$q_id][$i][$rank_position]/$candidates)*100,0) . '%)</w:t></w:r></w:p></w:tc>';
+              echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $rank_position;
+              if ($rank_position == 1) {
+                echo 'st';
+              } elseif ($rank_position == 2) {
+                echo 'nd';
+              } elseif ($rank_position == 3) {
+                echo 'rd';
               } else {
-                echo "<tr><td class=\"figures\">" . $log[$q_id][$i+1][$rank_position] . "</w:t></w:r></w:p></w:tc></w:tr><td>$rank_position</w:t></w:r></w:p></w:tc></w:tr></w:tr>";
+                echo 'th';
               }
+              echo '</w:t></w:r></w:p></w:tc></w:tr>';
             }
+            echo '</w:tbl>';
+            $i++;
           }
-          echo '</w:tbl>';
           $table_on = 0;
           break;
       }
     } else {
-      $tmp_media_array = split("\|",$q_media);
-      $tmp_media_width_array = split("\|",$q_media_width);
-      $tmp_media_height_array = split("\|",$q_media_height);
-      $tmp_ext_scenarios = split("\|",$scenario);
-      $tmp_answers_array = split("\|",$correct_buf[0]);
+      $tmp_media_array = explode('|',$q_media);
+      $tmp_media_width_array = explode('|',$q_media_width);
+      $tmp_media_height_array = explode('|',$q_media_height);
+      $tmp_ext_scenarios = explode('|',$scenario);
+      $tmp_answers_array = explode('|',$correct_buf[0]);
       echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
       for ($i=1; $i<=(substr_count($scenario,'|')+1); $i++) {
         if ($tmp_ext_scenarios[$i-1])  echo "<w:p><w:r><w:t>" . $tmp_ext_scenarios[$i-1] . "</w:t></w:r></w:p><w:p/>";
@@ -261,7 +261,7 @@
   echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
   echo '<?mso-application progid="Word.Document"?>
 <w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
-  echo $_GET['paper'];
+  echo $paper;
   $tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
   $tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
   echo '</o:Title><o:Author>TouchStone ' . $ts_version . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>TouchStone ' . $ts_version . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
@@ -278,15 +278,9 @@
   $log_array = array();
   $hits = 0;
   // Capture the log data first.
-  if ($_GET['repdegree'] == 'Staff') {
-    $result = $mysqli->prepare("SELECT DISTINCT log3.userID, log3.q_id, user_answer, q_type, screen, score_method FROM (log3, questions, users) WHERE log3.q_id=questions.q_id AND q_paper=? AND users.id=log3.userID AND (users.roles LIKE 'Staff%' OR users.roles LIKE '%SysAdmin%')$exclude AND started>=? AND started<=?");
-    $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
-    $result->execute();
-  } else {
-    $result = $mysqli->prepare("SELECT DISTINCT log3.userID, log3.q_id, user_answer, q_type, screen, score_method FROM (log3, questions, users) WHERE log3.q_id=questions.q_id AND q_paper=? AND users.id=log3.userID AND log3.year LIKE ? AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started>=? AND started<=?");
-    $result->bind_param('issss', $_GET['paperID'], $_GET['repyear'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
-    $result->execute();
-  }
+  $result = $mysqli->prepare("SELECT DISTINCT log3.userID, log3.q_id, user_answer, q_type, screen, score_method FROM (log3, log_metadata, questions, users) WHERE log3.q_paper=log_metadata.paperID AND log3.userID=log_metadata.userID AND log3.started=log_metadata.started AND log3.q_id=questions.q_id AND q_paper=? AND users.id=log3.userID AND log_metadata.year LIKE ? AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND log_metadata.started>=? AND log_metadata.started<=?");
+  $result->bind_param('issss', $_GET['paperID'], $_GET['repyear'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
+  $result->execute();
   $result->store_result();
   $hits = $result->num_rows;
   $result->bind_result($tmp_username, $question_ID, $tmp_answer, $q_type, $screen, $score_method);
@@ -295,54 +289,78 @@
     switch ($q_type) {
       case 'blank':
         $tmp_answer_parts = array();
-        $tmp_answer_parts = split("\|",$tmp_answer);
+        $tmp_answer_parts = explode('|',$tmp_answer);
         $i = 0;
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
           $i++;
-          if ($tmp_individual_answer == 'u') {
-            $log_array[$screen][$question_ID][$i]['u']++;
-          } else {
+          if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_answer])) {
             $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
+          } else {
+            $log_array[$screen][$question_ID][$i][$tmp_individual_answer] = 1;
           }
         }
         break;
       case 'calculation':
         $tmp_score_method = array();
-        $tmp_score_method = split(',',$score_method);
+        $tmp_score_method = explode(',',$score_method);
         $tolerance = $tmp_score_method[1];
-        $tmp_first_split = split("\|", $tmp_answer);
+        $tmp_first_split = explode('|', $tmp_answer);
         if ($tmp_first_split[0] == $tmp_first_split[1]) {
           $log_array[$screen][$question_ID][1]['correct']++;
         } else {
           if ($tmp_first_split[0] == '') {
-            $log_array[$screen][$question_ID][1]['u']++;
+            if (isset($log_array[$screen][$question_ID][1]['u'])) {
+              $log_array[$screen][$question_ID][1]['u']++;
+            } else {
+              $log_array[$screen][$question_ID][1]['u'] = 1;
+            }
           } elseif (abs($tmp_first_split[0] - $tmp_first_split[1]) <= $tolerance) {
-            $log_array[$screen][$question_ID][1]['tolerance']++;
+            if (isset($log_array[$screen][$question_ID][1]['tolerance'])) {
+              $log_array[$screen][$question_ID][1]['tolerance']++;
+            } else {
+              $log_array[$screen][$question_ID][1]['tolerance'] = 1;
+            }
           } else {
-            $log_array[$screen][$question_ID][1]['incorrect']++;
+            if (isset($log_array[$screen][$question_ID][1]['incorrect'])) {
+              $log_array[$screen][$question_ID][1]['incorrect']++;
+            } else {
+              $log_array[$screen][$question_ID][1]['incorrect'] = 1;
+            }
           }
         }
         break;
       case 'dichotomous':
         for ($i=0; $i<strlen($tmp_answer); $i++) {
           $tmp_individual_answer = substr($tmp_answer, $i, 1);
-          $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
+          if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
+            $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
+          } else {
+            $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer] = 1;
+          }
         }
         break;
       case 'labelling':
-        $tmp_first_split = split(";", $tmp_answer);
-        $tmp_second_split = split('\$', $tmp_first_split[1]);
+        $tmp_first_split = explode(';', $tmp_answer);
+        $tmp_second_split = explode('$', $tmp_first_split[1]);
         $sections = count($tmp_second_split);
         for ($i=2; $i<=count($tmp_second_split);$i+=4) {
           $x_coord = $tmp_second_split[$i-2];
           $y_coord = $tmp_second_split[$i-1];
           $tmp_individual_answer = trim($tmp_second_split[$i]);
           $element = $x_coord . 'x' . $y_coord;
-          $log_array[$screen][$question_ID][$element][$tmp_individual_answer]++;
+          if (isset($log_array[$screen][$question_ID][$element][$tmp_individual_answer])) {
+            $log_array[$screen][$question_ID][$element][$tmp_individual_answer]++;
+          } else {
+            $log_array[$screen][$question_ID][$element][$tmp_individual_answer] = 1;
+          }
         }
         break;
       case 'likert':
-        $log_array[$screen][$question_ID][1][$tmp_answer]++;
+        if (isset($log_array[$screen][$question_ID][1][$tmp_answer])) {
+          $log_array[$screen][$question_ID][1][$tmp_answer]++;
+        } else {
+          $log_array[$screen][$question_ID][1][$tmp_answer] = 1;
+        }
         break;
       case 'hotspot':
         if (substr($tmp_answer,0,1) == '1') {
@@ -362,30 +380,50 @@
         if (substr($tmp_answer,0,5) == 'other') {
           $log_array[$screen][$question_ID][1]['other'][] = substr($tmp_answer,6);
         } elseif ($tmp_answer == 0) {
-          $log_array[$screen][$question_ID][1]['u']++;
+          if (isset($log_array[$screen][$question_ID][1]['u'])) {
+            $log_array[$screen][$question_ID][1]['u']++;
+          } else {
+            $log_array[$screen][$question_ID][1]['u'] = 1;
+          }
         } else {
-          $log_array[$screen][$question_ID][1][$tmp_answer]++;
+          if (isset($log_array[$screen][$question_ID][1][$tmp_answer])) {
+            $log_array[$screen][$question_ID][1][$tmp_answer]++;
+          } else {
+            $log_array[$screen][$question_ID][1][$tmp_answer] = 1;
+          }
         }
         break;
       case 'mrq':
         for ($i=0; $i<strlen($tmp_answer); $i++) {
           $tmp_individual_answer = substr($tmp_answer, $i, 1);
-          $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
+          if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
+            $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
+          } else {
+            $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer] = 1;
+          }
         }
         break;
       case 'extmatch':
         $tmp_answer_parts = array();
-        $tmp_answer_parts = split("\|",$tmp_answer);
+        $tmp_answer_parts = explode('|',$tmp_answer);
         $i = 0;
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
           $i++;
           $tmp_sub_parts = array();
-          $tmp_sub_parts = split('\$',$tmp_individual_answer);
+          $tmp_sub_parts = explode('$',$tmp_individual_answer);
           foreach ($tmp_sub_parts as $tmp_individual_part) {
             if ($tmp_individual_answer == 'u') {
-              $log_array[$screen][$question_ID][$i]['u']++;
+              if (isset($log_array[$screen][$question_ID][$i]['u'])) {
+                $log_array[$screen][$question_ID][$i]['u']++;
+              } else {
+                $log_array[$screen][$question_ID][$i]['u'] = 1;
+              }
             } else {
-              $log_array[$screen][$question_ID][$i][$tmp_individual_part]++;
+              if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_part])) {
+                $log_array[$screen][$question_ID][$i][$tmp_individual_part]++;
+              } else {
+                $log_array[$screen][$question_ID][$i][$tmp_individual_part] = 1;
+              }
             }
           }
         }
@@ -393,30 +431,40 @@
       case 'matrix':
         $tmp_answer = substr($tmp_answer, 1);
         $tmp_answer_parts = array();
-        $tmp_answer_parts = split("\|",$tmp_answer);
+        $tmp_answer_parts = explode('|',$tmp_answer);
         $i = 0;
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
           $i++;
-          if ($tmp_individual_answer == 'u') {
-            $log_array[$screen][$question_ID][$i]['u']++;
-          } else {
+          if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_answer])) {
             $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
+          } else {
+            $log_array[$screen][$question_ID][$i][$tmp_individual_answer] = 1;
           }
         }
         break;
       case 'rank':
         $tmp_answer_parts = array();
-        $tmp_answer_parts = split(',',$tmp_answer);
+        $tmp_answer_parts = explode(',',$tmp_answer);
         $i = 0;
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
+          if ($tmp_individual_answer == '9999') {
+            if (isset($log_array[$screen][$question_ID][$i]['u'])) {
+              $log_array[$screen][$question_ID][$i]['u']++;
+            } else {
+              $log_array[$screen][$question_ID][$i]['u']++;
+            }
+          } else {
+            if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_answer])) {
+              $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
+            } else {
+              $log_array[$screen][$question_ID][$i][$tmp_individual_answer] = 1;
+            }
+          }
           $i++;
-          $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
         }
         break;
       case 'textbox':
-        //if (trim($tmp_answer) != '') {
-          $log_array[$screen][$question_ID][1]['other'][] = $tmp_answer;
-        //}
+        $log_array[$screen][$question_ID][1]['other'][] = $tmp_answer;
         break;
       case 'timedate':
         $log_array[$screen][$question_ID][1]['other'][] = $tmp_answer;
@@ -457,7 +505,7 @@
         }
         if ($old_q_type == 'likert') {
           $options_buffer['n/a'] = 'n/a';
-          $likert_properties = split("\|",$old_score_method);
+          $likert_properties = explode('|',$old_score_method);
           for ($i=1; $i<=substr_count($old_score_method,'|'); $i++) {
             $options_buffer[$i] = $i;
           }
@@ -466,19 +514,21 @@
           $respondents = 0;
           $i = 1;
           foreach ($options_buffer as $individual_option) {
-            $respondents += $log_array[$old_screen][$old_q_id][1][$i];
+            if (isset($log_array[$old_screen][$old_q_id][1][$i])) {
+              $respondents += $log_array[$old_screen][$old_q_id][1][$i];
+            }
             $i++;
           }
-          $respondents += $log_array[$old_screen][$old_q_id][1]['n/a'];
-          $respondents += $log_array[$old_screen][$old_q_id][1]['t'];
-          $respondents += $log_array[$old_screen][$old_q_id][1]['f'];
-          $respondents += $log_array[$old_screen][$old_q_id][1]['u'];
-          $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
+          if (isset($log_array[$old_screen][$old_q_id][1]['n/a'])) $respondents += $log_array[$old_screen][$old_q_id][1]['n/a'];
+          if (isset($log_array[$old_screen][$old_q_id][1]['t'])) $respondents += $log_array[$old_screen][$old_q_id][1]['t'];
+          if (isset($log_array[$old_screen][$old_q_id][1]['f'])) $respondents += $log_array[$old_screen][$old_q_id][1]['f'];
+          if (isset($log_array[$old_screen][$old_q_id][1]['u'])) $respondents += $log_array[$old_screen][$old_q_id][1]['u'];
+          if (isset($log_array[$old_screen][$old_q_id][1]['other'])) $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
           echo "<w:p><w:r><w:t>($respondents Respondents)</w:t></w:r></w:p>";
           $display_respondents = 0;
         }
         if ($old_q_type != 'info') {
-          displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents, $o_media_buffer, $o_media_width_buffer, $o_media_height_buffer);
+          displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
           $question_no++;
         }
         if ($old_screen < $screen) {
@@ -494,8 +544,8 @@
         $correct_buffer = array();
       }
       if ($q_type == 'labelling') {
-        $tmp_first_split = split(";", $correct);
-        $tmp_second_split = split('\$', $tmp_first_split[8]);
+        $tmp_first_split = explode(';', $correct);
+        $tmp_second_split = explode('$', $tmp_first_split[8]);
         for ($label_no = 4; $label_no <= 43; $label_no += 4) {
           if (substr($tmp_second_split[$label_no],0,1) != '|') {
             $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')));
@@ -520,10 +570,9 @@
     }
     $result->close();
 
-    //$question_no++;
     if ($old_q_type == 'likert') {
       $options_buffer['n/a'] = 'n/a';
-      $likert_properties = split("\|",$old_score_method);
+      $likert_properties = explode('|',$old_score_method);
       for ($i=1; $i<=substr_count($old_score_method,'|'); $i++) {
         $options_buffer[$i] = $i;
       }
@@ -546,7 +595,7 @@
       }
     }
 
-    displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents, $o_media_buffer, $o_media_width_buffer, $o_media_height_buffer);
+    displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
   }
 
   if ($table_on == 1) echo '</w:tbl>';
