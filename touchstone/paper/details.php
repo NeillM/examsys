@@ -810,7 +810,7 @@ if (isset($_GET['change_screen'])) {
         $next_screen = $temp_array[$x + 1]['screen'];
       }
 
-      if ($active_date == 1 or $summative_lock == 1) {
+      if ($summative_lock == 1) {
         echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "','$x','" . $temp_array[$x]['q_type'] . "','" . $temp_array[$x]['screen'] . "','" . $temp_array[$x]['p_id'] . "'," . $temp_array[$x]['display_pos'] . ",'" . $prevous_screen . "','" . $next_screen . "','" . $temp_array[$x]['screen'] . "','menu2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
       } else {
         echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "','$x','" . $temp_array[$x]['q_type'] . "','" . $temp_array[$x]['screen'] . "','" . $temp_array[$x]['p_id'] . "'," . $temp_array[$x]['display_pos'] . ",'" . $prevous_screen . "','" . $next_screen . "','" . $temp_array[$x]['screen'] . "','menu2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
