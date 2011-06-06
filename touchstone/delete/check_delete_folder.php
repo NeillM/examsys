@@ -40,7 +40,7 @@ body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-s
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/assessment_bin.png" width="32" height="37" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="Recycle Bin" /></td>
 
 <td><p>Are you sure you wish to delete this folder?<p>
 <p>Deleting the folder will <strong>not</strong> delete the papers contained within.</p>

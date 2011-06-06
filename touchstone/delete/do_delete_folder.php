@@ -25,42 +25,45 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-  $result = $mysqli->prepare("SELECT name FROM folders WHERE id=?");
-  $result->bind_param('i', $_POST['folderID']);
-  $result->execute();
-  $result->bind_result($name);
-  $result->fetch();
-  $result->close();
-  
-  $directories = split(';',$name);
-  $parent = '';
-  if (count($directories) > 1) {
-    for ($i=1; $i<count($directories); $i++) {
-      if ($parent == '') {
-        $parent = $directories[$i-1];
-      } else {
-        $parent .= ';' . $directories[$i-1];
-      }
+check_var('folderID', 'POST', true, false);
+
+$result = $mysqli->prepare("SELECT name FROM folders WHERE id=?");
+$result->bind_param('i', $_POST['folderID']);
+$result->execute();
+$result->bind_result($name);
+$result->fetch();
+$result->close();
+
+$directories = explode(';',$name);
+$parent = '';
+if (count($directories) > 1) {
+  for ($i=1; $i<count($directories); $i++) {
+    if ($parent == '') {
+      $parent = $directories[$i-1];
+    } else {
+      $parent .= ';' . $directories[$i-1];
     }
   }
-  
-  if ($parent != '') {
-    $result = $mysqli->prepare("SELECT id FROM folders WHERE name=?");
-    $result->bind_param('s', $parent);
-    $result->execute();
-    $result->bind_result($parentID);
-    $result->fetch();
-    $result->close();
-  }
-  if (strpos($userroles,'SysAdmin') !== false) {
-    $result = $mysqli->prepare("UPDATE folders SET deleted=NOW() WHERE id=?");
-  } else {
-    $result = $mysqli->prepare("UPDATE folders SET deleted=NOW() WHERE id=? AND ownerID=$userID");
-  }
-  $result->bind_param("i", $_POST['folderID']);
+}
+
+if ($parent != '') {
+  $result = $mysqli->prepare("SELECT id FROM folders WHERE name=?");
+  $result->bind_param('s', $parent);
   $result->execute();
+  $result->bind_result($parentID);
+  $result->fetch();
   $result->close();
-  $mysqli->close;
+}
+if (strpos($userroles,'SysAdmin') !== false) {
+  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW() WHERE id=?");
+} else {
+  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW() WHERE id=? AND ownerID=$userID");
+}
+$result->bind_param("i", $_POST['folderID']);
+$result->execute();
+$result->close();
+
+$mysqli->close();
 ?>
 <html>
 <head>
@@ -69,9 +72,9 @@ require '../include/errors.inc';
   function closeWindow() {
     <?php
     if ($parent == '') {
-      echo "window.opener.top.location.href = '../index.php'\n";
+      echo "window.opener.location.href = '../index.php'\n";
     } else {
-      echo "window.opener.top.location.href = '../folder.php?folder=$parentID'\n";
+      echo "window.opener.location.href = '../folder.php?folder=$parentID'\n";
     }
     ?>
     self.close();
@@ -87,14 +90,14 @@ require '../include/errors.inc';
 
 <td><p>Folder successfully deleted.<p>
 
-<div style="text-align: center">
+<div style="text-align:center">
 <form action="" method="get">
 <?php
-  if ($parent == '') {
-    echo "<input type=\"button\" name=\"cancel\" value=\"    OK    \" onclick=\"javascript:self.opener.top.location.href='../index.php';window.close();\" />\n";
-  } else {
-    echo "<input type=\"button\" name=\"cancel\" value=\"    OK    \" onclick=\"javascript:self.opener.top.location.href='../folder.php?folder=$parentID';window.close();\" />\n";
-  }
+if ($parent == '') {
+  echo "<input type=\"button\" name=\"cancel\" value=\"    OK    \" onclick=\"javascript:self.opener.location.href='../index.php';window.close();\" />\n";
+} else {
+  echo "<input type=\"button\" name=\"cancel\" value=\"    OK    \" onclick=\"javascript:self.opener.location.href='../folder.php?folder=$parentID';window.close();\" />\n";
+}
 ?>
 </form>
 </div>
