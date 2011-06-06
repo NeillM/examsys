@@ -388,7 +388,11 @@
           $rating_array = explode(',',$row['rating']);
           foreach ($rating_array as $individual_rating) {
             if (isset($marks_array[$questionID][$partID]) and $individual_rating != '') {
-              $ebel_marks[$individual_rating] += $marks_array[$questionID][$partID];
+              if (isset($ebel_marks[$individual_rating])) {
+                $ebel_marks[$individual_rating] += $marks_array[$questionID][$partID];
+              } else {
+                $ebel_marks[$individual_rating] = $marks_array[$questionID][$partID];
+              }
               $angoff_review_marks += $marks_array[$questionID][$partID];
             }
             $partID++;

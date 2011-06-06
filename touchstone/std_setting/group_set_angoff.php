@@ -63,7 +63,7 @@ if (isset($_GET['reviewers'])) {
   for ($i=1; $i<=100; $i++) {
     if (isset($_POST["member$i"])) {
       $review_string .= ';' . $_POST["member$i"];
-      $parts = split(',',$_POST["member$i"]);
+      $parts = explode(',',$_POST["member$i"]);
       if ($rater_query == '') {
         $rater_query = " AND ((setterID=$parts[0] AND std_set=$parts[1])";
       } else {
@@ -123,7 +123,6 @@ if (!isset($no_screens)) {
     $themecolor = $row['themecolor'];
     $labelcolor = $row['labelcolor'];
     $bidirectional = $row['bidirectional'];
-    $background = $row['background'];
     $marking = $row['marking'];
     $paper_type = $row['paper_type'];
     $paper_prologue = $row['paper_prologue'];
@@ -137,11 +136,7 @@ if (!isset($no_screens)) {
 <meta http-equiv="imagetoolbar" content="false">
 
 <style type="text/css">
-  body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%<?php
-  if ($background != '') {
-    echo "; background-image: url(./backgrounds/$background)";
-  }
-  ?>}
+  body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%}
   li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
   select, input {font-size:100%}
   table {font-size:100%}
@@ -156,20 +151,6 @@ if (!isset($no_screens)) {
   .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
 </style>
 
-<script language="JavaScript">
-  function move_in(img_name) {
-    document[img_name].src=onImg.src;
-  }
-
-  function move_out(img_name) {
-    document[img_name].src=offImg.src;
-  }
-  
-  onImg = new Image;
-  onImg.src = '../artwork/up_folder_icon_on.gif';
-  offImg = new Image;
-  offImg.src = '../artwork/up_folder_icon_off.gif';
-</script>
 </head>
 <body>
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">

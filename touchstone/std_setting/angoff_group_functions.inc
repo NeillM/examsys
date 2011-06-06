@@ -69,7 +69,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
 
   $option_no = count($options);
   $part_id = 0;
+  $part_no = 0;
   $marks = 0;
+  $rating_part = 0;
   if ($options[0]['q_type'] != 'likert') $old_likert_label = '';
 
   if ($options[0]['q_type'] == 'dichotomous') {
@@ -115,7 +117,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
   } elseif ($options[0]['q_type'] == 'likert') {
     $str = $options[0]['score_method'];
-    $likert_display = split("\|",$str);
+    $likert_display = explode('|',$str);
     $likert_col_no = substr_count($options[0]['score_method'],'|');
     if ($old_likert_label != $str or $current_theme != '') {
       echo '</table><table cellpadding="4" cellspacing="0" border="0">';
@@ -146,12 +148,12 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
     }
     $old_likert_label = $str;
   } elseif ($options[0]['q_type'] == 'extmatch' or $options[0]['q_type'] == 'matrix') {
-    $matching_scenarios = split("\|", $options[0]['scenario']);
-    $matching_media = split("\|", $options[0]['q_media']);
-    $matching_media_width = split("\|", $options[0]['q_media_width']);
-    $matching_media_height = split("\|", $options[0]['q_media_height']);
+    $matching_scenarios = explode('|', $options[0]['scenario']);
+    $matching_media = explode('|', $options[0]['q_media']);
+    $matching_media_width = explode('|', $options[0]['q_media_width']);
+    $matching_media_height = explode('|', $options[0]['q_media_height']);
     $matching_options = array();
-    $matching_users_answers = split("\|", $options[0]['correct']);
+    $matching_users_answers = explode('|', $options[0]['correct']);
   }
   $i = 0;
   
@@ -191,7 +193,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         break;
       case 'calculation':
         if ($users_answers[$q_id] == '') {
-          $figures = split(',',$display_option['option_text']);
+          $figures = explode(',',$display_option['option_text']);
           switch ($part_id) {
             case 1:
               $A = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
@@ -219,8 +221,8 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
               break;
           }
         } else {
-          $calc_answers = split("\|",$users_answers[$q_id]);
-          $variables = split(',', $calc_answers[2]);
+          $calc_answers = explode('|',$users_answers[$q_id]);
+          $variables = explode(',', $calc_answers[2]);
           $A = $variables[0];
           $B = $variables[1];
           $C = $variables[2];
@@ -314,9 +316,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       case 'extmatch':
       case 'matrix':
         $matching_options[] = $display_option['option_text'];
-	break;
+        break;
       case 'rank':
-        $rank_answers = split(',', $users_answers[$q_id]);
+        $rank_answers = explode(',', $users_answers[$q_id]);
         $total_rank_no = 0;
         $require_na = false;
         for ($i=0; $i<$option_no; $i++) {
@@ -331,53 +333,53 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         }
         
         echo "<tr><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\" onchange=\"itemSelected($question_no,$part_id);\">\n";
-	echo $question . "<option value=\"9999\"></option>\n";
-	if ($require_na) {
-	  if ($rank_answers[$part_id] == '9990') {
-	    echo $question . "<option value=\"9990\" selected>N/A</option>\n";
-	  } else {
-            echo $question . "<option value=\"9990\">N/A</option>\n";
-	  }
-	}
-	for ($i=1; $i<=$total_rank_no; $i++) {
-	  if ($i == $rank_answers[$part_id]) {
-            echo "<option value=\"" . $i . "\" selected>" . $i;
+        echo $question . "<option value=\"9999\"></option>\n";
+        if ($require_na) {
+          if ($rank_answers[$part_id] == '9990') {
+            echo $question . "<option value=\"9990\" selected>N/A</option>\n";
           } else {
-            echo "<option value=\"" . $i . "\">" . $i;
+                  echo $question . "<option value=\"9990\">N/A</option>\n";
           }
-	  if ($i == 1) {
-	    echo 'st';
-	  } elseif ($i == 2) {
-	    echo 'nd';
-	  } elseif ($i == 3) {
-	    echo 'rd';
-	  } else {
-	    echo 'th';
-	  }
-	  echo '</option>';
-	}
-	echo '</select></td>';
-	if ($display_option['score_method'] == 'BonusMark') {
-	  echo "<td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
-	} else {
-	  echo "<td>" . $display_option['option_text'] . "</td>\n</tr>\n";
-	}
-	if ($display_option['score_method'] == 'AllItemsCorrect') {
-	  if ($part_id == 1) {
-	    $marks++;
-	  }
-	} elseif ($display_option['correct'] < 9990) {
-          $marks++;
-        } elseif ($display_option['score_method'] == 'StrictOrder') {
-          $marks++;
         }
-	break;
+        for ($i=1; $i<=$total_rank_no; $i++) {
+          if ($i == $rank_answers[$part_id]) {
+                  echo "<option value=\"" . $i . "\" selected>" . $i;
+                } else {
+                  echo "<option value=\"" . $i . "\">" . $i;
+                }
+          if ($i == 1) {
+            echo 'st';
+          } elseif ($i == 2) {
+            echo 'nd';
+          } elseif ($i == 3) {
+            echo 'rd';
+          } else {
+            echo 'th';
+          }
+          echo '</option>';
+        }
+        echo '</select></td>';
+        if ($display_option['score_method'] == 'BonusMark') {
+          echo "<td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
+        } else {
+          echo "<td>" . $display_option['option_text'] . "</td>\n</tr>\n";
+        }
+        if ($display_option['score_method'] == 'AllItemsCorrect') {
+          if ($part_id == 1) {
+            $marks++;
+          }
+        } elseif ($display_option['correct'] < 9990) {
+                $marks++;
+              } elseif ($display_option['score_method'] == 'StrictOrder') {
+                $marks++;
+              }
+        break;
       case 'timedate':
-	$date_details = split("\|",$display_option['score_method']);
-	$answer_array = split('/',$users_answers[$q_id]);
-	$answer_day = $answer_array[0];
-	$answer_month = $answer_array[1];
-	$answer_year = $answer_array[2];
+        $date_details = explode('|',$display_option['score_method']);
+        $answer_array = explode('/',$users_answers[$q_id]);
+        $answer_day = $answer_array[0];
+        $answer_month = $answer_array[1];
+        $answer_year = $answer_array[2];
         echo '<p>';
         if ($date_details[0] == 1 or $date_details[0] == 4) {
           $answer_day = $answer_array[1];
@@ -513,34 +515,34 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         break;
       case 'blank':
         if ($display_option['score_method'] == 'textboxes') {
-	  $blank_details = split("\[blank",$display_option['option_text']);
-	  $array_size = count($blank_details);
-	  $blank_count = 1;
-	  while ($blank_count < $array_size) {
-	    $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
-	    $results = array();
-	    $not_used = ereg("size=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
-	 
-	    if ($results[1]) {
-	      $blank_size[$blank_count] = $results[1];
-	    } else {
-	      $blank_size[$blank_count] = 15;
-	    }
-	    $results=array();
-	    $not_used = ereg("mark=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
-	    if ($results[1]) {
-	      $blank_mark[$blank_count] = $results[1];
-	    } else {
-	      $blank_mark[$blank_count] = 1;
-	    }
-	    $screen_output[$blank_count] = ereg_replace("\[blank.*\].*\[/blank\]","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
-	    $blank_count++;
-	  }
-	  $screen_output_all = '';
-	  foreach ($screen_output as $value) {
-	    $screen_output_all .= $value;
-	  }
-	  echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n";
+          $blank_details = explode('[blank',$display_option['option_text']);
+          $array_size = count($blank_details);
+          $blank_count = 1;
+          while ($blank_count < $array_size) {
+            $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
+            $results = array();
+            $not_used = ereg("size=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
+         
+            if ($results[1]) {
+              $blank_size[$blank_count] = $results[1];
+            } else {
+              $blank_size[$blank_count] = 15;
+            }
+            $results=array();
+            $not_used = ereg("mark=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
+            if ($results[1]) {
+              $blank_mark[$blank_count] = $results[1];
+            } else {
+              $blank_mark[$blank_count] = 1;
+            }
+            $screen_output[$blank_count] = ereg_replace("\[blank.*\].*\[/blank\]","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
+            $blank_count++;
+          }
+          $screen_output_all = '';
+          foreach ($screen_output as $value) {
+            $screen_output_all .= $value;
+          }
+          echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n";
           if (count($blank_mark) > 0) {
             foreach ($blank_mark as $individual_mark) {
               $marks += $individual_mark;
@@ -548,21 +550,21 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
           }
         } else {
           // Dropdown lists.
-          $blank_details = split("\[blank",$display_option['option_text']);
-          $blank_user_answers = split("\|", $users_answers[$q_id]);
+          $blank_details = explode('[blank',$display_option['option_text']);
+          $blank_user_answers = explode('|', $users_answers[$q_id]);
           $no_blanks = count($blank_details);
           echo '<p>' . $blank_details[0];
           $blank_count = 1;
           while ($blank_count < $no_blanks) {
-	    $not_used = ereg("mark=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
-	    if ($results[1]) {
-	      $blank_mark[$blank_count] = $results[1];
-	    } else {
-	      $blank_mark[$blank_count] = 1;
-	    }
+            $not_used = ereg("mark=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
+            if ($results[1]) {
+              $blank_mark[$blank_count] = $results[1];
+            } else {
+              $blank_mark[$blank_count] = 1;
+            }
             $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
-            $answer_options = split("\[/blank\]",$blank_details[$blank_count]);
-            $answer_list = split(",",$answer_options[0]);
+            $answer_options = explode('[/blank]',$blank_details[$blank_count]);
+            $answer_list = explode(',',$answer_options[0]);
             if ($blank_user_answers[$part_id] == 'u' and $screen_pre_submitted == 1) {
               echo "<select name=\"q" . $question_no . "_" . $part_id . "\" style=\"background-color:#FFC0C0\">\n";
             } else {
@@ -650,8 +652,8 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         $marks = $display_option['marks'];
         break;
       case 'labelling':
-        $tmp_first_split = split(";", $options[0]['correct']);
-        $tmp_second_split = split('\$', $tmp_first_split[8]);
+        $tmp_first_split = explode(';', $options[0]['correct']);
+        $tmp_second_split = explode('\$', $tmp_first_split[8]);
         for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
           if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 20) $marks++;
         }
@@ -773,7 +775,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       }
       
       $review_mean = round($rating_total/count($ratings_array));
-      if ($reviews[$setter_username][$q_id] != '') {
+      if (isset($reviews[$setter_username][$q_id]) and $reviews[$setter_username][$q_id] != '') {
         $tmp_value = $reviews[$setter_username][$q_id];
         echo "<div>" .  reviewScale('mcq', $q_id, $question_no, $part_no, $tmp_value, 1) . "</div>\n";
       } elseif (max($ratings_array) > (min($ratings_array) + 10) and count($ratings_array) > 0) {
@@ -792,7 +794,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       echo '</select></div>';
     }
   } elseif ($options[0]['q_type'] == 'calculation') {
-    $score_array = split(',',$options[0]['score_method']);
+    $score_array = explode(',',$options[0]['score_method']);
     if ($li_set == 1) {
       echo '<tr><td></td><td>';
     } else {
@@ -850,18 +852,18 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       }
     }
   } elseif ($options[0]['q_type'] == 'extmatch') {
-    $matching_answers = split("\|", $options[0]['correct']);
+    $matching_answers = explode('|', $options[0]['correct']);
 
     if ($matching_media[0] != '') {
       echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0]) . '</p>';
     }
     $text_scenarios = 0;
     for ($part_id=0; $part_id<10; $part_id++) {
-      if ($matching_scenarios[$part_id] != '') $text_scenarios++;
+      if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') $text_scenarios++;
     }
     $media_scenarios = 0;
     for ($part_id=1; $part_id<=10; $part_id++) {
-      if ($matching_media[$part_id] != '') $media_scenarios++;
+      if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
     }
     $scenario_no = max($text_scenarios, $media_scenarios);
     echo '<ol type="i">';
@@ -874,7 +876,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       if ($matching_media[$part_id] != '') {
         echo "<p>" . display_media($matching_media[$part_id],$matching_media_width[$part_id],$matching_media_height[$part_id]) . "</p>\n";
       }
-      $sub_answers = split('[\$]',$matching_answers[$part_id - 1]);
+      $sub_answers = explode('\$',$matching_answers[$part_id - 1]);
       $list_size = 10;
       if (count($matching_options) < 10) $list_size = count($matching_options);
       if ($answer_no == 1) {
@@ -894,7 +896,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       }
 
       $answer_count = 0;
-      $multi_answers = split('[\$]', $matching_users_answers[$part_id - 1]);
+      $multi_answers = explode('\$', $matching_users_answers[$part_id - 1]);
       $tmp_option_no = 1;
       foreach ($matching_options as $single_option) {
         $tmp_answer_match = false;
@@ -916,7 +918,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       $ratings_array = array();
       $rating_total = 0;
       foreach ($rater_names as $individual_rater) {
-        $ratings_parts = split(',',$reviews[$individual_rater][$q_id]);
+        $ratings_parts = explode(',',$reviews[$individual_rater][$q_id]);
         $ratings_array[] = $ratings_parts[$part_id - 1];
         $rating_total += $ratings_parts[$part_id - 1];
         $rater_name = $reviews[$individual_rater]['name'];
@@ -930,7 +932,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       
       $rating_part++;
       if ($answer_no == 1) {
-        if ($reviews[$setter_username][$q_id] != '') {
+        if (isset($reviews[$setter_username][$q_id]) and $reviews[$setter_username][$q_id] != '') {
           $tmp_value = $reviews[$setter_username][$q_id];
           echo '&nbsp;' .  reviewScale('extmatch', $q_id, $question_no, $rating_part, $tmp_value, 1) . '</div></li>';
         } elseif (max($ratings_array) > (min($ratings_array) + 10) and count($ratings_array) > 0) {
@@ -960,7 +962,6 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       }
       echo "<br />\n<br />\n";
     }
-    $matching_answers = split('[\||,]', $options[0]['correct']);
     echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" /><input type="hidden" name="multimatching' . $question_no . '_correct_no" value="' . $marks . '" />';
   } elseif ($options[0]['q_type'] == 'matrix') {
     $part_id = 1;

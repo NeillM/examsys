@@ -35,8 +35,8 @@
         $total_marks += $stems;
         break;
       case 'labelling':
-        $tmp_first_split = split(";", $old_correct);
-        $tmp_second_split = split('\$', $tmp_first_split[8]);
+        $tmp_first_split = explode(';', $old_correct);
+        $tmp_second_split = explode('\$', $tmp_first_split[8]);
         $label_count = 0;
         $placeholders = 0;
         for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
@@ -72,7 +72,7 @@
         break;
       case 'matrix':
         $correct_no = 0;
-        $matching_correct = split("\|", $old_correct);
+        $matching_correct = explode('|', $old_correct);
         for ($part_id=0; $part_id<10; $part_id++) {
           if ($matching_correct[$part_id] != '') $correct_no++;
         }
@@ -80,7 +80,7 @@
         $total_marks += $correct_no;
         break;
       case 'extmatch':
-        $correct_array = split("\|",$old_correct);
+        $correct_array = explode('|',$old_correct);
         foreach ($correct_array as $individual_correct) {
           if (trim($individual_correct) != '') {
             $correct_no = substr_count($individual_correct,'$') + 1;
@@ -111,7 +111,7 @@
         }
         break;
       case 'blank':
-        $blank_details = split("\[blank",$old_option_text);
+        $blank_details = explode("\[blank",$old_option_text);
         $array_size = count($blank_details);
         $blank_count = 1;
         while ($blank_count < $array_size) {
@@ -133,11 +133,11 @@
       case 'hotspot':
         $hotspot_image_area = $old_q_media_width * $old_q_media_height;
         $total_marks += $temp_marks;
-        $coords_array = split(';',$old_correct);
+        $coords_array = explode(';',$old_correct);
         $master_area_total = 0;
         for ($area_no = 0; $area_no < (count($coords_array)-1); $area_no += 3) {
           $individual_coords = array();
-          $individual_coords = split(",",$coords_array[$area_no+1]);
+          $individual_coords = explode(',',$coords_array[$area_no+1]);
           if ($coords_array[$area_no] == 'polygon') {
             $individual_coords[] = $individual_coords[0];
             $individual_coords[] = $individual_coords[1];
@@ -171,6 +171,7 @@
   $partID = 0;
   $total_marks = 0;
   $old_q_id = 0;
+  $stems = 0;
   $old_score_method = '';
   $question_data = $mysqli->query("SELECT q_type, q_id, marks, correct, score_method, q_media_height, q_media_width, option_text FROM (papers, questions, options) WHERE papers.paper=$paperID AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY o_id");
   while ($row = $question_data->fetch_assoc()) {
@@ -215,8 +216,8 @@
         }
         break;
       case 'labelling':
-        $tmp_first_split = split(";", $row['correct']);
-        $tmp_second_split = split('\$', $tmp_first_split[8]);
+        $tmp_first_split = explode(';', $row['correct']);
+        $tmp_second_split = explode('\$', $tmp_first_split[8]);
         for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
           if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 20) {
             $marks_array[$old_q_id][$partID] = 1;
@@ -259,56 +260,10 @@ a {color:black}
 a:hover {color:white; background-color:#000080}
 .heading {background-color:#EBEADB; color:black}
 </style>
-
-<script language="JavaScript" type="text/javascript">
-  function selReview(setterID, dateID, reviewID, methodType, menuID) {
-    tmp_ID = parent.frames['menu'].document.StdSetMenu.oldReviewID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      document.getElementById('review' + tmp_ID).style.color = 'black';
-    }
-    parent.frames['menu'].document.getElementById('menu2a').style.display = 'none';
-    parent.frames['menu'].document.getElementById('menu2b').style.display = 'none';
-    parent.frames['menu'].document.getElementById('menu2c').style.display = 'none';
-    parent.frames['menu'].document.getElementById(menuID).style.display = 'block';
-
-    parent.frames['menu'].document.StdSetMenu.setterID.value = setterID;
-    parent.frames['menu'].document.StdSetMenu.dateID.value = dateID;
-    parent.frames['menu'].document.StdSetMenu.method.value = methodType;
-
-    document.getElementById(reviewID).style.backgroundColor = '#316AC5';
-    document.getElementById('review' + reviewID).style.color = 'white';
-    parent.frames['menu'].document.StdSetMenu.oldReviewID.value = reviewID;
-  }
-
-  function reviewOff() {
-    parent.frames['menu'].document.getElementById('menu2a').style.display = 'block';
-    parent.frames['menu'].document.getElementById('menu2b').style.display = 'none';
-    parent.frames['menu'].document.getElementById('menu2c').style.display = 'none';
-    tmp_ID = parent.frames['menu'].document.StdSetMenu.oldReviewID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      document.getElementById('review' + tmp_ID).style.color = 'black';
-    }
-  }
-
-  function move_in(img_name) {
-    document[img_name].src=onImg.src;
-  }
-
-  function move_out(img_name) {
-    document[img_name].src=offImg.src;
-  }
-  
-  onImg = new Image;
-  onImg.src = '../artwork/up_folder_icon_on.gif';
-  offImg = new Image;
-  offImg.src = '../artwork/up_folder_icon_off.gif';
-</script>
 </head>
 
 <body>
-<form action="group_set_angoff.php" target="_top" method="post">
+<form action="group_set_angoff.php" method="post">
 <?php
   echo "<table onclick=\"reviewOff()\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td class=\"heading\"><div style=\"font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:40px; text-indent:-40px\"><a onmouseover=\"move_in('image1')\" onmouseout=\"move_out('image1')\" href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" target=\"_top\"><img name=\"image1\" src=\"../artwork/up_folder_icon_off.gif\" style=\"vertical-align: middle\" width=\"32\" height=\"38\" alt=\"Up\" border=\"0\" /></a>&nbsp;Select Reviews to Include</div></td></tr>\n";
@@ -333,9 +288,15 @@ a:hover {color:white; background-color:#000080}
       if ($old_questionID != $row['questionID']) {
         $partID = 0;
         $questionID = $row['questionID'];
-        $rating_array = split(',',$row['rating']);
+        $rating_array = explode(',',$row['rating']);
         foreach ($rating_array as $individual_rating) {
-          $ebel_marks[$individual_rating] += $marks_array[$questionID][$partID];
+          if (isset($marks_array[$questionID][$partID])) {
+            if (isset($ebel_marks[$individual_rating])) {
+              $ebel_marks[$individual_rating] += $marks_array[$questionID][$partID];
+            } else {
+              $ebel_marks[$individual_rating] = $marks_array[$questionID][$partID];
+            }
+          }
           $partID++;
         }
       }
@@ -351,7 +312,7 @@ a:hover {color:white; background-color:#000080}
         $std_total = 0;
       }
       if ($row['rating'] != '') {
-        $q_sections = split(',',$row['rating']);
+        $q_sections = explode(',',$row['rating']);
         foreach ($q_sections as $part) {
           $std_total += $part;
           $question_no++;
