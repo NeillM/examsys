@@ -60,7 +60,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       $unique_name = $_POST['old_q_media'];
       $tmp_media_width = $_POST['old_q_media_width'];
       $tmp_media_height = $_POST['old_q_media_height'];
-      if (isset($_POST['delete_media']) and $_POST['delete_media'] == '1') {
+      if (isset($_POST['delete_media1']) and $_POST['delete_media1'] == '1') {
         deleteMedia($_POST['old_q_media']);
         $unique_name = '';
         $tmp_media_width = 0;
