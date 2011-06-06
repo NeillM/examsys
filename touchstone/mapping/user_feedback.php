@@ -257,6 +257,8 @@
      $img_src = '../artwork/major_comment.png';
     }
     
+    if ($obj_data['mark_sum'] == '') $obj_data['mark_sum'] = 0;
+    
     //cohort performance comparison
     $comparison = round($objectives[$id]['mark_sum'] - ( $objectives[$id]['totalpos_sum'] * ($objectives[$id]['chort_mark_sum']/$objectives[$id]['chort_totalpos_sum'])),1);
     if($comparison == 0) {
@@ -278,9 +280,9 @@
   echo "<table style=\"font-size:100%\">\n";
   echo "<tr><td>Paper Title</td><td>$paper_title</td></tr>\n";
   echo "<tr><td>Started at</td><td>$started</td></tr>\n";
-    //display student marks
+  //display student marks
   if($paperID == 2501) {
-    if($marking == 1) {
+    if ($marking == 1) {
       $adjusted = round((($total_student_mark-$random_mark)/($total_mark-$random_mark))*100);
       echo "<tr><td>Your Mark</td><td>$total_student_mark out of $total_mark (adjusted $adjusted" . "%)</td></tr>\n";  
       echo "<tr><td>Random Mark</td><td>" . round($random_mark) . "</td></tr>\n";
