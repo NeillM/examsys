@@ -62,8 +62,7 @@ if (isset($_POST['submit'])) {
           $identifier++;
      
           $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL,?,?,?,'',?,NOW())");
-          $stmt->bind_param('ssss',$identifier,$moduleID,$title,$session);
-          //echo "INSERT INTO sessions VALUES (NULL,$identifier,$moduleID,$title,'',$session)<br />";
+          $stmt->bind_param('ssss', $identifier, $moduleID, $title, $session);
           $stmt->execute();
           $stmt->close();
           $session_flag = true;
@@ -77,10 +76,9 @@ if (isset($_POST['submit'])) {
           }
         
           $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?,?,?,?,?,?)");
-          $stmt->bind_param('issssi',$obj_id,$separate_line,$moduleID,$identifier,$session,$obj_id);
+          $stmt->bind_param('issssi', $obj_id, $separate_line, $moduleID, $identifier, $session, $obj_id);
           $stmt->execute();
           $stmt->close();
-          echo "INSERT INTO objectives VALUES ($obj_id,$separate_line,$moduleID,$identifier,$session,$obj_id)<br />";
           $obj_id++;
         }
       }
@@ -88,7 +86,6 @@ if (isset($_POST['submit'])) {
   }
   
   unlink('/tmp/' . $userID . '_load_objectives.txt');
-  exit;
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/mapping/sessions_list.php?module=" . $_POST['module']);
 } else {
   //display the form
