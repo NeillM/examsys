@@ -323,8 +323,8 @@
   
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
   echo "<tr><td align=\"right\">Cohort Size:</td><td style=\"text-align:right\">" . $user_no . "</td></tr>\n";
-  for ($i=count($labels); $i>0; $i--) {
-    echo "<tr><td align=\"right\">" . $labels[$i] . ":</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
+  foreach ($labels as $i => $label) {
+    echo "<tr><td align=\"right\">" . $label . ":</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
   }
   echo "</table>\n";
   

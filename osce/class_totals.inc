@@ -99,25 +99,25 @@
 
   switch ($marking) {
     case '1':
-      $labels = array(1=>'Fail',2=>'Pass');
+      $labels = array(1=>'Fail',2=>'Pass','ERROR'=>'ERROR');
       break;
     case '3':
-      $labels = array(1=>'Clear Fail',2=>'Borderline',3=>'Clear Pass');
+      $labels = array(1=>'Clear Fail',2=>'Borderline',3=>'Clear Pass','ERROR'=>'ERROR');
       break;
     case '4':
-      $labels = array(1=>'Fail',2=>'Borderline fail',3=>'Borderline pass',4=>'Pass',5=>'Good pass');
+      $labels = array(1=>'Fail',2=>'Borderline fail',3=>'Borderline pass',4=>'Pass',5=>'Good pass','ERROR'=>'ERROR');
       break;
     case '5':
-      $labels = array(1=>'Unsatisfactory',2=>'Competent');
+      $labels = array(1=>'Unsatisfactory',2=>'Competent','ERROR'=>'ERROR');
       break;
     case '6':
-      $labels = array(1=>'Clear FAIL',2=>'BORDERLINE',3=>'Clear PASS',4=>'Honours PASS');
+      $labels = array(1=>'Clear FAIL',2=>'BORDERLINE',3=>'Clear PASS',4=>'Honours PASS','ERROR'=>'ERROR');
       break;
   }
   
   $completed_no = 0;
   $total_score = 0;
-  $classifications = array(''=>'',1=>0,2=>0,3=>0,4=>0,5=>0);
+  $classifications = array(''=>'',1=>0,2=>0,3=>0,4=>0,5=>0,'ERROR'=>0);
   
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] != '') {   // No attendance

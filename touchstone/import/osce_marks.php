@@ -55,7 +55,8 @@ require '../include/staff_auth.inc';
     
     // Get student data.
     $students = array();
-    $result = $mysqli->prepare("SELECT users.id, student_id, username, year, grade FROM users, sid, student_modules WHERE users.id=sid.userID AND users.id=student_modules.userID AND moduleid=? AND calendar_year=?");
+    $result = $mysqli->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, student_modules WHERE users.id=sid.userID AND users.id=student_modules.userID AND moduleid=? AND calendar_year=?");
+    echo $mysqli->error;
     $result->bind_param('ss', $moduleID, $session);
     $result->execute();
     $result->bind_result($id, $student_id, $username, $year, $grade);
@@ -70,7 +71,7 @@ require '../include/staff_auth.inc';
     $lines = file($fileName);
     $line_written = 0;
     if ($_POST['header_row'] == '1') {
-      echo "<ol start=\"2\">\n";
+      echo "<ol start=\"1\">\n";
     } else {
       echo "<ol>\n";
     }
@@ -78,9 +79,10 @@ require '../include/staff_auth.inc';
       if ($_POST['header_row'] != '1' or $line_written > 0) {
         $fields = explode(',',$separate_line);
         $sid = trim($fields[0]);
-        if ($students[$sid]['username'] == '') {  // Student is not in class List.
+        if (!isset($students[$sid])) {  // Student is not in class List.
           // Look up to see if anywhere else in Authentication database.
-          $result = $mysqli->prepare("SELECT id, student_id, username, year, grade FROM users, sid WHERE users.id=sid.userID AND sid.student_id=?");
+          $result = $mysqli->prepare("SELECT id, student_id, username, yearofstudy, grade FROM users, sid WHERE users.id=sid.userID AND sid.student_id=?");
+          echo $mysqli->error;
           $result->bind_param('s', $sid);
           $result->execute();
           $result->store_result();
@@ -94,7 +96,7 @@ require '../include/staff_auth.inc';
           }
           $result->close();          
         }
-        if ($students[$sid]['username'] != '') {  // Student is in class List.
+        if (isset($students[$sid]) and $students[$sid]['username'] != '') {  // Student is in class List.
           $result = $mysqli->prepare("DELETE FROM log4 WHERE userID=? AND q_paper=?");
           $result->bind_param('ii', $students[$sid]['id'], $_GET['paperID']);
           $result->execute();
@@ -110,14 +112,16 @@ require '../include/staff_auth.inc';
           $numeric_score = 0;
           for ($q=1; $q<=$question_no; $q++) {
             $result = $mysqli->prepare("INSERT INTO log4 VALUES(NULL,?,?,?,?,?,NULL)");
-            $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], trim($fields[$q]));
+            $fields[$q] = trim($fields[$q]);
+            $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $fields[$q]);
             $result->execute();
             $result->close();
             $numeric_score += trim($fields[$q]);
           }
           // Record overall student/station details.
           $result = $mysqli->prepare("SELECT id FROM users WHERE username=? LIMIT 1");
-          $result->bind_param('s', trim($fields[$question_no+1]));
+          $fields[$question_no+1] = trim($fields[$question_no+1]);
+          $result->bind_param('s', $fields[$question_no+1]);
           $result->execute();
           $result->bind_result($examinerID);
           $result->fetch();
@@ -133,15 +137,23 @@ require '../include/staff_auth.inc';
               $cat2no = array('fail'=>1,'borderline fail'=>2,'borderline pass'=>3,'pass'=>4,'good pass'=>5);
               break;
             case '5':
+              //automatic
               $cat2no = array('unsatisfactory'=>1,'competent'=>2);
               break;
             case '6':
               $cat2no = array('clear fail'=>1,'borderline'=>2,'clear pass'=>3,'honours pass'=>4);
               break;
           }
-          $overall_rating = $cat2no[strtolower(trim($fields[$question_no+2]))];
-            
-          $feedback = trim($fields[$question_no+3]);
+          if(isset($cat2no[strtolower(trim($fields[$question_no+2]))])) {
+            $overall_rating = $cat2no[strtolower(trim($fields[$question_no+2]))];
+          } else {
+            $overall_rating = 'ERROR';
+          }
+          if (isset($fields[$question_no+3])) {
+            $feedback = trim($fields[$question_no+3]);
+          } else {
+            $feedback = '';
+          }
           $result = $mysqli->prepare("INSERT INTO log4_overall VALUES(NULL,?,?,?,?,?,?,?,?,?,'paper')");
           $result->bind_param('isisissss', $students[$sid]['id'], $paper_date, $_GET['paperID'], $overall_rating, $numeric_score, $feedback, $students[$sid]['grade'], $students[$sid]['year'], $examinerID);
           $result->execute();
@@ -166,7 +178,7 @@ require '../include/staff_auth.inc';
         ?>
         <html>
         <head>
-        <title>Load Spotter Marks</title>
+        <title>Load OSCE Marks</title>
         </head>
         <body style="font-family:Arial,sans-serif">
         <p>Marks loaded.</p>
@@ -179,7 +191,7 @@ require '../include/staff_auth.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Load Spotter Marks</title>
+<title>Load OSCE Marks</title>
 <link rel="stylesheet" href="../css/submenu.css" type="text/css">
 <style>
   body, p {color:#003366; font-family:Arial,sans-serif}
