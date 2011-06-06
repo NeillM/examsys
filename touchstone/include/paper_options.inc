@@ -63,8 +63,9 @@ $paper_details->close();
 
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $module = $_GET['module'];
+  $tmp_module = $_GET['module'];
 } else {
-  $module = $tmp_module;
+  $module = '';
 }
 if (isset($_GET['folder']) and $_GET['folder'] != '') {
   $folder = $_GET['folder'];
@@ -72,7 +73,7 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
   $folder = '';
 }
 
-$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE moduleid IN ('" . str_replace(",","','",$module) . "')");
+$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE moduleid IN ('" . str_replace(",","','",$tmp_module) . "')");
 $stmt->execute();
 $stmt->bind_result($tmp_checklist);
 $check[] = array();
@@ -258,8 +259,7 @@ $stmt->close();
     document.getElementById('stats_menu').style.display='none';
     if (!e) var e = window.event;
     e.cancelBubble = true;
-  }
-  
+  }  
 </script>
 
 <div id="left-sidebar" class="sidebar">
@@ -670,7 +670,7 @@ if ($paper_type == '2') {
   if ($summative_lock == 1) {
     $params = "?scrOfY=' + document.getElementById('scrOfY').value + '";
   } else {
-    $params = "?scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=$module";
+    $params = "?scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=$tmp_module";
   }
 
   makeMenu(array("Information Block"=>"/touchstone/question/add/info.php$params","Keyword-based Question"=>"/touchstone/question/add/keyword_based.php$params","Random Question Block"=>"/touchstone/question/add/random.php$params","-"=>"-","Calculation"=>"/touchstone/question/add/calculation.php$params","Dichotomous (Yes/No and True/False)"=>"/touchstone/question/add/dichotomous.php$params","Extended Matching"=>"/touchstone/question/add/extmatch.php$params","Fill-in-the-Blank"=>"/touchstone/question/add/blank.php$params","Flash Interface"=>"/touchstone/question/add/flash.php$params","Image Hotspot"=>"/touchstone/question/add/hotspot1.php$params","Labelling"=>"/touchstone/question/add/labelling1.php$params","Likert Scale"=>"/touchstone/question/add/likert.php$params","Matrix"=>"/touchstone/question/add/matrix.php$params","Multiple Choice (MCQ)"=>"/touchstone/question/add/mcq.php$params","Multiple Response (MRQ)"=>"/touchstone/question/add/mrq.php$params","Ranking"=>"/touchstone/question/add/rank.php$params","Script Concordance Test (SCT)"=>"/touchstone/question/add/sct.php$params","Text Box"=>"/touchstone/question/add/textbox.php$params","Time/Date"=>"/touchstone/question/add/timedate.php$params"));

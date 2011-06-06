@@ -23,25 +23,53 @@
 */
 
   require '../include/staff_auth.inc';
-  $mysqli->close();
 ?>
 <!DOCTYPE html
    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
      "DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone: Qualitative Analysis</title>
+<title>Qualitative Analysis<?php echo " $cfg_install_type"; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
-h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A4}
-.heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
+.heading {background-color:#F1F5FB}
+.breadcrumb {margin-top:2px; margin-left:10px; font-size:90%}
+.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
+.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
+.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 </style>
 </head>
 
 <body>
 <?php
+  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($paper);
+  $result->fetch();
+  $result->close();
+
+  $folder = '';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    $folder = $_GET['folder'];
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
+    $result->bind_param('i', $folder);
+    $result->execute();
+    $result->bind_result($folder_name);
+    $result->fetch();
+    $result->close();
+  }
+
   echo "<form name=\"analyse\" method=\"get\" action=\"qualitative_results.php\" target=\"results\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td class=\"heading\"><span style=\"font-size:200%; color:black; font-weight:bold\">Qualitative Analysis</span></td>";
+  echo "<tr><td class=\"heading\">";
+  echo '<div class="breadcrumb"><a href="../index.php">Home</a>';
+  if ($folder != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '" target="_top">' . $folder_name . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '" target="_top">' . $_GET['module'] . '</a>';
+  }
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '" target="_top">' . $paper . '</a></div>';
+  echo "<span style=\"font-size:200%; color:black; font-weight:bold; margin-left:10px\">Qualitative Analysis</span></td>";
   echo "<td class=\"heading\" valign=\"top\" width=\"250\"><input type=\"text\" name=\"keywords\" size=\"20\" value=\"";
   if (isset($_GET['keywords'])) echo $_GET['keywords']; 
   echo "\" /><input type=\"submit\" name=\"submit\" value=\"Highlight\" />";
@@ -61,6 +89,7 @@ h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A
   echo '<input type="hidden" name="enddate" value="' . $_GET['enddate'] . '" />';
   echo '<input type="hidden" name="module" value="' . $_GET['module'] . '" />';
   echo '<input type="hidden" name="repdegree" value="' . $_GET['repdegree'] . '" />';
+  echo '<input type="hidden" name="repyear" value="' . $_GET['repyear'] . '" />';
   echo "</td></tr>";
   echo "<tr><td colspan=\"2\" style=\"height: 3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
 ?>

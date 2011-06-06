@@ -24,13 +24,17 @@
 
   require '../include/staff_auth.inc';
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone: Qualitative Analysis</title>
+<title>Qualitative Analysis<?php echo " $cfg_install_type"; ?></title>
 <style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:10px; margin-right:10px}
-h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A4}
+body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
+h1 {margin-left:15px; font-size:150%; color:#3A70A4}
+li {margin-right:10px}
 .heading {background-color:#EBEADB; border-left: solid white 1px; border-right: solid #D8D2BD 1px; border-top: solid white 1px; border-bottom: solid #D8D2BD 1px; color:black}
+.comments {margin-left:10px; color:#808080}
 </style>
 </head>
 
@@ -56,38 +60,34 @@ h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A
   $enddate = $_GET['enddate'];
   $list_on = 0;
   $q_no = 0;
-  if ($_GET['repdegree'] == 'Staff') {
-    $result = $mysqli->prepare("SELECT DISTINCT log3.screen, theme, started, users.username AS username, users.surname AS surname, log3.q_id AS q_id, leadin, user_answer FROM (log3, papers, questions, users) WHERE users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=? AND q_paper=? AND log3.q_id=questions.q_id AND q_type='textbox' AND started>=? AND started<=? AND (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') ORDER BY log3.screen, display_pos");
-    $result->bind_param('iiss', $_GET['paperID'], $_GET['paperID'], $startdate, $enddate);
-  } else {
-    //echo "SELECT DISTINCT log3.screen, theme, log_metadata.started, users.username AS username, users.surname AS surname, log3.q_id AS q_id, leadin, user_answer FROM (log3, log_metadata, papers, questions, users) WHERE log3.userID=log_metadata.userID AND log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=" . $_GET['paperID'] . " AND q_paper=" . $_GET['paperID'] . " AND log_metadata.student_grade LIKE '" . $_GET['repdegree'] . "' AND log_metadata.year LIKE '" . $_GET['repyear'] . "' AND log3.q_id=questions.q_id AND q_type='textbox' AND log3.started>=$startdate AND log3.started<=$enddate AND (roles='Student' OR roles='graduate') ORDER BY log3.screen, display_pos<br />";
-    $result = $mysqli->prepare("SELECT DISTINCT log3.screen, theme, log_metadata.started, users.username AS username, users.surname AS surname, log3.q_id AS q_id, leadin, user_answer FROM (log3, log_metadata, papers, questions, users) WHERE log3.userID=log_metadata.userID AND log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=? AND q_paper=? AND log_metadata.student_grade LIKE ? AND log_metadata.year LIKE ? AND log3.q_id=questions.q_id AND q_type='textbox' AND log3.started>=? AND log3.started<=? AND (roles='Student' OR roles='graduate') ORDER BY log3.screen, display_pos");
-    $result->bind_param('iissss', $_GET['paperID'], $_GET['paperID'], $_GET['repdegree'], $_GET['repyear'], $startdate, $enddate);
-  }
+
+  $result = $mysqli->prepare("SELECT DISTINCT log3.screen, theme, log_metadata.started, users.username AS username, users.surname AS surname, log3.q_id AS q_id, leadin, user_answer FROM (log3, log_metadata, papers, questions, users) WHERE log3.userID=log_metadata.userID AND log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=? AND q_paper=? AND log_metadata.student_grade LIKE ? AND log_metadata.year LIKE ? AND log3.q_id=questions.q_id AND q_type='textbox' AND log3.started>=? AND log3.started<=? AND (roles='Student' OR roles='graduate') ORDER BY log3.screen, display_pos");
+  $result->bind_param('iissss', $_GET['paperID'], $_GET['paperID'], $_GET['repdegree'], $_GET['repyear'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($screen, $theme, $started, $tmp_username, $surname, $q_id, $leadin, $user_answer);
   
   while ($row = $result->fetch()) {
     if ($theme != '') $old_theme = $theme;
     if ($old_q_id != $q_id or $old_screen < $screen) {
-      if ($comment_flag == 0) echo "<div style=\"color:#808080\">&lt;No Comments&gt;</div>\n";
+      if ($comment_flag == 0) echo "<div class=\"comments\">&lt;No Comments&gt;</div>\n";
       if ($old_q_id != 0) {
         if ($list_on == 1) echo "</ul>\n";
         $list_on = 0;
         if (isset($_GET['keywords'])) {
-          echo "<div style=\"color:#808080\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
+          echo "<div class=\"comments\">$occurrence_words - occurrences of <strong>" . $_GET['keywords'] . "</strong> in $occurrence_comments comments.</div>\n";
         } else {
-          echo "<div style=\"color:#808080\">$occurrence_comments comments.</div>\n";
+          echo "<div class=\"comments\">$occurrence_comments comments.</div>\n";
         }
       }
       $comment_flag = 0;
       if ($old_screen < $screen) {
         if ($list_on == 1) echo "</ul>\n";
         $list_on = 0;
-        echo "<br />\n<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\">\n";
-        echo "<tr>\n<td width=\"20\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight: bold\">&nbsp;</td>\n";
-        echo "<td style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">Screen&nbsp;$screen</td>\n</tr>\n";
+        echo '<br /><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
+        echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
+        echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;$screen</td>\n</tr>\n";
         echo "</table>\n";
+        
       }
 
       if ($old_theme != '') {
@@ -97,7 +97,7 @@ h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A
         $q_no++;
       } while ($q_id != $paper_structure[$q_no-1] and $q_no < 9999);
       if ($list_on == 1) echo "</ul>\n";
-      echo "<p style=\"font-weight:bold\">$q_no. $leadin</p>\n<ul>\n";
+      echo "<p style=\"font-weight:bold; margin-left:10px; margin-right:10px\">$q_no. $leadin</p>\n<ul>\n";
       $occurrence_words = 0;
       $occurrence_comments = 0;
       $list_on = 1;
@@ -144,7 +144,6 @@ h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A
             } else {
               $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
             }
-            //echo "<div>$individual_keyword - $tmp_occur</div>\n";
             if ($tmp_occur > 0) {
               $occurrence_comments++;
               $match = true;
@@ -154,7 +153,7 @@ h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A
         } else {
           $keywords = array(trim($content));
           $individual_keyword = trim($content);
-          if ($_GET['casesensitive'] == '1') {
+          if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
             $tmp_occur = substr_count($response, $individual_keyword);
           } else {
             $tmp_occur = substr_count(strtolower($response), strtolower($individual_keyword));
@@ -174,14 +173,14 @@ h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#3A70A
       if ($match == true) {
         foreach ($keywords as $individual_keyword) {
           $individual_keyword = trim($individual_keyword);
-          if ($_GET['collapse'] == '1') {
-            if ($_GET['casesensitive'] == '1') {
+          if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
+            if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
               $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
             } else {
               $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);
             }
           } else {
-            if ($_GET['casesensitive'] == '1') {
+            if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
               $display_string = preg_replace("/($individual_keyword)/","<span style=\"background-color:yellow\">\\1</span>",$display_string);
             } else {
               $display_string = preg_replace("/($individual_keyword)/i","<span style=\"background-color:yellow\">\\1</span>",$display_string);

@@ -814,7 +814,6 @@
             for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
               if (isset($top_log[$q_id][$i][$rank_position])) {
                 $u = number_format(($top_log[$q_id][$i][$rank_position]/$candidate_no)*100,0);
-                //$u = $top_log[$q_id][$i][$rank_position] . '/' . $candidate_no;
               } else {
                 $u = 0;
               }
@@ -1142,7 +1141,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Facility/Discrimination Analysis</title>
+<title>Facility/Discrimination Analysis<?php echo " $cfg_install_type"; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
