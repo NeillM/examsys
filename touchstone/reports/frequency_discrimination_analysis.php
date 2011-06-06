@@ -521,6 +521,9 @@
           }
           break;
         case 'calculation':
+          
+          if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
+          
           echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'correct');
           if (isset($freq_log[$q_id][1]['correct'])) {
@@ -544,11 +547,11 @@
             $tmp_exclude = '';
           }
           
-          echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><strong>" . $std . "</strong></td><td id=\"q_" . $ex_no . "_1\"";
+          echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><strong>" . $std . "</strong></td><td id=\"q_" . $ex_no . "_1\"";
           if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' style="color:red; text-decoration:line-through"';
           echo ">$leadin</td></tr>\n";
-          echo "<tr><td colspan=\"4\">&nbsp;</td></tr>";
-          echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total) . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>";
+          echo "<tr><td colspan=\"6\">&nbsp;</td></tr>";
+          echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total) . "</td><td colspan=\"4\">" . dStats($d) . "</td></tr>";
           break;
         case 'dichotomous':
           $i = 0;
@@ -565,6 +568,7 @@
             if (!isset($bottom_log[$q_id][$i]['f'])) $bottom_log[$q_id][$i]['f'] = 0;
             if (!isset($top_log[$q_id][$i]['t'])) $top_log[$q_id][$i]['t'] = 0;
             if (!isset($top_log[$q_id][$i]['f'])) $top_log[$q_id][$i]['f'] = 0;
+            if (!isset($tmp_std_array[$std_part])) $tmp_std_array[$std_part] = '';
             
             if (isset($excluded[$q_id])) {
               $tmp_exclude = substr($excluded[$q_id],$i-1,1);
