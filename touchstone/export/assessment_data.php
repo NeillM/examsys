@@ -46,6 +46,7 @@
   $question_no = 0;
   $old_q_id = -1;
   $part = 0;
+  $old_correct = '';
   
   $result = $mysqli->prepare("SELECT paper_title, q_id, q_type, paper_type, screen, correct, option_text, score_method FROM (papers, questions, properties, options) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? AND q_type!='info' ORDER BY screen, display_pos, id_num");
   $result->bind_param('i',$_GET['paperID']);
@@ -123,8 +124,8 @@
   // Get order of the class.
   $student_list = '';
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT userID, sum(mark) AS total_mark FROM log0 WHERE q_paper=? AND started>=? AND started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND log0.year LIKE ? GROUP BY userID, q_paper, started) UNION ALL (SELECT userID, sum(mark) AS total_mark FROM log1 WHERE q_paper=? AND started>=? AND started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND log1.year LIKE ? GROUP BY userID, q_paper, started) ORDER BY total_mark " . $_GET['direction']);
-    $result->bind_param('isssisss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate'], $_GET['repyear'], $_GET['paperID'], $_GET['startdate'], $_GET['enddate'], $_GET['repyear']);
+    $result = $mysqli->prepare("(SELECT log0.userID, sum(mark) AS total_mark FROM log0,log_metadata WHERE log0.userID = log_metadata.userID AND log0.q_paper = log_metadata.paperID AND log0.started = log_metadata.started AND q_paper=? AND log_metadata.started>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY userID, q_paper, log_metadata.started) UNION ALL (SELECT log1.userID, sum(mark) AS total_mark FROM log1,log_metadata WHERE log1.userID = log_metadata.userID AND log1.q_paper = log_metadata.paperID AND log1.started = log_metadata.started AND q_paper=? AND log_metadata.started>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY log_metadata.userID, q_paper, log_metadata.started) ORDER BY total_mark " . $_GET['direction']);
+    $result->bind_param('ississ', $_GET['paperID'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
   } else {
     $result = $mysqli->prepare("SELECT log$paper_type.userID, sum(mark) AS total_mark FROM log$paper_type,log_metadata WHERE log$paper_type.userID = log_metadata.userID AND log$paper_type.q_paper = log_metadata.paperID AND log$paper_type.started = log_metadata.started AND  q_paper=? AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>=? AND log_metadata.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' GROUP BY userID, q_paper, log_metadata.started ORDER BY total_mark " . $_GET['direction']);
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
@@ -150,12 +151,12 @@
   $rowID = 0;
   // Capture the log data.
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT DISTINCT sid.student_id, username, log0.userID, title, surname, first_names, grade, gender, log0.year, started, log0.q_id, user_answer, q_type, screen FROM (log0, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log0.q_id=questions.q_id AND log0.userID IN ($student_list) AND q_paper=? AND log0.year LIKE ? AND users.id=log0.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started>=? AND started<=?) UNION ALL (SELECT DISTINCT sid.student_id, username, log1.userID, title, surname, first_names, grade, gender, log1.year, started, log1.q_id, user_answer, q_type, screen FROM (log1, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log1.q_id=questions.q_id AND log1.userID IN ($student_list) AND q_paper=? AND log1.year LIKE ? AND users.id=log1.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND started>=? AND started<=?) ORDER BY surname, first_names, started, userID");
-    $result->bind_param('issssissss', $_GET['paperID'], $_GET['repyear'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repyear'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("(SELECT DISTINCT sid.student_id, username, log0.userID, title, surname, first_names, grade, gender, log_metadata.year, log_metadata.started, log0.q_id, user_answer, q_type, screen FROM (log0, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log0.userID = log_metadata.userID AND log0.q_paper = log_metadata.paperID AND log0.started = log_metadata.started AND log0.q_id=questions.q_id AND log0.userID IN ($student_list) AND q_paper=? AND  users.id=log0.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND log_metadata.started>=? AND log_metadata.started<=?) UNION ALL (SELECT DISTINCT sid.student_id, username, log1.userID, title, surname, first_names, grade, gender, log_metadata.year, log_metadata.started, log1.q_id, user_answer, q_type, screen FROM (log1, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log1.userID = log_metadata.userID AND log1.q_paper = log_metadata.paperID AND log1.started = log_metadata.started AND log1.q_id=questions.q_id AND log1.userID IN ($student_list) AND q_paper=? AND users.id=log1.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND log_metadata.started>=? AND log_metadata.started<=?) ORDER BY surname, first_names, started, userID");
+    
+    $result->bind_param('isssisss', $_GET['paperID'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
   } else {
     $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, log$paper_type.userID, title, surname, first_names, grade, gender, log_metadata.year, log_metadata.started, log$paper_type.q_id, user_answer, q_type, screen FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log_metadata.userID = log2.userID AND log_metadata.paperID = log2.q_paper AND log_metadata.started = log2.started AND log$paper_type.q_id=questions.q_id AND log$paper_type.userID IN ($student_list) AND q_paper=? AND users.id=log$paper_type.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>=? AND log_metadata.started<=? ORDER BY surname, first_names, log_metadata.started, userID");
     $result->bind_param('isss', $_GET['paperID'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
-    echo $mysqli->error;
   }
 
   $result->execute();
@@ -324,18 +325,30 @@
           echo ',' . substr($tmp_answers,1);
           break;
         case 'calculation':
-          $answer_parts = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
-          if (!isset($excluded[$tmp_question_ID])) echo ',' . $answer_parts[0] . ',' . $answer_parts[1] . ',"' . $answer_parts[2] . '"';
+          if (isset($individual[$tmp_screen][$tmp_question_ID])) {
+            $answer_parts = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
+          } else {
+            $answer_parts = array('u','u','u');
+          }
+          if (!isset($excluded[$tmp_question_ID])) {
+            echo ',' . $answer_parts[0] . ',' . $answer_parts[1] . ',"' . $answer_parts[2] . '"';
+          }
           break;
         case 'dichotomous':
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           for ($partID=0; $partID<count($correct_parts)-1; $partID++) {
-            if (substr($tmp_exclude,$partID,1) == '0') echo ',' . substr($individual[$tmp_screen][$tmp_question_ID],$partID,1);
+            if (substr($tmp_exclude,$partID,1) == '0') {
+              echo ',';
+              if(isset($individual[$tmp_screen][$tmp_question_ID])) {
+                echo substr($individual[$tmp_screen][$tmp_question_ID],$partID,1);
+              } else {
+                echo 'u';
+              }
+            }
           }
           break;
         case 'extmatch':
           $answer_parts = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
-
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           $partID = 0;
           for ($outer=1; $outer<=count($correct_parts)-1; $outer++) {
@@ -345,10 +358,16 @@
           break;
         case 'matrix':
           $answer_parts = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
-
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           for ($partID=0; $partID<count($correct_parts)-1; $partID++) {
-            if (substr($tmp_exclude,$partID,1) == '0') echo ',' . $answer_parts[$partID];
+            if (substr($tmp_exclude,$partID,1) == '0') {
+              echo ',';
+              if($answer_parts[$partID] != '') {
+                echo $answer_parts[$partID];
+              } else {
+                echo 'u';
+              }
+            }
           }
           break;
         case 'rank':
@@ -356,7 +375,14 @@
           if (!isset($excluded[$tmp_question_ID])) echo ',' . $individual[$tmp_screen][$tmp_question_ID];
           break;
         case 'hotspot':
-          echo ',' . $individual[$tmp_screen][$tmp_question_ID][0];
+          if (!isset($excluded[$tmp_question_ID])) {
+            echo ',';
+            if(isset($individual[$tmp_screen][$tmp_question_ID][0])) {
+              echo $individual[$tmp_screen][$tmp_question_ID][0];
+            } else {
+              echo 'u';
+            }
+          } 
           break;
         case 'dichotomous':
         case 'mrq':
@@ -367,7 +393,11 @@
           if ($paper_buffer[$i]['score_method'] == 'other') echo ',' . substr($individual[$tmp_screen][$tmp_question_ID], $char_pos+1);
           break;
         case 'textbox':
-          $tmp_data = trim($individual[$tmp_screen][$tmp_question_ID]);
+          if(isset($individual[$tmp_screen][$tmp_question_ID])) {
+            $tmp_data = trim($individual[$tmp_screen][$tmp_question_ID]);
+          } else {
+            $tmp_data = '<unanswered>';
+          }
           $tmp_data = preg_replace("/(\r\n|\n|\r)/", "", $tmp_data);
           $tmp_data = str_replace('"',"'",$tmp_data);
           
@@ -375,7 +405,15 @@
           echo ',"' . $tmp_data . '"';
           break;
         default:
-          if (!isset($excluded[$tmp_question_ID])) echo ',"' .$individual[$tmp_screen][$tmp_question_ID] , '"';
+          if (!isset($excluded[$tmp_question_ID])) {
+            echo ',"';
+            if (isset($individual[$tmp_screen][$tmp_question_ID])) {
+              echo $individual[$tmp_screen][$tmp_question_ID];
+            } else {
+              echo 'u';
+            }
+            echo '"';
+          }
           break;
       }
     }
