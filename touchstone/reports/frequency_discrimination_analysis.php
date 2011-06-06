@@ -810,6 +810,7 @@
             for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
               if (isset($top_log[$q_id][$i][$rank_position])) {
                 $u = number_format(($top_log[$q_id][$i][$rank_position]/$candidate_no)*100,0);
+                //$u = $top_log[$q_id][$i][$rank_position] . '/' . $candidate_no;
               } else {
                 $u = 0;
               }
@@ -1254,14 +1255,14 @@ p {margin-left:0px; margin-right:0px}
   // Calculate top and bottom cohorts.
   $student_list = '';
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT username, sum(mark) AS total_mark FROM (log0, users, log_metadata) WHERE log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log0.started>=? AND log0.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log0.started) UNION ALL (SELECT username, sum(mark) AS total_mark FROM (log1, users, log_metadata) WHERE log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log1.started>=? AND log1.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log1.started) ORDER BY total_mark ASC, username");
+    $result = $mysqli->prepare("(SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log0, users, log_metadata) WHERE log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log0.started>=? AND log0.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log0.started) UNION ALL (SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log1, users, log_metadata) WHERE log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log1.started>=? AND log1.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log1.started) ORDER BY total_mark ASC, username");
     $result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=users.id AND q_paper=? AND DATE_ADD(log$paper_type.started, INTERVAL 2 MINUTE)>=? AND log$paper_type.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log$paper_type.started ORDER BY total_mark ASC, username");
+    $result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=users.id AND q_paper=? AND DATE_ADD(log$paper_type.started, INTERVAL 2 MINUTE)>=? AND log$paper_type.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log$paper_type.started ORDER BY total_mark ASC, username");
     $result->bind_param('iss',$paperID, $startdate, $enddate);
   }
   $result->execute();
-  $result->bind_result($username, $total_mark);
+  $result->bind_result($username, $total_mark, $started);
   $result->store_result();
 
   $student_no = 0;
@@ -1270,9 +1271,9 @@ p {margin-left:0px; margin-right:0px}
   $user_total = $result->num_rows;
   while ($row = $result->fetch()) {
     if ($student_no < $user_no) {
-      $bottom_cohort[$username] = '';
+      $bottom_cohort[$started][$username] = '';
     } elseif ($student_no >= ($user_total - $user_no)) {
-      $top_cohort[$username] = '';
+      $top_cohort[$started][$username] = '';
     }
     $student_no++;
   }
@@ -1283,30 +1284,25 @@ p {margin-left:0px; margin-right:0px}
   $bottom_log_array = array();
   $top_log_array = array();
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT username, log0.userID, log0.q_id, user_answer, q_type, score_method, mark, totalpos, option_order FROM log0, questions, users WHERE log0.q_id=questions.q_id AND q_paper=? AND users.id=log0.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=? $student_modules_sql) UNION ALL (SELECT username, log1.userID, log1.q_id, user_answer, q_type, score_method, mark, totalpos, option_order FROM log1, questions,  users WHERE log1.q_id=questions.q_id AND q_paper=? AND users.id=log1.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=?) $student_modules_sql ");
+    $result = $mysqli->prepare("(SELECT username, log0.userID, log0.q_id, user_answer, q_type, score_method, mark, totalpos, option_order, started FROM log0, questions, users WHERE log0.q_id=questions.q_id AND q_paper=? AND users.id=log0.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=? $student_modules_sql) UNION ALL (SELECT username, log1.userID, log1.q_id, user_answer, q_type, score_method, mark, totalpos, option_order, started FROM log1, questions,  users WHERE log1.q_id=questions.q_id AND q_paper=? AND users.id=log1.userID AND (users.roles='Student' OR users.roles='graduate') AND started>=? AND started<=?) $student_modules_sql ");
     $result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT username, log$paper_type.userID, log$paper_type.q_id, user_answer, q_type, score_method, mark, totalpos, option_order FROM log$paper_type, questions, users WHERE log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=? $student_modules_sql");
+    $result = $mysqli->prepare("SELECT username, log$paper_type.userID, log$paper_type.q_id, user_answer, q_type, score_method, mark, totalpos, option_order, started FROM log$paper_type, questions, users WHERE log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=? $student_modules_sql");
     $result->bind_param('iss', $paperID, $startdate, $enddate);
   }
   $result->execute();
-  $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order);
+  $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order, $started);
   
   while ($row = $result->fetch()) {
     storeData($freq_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order, 'all');
-    if (isset($bottom_cohort[$username])) {
+    if (isset($bottom_cohort[$started][$username])) {
       storeData($bottom_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order, 'bottom');
     }
-    if (isset($top_cohort[$username])) {
+    if (isset($top_cohort[$started][$username])) {
       storeData($top_log_array, $question_ID, $tmp_answer, $q_type, $score_method, $mark, $totalpos, $option_order, 'top');
     }
   }
   $result->close();
-  //echo "<div style='float: left'>";
-  //var_dump($top_log_array);
-  //echo "</div><div style='float: left'>";
-  //var_dump($bottom_log_array);
-  //echo "</div>";
   
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
