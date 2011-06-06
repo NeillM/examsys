@@ -107,7 +107,7 @@ require './include/staff_auth.inc';
 
     if ($duplicate_name == 0) {
       if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL,$userID, ?,'',NOW(),'yellow',NULL)")) {
-        $folder_query->bind_param('s', stripslashes($new_folder_name));
+        $folder_query->bind_param('s', $new_folder_name);
         $folder_query->execute();
         $folder_query->close();
       } else {
@@ -277,9 +277,9 @@ require './include/staff_auth.inc';
   $folder_details->close();
 
   if (isset($_GET['newfolder']) AND $_GET['newfolder'] == 'y' or $duplicate_name == 1) {
-    if ($_POST['submit'] and $duplicate_name == 1) {
+    if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_name == 1) {
       echo "<div class=\"f\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input style=\"background-color:#FFC0C0\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"Create\" /></div>\n";
-    } elseif (!$_POST['submit']) {
+    } elseif (!isset($_POST['submit'])) {
       echo "<div class=\"f\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input type=\"text\" size=\"30\" name=\"folder_name\" value=\"New Folder\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"Create\" /></div>\n";
     }
   }
