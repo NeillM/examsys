@@ -468,7 +468,8 @@
   $result->bind_result($column_type);
   $result->fetch();
   if ($column_type == "enum('year1','year2','year3','year4','year5','year6','cp1','cp2','cp3','f1','graduate')") {
-    for ($log_type = 0; $log_type<=3; $log_type++) {
+    $update_logs = array(0,1,2,3,5);
+    foreach($update_logs as $log_type) {
       $adjust = $mysqli->prepare("ALTER TABLE log$log_type ADD COLUMN yearofstudy tinyint");
       $adjust->execute();
       $adjust->close();
@@ -551,8 +552,8 @@
     $adjust->execute();
     $adjust->close();
     echo "<div>ALTER TABLE log_metadata ADD INDEX(userID,paperID,started)</div>\n";
-    
-    for ($log_type = 0; $log_type<=3; $log_type++) {
+    $update_logs = array(0,1,2,3,5);
+    foreach ($update_logs as $log_type) {
       echo "<div>Reading from Log$log_type and inserting into log_metadata</div>";
       $result2 = $mysqli->prepare("SELECT userID, q_paper, started, ipaddress, student_grade, yearofstudy FROM log$log_type GROUP BY userID, q_paper, started");
       //$result2 = $mysqli->prepare("SELECT DISTINCT userID, q_paper, started, ipaddress, student_grade, yearofstudy FROM log$log_type");
@@ -580,18 +581,22 @@
   $result->bind_result($column_type);
   $result->fetch();
   if ($column_type == 'varchar(15)') {
-    for ($log_type = 0; $log_type<=3; $log_type++) {
-      echo "<div>ALTER TABLE log$log_type DROP COLUMN ipaddress</div>\n";
-      $adjust = $mysqli->prepare("ALTER TABLE log$log_type DROP COLUMN ipaddress");
-      $adjust->execute();
-      $adjust->close();
-      echo "<div>Dropped ipaddress</div>\n";
+    $update_logs = array(0,1,2,3,5);
+    foreach ($update_logs as $log_type) {
+      if ($log_type != 5) {
+        echo "<div>ALTER TABLE log$log_type DROP COLUMN ipaddress</div>\n";
+        $adjust = $mysqli->prepare("ALTER TABLE log$log_type DROP COLUMN ipaddress");
+        $adjust->execute();
+        $adjust->close();
+        echo "<div>Dropped ipaddress</div>\n";
+      }
       
       echo "<div>ALTER TABLE log$log_type DROP COLUMN student_grade</div>\n";
       $adjust = $mysqli->prepare("ALTER TABLE log$log_type DROP COLUMN student_grade");
       $adjust->execute();
       $adjust->close();
       echo "<div>Droped student_grade</div>\n";
+      
       
       echo "<div>ALTER TABLE log$log_type DROP COLUMN yearofstudy</div>\n";
       $adjust = $mysqli->prepare("ALTER TABLE log$log_type DROP COLUMN yearofstudy");

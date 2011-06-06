@@ -60,7 +60,7 @@
     
     // Get student data.
     $students = array();
-    $result = $mysqli->prepare("SELECT users.id, student_id, username, year, grade FROM users, sid, student_modules WHERE users.id=sid.userID AND users.id=student_modules.userID AND moduleid=? AND calendar_year=?");
+    $result = $mysqli->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, student_modules WHERE users.id=sid.userID AND users.id=student_modules.userID AND moduleid=? AND calendar_year=?");
     $result->bind_param('ss', $moduleID, $session);
     $result->execute();
     $result->bind_result($id, $student_id, $username, $year, $grade);
@@ -75,17 +75,17 @@
     $lines = file($fileName);
     $line_written = 0;
     if ($_POST['header_row'] == '1') {
-      echo "<ol start=\"2\">\n";
+      echo "<ol start=\"1\">\n";
     } else {
       echo "<ol>\n";
     }
     foreach ($lines as $separate_line) {
       if ($_POST['header_row'] != '1' or $line_written > 0) {
-        $fields = split(',',$separate_line);
+        $fields = explode(',',$separate_line);
         $sid = trim($fields[0]);
-        if ($students[$sid]['username'] == '') {  // Student is not in class List.
+        if (!isset($students[$sid]['username'])) {  // Student is not in class List.
           // Look up to see if anywhere else in Authentication database.
-          $result = $mysqli->prepare("SELECT id, student_id, users.username, year, grade FROM users, sid WHERE users.id=sid.userID AND sid.student_id=?");
+          $result = $mysqli->prepare("SELECT id, student_id, users.username, yearofstudy, grade FROM users, sid WHERE users.id=sid.userID AND sid.student_id=?");
           $result->bind_param('s', $sid);
           $result->execute();
           $result->store_result();
@@ -100,15 +100,30 @@
           $result->close();          
         }
         if ($students[$sid]['username'] != '') {  // Student is in class List.
+          
+          $result = $mysqli->prepare("DELETE FROM log_metadata WHERE userID=? AND paperID=? AND started=?");
+          $result->bind_param('iis', $students[$sid]['id'], $_GET['paperID'], $paper_date);
+          $result->execute();
+          $result->close();
+          
           $result = $mysqli->prepare("DELETE FROM log5 WHERE userID=? AND q_paper=? AND started=?");
           $result->bind_param('iis', $students[$sid]['id'], $_GET['paperID'], $paper_date);
           $result->execute();
           $result->close();
 
           echo "<li>$sid -&gt; " . $students[$sid]['username'] . "</li>";
+          
+          $result = $mysqli->prepare("INSERT INTO log_metadata VALUES(NULL,?,?,?,?,?,?,?)");
+          $ip = '127.0.0.1';
+          $attempt = 1;
+          $result->bind_param('iisssii', $students[$sid]['id'], $_GET['paperID'], $paper_date, $ip, $students[$sid]['grade'], $students[$sid]['year'], $attempt);
+          $result->execute();
+          $result->close();
+          
           for ($q=1; $q<=$question_no; $q++) {
-            $result = $mysqli->prepare("INSERT INTO log5 VALUES(NULL,?,?,?,?,?,?,?,?)");
-            $result->bind_param('isiidiss', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], floatval(trim($fields[$q])), $paper[$q]['marks'], $students[$sid]['grade'], $students[$sid]['year']);
+            $result = $mysqli->prepare("INSERT INTO log5 VALUES(NULL,?,?,?,?,?,?)");
+            $mark = floatval(trim($fields[$q]));
+            $result->bind_param('isiidi', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $mark, $paper[$q]['marks']);
             $result->execute();
             $result->close();
           }
