@@ -171,7 +171,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-  <title>Edit Script Concordance Question</title>
+  <title>Edit Script Concordance Question<?php echo " $cfg_install_type"; ?></title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="stylesheet" href="../../css/add_edit.css" type="text/css">
   <script language="JavaScript">
@@ -288,8 +288,14 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     <tr height="70" style="background-color:#DFECFF">
       <td width="400">
         <img style="position:absolute; left:8px; top:2px;" src="../../artwork/edit_question.png" width="64" height="64" alt="Edit Logo" />
-        <span style="position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt">Edit Question</span>
-        <span style="position:absolute; left:80px; top:40px; font-family:Arial,sans-serif; font-size:12pt; font-weight:bold">(Script Concordance)</span>
+        <?php
+          if (isset($_GET['qNo'])) {
+            echo "<span style=\"position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt\">Edit Question " . $_GET['qNo'] . "</span>\n";
+          } else {
+            echo "<span style=\"position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt\">Edit Question</span>\n";
+          }
+        ?>
+       <span style="position:absolute; left:80px; top:40px; font-family:Arial,sans-serif; font-size:12pt; font-weight:bold">(Script Concordance)</span>
       </td>
       <td style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
     </tr>

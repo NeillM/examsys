@@ -180,18 +180,24 @@
             foreach ($options as $individual_option) {
               $i++;
               if ($i > 1 or $na == true) {
-                if ($log[$screen][$q_id][1][$individual_option] == '') {
+                if (!isset($log[$screen][$q_id][1][$individual_option])) {
                   echo "<td class=\"figures\">0</td><td>(0%)</td>\n";
                 } else {
                   echo "<td class=\"figures\">" . $log[$screen][$q_id][1][$individual_option] . "</td><td>(" . round(($log[$screen][$q_id][1][$individual_option]/$candidates)*100) . "%)</td>\n";
                 }
                 if ($individual_option >= 1 and $individual_option <= 10) {
-                  $sub_total += $individual_option * $log[$screen][$q_id][1][$individual_option];
+                  if (isset($log[$screen][$q_id][1][$individual_option])) {
+                    $sub_total += $individual_option * $log[$screen][$q_id][1][$individual_option];
+                  }
                 }
               }
             }
-            $unanswered = $log[$screen][$q_id][1]['n/a'];
-            if ($log[$screen][$q_id][1]['u'] == '') {
+            if (isset($log[$screen][$q_id][1]['n/a'])) {
+              $unanswered = $log[$screen][$q_id][1]['n/a'];
+            } else {
+              $unanswered = 0;
+            }
+            if (!isset($log[$screen][$q_id][1]['u'])) {
               echo "<td class=\"figures\" style=\"color:#808080\">0</td><td style=\"color:#808080\">(0%)</td>";
             } else {
               $unanswered += $log[$screen][$q_id][1]['u'];
@@ -238,7 +244,7 @@
                 echo "<td class=\"figures\">" . $log[$screen][$q_id][1][$i] . "</td><td>(" . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . "%)</td><td>$individual_option</td></tr>\n";
               }
             }
-            if ($log[$screen][$q_id][1]['u'] == '') {
+            if (!isset($log[$screen][$q_id][1]['u'])) {
               echo "<tr style=\"color:#808080\"><td class=\"figures\">0</td><td>(0%)</td><td>&lt;unanswered&gt;</td></tr>\n";
             } else {
               echo "<tr style=\"color:#808080\"><td class=\"figures\">" . $log[$screen][$q_id][1]['u'] . "</td><td>(" . round(($log[$screen][$q_id][1]['u']/$candidates)*100) . "%)</td><td>&lt;unanswered&gt;</td></tr>\n";
@@ -260,7 +266,7 @@
             $require_na = false;
             foreach ($options as $individual_option) {
               $i++;
-              if ($log[$screen][$q_id][$i]['correct'] == 9990) $require_na = true;
+              if (isset($log[$screen][$q_id][$i]['correct']) and $log[$screen][$q_id][$i]['correct'] == 9990) $require_na = true;
             }
             
             $i = 0;
@@ -268,8 +274,12 @@
               $i++;
               echo "<tr><td colspan=\"4\">$individual_option</td></tr>\n";
               for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
-                if ($log[$screen][$q_id][$i][$rank_position] == '') $log[$screen][$q_id][$i][$rank_position] = 0;
-                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i][$rank_position] . "</td><td>(" . number_format(($log[$screen][$q_id][$i][$rank_position]/$candidates)*100,0) . "%)</td><td></td><td>$rank_position";
+                if (isset($log[$screen][$q_id][$i][$rank_position]) and  $log[$screen][$q_id][$i][$rank_position] == '') $log[$screen][$q_id][$i][$rank_position] = 0;
+                if (isset($log[$screen][$q_id][$i][$rank_position])) {
+                  echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i][$rank_position] . "</td><td>(" . number_format(($log[$screen][$q_id][$i][$rank_position]/$candidates)*100,0) . "%)</td><td></td><td>$rank_position";
+                } else {
+                  echo "<tr><td class=\"figures\">0</td><td>(0%)</td><td></td><td>$rank_position";
+                }
                 if ($rank_position == 1) {
                   echo 'st';
                 } elseif ($rank_position == 2) {
@@ -281,10 +291,14 @@
                 }
                 echo "</td><td style=\"width:50%\">&nbsp;</td></tr>\n";
               }
-              if ($reqire_na == true) {
+              if (isset($reqire_na) and $reqire_na == true) {
                 echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i][9990] . "</td><td>(" . number_format(($log[$screen][$q_id][$i][9990]/$candidates)*100,0) . "%)</td><td></td><td>N/A</td><td style=\"width:50%\">&nbsp;</td></tr>";
               }
-              echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "</td><td>(" . number_format(($log[$screen][$q_id][$i]['u']/$candidates)*100,0) . "%)</td><td></td><td style=\"color:#808080\">&lt;unanswered&gt;</td><td style=\"width:50%\">&nbsp;</td></tr>";
+              if (isset($log[$screen][$q_id][$i]['u'])) {
+                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "</td><td>(" . number_format(($log[$screen][$q_id][$i]['u']/$candidates)*100,0) . "%)</td><td></td><td style=\"color:#808080\">&lt;unanswered&gt;</td><td style=\"width:50%\">&nbsp;</td></tr>";
+              } else {
+                echo "<tr><td class=\"figures\">0</td><td>(0%)</td><td></td><td style=\"color:#808080\">&lt;unanswered&gt;</td><td style=\"width:50%\">&nbsp;</td></tr>";
+              }
               echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
             }
             break;
@@ -317,7 +331,7 @@
                 echo "<td class=\"figures\" style=\"font-weight:bold\">" . $log[$screen][$q_id][$i][$option_no] . "</td>";
               }
             } else {
-              if ($log[$screen][$q_id][$i][$option_no] == '') {
+              if (!isset($log[$screen][$q_id][$i][$option_no])) {
                 echo "<td class=\"figures\">0</td>";
               } else {
                 echo "<td class=\"figures\">" . $log[$screen][$q_id][$i][$option_no] . "</td>";
@@ -325,7 +339,7 @@
             }
             $option_no++;
           }
-          if ($log[$screen][$q_id][$i]['u'] > 0) {
+          if (isset($log[$screen][$q_id][$i]['u'])) {
             echo "<td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "</td>";
           } else {
             echo "<td class=\"figures\">0</td>";
@@ -527,7 +541,11 @@ td {vertical-align:top}
         }
         break;
       case 'likert':
-        $log_array[$screen][$question_ID][1][$tmp_answer]++;
+        if (isset($log_array[$screen][$question_ID][1][$tmp_answer])) {
+          $log_array[$screen][$question_ID][1][$tmp_answer]++;
+        } else {
+          $log_array[$screen][$question_ID][1][$tmp_answer] = 1;
+        }
         break;
       case 'hotspot':
         if (substr($tmp_answer,0,1) == '1') {
@@ -636,9 +654,17 @@ td {vertical-align:top}
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
           $i++;
           if ($tmp_individual_answer == '9999') {
-            $log_array[$screen][$question_ID][$i]['u']++;
+            if (isset($log_array[$screen][$question_ID][$i]['u'])) {
+              $log_array[$screen][$question_ID][$i]['u']++;
+            } else {
+              $log_array[$screen][$question_ID][$i]['u']++;
+            }
           } else {
-            $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
+            if (isset($log_array[$screen][$question_ID][$i][$tmp_individual_answer])) {
+              $log_array[$screen][$question_ID][$i][$tmp_individual_answer]++;
+            } else {
+              $log_array[$screen][$question_ID][$i][$tmp_individual_answer] = 1;
+            }
           }
         }
         break;
@@ -706,7 +732,9 @@ td {vertical-align:top}
         $respondents = 0;
         $i = 1;
         foreach ($options_buffer as $individual_option) {
-          $respondents += $log_array[$old_screen][$old_q_id][1][$i];
+          if (isset($log_array[$old_screen][$old_q_id][1][$i])) {
+            $respondents += $log_array[$old_screen][$old_q_id][1][$i];
+          }
           $i++;
         }
         if (isset($log_array[$old_screen][$old_q_id][1]['n/a'])) $respondents += $log_array[$old_screen][$old_q_id][1]['n/a'];

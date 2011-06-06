@@ -1155,21 +1155,28 @@ table {font-size:100%}
           echo "\n<p class=\"leadin\"><strong>Then this " . strtolower($sct_titles[$paper[$question]['score_method']]) . " is:</strong></p>\n";
 
           $max = -1;
-          $correct_answer = -1;
           $reviewers_total = 0;
+          // Loop around to find the max number of experts
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             if ($paper[$question]['correct'][$part_id] > $max) {
               $max = $paper[$question]['correct'][$part_id];
-              $correct_answer = $part_id;
+              $correct_answer[$part_id] = $part_id;
             }
             $reviewers_total += $paper[$question]['correct'][$part_id];
+          }
+          // Loop round again to set correct answer(s)
+          $correct_answer = array();
+          for ($part_id=0; $part_id<$no_options; $part_id++) {
+            if ($max == $paper[$question]['correct'][$part_id]) {
+              $correct_answer[$part_id] = $part_id;
+            }
           }
           
           echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\">\n";
           echo "<tr><td></td><td></td><td></td><td style=\"color:#808080\">Experts</td><td></td></tr>\n";
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             $tmp_part_id = $option_order[$part_id];
-            if ($tmp_part_id == $correct_answer) {
+            if (isset($correct_answer[$tmp_part_id])) {
               $strong_on = '<b>';
               $strong_off = '</b>';
             } else {
