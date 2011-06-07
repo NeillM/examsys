@@ -62,7 +62,9 @@ li {list-style:none; padding-bottom:5px}
     $percent = 100;
   }
   
-  $question_data = getCohortData($mysqli, $moduleID, $startdate, $enddate, $_GET['repdegree'], $_GET['repmodule'], '%', $paperID, $paper_type, $_GET['direction'],$percent);
+  $student_no = 0;
+  $user_total = 0;
+  $question_data = getCohortData($mysqli, $moduleID, $startdate, $enddate, $_GET['repdegree'], $_GET['repmodule'], '%', $paperID, $paper_type, $_GET['direction'], $student_no, $user_total, $percent);
   
   if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $paper_title = $paper_title . ' - ' . $_GET['repmodule'] . ' students only';
@@ -139,7 +141,7 @@ li {list-style:none; padding-bottom:5px}
     <br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" width="95%" style="background-color:#E4EEFC; border:1px solid #B5C4DF">
     <tr><td style="text-align:left"><table cellpadding="2" cellspacing="0" border="0">
     <?php
-      echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">Total Candidate #</td><td>' . number_format($student_no) . '</td></tr>';
+      echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">Total Candidate #</td><td>' . number_format($user_total) . '</td></tr>';
       if ($_GET['percent'] != 100 AND $_GET['percent'] != '') {
         if ($_GET['direction'] == 'desc') {
           echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">Upper group size</td><td>' . $_GET['percent'] . '% (' . $student_no . ' candidates)</td></tr>';

@@ -22,8 +22,8 @@
 * @package
 */
 
-function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repdegree, $repmodule, $repyear, $paperID, $paper_type, $direction, $percent = 100) {
-  global $qid_list, $student_no;
+function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repdegree, $repmodule, $repyear, $paperID, $paper_type, $direction, &$student_no = 0, &$user_total = 0, $percent = 100) {
+  global $qid_list;
   
   // Get all the users on the module(s) the paper is on.
   if ($moduleID != '') {
@@ -68,11 +68,9 @@ function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repdegree, $re
   $student_list = '';
   
   //only take the required number of users if $percent is not 100%
-  if ($percent != 100) {
-    $user_total = floor($user_total * ($percent/100));
-  }
+  $user_limit = ($percent != 100) ? floor($user_total * ($percent/100)) : $user_total;
   
-  while ($row = $marks_query->fetch_assoc() and $student_no <= $user_total) {
+  while ($row = $marks_query->fetch_assoc() and $student_no <= $user_limit) {
     if ($student_list == '') {
       $student_list = "'" . $row['userID'] . "'";
     } else {
