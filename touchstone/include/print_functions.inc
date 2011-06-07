@@ -75,12 +75,8 @@ function display_options($options,$q_id, $current_theme) {
     }
   } elseif ($options[0]['q_type'] == 'mcq') {
     echo '<blockquote>';
-    if ($options[0]['score_method'] == 'vertical') {
+    if ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other' or $options[0]['score_method'] == 'dropdown') {
       echo '<table cellpadding="2" cellspacing="0" border="0">';
-    }
-    if ($options[0]['score_method'] == 'dropdown') {
-      echo '<div class="option"><select name="q' . $question_no . '" size="1">';
-      echo '<option value=""></option>';
     }
   } elseif ($options[0]['q_type'] == 'mrq') {
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -227,7 +223,7 @@ function display_options($options,$q_id, $current_theme) {
           } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
             echo "<img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" />&nbsp;" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "&nbsp;&nbsp;";
           }
-        } elseif ($options[0]['score_method'] == 'vertical') {
+        } elseif ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other' or $options[0]['score_method'] == 'dropdown') {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
             echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
           } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
@@ -568,10 +564,11 @@ function display_options($options,$q_id, $current_theme) {
   }                    // End foreach loop
 
   if ($options[0]['q_type'] == 'mcq') {
-    if ($options[0]['score_method'] == 'vertical') {
+    if ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other' or $options[0]['score_method'] == 'dropdown') {
+      if($options[0]['score_method'] == 'vertical_other') {
+        echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>Other&nbsp; <input type=\"textbox\" style=\"border: 1px solid black;\" value=\"\" name=\"mcq_other\" /></td></tr>\n";
+      }
       echo '</table>';
-    } elseif ($options[0]['score_method'] == 'dropdown') {
-      echo '</select></div>';
     }
   } elseif ($options[0]['q_type'] == 'calculation') {
     $score_array = explode(',',$options[0]['score_method']);
