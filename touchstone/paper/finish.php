@@ -1781,9 +1781,13 @@ table {font-size:100%}
                   if ($tmp_display_students_response == '1') echo  '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                 }
               } else {
-                if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-                if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
+                if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0' and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
+                  echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+                } else {
+                  echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
+                }
               }
+              if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
             }
             echo '<span';
             if (substr($tmp_exclude,$blank_count,1) == '1') echo ' style="color:red; text-decoration:line-through"';
