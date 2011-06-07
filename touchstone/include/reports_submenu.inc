@@ -26,13 +26,15 @@
 <?php
   if ($paper_type == '3') {
 ?>
-function go(url, evt) {
+  function go(url, evt) {
+    document.getElementById('stats_menu').style.display='none';
     if (document.getElementById('completerpt').checked) {
       completerpt = 1;
     } else {
       completerpt = 0;
     }
     window.location.href = url + "paperID=" + document.stats_menu.paperID.value + "&startdate=" + document.stats_menu.start_year.value + document.stats_menu.start_month.value + document.stats_menu.start_day.value + document.stats_menu.start_time.value + "&enddate=" + document.stats_menu.end_year.value + document.stats_menu.end_month.value + document.stats_menu.end_day.value + document.stats_menu.end_time.value + "&repdegree=" + document.stats_menu.repdegree.value + "&repyear=" + document.stats_menu.repyear.value + "&sortby=surname&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&complete=" + completerpt;
+    evt.cancelBubble = true;
     return false;
   }
 <?php

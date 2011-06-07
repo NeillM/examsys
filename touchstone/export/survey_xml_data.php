@@ -67,8 +67,8 @@ require '../include/staff_auth.inc';
   }
 
   // Capture the log data first.
-  $result = $mysqli->prepare("SELECT log$paper_type.q_id, grade, DATE_FORMAT(started,\"%d/%m/%Y %T\") AS started, log$paper_type.year, surname, initials, title, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log$paper_type.userID FROM (log$paper_type, questions, users) WHERE log$paper_type.q_id=questions.q_id AND q_paper=? AND log$paper_type.year LIKE ? AND users.id=log$paper_type.userID AND grade LIKE ? AND (users.roles='Student' OR users.roles='graduate')$exclude AND started>=? AND started<=? ORDER BY surname, initials");
-  echo $mysqli->error;
+  $user_no = 0;
+  $result = $mysqli->prepare("SELECT log3.q_id, grade, DATE_FORMAT(log_metadata.started,\"%d/%m/%Y %T\") AS started, log_metadata.year, surname, initials, title, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log3.userID FROM (log3, log_metadata, questions, users) WHERE log3.q_paper=log_metadata.paperID AND log3.userID=log_metadata.userID AND log3.started=log_metadata.started AND log3.q_id=questions.q_id AND q_paper=? AND log_metadata.year LIKE ? AND users.id=log3.userID AND grade LIKE ? AND (users.roles='Student' OR users.roles='graduate')$exclude AND log_metadata.started>=? AND log_metadata.started<=? ORDER BY surname, initials");
   $result->bind_param('issss', $_GET['paperID'], $_GET['repyear'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($question_ID, $grade, $started, $year, $surname, $initials, $title, $user_answer, $q_type, $user_ID);
@@ -107,40 +107,35 @@ require '../include/staff_auth.inc';
         case 'matching':
           $sub_part = 1;
           $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_question_ID];
-          $tmp_answers = split('¬',$log_array[$tmp_user_ID][$tmp_question_ID]);
+          $tmp_answers = explode('$',$log_array[$tmp_user_ID][$tmp_question_ID]);
           foreach ($tmp_answers as $individual_answer) {
             echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
             $sub_part++;          
           }
           break;
-        case 'multimatching':
-          $sub_part = 1;
-          $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_question_ID];
-          $tmp_answers = split('¬',$log_array[$tmp_user_ID][$tmp_question_ID]);
-          foreach ($tmp_answers as $individual_answer) {
-            echo "<question no=\"$Qno.$sub_part\">" . str_replace('|',',',$individual_answer) . "</question>\n";
-            $sub_part++;          
-          }
-          break;
         case 'matrix':
-          echo "<question no=\"$Qno\">";
-          $log_array[$tmp_user_ID][$tmp_question_ID] = substr($log_array[$tmp_user_ID][$tmp_question_ID],1);
-          $tmp_answers = str_replace('¬',',',$log_array[$tmp_user_ID][$tmp_question_ID]);
-          echo $tmp_answers;
-          echo "</question>\n";
+          $sub_part = 1;
+          if (isset($log_array[$tmp_user_ID][$tmp_question_ID])) {
+            $tmp_answers = explode('|',$log_array[$tmp_user_ID][$tmp_question_ID]);
+            foreach ($tmp_answers as $individual_answer) { 
+              echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
+              $sub_part++;
+            }
+          }
           break;
         case 'rank':
           $sub_part = 1;
-          $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_question_ID];
-          $tmp_answers = split(',',$log_array[$tmp_user_ID][$tmp_question_ID]);
-          foreach ($tmp_answers as $individual_answer) {
-            if ($individual_answer != '') {
-              if ($individual_answer == '9990') {
-                echo "<question no=\"$Qno.$sub_part\">n/a</question>\n";
-              } else {
-                echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
+          if (isset($log_array[$tmp_user_ID][$tmp_question_ID])) {
+            $tmp_answers = explode(',',$log_array[$tmp_user_ID][$tmp_question_ID]);
+            foreach ($tmp_answers as $individual_answer) {
+              if ($individual_answer != '') {
+                if ($individual_answer == '9990') {
+                  echo "<question no=\"$Qno.$sub_part\">n/a</question>\n";
+                } else {
+                  echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
+                }
+                $sub_part++;          
               }
-              $sub_part++;          
             }
           }
           break;
@@ -162,19 +157,24 @@ require '../include/staff_auth.inc';
           break;
         case 'textbox':
           echo "<question no=\"$Qno\">";
-          $tmp_data = $log_array[$tmp_user_ID][$tmp_question_ID];
-          $buffer = '';
-          for ($character=0; $character<strlen($tmp_data); $character++) {
-            if (ord($tmp_data{$character}) > 31 and ord($tmp_data{$character}) < 127) {
-              $buffer .= $tmp_data{$character};
+          if (isset($log_array[$tmp_user_ID][$tmp_question_ID])) {
+            $tmp_data = $log_array[$tmp_user_ID][$tmp_question_ID];
+            $buffer = '';
+            for ($character=0; $character<strlen($tmp_data); $character++) {
+              if (ord($tmp_data{$character}) > 31 and ord($tmp_data{$character}) < 127) {
+                $buffer .= $tmp_data{$character};
+              }
             }
+            echo htmlspecialchars($buffer);
           }
-          echo htmlspecialchars($buffer);
           echo "</question>\n";
           break;
-        default:
+        case 'mcq':
+        case 'likert':
           echo "<question no=\"$Qno\">";
-          echo $log_array[$tmp_user_ID][$tmp_question_ID];
+          if (isset($log_array[$tmp_user_ID][$tmp_question_ID])) {
+            echo $log_array[$tmp_user_ID][$tmp_question_ID];
+          }
           echo "</question>\n";
           break;
       }
