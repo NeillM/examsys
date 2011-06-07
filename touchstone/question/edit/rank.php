@@ -216,14 +216,14 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     }
 
     save_external_responses($mysqli);
- 
+    
     if ($changes == true) {
       // Update Question data
       $bloom = (empty($bloom)) ? NULL : $bloom;
-    	$result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, correct_fback=?, score_method=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, bloom=?, q_group=?, last_edited=NOW(), scenario_plain=?, leadin_plain=?, status=?, q_option_order=? WHERE q_id=?");
+    	$result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, correct_fback=?, incorrect_fback=?, score_method=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, bloom=?, q_group=?, last_edited=NOW(), scenario_plain=?, leadin_plain=?, status=?, q_option_order=? WHERE q_id=?");
       $scenario_striped = trim(strip_tags($scenario));
       $leadin_striped = trim(strip_tags($leadin));
-      $result->bind_param('sssssssssssssssi', $theme, $scenario, $leadin, $correct_fback, $score_method, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $scenario_striped, $leadin_striped, $status, $option_order, $_GET['q_id']);
+      $result->bind_param('ssssssssssssssssi', $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $scenario_striped, $leadin_striped, $status, $option_order, $_GET['q_id']);
       $result->execute();  
       $result->close();
     }
@@ -267,26 +267,26 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 
     // Check all options with text have a value in the drop-down
     var missingAnswers = [];
-    for(var i = 1; i <= 20; i++) {
+    for (var i = 1; i <= 20; i++) {
     	var text;
     	var ddl;
 
     	text = document.getElementById('new_option_text' + i);
-    	if(text != null) {
+    	if (text != null) {
 				ddl = document.getElementById('answer' + i);
-				if(ddl != null && ddl.options[ddl.selectedIndex].value == '') {
-						missingAnswers[missingAnswers.length] = i;
+				if (ddl != null && ddl.options[ddl.selectedIndex].value == '') {
+					missingAnswers[missingAnswers.length] = i;
 				}
     	}
     }
 
-    if(missingAnswers.length > 0) {
+    if (missingAnswers.length > 0) {
         var answers = '';
         var plural = (missingAnswers.length > 1) ? 's' : '';
-        for(i = 0; i < missingAnswers.length; i++) {
-            if(i > 0 && i == missingAnswers.length - 1) answers += ' and ';
-            answers += missingAnswers[i];
-            if(i < missingAnswers.length - 2) answers += ', ';
+        for (i = 0; i < missingAnswers.length; i++) {
+          if (i > 0 && i == missingAnswers.length - 1) answers += ' and ';
+          answers += missingAnswers[i];
+          if (i < missingAnswers.length - 2) answers += ', ';
         }
         alert('Missing answer' + plural + ' for option' + plural + ' ' + answers + '. Please select a correct answer for all options. Use \'N/A\' for distractors.');
         return false;
@@ -444,8 +444,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 	   <td colspan="2"><input id="nextOption" type="button" value="Add More Options..." onclick="showNextOption(1)"/></td>
 	   </tr>
 	   <?php
-       echo "<tr>\n<td class=\"field\">Feedback if Correct<br /><span style=\"font-weight:normal; font-size:9pt; color:red\">(default feedback)</span></td>\n<td><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $correct_fback . "</textarea><input type=\"hidden\" name=\"old_correct_fback\" value=\"" . htmlentities($correct_fback,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
-       echo "<tr>\n<td class=\"field\">Feedback if Wrong<br /><span style=\"font-weight:normal; font-size:9pt; color:#808080\">(leave blank to use default)</span></td>\n<td><textarea name=\"incorrect_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $incorrect_fback . "</textarea><input type=\"hidden\" name=\"old_incorrect_fback\" value=\"" . htmlentities($incorrect_fback,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"options\" value=\"" . $option_no . "\"></td>\n</tr>\n";
+       echo "<tr>\n<td class=\"field\">Feedback if Correct<br /><span style=\"font-weight:normal; font-size:90%; color:red\">(default feedback)</span></td>\n<td><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $correct_fback . "</textarea><input type=\"hidden\" name=\"old_correct_fback\" value=\"" . htmlentities($correct_fback,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
+       echo "<tr>\n<td class=\"field\">Feedback if Wrong<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(leave blank to use default)</span></td>\n<td><textarea name=\"incorrect_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $incorrect_fback . "</textarea><input type=\"hidden\" name=\"old_incorrect_fback\" value=\"" . htmlentities($incorrect_fback,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"options\" value=\"" . $option_no . "\"></td>\n</tr>\n";
 
        echo echoMetadata($bloom, $q_id, $q_group, 2, $mysqli, true, $status, $disabled);
       ?>

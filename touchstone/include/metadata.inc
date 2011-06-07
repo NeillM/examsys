@@ -169,14 +169,9 @@
     
     $team_no = 0;
     foreach ($teams_array as $team_name=>$fullname) {
-      $match = false;
-      foreach ($current_teams as $individual_team) {
-        if ($individual_team == $team_name) $match = true;
-      }
-      
       if ((isset($_GET['module']) and $team_name == $_GET['module'] and $team == '') or (isset($_COOKIE['default_team']) and $team_name == $_COOKIE['default_team'] and $team == '')) $match = true;
       
-      if ($match) {
+      if (isset($_GET['module']) and $team_name == $_GET['module']) {
         if (in_array($team_name,$teams) or strpos($userroles,'SysAdmin') !== false) {
           $html .= "<div style=\"background-color:#B3C8E8\" id=\"divteam$team_no\"><input type=\"checkbox\" onclick=\"toggle('divteam$team_no'); updateList();\" id=\"team$team_no\" name=\"team$team_no\" value=\"$team_name\" checked>&nbsp;$team_name: $fullname</div>\n";
         } else {
