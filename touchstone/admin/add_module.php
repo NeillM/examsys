@@ -126,7 +126,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $result->close();
 
       // Add student onto the module
-      echo "INSERT INTO student_modules VALUES (NULL,$tmp_userID,$module,$session,1,1)<br />";
       $result = $mysqli->prepare("INSERT INTO student_modules VALUES (NULL,?,?,?,1,1)");
       $result->bind_param('iss', $tmp_userID, $module, $session);
       $result->execute();
@@ -139,7 +138,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       }
     }
     echo "<ol>";
-exit;   
+
     // Write in a record to sms_imports table
     if ($enrolments > 0) {
       if ($_POST['sms_api'] == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
