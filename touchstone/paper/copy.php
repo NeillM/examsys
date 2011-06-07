@@ -78,6 +78,7 @@
   
   $calendar_year = $new_calendar_year = '';
   $moduleID = NULL;
+  $error = array();
   if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     // Copy the properties (properties table)
     $new_paper_id = copyProperties($userID, $mysqli, $calendar_year, $new_calendar_year, $moduleID);
@@ -106,13 +107,11 @@
       $result->execute();
       $result->close();
     }
-    
   } else {    // Copy the paper and the questions.
     // Copy the properties (properties table)
     $new_paper_id = copyProperties($userID, $mysqli, $calendar_year, $new_calendar_year, $moduleID);
   	
     // Copy the question and option data (questions and options tables)
-    $error = array();
     $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper=? ORDER BY display_pos");
     $result->bind_param('i', $_POST['paperID']);
     $result->execute();
@@ -269,8 +268,6 @@
         }
       }
       $mappings_copy_objID = implode(',',$mappings_copy_objID);
-      //echo implode(',',$mappings_copy_objID) . ' <-- objectives to copy<br/>';
-      //echo implode(',',$old_qids) . ' <-- old q_ids <br/>';
       
       //copy the objectives for each session where the objective still exists
       $i = 0;
@@ -297,11 +294,6 @@
   } else {
 ?>
   <body onclick="hideMenus()">
-  <?php
-    //$_GET['paperID'] = $_POST['paperID'];
-    //require '../include/paper_options.inc';
-  ?>
-
   <div id="content" class="content">
   <br />
   <br />
