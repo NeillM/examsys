@@ -196,6 +196,7 @@
   }
   $result->close();
   
+  $objectives = array();
   $qid_list = substr($qid_list,0,-1);
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
   unset($objByModule['none_of_the_above']);
@@ -245,6 +246,11 @@
   <h1>Learning Objectives</h1>
   <p>Below is a list of all the unique learning objectives tested by this paper. Because multiple questions may test the same objective it is possible to have partial acquisition of an objective. Use the results below to concentrate on red <img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /> and amber <img src="../artwork/minor_comment.png" width="16" height="16" alt="Mostly not acquired" /> objectives you have not fully mastered.</p>
   <?php
+  if (count($objectives) == 0) {
+    echo "<p style=\"background-color:#FFC0C0; border:1px solid #C00000; padding:10px; color:#800000\">This paper has not been mapped to any learning objectives.</p>\n</body>\n</html>\n";
+    exit;
+  }
+  
   echo "<blockquote><table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"font-size:100%\">\n";
   echo "<tr><th style=\"border-bottom: 1px solid #C0C0C0\">&nbsp;</th><th colspan=\"3\" style=\"border-bottom: 1px solid #C0C0C0\">Your Mark</th><th style=\"border-bottom: 1px solid #C0C0C0\">Relative</th><th style=\"border-bottom: 1px solid #C0C0C0\">Q&nbsp;no</th><th style=\"border-bottom: 1px solid #C0C0C0\">Objective</th></tr>";
   foreach($objectives as $id => $obj_data) {
