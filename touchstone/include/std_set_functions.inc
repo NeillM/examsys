@@ -688,41 +688,21 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       case 'hotspot':
 ?>
 
+  <div>
   <script language="JavaScript">
-    var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
-    function hotspot<?php echo $question_no; ?>_DoFSCommand(command, args) {
-      var hotspot<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.hotspot<?php echo $question_no; ?> : document.hotspot<?php echo $question_no; ?>;
-      document.questions.q<?php echo $question_no; ?>.value = args;
+    function swfLoaded<?php echo $question_no; ?>(message) {
+      var num = message.substring(5,message.length);
+      setUpFlash(num, message, '<?php echo $options[0]['q_media']; ?>', '<?php echo $options[0]['correct']; ?>', '');
     }
-    if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
-      document.write('<script language=\"VBScript\"\>\n');
-      document.write('On Error Resume Next\n');
-      document.write('Sub hotspot<?php echo $question_no; ?>_FSCommand(ByVal command, ByVal args)\n');
-      document.write('	Call hotspot<?php echo $question_no; ?>_DoFSCommand(command, args)\n');
-      document.write('End Sub\n');
-      document.write('</script\>\n');
-    }
+    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 300); ?>" height="<?php echo ($options[0]['q_media_height'] + 2); ?>" align="middle">');
+    write_string('<param name="allowScriptAccess" value="always" />');
+    write_string('<param name="movie" value="/touchstone/paper/hotspot_answer.swf" />');
+    write_string('<param name="quality" value="high" />');
+    write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+    write_string('<embed src="/touchstone/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($options[0]['q_media_width'] + 300); ?>" height="<?php echo ($options[0]['q_media_height'] + 2); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('</object>');
   </script>
-
- <?php
-    echo "<div align=\"center\">\n";
-    $tmp_bgcolor = $bgcolor;
-    $tmp_width = ($options[0]['q_media_width'] + 2);
-    if ($tmp_width < 375) $tmp_width = 375;
- ?>
-    <script language="JavaScript">
-      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" id="hotspot<?php echo $question; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo ($options[0]['q_media_height'] + 40); ?>" align="middle">');
-      write_string('<param name="allowScriptAccess" value="sameDomain" />');
-      write_string('<param name="movie" value="../reports/hotspot_show.swf" />');
-      write_string('<param name="quality" value="high" />');
-      write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-      write_string('<param name="FlashVars" value="imageName=<?php echo $options[0]['q_media']; ?>&config=<?php echo $options[0]['correct']; ?>" />');
-      write_string('<embed src="../reports/hotspot_show.swf" FlashVars="imageName=<?php echo $options[0]['q_media']; ?>&config=<?php echo $options[0]['correct']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo ($options[0]['q_media_height'] + 40); ?>" swLiveConnect=true id="hotspot<?php echo $question; ?>" name="hotspot<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-      write_string('</object>');
-    </script>
-    <br />
   </div>
-
 <?php
         echo "<div>" .  reviewScale('hotspot', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"u\" />\n";
@@ -742,41 +722,28 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         echo "</table>\n</blockquote>\n";
         $tmp_height = $options[0]['q_media_height'];
         if ($tmp_height < ($marks * 55)) $tmp_height = ($marks * 55);
-?>
-
-  <script language="JavaScript">
-    var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
-    function label_question<?php echo $question_no; ?>_DoFSCommand(command, args) {
-      var label_question<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.label_question<?php echo $question_no; ?> : document.label_question<?php echo $question_no; ?>;
-      document.questions.q<?php echo $question_no; ?>.value = args;
-    }
-    if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
-      document.write('<script language=\"VBScript\"\>\n');
-      document.write('On Error Resume Next\n');
-      document.write('Sub label_question<?php echo $question_no; ?>_FSCommand(ByVal command, ByVal args)\n');
-      document.write('	Call label_question<?php echo $question_no; ?>_DoFSCommand(command, args)\n');
-      document.write('End Sub\n');
-      document.write('</script\>\n');
-    }
-  </script>
-
-  <?php
-    echo "<div align=\"center\">\n";
-    $tmp_bgcolor = $bgcolor;
-  ?>
-  <script language="JavaScript">
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="label_question<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
-    write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="../paper/label_answer.swf" />');
-    write_string('<param name="quality" value="high" />');
-    write_string('<param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />');
-    write_string('<param name="FlashVars" value="imageName=<?php echo $options[0]['q_media']; ?>&labels=<?php echo str_replace('|','&#124;',$options[0]['correct']); ?>&answers=" />');
-    write_string('<embed src="../paper/label_answer.swf" FlashVars="imageName=<?php echo $options[0]['q_media']; ?>&labels=<?php echo str_replace('|','&#124;',$options[0]['correct']); ?>&answers=" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($options[0]['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swLiveConnect=true id="label_question<?php echo $question_no; ?>" name="label_question<?php echo $question_no; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />');
-    write_string('</object>');
-  </script>
-  </div>
-
+        
+        echo '<div align="center">';
+        echo '<script language="JavaScript">';
+        $options[0]['correct'] = str_replace('"','&#034;',stripslashes($options[0]['correct']));
+        $options[0]['correct'] = str_replace("'",'&#039;',stripslashes($options[0]['correct']));
+?> 
+      function swfLoaded<?php echo $question_no; ?>(message) {
+        var num = message.substring(5,message.length);
+        setUpFlash(num, message, '<?php echo $options[0]['q_media']; ?>', '<?php echo $options[0]['correct']; ?>', '','');
+      }
+      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
+      write_string('<param name="allowScriptAccess" value="always" />');
+      write_string('<param name="movie" value="/touchstone/paper/label_answer.swf" />');
+      write_string('<param name="quality" value="high" />');
+      write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+      write_string('<embed src="/touchstone/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($options[0]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('</object>');
 <?php
+        echo "</script>\n";
+        echo "</div>\n";
+        
+        
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
         break;
       case 'flash':

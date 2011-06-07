@@ -100,6 +100,7 @@ $current_screen = 1;
 </style>
 
 <script src="../javascript/ie_fix.js" type="text/javascript"></script>
+<script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript">
 <?php
