@@ -21,18 +21,13 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-  if (strpos($_SERVER['PHP_SELF'],'student_help') !== false) {
-    $help_type = 'student';
-    $require_file = '../include/staff_student_auth.inc';
-  } else {
-    $help_type = 'staff';
-    $require_file = '../include/staff_auth.inc';
-  }
-  require $require_file;
+  
+  require '../../include/staff_auth.inc';
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone Tutorial</title>
+<title>TouchStone Tutorial<?php echo " $cfg_install_type"; ?></title>
 </head>
 <body>
 <?php
@@ -41,7 +36,7 @@
   
    if (strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
     $result = $mysqli->prepare("INSERT INTO help_tutorial_log VALUES (NULL,?,?,NOW(),?)");
-    $result->bind_param('sis', $help_type, $userID, $_GET['tutorial']);
+    $result->bind_param('sis', 'staff', $userID, $_GET['tutorial']);
     $result->execute();  
     $result->close();
   }
