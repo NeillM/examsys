@@ -62,7 +62,7 @@ body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; 
 
   echo "<form name=\"analyse\" method=\"get\" action=\"qualitative_results.php\" target=\"results\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td class=\"heading\">";
-  echo '<div class="breadcrumb"><a href="../index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../index.php" target="_top">Home</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '" target="_top">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
