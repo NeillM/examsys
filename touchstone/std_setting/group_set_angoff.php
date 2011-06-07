@@ -56,10 +56,10 @@ if (isset($_GET['reviewers'])) {
   }
 } else {
   $paperID = $_POST['paperID'];
-  $module = $_POST['module'];
-  $folder = $_POST['folder'];
-  $setterID = $_POST['setterID'];
-  $dateID = $_POST['dateID'];
+  $module = (empty($_POST['module'])) ? '' : $_POST['module'];
+  $folder = (empty($_POST['folder'])) ? '' : $_POST['folder'];
+  $setterID = (empty($_POST['setterID'])) ? '' : $_POST['setterID'];
+  $dateID = (empty($_POST['setterID'])) ? '' : $_POST['dateID'];
   for ($i=1; $i<=100; $i++) {
     if (isset($_POST["member$i"])) {
       $review_string .= ';' . $_POST["member$i"];
@@ -93,7 +93,6 @@ if ($setterID != '') {
   $results->close();
 }
 
-$paper = $_POST['paper'];
 if ($rater_query != '') {
   $query_string = "SELECT std_set, rating, setterID, method, title, initials, surname, questionID FROM (standards_setting, users) WHERE standards_setting.setterID=users.id AND paperID=$paperID $rater_query) ORDER BY std_set, setterID";
   $results = $mysqli->query($query_string);
@@ -117,7 +116,7 @@ if (!isset($no_screens)) {
   }
   while ($row = $paper_properties->fetch_assoc()) {
     $no_screens = strval($row['screen']);
-    $screen_data[$no_screens] += 1;
+    $screen_data[$no_screens] = (isset($screen_data[$no_screens])) ? $screen_data[$no_screens] + 1 : 1;
     $bgcolor = $row['bgcolor'];
     $fgcolor = $row['fgcolor'];
     $themecolor = $row['themecolor'];
@@ -134,7 +133,7 @@ if (!isset($no_screens)) {
 ?>
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
-
+<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style type="text/css">
   body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%}
   li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
@@ -150,17 +149,26 @@ if (!isset($no_screens)) {
   .inactive {color:#C0C0C0}
   .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
 </style>
+<script src="../javascript/staff_help.js" type="text/javascript"></script>
 
 </head>
 <body>
+	<form method="post" name="questions" action="record_review.php?group=true">
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
-  <?
-  $paper = stripslashes($_POST['paper']);
-  echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?group=true\">";
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td class=\"heading\" colspan=\"10\"><span style=\"font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold\"><a onmouseover=\"move_in('image1')\" onmouseout=\"move_out('image1')\" href=\"index.php?paperID=$paperID&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "\" target=\"_top\"><img name=\"image1\" src=\"../artwork/up_folder_icon_off.gif\" style=\"vertical-align: middle\" width=\"32\" height=\"38\" alt=\"Up\" border=\"0\" /></a>&nbsp;$paper_title</span><br /><span style=\"margin-left:40px; font-weight:bold\">Standards Setting: Angoff Method - Group review</span></td></tr>\n";
-  echo "<tr style=\"height:4px\"><td valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
+  <?php
+  echo "\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>";
+  if ($folder != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+  }
+  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">Standards Setting</a></div>";
+  $helpID = 98;
+  echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $paper_title . '</div><div style="position:relative; left:12px; top:-3px; font-size:8pt">Standards Setting: Angoff Method - Group review</div>';
+  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "<tr style=\"height:4px\"><td colspan=\"2\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
 ?>
   <br />
   <div align="center">

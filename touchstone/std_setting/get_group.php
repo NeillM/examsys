@@ -253,24 +253,69 @@
 
 <title>TouchStone: List Settings</title>
 
+<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
-td {font-size:80%; color:black}
-a {color:black}
-a:hover {color:white; background-color:#000080}
+body {font-family:Arial,sans-serif; font-size:90%; color:black; padding:0;margin-top:0px; margin-left:0px; margin-right:0px}
+table {font-size:100%}
 .heading {background-color:#EBEADB; color:black}
 </style>
+<script src="../javascript/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body>
-<form action="group_set_angoff.php" method="post">
+	<form action="group_set_angoff.php" method="post">	
+	
 <?php
-  echo "<table onclick=\"reviewOff()\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td class=\"heading\"><div style=\"font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:40px; text-indent:-40px\"><a onmouseover=\"move_in('image1')\" onmouseout=\"move_out('image1')\" href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" target=\"_top\"><img name=\"image1\" src=\"../artwork/up_folder_icon_off.gif\" style=\"vertical-align: middle\" width=\"32\" height=\"38\" alt=\"Up\" border=\"0\" /></a>&nbsp;Select Reviews to Include</div></td></tr>\n";
-  echo "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td class=\"heading\" style=\"width:18px\">&nbsp;</td><td class=\"heading\" width=\"150\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Standard Setter&nbsp;</td><td class=\"heading\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Date&nbsp;</td><td class=\"heading\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Cut Score</td><td class=\"heading\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Method</td><td width=\"25%\" class=\"heading\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp</td></tr>\n";
-  echo "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"6\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
+  if (isset($_GET['module'])) {
+    $module = $_GET['module'];
+  } else {
+    $module = '';
+  }
 
+  $folder = '';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    $folder = $_GET['folder'];
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
+    $result->bind_param('i', $folder);
+    $result->execute();
+    $result->bind_result($folder_name);
+    $result->fetch();
+    $result->close();
+  }
+
+  // Get how many screens make up the question paper.
+  $screen_data = array();
+  $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, paper_prologue, marking, screen, leadin, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, bidirectional FROM (properties, papers, questions) WHERE papers.question=questions.q_id AND properties.property_id=papers.paper AND paper=? ORDER BY screen, p_id");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $leadin, $start_date, $end_date, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
+  while ($row = $result->fetch()) {
+    $no_screens = strval($screen);
+    if (isset($screen_data[$no_screens])) {
+      $screen_data[$no_screens] += 1;
+    } else {
+      $screen_data[$no_screens] = 1;
+    }
+  }
+  $result->close();
+  
+  echo "\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>";
+  if ($folder != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+  }
+  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">Standards Setting</a></div>";
+  $helpID = 98;
+  echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">Select Reviews to Include</div><div style="position:relative; left:12px; top:-3px; font-size:8pt">Standards Setting: Angoff Method - Group review</div>';
+  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "<tr style=\"height:4px\"><td colspan=\"2\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
+  
+?>
+  <table cellpadding="0" cellspacing="0" border="0">
+  <tr><td valign="top">
+<?php
   $old_date = '';
   $old_title = '';
   $old_initials = '';
