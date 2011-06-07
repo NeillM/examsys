@@ -117,18 +117,14 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 </head>
 <body onload="javascript:window.print()">
+  <!--  Start outer table -->
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
   <?php
-  echo '<table cellpadding="4" cellspacing="0" border="0" width="100%">';
-  echo '<tr><td class="raised_tbl"><div class="paper">' . $paper_title . '</div>';
-  echo '<table cellspacing="1" cellpadding="1" border="0" style="font-family: Arial,sans-serif; font-weight:bold; color:white"><tr>';
   $question_offset = 1;
-  
-  $question_offset += $screen_data[1];
-
-  echo '</tr></table>';
-  echo '</td><td align="center" class="raised_tbl" width="167"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="Logo" border="0" /></td></tr></table>';
+  echo '<!-- Start header table --><table cellpadding="4" cellspacing="0" border="0" width="100%">';
+  echo '<tr><td class="raised_tbl"><div class="paper">' . $paper_title . '</div>';
+  echo '</td><td align="center" class="raised_tbl" width="167"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="Logo" border="0" /></td></tr></table><!-- End header table -->';
 
   $old_leadin = '';
   $old_q_type = '';
@@ -136,12 +132,13 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   $question_no = 0;
   $marks = 0;
   $old_theme = '';
-  echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  echo "<!-- Start questions table A --><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   $result = $mysqli->prepare("SELECT paper_type, q_type, q_id, score_method, marks, paper_prologue, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM properties, papers, questions, options WHERE properties.property_id=papers.paper AND paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->store_result();
   $result->bind_result($paper_type, $q_type, $q_id, $score_method, $marks, $paper_prologue, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
+  $li_set = 0;
   while ($row = $result->fetch()) {
     if ($question_no == 0 and $current_screen == 1 and $paper_prologue != '') {
       echo '<p style="text-align: justify">' . $paper_prologue . '</p>';
@@ -150,46 +147,49 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
     if ($question_no == 0) echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     if ($old_q_id != $q_id) {          // New Question
       // Print the options of the previous question
-      $li_set = 0;
       if ($old_leadin != '') {
-        if ($li_set == 1) echo "</td></tr>\n";
         display_options($options_array, $old_q_id, $old_theme);
       }
-      if (($old_q_type == 'likert' and $q_type != 'likert') or ($old_q_type != 'likert' and $q_type == 'likert')) echo "</table>\n<br />\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-      
-      if ($theme != '') {
-        if ($old_q_type == 'likert') echo '</table><br /><table cellpadding="4" cellspacing="0" border="0" width="100%">';  // Close off table if last question was likert scale.
-        echo '<tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr>';
+      if ($li_set == 1) {
+        echo "</td></tr><!-- Close question A -->\n";
+        $li_set = 0;
       }
       
-      if (trim($notes) != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;' . $notes . '</td></tr>';
+      if (($old_q_type == 'likert' and $q_type != 'likert') or ($old_q_type != 'likert' and $q_type == 'likert')) echo "</table><!-- End questions table pre-B -->\n<br />\n<!-- Start questions table B --><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+      
+      if ($theme != '') {
+        if ($old_q_type == 'likert') echo '</table><!-- End questions table pre-C -->\n<br />\n<!-- Start questions table C --><table cellpadding="4" cellspacing="0" border="0" width="100%">';  // Close off table if last question was likert scale.
+        echo '<!-- Start theme row --><tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr><!-- End theme row -->';
+      }
+      
+      if (trim($notes) != '' and $q_type != 'likert') echo '<!-- Start notes row --><tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;' . make_para_if_not(trim($notes)) . '</td></tr><!-- End notes row -->';
 
       if ($scenario != '' and $q_type != 'info' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'sct') {
-        echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td><p>' . $scenario . '</p>';
-        $li_set = 1;
+        echo '<!-- Start q no. row  A --><tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>' . make_para_if_not(trim($scenario)) . '<!-- End q no. row  A -->';
+        echo "</td></tr><!-- Close question B -->\n";
       }
       if ($q_media != '' and $q_media != NULL and $q_type != 'sct' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'matrix') {
         if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
-          if ($li_set == 0) echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
+          if ($li_set == 0) echo '<!-- Start q no. row  B --><tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
           $li_set = 1;
           echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height,$question_no) . "</p>\n";
         } else {
-          if ($li_set == 0) echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
+          if ($li_set == 0) echo '<!-- Start q no. row  C --><tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
           $li_set = 1;
           echo "<p>" . display_media($q_media,$q_media_width,$q_media_height,$question_no) . "</p>\n";
         }
       }
       if ($q_type != 'hotspot' and $q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info' and $q_type != 'sct') {
-        if ($li_set == 0) echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
+        if ($li_set == 0) echo '<!-- Start q no. row  D --><tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
         $li_set = 1;
-        echo '<p>' . $leadin . '</p>';
+        echo make_para_if_not(trim($leadin));
       }
       if ($q_type == 'info') {
         if ($li_set == 0) echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
         if ($q_media != '' and $q_media != NULL) {
           echo '<p align="center">' . display_media($q_media,$q_media_width,$q_media_height,$question_no) . "</p>\n";
         }
-        echo $leadin;
+        echo make_para_if_not(trim($leadin));
         $li_set = 1;
         $question_no--;
       }
@@ -213,7 +213,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   $current_screen++;
   echo "</table>\n";
 
-  echo '</td></tr></table></td></tr></table>';
+  echo "</td>\n</tr>\n</table>\n<!-- End outer table -->\n";
   $mysqli->close();
 ?>
 </body>

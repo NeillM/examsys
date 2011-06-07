@@ -278,6 +278,7 @@ function display_options($options,$q_id, $current_theme) {
           $marks++;  // Add one mark at start in case all options are answered correctly
         }
         
+        echo "<tr>\n";
         for ($i=1; $i<=$total_rank_no; $i++) {
           echo "<td class=\"option\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td>";
         }
@@ -331,11 +332,11 @@ function display_options($options,$q_id, $current_theme) {
           foreach ($screen_output as $value) {
             $screen_output_all .= $value;
           }
-          echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n";
+          echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n<blockquote>\n";
         } else {
           // Dropdown lists.
           $no_blanks = count($blank_details);
-          echo '<p>' . $blank_details[0];
+          echo $blank_details[0];
           $blank_count = 1;
           while ($blank_count < $no_blanks) {
             $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
@@ -355,7 +356,7 @@ function display_options($options,$q_id, $current_theme) {
             $blank_count++;
             $part_id++;
           }
-          echo '</p>';
+          echo "<blockquote>\n";
         }
         if (count($blank_mark) > 0) {
           foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
@@ -473,34 +474,8 @@ function display_options($options,$q_id, $current_theme) {
             }
           }
         }
-        echo "</td></tr>\n";
+//        echo "</td></tr>\n";
         
-        
-        
-        
-        
-        
-//        echo "<div align=\"left\">";
-//        
-//        $hotspot_no = substr_count($question['correct'],'|') + 1;
-//        $tmp_height = $question['q_media_height'] + 30;
-//        if ($tmp_height < (($hotspot_no * 36) + 25)) $tmp_height = (($hotspot_no * 36) + 25);
-        ?>
-        <!--  <script language="JavaScript">
-          function swfLoaded<?php echo $question_no; ?>(message) {
-            var num = message.substring(5,message.length);
-            setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo $question['correct']; ?>', '','<?php echo $screen_pre_submitted; ?>');
-          }
-          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
-          write_string('<param name="allowScriptAccess" value="always" />');
-          write_string('<param name="movie" value="/touchstone/paper/hotspot_question.swf" />');
-          write_string('<param name="quality" value="high" />');
-          write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-          write_string('<embed src="/touchstone/paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-          write_string('</object>');
-        </script>
-        </div> -->
-<?php
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"\" />\n";
         break;
       case 'labelling':
@@ -528,7 +503,7 @@ function display_options($options,$q_id, $current_theme) {
         $tmp_height = $question['q_media_height'];
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
   
-        "<div align=\"center\">\n";
+        echo "<div align=\"center\">\n";
   ?>
     <script language="javascript">
       function swfLoaded<?php echo $question_no; ?>(message) {
@@ -601,14 +576,14 @@ function display_options($options,$q_id, $current_theme) {
   } elseif ($options[0]['q_type'] == 'calculation') {
     $score_array = explode(',',$options[0]['score_method']);
     
-    echo '<tr><td class="question_no">' . (($question_no + $question_offset) - 1) . '.&nbsp;';
+    echo '<tr><td class="question_no">&nbsp;';
     echo '</td><td>';
     
     $new_leadin = "";
     $search = array('$A','$B','$C','$D','$E','$F','$G','$H');
     $replace = array($A,$B,$C,$D,$E,$F,$G,$H);
     $display_option['leadin'] = str_ireplace($search,$replace,$display_option['leadin']);
-    echo "<p>" . $display_option['leadin'] . "</p>\n";
+    echo "<p>" . $display_option['leadin'] . "</p>\n<blockquote>\n";
     if (in_array('ERROR',$replace,true)) {
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled /></p>\n";
     } else {
@@ -683,6 +658,7 @@ function display_options($options,$q_id, $current_theme) {
     if ($matching_media[0] != '') {
       echo "<p align=\"center\">" . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0]) . "</p>\n";
     }
+    echo "<blockquote>\n";
     echo '<table cellpadding="2" cellspacing="0" border="1">';
     echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
     foreach ($matching_options as $single_option) {
@@ -712,7 +688,7 @@ function display_options($options,$q_id, $current_theme) {
   }
   
   // Display possible marks for question (if not Evaluation Questionnaire)
-  if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert') echo '</blockquote>';
+  if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'labelling' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'extmatch') echo '</blockquote>';
   if ($display_option['paper_type'] < 3) {
     if ($marks == 1) {
       echo "<div style=\"color: #808080; font-size: 80%\">($marks)</div>\n<br />\n";
@@ -741,4 +717,12 @@ function display_options($options,$q_id, $current_theme) {
     }
   }
 }                      // End function 'display_options'.
+
+function make_para_if_not($string) {
+  if(substr($string, 0, 3) != '<p>') {
+    return "<p>$string</p>";
+  } else {
+    return $string;
+  }
+}
 ?>
