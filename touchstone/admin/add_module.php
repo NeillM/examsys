@@ -81,7 +81,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $returned_data = file_get_contents($url);
     $xml = new SimpleXMLElement($returned_data);
     $enrolement_details = '';
-    echo "<ol>";
+
     foreach ($xml->Module->Membership->Student as $student) {
       $student->Title = trim($student->Title);
       $student->Surname = trim($student->Surname);
@@ -93,7 +93,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $student->Gender = trim($student->Gender);
       $student->YearofStudy = trim($student->YearofStudy);
       $student->Faculty = trim($student->Faculty);
-      echo "<li>$student->Surname</li>\n";
      
       $student_data = $mysqli->prepare("SELECT id FROM users WHERE username=? LIMIT 1");            // Do they have a TouchStone user record?
       $student_data->bind_param('s', $student->Username);
@@ -137,7 +136,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         $enrolement_details .= ',' . $student->Username;
       }
     }
-    echo "<ol>";
 
     // Write in a record to sms_imports table
     if ($enrolments > 0) {
