@@ -23,12 +23,21 @@
 */
 
   require '../include/staff_auth.inc';
+  
   header('Content-disposition: attachment; filename=report.xml');
   header('Content-type: text/xml');
   set_time_limit(0);
+  
+  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($paper);
+  $result->fetch();
+  $result->close();
+  
   echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
   echo '<?mso-application progid="Word.Document"?><w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
-  echo stripslashes($_GET['paper_title']);
+  echo wordToUtf8($paper);
   $tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
   $tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
   echo '</o:Title><o:Author>TouchStone ' . $ts_version . '</o:Author><o:Description>Quanlitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>TouchStone ' . $ts_version . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
@@ -40,7 +49,7 @@
 
   // Document body text here.
   echo '<w:body><wx:sect><wx:sub-section>';
-  echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . wordToUtf8(stripslashes($_GET['paper_title'])) . '</w:t></w:r></w:p>';
+  echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . wordToUtf8($paper) . '</w:t></w:r></w:p>';
 
   $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question=questions.q_id AND q_type!='info' AND paper=? ORDER BY screen, display_pos");
   $result->bind_param('i', $_GET['paperID']);
@@ -58,7 +67,7 @@
   $startdate = $_GET['startdate'];
   $enddate = $_GET['enddate'];
   $q_no = 0;
-  $result = $mysqli->prepare("SELECT DISTINCT log3.screen, theme, users.username AS username, log3.q_id AS q_id, REPLACE(leadin,'&','&amp;') AS leadin, REPLACE(user_answer,'&','&amp;') AS user_answer FROM (log3, papers, questions, users) WHERE users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=? AND q_paper=? AND log3.q_id=questions.q_id AND q_type='textbox' AND started>=? AND started<=? AND (roles='Student' OR roles='graduate') AND log3.student_grade LIKE ? AND log3.year LIKE ? ORDER BY papers.screen, display_pos");
+  $result = $mysqli->prepare("SELECT DISTINCT log3.screen, theme, users.username AS username, log3.q_id AS q_id, REPLACE(leadin,'&','&amp;') AS leadin, REPLACE(user_answer,'&','&amp;') AS user_answer FROM (log3, log_metadata, papers, questions, users) WHERE log3.q_paper=log_metadata.paperID AND log3.userID=log_metadata.userID AND log3.started=log_metadata.started AND users.id=log3.userID AND papers.question=log3.q_id AND papers.screen=log3.screen AND paper=? AND q_paper=? AND log3.q_id=questions.q_id AND q_type='textbox' AND log_metadata.started>=? AND log_metadata.started<=? AND (roles='Student' OR roles='graduate') AND log_metadata.student_grade LIKE ? AND log_metadata.year LIKE ? ORDER BY papers.screen, display_pos");
   $result->bind_param('iissss', $_GET['paperID'], $_GET['paperID'], $startdate, $enddate, $_GET['repdegree'], $_GET['repyear']);
   $result->execute();
   $result->bind_result($screen, $theme, $tmp_username, $q_id, $leadin, $user_answer);
