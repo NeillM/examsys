@@ -123,9 +123,9 @@ if ($temp_userID != '') {
 
   $student_photo =  $cfg_web_root . 'touchstone/users/photos/' . $username . '.jpg';
   if (file_exists($student_photo)) {
-    echo "<tr style=\"background-color:white\"><td valign=\"top\" rowspan=\"2\" width=\"70\" style=\"background-color:white\"><img src=\"../users/photos/$username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td>";
+    echo "<tr style=\"background-color:white\"><td valign=\"top\" rowspan=\"3\" width=\"70\" style=\"background-color:white\"><img src=\"../users/photos/$username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td>";
   } else {
-    echo "<tr style=\"background-color:white\"><td valign=\"top\" rowspan=\"2\" width=\"70\" style=\"background-color:white\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td>";
+    echo "<tr style=\"background-color:white\"><td valign=\"top\" rowspan=\"3\" width=\"70\" style=\"background-color:white\"><img style=\"position:relative; top:10px; left:5px\" src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td>";
   }
   if ($username == '') {
     echo "<td style=\"background-color:white\">&nbsp;</td><td style=\"color:#C00000; background-color:white; vertical-align:top\"><br /><strong>Warning:</strong> student ID " . trim($_GET['student_id']) .  " not found.<br /><br /></td></tr>";
@@ -133,8 +133,9 @@ if ($temp_userID != '') {
     echo "<tr><td colspan=\"3\" style=\"text-align:center; padding-top:10px\"><input type=\"button\" name=\"back\" value=\"&lt; Back\" style=\"width:100px\" onclick=\"history.back();\" /></td></tr>\n";
   } else {
     echo "<td style=\"background-color:white\">&nbsp;</td><td style=\"background-color:white; vertical-align:top\"><br />";
-	if (isset($_POST['student_id'])) echo trim($_POST['student_id']);
-	echo "<br /><span style=\"font-size:120%; font-weight:bold\">$title $surname, <span style=\"color:#C0C0C0\">$first_names</span></span><br /><a href=\"mailto:$email\">$email</a></td></tr>";
+    if (isset($_POST['student_id'])) echo trim($_POST['student_id']);
+    echo "<span style=\"font-size:120%; font-weight:bold\">$title $surname, <span style=\"color:#C0C0C0\">$first_names</span></span><br /><a href=\"mailto:$email\">$email</a></td></tr>\n";
+    echo "<tr><td colspan=\"3\" style=\"background-color:white\">&nbsp;</td></tr>\n";
     echo "<tr><td style=\"background-color:white\">&nbsp;</td><td style=\"background-color:white; vertical-align:bottom; text-align:justify; padding-right:4px; padding-bottom:6px; font-size:90%\">Reassign <strong>$assigned_account</strong> to the student detailed above. Please ensure that these details are correct and this is your intention.</td></tr>\n";
     echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"3\" style=\"text-align:center\"><input type=\"submit\" name=\"ok\" value=\"OK\" style=\"width:100px\" />&nbsp;&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Cancel\" style=\"width:100px\" /></td></tr>\n";

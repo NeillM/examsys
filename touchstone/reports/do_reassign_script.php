@@ -31,8 +31,14 @@
     $result->execute();
     $result->close();
   
-    // Transfer records in log.
-    $result = $mysqli->prepare("UPDATE log" . $_POST['log_type'] . " SET userID=?, student_grade=?, year=? WHERE userID=? AND q_paper=? AND started=?");
+    // Transfer records in logX.
+    $result = $mysqli->prepare("UPDATE log" . $_POST['log_type'] . " SET userID=? WHERE userID=? AND q_paper=? AND started=?");
+    $result->bind_param('iiis', $_POST['userID'], $_POST['temp_userID'], $_POST['paperID'], $_POST['started']);
+    $result->execute();
+    $result->close();
+
+    // Transfer records in log_metadata.
+    $result = $mysqli->prepare("UPDATE log_metadata SET userID=?, student_grade=?, year=? WHERE userID=? AND paperID=? AND started=?");
     $result->bind_param('issiis', $_POST['userID'], $_POST['grade'], $_POST['year'], $_POST['temp_userID'], $_POST['paperID'], $_POST['started']);
     $result->execute();
     $result->close();
