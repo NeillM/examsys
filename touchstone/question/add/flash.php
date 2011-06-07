@@ -30,16 +30,16 @@ require '../../include/mapping_tab.inc';
 
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   // Upload the Question SWF file.
-  $unique_name = uploadFile('qfile',$tmp_width,$tmp_height);
+  $unique_name = uploadFile('qfile', $tmp_width, $tmp_height);
 
   // Insert into Questions
-  $question_id = insert_into_questions('flash',$_POST['theme'],$_POST['parameters'],$_POST['leadin'],'','','',$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
+  $question_id = insert_into_questions('flash', $_POST['theme'], $_POST['parameters'], $_POST['leadin'], '', '', '', $_POST['notes'], $userID, $unique_name, $tmp_width, $tmp_height, date("YmdHis"), date("YmdHis"), $_POST['bloom'], getTeams(), $_POST['status'], 'display order');
     
   // Upload the Feedback SWF file.
-  $unique_name = uploadFile('ffile',$tmp_width,$tmp_height);
+  $unique_name = uploadFile('ffile', $tmp_width, $tmp_height);
   
   // Insert into Options
-  insert_into_options($question_id, '',$unique_name, '$tmp_width', '$tmp_height', '', '', '',$_POST['marks']);
+  insert_into_options($question_id, '', $unique_name, $tmp_width, $tmp_height, '', '', '', $_POST['marks']);
   
   // Save keywords
   $changes = false;
@@ -87,18 +87,18 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
       return true;
     }
     <?php
-    if($cfg_editor_name == 'tinymce') {
+    if ($cfg_editor_name == 'tinymce') {
       echo "\t tinyMCE.triggerSave();";
     }
     ?>    
-    if(submit != '') {
+    if (submit != '') {
       var modules = document.getElementById('modules').value;
       var modulesArray = modules.split(',');
-      for(var j = 0; j < modulesArray.length; j++) {
+      for (var j = 0; j < modulesArray.length; j++) {
         var objcount = document.getElementById(modulesArray[j] + '_objectiveCount').value;
-        for(var i = 0; i < objcount; i++) {
+        for (var i = 0; i < objcount; i++) {
           var cb = document.getElementById(modulesArray[j] + 'obj' + i).checked;
-          if(cb == true) {
+          if (cb == true) {
             submit = '';
             return confirm("WARNING: All mappings will be lost if this question is not added to the paper !");
           }

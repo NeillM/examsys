@@ -197,10 +197,11 @@ function saveObjMappings($paper_id, $question_id, $touchstonedb) {
  * @return array an array of objectives and mappings
  *
  */
+ 
 $objsBySession_cache = array();
-
 $vle_api_cache = array(); // cashe the vle api to save some queries
-function getObjectives($thisModuleid,$session,$paperID,$questionID,$touchstonedb, $scope='latest') {
+
+function getObjectives($thisModuleid, $session, $paperID, $questionID, $touchstonedb, $scope='latest') {
   global $objsBySession_cache, $vle_api_cache;
   $original_thisModuleid = $thisModuleid;
   $objsBySession = array();
@@ -229,11 +230,13 @@ function getObjectives($thisModuleid,$session,$paperID,$questionID,$touchstonedb
         $req->setPassword($_SERVER['PHP_AUTH_PW']);
         $req->execute();
         $resp = $req->getResponseBody();
-        if($resp != '') {
+        if ($resp != '') {
           $objsBySession_cache[$thisModuleid][$session] = $resp;
         }
       }
-      $objsBySession[$thisModuleid] = $objsBySession_cache[$thisModuleid][$session][$thisModuleid];
+      if (isset($objsBySession_cache[$thisModuleid][$session][$thisModuleid])) {
+        $objsBySession[$thisModuleid] = $objsBySession_cache[$thisModuleid][$session][$thisModuleid];
+      }
     } else {
       // Use TouchStone's internally stored objectves
       if ($scope == 'all') {
@@ -341,21 +344,21 @@ function getObjectives($thisModuleid,$session,$paperID,$questionID,$touchstonedb
  * @return array This is the return value description
  *
  */
-function getObjectivesByMapping($thisModuleid,$session,$paperID,$questionID,$touchstonedb) {
+function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, $touchstonedb) {
 
-  $objsBySession = getObjectives($thisModuleid,$session,$paperID,$questionID,$touchstonedb);
+  $objsBySession = getObjectives($thisModuleid, $session, $paperID, $questionID, $touchstonedb);
   $objsByMapping = array();
 
-  if(isset($objsBySession['none_of_the_above']['mapped']) and $objsBySession['none_of_the_above']['mapped'] == 1) {
+  if (isset($objsBySession['none_of_the_above']['mapped']) and $objsBySession['none_of_the_above']['mapped'] == 1) {
     $objsByMapping['none_of_the_above']['mapped'] = 1;
   }
 
   foreach($objsBySession as $moduleid => $session) {
-  	if(!empty($session)) {
-	    foreach($session as $identifier => $sessionData) {
-        if(is_array($sessionData) and isset($sessionData['objectives'])) {
-          foreach($sessionData['objectives'] as $id => $obj) {
-	          if($obj['mapped'] != 0) {
+  	if (!empty($session)) {
+	    foreach ($session as $identifier => $sessionData) {
+        if (is_array($sessionData) and isset($sessionData['objectives'])) {
+          foreach ($sessionData['objectives'] as $id => $obj) {
+	          if ($obj['mapped'] != 0) {
 	            $objsByMapping[$moduleid][$id] = $obj;
 	            $objsByMapping[$moduleid][$id]['session'] = $sessionData;
 	            unset($objsByMapping[$moduleid][$id]['session']['objectives']);
@@ -408,13 +411,13 @@ function copyObjectives($objectives, $module, $dest_session, $touchstonedb) {
     while ($row = $result->fetch()) {
       $obj_id = $largest + 1;
     }
-    if($obj_id < 10) {
+    if ($obj_id < 10) {
       $obj_id = 123;
     }
     $result->close();
     
 		// Loop through the objectives for the original session
-		foreach($session['objectives'] as $objective) {
+		foreach ($session['objectives'] as $objective) {
 			// Save them against the new session identifier
 			$stmt = $touchstonedb->prepare("INSERT INTO objectives(obj_id, objective, moduleID, identifier, calendar_year, sequence) VALUES (?,?,?,?,?,?)");
 			$stmt->bind_param('issssi', $obj_id, $objective['content'], $module, $identifier, $dest_session, $objective['sequence']);
@@ -422,7 +425,7 @@ function copyObjectives($objectives, $module, $dest_session, $touchstonedb) {
 			$err = $stmt->error;
 			$stmt->close();
 
-			if(!empty($err)) {
+			if (!empty($err)) {
 	    	throw new Exception($err);
 	    }
 			

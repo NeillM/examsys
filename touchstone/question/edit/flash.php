@@ -55,15 +55,16 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       if ($_POST['old_q_media'] != '') {
         unlink("../media/" . $_POST['old_q_media']); 
       }
-      $unique_question_name = unique_filename($_FILES['new_question_swf']['name']);
-      if (!move_uploaded_file($_FILES['new_question_swf']['tmp_name'], "../media/$unique_question_name"))  {
-        echo uploadError($_FILES['new_question_swf']['error']);
-        exit;
-      } else {
-        $identifier_size = GetImageSize("../media/$unique_question_name");
-        $tmp_q_width = $identifier_size[0];
-        $tmp_q_height = $identifier_size[1];
-      }
+      $unique_question_name = uploadFile('new_question_swf', $tmp_q_width, $tmp_q_height);
+      //$unique_question_name = unique_filename($_FILES['new_question_swf']['name']);
+      //if (!move_uploaded_file($_FILES['new_question_swf']['tmp_name'], "../media/$unique_question_name"))  {
+      //  echo uploadError($_FILES['new_question_swf']['error']);
+      //  exit;
+      //} else {
+      //  $identifier_size = GetImageSize("../media/$unique_question_name");
+      //  $tmp_q_width = $identifier_size[0];
+      //  $tmp_q_height = $identifier_size[1];
+      //}
       $changes = true;
       $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),'Question SWF')");
       $result->bind_param('iss', $q_id, $_POST['old_q_media'], $unique_question_name);
@@ -74,6 +75,13 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       $unique_question_name = $_POST['old_q_media'];
       $tmp_q_width = $_POST['old_q_media_width'];
       $tmp_q_height = $_POST['old_q_media_height'];
+      if (isset($_POST['delete_media1']) AND $_POST['delete_media1'] == '1') {
+        deleteMedia($_POST['old_q_media']);
+        $unique_question_name = '';
+        $tmp_q_width = 0;
+        $tmp_q_height = 0;
+        $changes = true;
+      }
     }
 
     // Upload Flash Answer onto server
@@ -81,7 +89,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       if (isset($_POST['old_o_media']) and $_POST['old_o_media'] != '') {
         deleteMedia($_POST['old_o_media']);
       }
-      $unique_name = uploadFile('new_answer_swf',$tmp_media_width,$tmp_media_height);
+      $unique_answer_name = uploadFile('new_answer_swf', $tmp_o_width, $tmp_o_height);
       $changes = true;
       $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),'Feedback SWF')");
       $result->bind_param('iss', $q_id, $_POST['old_o_media'], $unique_answer_name);
@@ -92,6 +100,13 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       $unique_answer_name = $_POST['old_o_media'];
       $tmp_o_width = $_POST['old_o_media_width'];
       $tmp_o_height = $_POST['old_o_media_height'];
+      if (isset($_POST['delete_media2']) AND $_POST['delete_media2'] == '1') {
+        deleteMedia($_POST['old_o_media']);
+        $unique_answer_name = '';
+        $tmp_o_width = 0;
+        $tmp_o_height = 0;
+        $changes = true;
+      }
     }
 
     $part_names = array('theme','leadin','notes','bloom','marks','status');
@@ -212,7 +227,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo "<tr><td class=\"field\">Current Question SWF</td><td colspan=\"3\">" . display_media($q_media,$q_media_width,$q_media_height,1) . "</td></tr>\n";
       echo "<tr><td class=\"field\">Change Question SWF</td><td colspan=\"3\"><input type=\"file\" size=\"55\" name=\"new_question_swf\" /><input type=\"hidden\" name=\"old_q_media\" value=\"$q_media\" /><input type=\"hidden\" name=\"old_q_media_width\" value=\"$q_media_width\" /><input type=\"hidden\" name=\"old_q_media_height\" value=\"$q_media_height\" /></td></tr>\n";
       if ($o_media != '') {
-        echo "<tr><td class=\"field\">Current Answer SWF</td><td colspan=\"3\">" . display_media($o_media,$o_media_width,$o_media_height,1) . "</td></tr>\n";
+        echo "<tr><td class=\"field\">Current Answer SWF</td><td colspan=\"3\">" . display_media($o_media,$o_media_width,$o_media_height,2) . "</td></tr>\n";
       } else {
         echo "<tr><td class=\"field\">Current Answer SWF</td><td colspan=\"3\"><span style=\"color:#808080\">&lt;no media&gt;</span></td></tr>\n";
       }
