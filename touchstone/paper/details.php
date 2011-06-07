@@ -44,7 +44,7 @@ function findDecisionQ($question_array,$sourceID) {
   return $source_question_no;
 }
 
-function checkProblems($q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $correct_array, $status) {
+function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $correct_array, $status) {
   if (!isset($tmp_excluded) and ($status == 'Normal' or $status == 'Experimental' or $status == 'Beta')) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = "Too many correct options";
@@ -67,6 +67,9 @@ function checkProblems($q_type, $score_method, &$temp_array, $scenario, $q_media
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
       if ($question_marks < $scenario_no) $temp_array[$row_no]['warnings'] = 'Correct answer missing for some options.';
+    }
+    if ($q_type == 'mcq' and $score_method == 'vertical_other' and $p_type != '3') {
+      $temp_array[$row_no]['warnings'] = "MCQ with 'other' should only be used on surveys";
     }
   }
 }
@@ -507,7 +510,7 @@ if (isset($_GET['change_screen'])) {
       }
       if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
       $temp_array[$row_no2]['score_method'] = $old_score_method;
-      if ($row_no2 > 0 and $paper_type < 3) checkProblems($old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_correct, $temp_array[$row_no2]['status']);
+      if ($row_no2 > 0 and $paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_correct, $temp_array[$row_no2]['status']);
       $old_correct = array();
       $old_option_text = array();
       $old_marks = 0;
@@ -613,7 +616,7 @@ if (isset($_GET['change_screen'])) {
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($paper_type < 3) checkProblems($old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_correct, $temp_array[$row_no2]['status']);
+    if ($paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_correct, $temp_array[$row_no2]['status']);
 
     if (($total_random_mark != $old_random_mark or $total_marks != $old_total_marks or $latex != $latex_needed) and $paper_type != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark=?, total_mark=?, latex_needed=? WHERE property_id=?");

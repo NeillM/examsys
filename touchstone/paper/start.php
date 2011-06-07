@@ -178,7 +178,7 @@ function keywordQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,
     $used_questions[$selected_q_id] = 1;
   }
   
-  if($unique) {
+  if ($unique) {
     // Look up selected question and overwrite data.
     $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
@@ -487,17 +487,6 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 <?php
   }
 ?>
-//cookie saving test
-var un = '<?php echo $_SERVER['PHP_AUTH_USER'];?>';
-var domain = '<?php echo $_SERVER['SERVER_NAME'];?>';
-var path = '';
-function save(name,qid) {
-  var lifeTime = <?php echo ($end_date + 300) - time();?>;
-  document.cookie = encodeURIComponent( un+qid ) + "=" + encodeURIComponent( document.questions[name].value ) +
-		( lifeTime ? ";expires=" + ( new Date( ( new Date() ).getTime() + ( 1000 * lifeTime ) ) ).toGMTString() : "" ) +
-		( path ? ";path=" + path : "") + ( domain ? ";domain=" + domain : "") + 
-		";secure";
-}
 </script>
 </head>
 <?php

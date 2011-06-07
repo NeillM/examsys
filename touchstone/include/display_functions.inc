@@ -1074,7 +1074,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   if ($question['q_type'] == 'mcq') {
     if ($question['score_method'] == 'vertical' or $question['score_method'] == 'vertical_other') {
-      if ($question['score_method'] == 'vertical_other') {
+      if ($question['score_method'] == 'vertical_other' and $paper_type == '3') {
         if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],0,5) == 'other') {
           echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($user_answers[$current_screen][$q_id],6) . "\" /></td></tr>\n";
         } else {

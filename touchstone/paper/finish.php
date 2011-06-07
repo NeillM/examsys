@@ -713,10 +713,10 @@ table {font-size:100%}
             $var_no++;
           }
           
-          if ($paper[$question]['scenario'] != '') echo "<p class=\"leadin\">" . $paper[$question]['scenario'] . "</p>\n";
+          if ($paper[$question]['scenario'] != '') echo "<p>" . $paper[$question]['scenario'] . "</p>\n";
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
           
-          echo "<p class=\"leadin\">" . $tmp_leadin . "</p>\n";
+          echo "<p>" . $tmp_leadin . "</p>\n";
           
           $score_array = explode(',',$paper[$question]['score_method']);
           echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
