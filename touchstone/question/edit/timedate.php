@@ -243,8 +243,10 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       if ($$section_name != $$old_section_name) {
         $changes = true;
         if ($section_name == 'format') {
+          $tmp_old_section_name = whichFormat($$old_section_name);
+          $tmp_section_name = whichFormat($$section_name);
           $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),?)");
-          $result->bind_param('isss', $q_id, whichFormat($$old_section_name), whichFormat($$section_name), $section_name);
+          $result->bind_param('isss', $q_id, $tmp_old_section_name, $tmp_section_name, $section_name);
         } else {
           $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),?)");
           $result->bind_param('isss', $q_id, $$old_section_name, $$section_name, $section_name);
