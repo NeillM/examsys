@@ -296,7 +296,7 @@ table {font-size:100%}
   }
   if ($current_screen > 1 and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
     // Record answers from the previous screen.
-    record_marks($paperID,$_POST['old_screen'],$mysqli,$_POST,$userID,$_POST['previous_duration'],$paper_type,$grade,$year,$attempt);
+    record_marks($paperID, $_POST['old_screen'], $mysqli, $_POST, $userID, $_POST['previous_duration'], $paper_type, $grade, $year, $attempt);
   }
 
   // Delete any duplicate entries from the database.
@@ -374,10 +374,10 @@ table {font-size:100%}
     $total_marks = 0;
     $user_mark = 0;
     
-    $answer_data = $mysqli->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, marks, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqli->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('i', $_GET['paperID']);
     $answer_data->execute();
-    $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $marks, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks, $display_pos, $status);
+    $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks, $display_pos, $status);
     while ($row = $answer_data->fetch()) {
       if ($old_q_id != $q_id or $old_display_pos != $display_pos) {  // New question.
         if ($old_q_id != 0) {
@@ -482,11 +482,11 @@ table {font-size:100%}
         
         // Look up selected question and overwrite data.
         $stems = 0;
-        $question_data = $mysqli->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, marks, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks, status FROM (questions, options) WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+        $question_data = $mysqli->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks, status FROM (questions, options) WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
         $question_data->bind_param('i', $selected_q_id);
         $question_data->execute();
         $question_data->store_result();
-        $question_data->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $marks, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks,$status);
+        $question_data->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks,$status);
         while ($row = $question_data->fetch()) {
           if ($stems == 0) {
             $correct_no = 0;
@@ -1321,8 +1321,6 @@ table {font-size:100%}
               echo "<td><select name=\"q" . $question . "_" . $tmp_part_id . "\">\n";
             }
             if ($rank_answers[$tmp_part_id-1] == 'u') echo "<option value=\"\" style=\"color:#808080\"></option>\n";
-//            if ($rank_answers[$tmp_part_id-1] == 0) echo "<option value=\"\" style=\"color:#808080\">N/A</option>\n";
-//            for ($a=1; $a<=(count($paper[$question]['correct'])-$na_count); $a++) {
             for ($a=0; $a<=count($paper[$question]['correct']); $a++) {
             	if ($rank_answers[$tmp_part_id-1] != 'u' and $a == $rank_answers[$tmp_part_id-1]) {
                 echo "<option value=\"" . $a . "\" selected>" . ordinal_suffix($a) . "</option>\n";
@@ -1636,7 +1634,7 @@ table {font-size:100%}
               $tmp_answer = str_ireplace($single_answer, '<span style="background-color:#FFFF00">' . $single_answer . '</span>', $tmp_answer);
             }
           }
-          echo "<blockquote><pre>" . $tmp_answer . "</pre></blockquote>\n<br />\n";
+          echo "<blockquote style=\"border:1px solid #164994\"><pre>" . $tmp_answer . "</pre></blockquote>\n<br />\n";
           if ($paper[$question]['correct_fback'] != '') {
             echo '<p class="feedback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
           }
@@ -1765,7 +1763,7 @@ table {font-size:100%}
             } else {
               echo '</span>';
               if ($tmp_display_correct_answer == '1') {
-                if(isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
+                if (isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
               }
               echo "<select name=\"\">\n<option value=\"\"></option>";
               foreach ($answer_list as $answer_option) {
@@ -1819,7 +1817,7 @@ table {font-size:100%}
             echo ' style="color:red; text-decoration:line-through"';
             $paper[$question]['mark'] = 0;
           }
-           if ($tmp_display_correct_answer == '0') {
+          if ($tmp_display_correct_answer == '0') {
 ?>
     <div>
 		<script language="JavaScript">
@@ -2057,9 +2055,12 @@ table {font-size:100%}
           } else {
             echo '<p><span class="mk">&nbsp;' . round($paper[$question]['mark'],2) . ' out of ' . $paper[$question]['totalpos'] . '&nbsp;</span></p>';
           }
+        } elseif ($paper[$question]['q_type'] == 'textbox') {
+          // Unmarked textbox questions.
+          echo '<p><span class="mk">&nbsp;&lt;unmarked&gt; out of ' . $paper[$question]['totalpos'] . '&nbsp;</span></p>';
         } else {
-          // Question not attempted - user skipped a screen.
-          echo '<p><span class="mk">&nbsp;0 out of 0&nbsp;</span></p>';
+          // User has skipped over question.
+          echo '<p><span class="mk">&nbsp;0 out of ' . $paper[$question]['totalpos'] . '&nbsp;</span></p>';
         }
       }
       if ($paper[$question]['status'] != 'Experimental' and isset($paper[$question]['mark'])) $user_mark += $paper[$question]['mark'];
