@@ -27,11 +27,10 @@ require '../include/media.inc';
 require '../include/std_set_functions.inc';
 
 function ebelDropdown($dropdownID,$selected) {
-  $categories = array(0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1);
   $html = "<select name=\"$dropdownID\" onchange=\"recountCategories();\">\n";
   $html .= "<option value=\"0\"></option>\n";
   for ($individual_category=0; $individual_category<=100; $individual_category++) {
-    if (($individual_category / 100) === $selected) {
+    if ($individual_category === ($selected * 100)) {
       $html .= "<option value=\"" . ($individual_category / 100) . "\" selected>$individual_category%</option>\n";
     } else {
       $html .= "<option value=\"" . ($individual_category / 100) . "\">$individual_category%</option>\n";
@@ -401,9 +400,11 @@ $current_screen = 1;
   $reviews = array();
   $setterID = (!empty($_GET['setterID'])) ? $_GET['setterID'] : '';
   $date_id = (!empty($_GET['dateID'])) ? $_GET['dateID'] : '';
+  
   if ($setterID != '') {
+    $tmp_date_id = $date_id;
     $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
-    $result->bind_param('iss', $_GET['paperID'], $setterID, $date_id);
+    $result->bind_param('iss', $_GET['paperID'], $setterID, $tmp_date_id);
     $result->execute();
     $result->bind_result($std_set, $rating, $questionID);
     while ($row = $result->fetch()) {
@@ -577,11 +578,12 @@ $current_screen = 1;
   echo "<tr><td colspan=\"2\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
-    $ebel = $ebel = array('','','','','','','','','','','','','','','','','','');
+    //$ebel = $ebel = array('','','','','','','','','','','','','','','','','','');
     if ($setterID != '') {
       $query_string = $mysqli->query("SELECT percentage FROM ebel WHERE setterID=" . $setterID . " AND date_set='" . $date_id . "' ORDER BY id");
       if ($query_string->num_rows > 0) {
         while ($row = $query_string->fetch_assoc()) {
+          //echo "<div>" . $row['percentage'] . "</div>";
           $ebel[] = $row['percentage'];
         }
       }
