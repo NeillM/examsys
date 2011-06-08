@@ -72,7 +72,7 @@ $papers = 0;
 $papers_query = <<< QUERY
 SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year FROM properties p
 INNER JOIN papers pa ON p.property_id = pa.paper
-WHERE p.paper_type IN (0,1,3)
+WHERE p.paper_type IN ('0','1','3')
 AND p.moduleID LIKE ? AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
 AND p.start_date < NOW() AND p.end_date > NOW()
 AND p.deleted IS NULL
