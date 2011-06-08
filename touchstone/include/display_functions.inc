@@ -76,7 +76,7 @@ function gen_random_no($min, $max, $increment, $decimals) {
     $gen_no *= $increment;
     $gen_no += $min;
   }
-  if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals);
+  if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals, '.', '');
   return $gen_no;
 }
 

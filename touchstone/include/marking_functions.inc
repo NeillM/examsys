@@ -266,6 +266,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
         }
 
         if ($saved_response != '') {
+          $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
           $variable_array = explode(',',$question_variables);
           $var_no = 1;
           foreach($variable_array as $individual_variable) {
@@ -303,7 +304,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
             if ($answer_equation != '') {
               eval ("\$answer = \"" . $answer_equation . "\";");
             }
-            if ($saved_response == $answer) {
+            if ($saved_response_clean == $answer) {
               $mark = $marks;
             }
           } else {
@@ -311,9 +312,9 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
               eval ("\$answer = $answer_equation;");
               $answer = round($answer, $score_array[0]);
             }
-            if ($saved_response == $answer) {
+            if ($saved_response_clean == $answer) {
               $mark = $marks;
-            } elseif (abs($saved_response - $answer) <= $score_array[1]) {
+            } elseif (abs($saved_response_clean - $answer) <= $score_array[1]) {
               $mark = $marks;
             }
           }

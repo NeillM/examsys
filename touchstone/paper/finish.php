@@ -727,14 +727,15 @@ table {font-size:100%}
           } else {
             echo '<td></td>';
           }
+          $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
           if ($tmp_answer[0] == '') {
             echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"unanswered\" />" . $score_array[2];
           } else {
             echo '<td>';
             if ($tmp_exclude == '1')  echo '<span style="color:red; text-decoration:line-through">';
-            if ($saved_response == $tmp_answer[1]) {
+            if ($saved_response_clean == $tmp_answer[1]) {
               $tmp_mark = $paper[$question]['qmarks'];
-            } elseif (abs($saved_response - $tmp_answer[1]) <= $score_array[1] AND $score_array[2] != 'Formula') {
+            } elseif (abs($saved_response_clean - $tmp_answer[1]) <= $score_array[1] AND $score_array[2] != 'Formula') {
               $tmp_mark = $paper[$question]['qmarks'];
             }
             if ($tmp_mark == $paper[$question]['qmarks']) {
@@ -747,14 +748,14 @@ table {font-size:100%}
           }
           if ($tmp_display_correct_answer == '1' AND $score_array[2] != 'Formula') {
             if(is_double($tmp_answer[1])) {
-              echo ' <strong>(' . number_format($tmp_answer[1],$score_array[0]) . $score_array[2] . ')</strong>';
+              echo ' <strong>(' . number_format($tmp_answer[1],$score_array[0], '.', '') . $score_array[2] . ')</strong>';
             } else {
                echo ' <strong>(' . $tmp_answer[1] . ')</strong>';
             }
           } else {
             echo ' ';
           }
-          if ($saved_response <> $tmp_answer[1] and $tmp_mark == $paper[$question]['qmarks']) echo ' with a tolerance of ' . $score_array[1];
+          if ($saved_response_clean <> $tmp_answer[1] and $tmp_mark == $paper[$question]['qmarks']) echo ' with a tolerance of ' . $score_array[1];
           
           if ($tmp_exclude == '1')  echo '</span>';
           echo "</td></tr>\n</table>\n";
