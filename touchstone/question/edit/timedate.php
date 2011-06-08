@@ -312,11 +312,13 @@ function checkForm() {
   }
 }
 </script>
+<script language="JavaScript" src="../../javascript/jquery-1.6.1.min.js" type="text/javascript"></script>
 <script language="JavaScript" src="../../javascript/edit_tabs.js"></script>
 <script language="JavaScript" src="../../javascript/metadata.js"></script>
 <script language="JavaScript" src="../../javascript/mapping_tab.js"></script>
 <?php echo $cfg_editor_javascript; ?>
 <script language="JavaScript" src="../../javascript/staff_help.js"></script>
+<script type="text/javascript" src="../../javascript/jquery.formhelpers.js"></script>
 </head>
 
 <body style="background-color:white">
@@ -331,7 +333,7 @@ function checkForm() {
   while ($row = $result->fetch()) {
     if ($question_no == 1) {
 ?>
-  <form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $q_id; ?>" enctype="multipart/form-data">
+  <form class="clearinput" name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $q_id; ?>" enctype="multipart/form-data">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr height="70" style="background-color:#DFECFF">
     <td width="400">
@@ -513,7 +515,7 @@ function checkForm() {
       <td class="field">Answer</td>
       <td colspan="3">
       <?php
-        echo "<input type=\"text\" size=\"5\" name=\"answer_day\" value=\"$answer_day\" /> / <input type=\"text\" size=\"5\" name=\"answer_month\" value=\"$answer_month\" /> / <input type=\"text\" size=\"5\" name=\"answer_year\" value=\"$answer_year\" />&nbsp;&nbsp;&nbsp;<input type=\"text\" size=\"5\" name=\"answer_hour\" value=\"$answer_hour\" /> : <input type=\"text\" size=\"5\" name=\"answer_minute\" value=\"$answer_minute\" /> : <input type=\"text\" size=\"5\" name=\"answer_second\" value=\"$answer_second\" />\n";
+        echo "<input type=\"text\" size=\"5\" name=\"answer_day\" value=\"$answer_day\" class=\"clearinput\" title=\"dd\" /> / <input type=\"text\" size=\"5\" name=\"answer_month\" value=\"$answer_month\" class=\"clearinput\" title=\"MM\" /> / <input type=\"text\" size=\"5\" name=\"answer_year\" value=\"$answer_year\" class=\"clearinput\" title=\"yyyy\" />&nbsp;&nbsp;&nbsp;<input type=\"text\" size=\"5\" name=\"answer_hour\" value=\"$answer_hour\" class=\"clearinput\" title=\"hh\" /> : <input type=\"text\" size=\"5\" name=\"answer_minute\" value=\"$answer_minute\" class=\"clearinput\" title=\"mm\" /> : <input type=\"text\" size=\"5\" name=\"answer_second\" value=\"$answer_second\" class=\"clearinput\" title=\"ss\" />\n";
         echo "<input type=\"hidden\" size=\"5\" name=\"old_answer_day\" value=\"$answer_day\" /><input type=\"hidden\" size=\"5\" name=\"old_answer_month\" value=\"$answer_month\" /><input type=\"hidden\" size=\"5\" name=\"old_answer_year\" value=\"$answer_year\" /><input type=\"hidden\" size=\"5\" name=\"old_answer_hour\" value=\"$answer_hour\" /><input type=\"hidden\" size=\"5\" name=\"old_answer_minute\" value=\"$answer_minute\" /><input type=\"hidden\" size=\"5\" name=\"old_answer_second\" value=\"$answer_second\" />\n";
       ?>
       </td>

@@ -149,15 +149,17 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     }
   }
 </script>
-<script language="JavaScript" src="../../javascript/mapping_tab.js"></script>
-<script language="JavaScript" src="../../javascript/metadata.js"></script>
+<script language="JavaScript" src="../../javascript/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../javascript/mapping_tab.js" type="text/javascript"></script>
+<script language="JavaScript" src="../../javascript/metadata.js" type="text/javascript"></script>
 <?php echo $cfg_editor_javascript; ?>
-<script language="JavaScript" src="../../javascript/staff_help.js"></script>
+<script language="JavaScript" src="../../javascript/staff_help.js" type="text/javascript"></script>
+<script type="text/javascript" src="../../javascript/jquery.formhelpers.js"></script>
 </head>
 
 <body onLoad="document.add_form.theme.focus();">
 
-<form name="add_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+<form class="clearinput" name="add_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr height="70" style="background-color:#DFECFF">
     <td width="400">
@@ -224,7 +226,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     <tr>
       <td class="field">Answer</td>
       <td colspan="5">
-      <input type="text" size="5" name="answer_day" /> / <input type="text" size="5" name="answer_month" /> / <input type="text" size="5" name="answer_year" />&nbsp;&nbsp;&nbsp;<input type="text" size="5" name="answer_hour" /> : <input type="text" size="5" name="answer_minute" /> : <input type="text" size="5" name="answer_second" />
+      <input type="text" size="5" name="answer_day" class="clearinput" title="dd" /> / <input type="text" size="5" name="answer_month" class="clearinput" title="MM" /> / <input type="text" size="5" name="answer_year" class="clearinput" title="yyyy" />&nbsp;&nbsp;&nbsp;<input type="text" size="5" name="answer_hour" class="clearinput" title="hh" /> : <input type="text" size="5" name="answer_minute" class="clearinput" title="mm" /> : <input type="text" size="5" name="answer_second" class="clearinput" title="ss" />
       </td>
     </tr>
     <tr>
