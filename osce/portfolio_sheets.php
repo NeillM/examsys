@@ -24,9 +24,11 @@
 
   require '../touchstone/include/staff_auth.inc';
   require './osce.inc';
+  
   header('Content-disposition: attachment; filename=report.xml');
   header('Content-type: text/xml');
   set_time_limit(0);
+  
   echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <?mso-application progid="Word.Document"?>
 <w:wordDocument xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><w:ignoreSubtree w:val="http://schemas.microsoft.com/office/word/2003/wordml/sp2"/><o:DocumentProperties><o:Author>TouchStone 3.6</o:Author><o:LastAuthor>TouchStone 3.6</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>1</o:TotalTime><o:Created>';
@@ -44,14 +46,16 @@
 
   $startdate = $_GET['startdate'];
   $enddate = $_GET['enddate'];
-  $result = $mysqli->prepare("SELECT log4.userID, students.title, students.surname, students.first_names, log4.q_id, rating, q_parts, leadin, theme, DATE_FORMAT(log4_overall.started,\"%d/%m/%Y %H:%i\") AS started, REPLACE(feedback,'&','&amp;') AS feedback, examiners.title, examiners.surname FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners) WHERE log4.userID=log4_overall.userID AND log4.q_paper=log4_overall.q_paper AND log4.userID=students.id AND log4_overall.examinerID=examiners.id AND papers.question=questions.q_id AND papers.paper=? AND log4.q_paper=? AND log4.q_id=questions.q_id AND log4_overall.started>=? AND log4_overall.started<=? AND (students.roles='Student' OR students.roles='graduate') AND log4_overall.student_grade LIKE ? AND log4_overall.year LIKE ? ORDER BY students.surname, students.initials, log4_overall.userID, display_pos");
-  $result->bind_param('iissss', $_GET['paperID'], $_GET['paperID'], $startdate, $enddate, $_GET['repdegree'], $_GET['repyear']);
+  //echo "SELECT log4.userID, students.title, students.surname, students.first_names, log4.q_id, rating, q_parts, leadin, theme, DATE_FORMAT(log4_overall.started,\"%d/%m/%Y %H:%i\") AS started, REPLACE(feedback,'&','&amp;') AS feedback, examiners.title, examiners.surname FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners) WHERE log4.userID=log4_overall.userID AND log4.q_paper=log4_overall.q_paper AND log4.userID=students.id AND log4_overall.examinerID=examiners.id AND papers.question=questions.q_id AND papers.paper=" . $_GET['paperID'] . " AND log4.q_paper=" . $_GET['paperID'] . " AND log4.q_id=questions.q_id AND log4_overall.started>='" . $startdate . "' AND log4_overall.started<='" . $enddate . "' AND (students.roles='Student' OR students.roles='graduate') AND log4_overall.student_grade LIKE '" . $_GET['repdegree'] . "' ORDER BY students.surname, students.initials, log4_overall.userID, display_pos<br />";
+  $result = $mysqli->prepare("SELECT log4.userID, students.title, students.surname, students.first_names, log4.q_id, rating, q_parts, leadin, theme, DATE_FORMAT(log4_overall.started,\"%d/%m/%Y %H:%i\") AS started, REPLACE(feedback,'&','&amp;') AS feedback, examiners.title, examiners.surname FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners) WHERE log4.userID=log4_overall.userID AND log4.q_paper=log4_overall.q_paper AND log4.userID=students.id AND log4_overall.examinerID=examiners.id AND papers.question=questions.q_id AND papers.paper=? AND log4.q_paper=? AND log4.q_id=questions.q_id AND log4_overall.started>=? AND log4_overall.started<=? AND (students.roles='Student' OR students.roles='graduate') AND log4_overall.student_grade LIKE ? ORDER BY students.surname, students.initials, log4_overall.userID, display_pos");
+  $result->bind_param('iisss', $_GET['paperID'], $_GET['paperID'], $startdate, $enddate, $_GET['repdegree']);
   $result->execute();
   $result->bind_result($tmp_userID, $title, $surname, $first_names, $q_id, $rating, $q_parts, $leadin, $theme, $started, $feedback, $examiner_title, $examiner_surname);
   $old_tmp_userID = 0;
   $table_open = 0;
   $student_no = 0;
   while ($row = $result->fetch()) {
+  echo "hI";
     if ($old_tmp_userID != $tmp_userID) {
       $student_no++;
       if ($old_tmp_userID != '') {
@@ -78,7 +82,7 @@
       $table_open = 1;
     }
 
-    $leadin = parse_leadin_word_2003($leadin,$q_parts);
+    $leadin = parse_leadin_word_2003(strip_tags($leadin),$q_parts);
 
     // Lead-in
     echo '<w:tr wsp:rsidR="00A11D0F" wsp:rsidRPr="00A11D0F" wsp:rsidTr="00A11D0F">';
@@ -137,5 +141,4 @@
 
         return str_replace($wordChr,$utf8Chr,$str);
   }
-  $mysqli->close();
 ?>
