@@ -25,33 +25,33 @@
 require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 
-  function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
-    foreach ($marray as $row) {
-      $sortarr[] = $row[$column];
-    }
-    if ($sort_order == 'asc') {
-      array_multisort($sortarr, SORT_ASC, $marray);
-    } else {
-      array_multisort($sortarr, SORT_DESC, $marray);
-    }
-    return $marray;
+function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
+  foreach ($marray as $row) {
+    $sortarr[] = $row[$column];
   }
-  
-  function dateDisplay($tmp_date) {
-    return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);
+  if ($sort_order == 'asc') {
+    array_multisort($sortarr, SORT_ASC, $marray);
+  } else {
+    array_multisort($sortarr, SORT_DESC, $marray);
   }
+  return $marray;
+}
 
-  if (isset($_GET['module'])) {
-    $module = $_GET['module'];
-  } else {
-    $module = '';
-  }
-  
-  if (isset($_GET['folder'])) {
-    $folder = $_GET['folder'];
-  } else {
-    $folder = '';  
-  }
+function dateDisplay($tmp_date) {
+  return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);
+}
+
+if (isset($_GET['module'])) {
+  $module = $_GET['module'];
+} else {
+  $module = '';
+}
+
+if (isset($_GET['folder'])) {
+  $folder = $_GET['folder'];
+} else {
+  $folder = '';  
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -93,13 +93,13 @@ require '../include/question_types.inc';
     }
   }
 
-  function highlight(lineID) {
+  function lon(lineID) {
     if (lineID != document.PapersMenu.oldLineNo.value) {
-      document.getElementById(lineID).style.backgroundColor = '#ECE9D8';
+      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
     }
   }
 
-  function unhighlight(lineID) {
+  function loff(lineID) {
     if (lineID != document.PapersMenu.oldLineNo.value) {
       document.getElementById(lineID).style.backgroundColor = '';
     }
@@ -196,11 +196,11 @@ for ($item=0; $item<$i; $item++) {
   if ($recycle_bin[$item]['type'] == 'paper') {
     $temp_type = $recycle_bin[$item]['subtype'];
     $split_name = explode('[deleted',$recycle_bin[$item]['name']);
-    echo "<tr id=\"line$item\" onmouseover=\"highlight('line$item')\" onmouseout=\"unhighlight('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'paper'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $split_name[0] . "</td><td>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td>&nbsp;" . $paper_types[$temp_type] . "</td></tr>\n";
+    echo "<tr id=\"line$item\" onmouseover=\"lon('line$item')\" onmouseout=\"loff('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'paper'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $split_name[0] . "</td><td>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td>&nbsp;" . $paper_types[$temp_type] . "</td></tr>\n";
   } elseif ($recycle_bin[$item]['type'] == 'folder') {
-    echo "<tr id=\"line$item\" onmouseover=\"highlight('line$item')\" onmouseout=\"unhighlight('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'folder'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $recycle_bin[$item]['name'] . "</td><td>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td>&nbsp;Folder</td></tr>\n";
+    echo "<tr id=\"line$item\" onmouseover=\"lon('line$item')\" onmouseout=\"loff('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'folder'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $recycle_bin[$item]['name'] . "</td><td>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td>&nbsp;Folder</td></tr>\n";
   } else {
-    echo "<tr id=\"line$item\" onmouseover=\"highlight('line$item')\" onmouseout=\"unhighlight('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'question'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $recycle_bin[$item]['name'] . "</td><td>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td>&nbsp;" . fullQuestionType($recycle_bin[$item]['subtype']) . "</td></tr>\n";
+    echo "<tr id=\"line$item\" onmouseover=\"lon('line$item')\" onmouseout=\"loff('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'question'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $recycle_bin[$item]['name'] . "</td><td>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td>&nbsp;" . fullQuestionType($recycle_bin[$item]['subtype']) . "</td></tr>\n";
   }
 }
 echo "</table>\n";
