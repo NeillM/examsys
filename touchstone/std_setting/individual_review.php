@@ -30,7 +30,7 @@ function ebelDropdown($dropdownID,$selected) {
   $html = "<select name=\"$dropdownID\" onchange=\"recountCategories();\">\n";
   $html .= "<option value=\"0\"></option>\n";
   for ($individual_category=0; $individual_category<=100; $individual_category++) {
-    if ($individual_category === ($selected * 100)) {
+    if ($individual_category == ($selected * 100)) {
       $html .= "<option value=\"" . ($individual_category / 100) . "\" selected>$individual_category%</option>\n";
     } else {
       $html .= "<option value=\"" . ($individual_category / 100) . "\">$individual_category%</option>\n";
