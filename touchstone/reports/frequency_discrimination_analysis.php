@@ -161,20 +161,21 @@
         $tmp_score_method = explode(',',$scoring);
         $tolerance = $tmp_score_method[1];
         $tmp_first_split = explode('|', $answer);
-        if ($tmp_first_split[0] == $tmp_first_split[1]) {
+        $user_ans_clean = $saved_response_clean = str_replace(',', '', str_replace(' ', '', $tmp_first_split[0]));
+        if ($user_ans_clean == $tmp_first_split[1]) {
           if (isset($log_array[$qID][1]['correct'])) {
             $log_array[$qID][1]['correct']++;
           } else {
             $log_array[$qID][1]['correct'] = 1;
           }
         } else {
-          if ($tmp_first_split[0] == '') {
+          if ($user_ans_clean == '') {
             if (isset($log_array[$qID][1]['u'])) {
               $log_array[$qID][1]['u']++;
             } else {
               $log_array[$qID][1]['u'] = 1;
             }
-          } elseif (abs($tmp_first_split[0] - $tmp_first_split[1]) <= $tolerance) {
+          } elseif (abs($user_ans_clean - $tmp_first_split[1]) <= $tolerance) {
             if (isset($log_array[$qID][1]['tolerance'])) {
               $log_array[$qID][1]['tolerance']++;
             } else {
