@@ -139,6 +139,7 @@ if ($password != '') {
   }
 }
 
+$low_bandwidth = 0;
 //Check this PC is registered for this exam
 if ($labs != '' and stripos($userroles,'Student') !== false) {
   $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
@@ -337,6 +338,8 @@ if ($textsize > 120) {
     }
   }
   echo '<br />&nbsp;';
+  
+  $display_date = '';
   if ($test_type != 2) {
     // Display previous attempts
     $old_started = '';
