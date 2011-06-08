@@ -555,7 +555,11 @@
     $update_logs = array(0,1,2,3,5);
     foreach ($update_logs as $log_type) {
       echo "<div>Reading from Log$log_type and inserting into log_metadata</div>";
-      $result2 = $mysqli->prepare("SELECT userID, q_paper, started, ipaddress, student_grade, yearofstudy FROM log$log_type GROUP BY userID, q_paper, started");
+      if ($log_type == 5) {
+        $result2 = $mysqli->prepare("SELECT userID, q_paper, started, '' AS ipaddress, student_grade, yearofstudy FROM log$log_type GROUP BY userID, q_paper, started");
+      } else {
+        $result2 = $mysqli->prepare("SELECT userID, q_paper, started, ipaddress, student_grade, yearofstudy FROM log$log_type GROUP BY userID, q_paper, started");
+      }
       //$result2 = $mysqli->prepare("SELECT DISTINCT userID, q_paper, started, ipaddress, student_grade, yearofstudy FROM log$log_type");
       $result2->execute();
       $result2->store_result();
