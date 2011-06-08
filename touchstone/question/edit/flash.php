@@ -124,8 +124,9 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     if ($changes == true) {
       // Update Question data
       $bloom = (empty($bloom)) ? NULL : $bloom;
+      $tmp_leadin = trim(strip_tags($leadin));
     	$result = $mysqli->prepare("UPDATE questions SET theme=?, leadin=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, bloom=?, q_group=?, last_edited=NOW(), leadin_plain=?, status=? WHERE q_id=?");
-      $result->bind_param('ssssssssssi', $theme, $leadin, $notes, $unique_question_name, $tmp_q_width, $tmp_q_height, $bloom, $question_teams, trim(strip_tags($leadin)), $status, $_GET['q_id']);
+      $result->bind_param('ssssssssssi', $theme, $leadin, $notes, $unique_question_name, $tmp_q_width, $tmp_q_height, $bloom, $question_teams, $tmp_leadin, $status, $_GET['q_id']);
       $result->execute();  
       $result->close();
   
@@ -245,7 +246,6 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo echoMetadata($bloom, $q_id, $q_group, 1, $mysqli, true, $status, $disabled);
     }
   }
-}
 ?>
 
 <tr><td colspan="5">&nbsp;<?php echo hidden_edit_fields(); ?></td></tr>
@@ -260,8 +260,11 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
   displayMappingTab($_GET['paperID'], $mysqli, $created, $modified);
   $result->free_result();
   $result->close();
-  $mysqli->close();
 ?>
 </form>
 </body>
 </html>
+<?php
+}
+$mysqli->close();
+?>
