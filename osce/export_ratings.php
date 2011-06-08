@@ -44,8 +44,9 @@
 
   $log_array = array();
   $hits = 0;
+  $user_no = 0;
   // Capture the log data first.
-  $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, log4.username, title, surname, initials, grade, gender, started, log4.q_id, rating FROM (log4, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log4.q_id=questions.q_id AND q_paper=? AND users.id=log4.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started>=? AND started<=?");
+  $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, users.username, title, surname, initials, grade, gender, started, log4.q_id, rating FROM (log4, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log4.q_id=questions.q_id AND q_paper=? AND users.id=log4.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started>=? AND started<=?");
   $result->bind_param('isss', $paperID, $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($user_ID, $username, $title, $surname, $initials, $grade, $gender, $started, $q_id, $rating);
@@ -63,7 +64,8 @@
   }
   $result->close();
   
-  $result = $mysqli->prepare("SELECT student_id, overall_rating, numeric_score, feedback, log4_overall.year, title, surname, initials FROM (log4_overall, sid, users) WHERE log4_overall.examiner=users.id AND log4_overall.userID=sid.userID AND q_paper=? AND started>=? AND started<=?");
+  //echo "SELECT student_id, overall_rating, numeric_score, feedback, log4_overall.year, title, surname, initials FROM (log4_overall, sid, users) WHERE log4_overall.examinerID=users.id AND log4_overall.userID=sid.userID AND q_paper=$paperID AND started>='" . $_GET['startdate'] . "' AND started<='" . $_GET['enddate'] . "'<br />";
+  $result = $mysqli->prepare("SELECT student_id, overall_rating, numeric_score, feedback, log4_overall.year, title, surname, initials FROM (log4_overall, sid, users) WHERE log4_overall.examinerID=users.id AND log4_overall.userID=sid.userID AND q_paper=? AND started>=? AND started<=?");
   $result->bind_param('iss', $paperID, $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($user_ID, $overall_rating, $numeric_score, $feedback, $year, $title, $surname, $initials);
@@ -92,7 +94,6 @@
     echo $paper_title . ',' . $individual['examiner'] . ',' . $individual['gender'] . ',' . $individual['title'] . ',' . $individual['surname'] . ',' . $individual['initials'] . ',' . $individual['username'] . ',' . $individual['student_id'] . ',' . $individual['course'] . ',' . $individual['year'] . ',' . $individual['started'];
     for ($i=0; $i<$question_no; $i++) {
       $tmp_question_ID = $paper_buffer[$i]['ID'];
-      $tmp_screen = $paper_buffer[$i]['screen'];
       echo ',' . $individual[$tmp_question_ID];
     }
     echo ',' . $individual['numeric_score'] . ',' . $individual['feedback'];
