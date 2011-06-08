@@ -69,12 +69,54 @@
 <tr><td>
 <div><strong>Word or phrase</strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
 <table cellpadding="0" cellspacing="0" border="0">
-<tr><td><input type="checkbox" name="formative" value="1"<?php if (!isset($_POST) or (isset($_POST['formative']) and $_POST['formative'] == 1)) echo ' checked'; ?> /></td><td>Formative Self-Assessment</td></tr>
-<tr><td><input type="checkbox" name="progress" value="1"<?php if (!isset($_POST) or (isset($_POST['progress']) and $_POST['progress'] == 1)) echo ' checked'; ?> /></td><td>Progress Test</td></tr>
-<tr><td><input type="checkbox" name="summative" value="1"<?php if (!isset($_POST) or (isset($_POST['summative']) and $_POST['summative'] == 1)) echo ' checked'; ?> /></td><td>Summative Exam</td></tr>
-<tr><td><input type="checkbox" name="survey" value="1"<?php if (!isset($_POST) or (isset($_POST['survey']) and $_POST['survey'] == 1)) echo ' checked'; ?> /></td><td>Survey</td></tr>
-<tr><td><input type="checkbox" name="osce" value="1"<?php if (!isset($_POST) or (isset($_POST['osce']) and $_POST['osce'] == 1)) echo ' checked'; ?> /></td><td>OSCE Station</td></tr>
-<tr><td><input type="checkbox" name="offline" value="1"<?php if (!isset($_POST) or (isset($_POST['offline']) and $_POST['offline'] == 1)) echo ' checked'; ?> /></td><td>Offline Paper</td></tr>
+<?php
+  if (isset($_POST['submit'])) {
+    if (isset($_POST['formative']) and $_POST['formative'] == 1) {
+      $radio[0] = ' checked';
+    } else {
+      $radio[0] = '';
+    }
+    if (isset($_POST['progress']) and $_POST['progress'] == 1) {
+      $radio[1] = ' checked';
+    } else {
+      $radio[1] = '';
+    }
+    if (isset($_POST['summative']) and $_POST['summative'] == 1) {
+      $radio[2] = ' checked';
+    } else {
+      $radio[2] = '';
+    }
+    if (isset($_POST['survey']) and $_POST['survey'] == 1) {
+      $radio[3] = ' checked';
+    } else {
+      $radio[3] = '';
+    }
+    if (isset($_POST['osce']) and $_POST['osce'] == 1) {
+      $radio[4] = ' checked';
+    } else {
+      $radio[4] = '';
+    }
+    if (isset($_POST['offline']) and $_POST['offline'] == 1) {
+      $radio[5] = ' checked';
+    } else {
+      $radio[5] = '';
+    }
+  } else {
+    $radio[0] = ' checked';
+    $radio[1] = ' checked';
+    $radio[2] = ' checked';
+    $radio[3] = ' checked';
+    $radio[4] = ' checked';
+    $radio[5] = ' checked';
+  }
+?>
+
+<tr><td><input type="checkbox" name="formative" value="1"<?php echo $radio[0]; ?> /></td><td>Formative Self-Assessment</td></tr>
+<tr><td><input type="checkbox" name="progress" value="1"<?php echo $radio[1]; ?> /></td><td>Progress Test</td></tr>
+<tr><td><input type="checkbox" name="summative" value="1"<?php echo $radio[2]; ?> /></td><td>Summative Exam</td></tr>
+<tr><td><input type="checkbox" name="survey" value="1"<?php echo $radio[3]; ?> /></td><td>Survey</td></tr>
+<tr><td><input type="checkbox" name="osce" value="1"<?php echo $radio[4]; ?> /></td><td>OSCE Station</td></tr>
+<tr><td><input type="checkbox" name="offline" value="1"<?php echo $radio[5]; ?> /></td><td>Offline Paper</td></tr>
 </table>
 
 <br />
