@@ -66,7 +66,7 @@ function reviewScale($q_type, $tmp_q_id, $q_no, $tmp_part_no, $set_method, $prev
       }
       if ($q_type == 'mrq') {
         $current_review = $sub_reviews[$mrq_part - 1];
-      } elseif ($q_type == 'dichotomous' or $q_type == 'rank' or $q_type == 'extmatch' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'labelling') {
+      } elseif ($q_type == 'dichotomous' or $q_type == 'rank' or $q_type == 'extmatch' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'labelling' or $q_type == 'hotspot') {
         $current_review = (!empty($sub_reviews[$tmp_part_no - 1])) ? $sub_reviews[$tmp_part_no - 1] : '';
       } elseif ($q_type == 'textbox') {
         $current_review = $sub_reviews[count($sub_reviews)-$tmp_part_no];
@@ -84,7 +84,7 @@ function reviewScale($q_type, $tmp_q_id, $q_no, $tmp_part_no, $set_method, $prev
       $html .=  "</select>\n";
       break;
     case 'ebel':
-      if ($q_type == 'dichotomous' or $q_type == 'extmatch' or $q_type == 'mrq' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'rank' or $q_type == 'labelling') {
+      if ($q_type == 'dichotomous' or $q_type == 'extmatch' or $q_type == 'mrq' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'rank' or $q_type == 'labelling' or $q_type == 'hotspot') {
         if (isset($prev_reviews[$tmp_q_id])) {
           $sub_reviews = explode(',', $prev_reviews[$tmp_q_id]);
         } else {
@@ -704,7 +704,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   </script>
   </div>
 <?php
-        echo "<div>" .  reviewScale('hotspot', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
+        for ($i=1; $i<=$display_option['marks']; $i++) {
+          echo "<div>" .  chr($i+64) . ")&nbsp;" . reviewScale('hotspot', $q_id, $question_no, $i, $std_method, $tmp_reviews, substr($tmp_exclude,$i-1,1)) . "</div>\n";
+        }
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"u\" />\n";
         $marks = $display_option['marks'];
         break;
@@ -785,7 +787,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   </div>
 
 <?php
-        echo "<div>" .  reviewScale('flash', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
+        echo "<div>" .  reviewScale('flash', $q_id, $question_no, '', $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
         $marks += $display_option['marks'];
         break;
@@ -799,9 +801,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
       }
       echo '</table></blockquote>';
-      echo "<div>" .  reviewScale('mcq', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
+      echo "<div>" .  reviewScale('mcq', $q_id, $question_no, '', $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
     } elseif ($options[0]['score_method'] == 'dropdown') {
-      echo '</select>&nbsp;' .  reviewScale('mcq', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
+      echo '</select>&nbsp;' .  reviewScale('mcq', $q_id, $question_no, '', $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</div>\n";
     }
   } elseif ($options[0]['q_type'] == 'calculation') {
     $score_array = explode(',',$options[0]['score_method']);

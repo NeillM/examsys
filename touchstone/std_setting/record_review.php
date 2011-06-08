@@ -128,7 +128,6 @@
     switch ($row['q_type']) {
       case 'calculation':
       case 'mcq':
-      case 'hotspot':
         if (isset($_POST["std$question_no"])) {
           $rating = $_POST["std$question_no"];
         } else {
@@ -148,6 +147,20 @@
         if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
         if ($_POST["$qid"] != '') $last_question = $question_no;
         $total_parts++;
+        break;
+      case 'hotspot':
+        $subparts = explode('|',$row['correct']);
+        $no_parts = count($subparts);
+        for ($i=1; $i<=$no_parts; $i++) {
+          $qid = 'std' . $question_no . '_' . $i;
+          if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
+          if ($i == 1) {
+            $rating = $_POST["$qid"];
+          } else {
+            $rating .= ',' . $_POST["$qid"];
+          }
+          $total_parts++;
+        }
         break;
       case 'mrq':
         $qid = 'std' . $question_no . '_' . $question_part;

@@ -115,9 +115,18 @@
         break;
       case 'calculation':
       case 'timedate':
-      case 'hotspot':
         if (substr($exclude[$old_q_id],$partID,1) == '0') {
           $marks_array[$old_q_id][$partID] = 1;
+        }
+        break;
+      case 'hotspot':
+        $tmp_first_split = explode('|', $row['correct']);
+        for ($i=0; $i<count($tmp_first_split); $i++) {
+          if (substr($exclude[$old_q_id],$i,1) == '0') {
+            $marks_array[$old_q_id][$i] = 1;
+          } else {
+            $marks_array[$old_q_id][$i] = 0;
+          }
         }
         break;
       case 'blank':
