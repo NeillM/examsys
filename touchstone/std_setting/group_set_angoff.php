@@ -26,8 +26,6 @@ require '../include/staff_auth.inc';
 require '../include/media.inc';
 require 'angoff_group_functions.inc';
 
-echo "<html>\n<head>\n<title>Standards Setting</title>\n";
-
 $rater_query = '';
 $rater_names = array();
 $review_string = '';
@@ -76,6 +74,7 @@ if (isset($_GET['reviewers'])) {
 $reviews = array();
 $review_string = substr($review_string,1);
 
+$hidden_fields = '';
 if ($setterID != '') {
   $query_string = "SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=$paperID AND setterID=$setterID AND std_set=$dateID";
   $results = $mysqli->query($query_string);
@@ -88,7 +87,7 @@ if ($setterID != '') {
   $query_string = "SELECT question, std FROM (papers, questions) WHERE paper=$paperID AND papers.question=questions.q_id";
   $results = $mysqli->query($query_string);
   while ($row = $results->fetch_assoc()) {
-    echo "<input type=\"hidden\" name=\"old" . $row['question'] . "\" value=\"" . $row['std'] . "\" />";
+    $hidden_fields .= "<input type=\"hidden\" name=\"old" . $row['question'] . "\" value=\"" . $row['std'] . "\" />";
   }
   $results->close();
 }
@@ -131,6 +130,10 @@ if (!isset($no_screens)) {
   $current_screen = 1;
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Standards Setting</title>
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -280,6 +283,7 @@ if (!isset($no_screens)) {
 <input type="submit" name="submit" value="Save Ratings" style="width:150px" />&nbsp;<input onclick="javascript: history.back()" type="button" name="cancel" value="Cancel" style="width:100px" />
 </div>
 <br />
+<?php echo $hidden_fields ?>
 </form>
 </body>
 </html>
