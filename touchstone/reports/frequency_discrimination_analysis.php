@@ -1142,7 +1142,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Facility/Discrimination Analysis<?php echo " $cfg_install_type"; ?></title>
+<title>Frequency/Discrimination Analysis<?php echo " $cfg_install_type"; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
