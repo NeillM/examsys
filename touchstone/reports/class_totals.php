@@ -519,7 +519,7 @@ a.user:hover {color:white; background-color:#000080}
     }
   }
   if ($temp_user_no > 0) {
-    echo "<tr><td style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"10\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">&nbsp;&nbsp;<strong>Temporary Accounts Warning</strong>&nbsp;&nbsp;&nbsp;$temp_user_no temporary accounts have been used. Please reassign to the proper student accounts. <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">Click for more details.</a></td></tr>\n";
+    echo "<tr><td style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"10\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">&nbsp;&nbsp;<strong>Temporary Accounts Warning</strong>&nbsp;&nbsp;&nbsp;Please reassign to the proper student accounts. <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">Click for more details.</a></td></tr>\n";
   }
 
   if (count($log_late) > 0) {
