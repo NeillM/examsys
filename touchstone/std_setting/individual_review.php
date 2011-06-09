@@ -578,17 +578,16 @@ $current_screen = 1;
   echo "<tr><td colspan=\"2\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
-    //$ebel = $ebel = array('','','','','','','','','','','','','','','','','','');
     if ($setterID != '') {
       $query_string = $mysqli->query("SELECT percentage FROM ebel WHERE setterID=" . $setterID . " AND date_set='" . $date_id . "' ORDER BY id");
       if ($query_string->num_rows > 0) {
         while ($row = $query_string->fetch_assoc()) {
-          //echo "<div>" . $row['percentage'] . "</div>";
           $ebel[] = $row['percentage'];
         }
       }
       $query_string->close(); 
     }
+    if(empty($ebel)) $ebel = array('','','','','','','','','','','','','','','','','','');
 
     echo "<br />\n<div align=\"center\">\n";
     echo "<table cellpadding=\"4\" cellspacing=\"0\" width=\"90%\" style=\"background-color:#E4EEFC; border: 1px solid #B5C4DF; text-align:left\">\n";
