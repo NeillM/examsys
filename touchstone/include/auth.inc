@@ -37,9 +37,11 @@
 function ldap_auth($u, $p, &$data){
   global $cfg_ldap_server, $cfg_ldap_search_dn, $cfg_ldap_bind_rdn, $cfg_ldap_bind_password;
   if ($u == '') {
+    $data['error'] = 'No LDAP username or password supplied';
     return false;
   }
   if ($p == '') {
+    $data['error'] = 'No LDAP username or password supplied';
     return false;
   }
 

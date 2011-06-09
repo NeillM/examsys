@@ -267,7 +267,7 @@ while ($row = $stmt->fetch()) {
     if (stripos($userroles,'Student') !== false) {
 	    // Check for additional password on the paper
       if ($password != '') {
-        if ($password != $_COOKIE['paperpwd']) {
+        if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
           echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
           echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
           echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">There is a specific password assigned to this paper.</p>\n<p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"OK\" style=\"width:100px\" name=\"ok\" onclick=\"window.close();\"></form></p>\n</body>\n</html>";
