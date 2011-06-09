@@ -141,14 +141,14 @@ foreach ($log_array as $individual) {
           }
           break;
         case 'matrix':
-          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|');
+          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|') + 1;
           for ($sec=1; $sec<=$sections; $sec++) {
             if ($sec > 1) echo ',';
             echo 'Q' . ($i+1) . '.' . $sec;
           }
           break;
         case 'rank':
-          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],',');
+          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],',') + 1;
           for ($sec=1; $sec<=$sections; $sec++) {
             if ($sec > 1) echo ',';
             echo 'Q' . ($i+1) . '.' . $sec;
@@ -197,10 +197,10 @@ foreach ($log_array as $individual) {
         case 'matrix':
           $log_array[$tmp_user_ID][$tmp_question_ID] = substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],1);
           $tmp_answers = str_replace('|',',',$log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
-          echo substr($tmp_answers,1);
+          echo $tmp_answers;
           break;
         case 'rank':
-          $buffer = substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], 1);
+          $buffer = $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID];
           $buffer = str_replace('9999','',$buffer);
           $buffer = str_replace('9990','n/a',$buffer);
           echo $buffer;
