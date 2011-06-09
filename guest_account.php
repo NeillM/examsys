@@ -72,7 +72,7 @@ if ($ip_match == false) {
   echo "<html>\n<head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This page can only be accessed from a university computer within the examination room.</p>\n<!-- " . get_ipaddress() . " -->\n</body>\n</html>";
+  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This page can only be accessed from a university computer within the examination room.</p>\n<!-- " . get_ipaddress() . " -->\n<!-- $labs -->\n</body>\n</html>";
   exit;
 }
 ?>
@@ -153,9 +153,9 @@ body {color:black; background-color:white; font-family:Arial,sans-serif}
 
 <body>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<div align="center" style="text-align:center">
-<table cellpadding="0" cellspacing="0" style="width:450px; border:1px #C8C8C8 solid">
-<tr style="height:70px; width:100%; background-image:url(./touchstone/artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td>Guest Account Registration</td></tr>
+<div style="text-align:center">
+<table cellpadding="0" cellspacing="0" style="margin-left:auto; margin-right:auto; width:450px; border:1px #C8C8C8 solid">
+<tr style="height:70px; width:100%; background-image:url(./touchstone/artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold"><td style="padding-left:6px">Guest Account Registration</td></tr>
 
 <tr><td style="text-align:center; padding:6px">
 <table cellpadding="2" cellspacing="0" border="0">

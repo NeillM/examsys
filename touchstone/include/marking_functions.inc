@@ -681,12 +681,16 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
         break;
       case 'hotspot':
         $qid = 'q' . $question_no;
-        if(isset($posted_vars[$qid])) {
+        $mark = 0;
+        if (isset($posted_vars[$qid])) {
           $saved_response = $posted_vars[$qid];
+          $sub_parts = explode('|',$saved_response);
+          foreach ($sub_parts as $sub_part) {
+            if ($sub_part{0} == 1) $mark++;
+          }
         } else {
           $saved_response = '';
         }
-        if ($saved_response{0} == 1) $mark += $marks;
         $totalpos += $marks;
         break;
       case 'labelling':

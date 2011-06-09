@@ -509,10 +509,19 @@ a.user:hover {color:white; background-color:#000080}
   }
 
   echo '</tr>';
+  echo '<tr style="height:4px"><td valign="top" colspan="11"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>';
 
-?>
-<tr style="height:4px"><td valign="top" colspan="11"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
-<?php
+  // Check for any temporary accounts and if so display warning banner
+  $temp_user_no = 0;
+  for ($i=0; $i<$user_no; $i++) {
+    if (strpos($user_results[$i]['username'], 'user') === 0) {
+      $temp_user_no++;
+    }
+  }
+  if ($temp_user_no > 0) {
+    echo "<tr><td style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"10\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">&nbsp;&nbsp;<strong>Temporary Accounts Warning</strong>&nbsp;&nbsp;&nbsp;$temp_user_no temporary accounts have been used. Please reassign to the proper student accounts. <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">Click for more details.</a></td></tr>\n";
+  }
+
   if (count($log_late) > 0) {
     echo "<tr><td style=\"width:40px; height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" width=\"28\" height=\"28\" style=\"position:relative; left:0px; top:2px;\" alt=\"Warning\" />&nbsp;&nbsp;</td><td colspan=\"10\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>Late Submissions</strong>&nbsp;&nbsp;&nbsp;Users have data saved after the end of the assessment (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">Click for more details</a>): ";
     $html = '';
@@ -595,8 +604,12 @@ a.user:hover {color:white; background-color:#000080}
         } else {
           $bg_color = 'white';
         }
-        if (strpos($user_results[$i]['username'], 'user') === 0) $bg_color = '#FFFF80';
-        echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">&nbsp;<span style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . ", " . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></span>";
+        if (strpos($user_results[$i]['username'], 'user') === 0) {
+          $bg_color = '#FFFF80';
+          echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">&nbsp;<span style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . ", " . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\">" . str_replace('User','Temporary Account No. ',$user_results[$i]['surname']) . "</span>";
+        } else {
+          echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">&nbsp;<span style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . ", " . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></span>";
+        }
         if (isset($special_needs[$user_results[$i]['tmp_userID']]) and $special_needs[$user_results[$i]['tmp_userID']] == 'y') {
           echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="Special Needs" border="0" />';
         }
