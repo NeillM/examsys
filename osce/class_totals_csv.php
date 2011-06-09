@@ -26,7 +26,7 @@
   require 'class_totals.inc';
 
   header("Content-type: application/vnd.ms-excel");
-  header("Content-Disposition: attachment; filename=" . $_GET['paper'] . ".csv");
+  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".csv");
 
   echo "Title\tSurname\tFirst Names\tStudent ID\tCourse\tTotal\tClassification\tStart Date\tExaminer\n";
   for ($i=0; $i<$user_no; $i++) {
