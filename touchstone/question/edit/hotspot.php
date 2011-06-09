@@ -63,9 +63,9 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   <html>
   <head>
   <title>Image Hotspot Correction</title>
-  <link rel="stylesheet" href="../css/add_edit.css" type="text/css">
-  <script language="JavaScript" src="../javascript/ie_fix.js"></script>
-  <script language="JavaScript" src="../javascript/flash_include.js"></script>
+  <link rel="stylesheet" href="../../css/add_edit.css" type="text/css">
+  <script language="JavaScript" src="../../javascript/ie_fix.js"></script>
+  <script language="JavaScript" src="../../javascript/flash_include.js"></script>
   </head>
   <body>
   <form action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id']; ?>" method="post" name="correctform">
@@ -84,12 +84,11 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
 <br />
 <div align="center">
   <input type="hidden" name="paperID" value="<?php echo $_POST['paperID']; ?>" />
-  <input type="hidden" name="year" value="<?php echo $_POST['year']; ?>" />
   <input type="hidden" name="module" value="<?php echo $_POST['module']; ?>" />
   <input type="hidden" name="calling" value="<?php echo $_POST['calling']; ?>" />
   <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
   <input type="hidden" name="scrOfY" value="<?php echo $_POST['scrOfY']; ?>" />
-  <input type="hidden" name="points" value="<?php echo $points; ?>" />
+  <input type="hidden" name="points" value="<?php if (isset($points)) echo $points; ?>" />
   <input type="hidden" name="old_points" value="<?php echo $_POST['old_points']; ?>" />
   <input type="hidden" name="correctedpoints" value="" />
 <?php
@@ -107,17 +106,22 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   $result->close();
   $fix_data = substr($fix_data,1);
 ?>  
-    <script language="JavaScript">
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="hotspot" width="<?php echo ($_POST['tmp_media_width'] + 306); ?>" height="<?php echo ($_POST['tmp_media_height'] + 25); ?>" align="middle">');
-    write_string('<param name="allowScriptAccess" value="sameDomain" />');
+  <script language="JavaScript">
+    function swfLoaded1(message) {
+      var num = message.substring(5,message.length);
+      setUpFlash(num, message, '<?php echo $_POST['tmp_media']; ?>', '<?php echo $_POST['old_points']; ?>', '<?php echo $fix_data; ?>');
+    }
+    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($_POST['tmp_media_width'] + 306); ?>" height="<?php echo ($_POST['tmp_media_height'] + 25); ?>" align="middle">');
+    write_string('<param name="allowScriptAccess" value="always" />');
     write_string('<param name="movie" value="hotspot_correct.swf" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="#FFFFFF" />');
-    write_string('<param name="FlashVars" value="imageName=<?php echo $_POST['tmp_media']; ?>&config=<?php echo $_POST['points']; ?>&newStudentData=<?php echo $fix_data; ?>" />');
-    write_string('<embed src="hotspot_correct.swf" FlashVars="imageName=<?php echo $_POST['tmp_media']; ?>&config=<?php echo $_POST['points']; ?>&newStudentData=<?php echo $fix_data; ?>" quality="high" bgcolor="#FFFFFF" width="<?php echo ($_POST['tmp_media_width'] + 306); ?>" height="<?php echo ($_POST['tmp_media_height'] + 25); ?>" swLiveConnect=true id="hotspot" name="hotspot" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="hotspot_correct.swf" quality="high" bgcolor="#FFFFFF" width="<?php echo ($_POST['tmp_media_width'] + 306); ?>" height="<?php echo ($_POST['tmp_media_height'] + 25); ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
   </script>
+
   <br />
+  <input type="text" cols="80" rows="6" name="q1" id="q1" value="" />
   <br />
   <div>The green dots show students ansers which have now been marked as correct.<br />If you need to make further corrections please click 'OK' and then re-edit the question.</div>
   <br />
