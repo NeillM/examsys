@@ -182,7 +182,9 @@ function outputLoadTimes() {
     
     echo "<div id=\"debug_$id\" style=\"display:none\"><pre>"; 
       var_dump($query['stack']);
-      var_dump($query['sql']['INFO']);
+      if(isset($query['sql']['INFO'])) {
+        var_dump($query['sql']['INFO']);
+      }
     echo "</pre></div>";
     if (isset($query['sql']['error'])) echo "</div>";
     echo "</li>";
