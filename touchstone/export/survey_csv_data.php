@@ -24,151 +24,165 @@
 
 require '../include/staff_auth.inc';
   
-  // Capture the paper makeup.
-  $paper_buffer = array();
-  $question_no = 0;
+$paper_id = $_GET['paperID'];
+$rep_year = (empty($_GET['repyear'])) ? '%' : $_GET['repyear'];
+$rep_degree = (empty($_GET['repdegree'])) ? '%' : $_GET['repdegree'];
 
-  $old_q_id = 0;
-  $option_no = 0;
-  $query_string = "SELECT paper_title, q_id, q_type, screen, id_num, score_method FROM (properties, papers, questions, options) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=" . $_GET['paperID'] . " AND q_type!='info' AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num";
-  $paper_query = $mysqli->query($query_string,$link_id);
-  while ($row = $paper_query->fetch_assoc()) {
-    $paper = $row['paper_title'];
-    if ($old_q_id != $row['q_id']) {
-      if ($old_q_id > 0) {
-        $paper_buffer[$question_no]['ID'] = $old_q_id;
-        $paper_buffer[$question_no]['type'] = $old_q_type;
-        $paper_buffer[$question_no]['screen'] = $old_screen;
-        $paper_buffer[$question_no]['option_no'] = $option_no;
-        $paper_buffer[$question_no]['score_method'] = $old_score_method;
-        $question_no++;
-        $option_no = 0;
-      }
-    }
-    $old_q_id = $row['q_id'];
-    $old_q_type = $row['q_type'];
-    $old_screen = $row['screen'];
-    $old_score_method = $row['score_method'];
-    $option_no++;
-  }
-  $paper_buffer[$question_no]['ID'] = $old_q_id;
-  $paper_buffer[$question_no]['type'] = $old_q_type;
-  $paper_buffer[$question_no]['screen'] = $old_screen;
-  $paper_buffer[$question_no]['option_no'] = $option_no;
-  $paper_buffer[$question_no]['score_method'] = $old_score_method;
-  $question_no++;
+// Capture the paper makeup.
+$paper_buffer = array();
+$question_no = 0;
 
+$old_q_id = 0;
+$option_no = 0;
 
-  header('Content-type: application/octet-stream');
-  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".csv");
-
-  $user_no = 0;
-  $paper_string = $mysqli->query("SELECT COUNT(question) AS question_no FROM (papers, questions) WHERE papers.question=questions.q_id AND q_type!='info' AND paper=" . $_GET['paperID'],$link_id);
-  while ($row = $paper_string->fetch_assoc()) {
-    $number_of_questions = $row['question_no'];
-  }
-  $exclude = '';
-  if ($_GET['complete'] == 1) {
-    $paper_string = $mysqli->query("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper=" . $_GET['paperID'] . " AND started>=" . $_GET['startdate'] . " AND started<=" . $_GET['enddate'] . " GROUP BY username",$link_id);
-    while ($row = $paper_string->fetch_assoc()) {
-      if ($row['answer_no'] < $number_of_questions or $row['answer_no'] > $number_of_questions) {
-        $exclude .= ' AND log.userID != "' . $row['userID'] . '"';
-      }
+$stmt = $mysqli->prepare("SELECT paper_title, q_id, q_type, screen, id_num, score_method FROM (properties, papers, questions, options) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND q_type!='info' AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
+$stmt->bind_param('i', $paper_id);
+$stmt->execute();
+$stmt->bind_result($paper_title, $q_id, $q_type, $screen, $id_num, $score_method);
+while($stmt->fetch()) {
+  if ($old_q_id != $q_id) {
+    if ($old_q_id > 0) {
+      $paper_buffer[$question_no]['ID'] = $old_q_id;
+      $paper_buffer[$question_no]['type'] = $old_q_type;
+      $paper_buffer[$question_no]['screen'] = $old_screen;
+      $paper_buffer[$question_no]['option_no'] = $option_no;
+      $paper_buffer[$question_no]['score_method'] = $old_score_method;
+      $question_no++;
+      $option_no = 0;
     }
   }
+  $old_q_id = $q_id;
+  $old_q_type = $q_type;
+  $old_screen = $screen;
+  $old_score_method = $score_method;
+  $option_no++;
+}
+$stmt->close();
+$paper_buffer[$question_no]['ID'] = $old_q_id;
+$paper_buffer[$question_no]['type'] = $old_q_type;
+$paper_buffer[$question_no]['screen'] = $old_screen;
+$paper_buffer[$question_no]['option_no'] = $option_no;
+$paper_buffer[$question_no]['score_method'] = $old_score_method;
+$question_no++;
 
-  $log_array = array();
-  $hits = 0;
-  if($_GET['repdegree'] == 'Staff') {
-    $log_query = $mysqli->query("SELECT DISTINCT sid.student_id, username, title, surname, initials, grade, gender, log3.year, started, log3.q_id, user_answer, q_type, screen FROM (log3, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log3.q_id=questions.q_id AND q_paper=" . $_GET['paperID'] . " AND users.id=log3.userID AND users.roles LIKE 'Staff%' AND started>=" . $_GET['startdate'] . " AND started<=" . $_GET['enddate'],$link_id);
-  } else {
-    $log_query = $mysqli->query("SELECT DISTINCT sid.student_id, username, title, surname, initials, grade, gender, log3.year, started, log3.q_id, user_answer, q_type, screen FROM (log3, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log3.q_id=questions.q_id AND q_paper=" . $_GET['paperID'] . " AND log3.year LIKE '" . $_GET['repyear'] . "' AND users.id=log3.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE '" . $_GET['repdegree'] . "' AND started>=" . $_GET['startdate'] . " AND started<=" . $_GET['enddate'],$link_id);
+
+header('Content-type: application/octet-stream');
+header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
+
+$user_no = 0;
+
+$stmt = $mysqli->prepare("SELECT COUNT(question) AS number_of_questions FROM (papers, questions) WHERE papers.question=questions.q_id AND q_type!='info' AND paper=?");
+$stmt->bind_param('i', $paper_id);
+$stmt->execute();
+$stmt->bind_result($number_of_questions);
+$stmt->fetch();
+$stmt->close();
+
+
+$exclude = '';
+if ($_GET['complete'] == 1) {
+  $stmt = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper=? AND started>=? AND started<=? GROUP BY userID");
+  $stmt->bind_param('iss', $paper_id, $_GET['startdate'], $_GET['enddate']);
+  $stmt->execute();
+  $stmt->bind_result($userID, $answer_no);
+  while($stmt->fetch()) {
+    if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
+      $exclude .= " AND log3.userID != $userID";
+    }
   }
-  while ($row = $log_query->fetch_assoc()) {
-    $user_ID = $row['username'];
-    $question_ID = $row['q_id'];
-    $screen_no = $row['screen'];
-    $log_array[$user_ID][$screen_no][$question_ID] = $row['user_answer'];
-    $log_array[$user_ID]['student_id'] = $row['student_id'];
-    $log_array[$user_ID]['username'] = $user_ID;
-    $log_array[$user_ID]['degree'] = $row['grade'];
-    $log_array[$user_ID]['year'] = $row['year'];
-    $log_array[$user_ID]['started'] = $row['started'];
-    $log_array[$user_ID]['title'] = $row['title'];
-    $log_array[$user_ID]['surname'] = $row['surname'];
-    $log_array[$user_ID]['initials'] = $row['initials'];
-    $log_array[$user_ID]['gender'] = $row['gender'];
-    $user_no++;
-  }
+  $stmt->close();
+}
+
+$log_array = array();
+$hits = 0;
+$stmt = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, title, surname, initials, grade, gender, log_metadata.year, log3.started, log3.q_id, user_answer, q_type, screen FROM (log3, questions, users, log_metadata) LEFT JOIN sid ON users.id=sid.userID WHERE log3.userID = log_metadata.userID AND log3.q_paper = log_metadata.paperID AND log3.started = log_metadata.started AND log3.q_id=questions.q_id AND q_paper=? AND log_metadata.year LIKE ? AND users.id=log3.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND log3.started>=? AND log3.started<=?");
+$stmt->bind_param('issss', $paper_id, $rep_year, $rep_degree, $_GET['startdate'], $_GET['enddate']);
+$stmt->execute();
+$stmt->bind_result($student_id, $username, $title, $surname, $initials, $grade, $gender, $year, $started, $q_id, $user_answer, $q_type, $screen);
+while($stmt->fetch()) {
+  $log_array[$username][$screen][$q_id] = $user_answer;
+  $log_array[$username]['student_id'] = $student_id;
+  $log_array[$username]['username'] = $username;
+  $log_array[$username]['degree'] = $grade;
+  $log_array[$username]['year'] = $year;
+  $log_array[$username]['started'] = $started;
+  $log_array[$username]['title'] = $title;
+  $log_array[$username]['surname'] = $surname;
+  $log_array[$username]['initials'] = $initials;
+  $log_array[$username]['gender'] = $gender;
+  $user_no++;
+}
+$stmt->close();
   
-  $row_written = 0;
-  foreach ($log_array as $individual) {
-    $tmp_user_ID = $individual['username'];
-    // Write out the headings.
-    if ($row_written == 0) {
-      // Only output personal data if assessment, do not show if survey.
-      echo 'Gender,Student ID,Degree,Year,Submitted,';
-      for ($i=0; $i<$question_no; $i++) {
-        $tmp_question_ID = $paper_buffer[$i]['ID'];
-        $tmp_screen = $paper_buffer[$i]['screen'];
-        if ($i>0) echo ',';
-        switch ($paper_buffer[$i]['type']) {
-          case 'blank':
-            $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|');
-            for ($sec=1; $sec<=$sections; $sec++) {
-              if ($sec > 1) echo ',';
-              echo 'Q' . ($i+1) . '.' . $sec;
-            }
-            break;
-          case 'extmatch':
-            $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|') + 1;
-            for ($sec=1; $sec<=$sections; $sec++) {
-              if ($sec > 1) echo ',';
-              echo 'Q' . ($i+1) . '.' . $sec;
-            }
-            break;
-          case 'matrix':
-            $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|');
-            for ($sec=1; $sec<=$sections; $sec++) {
-              if ($sec > 1) echo ',';
-              echo 'Q' . ($i+1) . '.' . $sec;
-            }
-            break;
-          case 'rank':
-            $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],',');
-            for ($sec=1; $sec<=$sections; $sec++) {
-              if ($sec > 1) echo ',';
-              echo 'Q' . ($i+1) . '.' . $sec;
-            }
-            break;
-          case 'dichotomous':
-            $sections = strlen($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
-            for ($sec=1; $sec<=$sections; $sec++) {
-              if ($sec > 1) echo ',';
-              echo 'Q' . ($i+1) . '.' . $sec;
-            }
-            break;
-          case 'mrq':
-            $sections = $paper_buffer[$i]['option_no'];
-            for ($sec=1; $sec<=$sections; $sec++) {
-              if ($sec > 1) echo ',';
-              echo 'Q' . ($i+1) . '.' . $sec;
-            }
-            if ($paper_buffer[$i]['score_method'] == 'other') echo ',Q' . ($i+1) . '.' . $sec;
-            break;
-          default:
-            echo 'Q' . ($i+1);
-            break;
-        }
-      }
-      echo "\n";
-    }
-    // Write out the raw data.
-    echo $individual['gender'] . ',' . $individual['student_id'] . ',' . $individual['degree'] . ',' . $individual['year'] . ',' . $individual['started'] . ',';
+$row_written = 0;
+foreach ($log_array as $individual) {
+  $tmp_user_ID = $individual['username'];
+  // Write out the headings.
+  if ($row_written == 0) {
+    // Only output personal data if assessment, do not show if survey.
+    echo 'Gender,Student ID,Degree,Year,Submitted,';
     for ($i=0; $i<$question_no; $i++) {
       $tmp_question_ID = $paper_buffer[$i]['ID'];
       $tmp_screen = $paper_buffer[$i]['screen'];
       if ($i>0) echo ',';
+      switch ($paper_buffer[$i]['type']) {
+        case 'blank':
+          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|');
+          for ($sec=1; $sec<=$sections; $sec++) {
+            if ($sec > 1) echo ',';
+            echo 'Q' . ($i+1) . '.' . $sec;
+          }
+          break;
+        case 'extmatch':
+          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|') + 1;
+          for ($sec=1; $sec<=$sections; $sec++) {
+            if ($sec > 1) echo ',';
+            echo 'Q' . ($i+1) . '.' . $sec;
+          }
+          break;
+        case 'matrix':
+          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|');
+          for ($sec=1; $sec<=$sections; $sec++) {
+            if ($sec > 1) echo ',';
+            echo 'Q' . ($i+1) . '.' . $sec;
+          }
+          break;
+        case 'rank':
+          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],',');
+          for ($sec=1; $sec<=$sections; $sec++) {
+            if ($sec > 1) echo ',';
+            echo 'Q' . ($i+1) . '.' . $sec;
+          }
+          break;
+        case 'dichotomous':
+          $sections = strlen($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
+          for ($sec=1; $sec<=$sections; $sec++) {
+            if ($sec > 1) echo ',';
+            echo 'Q' . ($i+1) . '.' . $sec;
+          }
+          break;
+        case 'mrq':
+          $sections = $paper_buffer[$i]['option_no'];
+          for ($sec=1; $sec<=$sections; $sec++) {
+            if ($sec > 1) echo ',';
+            echo 'Q' . ($i+1) . '.' . $sec;
+          }
+          if ($paper_buffer[$i]['score_method'] == 'other') echo ',Q' . ($i+1) . '.' . $sec;
+          break;
+        default:
+          echo 'Q' . ($i+1);
+          break;
+      }
+    }
+    echo "\n";
+  }
+  // Write out the raw data.
+  echo $individual['gender'] . ',' . $individual['student_id'] . ',' . $individual['degree'] . ',' . $individual['year'] . ',' . $individual['started'] . ',';
+  for ($i=0; $i<$question_no; $i++) {
+    $tmp_question_ID = $paper_buffer[$i]['ID'];
+    $tmp_screen = $paper_buffer[$i]['screen'];
+    if ($i>0) echo ',';
+    if(isset($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID])) {
       switch ($paper_buffer[$i]['type']) {
         case 'blank':
           $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID];
@@ -222,8 +236,9 @@ require '../include/staff_auth.inc';
           break;
       }
     }
-    echo "\n";
-    $row_written++;
   }
-  $mysqli->close();
+  echo "\n";
+  $row_written++;
+}
+$mysqli->close();
 ?>
