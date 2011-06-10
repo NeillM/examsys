@@ -88,7 +88,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
 <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
   <tr height="70" style="background-color:#DFECFF">
     <td width="600">
-      <img style="position:absolute; left:8px; top:2px;" src="../artwork/edit_question.png" width="64" height="64" alt="Edit Logo" />
+      <img style="position:absolute; left:8px; top:2px;" src="../../artwork/edit_question.png" width="64" height="64" alt="Edit Logo" />
       <span style="position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt">Corrected&nbsp;Answers</span>
       <span style="position:absolute; left:80px; top:40px; font-family:Arial,sans-serif; font-size:12pt; font-weight:bold">(Image Hotspot)</span>
     </td>
@@ -120,7 +120,6 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
       $tmp_user_answer = '';
       $layers = explode('|',$user_answer);
       foreach ($layers as $layer) {
-        //echo "Layer=$layer<br />";
         $sub_parts = explode(',',$layer);
         if ($tmp_user_answer == '') {
           $tmp_user_answer = $sub_parts[1] . ',' . $sub_parts[2];
@@ -137,7 +136,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   <script language="JavaScript">
     function swfLoaded1(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $_POST['tmp_media']; ?>', '<?php echo $_POST['q1']; ?>', '<?php echo $fix_data; ?>');
+      setUpFlash(num, message, '<?php echo $_POST['tmp_media']; ?>', '<?php echo trim($_POST['q1']); ?>', '<?php echo $fix_data; ?>');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($_POST['tmp_media_width'] + 306); ?>" height="<?php echo ($_POST['tmp_media_height'] + 25); ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
@@ -149,7 +148,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   </script>
 
   <br />
-  <input type="text" cols="800" rows="6" name="q1" id="q1" value="" />
+  <input type="hidden" name="q1" id="q1" value="" />
   <br />
   <div>The green dots show students ansers which have now been marked as correct.<br />If you need to make further corrections please click 'OK' and then re-edit the question.</div>
   <br />
