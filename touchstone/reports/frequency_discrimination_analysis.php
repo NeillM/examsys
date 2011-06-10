@@ -676,7 +676,7 @@
           <script language="JavaScript">
       			function swfLoaded<?php echo $q_no; ?>(message) {
       				var num = message.substring(5,message.length);
-      				setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '','0');
+      				setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '<?php echo $freq_log[$q_id][1]['coords']; ?>','0');
       			}
       			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 300); ?>" height="<?php echo ($q_media_height + 2); ?>" align="middle">');
       			write_string('<param name="allowScriptAccess" value="always" />');
