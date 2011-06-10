@@ -692,7 +692,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   <script language="JavaScript">
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $options[0]['q_media']; ?>', '<?php echo $options[0]['correct']; ?>', '');
+      setUpFlash(num, message, '<?php echo $options[0]['q_media']; ?>', '<?php echo trim($options[0]['correct']); ?>', '');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 300); ?>" height="<?php echo ($options[0]['q_media_height'] + 2); ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
@@ -732,7 +732,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
 ?> 
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $options[0]['q_media']; ?>', '<?php echo $options[0]['correct']; ?>', '','');
+        setUpFlash(num, message, '<?php echo $options[0]['q_media']; ?>', '<?php echo trim($options[0]['correct']); ?>', '','');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($options[0]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');

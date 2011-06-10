@@ -1828,7 +1828,7 @@ table {font-size:100%}
 		<script language="JavaScript">
 			function swfLoaded<?php echo $question_no; ?>(message) {
 				var num = message.substring(5,message.length);
-				setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>','0');
+				setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','0');
 			}
 			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 300); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 2); ?>" align="middle">');
 			write_string('<param name="allowScriptAccess" value="always" />');
@@ -1846,7 +1846,7 @@ table {font-size:100%}
     <script language="JavaScript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>');
+        setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 300); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 2); ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
@@ -1954,7 +1954,7 @@ table {font-size:100%}
 ?> 
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>','');
+        setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
@@ -1985,7 +1985,7 @@ table {font-size:100%}
 ?> 
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>','<?php echo $tmp_std; ?>');
+      setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $tmp_std; ?>');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');

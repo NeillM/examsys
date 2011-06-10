@@ -214,7 +214,7 @@ while ($row = $result->fetch()) {
     <script language="JavaScript">
       function swfLoaded1(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $q_media; ?>','<?php echo str_replace('"','&#034;',str_replace("'",'&#039;',str_replace('¬','&#172;',$correct))); ?>');
+        setUpFlash(num, message, '<?php echo $q_media; ?>','<?php echo trim(str_replace('"','&#034;',str_replace("'",'&#039;',str_replace('¬','&#172;',$correct)))); ?>');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($q_media_width + 220); ?>" height="<?php echo ($tmp_height + 25); ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
