@@ -690,8 +690,10 @@
           <?php
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,1);
           $tmp_correct_no = (isset($freq_log[$q_id][1][1])) ? $freq_log[$q_id][1][1] : 0;
+          $tmp_top_no = (isset($top_log[$q_id][1][1])) ? $top_log[$q_id][1][1] : 0;
+          $tmp_bottom_no = (isset($bottom_log[$q_id][1][1])) ? $bottom_log[$q_id][1][1] : 0;
           echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
-          echo "<tr style=\"font-weight:bold\"><td class=\"figures\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td class=\"figures\">u=" . number_format(($top_log[$q_id][1][1]/$candidate_no)*100,0) . "%</td><td class=\"figures\">l=" . number_format(($bottom_log[$q_id][1][1]/$candidate_no)*100,0) . "%</td></tr>\n";
+          echo "<tr style=\"font-weight:bold\"><td class=\"figures\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td class=\"figures\">u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td class=\"figures\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td></tr>\n";
           echo "<tr><td>" . pStats($tmp_correct_no/$user_total) . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'mcq':
