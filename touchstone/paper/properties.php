@@ -663,7 +663,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<tr><td align=\"right\" valign=\"top\">";
      if ($paper_type != '4') echo 'Feedback&nbsp';
      echo "</td><td colspan=\"3\">";
-     if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
+     if (in_array($paper_type, array('0', '1', '2', '5'))) {
        $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=?");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
