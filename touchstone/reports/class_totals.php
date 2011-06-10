@@ -209,7 +209,7 @@ a.user:hover {color:white; background-color:#000080}
       alert("Only temporary accounts may be reassigned.");
       return false;
     } else {
-      reassign = window.open("check_reassign_script.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&started=" + document.getElementById('started').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      reassign = window.open("check_reassign_script.php?userID=" + document.getElementById('userID').value + "&paperID=<?php echo $paperID; ?>&started=" + document.getElementById('started').value + "&log_type=" + document.getElementById('log_type').value + "","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         reassign.focus();
       }

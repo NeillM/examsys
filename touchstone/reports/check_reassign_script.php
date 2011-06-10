@@ -22,14 +22,56 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require '../classes/dateutils.class.php';
+
+function getModules($userID, $mysqlidb) {
+  $modules = array();
+  $session = DateUtils::get_current_academic_year();
+
+  $result = $mysqlidb->prepare("SELECT moduleid FROM student_modules WHERE calendar_year=? AND userID=?");
+  $result->bind_param('si', $session, $userID);
+  $result->execute();
+  $result->bind_result($moduleid);
+  while ($result->fetch()) {
+    $modules[] = $moduleid;
+  }
+  $result->close();
+  
+  return $modules;
+}
+
+// Get all the details from 'temp_users' for given userID.
+$result = $mysqli->prepare("SELECT temp_users.id, temp_users.title, temp_users.first_names, temp_users.surname, student_id, assigned_account, username FROM users, temp_users WHERE users.id=? AND users.username=temp_users.assigned_account");
+$result->bind_param('i', $_GET['userID']);
+$result->execute();
+$result->bind_result($temp_account_id, $temp_title, $temp_first_names, $temp_surname, $temp_student_id, $assigned_account, $temp_username);
+$result->fetch();
+$result->close();
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <title>Reassign Script to User</title>
 <style>
-body {background-color:#EEEEEE; color:black; font-family:Arial,sans-serif; margin:0px}
+body {background-color:white; color:black; font-family:Arial,sans-serif; margin:0px}
 </style>
+
+<script language="JavaScript">
+  function doReassign(targetID) {
+    window.location = "do_reassign_script.php?paperID=<?php echo $_GET['paperID']; ?>&temp_userID=<?php echo $_GET['userID']; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
+  }
+  
+  function lon(lineID) {
+    document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+    document.getElementById(lineID).style.border = '1px solid red';
+  }
+  
+  function loff(lineID) {
+    document.getElementById(lineID).style.backgroundColor = '';
+    document.getElementById(lineID).style.border = '1px solid white';
+  }
+</script>
 </head>
 
 <body>
@@ -47,122 +89,81 @@ if (time() < $end_date) {
   exit;
 }
 
+$target_userID = '';
 
-$temp_userID = '';
 
-if (isset($_POST['submit'])) {
-  $result = $mysqli->prepare("SELECT userID FROM sid WHERE student_id=?");
-  $result->bind_param('s', $_POST['student_id']);
+$target_student = array();
+
+// Look up the temporary information in 'users'.
+if ($temp_student_id != '') {
+  // Try student number lookup.
+  $result = $mysqli->prepare("SELECT id, surname, first_names, title, gender FROM users, sid WHERE users.id=sid.userID AND student_id=?");
+  $result->bind_param('i', $temp_student_id);
   $result->execute();
-  $result->bind_result($temp_userID);
-  $result->fetch();
+  $result->store_result();
+  $result->bind_result($target_userID, $target_surname, $target_first_names, $target_title, $gender);
+  while ($result->fetch()) {
+    $target_student[$target_userID]['surname'] = $target_surname;
+    $target_student[$target_userID]['first_names'] = $target_first_names;
+    $target_student[$target_userID]['title'] = $target_title;
+    $target_student[$target_userID]['gender'] = $gender;
+    $target_student[$target_userID]['student_id'] = $temp_student_id;
+    $target_student[$target_userID]['modules'] = getModules($target_userID, $mysqli);
+  }
   $result->close();
-
-  // Get details of the temporary user.
-  $result = $mysqli->prepare("SELECT username FROM users WHERE id=?");
-  $result->bind_param('i', $_POST['temp_userID']);
+}
+if ($target_userID == '') {
+  // If no student number try the other details.
+  $first_names = trim($temp_first_names) . '%';
+  $temp_surname = trim($temp_surname);
+  $temp_title = trim($temp_title);
+  $result = $mysqli->prepare("SELECT id, surname, first_names, title, gender, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE surname=? AND first_names LIKE ? AND (roles LIKE '%staff%' OR roles = 'student')");
+  $result->bind_param('ss', $temp_surname, $first_names);
   $result->execute();
-  $result->bind_result($temporay_user_username);
-  $result->fetch();
+  $result->store_result();
+  $result->bind_result($target_userID, $target_surname, $target_first_names, $target_title, $gender, $student_id);
+  while ($result->fetch()) {
+    $target_student[$target_userID]['surname'] = $target_surname;
+    $target_student[$target_userID]['first_names'] = $target_first_names;
+    $target_student[$target_userID]['title'] = $target_title;
+    $target_student[$target_userID]['gender'] = $gender;
+    $target_student[$target_userID]['student_id'] = $student_id;
+    $target_student[$target_userID]['modules'] = getModules($target_userID, $mysqli);
+  }
   $result->close();
-} else {
-  // Get all the details from 'temp_users' for given userID.
-  $result = $mysqli->prepare("SELECT temp_users.id, temp_users.title, temp_users.first_names, temp_users.surname, student_id, assigned_account FROM users, temp_users WHERE users.id=? AND users.username=temp_users.assigned_account");
-  $result->bind_param('i', $_GET['userID']);
-  $result->execute();
-  $result->bind_result($temp_account_id, $temp_title, $temp_first_names, $temp_surname, $temp_student_id, $assigned_account);
-  $result->fetch();
-  $result->close();
-
-  // Look up the temporary information in 'users'.
-  if ($temp_student_id != '') {
-    // Try student number lookup.
-    $result = $mysqli->prepare("SELECT userID FROM sid WHERE student_id=?");
-    $result->bind_param('i', $temp_student_id);
-    $result->execute();
-    $result->bind_result($temp_userID);
-    $result->fetch();
-    $result->close();
-  }
-  if ($temp_userID == '') {
-    // If no student number try the other details.
-    $first_names = trim($temp_first_names) . '%';
-	$temp_surname = trim($temp_surname);
-	$temp_title = trim($temp_title);
-    $result = $mysqli->prepare("SELECT id FROM users WHERE surname=? AND first_names LIKE ? AND title=?");
-    $result->bind_param('sss', $temp_surname, $first_names, $temp_title);
-    $result->execute();
-    $result->bind_result($temp_userID);
-    $result->fetch();
-    $result->close();
-  }
-
-  if ($temp_userID != '') {
-    // Get details of the temporary user.
-    $result = $mysqli->prepare("SELECT username FROM users WHERE id=?");
-    $result->bind_param('i', $temp_userID);
-    $result->execute();
-    $result->bind_result($temporay_user_username);
-    $result->fetch();
-    $result->close();
-  }
 }
 
-if ($temp_userID != '') {
-  echo "<form name=\"myform\" method=\"post\" action=\"do_reassign_script.php\">\n";
+echo "<p style=\"color:#0033BC\">$temp_username was reserved with the following details:</p>\n<table border=\"0\" style=\"width:100%\">\n";
+if ($temp_student_id == '') $temp_student_id = '<span style="color:#808080">&lt;unset&gt;</span>';
+echo "<tr><td>$temp_title</td><td>$temp_surname</td><td>$temp_first_names</td><td>$temp_student_id</td></tr>\n";
+echo "</table>\n<br />\n";
 
-  // Look up the user you wish to reassign to.
-  $result = $mysqli->prepare("SELECT username, title, surname, first_names, email, grade FROM users WHERE id=?");
-  $result->bind_param('i', $temp_userID);
-  $result->execute();
-  $result->bind_result($username, $title, $surname, $first_names, $email, $grade);
-  $result->fetch();
-  $result->close();
-
-  echo "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%; font-size:100%\">\n";
-
-  $student_photo =  $cfg_web_root . 'touchstone/users/photos/' . $username . '.jpg';
-  if (file_exists($student_photo)) {
-    echo "<tr style=\"background-color:white\"><td valign=\"top\" rowspan=\"3\" width=\"70\" style=\"background-color:white\"><img src=\"../users/photos/$username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td>";
-  } else {
-    echo "<tr style=\"background-color:white\"><td valign=\"top\" rowspan=\"3\" width=\"70\" style=\"background-color:white\"><img style=\"position:relative; top:10px; left:5px\" src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td>";
-  }
-  if ($username == '') {
-    echo "<td style=\"background-color:white\">&nbsp;</td><td style=\"color:#C00000; background-color:white; vertical-align:top\"><br /><strong>Warning:</strong> student ID " . trim($_GET['student_id']) .  " not found.<br /><br /></td></tr>";
-    echo "<tr><td style=\"background-color:white\" colspan=\"3\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"3\" style=\"text-align:center; padding-top:10px\"><input type=\"button\" name=\"back\" value=\"&lt; Back\" style=\"width:100px\" onclick=\"history.back();\" /></td></tr>\n";
-  } else {
-    echo "<td style=\"background-color:white\">&nbsp;</td><td style=\"background-color:white; vertical-align:top\"><br />";
-    if (isset($_POST['student_id'])) echo trim($_POST['student_id']);
-    echo "<span style=\"font-size:120%; font-weight:bold\">$title $surname, <span style=\"color:#C0C0C0\">$first_names</span></span><br /><a href=\"mailto:$email\">$email</a></td></tr>\n";
-    echo "<tr><td colspan=\"3\" style=\"background-color:white\">&nbsp;</td></tr>\n";
-    echo "<tr><td style=\"background-color:white\">&nbsp;</td><td style=\"background-color:white; vertical-align:bottom; text-align:justify; padding-right:4px; padding-bottom:6px; font-size:90%\">Reassign <strong>$assigned_account</strong> to the student detailed above. Please ensure that these details are correct and this is your intention.</td></tr>\n";
-    echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"3\" style=\"text-align:center\"><input type=\"submit\" name=\"ok\" value=\"OK\" style=\"width:100px\" />&nbsp;&nbsp;<input type=\"submit\" name=\"cancel\" value=\"Cancel\" style=\"width:100px\" /></td></tr>\n";
-  }
-  if (isset($_GET['userID'])) {
-    echo "</table>\n<input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />\n<input type=\"hidden\" name=\"temp_userID\" value=\"" . $_GET['userID'] . "\" />\n<input type=\"hidden\" name=\"userID\" value=\"$temp_userID\" />\n<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n<input type=\"hidden\" name=\"started\" value=\"" . $_GET['started'] . "\" />\n<input type=\"hidden\" name=\"assigned_account\" value=\"$assigned_account\" />\n<input type=\"hidden\" name=\"grade\" value=\"$grade\" />\n</form>\n";
-  } else {
-    echo "</table>\n<input type=\"hidden\" name=\"log_type\" value=\"" . $_POST['log_type'] . "\" />\n<input type=\"hidden\" name=\"temp_userID\" value=\"" . $_POST['temp_userID'] . "\" />\n<input type=\"hidden\" name=\"userID\" value=\"$temp_userID\" />\n<input type=\"hidden\" name=\"paperID\" value=\"" . $_POST['paperID'] . "\" />\n<input type=\"hidden\" name=\"started\" value=\"" . $_POST['started'] . "\" />\n<input type=\"hidden\" name=\"assigned_account\" value=\"$assigned_account\" />\n<input type=\"hidden\" name=\"grade\" value=\"$grade\" />\n</form>\n";
-  }
+if (count($target_student) == 0) {
+  echo "<div>No user found matching above details.</div>\n";
 } else {
-?>
-
-<form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-
-<div style="margin-top:10px; margin-left:5px">Student ID: 
-<input type="text" name="student_id" size="20" />
-<input type="submit" name="submit" value="Find" style="width:80px" />
-<input type="hidden" name="temp_userID" value="<?php echo $_GET['userID']; ?>" />
-<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
-<input type="hidden" name="log_type" value="<?php echo $_GET['log_type']; ?>" />
-<input type="hidden" name="started" value="<?php echo $_GET['started']; ?>" />
-</div>
-
-</form>
-<?php
+  //echo "<div>" . DateUtils::get_current_academic_year() . "</div>";
+  echo "<p style=\"color:#0033BC\">Reassign answers/marks from $temp_username to following user:</p>\n<div style=\"height:320px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
+  foreach ($target_student as $individualID=>$individual) {
+    if ($individual['title'] == 'Mr') {
+      $user_icon = 'user_male_64.png';
+    } elseif ($individual['title'] == 'Dr') {
+      if ($individual['gender'] == 'female') {
+        $user_icon = 'user_female_64.png';
+      } else {
+        $user_icon = 'user_male_64.png';
+      }
+    } else {
+      $user_icon = 'user_female_64.png';
+    }
+    echo "<div style=\"border:1px solid white\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><img src=\"../artwork/$user_icon\" width=\"64\" height=\"64\" alt=\"user\" border=\"0\" align=\"left\" />" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
+    echo implode(',',$individual['modules']);
+    echo "<br clear=\"all\" /><br /></div>";
+  }
+  echo "</div>\n";
 }
 ?>
+<br />
+<div style="text-align:center"><input type="button" name="cancel" value="Cancel" onclick="window.close()" style="width:100px" /></div>
 
 </body>
 </html>

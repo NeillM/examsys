@@ -32,8 +32,7 @@ Class DateUtils {
 	 * Get the current academic year in the format 'yyyy/yy', e.g. '2010/11'
 	 * @return string
 	 */
-	static function get_current_academic_year()
-	{
+	static function get_current_academic_year()	{
 		return DateUtils::get_academic_year(date('Y/m/d'));
 	}
 	

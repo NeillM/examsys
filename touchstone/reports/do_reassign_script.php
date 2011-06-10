@@ -22,45 +22,69 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
 
-  if ($_POST['ok']) {
-    // Record the change in 'track_changes'.
-    $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Exam Script',?,?,?,?,NOW(),'Reassigned temporary user')");
-    $result->bind_param('isss', $_POST['paperID'], $userID, $_POST['temp_userID'], $_POST['userID']);
-    $result->execute();
-    $result->close();
+echo "Hi";
+exit;
   
-    // Transfer records in logX.
-    $result = $mysqli->prepare("UPDATE log" . $_POST['log_type'] . " SET userID=? WHERE userID=? AND q_paper=? AND started=?");
-    $result->bind_param('iiis', $_POST['userID'], $_POST['temp_userID'], $_POST['paperID'], $_POST['started']);
-    $result->execute();
-    $result->close();
+check_var('paperID', 'GET', true, false); 
+check_var('userID', 'GET', true, false); 
+check_var('temp_userID', 'GET', true, false); 
 
-    // Transfer records in log_metadata.
-    $result = $mysqli->prepare("UPDATE log_metadata SET userID=?, student_grade=?, year=? WHERE userID=? AND paperID=? AND started=?");
-    $result->bind_param('issiis', $_POST['userID'], $_POST['grade'], $_POST['year'], $_POST['temp_userID'], $_POST['paperID'], $_POST['started']);
-    $result->execute();
-    $result->close();
+// Get start time of the paper.
+$result = $mysqli->prepare("SELECT started FROM log2 WHERE userID=? AND q_paper=?");
+$result->bind_param('ii', $_GET['temp_userID'], $_GET['paperID']);
+$result->execute();
+$result->bind_result($started);
+$result->fetch();
+$result->close();
 
-    // Transfer textbox marking (just in case marking done before marks reasignment).
-    $result = $mysqli->prepare("UPDATE textbox_marking SET student_userID=? WHERE student_userID=? AND paperID=?");
-    $result->bind_param('iii', $_POST['userID'], $_POST['temp_userID'], $_POST['paperID']);
-    $result->execute();
-    $result->close();
+// Get grade and student of the user.
+$result = $mysqli->prepare("SELECT grade, yearofstudy, username FROM users WHERE id=?");
+$result->bind_param('i', $_GET['userID']);
+$result->execute();
+$result->bind_result($grade, $yearofstudy, $new_username);
+$result->fetch();
+$result->close();
 
-    // Transfer any student notes.
-    $result = $mysqli->prepare("UPDATE student_notes SET userID=? WHERE userID=? AND paper_id=?");
-    $result->bind_param('iii', $_POST['userID'], $_POST['temp_userID'], $_POST['paperID']);
-    $result->execute();
-    $result->close();
-    
-    // Free up the temporary account.
-    $result = $mysqli->prepare("DELETE FROM temp_users WHERE assigned_account=?");
-    $result->bind_param('s', $_POST['assigned_account']);
-    $result->execute();
-    $result->close();
-  }
+// Record the change in 'track_changes'.
+$result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Exam Script',?,?,?,?,NOW(),'Reassigned temporary user')");
+$result->bind_param('isss', $_GET['paperID'], $_GET['userID'], $_GET['temp_userID'], $new_username);
+$result->execute();
+$result->close();
+
+// Transfer records in logX.
+$result = $mysqli->prepare("UPDATE log2 SET userID=? WHERE userID=? AND q_paper=? AND started=?");
+$result->bind_param('iiis', $_GET['userID'], $_GET['temp_userID'], $_GET['paperID'], $started);
+$result->execute();
+$result->close();
+
+
+// Transfer records in log_metadata.
+$result = $mysqli->prepare("UPDATE log_metadata SET userID=?, student_grade=?, year=? WHERE userID=? AND paperID=? AND started=?");
+$result->bind_param('issiis', $_GET['userID'], $grade, $yearofstudy, $_GET['temp_userID'], $_GET['paperID'], $started);
+$result->execute();
+$result->close();
+
+// Transfer textbox marking (just in case marking done before marks reasignment).
+$result = $mysqli->prepare("UPDATE textbox_marking SET student_userID=? WHERE student_userID=? AND paperID=?");
+$result->bind_param('iii', $_GET['userID'], $_GET['temp_userID'], $_GET['paperID']);
+$result->execute();
+$result->close();
+
+// Transfer any student notes.
+$result = $mysqli->prepare("UPDATE student_notes SET userID=? WHERE userID=? AND paper_id=?");
+$result->bind_param('iii', $_GET['userID'], $_GET['temp_userID'], $_GET['paperID']);
+$result->execute();
+$result->close();
+
+// Free up the temporary account.
+$result = $mysqli->prepare("DELETE FROM temp_users WHERE assigned_account=?");
+$result->bind_param('s', $_GET['assigned_account']);
+$result->execute();
+$result->close();
+
 ?>
 <html>
 <head>
