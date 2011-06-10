@@ -446,6 +446,7 @@
     global $user_no, $ex_no, $d_no, $d_total, $excluded, $user_total;
     if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
     echo "<tr>\n";
+    $tmp_std_array = (!empty($std)) ? explode(',',$std) : array();
     if ($q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'textbox') {
       if ($q_type == 'info') {
         echo "<td colspan=\"2\" style=\"padding-left:15px\">$leadin\n";
@@ -468,7 +469,6 @@
       }
       switch ($q_type) {
         case 'blank':
-          $tmp_std_array = explode(',',$std);
           $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$options[0]);
           $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|","",$options[0]);
           $blank_details = array();
@@ -487,7 +487,8 @@
               } else {
                 $tmp_exclude = '';
               }
-              echo ' ' . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . '<strong>' . $tmp_std_array[$blank_count-1] . '</strong>';
+              $std_html = (isset($tmp_std_array[$blank_count-1])) ? '<strong>' . $tmp_std_array[$blank_count-1] . '</strong>' : '';
+              echo ' ' . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . $std_html;
               
               echo '<span id="q_' . ($ex_no) . '_1" style="border:1px solid #6593CF; background-color:#EBF3FF';
               if (isset($excluded[$q_id]) and substr($excluded[$q_id],$blank_count-1,1) == '1') echo '; color:red; text-decoration:line-through';
@@ -556,7 +557,6 @@
           break;
         case 'dichotomous':
           $i = 0;
-          $tmp_std_array = explode(',',$std);
           $std_part = 0;
           foreach ($options as $individual_option) {
             $i++;
@@ -591,7 +591,6 @@
           }
           break;
         case 'labelling':
-          $tmp_std_array = explode(',',$std);
           $std_part = 0;
 
           $tmp_labels = 0;
@@ -618,13 +617,16 @@
 ?>
     <div align="center">
     <script language="JavaScript">
-      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="<?php echo $q_media_width + 255; ?>" height="<?php echo $tmp_height; ?>" id="label_answer" align="middle">');
-      write_string('<param name="allowScriptAccess" value="sameDomain" />');
-      write_string('<param name="movie" value="label_analysis.swf" />');
+      function swfLoaded<?php echo $q_no; ?>(message) {
+        var num = message.substring(5,message.length);
+        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo $correct; ?>', '','');
+      }
+      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
+      write_string('<param name="allowScriptAccess" value="always" />');
+      write_string('<param name="movie" value="/touchstone/reports/label_analysis.swf" />');
       write_string('<param name="quality" value="high" />');
       write_string('<param name="bgcolor" value="#ffffff" />');
-      write_string('<param name="FlashVars" value="imageName=<?php echo $q_media; ?>&labels=<?php echo str_replace("'",'&#039;',$correct); ?>" />');
-      write_string('<embed src="label_analysis.swf" FlashVars="imageName=<?php echo $q_media; ?>&labels=<?php echo str_replace("'",'&#039;',$correct); ?>" quality="high" bgcolor="#ffffff" width="<?php echo $q_media_width + 255; ?>" height="<?php echo $tmp_height; ?>" name="label_answer" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />');
+      write_string('<embed src="/touchstone/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
     </script>
     </div>
@@ -672,24 +674,24 @@
           ?>
           <div align="center">
           <script language="JavaScript">
-
-            addLoadEvent(setUpFlash, '<?php echo $q_no; ?>', 'hotspot<?php echo $q_no; ?>', '<?php echo $q_media; ?>', '<?php echo $correct; ?>', '<?php echo $freq_log[$q_id][1]['coords']; ?>');
-
-            write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="hotspot<?php echo $q_no; ?>" width="<?php echo $tmp_width + 301; ?>" height="<?php echo ($q_media_height + 25); ?>" align="middle">');
-            write_string('<param name="allowScriptAccess" value="always" />');
-            write_string('<param name="quality" value="high" />');
-            write_string('<param name="movie" value="hotspot_analysis.swf" /><param name="quality" value="high" />');
-            write_string('<param name="bgcolor" value="#ffffff" />');
-            write_string('<embed src="hotspot_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo $tmp_width + 301; ?>" height="<?php echo ($q_media_height + 25); ?>" name="hotspot_analysis<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />');
-
-            write_string('</object>');
+      			function swfLoaded<?php echo $q_no; ?>(message) {
+      				var num = message.substring(5,message.length);
+      				setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '','0');
+      			}
+      			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 300); ?>" height="<?php echo ($q_media_height + 2); ?>" align="middle">');
+      			write_string('<param name="allowScriptAccess" value="always" />');
+      			write_string('<param name="movie" value="/touchstone/reports/hotspot_analysis.swf" />');
+      			write_string('<param name="quality" value="high" />');
+      			write_string('<param name="bgcolor" value="#ffffff" />');
+      			write_string('<embed src="/touchstone/reports/hotspot_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 300); ?>" height="<?php echo ($q_media_height + 2); ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      			write_string('</object>');
           </script>
           </div>
           <?php
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,1);
-          $tmp_correct_no = $freq_log[$q_id][1][1];
+          $tmp_correct_no = (isset($freq_log[$q_id][1][1])) ? $freq_log[$q_id][1][1] : 0;
           echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
-          echo "<tr style=\"font-weight:bold\"><td class=\"figures\">t=" . number_format(($freq_log[$q_id][1][1]/$user_total)*100,0) . "%</td><td class=\"figures\">u=" . number_format(($top_log[$q_id][1][1]/$candidate_no)*100,0) . "%</td><td class=\"figures\">l=" . number_format(($bottom_log[$q_id][1][1]/$candidate_no)*100,0) . "%</td></tr>\n";
+          echo "<tr style=\"font-weight:bold\"><td class=\"figures\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td class=\"figures\">u=" . number_format(($top_log[$q_id][1][1]/$candidate_no)*100,0) . "%</td><td class=\"figures\">l=" . number_format(($bottom_log[$q_id][1][1]/$candidate_no)*100,0) . "%</td></tr>\n";
           echo "<tr><td>" . pStats($tmp_correct_no/$user_total) . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'mcq':
@@ -719,7 +721,7 @@
             }
             if ($correct == $i) {
               $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,$i);
-              $tmp_correct_no = $freq_log[$q_id][1][$i];
+              $tmp_correct_no = (isset($freq_log[$q_id][1][$i])) ? $freq_log[$q_id][1][$i] : 0;
               echo "<tr style=\"font-weight:bold\"><td>t=" . $t . "%</td><td>u=" . $u . "%</td><td>l=" . $l . "%</td><td>$std</td>";
             } else {
               echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td>";
@@ -746,7 +748,6 @@
           echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), $tmp_parts) . "</td></tr>\n";
           $i = 0;
           $tmp_parts = 0;
-          $tmp_std_array = explode(',',$std);
           $std_part = 0;
           foreach ($options as $individual_option) {
             $i++;
@@ -788,7 +789,6 @@
           echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'rank':
-          $tmp_std_array = (!empty($std)) ? explode(',',$std) : array();
           $std_part = 0;
           $rank_no = 0;
           foreach ($correct_buf as $individual_correct) {
@@ -945,7 +945,6 @@
       }
       echo "</table></td></tr>\n";
     } elseif ($q_type == 'matrix') {
-      $tmp_std_array = explode(',',$std);
       $tmp_media_array = explode('|',$q_media);
       $tmp_media_width_array = explode('|',$q_media_width);
       $tmp_media_height_array = explode('|',$q_media_height);
@@ -1004,7 +1003,6 @@
       $tmp_media_height_array = explode('|',$q_media_height);
       $tmp_ext_scenarios = explode('|',$scenario);
       $tmp_answers_array = explode('|',$correct_buf[0]);
-      $tmp_std_array = explode(',',$std);
 
       $tmp_text_no = 0;
       for ($part_id=0; $part_id<10; $part_id++) {
