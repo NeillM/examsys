@@ -664,7 +664,7 @@
         case 'hotspot':
           echo "<p id=\"q_" . ($ex_no + 1) . "_1\"";
           if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') {
-            echo ' style="color:red; text-decoration:line-through>"' . excludeButton($ex_no, $q_id, 1, 1, 1);
+            echo ' style="color:red; text-decoration:line-through">' . excludeButton($ex_no, $q_id, 1, 1, 1);
           } else {
             echo '>' . excludeButton($ex_no, $q_id, 0, 1, 1);
           }
