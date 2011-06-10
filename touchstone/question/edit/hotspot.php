@@ -31,7 +31,7 @@ require '../../include/mapping_tab.inc';
 $q_id = $_GET['q_id'];
 
 if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
-  $points = $_POST['q1'];
+  $points = $_POST['old_points'];
 
   // Record the change in 'track_changes'.
   $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Post Exam Answer change',?,$userID,?,?,NOW(),'Correct Answer')");
@@ -40,17 +40,33 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   $result->close();
 
   // Update log2 with new student marks.
-  $student_records = split(';',$_POST['correctedpoints']);
+  $student_records = explode(';',$_POST['q1']);
   foreach ($student_records as $student_record) {
     if (strlen($student_record) > 0) {
-      $sub_parts = split(',',$student_record);
-      $tmp_user_answer = $sub_parts[1] . ',' . $sub_parts[2] . ',' . $sub_parts[3];
+      $layers = explode('|',$student_record);
+      $mark = 0;
+      $layer_no = 0;
+      foreach ($layers as $layer) {
+        $sub_parts = explode(',',$layer);
+        if ($layer_no == 0) {
+          $database_id = $sub_parts[0];
+          $mark += $sub_parts[1];
+        } else {
+          $mark += $sub_parts[0];
+        }
+        $layer_no++;
+      }
+      
+      $first_comma = strpos($student_record, ',') + 1;
+      $tmp_user_answer = substr($student_record,$first_comma);
+      
       $result = $mysqli->prepare("UPDATE log2 SET mark=?, user_answer=? WHERE id=?");
-      $result->bind_param('dsi', $sub_parts[1], $tmp_user_answer, $sub_parts[0]);
+      $result->bind_param('dsi', $mark, $tmp_user_answer, $database_id);
       $result->execute();  
       $result->close();
     }
   }
+
   // Save the new points into the questions table
   $result = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
   $result->bind_param('si', $points, $_GET['q_id']);
@@ -89,18 +105,30 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
   <input type="hidden" name="scrOfY" value="<?php echo $_POST['scrOfY']; ?>" />
   <input type="hidden" name="points" value="<?php if (isset($points)) echo $points; ?>" />
-  <input type="hidden" name="old_points" value="<?php echo $_POST['old_points']; ?>" />
+  <input type="hidden" name="old_points" value="<?php echo $_POST['q1']; ?>" />
   <input type="hidden" name="correctedpoints" value="" />
+  <input type="hidden" name="checkout_author" value="<?php if (isset($_POST['checkout_author'])) echo $_POST['checkout_author']; ?>" />
 <?php
   // Query log2 table for existing student answers.
   $fix_data = '';
   $result = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id=?");
-  $result->bind_param("i", $q_id);
+  $result->bind_param('i', $q_id);
   $result->execute();  
   $result->bind_result($id, $user_answer);
   while ($row = $result->fetch()) {
-    if (strlen($user_answer) > 1) {
-      $fix_data .= ';' . $id . ',' . substr($user_answer,2);
+    if ($user_answer != 'u') {
+      $tmp_user_answer = '';
+      $layers = explode('|',$user_answer);
+      foreach ($layers as $layer) {
+        //echo "Layer=$layer<br />";
+        $sub_parts = explode(',',$layer);
+        if ($tmp_user_answer == '') {
+          $tmp_user_answer = $sub_parts[1] . ',' . $sub_parts[2];
+        } else {
+          $tmp_user_answer .= '|' . $sub_parts[1] . ',' . $sub_parts[2];
+        }
+      }
+      $fix_data .= ';' . $id . ',' . $tmp_user_answer;
     }
   }
   $result->close();
@@ -109,7 +137,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   <script language="JavaScript">
     function swfLoaded1(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $_POST['tmp_media']; ?>', '<?php echo $_POST['old_points']; ?>', '<?php echo $fix_data; ?>');
+      setUpFlash(num, message, '<?php echo $_POST['tmp_media']; ?>', '<?php echo $_POST['q1']; ?>', '<?php echo $fix_data; ?>');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($_POST['tmp_media_width'] + 306); ?>" height="<?php echo ($_POST['tmp_media_height'] + 25); ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
@@ -121,7 +149,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
   </script>
 
   <br />
-  <input type="text" cols="80" rows="6" name="q1" id="q1" value="" />
+  <input type="text" cols="800" rows="6" name="q1" id="q1" value="" />
   <br />
   <div>The green dots show students ansers which have now been marked as correct.<br />If you need to make further corrections please click 'OK' and then re-edit the question.</div>
   <br />
@@ -297,7 +325,7 @@ while ($row = $result->fetch()) {
     <script language="JavaScript">
       function swfLoaded1(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo $correct; ?>');
+        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($q_media_width + 306); ?>" height="<?php echo $plugin_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
