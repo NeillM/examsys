@@ -550,7 +550,7 @@
     $adjust->execute();
     $adjust->close();
     echo "<div>CREATE TABLE log_metadata (id int not null primary key auto_increment, userID mediumint, paperID smallint, started datetime, ipaddress char(15), student_grade char(25), year tinyint, attempt tinyint)</div>\n";
-    echo "<div>ALTER TABLE log_metadata ADD INDEX(userID,paperID,started)</div>\n";
+    
     $update_logs = array(0,1,2,3,5);
     foreach ($update_logs as $log_type) {
       echo "<div>Reading from Log$log_type and inserting into log_metadata</div>";
@@ -572,6 +572,7 @@
       }
       $result2->close();
     }
+    echo "<div>ALTER TABLE log_metadata ADD INDEX(userID,paperID,started)</div>\n";
     $adjust = $mysqli->prepare("ALTER TABLE log_metadata ADD INDEX(userID,paperID,started)");
     $adjust->execute();
     $adjust->close();
