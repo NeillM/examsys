@@ -411,7 +411,7 @@
     if ($tmp_method == 'Angoff (Yes/No)' or $tmp_method = 'Modified Angoff') {
       $pass_mark = round($total_rating/$total_parts);
 
-      $std_query = "UPDATE properties SET pass_mark=$pass_mark WHERE paper_title=\"$paper\"";
+      $std_query = "UPDATE properties SET pass_mark=$pass_mark WHERE property_id=$paperID";
       if (!$mysqli->query($std_query)) {
         echo "<p>Error updating paper properties: ". $mysqli->error . "</p>\n";
         echo "<p>Query: $std_query</p>\n";
@@ -432,8 +432,8 @@
   $std_query->execute();
   $std_query->close();
 
-  $module = $_GET['module'];
-  $folder = $_GET['folder'];
+  $module = (isset($_GET['module'])) ? $_GET['module'] : '';
+  $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
   if (isset($_POST['continue'])) {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/std_setting/individual_review.php?&paperID=$paperID&method=" . $_GET['method'] . "&setterID=$userID&dateID=$now&module=$module&folder=$folder#$last_question");
   } else {

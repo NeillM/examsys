@@ -95,7 +95,13 @@
 <tr><td style="font-weight:bold">Group Rating</td></tr>
 <tr><td style="margin:4px">
 <table cellpadding="3" cellspacing="0" border="0" id="menu3" style="margin-left:7px; font-size:90%">
+<?php 
+if(isset($no_reviews) and $no_reviews > 1) {
+?>
 <tr><td><a href="get_group.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&method=modified_angoff"><img src="../artwork/small_users_icon.png" width="16" height="16" alt="Angoff Method" border="0" /></a></td><td class="menuitem"><a href="get_group.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&method=modified_angoff">Modified Angoff</a></td></tr>
+<?php } else { ?>
+<tr><td><img src="../artwork/small_users_icon_grey.png" width="16" height="16" alt="Angoff Method" border="0" /></td><td class="greymenuitem">Modified Angoff</td></tr>
+<?php }?>
 </table>
 </td></tr>
 </table>

@@ -308,11 +308,8 @@
 </head>
 
 <body onclick="reviewOff()">
-<?php
-  require '../include/std_set_menu.inc';
-?>
 
-<div id="content" class="content" style="font-size:80%"><?php
+<?php
   $old_date = '';
   $old_title = '';
   $old_initials = '';
@@ -325,18 +322,21 @@
   $ebel_marks = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
   $angoff_review_marks = 0;
 
+  $reviews_html = '';
+  
   $results = $mysqli->query("SELECT paper_title, total_mark FROM properties WHERE property_id=$paperID LIMIT 1");
   while ($row = $results->fetch_assoc()) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "\">" . $row['paper_title'] . "</a></div><div style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">Standards Setting</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(97); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"width:18px; background-color:#F1F5FB\">&nbsp;</td><td style=\"background-color:#F1F5FB; width:150px\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Standard Setter&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Date&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Pass Score</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Distinction</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Review Marks</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Paper Total</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Method</td><td width=\"25%\" style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp</td></tr>\n";
-    echo "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"9\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
+    $reviews_html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+    $reviews_html .= "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "\">" . $row['paper_title'] . "</a></div><div style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">Standards Setting</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(97); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+    $reviews_html .= "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+    $reviews_html .= "<tr><td style=\"width:18px; background-color:#F1F5FB\">&nbsp;</td><td style=\"background-color:#F1F5FB; width:150px\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Standard Setter&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Date&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Pass Score</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Distinction</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Review Marks</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Paper Total</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Method</td><td width=\"25%\" style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp</td></tr>\n";
+    $reviews_html .= "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"9\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
     $total_marks = $row['total_mark'];
   }
   $results->close();
   
   $results = $mysqli->query("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=$paperID ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
+  $no_reviews = 0;
   if ($results->num_rows > 0) {
     while ($row = $results->fetch_assoc()) {
       $paper_title = $row['paper_title'];
@@ -376,7 +376,8 @@
           $distinction_score = (($cut_marks2 / ($total_marks * 100)) * 100);
           $distinction_score = round($distinction_score,1);
         }
-        echo displayReview($old_group_review);
+        if($old_group_review == 'No') $no_reviews++;
+        $reviews_html .= displayReview($old_group_review);
         $ebel_percents = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
         $ebel_marks = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
         $question_no = 0;
@@ -469,9 +470,15 @@
       $distinction_score = (($cut_marks2 / ($total_marks * 100)) * 100);
       $distinction_score = round($distinction_score,1);
     }
-    echo displayReview($old_group_review);
+    if($old_group_review == 'No') $no_reviews++;
+    $reviews_html .= displayReview($old_group_review);
   }
-  echo "<table>\n";
+  require '../include/std_set_menu.inc';
+?>
+<div id="content" class="content" style="font-size:80%">
+<?php
+  echo $reviews_html;
+  echo "</table>\n";
   $results->close();
   $mysqli->close();
 ?>
