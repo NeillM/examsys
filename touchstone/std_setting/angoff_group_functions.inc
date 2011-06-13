@@ -144,7 +144,6 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
     $matching_media_width = explode('|', $options[0]['q_media_width']);
     $matching_media_height = explode('|', $options[0]['q_media_height']);
     $matching_options = array();
-    $matching_users_answers = explode('|', $options[0]['correct']);
   }
   $i = 0;
   
@@ -286,9 +285,9 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         }
         
         echo "<tr><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\" onchange=\"itemSelected($question_no,$part_id);\">\n";
-        echo $question . "<option value=\"9999\"></option>\n";
+        echo "<option value=\"9999\"></option>\n";
         if ($require_na) {
-          echo $question . "<option value=\"9990\">N/A</option>\n";
+          echo "<option value=\"9990\">N/A</option>\n";
         }
         for ($i=1; $i<=$total_rank_no; $i++) {
           echo "<option value=\"" . $i . "\">" . $i;
@@ -458,8 +457,8 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
           echo '<p>' . $blank_details[0];
           $blank_count = 1;
           while ($blank_count < $no_blanks) {
-            $not_used = ereg("mark=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
-            if ($results[1]) {
+            $not_used = preg_match("/mark=\"([0-9]{1,3})\"/",$blank_details[$blank_count],$results);
+            if ($not_used > 0) {
               $blank_mark[$blank_count] = $results[1];
             } else {
               $blank_mark[$blank_count] = 1;
@@ -740,37 +739,17 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       $list_size = 10;
       if (count($matching_options) < 10) $list_size = count($matching_options);
       if ($answer_no == 1) {
-        if ($matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
-          echo "<select style=\"background-color:#FFC0C0\" name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
-        } else {
-          echo "<select name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
-        }
+        echo "<select name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
         echo "<option value=\"u\"></option>\n";
       } else {
         echo "<br />\n";
-        if ($matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-          echo "<div class=\"option\"><select style=\"background-color:#FFC0C0\" onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
-        } else {
-          echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
-        }
+        echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
       }
 
       $answer_count = 0;
-      $multi_answers = explode('\$', $matching_users_answers[$part_id - 1]);
       $tmp_option_no = 1;
       foreach ($matching_options as $single_option) {
-        $tmp_answer_match = false;
-        foreach ($multi_answers as $separate_tmp_answer) {
-          if ($separate_tmp_answer == $tmp_option_no) {
-            $tmp_answer_match = true;
-            $answer_count++;
-          }
-        }
-        if ($tmp_answer_match == true) {
-          echo "<option value=\"$tmp_option_no\" selected>$single_option</option>\n";
-        } else {
-          echo "<option value=\"$tmp_option_no\">$single_option</option>\n";
-        }
+        echo "<option value=\"$tmp_option_no\">$single_option</option>\n";
         $tmp_option_no++;
       }
       echo '</select>';
@@ -837,19 +816,11 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
     $numerals = array('0','i','ii','iii','iv','v','vi','vii','viii','ix','x');
     foreach ($matching_scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
-        if ($matching_users_answers[$part_id] == '' and $screen_pre_submitted == 1) {
-          echo "<tr style=\"background-color:#FFC0C0\">\n";
-        } else {
-          echo "<tr>\n";
-        }
+        echo "<tr>\n";
         echo '<td align="right">' . $numerals[$part_id - 1] . '.</td><td>' . $single_scenario . '</td>';
         $answer_no = 1;
         foreach ($matching_options as $single_option) {
-          if ($matching_users_answers[$part_id] == $answer_no) {
-            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $answer_no . '" checked /></div></td>';
-          } else {
-            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $answer_no . '" /></div></td>';
-          }
+          echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $answer_no . '" /></div></td>';
           $answer_no++;
         }
         echo "</tr>\n";

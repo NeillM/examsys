@@ -22,6 +22,16 @@
 * @package
 */
 
+/**
+ * Returns the factorial of the passed number.
+ *
+ */
+function factorial($number) {
+  $temp = 1;
+  while ($number > 1) $temp *= $number--;
+  return $temp;
+}
+
   function rnd_mark_from_type($old_question_type) {
     global $temp_marks, $total_marks, $total_random_mark, $stems, $correct_no, $old_option_text, $old_correct, $old_score_method, $old_score_method, $old_q_media_width, $old_q_media_height;
     switch ($old_question_type) {
@@ -44,7 +54,9 @@
           if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 150) $placeholders++;
         }
         $total_marks += $placeholders;
-        $total_random_mark += ($placeholders / $label_count);
+        if ($label_count > 0) {
+          $total_random_mark += ($placeholders / $label_count);
+        }
         break;
       case 'flash':
       case 'textbox':
@@ -74,7 +86,7 @@
         $correct_no = 0;
         $matching_correct = explode('|', $old_correct);
         for ($part_id=0; $part_id<10; $part_id++) {
-          if ($matching_correct[$part_id] != '') $correct_no++;
+          if (!empty($matching_correct)) $correct_no++;
         }
         $total_random_mark += (1 / $stems) * $correct_no;
         $total_marks += $correct_no;
@@ -90,7 +102,6 @@
         }
         break;
       case 'rank':
-        $correct++;
         if ($old_score_method == 'StrictOrder') {
           if ($correct_no == $stems) {
             $total_random_mark += 1;
