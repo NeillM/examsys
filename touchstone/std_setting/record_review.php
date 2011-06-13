@@ -128,6 +128,8 @@
     $question_part++;
 
     if ($question_no > 0) {
+      // Default format for $qid
+      $qid = 'std' . $question_no;
       switch ($row['q_type']) {
         case 'calculation':
         case 'mcq':
@@ -285,7 +287,6 @@
           }
           break;
         case 'timedate':
-          $qid = 'std' . $question_no;
           $rating = $_POST["$qid"];
           $total_parts++;
           break;
