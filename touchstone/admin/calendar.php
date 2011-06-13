@@ -34,6 +34,7 @@
   }
 
   function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
+    $sortarr = array();
     foreach ($marray as $row) {
       $sortarr[] = $row[$column];
     }
@@ -167,6 +168,7 @@
     if($schools_sql != '') $schools_sql .= ')';
   }
   $paper_no = 0;
+  $paper_details = array();
   if ($schools_sql != '' OR !isset($_GET['school']) OR (isset($_GET['school']) AND ($_GET['school'] == -1 OR $_GET['school'] == ''))) {
     // Get papers running on various dates.
     $results = $mysqli->query("SELECT DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(end_date,'%H:%i') AS end_time, property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%Y') AS cal_year, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, moduleID, paper_type FROM properties WHERE start_date>=" . $current_year . "0101000000 AND end_date<=" . $current_year . "1231235959 AND (paper_type='2' OR paper_type='4') AND deleted IS NULL $schools_sql ORDER BY start_date");
@@ -368,12 +370,13 @@
   
   $prev_param = 'calyear=' . $current_year-1;
   $next_param = 'calyear=' . $current_year+1;
-  if (isset($_GET['module'])) {
+  $module = (isset($_GET['module'])) ? $_GET['module'] : '';
+  if ($module != '') {
     $prev_param .= '&module=' . $_GET['module'];
     $next_param .= '&module=' . $_GET['module'];
   }
 ?>
-<div style="text-align:right"><input style="width:100px" type="button" onclick="window.location='<?php echo $_SERVER['PHP_SELF']; ?>?calyear=<?php echo $current_year-1; ?>&module=<?php echo $_GET['module']; ?>'" value="&lt; <?php echo $current_year-1; ?>" />&nbsp;<input style="width:100px" type="button" onclick="window.location='<?php echo $_SERVER['PHP_SELF']; ?>?calyear=<?php echo $current_year+1; ?>&module=<?php echo $_GET['module']; ?>'" value="<?php echo $current_year+1; ?> &gt;" />&nbsp;</div>
+<div style="text-align:right"><input style="width:100px" type="button" onclick="window.location='<?php echo $_SERVER['PHP_SELF']; ?>?calyear=<?php echo $current_year-1; ?>&module=<?php echo $module; ?>'" value="&lt; <?php echo $current_year-1; ?>" />&nbsp;<input style="width:100px" type="button" onclick="window.location='<?php echo $_SERVER['PHP_SELF']; ?>?calyear=<?php echo $current_year+1; ?>&module=<?php echo $module; ?>'" value="<?php echo $current_year+1; ?> &gt;" />&nbsp;</div>
 </form>
 </div>
 
