@@ -192,7 +192,7 @@ if (isset($_GET['change_screen'])) {
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html onscroll="scrollXY();" onclick="qOff(); hideMenus(); hideAssStatsMenu(event); hideCopyMenu(event);">
+<html onscroll="scrollXY();" onclick="qOff(); hideMenus(); hideAssStatsMenu(event);">
 <head>
 <title>TouchStone<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
