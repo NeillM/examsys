@@ -55,7 +55,6 @@ function get_ipaddress() {
   return $tmp_client_ipaddress;
 }
 
-
 /**
  * This is function record_marks, is used to mark the users answer, and record it in the database for all question types. 
  *
@@ -71,7 +70,7 @@ function get_ipaddress() {
  * 
  *
  */
-function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_duration,$paper_type,$student_grade,$student_year,$attempt) {
+function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $extra_duration, $paper_type, $student_grade, $student_year, $attempt) {
   global $userroles;
 
   $log_ids = array();
@@ -141,7 +140,23 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
     $old_display_pos = $display_pos;
   }
   $questions->close();
-  
+
+  // Set up new insert query ready.
+  if (count($log_ids) > 0) {
+    $save_answers = $dblink->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
+    $save_answers->bind_param('isisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
+  } else {
+    if ($screen_no == 1) {       // Write log_metadata first on screen 1 only
+      $tmp_ip_address = get_ipaddress();
+      $save_answers = $dblink->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+      $save_answers->bind_param('iisssii', $userid, $paper_id, $posted_vars['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
+      $save_answers->execute();
+      $save_answers->close();
+    }
+    $save_answers = $dblink->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
+    $save_answers->bind_param('isiiiisiiss', $userid, $posted_vars['sessionid'], $paper_id, $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order);
+  }
+    
   // Use the new structure to look for posted responses.
   $old_type = '';
   $old_score_method = '';
@@ -160,6 +175,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
   $display_pos = 0;
   $old_display_pos = 0;
   foreach ($paper_array as &$row){
+    $q_log_id = 0;
     $q_id = $row['q_id'];
     $scenario = $row['scenario'];
     $q_type = $row['q_type'];
@@ -197,7 +213,7 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
           }
         }
       }
-      if(isset($posted_vars["order$question_no"])) {
+      if (isset($posted_vars["order$question_no"])) {
         $option_order = $posted_vars["order$question_no"];
       } else {
         $option_order = '';
@@ -208,19 +224,10 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
         $tmp_duration += $extra_duration;
 
         if (isset($log_ids[$old_q_id])) {
-          $update_query = "UPDATE log$paper_type SET mark=$mark, user_answer=\"" . $saved_response . "\", duration=$tmp_duration, updated=NOW(), dismiss='$dismiss' WHERE id=" . $log_ids[$old_q_id];
-          if (!$dblink->query($update_query)) echo "<p>Error writing to log file: $update_query</p>\n";
-        } else {
-          if ($log_query == '') {
-            if ($screen_no == 1) {
-              //first screen fist time put record in log_metadata
-              $log_metadata_query = "INSERT INTO log_metadata VALUES (NULL, $userid, $paper_id, '" . $posted_vars['sessionid'] . "', '" . get_ipaddress() . "', '$student_grade', '$student_year', $attempt)";
-            }
-            $log_query = "INSERT INTO log$paper_type VALUES (NULL,$userid,'" . $posted_vars['sessionid'] . "',$paper_id,$log_id,$mark,$totalpos,\"" . $saved_response . "\",$screen_no,$tmp_duration,NOW(),'$dismiss','$option_order')";
-          } else {
-            $log_query .= ",(NULL,$userid,'" . $posted_vars['sessionid'] . "',$paper_id,$log_id,$mark,$totalpos,\"" . $saved_response . "\",$screen_no,$tmp_duration,NOW(),'$dismiss','$option_order')";
-          }
+          $q_log_id = $log_ids[$old_q_id];
         }
+        $save_answers->execute();
+        
         $saved_response = '';
         $dismiss = '';
       }      
@@ -754,25 +761,12 @@ function record_marks($paper_id,$screen_no,$dblink,$posted_vars,$userid,$extra_d
   $tmp_duration += $extra_duration;
   if ($old_q_type != 'info') {
     if (isset($log_ids[$old_q_id])) {
-      $update_query = "UPDATE log$paper_type SET mark=$mark, user_answer=\"" . $saved_response . "\", duration=$tmp_duration, updated=NOW(), dismiss='$dismiss' WHERE id=" . $log_ids[$old_q_id];
-      if (!$dblink->query($update_query)) echo "<p>Error writing to log file2: ". $dblink->error . "</p>\n";
-    } else {
-      if ($log_query == '') {
-        if ($screen_no == 1) {
-          //first screen fist time put record in log_metadata
-          $log_metadata_query = "INSERT INTO log_metadata VALUES (NULL, $userid, $paper_id, '" . $posted_vars['sessionid'] . "', '" . get_ipaddress() . "', '$student_grade', '$student_year', $attempt)";
-        }
-        $log_query = "INSERT INTO log$paper_type VALUES (NULL,$userid,'" . $posted_vars['sessionid'] . "',$paper_id,$log_id,$mark,$totalpos,\"" . $saved_response . "\",$screen_no,$tmp_duration,NOW(),'$dismiss','$option_order')";
-      } else {
-        $log_query .= ",(NULL,$userid,'" . $posted_vars['sessionid'] . "',$paper_id,$log_id,$mark,$totalpos,\"" . $saved_response . "\",$screen_no,$tmp_duration,NOW(),'$dismiss','$option_order')";
-      }
+      $q_log_id = $log_ids[$old_q_id];
     }
+    $save_answers->execute();
   }
-  if (isset($log_metadata_query)) {
-    if (!$dblink->query($log_metadata_query)) echo "<p>Error writing to log_metadata file4: ". $dblink->error . " $log_metadata_query</p>\n";
-  }
-  if ($log_query != '') {
-    if (!$dblink->query($log_query)) echo "<p>Error writing to log file3: ". $dblink->error . " $log_query</p>\n"; 
-  }
+  
+  // Close still open database prepared queries
+  $save_answers->close();
 }
 ?>

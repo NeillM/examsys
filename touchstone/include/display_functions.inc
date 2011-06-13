@@ -890,26 +890,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'textbox':
         $textbox_size = explode('x',$question['score_method']);
         if ($display_option['option_text'] == 'plain') {
-          if ($textbox_size[1] == 1) {
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              echo "<blockquote><input style=\"font-family:Arial,sans-serif\" class=\"unans\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $user_answers[$current_screen][$q_id] . "\" /></blockquote>\n";
-            } else {
-              $ans = '';
-              if(isset($user_answers[$current_screen][$q_id])) {
-                $ans = $user_answers[$current_screen][$q_id];
-              }
-              echo "<blockquote><input style=\"font-family:Arial,sans-serif\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $ans . "\" /></blockquote>\n";
-            }
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
+            echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
           } else {
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
-            } else {
-              $ans = '';
-              if(isset($user_answers[$current_screen][$q_id])) {
-                $ans = $user_answers[$current_screen][$q_id];
-              }
-              echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $ans . "</textarea></blockquote>\n";
+            $ans = '';
+            if(isset($user_answers[$current_screen][$q_id])) {
+              $ans = $user_answers[$current_screen][$q_id];
             }
+            echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $ans . "</textarea></blockquote>\n";
           }
         } else {
           include_once('wysiwyg_editor.inc');
@@ -922,20 +910,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           } else {
             echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . ($textbox_size[0] * 7) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
           }
-          /*
-          echo "<p><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $ans . "</textarea></p>\n";
-          echo "<script>\n";
-          echo "var oEdit$question_no = new InnovaEditor(\"oEdit$question_no\");\n";
-          echo "oEdit$question_no.mode=\"XHTMLBody\";\n";
-          echo "oEdit$question_no.useTagSelector=false;\n";
-          echo "oEdit$question_no.useBR=false;\n";
-          echo "oEdit$question_no.width=\"" . ($textbox_size[0] * 7). "px\";\n";
-          echo "oEdit$question_no.height=\"" . ($textbox_size[1] * 28) . "px\";\n";
-          echo "oEdit$question_no.features=[\"StyleAndFormatting\",\"TextFormatting\",\"ListFormatting\",\"BoxFormatting\",\"ParagraphFormatting\",\"CssText\",\"|\",\"Cut\",\"Copy\",\"PasteText\",\"|\",\"Undo\",\"|\",\"Bold\",\"Italic\",\"Underline\",\"|\",\"Superscript\",\"Subscript\",\"|\",\"JustifyLeft\",\"JustifyCenter\",\"JustifyRight\",\"|\",\"Numbering\",\"Bullets\",\"|\",\"Table\",\"Characters\"];\n";
-          echo "oEdit$question_no.arrStyle = [[\"BODY\",false,\"\",\"background:white; margin:2px; color:black; font-size:90%; font-family:Arial\"]];\n";
-          echo "oEdit$question_no.btnStyles = true;\n";
-          echo "oEdit$question_no.REPLACE(\"q$question_no\");\n</script>\n<blockquote>\n";
-          */
         }
         $marks += $display_option['marks'];
         break;
