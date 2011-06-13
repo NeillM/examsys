@@ -666,13 +666,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
     }
   } elseif ($options[0]['q_type'] == 'calculation') {
     $score_array = explode(',',$options[0]['score_method']);
-    if ($li_set == 1) {
-      echo '<tr><td></td><td>';
-    } else {
-      echo '<tr><td class="question_no">' . (($question_no + $question_offset) - 1) . '.&nbsp;</td><td>';
-    }
-    $new_leadin = "echo \"<p>$current_leadin</p>\"";
-    eval("$new_leadin;");
+    echo '<tr><td></td><td>';
     echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[2] .  "</p>\n";
     $answer = "echo \"" . $options[0]['correct'] . "\"";
     echo '<input type="hidden" name="q' . $question_no . '_answer" value="';
