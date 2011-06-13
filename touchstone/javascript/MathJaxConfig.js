@@ -3,6 +3,7 @@ script.src  = "/touchstone/tools/MathJax/MathJax.js";
 script.type = 'text/javascript';
 
 var config = 'MathJax.Hub.Config({' +
+  'delayStartupUntil: "onload",' +
   'showProcessingMessages: false,' +
   'menuSettings: {zoom:"none"},' +
   'extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js", "TeX/boldsymbol.js", "TeX/autobold.js"],' +
@@ -21,13 +22,14 @@ var config = 'MathJax.Hub.Config({' +
                 'preferredFont: "STIX",' +
                 'minScaleAdjust: 50,' +
         '}' +
-  '});' + ' MathJax.Hub.Startup.onload();';
+  '});';
   
 if (window.opera) {
   script.innerHTML = config
 } else {
   script.text = config
-}
+}  
 document.getElementsByTagName('head')[0].appendChild(script);
+
 
 
