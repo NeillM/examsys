@@ -8,6 +8,9 @@
 */
 
   //require '../include/sysadmin_auth.inc';
+  if (!defined('STDIN')) {
+    exit;
+  }
   require '../config/config.inc';
   set_time_limit(0);
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
