@@ -54,17 +54,17 @@ $result->close();
 <head>
 <title>Reassign Script to User</title>
 <style>
-body {background-color:white; color:black; font-family:Arial,sans-serif; margin:0px}
+body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
 </style>
 
 <script language="JavaScript">
   function doReassign(targetID) {
-    window.location = "do_reassign_script.php?paperID=<?php echo $_GET['paperID']; ?>&temp_userID=<?php echo $_GET['userID']; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
+    window.location = "do_reassign_script.php?temp_userID=<?php echo $_GET['userID']; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
   }
   
   function lon(lineID) {
-    document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-    document.getElementById(lineID).style.border = '1px solid red';
+    document.getElementById(lineID).style.backgroundColor = '#EBF3FD';
+    document.getElementById(lineID).style.border = '1px solid #B8D6FB';
   }
   
   function loff(lineID) {
@@ -90,7 +90,6 @@ if (time() < $end_date) {
 }
 
 $target_userID = '';
-
 
 $target_student = array();
 
@@ -133,16 +132,16 @@ if ($target_userID == '') {
   $result->close();
 }
 
-echo "<p style=\"color:#0033BC\">$temp_username was reserved with the following details:</p>\n<table border=\"0\" style=\"width:100%\">\n";
+echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " was reserved with the following details:</p>\n<table border=\"0\" style=\"width:100%\">\n";
 if ($temp_student_id == '') $temp_student_id = '<span style="color:#808080">&lt;unset&gt;</span>';
+echo "<tr><th>Title</th><th>Last Name</th><th>First Names</th><th>Student ID</th></tr>\n";
 echo "<tr><td>$temp_title</td><td>$temp_surname</td><td>$temp_first_names</td><td>$temp_student_id</td></tr>\n";
 echo "</table>\n<br />\n";
 
 if (count($target_student) == 0) {
   echo "<div>No user found matching above details.</div>\n";
 } else {
-  //echo "<div>" . DateUtils::get_current_academic_year() . "</div>";
-  echo "<p style=\"color:#0033BC\">Reassign answers/marks from $temp_username to following user:</p>\n<div style=\"height:320px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
+  echo "<br /><div style=\"color:#0033BC\">Reassign answers/marks from " . str_replace('user','Temporary Account ',$temp_username) . " to following user:</div>\n<div style=\"height:300px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
   foreach ($target_student as $individualID=>$individual) {
     if ($individual['title'] == 'Mr') {
       $user_icon = 'user_male_64.png';
@@ -155,9 +154,9 @@ if (count($target_student) == 0) {
     } else {
       $user_icon = 'user_female_64.png';
     }
-    echo "<div style=\"border:1px solid white\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><img src=\"../artwork/$user_icon\" width=\"64\" height=\"64\" alt=\"user\" border=\"0\" align=\"left\" />" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
-    echo implode(',',$individual['modules']);
-    echo "<br clear=\"all\" /><br /></div>";
+    echo "<div style=\"border:1px solid white; cursor:hand\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><table border=\"0\"><tr><td><img src=\"../artwork/$user_icon\" width=\"64\" height=\"64\" alt=\"user\" border=\"0\" /></td><td>" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
+    echo implode(', ',$individual['modules']);
+    echo "</td></tr></table></div>";
   }
   echo "</div>\n";
 }
