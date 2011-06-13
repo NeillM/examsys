@@ -647,10 +647,13 @@
                 } else {
                   $std_rating = '';
                 }
+                $tmp_correct_no = (isset($freq_log[$q_id][$individual_coord][$individual_option])) ? $freq_log[$q_id][$individual_coord][$individual_option] : 0;
+                $tmp_top_no = (isset($top_log[$q_id][$individual_coord][$individual_option])) ? $top_log[$q_id][$individual_coord][$individual_option] : 0;
+                $tmp_bottom_no = (isset($bottom_log[$q_id][$individual_coord][$individual_option])) ? $bottom_log[$q_id][$individual_coord][$individual_option] : 0;
                 if (isset($excluded[$q_id])) {
-                  echo "<td>" . excludeButton($ex_no, $q_id, substr($excluded[$q_id],$i-1,1), 1, 1) . "</td><td>" . pStats($freq_log[$q_id][$individual_coord][$individual_option]/$user_total) . "</td><td>" . dStats($d) . "</td><td>t=" . number_format(($freq_log[$q_id][$individual_coord][$individual_option]/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$individual_coord][$individual_option]/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$individual_coord][$individual_option]/$candidate_no)*100,0) . "%</td><td>$std_rating</td><td id=\"q_" . $ex_no . "_1\"";
+                  echo "<td>" . excludeButton($ex_no, $q_id, substr($excluded[$q_id],$i-1,1), 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total) . "</td><td>" . dStats($d) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td>$std_rating</td><td id=\"q_" . $ex_no . "_1\"";
                 } else {
-                  echo "<td>" . excludeButton($ex_no, $q_id, '', 1, 1) . "</td><td>" . pStats($freq_log[$q_id][$individual_coord][$individual_option]/$user_total) . "</td><td>" . dStats($d) . "</td><td>t=" . number_format(($freq_log[$q_id][$individual_coord][$individual_option]/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$individual_coord][$individual_option]/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$individual_coord][$individual_option]/$candidate_no)*100,0) . "%</td><td>$std_rating</td><td id=\"q_" . $ex_no . "_1\"";
+                  echo "<td>" . excludeButton($ex_no, $q_id, '', 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total) . "</td><td>" . dStats($d) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td>$std_rating</td><td id=\"q_" . $ex_no . "_1\"";
                 }
                 if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' style="color:red; text-decoration:line-through"';
                 echo "><strong>$individual_option</strong></td></tr>\n";
@@ -865,7 +868,9 @@
           }
           $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
           $std_val = (isset($tmp_std_array[$std_part])) ? $tmp_std_array[$std_part] : '';
-          echo "<tr><td><strong>u=" . number_format(($top_log[$q_id]['all_correct']/$candidate_no)*100,0) . "%</strong></td><td><strong>l=" . number_format(($bottom_log[$q_id]['all_correct']/$candidate_no)*100,0) . "%</strong></td><td style=\"font-weight:bold\">" . $std_val . "</td><td style=\"font-weight:bold\">All items correct</td></tr>\n";
+          $tmp_correct_no = (isset($top_log[$q_id]['all_correct'])) ? $top_log[$q_id]['all_correct'] : 0;
+          $tmp_bottom_no = (isset($bottom_log[$q_id]['all_correct'])) ? $bottom_log[$q_id]['all_correct'] : 0;
+          echo "<tr><td><strong>u=" . number_format(($tmp_correct_no/$candidate_no)*100,0) . "%</strong></td><td><strong>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</strong></td><td style=\"font-weight:bold\">" . $std_val . "</td><td style=\"font-weight:bold\">All items correct</td></tr>\n";
           echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'sct':
@@ -972,12 +977,15 @@
             } else {
               $tmp_exclude = '';
             }
+            $tmp_correct_no = (isset($freq_log[$q_id][$i][$correct_answer])) ? $freq_log[$q_id][$i][$correct_answer] : 0;
+            $tmp_top_no = (isset($top_log[$q_id][$i][$correct_answer])) ? $top_log[$q_id][$i][$correct_answer] : 0;
+            $tmp_bottom_no = (isset($bottom_log[$q_id][$i][$correct_answer])) ? $bottom_log[$q_id][$i][$correct_answer] : 0;
             echo "<td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td>";
-            echo "<td style=\"font-weight:bold\">" . pStats($freq_log[$q_id][$i][$correct_answer]/$user_total) . "</td>";
+            echo "<td style=\"font-weight:bold\">" . pStats($tmp_correct_no/$user_total) . "</td>";
             echo "<td style=\"font-weight:bold\">" . dStats($d) . "</td>";
-            echo "<td style=\"font-weight:bold\">t=" . number_format(($freq_log[$q_id][$i][$correct_answer]/$user_total)*100,0) . "%</td>";
-            echo "<td style=\"font-weight:bold\">u=" . number_format(($top_log[$q_id][$i][$correct_answer]/$candidate_no)*100,0) . "%</td>";
-            echo "<td style=\"font-weight:bold\">l=" . number_format(($bottom_log[$q_id][$i][$correct_answer]/$candidate_no)*100,0) . "%</td>";
+            echo "<td style=\"font-weight:bold\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td>";
+            echo "<td style=\"font-weight:bold\">u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td>";
+            echo "<td style=\"font-weight:bold\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td>";
             echo "<td style=\"font-weight:bold\">";
             if (isset($tmp_std_array[$i-1])) echo $tmp_std_array[$i-1];
             echo "</td>";
