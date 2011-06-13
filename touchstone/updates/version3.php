@@ -865,6 +865,20 @@
   	  }
   $result->close();
   
+  // 13/06/2011
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE sys_errors (id int not null primary key auto_increment, occurred datetime, userID int, errtype enum('Notice','Warning','Fatal Error','Unknown'), errstr text, errfile text, errline int)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>CREATE TABLE sys_errors (id int not null primary key auto_increment, occurred datetime, userID int, errtype enum('Notice','Warning','Fatal Error','Unknown'), errstr text, errfile text, errline int)</div>\n";
+    ob_flush();
+    flush();
+  }   
   
   //Close the database
   $mysqli->close();

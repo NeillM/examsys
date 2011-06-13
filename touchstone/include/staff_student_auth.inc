@@ -26,6 +26,8 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . 'touchstone/config/config.inc';
 require_once $cfg_web_root . 'touchstone/include/auth.inc';
+require_once $cfg_web_root . 'touchstone/include/custom_error_handler.inc';
+
 if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
   echo "<html>\n<body style=\"font-family:Arial,sans-serif;font-size:100%;color:#C00000\">\n<p><strong>WARNING:</strong> TouchStone can only be accessed through a secure web connection.</p>\n<p>Instead use: <a href=\"https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "\">https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "</a>.\n</body>\n</html>\n";
   exit;

@@ -1,0 +1,47 @@
+<?php
+// This file is part of TouchStone
+//
+// TouchStone is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// TouchStone is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+
+  set_error_handler("customErrorHandler");
+
+  function customErrorHandler($errno, $errstr, $errfile, $errline) {
+    global $mysqli, $userID;
+    
+    switch ($errno) {
+      case E_NOTICE:
+      case E_USER_NOTICE:
+        $error_type = "Notice";
+        break;
+      case E_WARNING:
+      case E_USER_WARNING:
+        $error_type = "Warning";
+        break;
+      case E_ERROR:
+      case E_USER_ERROR:
+        $error_type = "Fatal Error";
+        break;
+      default:
+        $error_type = "Unknown";
+        break;
+    }
+
+    $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?)");
+    $log_error->bind_param('issss', $userID, $error_type, $errstr, $errfile, $errline);
+    $log_error->execute();
+    $log_error->close();
+      
+    return  false;
+  }
+?>
