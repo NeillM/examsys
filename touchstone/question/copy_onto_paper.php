@@ -177,13 +177,17 @@ td {font-size:80%}
     // Question data
     if ($q_media != '' and $q_media != 'NULL' and $line == 0) {
       $media_array = array();
-      $media_array = split("\|",$q_media);
+      $media_array = explode("|",$q_media);
       $new_q_media = '';
       foreach ($media_array as $individual_media) {
         if ($individual_media != '' and $individual_media != 'NULL') {
           $new_media_name = unique_filename($individual_media,FALSE);
-          if (!copy("../media/$individual_media","../media/$new_media_name")) {
-            display_error('File Copy Error 1', "File <strong>'$new_media_name'</strong> could not be copied");
+          if(file_exists("../media/$individual_media")){
+            if (!copy("../media/$individual_media","../media/$new_media_name")) {
+              display_error('File Copy Error 1', "File <strong>'$new_media_name'</strong> could not be copied");
+            }
+          } else {
+            display_error('File Copy Error 3', "File <strong>'$new_media_name'</strong> could not be copied.<br />File not found.");
           }
           if ($new_q_media == '') {
             $new_q_media = $new_media_name;
@@ -198,13 +202,17 @@ td {font-size:80%}
     $o_id = $_GET['q_id'];
     if ($o_media != '') {
       $media_array = array();
-      $media_array = split("\|",$o_media);
+      $media_array = explode("|",$o_media);
       $new_o_media = '';
       foreach ($media_array as $individual_media) {
         if ($individual_media != '' and $individual_media != 'NULL') {
           $new_media_name = unique_filename($individual_media,FALSE);
-          if (!copy("../media/$individual_media","../media/$new_media_name")) {
-            display_error('File Copy Error 2', "File <strong>'$new_media_name'</strong> could not be copied.<br />Original filename was: $individual_media");
+          if(file_exists("../media/$individual_media")){
+            if (!copy("../media/$individual_media","../media/$new_media_name")) {
+              display_error('File Copy Error 2', "File <strong>'$new_media_name'</strong> could not be copied.<br />Original filename was: $individual_media");
+            }
+          } else {
+            display_error('File Copy Error 4', "File <strong>'$new_media_name'</strong> could not be copied.<br />File not found.");
           }
           if ($new_o_media == '') {
             $new_o_media = $new_media_name;
