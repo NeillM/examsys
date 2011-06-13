@@ -44,6 +44,7 @@
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 
 <style>
+.sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
 a {font-family:Arial,sans-serif; color:#215DC6}
 a:hover {color:#428EFF}
 a.heading {color:#215DC6; font-weight:bold}
@@ -70,7 +71,7 @@ a.heading:hover {color:#428EFF; font-weight:bold}
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:100%; text-align:left">
 <tr><td style="vertical-align:top">
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; text-align:left">
-<tr><td style="width:120px; background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold">Table</td><td style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold">Records</td><td style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold">Updated<td style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold">Engine&nbsp;</td>
+<tr><td style="width:120px" class="sechead">Table</td><td class="sechead">Records</td><td class="sechead">Updated<td class="sechead">Engine&nbsp;</td>
 </tr>
 <?php
   $results = $mysqli->query("SHOW TABLE STATUS");
@@ -90,7 +91,7 @@ a.heading:hover {color:#428EFF; font-weight:bold}
   $results->close();
 
   echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-  echo "<tr><td colspan=\"2\" style=\"background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB\">MySQL Status</td><td colspan=\"2\"></td></tr>\n";
+  echo "<tr><td colspan=\"2\" class=\"sechead\">MySQL Status</td><td colspan=\"2\"></td></tr>\n";
   $status = explode('  ', $mysqli->stat());
   for ($i=0; $i<=7; $i++) {
     $parts = explode(': ', $status[$i]);
@@ -106,7 +107,7 @@ a.heading:hover {color:#428EFF; font-weight:bold}
 <td style="width:50px">&nbsp;</td>
 <td style="vertical-align:top">
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:400px">
-<tr><td colspan="2" style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold">TouchStone</td></tr>
+<tr><td colspan="2" class="sechead">TouchStone</td></tr>
 <tr><td>Version</td><td><?php echo $ts_version; ?></td></tr>
 <tr><td>Web Root</td><td><?php echo $cfg_web_root; ?></td></tr>
 <tr><td>Database</td><td><?php echo $cfg_db_database; ?></td></tr>
@@ -119,7 +120,7 @@ if ($cfg_use_ldap == true) {
 ?>
 <tr><td colspan="2">&nbsp;</td></tr>
 
-<tr><td colspan="2" style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold">Server Information</td></tr>
+<tr><td colspan="2" class="sechead">Server Information</td></tr>
 <?php
 
    if (php_uname('s') != 'Windows NT') {
@@ -177,13 +178,13 @@ if ($cfg_use_ldap == true) {
   echo "<tr><td>MySQL</td><td>" . $mysqli->server_info . "</td></tr>\n";
   
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
-  echo '<tr><td colspan="2" style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB"><strong>Client Computer</strong></td></tr>';
+  echo '<tr><td colspan="2" class="sechead">Client Computer</td></tr>';
   echo '<tr><td>IP Address</td><td>' . get_ipaddress() . '</td></tr>';
   echo '<tr><td>Clock</td><td><script language="JavaScript">the_date = new Date(); document.write(the_date.toLocaleString()); </script></td></tr>';
   echo '<tr><td>Browser</td><td>' . $_SERVER['HTTP_USER_AGENT'] . '</td></tr>';
 
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
-  echo '<tr><td colspan="2" style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB"><strong>Partitions</strong></td></tr>';
+  echo '<tr><td colspan="2" class="sechead">Partitions</td></tr>';
 
   echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
     

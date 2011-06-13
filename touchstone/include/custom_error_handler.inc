@@ -37,11 +37,13 @@
         break;
     }
 
-    $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?)");
-    $log_error->bind_param('issss', $userID, $error_type, $errstr, $errfile, $errline);
-    $log_error->execute();
-    $log_error->close();
-      
+    if ($error_type != 'Notice') {
+      $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?)");
+      $log_error->bind_param('issss', $userID, $error_type, $errstr, $errfile, $errline);
+      $log_error->execute();
+      $log_error->close();
+    }
+    
     return  false;
   }
 ?>

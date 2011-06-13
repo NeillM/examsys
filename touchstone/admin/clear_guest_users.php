@@ -32,6 +32,7 @@
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <script language="JavaScript" src="../javascript/staff_help.js"></script>
 <style>
+.sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
 .l {border-bottom:1px solid #EEEEEE}
 .loff {border-bottom:1px solid #EEEEEE; color:#808080}
 </style>
@@ -63,7 +64,7 @@
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <blockquote>
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:100%">
-<tr style="background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB; font-weight:bold"><td>Clear</td><td>User</td><td>Password</td><td>Surname</td><td>First Names</td><td>Title</td><td>Student ID</td><td>Date Account Reserved</td><td>Assessment Taken</td></tr>
+<tr><td class="sechead">Clear</td><td class="sechead">User</td><td class="sechead">Password</td><td class="sechead">Surname</td><td class="sechead">First Names</td><td class="sechead">Title</td><td class="sechead">Student ID</td><td class="sechead">Date Account Reserved</td><td class="sechead">Assessment Taken</td></tr>
 <?php
   $used = array();
 
