@@ -138,16 +138,18 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $part_names = array('theme','notes','scenario','leadin','bloom','feedback','formula','units','tolerance','answer_decs','status','formula','marks');
     foreach($part_names as $section_name) {
       if(isset($_POST["$section_name"])) {
-        $$section_name = stripslashes($_POST["$section_name"]);
+        $$section_name = $_POST["$section_name"];
       } else {
         $$section_name = '';
       }
     }
+    
     if (trim(strip_tags($scenario)) == '') $scenario = '';
+    
     $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_feedback','old_formula','old_units','old_tolerance','old_answer_decs','old_status','old_marks');
     foreach($part_names as $section_name) {
       if(isset($_POST["$section_name"])) {
-        $$section_name = stripslashes($_POST["$section_name"]);
+        $$section_name = $_POST["$section_name"];
       } else {
         $$section_name = '';
       }
@@ -156,7 +158,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     // Strip MS Office HTML.
     $scenario = clearMSOtags($scenario);
     $leadin = clearMSOtags($leadin);
-
+  
     // Upload Image (if exists) onto server
     if ($_FILES['q_media']['name'] != $_POST['old_q_media'] and ($_FILES['q_media']['name'] != 'none' and $_FILES['q_media']['name'] != '')) {
       if (isset($_POST['old_q_media']) and $_POST['old_q_media'] != '') {
@@ -283,9 +285,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     if ($changes == true) {
       $bloom = (empty($bloom)) ? NULL : $bloom;
     	$result = $mysqli->prepare("UPDATE questions SET theme=?,scenario=?,leadin=?,correct_fback=?,score_method=?,notes=?,q_media=?,q_media_width=?,q_media_height=?, bloom=?, q_group=?, last_edited=NOW(), scenario_plain=?, leadin_plain=?, status=? WHERE q_id=?");
-      $scenario = trim(strip_tags($scenario));
-      $leadin = trim(strip_tags($leadin));
-      $result->bind_param('ssssssssssssssi', $theme, $scenario, $leadin, $feedback, $score_method, $notes, $unique_name, $tmp_width, $tmp_height, $bloom, $question_teams, $scenario, $leadin, $status, $q_id);
+      $scenario_plan = trim(strip_tags($scenario));
+      $leadin_plan = trim(strip_tags($leadin));
+      $result->bind_param('ssssssssssssssi', $theme, $scenario, $leadin, $feedback, $score_method, $notes, $unique_name, $tmp_width, $tmp_height, $bloom, $question_teams, $scenario_plan, $leadin_plan, $status, $q_id);
       $result->execute();  
       $result->close();
     }

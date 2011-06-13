@@ -38,12 +38,12 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     $scenario =  $_POST['scenario'];
     $part_names = array('theme','notes','scale_type','status');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_scale_type','old_notapplicable','old_status');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
 
     // Strip MS Office HTML.
@@ -249,7 +249,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo "<option value=\"custom\" selected>Custom...</option>\n";
       $score_parts = explode("|",$score_method);
     }
-    echo "</select></optgroup><input type=\"hidden\" name=\"old_scale_type\" value=\"". stripslashes($current_scale) . "\" /></td></tr>\n";
+    echo "</select></optgroup><input type=\"hidden\" name=\"old_scale_type\" value=\"". $current_scale . "\" /></td></tr>\n";
     $na = substr($score_method,strrpos($score_method,'|')+1);
     echo "<tr><td class=\"field\">N/A Column</td><td><input type=\"hidden\" name=\"old_notapplicable\" value=\"$na\" />";
     if ($na == 'true') {
@@ -266,7 +266,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       if ($scale_match == true or $i >= count($score_parts)) {
         echo "<tr><td class=\"field\">$i.</td><td><input type=\"textbox\" size=\"30\" name=\"custom$i\" /></td></tr>\n";
       } else {
-        echo "<tr><td class=\"field\">$i.</td><td><input type=\"textbox\" size=\"30\" name=\"custom$i\" value=\"" . stripslashes($score_parts[$i-1]) . "\"/></td></tr>\n";
+        echo "<tr><td class=\"field\">$i.</td><td><input type=\"textbox\" size=\"30\" name=\"custom$i\" value=\"" . $score_parts[$i-1] . "\"/></td></tr>\n";
       }
     }
     echo "</table>\n</td></tr>\n";

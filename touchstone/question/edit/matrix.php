@@ -91,11 +91,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $leadin = $_POST['leadin'];
     $part_names = array('theme','notes','bloom','status', 'feedback','option_order');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
     $part_names = array('old_theme','old_leadin','old_notes','old_bloom','old_status', 'old_feedback','old_option_order');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes(html_entity_decode($_POST["$section_name"]));
+      $$section_name = html_entity_decode($_POST["$section_name"]);
     }
 
     // Strip MS Office HTML.
@@ -132,14 +132,14 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     for ($qcount=0; $qcount<10; $qcount++) {
       if ($_POST["stem$qcount"] != '') {
         if ($tmp_scenario == '') {
-          $tmp_scenario = stripslashes($_POST["stem$qcount"]);
+          $tmp_scenario = $_POST["stem$qcount"];
           if(isset($_POST["correct$qcount"])) {
             $tmp_answer = $_POST["correct$qcount"];
           } else {
             $tmp_answer = '';
           }
         } else {
-          $tmp_scenario .= '|' . stripslashes($_POST["stem$qcount"]);
+          $tmp_scenario .= '|' . $_POST["stem$qcount"];
           if(isset($_POST["correct$qcount"])) {
             $tmp_answer .= '|' . $_POST["correct$qcount"];
           } else {
@@ -155,8 +155,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         $result->close();
       }
     
-      $new_stem = stripslashes(html_entity_decode($_POST["stem$qcount"]));
-      $old_stem = stripslashes(html_entity_decode($_POST["old_stem$qcount"]));
+      $new_stem = html_entity_decode($_POST["stem$qcount"]);
+      $old_stem = html_entity_decode($_POST["old_stem$qcount"]);
     
       if ($new_stem != $old_stem) {
         $changes = true;
@@ -192,8 +192,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         $result->close();
       }
 
-      $new_option_text = stripslashes(html_entity_decode($_POST["option_text$ocount"]));
-      $old_option_text = stripslashes(html_entity_decode($_POST["old_option_text$ocount"]));
+      $new_option_text = html_entity_decode($_POST["option_text$ocount"]);
+      $old_option_text = html_entity_decode($_POST["old_option_text$ocount"]);
     
       if ($new_option_text != $old_option_text) {
         $changes = true;
@@ -407,9 +407,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
           if ($question == 0 and $col_no == 0) {
             echo '<td style="border-right:solid #CFCFCF 1px">&nbsp;</td>';
           } elseif ($question == 0 and $col_no > 0) {
-            echo '<td style="border-right: solid #CFCFCF 1px"><input type="text" name="option_text' . ($col_no - 1) . '" size="6"  value="' . htmlentities(stripslashes($matching_options[$col_no - 1]),ENT_NOQUOTES,'UTF-8') . '" /><input type="hidden" name="old_option_text' . ($col_no - 1) . '" value="' . htmlentities(stripslashes($matching_options[$col_no - 1]),ENT_NOQUOTES,'UTF-8') . '" /></td>';
+            echo '<td style="border-right: solid #CFCFCF 1px"><input type="text" name="option_text' . ($col_no - 1) . '" size="6"  value="' . htmlentities($matching_options[$col_no - 1],ENT_NOQUOTES,'UTF-8') . '" /><input type="hidden" name="old_option_text' . ($col_no - 1) . '" value="' . htmlentities($matching_options[$col_no - 1],ENT_NOQUOTES,'UTF-8') . '" /></td>';
           } elseif ($col_no == 0 and $question > 0) {
-            echo '<td style="border-right:solid #CFCFCF 1px; border-top: solid #CFCFCF 1px"><input type="text" name="stem' . ($question - 1) . '" size="6" value="' . htmlentities(stripslashes($matching_scenarios[$question - 1]),ENT_NOQUOTES,'UTF-8') . '" /><input type="hidden" name="old_stem' . ($question - 1) . '" value="' . htmlentities(stripslashes($matching_scenarios[$question - 1]),ENT_NOQUOTES,'UTF-8') . '" /></td>';
+            echo '<td style="border-right:solid #CFCFCF 1px; border-top: solid #CFCFCF 1px"><input type="text" name="stem' . ($question - 1) . '" size="6" value="' . htmlentities($matching_scenarios[$question - 1],ENT_NOQUOTES,'UTF-8') . '" /><input type="hidden" name="old_stem' . ($question - 1) . '" value="' . htmlentities($matching_scenarios[$question - 1],ENT_NOQUOTES,'UTF-8') . '" /></td>';
           } else {
             if ($matching_correct[$question - 1] == $col_no) {
               echo '<td style="border-right:solid #CFCFCF 1px; border-top:solid #CFCFCF 1px"><div align="center"><input type="radio" name="correct' . ($question - 1) . '" value="' . $col_no . '" checked /></div></td>';

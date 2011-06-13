@@ -37,7 +37,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 
   $tmp_leadin = clearMSOtags($_POST['leadin']);
 
-  $tmp_correct_fback = stripslashes($_POST['correct_fback']);
+  $tmp_correct_fback = $_POST['correct_fback'];
   $keywords = getKeywords();
   $score_method = $_POST['columns'] . 'x' . $_POST['rows'];
   

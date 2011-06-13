@@ -109,12 +109,12 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $scenario =  $_POST['scenario'];
     $part_names = array('theme','notes','bloom','correct_fback','score_method','status','option_order');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_correct_fback','old_score_method','old_status','old_option_order');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
 
     // Strip MS Office HTML.
@@ -225,13 +225,13 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         foreach($part_names as $section_name) {
           $new_section_name = $section_name . "$option_no";
           if(isset($_POST[$new_section_name])) {
-            $new_section_name = stripslashes(html_entity_decode($_POST[$new_section_name]));
+            $new_section_name = html_entity_decode($_POST[$new_section_name]);
           } else {
             $new_section_name = '';
           }
           $old_section_name = 'old_' . $section_name . "$option_no";
           if(isset($_POST[$old_section_name])) {
-            $old_section_name = stripslashes(html_entity_decode($_POST[$old_section_name]));
+            $old_section_name = html_entity_decode($_POST[$old_section_name]);
           }  else {
             $old_section_name = '';
           }
@@ -259,10 +259,10 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         }
         if ($stem_changes == true) {
           $temp_id = $_POST["optionid$option_no"];
-          $tmp_option = stripslashes($_POST["option_text$option_no"]);
+          $tmp_option = $_POST["option_text$option_no"];
           $result = $mysqli->prepare("UPDATE options SET option_text=?, o_media=?, o_media_width=?, o_media_height=?, feedback_right=?, feedback_wrong=?, correct=? WHERE id_num=?");
-          $tmp_option_right_fback = stripslashes($_POST["option_right_fback$option_no"]);
-          $tmp_option_wrong_fback =  stripslashes($_POST["option_wrong_fback$option_no"]);
+          $tmp_option_right_fback = $_POST["option_right_fback$option_no"];
+          $tmp_option_wrong_fback =  $_POST["option_wrong_fback$option_no"];
           $result->bind_param('sssssssi', $tmp_option, $option_media, $tmp_width, $tmp_height, $tmp_option_right_fback, $tmp_option_wrong_fback, $new_checkbox, $temp_id);
           $result->execute();
           $result->close();

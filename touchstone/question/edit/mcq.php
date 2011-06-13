@@ -79,14 +79,14 @@ $q_id = $_GET['q_id'];
       $part_names = array('theme','notes','bloom','correct_fback','incorrect_fback','score_method','status','option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = stripslashes($_POST["$section_name"]);
+          $$section_name = $_POST["$section_name"];
         }
       }
       if (trim(strip_tags($scenario)) == '') $scenario = '';
       $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_correct_fback','old_incorrect_fback','old_score_method','old_status','old_option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = stripslashes($_POST["$section_name"]);
+          $$section_name = $_POST["$section_name"];
         }
       }
 
@@ -200,7 +200,7 @@ $q_id = $_GET['q_id'];
         if($option_changes == true) {
           $temp_id = $_POST["optionid$option_no"];
           $result = $mysqli->prepare("UPDATE options SET option_text=?, o_media=?, o_media_width='$tmp_width', o_media_height='$tmp_height', correct=?, feedback_right=? WHERE id_num=?");
-          $tmp_option_text =  stripslashes($_POST["new_option_text$option_no"]);
+          $tmp_option_text =  $_POST["new_option_text$option_no"];
           $result->bind_param('ssssi',$tmp_option_text, $tmp_option_media, $_POST['correct'], $_POST["feedback_right$option_no"], $temp_id);
           $result->execute();  
           $result->close();
@@ -403,8 +403,6 @@ $q_id = $_GET['q_id'];
   </tr>
   <?php
     echo "<tr>\n<td class=\"field\">General Feedback</td>\n<td colspan=\"2\"><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . stripslashes($correct_fback) . "</textarea><input type=\"hidden\" name=\"old_correct_fback\" value=\"" . htmlentities(stripslashes($correct_fback),ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
-    //echo "<tr>\n<td class=\"field\">Feedback if Wrong<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(leave blank to use default)</span></td>\n<td><textarea name=\"incorrect_fback\" style=\"width:700px\" cols=\"85\" rows=\"4\" wrap=\"virtual\">" . stripslashes($incorrect_fback) . "</textarea><input type=\"hidden\" name=\"options\" value=\"" . $option_no . "\"><input type=\"hidden\" name=\"old_incorrect_fback\" value=\"" . htmlentities(stripslashes($incorrect_fback),ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
- 
     echo echoMetadata($bloom, $q_id, $q_group, 3, $mysqli, true, $status, $disabled);
   ?>
   <tr>

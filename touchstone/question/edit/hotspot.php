@@ -180,12 +180,12 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
     $scenario =  $_POST['scenario'];
     $part_names = array('theme','notes','bloom','feedback','status');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_notes','old_bloom','old_feedback','old_points','old_status');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes(html_entity_decode($_POST["$section_name"]));
+      $$section_name = html_entity_decode($_POST["$section_name"]);
     }
 
     // Strip MS Office HTML.

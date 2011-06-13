@@ -33,7 +33,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   // Add Question data
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
 
-  $tmp_theme = stripslashes($_POST['theme']);
+  $tmp_theme = $_POST['theme'];
   $tmp_theme = clearMSOtags($tmp_theme);
 
   $tmp_scenario = clearMSOtags($_POST['scenario']);
@@ -51,7 +51,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     $tmp_option_incorrect_fback = '';
     $tmp_option_abstain_fback = '';
     $tmp_option_text = '';
-    $tmp_option_text = stripslashes(html_entity_decode($_POST["option_text$option_no"]));
+    $tmp_option_text = html_entity_decode($_POST["option_text$option_no"]);
     $unique_name = uploadFile('omedia' . $option_no,$tmp_width,$tmp_height);
     if ($tmp_option_text != '' or ($unique_name != 'none' and $unique_name != '')) {
       if(isset($_POST['correct' . $option_no])) $tmp_correct = $_POST['correct' . $option_no];

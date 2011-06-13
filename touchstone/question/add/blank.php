@@ -32,8 +32,7 @@ include_once('../../tools/getid3/getid3.php');
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
-  $tmp_stem = stripslashes($_POST['stem']);
-  $tmp_stem = clearMSOtags($tmp_stem);
+  $tmp_stem = clearMSOtags($_POST['stem']);
 
   // Insert into Questions
   $question_id = insert_into_questions('blank',$_POST['theme'],'',$_POST['leadin'],$_POST['correct_fback'],'',$_POST['score_method'],$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
@@ -71,10 +70,6 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
       echo "\t tinyMCE.triggerSave();";
     }
     ?>
-    if (oEdit1.getXHTMLBody() == "" || oEdit1.getXHTMLBody() == "&nbsp;" || oEdit1.getXHTMLBody() == "<p>&nbsp;</p>" || oEdit1.getXHTMLBody() == "<div>&nbsp;</div>" || oEdit1.getXHTMLBody() == "<br />") {
-      alert ("Please enter a question.");
-      return false;
-    }
     if (document.getElementById('leadin').value == "" || document.getElementById('stem').value == "&nbsp;" || document.getElementById('leadin').value == "<p>&nbsp;</p>" || document.getElementById('leadin').value == "<div>&nbsp;</div>" || document.getElementById('leadin').value == "<br />") {
       alert ("Please enter a Lead-in for the question.");
       return false;

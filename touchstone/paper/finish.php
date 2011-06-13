@@ -255,7 +255,7 @@ table {font-size:100%}
 .theme {margin-left:15px;font-size:150%;font-weight:bold;color:<?php echo $themecolor; ?>}
 .objH {font-weight:bold;color:<?php echo $themecolor; ?>}
 .notes {color:<?php echo $labelcolor; ?>}
-.feedback {font-family:<?php echo $font; ?>,sans-serif;font-style:italic;color:<?php echo $labelcolor; ?>}
+.feedback {font-family:<?php echo $font; ?>,sans-serif;font-style:italic;color:<?php echo $labelcolor; ?>;white-space: pre}
 .label {color:<?php echo $labelcolor; ?>}
 .mk {background-color:#FFFF00;font-weight:bold}
 .answerindent {margin-left:17px;margin-right:15px}
@@ -419,8 +419,8 @@ table {font-size:100%}
         $paper[$q_no]['correct'] = array();
       }
       $paper[$q_no]['option_text'][] = $option_text;
-      $paper[$q_no]['feedback_right'][] = stripslashes($feedback_right);
-      $paper[$q_no]['feedback_wrong'][] = stripslashes($feedback_wrong);
+      $paper[$q_no]['feedback_right'][] = $feedback_right;
+      $paper[$q_no]['feedback_wrong'][] = $feedback_wrong;
       $paper[$q_no]['o_media'][] = $o_media;
       $paper[$q_no]['o_media_width'][] = $o_media_width;
       $paper[$q_no]['o_media_height'][] = $o_media_height;

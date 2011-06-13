@@ -236,7 +236,7 @@ if (isset($_POST['submit1'])) {
   deleteMedia($_POST['image_name']);
   redirect($_POST['paperID']);
 } else {
-  $tmp_scenario = stripslashes($_POST['scenario']);
+  $tmp_scenario = $_POST['scenario'];
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
   $tmp_scenario = clearMSOtags($tmp_scenario);
 

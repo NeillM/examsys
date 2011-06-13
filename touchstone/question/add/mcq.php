@@ -49,17 +49,17 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
 
-  $tmp_scenario = clearMSOtags(stripslashes($_POST['scenario']));
+  $tmp_scenario = clearMSOtags($_POST['scenario']);
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
-  $tmp_leadin = clearMSOtags(stripslashes($_POST['leadin']));
+  $tmp_leadin = clearMSOtags($_POST['leadin']);
 
   // Insert into Questions
   $question_id = insert_into_questions('mcq',$_POST['theme'],$tmp_scenario,$tmp_leadin,$_POST['correct_fback'],'',$_POST['score_method'],$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
 
   // Insert into Options
   for ($option_no=1; $option_no<=20; $option_no++) {
-    $tmp_option_text = stripslashes($_POST["option_text$option_no"]);
+    $tmp_option_text = $_POST["option_text$option_no"];
     
     if(isset($_FILES['omedia' . $option_no])) {
       $unique_name = uploadFile('omedia' . $option_no,$tmp_width,$tmp_height);

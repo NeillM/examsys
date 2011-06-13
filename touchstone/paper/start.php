@@ -491,9 +491,9 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 </head>
 <?php
 if (stripos($userroles,'Student') !== false) {
-  echo '<body oncontextmenu="return false;" onload="StartClock()" onunload="KillClock()">';
+  echo '<body oncontextmenu="return false;" onload="StartClock();" onunload="KillClock()">';
 } else {
-  echo '<body onload="StartClock()" onunload="KillClock()">';
+  echo '<body onload="StartClock();" onunload="KillClock()">';
 }
 if ($current_screen < $no_screens) {
   echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "\"";
