@@ -101,6 +101,7 @@ function randomDetails($questionID) {
         $random_questions[$question_no]['type'] = $old_q_type;
         $random_questions[$question_no]['leadin'] = $old_leadin;
         $random_questions[$question_no]['scenario'] = $old_scenario;
+        $random_questions[$question_no]['scenario'] = $old_scenario;
         $random_questions[$question_no]['correct'] = $old_correct;
         $random_questions[$question_no]['status'] = $old_status;
         $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
@@ -120,6 +121,8 @@ function randomDetails($questionID) {
       $old_correct[] = $correct;
       $old_option_text[] = $option_text;
       $old_score_method = $score_method;
+      $old_q_media_width = $q_media_width;
+      $old_q_media_height = $q_media_height;
     }
 
     // Write out the last question.
