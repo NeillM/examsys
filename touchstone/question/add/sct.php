@@ -59,10 +59,10 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
 
-  $tmp_scenario = clearMSOtags($_POST['scenario']);
+  $tmp_scenario = stripslashes(clearMSOtags($_POST['scenario']));
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
-  $tmp_leadin = clearMSOtags($_POST['leadin1']) . '~' . clearMSOtags($_POST['leadin2']);
+  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin1'])) . '~' . stripslashes(clearMSOtags($_POST['leadin2']));
   
   // Work out the highest number of experts
   $max_experts = 1;

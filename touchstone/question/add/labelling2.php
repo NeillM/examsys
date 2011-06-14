@@ -236,11 +236,11 @@ if (isset($_POST['submit1'])) {
   deleteMedia($_POST['image_name']);
   redirect($_POST['paperID']);
 } else {
-  $tmp_scenario = $_POST['scenario'];
+  $tmp_scenario = stripslashes($_POST['scenario']);
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
   $tmp_scenario = clearMSOtags($tmp_scenario);
 
-  $tmp_leadin = clearMSOtags($_POST['leadin']);
+  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
 
   // Insert into Questions
   $question_id = insert_into_questions('labelling',$_POST['theme'],$tmp_scenario,$tmp_leadin,$_POST['correct_fback'],'NULL','',$_POST['notes'],$userID,$_POST['image_name'],$_POST['image_width'],$_POST['image_height'],date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');

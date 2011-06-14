@@ -34,12 +34,12 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
 
   $tmp_theme = $_POST['theme'];
-  $tmp_theme = clearMSOtags($tmp_theme);
+  $tmp_theme = stripslashes(clearMSOtags($tmp_theme));
 
-  $tmp_scenario = clearMSOtags($_POST['scenario']);
+  $tmp_scenario = stripslashes(clearMSOtags($_POST['scenario']));
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
-  $tmp_leadin = clearMSOtags($_POST['leadin']);
+  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
 
   // Insert into Questions
   $question_id = insert_into_questions('dichotomous',$tmp_theme,$tmp_scenario,$tmp_leadin,$_POST['question_feedback'],'NULL',$_POST['score_method'],$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
@@ -51,7 +51,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     $tmp_option_incorrect_fback = '';
     $tmp_option_abstain_fback = '';
     $tmp_option_text = '';
-    $tmp_option_text = html_entity_decode($_POST["option_text$option_no"]);
+    $tmp_option_text = stripslashes(html_entity_decode($_POST["option_text$option_no"]));
     $unique_name = uploadFile('omedia' . $option_no,$tmp_width,$tmp_height);
     if ($tmp_option_text != '' or ($unique_name != 'none' and $unique_name != '')) {
       if(isset($_POST['correct' . $option_no])) $tmp_correct = $_POST['correct' . $option_no];

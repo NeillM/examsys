@@ -40,10 +40,10 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
 
-  $tmp_scenario = clearMSOtags($_POST['scenario']);
+  $tmp_scenario = stripslashes(clearMSOtags($_POST['scenario']));
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
-  $tmp_leadin = clearMSOtags($_POST['leadin']);
+  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
   $tmp_score_method = $_POST['answer_decimals'] . ',' . $_POST['tolerance'] . ',' . $_POST['units'];
 
   // Insert into Questions

@@ -32,12 +32,12 @@ include_once('../../tools/getid3/getid3.php');
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   $unique_name = uploadFile('qmedia',$tmp_width,$tmp_height);
 
-  $tmp_scenario = clearMSOtags($_POST['scenario']);
+  $tmp_scenario = stripslashes(clearMSOtags($_POST['scenario']));
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
-  $tmp_leadin = clearMSOtags($_POST['leadin']);
+  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
 
-  $tmp_correct_fback = $_POST['correct_fback'];
+  $tmp_correct_fback = stripslashes($_POST['correct_fback']);
   $keywords = getKeywords();
   $score_method = $_POST['columns'] . 'x' . $_POST['rows'];
   

@@ -31,9 +31,9 @@ include_once('../../tools/getid3/getid3.php');
 
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   //Get all the data first into temporay variables.
-  $tmp_theme = $_POST['theme'];
-  $tmp_leadin = clearMSOtags($_POST['leadin']);
-  $tmp_notes = $_POST['notes'];
+  $tmp_theme = stripslashes($_POST['theme']);
+  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
+  $tmp_notes = stripslashes($_POST['notes']);
   $tmp_bloom = $_POST['bloom'];
   $tmp_question_team = getTeams();
   $tmp_scenario = '';
@@ -72,7 +72,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
         $tmp_media_height .= '|0';
       }
       if (trim(strip_tags($_POST["stem$qcount"])) != '' or $media_name != '') {
-        $tmp_scenario .= '|' . clearMSOtags($_POST["stem$qcount"]);
+        $tmp_scenario .= '|' . stripslashes(clearMSOtags($_POST["stem$qcount"]));
         if(isset($_POST["correct_options$qcount"])) {
           $addr = $_POST["correct_options$qcount"];
         } else {

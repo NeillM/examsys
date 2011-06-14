@@ -32,7 +32,7 @@ include_once('../../tools/getid3/getid3.php');
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
-  $tmp_stem = clearMSOtags($_POST['stem']);
+  $tmp_stem = stripslashes(clearMSOtags($_POST['stem']));
 
   // Insert into Questions
   $question_id = insert_into_questions('blank',$_POST['theme'],'',$_POST['leadin'],$_POST['correct_fback'],'',$_POST['score_method'],$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');

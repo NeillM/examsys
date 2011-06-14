@@ -257,7 +257,7 @@ if (isset($_POST['submit1'])) {
   }
   $marks = $i;
 
-  $tmp_scenario = clearMSOtags($_POST['scenario']);
+  $tmp_scenario = stripslashes(clearMSOtags($_POST['scenario']));
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
   // Insert into Questions
