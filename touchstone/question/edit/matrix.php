@@ -91,11 +91,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $leadin = $_POST['leadin'];
     $part_names = array('theme','notes','bloom','status', 'feedback','option_order');
     foreach($part_names as $section_name) {
-      $$section_name = $_POST["$section_name"];
+      $$section_name = stripslashes($_POST["$section_name"]);
     }
     $part_names = array('old_theme','old_leadin','old_notes','old_bloom','old_status', 'old_feedback','old_option_order');
     foreach($part_names as $section_name) {
-      $$section_name = html_entity_decode($_POST["$section_name"]);
+      $$section_name = stripslashes(html_entity_decode($_POST["$section_name"]));
     }
 
     // Strip MS Office HTML.

@@ -79,14 +79,14 @@ $q_id = $_GET['q_id'];
       $part_names = array('theme','notes','bloom','correct_fback','incorrect_fback','score_method','status','option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = $_POST["$section_name"];
+          $$section_name = stripslashes($_POST["$section_name"]);
         }
       }
       if (trim(strip_tags($scenario)) == '') $scenario = '';
       $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_correct_fback','old_incorrect_fback','old_score_method','old_status','old_option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = $_POST["$section_name"];
+          $$section_name = stripslashes($_POST["$section_name"]);
         }
       }
 

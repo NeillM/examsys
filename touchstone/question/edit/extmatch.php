@@ -118,12 +118,12 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $part_names = array('theme','leadin','notes','bloom','status','option_order');
     foreach($part_names as $section_name) {
       //$$section_name = stripslashes($_POST["$section_name"]);
-      $$section_name = $_POST["$section_name"];
+      $$section_name = stripslashes($_POST["$section_name"]);
     }
     $part_names = array('old_theme','old_leadin','old_notes','old_bloom','old_status','old_option_order');
     foreach($part_names as $section_name) {
       //$$section_name = stripslashes($_POST["$section_name"]);
-      $$section_name = $_POST["$section_name"];
+      $$section_name = stripslashes($_POST["$section_name"]);
     }
 
     //Get all the data first into temporay variables.
