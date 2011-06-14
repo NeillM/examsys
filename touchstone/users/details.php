@@ -567,10 +567,15 @@ a.access:hover {color:white}
   $mysqli->select_db('touchstone');
   if (strpos($tmp_roles,'External Examiner') !== false) {      // Get the papers the External is down to review.
     $external_array = array();
-    $external_papers = $mysqli->query("SELECT DISTINCT paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=$tmp_id WHERE deleted IS NULL AND externals LIKE '%$tmp_id%' AND reviewed IS NULL ORDER BY paper_title");
-    while ($row = $external_papers->fetch_assoc()) {
-      $paper[$results_no]['q_paper'] = $row['paper_title'];
-      $paper[$results_no]['id'] = $row['property_id'];
+
+    $stmt = $mysqli->prepare("SELECT DISTINCT paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=? WHERE deleted IS NULL AND externals LIKE ? AND reviewed IS NULL ORDER BY paper_title");
+    $tmp_id_like = '%' . $tmp_id . '%';
+    $stmt->bind_param('is', $tmp_id, $tmp_id_like);
+    $stmt->execute();
+    $stmt->bind_result($paper_title, $property_id, $paper_type);
+    while($stmt->fetch()) {
+      $paper[$results_no]['q_paper'] = $paper_title;
+      $paper[$results_no]['id'] = $property_id;
       $paper[$results_no]['paper_type'] = '2';
       $paper[$results_no]['started'] = '';
       $paper[$results_no]['duration'] = '';
@@ -579,19 +584,26 @@ a.access:hover {color:white}
       $paper[$results_no]['ipaddress'] = '';
       $results_no++;
     }
-    $external_papers->close();
-    $test_history = $mysqli->query("SELECT paper_title, paper_type, q_paper, DATE_FORMAT(reviewed,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM (properties, review_comments) WHERE properties.property_id=review_comments.q_paper AND reviewer=$tmp_id ORDER BY q_paper, started, screen");
+    $stmt->close();
+
+    $stmt = $mysqli->prepare("SELECT paper_title, paper_type, q_paper, DATE_FORMAT(reviewed,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM (properties, review_comments) WHERE properties.property_id=review_comments.q_paper AND reviewer=? ORDER BY q_paper, started, screen");
+    $stmt->bind_param('i', $tmp_id);
   } else {
-    $query_sql = "(SELECT paper_title, 0 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log0, log_metadata WHERE log0.q_paper=log_metadata.paperID AND log0.started=log_metadata.started AND log0.userID=log_metadata.userID AND properties.property_id=log0.q_paper AND log0.userID=$tmp_id)";
-    $query_sql .= " UNION ALL (SELECT paper_title, 1 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log1, log_metadata WHERE log1.q_paper=log_metadata.paperID AND log1.started=log_metadata.started AND log1.userID=log_metadata.userID AND properties.property_id=log1.q_paper AND log1.userID=$tmp_id)";
-    $query_sql .= " UNION ALL (SELECT paper_title, 2 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log2, log_metadata WHERE log2.q_paper=log_metadata.paperID AND log2.started=log_metadata.started AND log2.userID=log_metadata.userID AND properties.property_id=log2.q_paper AND log2.userID=$tmp_id)";
-    $query_sql .= " UNION ALL (SELECT paper_title, 3 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log3, log_metadata WHERE log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND log3.userID=log_metadata.userID AND properties.property_id=log3.q_paper AND log3.userID=$tmp_id)";
-    $query_sql .= " UNION ALL (SELECT paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id=log4_overall.q_paper AND userID=$tmp_id)";
+    $query_sql = "(SELECT paper_title, 0 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log0, log_metadata WHERE log0.q_paper=log_metadata.paperID AND log0.started=log_metadata.started AND log0.userID=log_metadata.userID AND properties.property_id=log0.q_paper AND log0.userID=?)";
+    $query_sql .= " UNION ALL (SELECT paper_title, 1 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log1, log_metadata WHERE log1.q_paper=log_metadata.paperID AND log1.started=log_metadata.started AND log1.userID=log_metadata.userID AND properties.property_id=log1.q_paper AND log1.userID=?)";
+    $query_sql .= " UNION ALL (SELECT paper_title, 2 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log2, log_metadata WHERE log2.q_paper=log_metadata.paperID AND log2.started=log_metadata.started AND log2.userID=log_metadata.userID AND properties.property_id=log2.q_paper AND log2.userID=?)";
+    $query_sql .= " UNION ALL (SELECT paper_title, 3 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, duration, screen, ipaddress FROM properties, log3, log_metadata WHERE log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND log3.userID=log_metadata.userID AND properties.property_id=log3.q_paper AND log3.userID=?)";
+    $query_sql .= " UNION ALL (SELECT paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id=log4_overall.q_paper AND userID=?)";
     $query_sql .= " ORDER BY q_paper, started, screen";
-    $test_history = $mysqli->query($query_sql);
+    
+    $stmt = $mysqli->prepare($query_sql);
+    $stmt->bind_param('iiiii', $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id);
   }
-  while ($row = $test_history->fetch_assoc()) {
-    if ($old_q_paper != $row['q_paper'] or $old_started != $row['started']) {
+  
+  $stmt->execute();
+  $stmt->bind_result($paper_title, $paper_type, $q_paper, $started, $duration, $screen, $ipaddress);
+  while($stmt->fetch()) {
+    if ($old_q_paper != $q_paper or $old_started != $started) {
       if ($old_q_paper != '') {
         $paper[$results_no]['q_paper'] = $old_paper_title;
         $paper[$results_no]['id'] = $old_q_paper;
@@ -604,17 +616,17 @@ a.access:hover {color:white}
       $old_screen = 0;
       $old_duration = 0;
     }
-    if ($old_screen != $row['screen']) {
-      $old_duration += $row['duration'];
+    if ($old_screen != $screen) {
+      $old_duration += $duration;
     }
-    $old_q_paper = $row['q_paper'];
-    $old_started = $row['started'];
-    $old_paper_type = $row['paper_type'];
-    $old_screen = $row['screen'];
-    $old_paper_title = $row['paper_title'];
-    $old_ipaddress = $row['ipaddress'];
+    $old_q_paper = $q_paper;
+    $old_started = $started;
+    $old_paper_type = $paper_type;
+    $old_screen = $screen;
+    $old_paper_title = $paper_title;
+    $old_ipaddress = $ipaddress;
   }
-  $test_history->close();
+  $stmt->close();
   
   if ($old_q_paper != '') {
     $paper[$results_no]['q_paper'] = $old_paper_title;
