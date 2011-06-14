@@ -24,16 +24,7 @@
 
   require '../include/sysadmin_auth.inc';
   require '../include/sidebar_menu.inc';
-
-  function get_ipaddress() {
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-      $tmp_client_ipaddress = trim($tmp_parts[0]);
-    } else {
-      $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-    }
-    return $tmp_client_ipaddress;
-  }
+  require_once '../classes/networkutils.class.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -179,7 +170,7 @@ if ($cfg_use_ldap == true) {
   
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2" class="sechead">Client Computer</td></tr>';
-  echo '<tr><td>IP Address</td><td>' . get_ipaddress() . '</td></tr>';
+  echo '<tr><td>IP Address</td><td>' . NetworkUtils::get_ipaddress() . '</td></tr>';
   echo '<tr><td>Clock</td><td><script language="JavaScript">the_date = new Date(); document.write(the_date.toLocaleString()); </script></td></tr>';
   echo '<tr><td>Browser</td><td>' . $_SERVER['HTTP_USER_AGENT'] . '</td></tr>';
 

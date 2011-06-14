@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
+require_once './touchstone/classes/networkutils.class.php';
+
 /**
 * 
 * Looks up the next free temporary account and reserves it for the current user.
@@ -24,22 +26,6 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-
-/**
- * This is function get_ipaddress, attempts to get the client ip address 
- *
- * @return mixed client ip address
- *
- */
-function get_ipaddress() {
-  if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    $tmp_parts = split(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-    $tmp_client_ipaddress = trim($tmp_parts[0]);
-  } else {
-    $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-  }
-  return $tmp_client_ipaddress;
-}
 
 function encpw($u,$p) {
   $salt = '$1$' . substr(md5($u),0,12) . '$';
@@ -62,7 +48,7 @@ while ($row=$results->fetch()) {
   $sub_results->store_result();
   $sub_results->bind_result($address);
   while ($sub_row=$sub_results->fetch()) {
-    if (get_ipaddress() == $address) $ip_match = true;
+    if (NetworkUtils::get_ipaddress() == $address) $ip_match = true;
   }
   $sub_results->close();
 }
@@ -72,7 +58,7 @@ if ($ip_match == false) {
   echo "<html>\n<head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This page can only be accessed from a university computer within the examination room.</p>\n<!-- " . get_ipaddress() . " -->\n<!-- $labs -->\n</body>\n</html>";
+  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This page can only be accessed from a university computer within the examination room.</p>\n<!-- " . NetworkUtils::get_ipaddress() . " -->\n<!-- $labs -->\n</body>\n</html>";
   exit;
 }
 ?>

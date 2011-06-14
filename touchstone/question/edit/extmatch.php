@@ -87,14 +87,14 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $result->close();
 
     // Remark the student's answers in 'log2'.
-    $big_answer_parts = split('\|',$tmp_answer);
+    $big_answer_parts = explode('|',$tmp_answer);
     $result = $mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
     $result->bind_param('ii', $q_id, $_POST['paperID']);
     $result->execute();  
     $result->store_result();
     $result->bind_result($user_answer);
     while ($row = $result->fetch()) {
-      $big_user_parts = split('\|',$user_answer);
+      $big_user_parts = explode('|',$user_answer);
       $marks = 0;
       for ($i=0; $i<count($big_answer_parts); $i++) {
         if ($big_answer_parts[$i] == $big_user_parts[$i]) $marks++;

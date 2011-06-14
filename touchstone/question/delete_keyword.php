@@ -27,7 +27,7 @@ require './include/staff_auth.inc';
   if (isset($_POST['delete'])) {
   $question_details = mysql_query("SELECT q_id, keywords FROM questions WHERE keywords LIKE \"%" . $_POST['deleteword'] . "%\" AND ownerID=$userID",$link_id);
   while ($row = mysql_fetch_array($question_details)) {
-    $keyword_list = split(';',$row['keywords']);
+    $keyword_list = explode(';',$row['keywords']);
     $new_keyword_list = $row['keywords'];
     $new_keyword_list = preg_replace('/^' . $_POST['deleteword'] . ';/', '', $new_keyword_list);
     $new_keyword_list = preg_replace('/;' . $_POST['deleteword'] . ';/', ';', $new_keyword_list);

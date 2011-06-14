@@ -79,7 +79,7 @@
     $paper_details[$paper_no]['paper_type'] = $row['paper_type'];
     $paper_details[$paper_no]['paper_ownerID'] = $row['paper_ownerID'];
     $paper_details[$paper_no]['paper_owner_email'] = $row['email'];
-    $tmp_modules = split(',',$row['moduleID']);
+    $tmp_modules = explode(',',$row['moduleID']);
     $paper_details[$paper_no]['moduleID'] = $tmp_modules[0];
     $paper_no++;
   }
@@ -122,7 +122,7 @@
     $vevent->setProperty( 'summary', 'EXAM:' . $paper['paper_title'] );
     $vevent->setProperty( 'description', $paper['paper_title'] );
     
-    $rooms = split(',',$paper['labs']);
+    $rooms = explode(',',$paper['labs']);
     $roomList = '';
     foreach ($rooms as $individual_room) {
       if ($roomList == '') {

@@ -200,7 +200,7 @@
       }
       if (($row['labs'] != '' and $row['paper_type'] == '2') or $row['paper_type'] != '2') {
         echo "<div class=\"p\" id=\"divpaper$paper_no\"><input type=\"checkbox\" onclick=\"toggle('divpaper$paper_no')\" name=\"paper$paper_no\" value=\"" . $row['property_id'] . "\" />&nbsp;" . $row['paper_title'] . " <span style=\"font-size:80%\">";
-        $rooms = split(',',$row['labs']);
+        $rooms = explode(',',$row['labs']);
         $html = '';
         foreach ($rooms as $individual_room) {
           if ($html == '') {

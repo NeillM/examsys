@@ -93,7 +93,7 @@ function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_ans
       if ($branching_q_data['scenario'] == $questionID) $previous_user_answer = $past_answer;
     }
   }
-  $target_questionIDs = split(',',$branching_q_data['options'][$previous_user_answer-1]['option_text']);
+  $target_questionIDs = explode(',',$branching_q_data['options'][$previous_user_answer-1]['option_text']);
   
   // Remove any additional records from log, if user goes down different 'branch'.
   
@@ -101,7 +101,7 @@ function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_ans
     //build a list of all optional questions
     $optional_qids .= $individual_option['option_text'] . ',';
   }
-  $optional_qids = array_unique(split(',',$optional_qids)); //get the unique qids
+  $optional_qids = array_unique(explode(',',$optional_qids)); //get the unique qids
   foreach ($optional_qids as $op_qid) {
     if (!in_array($op_qid,$target_questionIDs) and isset($user_answers[$current_screen][$op_qid])) {
       //if any of the possible qids are set on this screen remove old answer as the user is no on a different branch 

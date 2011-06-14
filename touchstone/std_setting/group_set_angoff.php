@@ -33,10 +33,10 @@ if (isset($_GET['reviewers'])) {
   $paperID = $_GET['paperID'];
   $module = $_GET['module'];
   $folder = $_GET['folder'];
-  $reviews = split(';',$_GET['reviewers']);
+  $reviews = explode(';',$_GET['reviewers']);
   $row_no = 0;
   foreach ($reviews as $individual_review) {
-    $parts = split(',',$individual_review);
+    $parts = explode(',',$individual_review);
     if ($row_no == 0) {
       $setterID = $parts[0];
       $dateID = $parts[1];

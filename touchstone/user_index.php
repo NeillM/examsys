@@ -26,16 +26,6 @@
 
 require './include/staff_student_auth.inc';
 
-function get_ipaddress() {
-  if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    $tmp_parts = split(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-    $tmp_client_ipaddress = trim($tmp_parts[0]);
-  } else {
-    $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-  }
-  return $tmp_client_ipaddress;
-}
-
 function display_duration($normal,$extra) {
   $mins = $normal;
   if ($extra != NULL) $mins .= ' + ' . ($normal/100)*$extra;

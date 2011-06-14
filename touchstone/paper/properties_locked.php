@@ -206,7 +206,7 @@ if (isset($_POST['Submit'])) {
      $folder_details->bind_result($folder_id, $folder_name);
      while ($row = $folder_details->fetch()) {
        $path_parts = substr_count($folder_name,';');
-       $folder_array = split(';',$folder_name);
+       $folder_array = explode(';',$folder_name);
        $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
        if ($folder == $folder_id) {
          echo "<option value=\"" . $folder_id . "\" selected>" . $display_name . "</option>";

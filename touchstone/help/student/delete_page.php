@@ -9,9 +9,9 @@
 
   function check4Images($html,&$images) {
     if (stripos($html, '<img') !== false) {
-      $img_parts = split('src="',$html);
+      $img_parts = explode('src="',$html);
       for ($i=1; $i<count($img_parts); $i++) {
-        $quote_parts = split('"',$img_parts[$i]);
+        $quote_parts = explode('"',$img_parts[$i]);
         $images[] = $quote_parts[0];
       }
     }

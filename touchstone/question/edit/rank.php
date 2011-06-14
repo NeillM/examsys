@@ -69,7 +69,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       $mark = 0;
       $totalpos = 0;
       $correct_rank = true;
-      $user_answers = split(',',$user_answer);
+      $user_answers = explode(',',$user_answer);
       for ($i=1; $i<=count($correct_answers); $i++) {
         if ($i == 1 and $_POST['score_method'] == 'BonusMark') $totalpos++;
         if ($_POST['score_method'] == 'StrictOrder') {

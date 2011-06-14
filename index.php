@@ -27,22 +27,13 @@
 */
 
 require './touchstone/include/staff_student_auth.inc';
+require_once './touchstone/classes/networkutils.class.php';
 
   // Redirect External Exminers and Invigilators to their own areas.
   if ($userroles == 'External Examiner') {
     header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/reviews/");
   } elseif ($userroles == 'Invigilator') {
     header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/invigilator/");
-  }
-
-  function get_ipaddress() {
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      $tmp_parts = split(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-      $tmp_client_ipaddress = trim($tmp_parts[0]);
-    } else {
-      $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-    }
-    return $tmp_client_ipaddress;
   }
 
   function displayIcon($paper_type) {
@@ -70,7 +61,7 @@ require './touchstone/include/staff_student_auth.inc';
     if ($row['labs'] != '') {
       $machineOK = false;
       $labs = str_replace(","," OR lab=",$row['labs']);
-      $lab_info = $mysqli->query("SELECT address FROM ip_addresses WHERE address='" . get_ipaddress() . "' AND (lab=$labs)");
+      $lab_info = $mysqli->query("SELECT address FROM ip_addresses WHERE address='" . NetworkUtils::get_ipaddress() . "' AND (lab=$labs)");
       if ($lab_info->num_rows > 0) $machineOK = true;
       $lab_info->close();
     } else {
@@ -117,7 +108,7 @@ require './touchstone/include/staff_student_auth.inc';
 
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Most likely cause is one or more security conflicts with:</p>\n<ul style=\"margin-left:80px\">\n";
 
-    $ip_info = $mysqli->query("SELECT name FROM (labs, ip_addresses) WHERE labs.id=ip_addresses.lab AND address='" . get_ipaddress() . "'");
+    $ip_info = $mysqli->query("SELECT name FROM (labs, ip_addresses) WHERE labs.id=ip_addresses.lab AND address='" . NetworkUtils::get_ipaddress() . "'");
     if ($ip_info->num_rows > 0) {
       $ip_row = $ip_info->fetch_assoc();
       $computer_lab = '(' . $ip_row['name'] . ')';
@@ -125,7 +116,7 @@ require './touchstone/include/staff_student_auth.inc';
       $computer_lab = '<span style="color:red">(unknown address)</span>';
     }
     $ip_info->close();
-    echo "<li>IP address - " . get_ipaddress() . " $computer_lab</li>\n";
+    echo "<li>IP address - " . NetworkUtils::get_ipaddress() . " $computer_lab</li>\n";
     echo "<li>Time/Date - " . date('d/m/Y H:i:s') . "</li>\n";
     echo "<li>Academic Year - ";
     if ($year == '') {

@@ -23,16 +23,7 @@
 */
 
   require '../include/invigilator_auth.inc';
-  
-  function get_ipaddress() {
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      $tmp_parts = split(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-      $tmp_client_ipaddress = trim($tmp_parts[0]);
-    } else {
-      $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-    }
-    return $tmp_client_ipaddress;
-  }
+  require_once '../classes/networkutils.class.php';
   
   function get_students($modules, $session, $paperID, $exam_length) {
     global $mysqli;
@@ -154,7 +145,7 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
 <body onload="StartClock(); resizeLists();" onunload="KillClock()">
 
 <?php
-  $current_ip_address = get_ipaddress();
+  $current_ip_address = NetworkUtils::get_ipaddress();
 
   $lab_results = $mysqli->prepare("select lab, name FROM ip_addresses, labs WHERE ip_addresses.lab=labs.id AND address=?");
   $lab_results->bind_param('s', $current_ip_address);
@@ -170,7 +161,7 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
 <td><div style="padding-left:10px; font-size:24pt; font-weight:bold">
 <?php
   if ($room_name == '') {
-    echo get_ipaddress() . ' - unknown lab'; 
+    echo NetworkUtils::get_ipaddress() . ' - unknown lab'; 
   } else {
     echo 'Lab: ' . $room_name; 
   }

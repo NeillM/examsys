@@ -97,9 +97,9 @@
           } else {
             $separate_line = str_replace(',','~',$separate_line);
           }
-          $fields = split('~',$separate_line);
+          $fields = explode('~',$separate_line);
           $email = trim($fields[12]);
-          $username = split("@",$email);
+          $username = explode("@",$email);
           $username = $username[0];
           $session = trim('20' . $fields[1]);
           $students[$username]['username'] = $username;
@@ -143,14 +143,14 @@
           } else {
             $separate_line = str_replace(',','~',$separate_line);
           }
-          $fields = split('~',$separate_line);
+          $fields = explode('~',$separate_line);
 
           if (!stristr($fields[0],"Module Mnem")) {
             $sid = trim($fields[3]);
             $module = $fields[0];
             $session = trim('20' . $fields[1]);
             $email = trim($fields[12]);
-            $username = split("@",$email);
+            $username = explode("@",$email);
             $username = $username[0];
             if (in_array($module,$touchstone_modules)) {
               if (!in_array($module,$students[$username]['modules'])) {

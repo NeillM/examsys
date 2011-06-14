@@ -8,27 +8,12 @@
 */
 
   require '../include/invigilator_auth.inc';
-
-  /**
-   * This is function get_ipaddress, attempts to get the client ip address 
-   *
-   * @return mixed client ip address
-   *
-   */
-  function get_ipaddress() {
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      $tmp_parts = split(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-      $tmp_client_ipaddress = trim($tmp_parts[0]);
-    } else {
-      $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-    }
-    return $tmp_client_ipaddress;
-  }
-
+  require_once '../classes/networkutils.class.php';
+  
   if (isset($_POST['submit'])) {
     if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
       $note = stripslashes($_POST['note']);
-      $current_ipaddress = get_ipaddress();
+      $current_ipaddress = NetworkUtils::get_ipaddress();
     
       $result = $mysqli->prepare("INSERT INTO paper_notes VALUES (NULL,?,NOW(),?,?,?)");
       $result->bind_param('siis', $note, $_POST['paperID'], $userID, $current_ipaddress);
@@ -55,7 +40,7 @@
   </form>
   <?php
   } else {
-    $current_ipaddress = get_ipaddress();
+    $current_ipaddress = NetworkUtils::get_ipaddress();
   
     $result = $mysqli->prepare("SELECT note_id, note FROM paper_notes WHERE paper_id=? AND note_workstation=?");
     $result->bind_param('is', $_GET['paperID'], $current_ipaddress);

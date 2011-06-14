@@ -119,7 +119,7 @@ function add_users_from_file($fileName) {
     if (isset($header['username'])) {
       $username = $fields[$header['username']];
     } else {
-      $username = split("@",$email);
+      $username = explode("@",$email);
       $username = $username[0];
     }
       

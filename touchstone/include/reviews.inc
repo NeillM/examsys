@@ -22,21 +22,13 @@
 * @package
 */
 
+require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/networkutils.class.php');
+
 function time_to_seconds($seconds) {
   $hr = intval(substr($seconds,8,2));
   $min = intval(substr($seconds,10,2));
   $sec = intval(substr($seconds,12,2));
   return ($hr * 3600) + ($min * 60) + $sec;
-}
-
-function get_ipaddress() {
-  if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    $tmp_parts = split(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-    $tmp_client_ipaddress = trim($tmp_parts[0]);
-  } else {
-    $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-  }
-  return $tmp_client_ipaddress;
 }
 
 function record_comments($paper_id,$screen_no,$dblink,$posted_vars,$userid,$review_type) {
@@ -60,7 +52,7 @@ function record_comments($paper_id,$screen_no,$dblink,$posted_vars,$userid,$revi
         if ($tmp_duration < 0) $tmp_duration += 86400;
         $tmp_duration += $_POST['previous_duration'];
         $extcomments = stripslashes($_POST["extcomments$question_no"]);
-        $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL,?,?,?,?,?,?,'Not actioned','',?,'" . get_ipaddress() . "',$tmp_duration,?)");
+        $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL,?,?,?,?,?,?,'Not actioned','',?,'" . NetworkUtils::get_ipaddress() . "',$tmp_duration,?)");
         $result->bind_param('iiisissi', $paper_id, $row['q_id'], $_POST["exttype$question_no"], $extcomments, $userid, $_POST['sessionid'], $review_type, $_POST['old_screen']);
         $result->execute();  
         $result->close();

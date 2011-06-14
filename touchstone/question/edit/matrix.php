@@ -68,7 +68,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $result->store_result();
     $result->bind_result($user_answer);
     while ($row = $result->fetch()) {
-      $user_parts = split('\|',$user_answer);
+      $user_parts = explode('|',$user_answer);
       $marks = 0;
       for ($i=0; $i<count($answer_parts); $i++) {
         if ($user_parts[$i] == $answer_parts[$i]) $marks++;

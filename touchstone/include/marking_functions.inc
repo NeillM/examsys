@@ -23,7 +23,7 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-
+require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/networkutils.class.php');
 
 /**
  * This is function time_to_seconds
@@ -37,22 +37,6 @@ function time_to_seconds($seconds) {
   $min = intval(substr($seconds,10,2));
   $sec = intval(substr($seconds,12,2));
   return ($hr * 3600) + ($min * 60) + $sec;
-}
-
-/**
- * This is function get_ipaddress, attempts to get the client ip address 
- *
- * @return mixed client ip address
- *
- */
-function get_ipaddress() {
-  if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    $tmp_parts = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-    $tmp_client_ipaddress = trim($tmp_parts[0]);
-  } else {
-    $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
-  }
-  return $tmp_client_ipaddress;
 }
 
 /**
@@ -147,7 +131,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
     $save_answers->bind_param('isisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
   } else {
     if ($screen_no == 1) {       // Write log_metadata first on screen 1 only
-      $tmp_ip_address = get_ipaddress();
+      $tmp_ip_address = NetworkUtils::get_ipaddress();
       $save_answers = $dblink->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
       $save_answers->bind_param('iisssii', $userid, $paper_id, $posted_vars['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
       $save_answers->execute();

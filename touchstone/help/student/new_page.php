@@ -24,7 +24,7 @@
     $tmp_title = stripslashes($_POST['title']);
     // Check to see if dummy parent record exists for title.
     if (strpos($tmp_title,'/') !== false) {
-      $parts = split('/',$tmp_title);
+      $parts = explode('/',$tmp_title);
       $parent = $parts[0];
       
       $result = $mysqli->prepare("SELECT id FROM student_help WHERE title=?");

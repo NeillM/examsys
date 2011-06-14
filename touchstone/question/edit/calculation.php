@@ -75,8 +75,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $result->bind_result($user_answer, $id);
     while ($row = $result->fetch()) {
       // Split up the user answer into its constituent parts.
-      $answer_parts = split('\|',$user_answer);
-      $variable_array = split(',',$answer_parts[2]);
+      $answer_parts = explode('|',$user_answer);
+      $variable_array = explode(',',$answer_parts[2]);
       $saved_response = $answer_parts[0];
       $var_no = 1;
       foreach($variable_array as $individual_variable) {

@@ -54,7 +54,7 @@ function demo_replace_number($number, $demo_on) {
 
 function demo_replace_username($username, $demo_on) {
   if ($demo_on == true) {
-    $split_username = split('@',$username);
+    $split_username = explode('@',$username);
     if (substr($username,0,3) == 'mzy') {
       $username = 'mzy####';
     } else {
