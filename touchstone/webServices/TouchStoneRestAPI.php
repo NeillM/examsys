@@ -21,7 +21,6 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-
 require $_SERVER['DOCUMENT_ROOT'] . 'touchstone/include/staff_student_auth.inc';
 require $_SERVER['DOCUMENT_ROOT'] . 'touchstone/config/config.inc';
 require './restAPI.class';
@@ -44,11 +43,15 @@ Class TouchStoneRestAPI extends restAPI {
 	switch($action) {
       case 'getAvailableFeedback':
 	    //process url
-	    list($username,$module) = explode('/',$parms);
+      $username = '';
+      $module = '';
+	    $tmp = explode('/',$parms);
+      if(isset($tmp[0])) $username = $tmp[0];
+      if(isset($tmp[1])) $module = $tmp[1];
 		if($username == '') {
 		  $this->sendResponse(400,'','');
 		} else {
-	      //return the module Available Feedback
+	    //return the module Available Feedback
 		  $this->data = $this->getAvailableFeedback($username,$module);
 		  if($this->data == '') {
 		    $this->sendResponse(400,'','');
