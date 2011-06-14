@@ -51,9 +51,13 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
       if ($_POST["correct$i"] == '1') $tmp_correct = $i;
     }
   }
+  
+  $tmp_theme = stripslashes(clearMSOtags($_POST['theme']));
+  $tmp_general_feedback = stripslashes(clearMSOtags($_POST['general_feedback']));
+  $tmp_notes = stripslashes(clearMSOtags($_POST['notes']));
 
   // Insert into Questions
-  $question_id = insert_into_questions($q_type,$_POST['theme'],$tmp_scenario,$tmp_leadin,$_POST['general_feedback'],'NULL',$tmp_score_method,$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
+  $question_id = insert_into_questions($q_type,$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_general_feedback,'NULL',$tmp_score_method,$tmp_notes,$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
 
   // Insert into Options
   for ($option_no = 1; $option_no <=20; $option_no++) {
@@ -71,7 +75,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
         }
       }
       $current_correctfb = stripslashes($_POST["correct_feedback$option_no"]);
-      $current_incorrectfb = $stripslashes(_POST["incorrect_feedback$option_no"]);
+      $current_incorrectfb = stripslashes($_POST["incorrect_feedback$option_no"]);
       insert_into_options($question_id,$tmp_option_text,$unique_name,$tmp_width,$tmp_height,$current_correctfb,$current_incorrectfb,$tmp_correct,1);
     }
   }

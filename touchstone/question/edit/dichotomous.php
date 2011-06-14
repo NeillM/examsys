@@ -222,11 +222,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         }
       
         if ($stem_changes == true) {
-          $tmp_option_text = $_POST["option_text$option_no"];
+          $tmp_option_text = stripslashes($_POST["option_text$option_no"]);
           $temp_id = $_POST["optionid$option_no"];
           $result = $mysqli->prepare("UPDATE options SET option_text=?, o_media=?, o_media_width=?, o_media_height=?, feedback_right=?, feedback_wrong=?, correct=? WHERE id_num=?");
-          $tmp_option_right_fback = $_POST["option_right_fback$option_no"]; 
-          $tmp_option_wrong_fback = $_POST["option_wrong_fback$option_no"];
+          $tmp_option_right_fback = stripslashes($_POST["option_right_fback$option_no"]); 
+          $tmp_option_wrong_fback = stripslashes($_POST["option_wrong_fback$option_no"]);
           $result->bind_param('sssssssi', $tmp_option_text, $tmp_option_media, $tmp_width, $tmp_height, $tmp_option_right_fback, $tmp_option_wrong_fback, $_POST["correct$option_no"], $temp_id);
           $result->execute();  
           $result->close();

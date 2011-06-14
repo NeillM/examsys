@@ -47,7 +47,10 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   $tmp_score_method = $_POST['answer_decimals'] . ',' . $_POST['tolerance'] . ',' . $_POST['units'];
 
   // Insert into Questions
-  $question_id = insert_into_questions('calculation',$_POST['theme'],$tmp_scenario,$tmp_leadin,$_POST['feedback'],'NULL',$tmp_score_method,$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
+  $tmp_theme = stripslashes($_POST['theme']); 
+  $tmp_notes = stripslashes($_POST['notes']); 
+  $tmp_feedback = stripslashes($_POST['feedback']); 
+  $question_id = insert_into_questions('calculation',$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_feedback,'NULL',$tmp_score_method,$tmp_notes,$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
 
   // Insert into Options
   for ($option_no=1; $option_no<=8; $option_no++) {

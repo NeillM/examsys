@@ -87,14 +87,14 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $result->close();
 
     // Remark the student's answers in 'log2'.
-    $big_answer_parts = split('\|',$tmp_answer);
+    $big_answer_parts = explode('|',$tmp_answer);
     $result = $mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
     $result->bind_param('ii', $q_id, $_POST['paperID']);
     $result->execute();  
     $result->store_result();
     $result->bind_result($user_answer);
     while ($row = $result->fetch()) {
-      $big_user_parts = split('\|',$user_answer);
+      $big_user_parts = explode('|',$user_answer);
       $marks = 0;
       for ($i=0; $i<count($big_answer_parts); $i++) {
         if ($big_answer_parts[$i] == $big_user_parts[$i]) $marks++;
@@ -117,19 +117,17 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     //Get all the data first into temporay variables.
     $part_names = array('theme','leadin','notes','bloom','status','option_order');
     foreach($part_names as $section_name) {
-      //$$section_name = stripslashes($_POST["$section_name"]);
       $$section_name = stripslashes($_POST["$section_name"]);
     }
     $part_names = array('old_theme','old_leadin','old_notes','old_bloom','old_status','old_option_order');
     foreach($part_names as $section_name) {
-      //$$section_name = stripslashes($_POST["$section_name"]);
       $$section_name = stripslashes($_POST["$section_name"]);
     }
 
     //Get all the data first into temporay variables.
-    $tmp_theme = $_POST['theme'];
-    $tmp_leadin = $_POST['leadin'];
-    $tmp_notes = $_POST['notes'];
+    $tmp_theme = stripslashes($_POST['theme']);
+    $tmp_leadin = stripslashes($_POST['leadin']);
+    $tmp_notes = stripslashes($_POST['notes']);
     $tmp_scenario = '';
     $tmp_answer = '';
     $tmp_right_feedback = '';
@@ -220,7 +218,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       $part_names = array('scenario_text','correct_fback');
       foreach($part_names as $section_name) {
         if (isset($_POST["$section_name$qcount"])) {
-          $new_section_name = $_POST["$section_name$qcount"];
+          $new_section_name = stripslashes($_POST["$section_name$qcount"]);
         } else {
           $new_section_name = '';
         }
@@ -235,8 +233,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       }
   
       if (trim(strip_tags(nl2br(str_replace('&nbsp;','',$_POST["scenario_text$qcount"])))) != '' or $media_name != '' or (isset($_POST["old_media$qcount"]) and $_POST["old_media$qcount"] != '') ) {
-        $tmp_scenario .= '|' . clearMSOtags($_POST["scenario_text$qcount"]);
-        $tmp_old_scenario .= '|' . $_POST["old_scenario_text$qcount"];
+        $tmp_scenario .= '|' . stripslashes(clearMSOtags($_POST["scenario_text$qcount"]));
+        $tmp_old_scenario .= '|' . stripslashes($_POST["old_scenario_text$qcount"]);
         $addr = $_POST["correct_options$qcount"];
         $count = count($addr);
         for ($i=0; $i<$count; $i++) {
@@ -262,9 +260,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     
     $tmp_scenario = substr($tmp_scenario,1);
     $tmp_old_scenario = substr($tmp_old_scenario,1);
-    $tmp_answer = substr($tmp_answer,1);
+    $tmp_answer = stripslashes(substr($tmp_answer,1));
     $old_tmp_answer = substr($old_tmp_answer,1);
-    $tmp_correct_feedback = substr($tmp_correct_feedback,1);
+    $tmp_correct_feedback = stripslashes(substr($tmp_correct_feedback,1));
 
     // Have any of the answers changed?
     if ($tmp_answer != $old_tmp_answer) {
@@ -317,7 +315,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       for ($ocount=0; $ocount<26; $ocount++) {
         if (isset($_POST["option_text$ocount"]) and $_POST["option_text$ocount"] != '') {
           $result = $mysqli->prepare("INSERT INTO options VALUES (?,?,NULL,NULL,NULL,'','',?,NULL,1)");
-          $tmp_option_text = $_POST["option_text$ocount"];
+          $tmp_option_text = stripslashes($_POST["option_text$ocount"]);
           $result->bind_param('iss', $question_id, $tmp_option_text, $tmp_answer);
           $result->execute();  
           $result->close();

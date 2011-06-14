@@ -241,9 +241,12 @@ if (isset($_POST['submit1'])) {
   $tmp_scenario = clearMSOtags($tmp_scenario);
 
   $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
+  $tmp_theme = stripslashes(clearMSOtags($_POST['theme']));
+  $tmp_correct_fback = stripslashes(clearMSOtags($_POST['correct_fback']));
+  $tmp_notes = stripslashes(clearMSOtags($_POST['notes']));
 
   // Insert into Questions
-  $question_id = insert_into_questions('labelling',$_POST['theme'],$tmp_scenario,$tmp_leadin,$_POST['correct_fback'],'NULL','',$_POST['notes'],$userID,$_POST['image_name'],$_POST['image_width'],$_POST['image_height'],date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
+  $question_id = insert_into_questions('labelling',$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_correct_fback,'NULL','',$tmp_notes,$userID,$_POST['image_name'],$_POST['image_width'],$_POST['image_height'],date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
 
   // Insert into Options
   insert_into_options($question_id,NULL,NULL,NULL,NULL,NULL,NULL,$_POST['q1'],1);

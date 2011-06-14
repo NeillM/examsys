@@ -53,9 +53,13 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
   $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
+  
+  $tmp_theme = stripslashes(clearMSOtags($_POST['theme']));
+  $tmp_correct_fback = stripslashes(clearMSOtags($_POST['correct_fback']));
+  $tmp_notes = stripslashes(clearMSOtags($_POST['notes']));
 
   // Insert into Questions
-  $question_id = insert_into_questions('mcq',$_POST['theme'],$tmp_scenario,$tmp_leadin,$_POST['correct_fback'],'',$_POST['score_method'],$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
+  $question_id = insert_into_questions('mcq',$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_correct_fback,'',$_POST['score_method'],$tmp_notes,$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
 
   // Insert into Options
   for ($option_no=1; $option_no<=20; $option_no++) {
@@ -71,7 +75,8 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
       } else {
         $correct = '';
       }
-      insert_into_options($question_id,$tmp_option_text,$unique_name,$tmp_width,$tmp_height,$_POST["feedback_right$option_no"],'',$correct,1);
+      $tmp_feedback_right = stripslashes($_POST["feedback_right$option_no"]);
+      insert_into_options($question_id,$tmp_option_text,$unique_name,$tmp_width,$tmp_height,$tmp_feedback_right,'',$correct,1);
     }
   }
 

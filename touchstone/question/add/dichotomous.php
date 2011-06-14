@@ -35,14 +35,18 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 
   $tmp_theme = $_POST['theme'];
   $tmp_theme = stripslashes(clearMSOtags($tmp_theme));
+  
+  $tmp_notes = stripslashes(clearMSOtags($_POST['notes']));
 
   $tmp_scenario = stripslashes(clearMSOtags($_POST['scenario']));
   if (trim(strip_tags($tmp_scenario)) == '') $tmp_scenario = '';
 
+  $tmp_question_feedback = stripslashes(clearMSOtags($_POST['question_feedback']);
+  
   $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
 
   // Insert into Questions
-  $question_id = insert_into_questions('dichotomous',$tmp_theme,$tmp_scenario,$tmp_leadin,$_POST['question_feedback'],'NULL',$_POST['score_method'],$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
+  $question_id = insert_into_questions('dichotomous',$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_question_feedback,'NULL',$_POST['score_method'],$tmp_notes,$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
 
   // Add Option data
   for ($option_no = 1; $option_no <=15; $option_no++) {
@@ -55,9 +59,9 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     $unique_name = uploadFile('omedia' . $option_no,$tmp_width,$tmp_height);
     if ($tmp_option_text != '' or ($unique_name != 'none' and $unique_name != '')) {
       if(isset($_POST['correct' . $option_no])) $tmp_correct = $_POST['correct' . $option_no];
-      if(isset($_POST['option_correct_fback' . $option_no])) $tmp_option_correct_fback = $_POST['option_correct_fback' . $option_no];
-      if(isset($_POST['option_incorrect_fback' . $option_no])) $tmp_option_incorrect_fback = $_POST['option_incorrect_fback' . $option_no];
-      if(isset($_POST['option_abstain_fback' . $option_no])) $tmp_option_abstain_fback = $_POST['option_abstain_fback' . $option_no];
+      if(isset($_POST['option_correct_fback' . $option_no])) $tmp_option_correct_fback = stripslashes($_POST['option_correct_fback' . $option_no]);
+      if(isset($_POST['option_incorrect_fback' . $option_no])) $tmp_option_incorrect_fback = stripslashes($_POST['option_incorrect_fback' . $option_no]);
+      if(isset($_POST['option_abstain_fback' . $option_no])) $tmp_option_abstain_fback = stripslashes($_POST['option_abstain_fback' . $option_no]);
       $tmp_option_text = preg_replace("[\r\n\t]", "", trim($tmp_option_text));
 
       insert_into_options($question_id,$tmp_option_text,$unique_name,$tmp_width,$tmp_height,$tmp_option_correct_fback,$tmp_option_incorrect_fback,$tmp_correct,1);

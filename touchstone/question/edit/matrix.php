@@ -68,7 +68,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $result->store_result();
     $result->bind_result($user_answer);
     while ($row = $result->fetch()) {
-      $user_parts = split('\|',$user_answer);
+      $user_parts = explode('|',$user_answer);
       $marks = 0;
       for ($i=0; $i<count($answer_parts); $i++) {
         if ($user_parts[$i] == $answer_parts[$i]) $marks++;
@@ -88,7 +88,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 
     $changes = false;
     //Get all the data first into temporay variables.
-    $leadin = $_POST['leadin'];
+    $leadin = stripslashes($_POST['leadin']);
     $part_names = array('theme','notes','bloom','status', 'feedback','option_order');
     foreach($part_names as $section_name) {
       $$section_name = stripslashes($_POST["$section_name"]);
@@ -147,7 +147,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
           }
         }
       }
-      if (isset($_POST["correct$qcount"]) and $_POST["correct$qcount"] != $_POST["old_correct$qcount"] and trim(mysql_escape_string($_POST["stem$qcount"])) != '') {
+      if (isset($_POST["correct$qcount"]) and $_POST["correct$qcount"] != $_POST["old_correct$qcount"] and trim($_POST["stem$qcount"]) != '') {
         $changes = true;
         $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),'Stem " . ($qcount + 1) . " Answer')");
         $result->bind_param('iss', $q_id, $_POST["old_correct$qcount"], $_POST["correct$qcount"]);
@@ -155,8 +155,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         $result->close();
       }
     
-      $new_stem = html_entity_decode($_POST["stem$qcount"]);
-      $old_stem = html_entity_decode($_POST["old_stem$qcount"]);
+      $new_stem = stripslashes(html_entity_decode($_POST["stem$qcount"]));
+      $old_stem = stripslashes(html_entity_decode($_POST["old_stem$qcount"]));
     
       if ($new_stem != $old_stem) {
         $changes = true;
@@ -186,14 +186,15 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 
     for ($ocount=0; $ocount<10; $ocount++) {
       if ($_POST["option_text$ocount"] != '') {
+        $tmp_option_text = stripslashes($_POST["option_text$ocount"]);
         $result = $mysqli->prepare("INSERT INTO options VALUES (?,?,NULL,NULL,NULL,'','',?,NULL,1)");
-        $result->bind_param('iss', $q_id, $_POST["option_text$ocount"], $tmp_answer);
+        $result->bind_param('iss', $q_id, $tmp_option_text, $tmp_answer);
         $result->execute();  
         $result->close();
       }
 
-      $new_option_text = html_entity_decode($_POST["option_text$ocount"]);
-      $old_option_text = html_entity_decode($_POST["old_option_text$ocount"]);
+      $new_option_text = stripslashes(html_entity_decode($_POST["option_text$ocount"]));
+      $old_option_text = stripslashes(html_entity_decode($_POST["old_option_text$ocount"]));
     
       if ($new_option_text != $old_option_text) {
         $changes = true;
@@ -229,9 +230,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     if ($changes == true) {
       $bloom = (empty($bloom)) ? NULL : $bloom;
     	$result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, bloom=?, q_group=?, scenario_plain=?, leadin_plain=?, last_edited=NOW(), status=?, correct_fback=?, q_option_order=? WHERE q_id=?");
-      $tmp_scenario = trim(strip_tags($tmp_scenario));
-      $leadin = trim(strip_tags($leadin));
-      $tmp_scenario = trim(strip_tags($tmp_scenario));
+      $tmp_scenario = stripslashes(trim(strip_tags($tmp_scenario)));
       $leadin = trim(strip_tags($leadin));
       $result->bind_param('ssssssssssssssi', $theme, $tmp_scenario, $leadin, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $tmp_scenario, $leadin, $status, $feedback, $option_order, $_GET['q_id']);
       $result->execute();  

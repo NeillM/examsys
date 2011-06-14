@@ -72,7 +72,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
         $tmp_media_height .= '|0';
       }
       if (trim(strip_tags($_POST["stem$qcount"])) != '' or $media_name != '') {
-        $tmp_scenario .= '|' . stripslashes(clearMSOtags($_POST["stem$qcount"]));
+        $tmp_scenario .= '|' . clearMSOtags($_POST["stem$qcount"]);
         if(isset($_POST["correct_options$qcount"])) {
           $addr = $_POST["correct_options$qcount"];
         } else {
@@ -95,16 +95,17 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   }
 
   // Strip the first bar off the front.
-  $tmp_scenario = substr($tmp_scenario,1);
-  $tmp_answer = substr($tmp_answer,1);
-  $tmp_correct_feedback = substr($tmp_correct_feedback,1);
+  $tmp_scenario = stripslashes(substr($tmp_scenario,1));
+  $tmp_answer = stripslashes(substr($tmp_answer,1));
+  $tmp_correct_feedback = stripslashes(substr($tmp_correct_feedback,1));
 
   // Insert into Questions
   $question_id = insert_into_questions('extmatch',$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_correct_feedback,$tmp_incorrect_feedback,'',$tmp_notes,$userID,$tmp_media,$tmp_media_width,$tmp_media_height,date("YmdHis"),date("YmdHis"),$tmp_bloom,getTeams(),$_POST['status'],$_POST['option_order']);
 
   for ($ocount=0; $ocount<26; $ocount++) {
     if (isset($_POST["option_text$ocount"]) and $_POST["option_text$ocount"] != '') {
-      insert_into_options($question_id,$_POST["option_text$ocount"],'NULL','NULL','NULL','','',$tmp_answer,1);
+      $tmp_option_text = stripslashes($_POST["option_text$ocount"]);
+      insert_into_options($question_id,$tmp_option_text,'NULL','NULL','NULL','','',$tmp_answer,1);
     }
   }
 
