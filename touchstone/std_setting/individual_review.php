@@ -411,27 +411,18 @@ $current_screen = 1;
       $reviews[$questionID] = $rating;
     }
     $result->close();
-
-    $result = $mysqli->prepare("SELECT question, std FROM (papers, questions) WHERE paper=? AND papers.question=questions.q_id");
-    $result->bind_param('i', $_GET['paperID']);
-    $result->execute();
-    $result->bind_result($question, $std);
-    while ($row = $result->fetch()) {
-      echo "<input type=\"hidden\" name=\"old" . $question . "\" value=\"$std\" />\n";
-    }
-    $result->close();
-  } else {
-    // Load default setting from the Questions table.
-    $result = $mysqli->prepare("SELECT question, std FROM (papers, questions) WHERE paper=? AND papers.question=questions.q_id");
-    $result->bind_param('i', $_GET['paperID']);
-    $result->execute();
-    $result->bind_result($questionID, $std);
-    while ($row = $result->fetch()) {
-      $reviews[$questionID] = $std;
-      echo "<input type=\"hidden\" name=\"old" . $questionID . "\" value=\"$std\" />\n";
-    }
-    $result->close();
   }
+  
+  // Load default setting from the Questions table and save to reviews array if no existing data
+  $result = $mysqli->prepare("SELECT question, std FROM (papers, questions) WHERE paper=? AND papers.question=questions.q_id");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($questionID, $std);
+  while ($row = $result->fetch()) {
+    if ($setterID == '') $reviews[$questionID] = $std;
+    echo "<input type=\"hidden\" name=\"old" . $questionID . "\" value=\"$std\" />\n";
+  }
+  $result->close();
 ?>
   <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr><td valign="top">
