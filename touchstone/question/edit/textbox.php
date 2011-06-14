@@ -46,7 +46,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_leadin','old_correct_fback','old_columns','old_rows','old_notes','old_editor','old_bloom','old_terms','old_marks','old_status');
     foreach($part_names as $section_name) {
-      $$section_name = html_entity_decode($_POST["$section_name"]);
+      $$section_name = stripslashes(html_entity_decode($_POST["$section_name"]));
     }
 
     // Strip MS Office HTML.

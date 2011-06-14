@@ -89,14 +89,12 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $changes = false;
     $part_names = array('theme','scenario','leadin','notes','bloom','general_feedback','score_method','status','option_order');
     foreach($part_names as $section_name) {
-      //$$section_name = stripslashes($_POST["$section_name"]);
-      $$section_name = $_POST["$section_name"];
+      $$section_name = stripslashes($_POST["$section_name"]);
     }
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_general_feedback','old_score_method','old_status','old_option_order');
     foreach($part_names as $section_name) {
-      //$$section_name = stripslashes($_POST["$section_name"]);
-      $$section_name = $_POST["$section_name"];
+      $$section_name = stripslashes($_POST["$section_name"]);
     }
 
     // Strip MS Office HTML.
@@ -224,11 +222,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         }
       
         if ($stem_changes == true) {
-          $tmp_option_text = $_POST["option_text$option_no"];
+          $tmp_option_text = stripslashes($_POST["option_text$option_no"]);
           $temp_id = $_POST["optionid$option_no"];
           $result = $mysqli->prepare("UPDATE options SET option_text=?, o_media=?, o_media_width=?, o_media_height=?, feedback_right=?, feedback_wrong=?, correct=? WHERE id_num=?");
-          $tmp_option_right_fback = $_POST["option_right_fback$option_no"]; 
-          $tmp_option_wrong_fback = $_POST["option_wrong_fback$option_no"];
+          $tmp_option_right_fback = stripslashes($_POST["option_right_fback$option_no"]); 
+          $tmp_option_wrong_fback = stripslashes($_POST["option_wrong_fback$option_no"]);
           $result->bind_param('sssssssi', $tmp_option_text, $tmp_option_media, $tmp_width, $tmp_height, $tmp_option_right_fback, $tmp_option_wrong_fback, $_POST["correct$option_no"], $temp_id);
           $result->execute();  
           $result->close();

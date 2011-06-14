@@ -38,11 +38,11 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     $changes = false;
     $part_names = array('theme','leadin','stem','notes','bloom','correct_fback','score_method','status');
     foreach($part_names as $section_name) {
-      $$section_name = $_POST["$section_name"];
+      $$section_name = stripslashes($_POST["$section_name"]);
     }
     $part_names = array('old_theme','old_leadin','old_stem','old_notes','old_bloom','old_correct_fback','old_score_method','old_status');
     foreach($part_names as $section_name) {
-      $$section_name = html_entity_decode($_POST["$section_name"]);
+      $$section_name = stripslashes(html_entity_decode($_POST["$section_name"]));
     }
 
     // Strip MS Office HTML.
