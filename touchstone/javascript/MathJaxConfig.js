@@ -16,7 +16,7 @@ var config = 'MathJax.Hub.Config({' +
     'inlineDelimiters: [["$$","$$"]],' +
     'preview: "none"' +
   '},' +
-  '"HTML-CSS": { scale: 100,' +
+  '"HTML-CSS": { scale: 85,' +
                 'showMathMenu: false,' +
                 'availableFonts: ["STIX","TeX"],' +
                 'preferredFont: "STIX",' +
