@@ -10,7 +10,7 @@
 */
 
 $ts_version = '4.0';
-$cfg_web_root = $_SERVER['DOCUMENT_ROOT'];
+$cfg_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 $protocol = 'https://';
 
 $news_msg = '';
