@@ -62,6 +62,100 @@
     return $html;
   }
 
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<title>TouchStone: List Settings<?php echo " $cfg_install_type"; ?></title>
+<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script language="JavaScript" type="text/javascript">
+  function editReview(tmp_setter, tmp_date, tmp_review_no, tmp_method, tmp_group_review) {
+    if (tmp_method == 'Modified Angoff') {
+      tmp_method = 'modified_angoff';
+    } else if (tmp_method == 'Ebel') {
+      tmp_method = 'ebel';
+    }
+    if (tmp_group_review == 'No') {
+      window.location.href = "individual_review.php?setterID=" + tmp_setter + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&dateID=" + tmp_date + "&method=" + tmp_method;
+    } else {
+      window.location.href = "group_set_angoff.php?reviewers=" + tmp_setter + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&dateID=" + tmp_date + "&method=" + tmp_method;
+    }
+  }
+
+  function selReview(setterID, dateID, reviewID, methodType, menuID, evt) {
+    tmp_ID = document.StdSetMenu.oldReviewID.value;
+    if (tmp_ID != '') {
+      document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
+      document.getElementById('review' + tmp_ID).style.color = 'black';
+    }
+    document.getElementById('menu2a').style.display = 'none';
+    document.getElementById('menu2b').style.display = 'none';
+    document.getElementById('menu2c').style.display = 'none';
+    document.getElementById(menuID).style.display = 'block';
+
+    document.StdSetMenu.setterID.value = setterID;
+    document.StdSetMenu.dateID.value = dateID;
+    document.StdSetMenu.method.value = methodType;
+
+    document.getElementById('review' + reviewID).style.backgroundColor = '#316AC5';
+    document.getElementById('review' + reviewID).style.color = 'white';
+    document.StdSetMenu.oldReviewID.value = reviewID;
+    evt.cancelBubble = true;
+  }
+
+  function reviewOff() {
+    parent.frames['menu'].document.getElementById('menu2a').style.display = 'block';
+    parent.frames['menu'].document.getElementById('menu2b').style.display = 'none';
+    parent.frames['menu'].document.getElementById('menu2c').style.display = 'none';
+    tmp_ID = document.StdSetMenu.oldReviewID.value;
+    if (tmp_ID != '') {
+      document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
+      document.getElementById('review' + tmp_ID).style.color = 'black';
+    }
+  }
+
+  function highlight(lineID) {
+    if (lineID != parent.frames['menu'].document.StdSetMenu.oldReviewID.value) {
+      document.getElementById('review' + lineID).style.backgroundColor = '#ECE9D8';
+    }
+  }
+
+  function unhighlight(lineID) {
+    if (lineID != parent.frames['menu'].document.StdSetMenu.oldReviewID.value) {
+      document.getElementById('review' + lineID).style.backgroundColor = '';
+    }
+  }
+
+  function roundNumber(num, dec) {
+    var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+    return result;
+  }
+</script>
+</head>
+
+<body onclick="reviewOff()">
+
+<?php
+$reviews_html = '';
+$total_marks = 0;
+
+$results = $mysqli->query("SELECT paper_title, total_mark FROM properties WHERE property_id=$paperID LIMIT 1");
+while ($row = $results->fetch_assoc()) {
+  $reviews_html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  $reviews_html .= "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "\">" . $row['paper_title'] . "</a></div><div style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">Standards Setting</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(97); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  $reviews_html .= "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  $reviews_html .= "<tr><td style=\"width:18px; background-color:#F1F5FB\">&nbsp;</td><td style=\"background-color:#F1F5FB; width:150px\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Standard Setter&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Date&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Pass Score</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Distinction</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Review Marks</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Paper Total</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Method</td><td width=\"25%\" style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp</td></tr>\n";
+  $reviews_html .= "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"9\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
+  $total_marks = $row['total_mark'];
+}
+$results->close();
+
+
+$reviews_query = $mysqli->query("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=$paperID ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
+$no_reviews = 0;
+if ($reviews_query->num_rows > 0) {
   // Get any questions to exclude.
   $exclude = array();
   $exclude_query = $mysqli->query("SELECT q_id, parts FROM question_exclude WHERE q_paper=$paperID");
@@ -73,7 +167,6 @@
   // Calculate marks for the current paper.
   $marks_array = array();
   $partID = 0;
-  $total_marks = 0;
   $old_q_id = 0;
   $stems = 0;
   $correct_no = 0;
@@ -93,7 +186,7 @@
       $temp_marks = 0;
       $partID = 0;
     }
-    
+
     $old_q_id = $row['q_id'];
     if (!isset($exclude[$old_q_id])) {  // If no record exists set to zero (i.e. included)
       $exclude[$old_q_id] = '00000000000000000000000000000';
@@ -234,82 +327,10 @@
       $marks_array[$old_q_id][$partID] = 1;
     }
   }
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head>
 
-<title>TouchStone: List Settings<?php echo " $cfg_install_type"; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript" type="text/javascript">
-  function editReview(tmp_setter, tmp_date, tmp_review_no, tmp_method, tmp_group_review) {
-    if (tmp_method == 'Modified Angoff') {
-      tmp_method = 'modified_angoff';
-    } else if (tmp_method == 'Ebel') {
-      tmp_method = 'ebel';
-    }
-    if (tmp_group_review == 'No') {
-      window.location.href = "individual_review.php?setterID=" + tmp_setter + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&dateID=" + tmp_date + "&method=" + tmp_method;
-    } else {
-      window.location.href = "group_set_angoff.php?reviewers=" + tmp_setter + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&dateID=" + tmp_date + "&method=" + tmp_method;
-    }
-  }
 
-  function selReview(setterID, dateID, reviewID, methodType, menuID, evt) {
-    tmp_ID = document.StdSetMenu.oldReviewID.value;
-    if (tmp_ID != '') {
-      document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
-      document.getElementById('review' + tmp_ID).style.color = 'black';
-    }
-    document.getElementById('menu2a').style.display = 'none';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    document.getElementById(menuID).style.display = 'block';
 
-    document.StdSetMenu.setterID.value = setterID;
-    document.StdSetMenu.dateID.value = dateID;
-    document.StdSetMenu.method.value = methodType;
 
-    document.getElementById('review' + reviewID).style.backgroundColor = '#316AC5';
-    document.getElementById('review' + reviewID).style.color = 'white';
-    document.StdSetMenu.oldReviewID.value = reviewID;
-    evt.cancelBubble = true;
-  }
-
-  function reviewOff() {
-    parent.frames['menu'].document.getElementById('menu2a').style.display = 'block';
-    parent.frames['menu'].document.getElementById('menu2b').style.display = 'none';
-    parent.frames['menu'].document.getElementById('menu2c').style.display = 'none';
-    tmp_ID = document.StdSetMenu.oldReviewID.value;
-    if (tmp_ID != '') {
-      document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
-      document.getElementById('review' + tmp_ID).style.color = 'black';
-    }
-  }
-
-  function highlight(lineID) {
-    if (lineID != parent.frames['menu'].document.StdSetMenu.oldReviewID.value) {
-      document.getElementById('review' + lineID).style.backgroundColor = '#ECE9D8';
-    }
-  }
-
-  function unhighlight(lineID) {
-    if (lineID != parent.frames['menu'].document.StdSetMenu.oldReviewID.value) {
-      document.getElementById('review' + lineID).style.backgroundColor = '';
-    }
-  }
-
-  function roundNumber(num, dec) {
-    var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-    return result;
-  }
-</script>
-</head>
-
-<body onclick="reviewOff()">
-
-<?php
   $old_date = '';
   $old_title = '';
   $old_initials = '';
@@ -322,165 +343,149 @@
   $ebel_marks = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
   $angoff_review_marks = 0;
 
-  $reviews_html = '';
-  
-  $results = $mysqli->query("SELECT paper_title, total_mark FROM properties WHERE property_id=$paperID LIMIT 1");
-  while ($row = $results->fetch_assoc()) {
-    $reviews_html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    $reviews_html .= "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "\">" . $row['paper_title'] . "</a></div><div style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">Standards Setting</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(97); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-    $reviews_html .= "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    $reviews_html .= "<tr><td style=\"width:18px; background-color:#F1F5FB\">&nbsp;</td><td style=\"background-color:#F1F5FB; width:150px\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Standard Setter&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Date&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Pass Score</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Distinction</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Review Marks</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Paper Total</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Method</td><td width=\"25%\" style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp</td></tr>\n";
-    $reviews_html .= "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"9\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
-    $total_marks = $row['total_mark'];
-  }
-  $results->close();
-  
-  $results = $mysqli->query("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=$paperID ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
-  $no_reviews = 0;
-  if ($results->num_rows > 0) {
-    while ($row = $results->fetch_assoc()) {
-      $paper_title = $row['paper_title'];
-      if ($old_date != $row['std_set'] and $old_date != '') {     // New review date
-        $review_no++;
-        if ($old_method == 'Modified Angoff') {
-          // $question_no can be 0 in some cases if questions have been excluded
-          $pass_score = ($question_no > 0) ? round($std_total/$question_no) : 0;
-          $review_total = $angoff_review_marks;
-          $distinction_score = 'n/a';
-        } elseif ($old_method == 'Ebel') {
-          $cut_marks = 0.0;
-          $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
-          $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
-          $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
-          $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
-          $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
-          $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
-          $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
-          $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
-          $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-          $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
+  while ($reviews_row = $reviews_query->fetch_assoc()) {
+    $paper_title = $reviews_row['paper_title'];
+    if ($old_date != $reviews_row['std_set'] and $old_date != '') {     // New review date
+      $review_no++;
+      if ($old_method == 'Modified Angoff') {
+        // $question_no can be 0 in some cases if questions have been excluded
+        $pass_score = ($question_no > 0) ? round($std_total/$question_no) : 0;
+        $review_total = $angoff_review_marks;
+        $distinction_score = 'n/a';
+      } elseif ($old_method == 'Ebel') {
+        $cut_marks = 0.0;
+        $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
+        $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
+        $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
+        $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
+        $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
+        $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
+        $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
+        $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
+        $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
+        $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
          
-          $pass_score = ($cut_marks / ($total_marks  * 100)) * 100;
-          $pass_score = round($pass_score,1);
+        $pass_score = ($cut_marks / ($total_marks  * 100)) * 100;
+        $pass_score = round($pass_score,1);
 
-          $cut_marks2 = 0.0;
-          $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
-          $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
-          $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
-          $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
-          $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
-          $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
-          $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
-          $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
-          $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
-          $distinction_score = (($cut_marks2 / ($total_marks * 100)) * 100);
-          $distinction_score = round($distinction_score,1);
-        }
-        if($old_group_review == 'No') $no_reviews++;
-        $reviews_html .= displayReview($old_group_review);
-        $ebel_percents = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
-        $ebel_marks = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
-        $question_no = 0;
-        $std_total = 0;
-        $angoff_review_marks = 0;
+        $cut_marks2 = 0.0;
+        $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
+        $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
+        $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
+        $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
+        $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
+        $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
+        $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
+        $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
+        $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
+        $distinction_score = (($cut_marks2 / ($total_marks * 100)) * 100);
+        $distinction_score = round($distinction_score,1);
       }
-      $category = $row['category'];
-      $ebel_percents[$category] = $row['percentage'];
-      if ($old_questionID != $row['questionID']) {
-        $questionID = $row['questionID'];
-        if (array_key_exists($questionID,$exclude)) {
-          $tmp_exclude = $exclude[$questionID];
-        } else {
-          $tmp_exclude = '0000000000000000000000000000000000000000';
-        }
-        $partID = 0;
-        
-        if ($row['rating'] != '') {
-          $rating_array = explode(',',$row['rating']);
-          foreach ($rating_array as $individual_rating) {
-            if (isset($marks_array[$questionID][$partID]) and $individual_rating != '') {
-              if (isset($ebel_marks[$individual_rating])) {
-                $ebel_marks[$individual_rating] += $marks_array[$questionID][$partID];
-              } else {
-                $ebel_marks[$individual_rating] = $marks_array[$questionID][$partID];
-              }
-              $angoff_review_marks += $marks_array[$questionID][$partID];
-            }
-            $partID++;
-          }
-        }
-      }
-
-      if ($row['rating'] != '') {
-        $q_sections = explode(',',$row['rating']);
-        $tmp_part = 0;
-        foreach ($q_sections as $part) {
-          if (substr($tmp_exclude,$tmp_part,1) == '0') {
-            if ($row['q_type'] == 'textbox') {
-              $std_total += $part * (count($q_sections) - $tmp_part);
-            } else {
-              $std_total += $part;
-            }
-            $question_no++;
-          }
-          $tmp_part++;
-        }
-      }
-      $old_date = $row['std_set'];
-      $old_display_date = $row['display_date'];
-      $old_method = $row['method'];
-      $old_title = $row['title'];
-      $old_initials = $row['initials'];
-      $old_surname = $row['surname'];
-      $old_setterID = $row['setterID'];
-      $old_group_review = $row['group_review'];
-      $old_questionID = $row['questionID'];
-    }  // End while loop
-
-    $review_no++;
-    if ($old_method == 'Modified Angoff') {
-      $pass_score = round($std_total/$question_no);
-      $review_total = $angoff_review_marks;
-      $distinction_score = 'n/a';
-    } elseif ($old_method == 'Ebel') {
-      $cut_marks = 0.0;
-      $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
-      $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
-      $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
-      $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
-      $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
-      $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
-      $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
-      $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
-      $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-      $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
-      $pass_score = (($cut_marks / ($total_marks * 100)) * 100);
-      $pass_score = round($pass_score,1);
-
-      $cut_marks2 = 0.0;
-      $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
-      $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
-      $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
-      $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
-      $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
-      $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
-      $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
-      $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
-      $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
-      $distinction_score = (($cut_marks2 / ($total_marks * 100)) * 100);
-      $distinction_score = round($distinction_score,1);
+      if($old_group_review == 'No') $no_reviews++;
+      $reviews_html .= displayReview($old_group_review);
+      $ebel_percents = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
+      $ebel_marks = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
+      $question_no = 0;
+      $std_total = 0;
+      $angoff_review_marks = 0;
     }
-    if($old_group_review == 'No') $no_reviews++;
-    $reviews_html .= displayReview($old_group_review);
+    $category = $reviews_row['category'];
+    $ebel_percents[$category] = $reviews_row['percentage'];
+    if ($old_questionID != $reviews_row['questionID']) {
+      $questionID = $reviews_row['questionID'];
+      if (array_key_exists($questionID,$exclude)) {
+        $tmp_exclude = $exclude[$questionID];
+      } else {
+        $tmp_exclude = '0000000000000000000000000000000000000000';
+      }
+      $partID = 0;
+
+      if ($reviews_row['rating'] != '') {
+        $rating_array = explode(',',$reviews_row['rating']);
+        foreach ($rating_array as $individual_rating) {
+          if (isset($marks_array[$questionID][$partID]) and $individual_rating != '') {
+            if (isset($ebel_marks[$individual_rating])) {
+              $ebel_marks[$individual_rating] += $marks_array[$questionID][$partID];
+            } else {
+              $ebel_marks[$individual_rating] = $marks_array[$questionID][$partID];
+            }
+            $angoff_review_marks += $marks_array[$questionID][$partID];
+          }
+          $partID++;
+        }
+      }
+    }
+
+    if ($reviews_row['rating'] != '') {
+      $q_sections = explode(',',$reviews_row['rating']);
+      $tmp_part = 0;
+      foreach ($q_sections as $part) {
+        if (substr($tmp_exclude,$tmp_part,1) == '0') {
+          if ($reviews_row['q_type'] == 'textbox') {
+            $std_total += $part * (count($q_sections) - $tmp_part);
+          } else {
+            $std_total += $part;
+          }
+          $question_no++;
+        }
+        $tmp_part++;
+      }
+    }
+    $old_date = $reviews_row['std_set'];
+    $old_display_date = $reviews_row['display_date'];
+    $old_method = $reviews_row['method'];
+    $old_title = $reviews_row['title'];
+    $old_initials = $reviews_row['initials'];
+    $old_surname = $reviews_row['surname'];
+    $old_setterID = $reviews_row['setterID'];
+    $old_group_review = $reviews_row['group_review'];
+    $old_questionID = $reviews_row['questionID'];
+  }  // End while loop
+
+  $review_no++;
+  if ($old_method == 'Modified Angoff') {
+    $pass_score = round($std_total/$question_no);
+    $review_total = $angoff_review_marks;
+    $distinction_score = 'n/a';
+  } elseif ($old_method == 'Ebel') {
+    $cut_marks = 0.0;
+    $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
+    $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
+    $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
+    $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
+    $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
+    $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
+    $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
+    $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
+    $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
+    $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
+    $pass_score = (($cut_marks / ($total_marks * 100)) * 100);
+    $pass_score = round($pass_score,1);
+
+    $cut_marks2 = 0.0;
+    $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
+    $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
+    $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
+    $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
+    $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
+    $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
+    $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
+    $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
+    $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
+    $distinction_score = (($cut_marks2 / ($total_marks * 100)) * 100);
+    $distinction_score = round($distinction_score,1);
   }
-  require '../include/std_set_menu.inc';
+  if($old_group_review == 'No') $no_reviews++;
+  $reviews_html .= displayReview($old_group_review);
+}
+require '../include/std_set_menu.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
 <?php
-  echo $reviews_html;
-  echo "</table>\n";
-  $results->close();
-  $mysqli->close();
+echo $reviews_html;
+echo "</table>\n";
+$reviews_query->close();
+$mysqli->close();
 ?>
 </body>
 </html>
