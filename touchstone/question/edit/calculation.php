@@ -138,7 +138,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $part_names = array('theme','notes','scenario','leadin','bloom','feedback','formula','units','tolerance','answer_decs','status','formula','marks');
     foreach($part_names as $section_name) {
       if(isset($_POST["$section_name"])) {
-        $$section_name = stripslashes($_POST["$section_name"]);
+        $$section_name = $_POST["$section_name"];
       } else {
         $$section_name = '';
       }
@@ -149,7 +149,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_feedback','old_formula','old_units','old_tolerance','old_answer_decs','old_status','old_marks');
     foreach($part_names as $section_name) {
       if(isset($_POST["$section_name"])) {
-        $$section_name = stripslashes($_POST["$section_name"]);
+        $$section_name = $_POST["$section_name"];
       } else {
         $$section_name = '';
       }

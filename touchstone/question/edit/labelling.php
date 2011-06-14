@@ -38,16 +38,16 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     saveObjMappings($_POST['paperID'],$q_id,$mysqli);
 
     $changes = false;
-    $leadin = stripslashes($_POST['leadin']);
-    $scenario =  stripslashes($_POST['scenario']);
+    $leadin = $_POST['leadin'];
+    $scenario =  $_POST['scenario'];
     $part_names = array('theme','notes','q1','bloom','feedback','status');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_points','old_feedback','old_bloom','old_status');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
 
     // Strip MS Office HTML.

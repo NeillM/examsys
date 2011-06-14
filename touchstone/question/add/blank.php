@@ -32,14 +32,10 @@ include_once('../../tools/getid3/getid3.php');
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   
   $unique_name = uploadFile('q_media',$tmp_width,$tmp_height);
-  $tmp_stem = stripslashes(clearMSOtags($_POST['stem']));
-  $tmp_theme = stripslashes(clearMSOtags($_POST['theme']));
-  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
-  $tmp_correct_fback = stripslashes(clearMSOtags($_POST['correct_fback']));
-  $tmp_notes = stripslashes(clearMSOtags($_POST['notes']));
+  $tmp_stem = clearMSOtags($_POST['stem']);
 
   // Insert into Questions
-  $question_id = insert_into_questions('blank',$tmp_theme,'',$tmp_leadin,$tmp_correct_fback,'',$_POST['score_method'],$tmp_notes,$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
+  $question_id = insert_into_questions('blank',$_POST['theme'],'',$_POST['leadin'],$_POST['correct_fback'],'',$_POST['score_method'],$_POST['notes'],$userID,$unique_name,$tmp_width,$tmp_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],'display order');
  
   // Insert into Options
   $id_num = insert_into_options($question_id, $tmp_stem,'NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL');

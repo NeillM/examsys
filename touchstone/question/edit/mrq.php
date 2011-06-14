@@ -105,16 +105,16 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     saveObjMappings($_POST['paperID'],$q_id,$mysqli);
 
     $changes = false;
-    $leadin = stripslashes($_POST['leadin']);
-    $scenario =  stripslashes($_POST['scenario']);
+    $leadin = $_POST['leadin'];
+    $scenario =  $_POST['scenario'];
     $part_names = array('theme','notes','bloom','correct_fback','score_method','status','option_order');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_correct_fback','old_score_method','old_status','old_option_order');
     foreach($part_names as $section_name) {
-      $$section_name = stripslashes($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
 
     // Strip MS Office HTML.
@@ -186,8 +186,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
           $tmp_option_media = uploadFile("new_option_media$option_no",$tmp_width,$tmp_height);
         }
         $result = $mysqli->prepare("INSERT INTO options VALUES (?,?,?,?,?,'','',?,NULL,1)");
-        $tmp_option_text =  stripslashes($_POST["option_text$option_no"]);
-        $result->bind_param('isssss', $q_id, $tmp_option_text, $tmp_option_media, $tmp_width, $tmp_height, $tmp_correct);
+        $result->bind_param('isssss', $q_id, $_POST["option_text$option_no"], $tmp_option_media, $tmp_width, $tmp_height, $tmp_correct);
         $result->execute();
         $option_id = $mysqli->insert_id;
         $result->close();
@@ -260,10 +259,10 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         }
         if ($stem_changes == true) {
           $temp_id = $_POST["optionid$option_no"];
-          $tmp_option = stripslashes($_POST["option_text$option_no"]);
+          $tmp_option = $_POST["option_text$option_no"];
           $result = $mysqli->prepare("UPDATE options SET option_text=?, o_media=?, o_media_width=?, o_media_height=?, feedback_right=?, feedback_wrong=?, correct=? WHERE id_num=?");
-          $tmp_option_right_fback = stripslashes($_POST["option_right_fback$option_no"]);
-          $tmp_option_wrong_fback =  stripslashes($_POST["option_wrong_fback$option_no"]);
+          $tmp_option_right_fback = $_POST["option_right_fback$option_no"];
+          $tmp_option_wrong_fback =  $_POST["option_wrong_fback$option_no"];
           $result->bind_param('sssssssi', $tmp_option, $option_media, $tmp_width, $tmp_height, $tmp_option_right_fback, $tmp_option_wrong_fback, $new_checkbox, $temp_id);
           $result->execute();
           $result->close();

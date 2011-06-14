@@ -31,9 +31,9 @@ include_once('../../tools/getid3/getid3.php');
 
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   //Get all the data first into temporay variables.
-  $tmp_theme = stripslashes($_POST['theme']);
-  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
-  $tmp_notes = stripslashes($_POST['notes']);
+  $tmp_theme = $_POST['theme'];
+  $tmp_leadin = clearMSOtags($_POST['leadin']);
+  $tmp_notes = $_POST['notes'];
   $tmp_bloom = $_POST['bloom'];
   $tmp_question_team = getTeams();
   $tmp_scenario = '';
@@ -95,17 +95,16 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   }
 
   // Strip the first bar off the front.
-  $tmp_scenario = stripslashes(substr($tmp_scenario,1));
-  $tmp_answer = stripslashes(substr($tmp_answer,1));
-  $tmp_correct_feedback = stripslashes(substr($tmp_correct_feedback,1));
+  $tmp_scenario = substr($tmp_scenario,1);
+  $tmp_answer = substr($tmp_answer,1);
+  $tmp_correct_feedback = substr($tmp_correct_feedback,1);
 
   // Insert into Questions
   $question_id = insert_into_questions('extmatch',$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_correct_feedback,$tmp_incorrect_feedback,'',$tmp_notes,$userID,$tmp_media,$tmp_media_width,$tmp_media_height,date("YmdHis"),date("YmdHis"),$tmp_bloom,getTeams(),$_POST['status'],$_POST['option_order']);
 
   for ($ocount=0; $ocount<26; $ocount++) {
     if (isset($_POST["option_text$ocount"]) and $_POST["option_text$ocount"] != '') {
-      $tmp_option_text = stripslashes($_POST["option_text$ocount"]);
-      insert_into_options($question_id,$tmp_option_text,'NULL','NULL','NULL','','',$tmp_answer,1);
+      insert_into_options($question_id,$_POST["option_text$ocount"],'NULL','NULL','NULL','','',$tmp_answer,1);
     }
   }
 

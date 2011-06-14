@@ -42,8 +42,8 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 
   // Insert into Options
   for ($option_no=1; $option_no<=20; $option_no++) {
-    $tmp_option_text = stripslashes($_POST["option_text$option_no"]);
-    $tmp_answer = stripslashes($_POST["answer$option_no"]);
+    $tmp_option_text = $_POST["option_text$option_no"];
+    $tmp_answer = $_POST["answer$option_no"];
     if ($tmp_option_text != '') {
       insert_into_options($question_id,$tmp_option_text,'NULL','NULL','NULL','NULL','NULL',$tmp_answer,1);
     }

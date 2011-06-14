@@ -31,8 +31,8 @@ include_once('../../tools/getid3/getid3.php');
 
 if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   // Get all the data first into temporay variables.
-  $tmp_theme = stripslashes($_POST['theme']);
-  $tmp_notes = stripslashes($_POST['notes']);
+  $tmp_theme = $_POST['theme'];
+  $tmp_notes = $_POST['notes'];
   $tmp_scenario = '';
   $tmp_answer = '';
   $tmp_right_feedback = '';
@@ -46,16 +46,16 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   for ($qcount=0; $qcount<10; $qcount++) {
     if ($_POST["stem$qcount"] != '' or $unique_name != '') {
       if ($tmp_scenario == '') {
-        $tmp_scenario = stripslashes($_POST["stem$qcount"]);
+        $tmp_scenario = $_POST["stem$qcount"];
         if(isset($_POST["correct$qcount"])) {
-          $tmp_answer = stripslashes($_POST["correct$qcount"]);
+          $tmp_answer = $_POST["correct$qcount"];
         } else {
           $tmp_answer = '';
         }
       } else {
-        $tmp_scenario .= '|' . stripslashes($_POST["stem$qcount"]);
+        $tmp_scenario .= '|' . $_POST["stem$qcount"];
         if(isset($_POST["correct$qcount"])) {
-          $tmp_answer .= '|' . stripslashes($_POST["correct$qcount"]);
+          $tmp_answer .= '|' . $_POST["correct$qcount"];
         } else {
           $tmp_answer .= '|';
         }
@@ -63,7 +63,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     }
   }
 
-  $tmp_leadin = stripslashes(clearMSOtags($_POST['leadin']));
+  $tmp_leadin = clearMSOtags($_POST['leadin']);
 
   // Insert into Questions
   $question_id = insert_into_questions('matrix',$tmp_theme,$tmp_scenario,$tmp_leadin,'','','',$tmp_notes,$userID,$unique_name,$tmp_media_width,$tmp_media_height,date("YmdHis"),date("YmdHis"),$_POST['bloom'],getTeams(),$_POST['status'],$_POST['option_order']);
@@ -71,8 +71,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   // Insert into Options
   for ($ocount=0; $ocount<=10; $ocount++) {
     if (isset($_POST["option_text$ocount"]) and $_POST["option_text$ocount"] != '') {
-      $tmp_option_text = stripslashes($_POST["option_text$ocount"]);
-      insert_into_options($question_id,$tmp_option_text,'NULL','NULL','NULL','','',$tmp_answer,1);
+      insert_into_options($question_id,$_POST["option_text$ocount"],'NULL','NULL','NULL','','',$tmp_answer,1);
     }
   }
 
