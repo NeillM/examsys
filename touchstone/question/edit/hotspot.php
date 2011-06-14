@@ -263,12 +263,15 @@ while ($row = $result->fetch()) {
 <script language="JavaScript" src="../../javascript/edit_tabs.js"></script>
 <script language="JavaScript" src="../../javascript/metadata.js"></script>
 <script language="JavaScript" src="../../javascript/mapping_tab.js"></script>
-<?php echo $cfg_editor_javascript; ?>
+<?php
+echo $cfg_editor_javascript;
+$qNo_parm = (isset($_GET['qNo'])) ? '&qNo=' . $_GET['qNo'] : '';
+?>
 <script src="../../javascript/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body style="background-color:white">
-<form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&qNo=' . $_GET['qNo']; ?>" enctype="multipart/form-data">
+<form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . $qNo_parm; ?>" enctype="multipart/form-data">
 <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
   <tr height="70" style="background-color:#DFECFF">
     <td width="400">
