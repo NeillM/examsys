@@ -16,7 +16,7 @@
 
 /**
 * 
-* Utility class for date related functionality
+* Utility class for network related functionality
 * 
 * @author Rob Ingram
 * @version 1.0
