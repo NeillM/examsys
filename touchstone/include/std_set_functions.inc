@@ -704,11 +704,14 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
   </script>
   </div>
 <?php
+        $layers = explode('|', $options[0]['correct']);
+        echo "<table summary=\"Options for Hotspot question\">\n";
         for ($i=1; $i<=$display_option['marks']; $i++) {
-          echo "<div>" .  chr($i+64) . ")&nbsp;" . reviewScale('hotspot', $q_id, $question_no, $i, $std_method, $tmp_reviews, substr($tmp_exclude,$i-1,1)) . "</div>\n";
+          echo "<tbody><tr><td style=\"padding-right: 12px\">" .  chr($i+64) . ')&nbsp;' . substr($layers[$i-1], 0, strpos($layers[$i-1], '~')) . "</td><td>" . reviewScale('hotspot', $q_id, $question_no, $i, $std_method, $tmp_reviews, substr($tmp_exclude,$i-1,1)) . "</td></tr></tbody>\n";
         }
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"u\" />\n";
         $marks = $display_option['marks'];
+        echo '</table>';
         break;
       case 'labelling':
         $tmp_first_split = explode(';', $options[0]['correct']);
