@@ -713,15 +713,6 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       case 'labelling':
         $tmp_first_split = explode(';', $options[0]['correct']);
         $tmp_second_split = explode('$', $tmp_first_split[8]);
-        echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
-        for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-          if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 200) {
-            echo "<tr><td>" . chr($part_id + 64) . ".</td><td>" . substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')) . "</td><td>" . reviewScale('labelling', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,$part_id-1,1)) . "</td></tr>\n";
-            $part_id++;
-            $marks++;
-          }
-        }
-        echo "</table>\n</blockquote>\n";
         $tmp_height = $options[0]['q_media_height'];
         if ($tmp_height < ($marks * 55)) $tmp_height = ($marks * 55);
         
@@ -745,6 +736,15 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         echo "</script>\n";
         echo "</div>\n";
         
+        echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
+        for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
+          if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 200) {
+            echo "<tr><td>" . chr($part_id + 64) . ".</td><td>" . substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')) . "</td><td>" . reviewScale('labelling', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,$part_id-1,1)) . "</td></tr>\n";
+            $part_id++;
+            $marks++;
+          }
+        }
+        echo "</table>\n</blockquote>\n";
         
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
         break;
