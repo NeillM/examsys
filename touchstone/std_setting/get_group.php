@@ -104,8 +104,16 @@ echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-alig
 echo "<tr style=\"height:4px\"><td colspan=\"2\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
 
 ?>
-  <table cellpadding="0" cellspacing="0" border="0">
-  <tr><td valign="top">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr>
+	<td style="width:18px; background-color:#F1F5FB">&nbsp;</td>
+	<td style="background-color:#F1F5FB; width:20%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Standard Setter&nbsp;</td>
+	<td style="background-color:#F1F5FB; width:15%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Date&nbsp;</td>
+	<td style="background-color:#F1F5FB; width:8%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Pass Score</td>
+	<td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Method</td>
+	<td width="25%" style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp</td>
+</tr>
+<tr style="height:4px"><td valign="top" colspan="6"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 <?php
 $reviews = get_reviews($mysqli, 'group', $paperID, $total_marks);
 foreach($reviews as $review) {

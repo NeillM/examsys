@@ -146,11 +146,28 @@ $total_marks = 0;
 
 $results = $mysqli->query("SELECT paper_title, total_mark FROM properties WHERE property_id=$paperID LIMIT 1");
 while ($row = $results->fetch_assoc()) {
-  $reviews_html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  $reviews_html .= "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "\">" . $row['paper_title'] . "</a></div><div style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">Standards Setting</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(97); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-  $reviews_html .= "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  $reviews_html .= "<tr><td style=\"width:18px; background-color:#F1F5FB\">&nbsp;</td><td style=\"background-color:#F1F5FB; width:150px\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Standard Setter&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Date&nbsp;</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Pass Score</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Distinction</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Review Marks</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Paper Total</td><td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Method</td><td width=\"25%\" style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp</td></tr>\n";
-  $reviews_html .= "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"9\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
+  $reviews_html .= <<< PAGEHEADING
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID={$_GET['paperID']}&folder={$_GET['folder']}&module={$_GET['module']}">{$row['paper_title']}</a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">Standards Setting</div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>
+  <tr style="height:4px"><td colspan="2" valign="top"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+</table>\n\n
+PAGEHEADING;
+
+  $reviews_html .= <<< TABLEHEADER
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+  	<td style="width:18px; background-color:#F1F5FB">&nbsp;</td>
+  	<td style="background-color:#F1F5FB; width:18%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Standard Setter&nbsp;</td>
+  	<td style="background-color:#F1F5FB; width:13%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Date&nbsp;</td>
+  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Pass Score</td>
+  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Distinction</td>
+  	<td style="background-color:#F1F5FB; width:12%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Review Marks</td>
+  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Paper Total</td>
+  	<td style="background-color:#F1F5FB; width:14%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Method</td>
+  	<td width="25%" style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp</td>
+ </tr>
+ <tr style="height:4px"><td valign="top" colspan="9"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+TABLEHEADER;
   $total_marks = $row['total_mark'];
 }
 $results->close();
