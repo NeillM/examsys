@@ -22,15 +22,7 @@
 * @package
 */
 
-/**
- * Returns the factorial of the passed number.
- *
- */
-function factorial($number) {
-  $temp = 1;
-  while ($number > 1) $temp *= $number--;
-  return $temp;
-}
+require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
 
 /**
  * Returns the number of marks the question is out of.
@@ -288,11 +280,11 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $sco
             $random_mark += ($correct_no / count($option_text)) + ((count($option_text) - $correct_no) / (count($option_text) / $na));
           }
         } elseif ($score_method == 'AllItemsCorrect') {
-          $random_mark += 1 / factorial(count($option_text));
+          $random_mark += 1 / MathsUtils::factorial(count($option_text));
         } elseif ($score_method == 'OrderNeighbours') {
           $random_mark += 1 + ((count($option_text) - 2) / count($option_text)) + (1/count($option_text));
         } elseif ($score_method == 'BonusMark' and $correct_no > 0) {
-          $random_mark += (($correct_no * $correct_no) / count($option_text)) + (factorial(count($option_text)-$correct_no)/factorial(count($option_text)));
+          $random_mark += (($correct_no * $correct_no) / count($option_text)) + (MathsUtils::factorial(count($option_text)-$correct_no)/MathsUtils::factorial(count($option_text)));
         }
       }
       break;
