@@ -11,7 +11,7 @@
   if (!defined('STDIN')) {
 //    exit;
   }
-  require '../config/config.inc';
+  require_once '../config/config.inc';
   set_time_limit(0);
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
   echo "\nStarting update from version 4.0 to 4.1\n";
