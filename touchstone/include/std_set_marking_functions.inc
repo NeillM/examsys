@@ -1,6 +1,8 @@
 <?php
 
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
+  $reviews = array();
+  
   if($mode == 'index') {
     $reviews_query = $mysqli->query("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=$paperID ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
   } else {
