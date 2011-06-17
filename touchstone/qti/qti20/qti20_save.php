@@ -250,7 +250,7 @@ class IE_qti20_Save extends IE_Main
 		
 		foreach($question->variables as $var => $vairable)
 		{	
-			$$var = gen_random_no(checkVariables($vairable->min), checkVariables($vairable->max), $vairable->inc, $vairable->dec);
+			$$var = MathsUtils::gen_random_no(checkVariables($vairable->min), checkVariables($vairable->max), $vairable->inc, $vairable->dec);
 		}	
 		
 		

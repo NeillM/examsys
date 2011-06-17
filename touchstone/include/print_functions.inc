@@ -22,23 +22,7 @@
 * @package
 */
 
-function gen_random_no($min, $max, $increment, $decimals) {
-  if ($decimals > 0) {
-    $min = $min * (10 * $decimals);
-    $max = $max * (10 * $decimals);
-    $increment = $increment * (10 * $decimals);
-  }
-  if ($increment == 1) {
-    $gen_no = rand($min, $max);
-  } else {
-    $new_max = ($max - $min) / $increment;
-    $gen_no = rand(0, $new_max);
-    $gen_no *= $increment;
-    $gen_no += $min;
-  }
-  if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals);
-  return $gen_no;
-}
+require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
 
 function checkVariables($number) {
   global $A, $B, $C, $D, $E, $F, $G, $H;
@@ -169,7 +153,7 @@ function display_options($options,$q_id, $current_theme) {
         $var = $vars[$part_id];
         $tmp_user_answers = array();
         $figures = explode(',',$display_option['option_text']);
-        $$var = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+        $$var = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
       break;
       case 'dichotomous':
         if ($marking == 2) {

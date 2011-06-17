@@ -269,7 +269,7 @@ class IE_qti12_Save extends IE_Main
 		// replace all variables in leadin with randomly generated values
 		foreach($question->variables as $var => $vairable)
 		{	
-			$$var = gen_random_no(checkVariables($vairable->min), checkVariables($vairable->max), $vairable->inc, $vairable->dec);
+			$$var = MathsUtils::gen_random_no(checkVariables($vairable->min), checkVariables($vairable->max), $vairable->inc, $vairable->dec);
 			$q_text = str_ireplace("\$$var",$$var,$q_text);
 		}	
 			

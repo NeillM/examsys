@@ -35,5 +35,34 @@ Class MathsUtils {
     while ($number > 1) $temp *= $number--;
     return $temp;
   }
+  
+  /**
+   * Generate a random number between $min and $max with a specified increment and number of decimal places
+   * @param mixed $min
+   * @param mixed $max
+   * @param mixed $increment
+   * @param int $decimals
+   * @return mixed Random number based on input parameters
+   */
+  static function gen_random_no($min, $max, $increment, $decimals) {
+    if ($min == 'ERROR' or $max == 'ERROR') return 'ERROR';
+    if ($decimals > 0) {
+      $min = $min * (10 * $decimals);
+      $max = $max * (10 * $decimals);
+      $increment = $increment * (10 * $decimals);
+    }
+    if ($increment == 1) {
+      $gen_no = rand($min, $max);
+    } else {
+      $new_max = ($max - $min) / $increment;
+      $gen_no = rand(0, $new_max);
+      $gen_no *= $increment;
+      $gen_no += $min;
+    }
+    if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals, '.', '');
+    return $gen_no;
+  }
 }
+
+
 ?>

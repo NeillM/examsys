@@ -22,24 +22,7 @@
 * @package
 */
 
-function gen_random_no($min, $max, $increment, $decimals) {
-  if ($min == 'ERROR' or $max == 'ERROR') return 'ERROR';
-  if ($decimals > 0) {
-    $min = $min * (10 * $decimals);
-    $max = $max * (10 * $decimals);
-    $increment = $increment * (10 * $decimals);
-  }
-  if ($increment == 1) {
-    $gen_no = rand($min, $max);
-  } else {
-    $new_max = ($max - $min) / $increment;
-    $gen_no = rand(0, $new_max);
-    $gen_no *= $increment;
-    $gen_no += $min;
-  }
-  if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals);
-  return $gen_no;
-}
+require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/networkutils.class.php');
 
 function checkVariables($number) {
   global $A, $B, $C, $D, $E, $F, $G, $H;
@@ -257,42 +240,42 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $figures = explode(',',$display_option['option_text']);
         switch ($part_id) {
           case 1:
-            $A = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $A = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $A_min = $figures[0];
             $A_max = $figures[1];
             break;
           case 2:
-            $B = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $B = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $B_min = $figures[0];
             $B_max = $figures[1];
             break;
           case 3:
-            $C = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $C = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $C_min = $figures[0];
             $C_max = $figures[1];
             break;
           case 4:
-            $D = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $D = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $D_min = $figures[0];
             $D_max = $figures[1];
             break;
           case 5:
-            $E = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $E = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $E_min = $figures[0];
             $E_max = $figures[1];
             break;
           case 6:
-            $F = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $F = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $F_min = $figures[0];
             $F_max = $figures[1];
             break;
           case 7:
-            $G = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $G = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $G_min = $figures[0];
             $G_max = $figures[1];
             break;
           case 8:
-            $H = gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
+            $H = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
             $H_min = $figures[0];
             $H_max = $figures[1];
             break;

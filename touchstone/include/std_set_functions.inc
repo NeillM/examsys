@@ -23,24 +23,6 @@
 */
 
 $stdID = 0;
-function gen_random_no($min, $max, $increment, $decimals) {
-  if ($decimals > 0) {
-    $min = $min * (10 * $decimals);
-    $max = $max * (10 * $decimals);
-    $increment = $increment * (10 * $decimals);
-  }
-  if ($increment == 1) {
-    $gen_no = rand($min, $max);
-  } else {
-    $new_max = ($max - $min) / $increment;
-    $gen_no = rand(0, $new_max);
-    $gen_no *= $increment;
-    $gen_no += $min;
-  }
-  if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals);
-  return $gen_no;
-}
-
 function reviewScale($q_type, $tmp_q_id, $q_no, $tmp_part_no, $set_method, $prev_reviews, $status) {
   global $mrq_part, $stdID, $std_excluded;
   if (strpos($status,'1') !== false) {

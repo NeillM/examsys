@@ -22,6 +22,8 @@
 * @package
 */
 
+require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
+
 function calcPreParse($inputVal, $user_answers, $tmp_vars) {
   global $A, $B, $C, $D, $E, $F, $G, $H;
   if (substr($inputVal,0,3) == 'ans') {
@@ -59,25 +61,6 @@ function calcPreParse($inputVal, $user_answers, $tmp_vars) {
   }
   eval("\$inputVal = $inputVal;");
   return $inputVal;
-}
-
-function gen_random_no($min, $max, $increment, $decimals) {
-  if ($min == 'ERROR' or $max == 'ERROR') return 'ERROR';
-  if ($decimals > 0) {
-    $min = $min * (10 * $decimals);
-    $max = $max * (10 * $decimals);
-    $increment = $increment * (10 * $decimals);
-  }
-  if ($increment == 1) {
-    $gen_no = rand($min, $max);
-  } else {
-    $new_max = ($max - $min) / $increment;
-    $gen_no = rand(0, $new_max);
-    $gen_no *= $increment;
-    $gen_no += $min;
-  }
-  if ($decimals > 0) $gen_no = number_format(($gen_no / (10 * $decimals)), $decimals, '.', '');
-  return $gen_no;
 }
 
 function checkVariables($number) {
@@ -433,12 +416,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         
         if (!isset($user_answers[$current_screen][$q_id])) {
           //its a normal range and user has not seen the question genarate value
-          $$var = gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
+          $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
         } else {
           //user has seen this question before use values already presented to the student
           $variables = explode(',', $tmp_user_answers[2]);
           if (substr($figures[0],0,3) == 'ans' or substr($figures[1],0,3) == 'ans' or substr($figures[0],0,3) == 'var' or substr($figures[1],0,3) == 'var') {
-            $$var = gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
+            $$var = MathsUtils::gen_random_no(checkVariables($min), checkVariables($max), $figures[2], $figures[3]);
           } else {
             $$var = $variables[$part_id-1];
           }
