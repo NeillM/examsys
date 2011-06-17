@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/networkutils.class.php');
+require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
 
 function reviewScale($q_type, $tmp_q_id, $q_no, $tmp_part_no, $mean_val, $default_on) {
   $qID = $q_no;
