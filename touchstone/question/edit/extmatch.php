@@ -168,14 +168,14 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $tmp_old_scenario = '';
 
     for ($qcount=0; $qcount<10; $qcount++) {
-      if(isset($_FILES["media$qcount"])) {
+      if (isset($_FILES["media$qcount"])) {
         $media_name = $_FILES["media$qcount"]['name'];
         $media_type = $_FILES["media$qcount"]['type'];
       } else {
         $media_name = '';
         $media_type = '';
       }
-      if(isset($_POST["old_media$qcount"])) {
+      if (isset($_POST["old_media$qcount"])) {
         $old_media_name = $_POST["old_media$qcount"];
       } else {
         $old_media_name = '';
@@ -184,15 +184,16 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       $store_answer = '';
       if ($media_name != '' and $media_name != 'none') {
         // Change a media file.
-        deleteMedia( $old_media_name);
-        $tmp_media_name = uploadFile("media$qcount",$tmp_width,$tmp_height);
+        deleteMedia($old_media_name);
+        $tmp_media_name = uploadFile("media$qcount", $tmp_width, $tmp_height);
         if ($tmp_media_width == '') {
           $tmp_media_width = $tmp_width;
           $tmp_media_height = $tmp_height;
         } else {
-          $tmp_media_width .= '|' . $tmp_width[0];
-          $tmp_media_height .= '|' . $tmp_height[1];
+          $tmp_media_width .= '|' . $tmp_width;
+          $tmp_media_height .= '|' . $tmp_height;
         }
+        $tmp_media .= '|' . $tmp_media_name;
       } else {
         if (isset($_POST["delete_media$qcount"]) and $_POST["delete_media$qcount"] == '1') {
           deleteMedia($_POST["old_media$qcount"]);
