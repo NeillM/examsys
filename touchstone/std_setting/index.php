@@ -149,7 +149,6 @@ while ($row = $results->fetch_assoc()) {
   $reviews_html .= <<< PAGEHEADING
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID={$_GET['paperID']}&folder={$_GET['folder']}&module={$_GET['module']}">{$row['paper_title']}</a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">Standards Setting</div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>
-  <tr style="height:4px"><td colspan="2" valign="top"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>\n\n
 PAGEHEADING;
 
