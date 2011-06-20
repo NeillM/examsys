@@ -24,14 +24,51 @@
 * @package
 */
 
-  // If config.inc exists we just created config.inc and need to redirect to homepage
-  $configfile = '/touchstone/config/config.inc';
-  if (file_exists($configfile)) {
-    header("Location: /touchstone/index.php");
-    exit;
-  }
-  
-  mkdir('/touchstone/new_config');
-  
-  if (!copy('/touchstone/install/config.tmpl','/touchstone/new_config/config.inc') ) die("Can't copy config file");
+// check fop PHP.
+if ( false ) {
+  ?>
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html>
+  <head>
+    <title>Error: PHP is Missing</title>
+  </head>
+  <body>
+    <h2>Error: PHP Missing</h2>
+    <p>TouchStone requires that your web server is running PHP. Your server does not have PHP installed, or PHP is turned off.</p>
+  </body>
+  </html>
+  <?php
+  exit;
+}
+
+require '../classes/installutils.class.php';
+
+//basic checks
+InstallUtils::displayHeader();
+InstallUtils::checkHTTPS();
+InstallUtils::checkSoftware();
+InstallUtils::checkDirPermissions();
+
+//have we got a config file ?
+InstallUtils::configFile();
+
+//output form
+if(isset($_POST['install'])) {
+  InstallUtils::processForm();
+} else {
+  InstallUtils::displayForm();
+}
+InstallUtils::displayfooter();
+
+// If config.inc exists we just created config.inc and need to redirect to homepage
+/*$configfile = '/touchstone/config/config.inc';
+if (file_exists($configfile)) {
+  header("Location: /touchstone/index.php");
+  exit;
+}
+
+mkdir('/touchstone/new_config');
+
+if (!copy('/touchstone/install/config.tmpl','/touchstone/new_config/config.inc') ) die("Can't copy config file");*/
+
 ?>
