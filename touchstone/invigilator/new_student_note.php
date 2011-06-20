@@ -3,7 +3,7 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2010 The University of Nottingham
+* @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
 
@@ -12,12 +12,12 @@
   if (isset($_POST['submit'])) {
     if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
       $result = $mysqli->prepare("INSERT INTO student_notes VALUES (NULL,?,?,NOW(),?,?)");
-      $result->bind_param('isii', $_POST['student_userID'], stripslashes($_POST['note']), $_POST['paperID'], $userID);
+      $result->bind_param('isii', $_POST['student_userID'], $_POST['note'], $_POST['paperID'], $userID);
       $result->execute();  
       $result->close();
     } else {
       $result = $mysqli->prepare("UPDATE student_notes SET note=? WHERE note_id=?");
-      $result->bind_param('si', stripslashes($_POST['note']), $_POST['note_id']);
+      $result->bind_param('si', $_POST['note'], $_POST['note_id']);
       $result->execute();  
       $result->close();
     }
