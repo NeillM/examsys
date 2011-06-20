@@ -17,8 +17,13 @@
   set_error_handler("customErrorHandler");
 
   function customErrorHandler($errno, $errstr, $errfile, $errline) {
-    global $mysqli, $userID;
-          
+    global $mysqli, $userID, $debug_pagestart;
+    
+    if(isset($debug_pagestart)) {
+      //we are in a debug session do not log errors to db just display them
+      return false;
+    }
+
     switch ($errno) {
       case E_NOTICE:
       case E_USER_NOTICE:
