@@ -530,7 +530,7 @@
       $adjust->close();
     }
 
-      $adjust = $mysqli->prepare("ALTER TABLE users DROP COLUMN year");
+    $adjust = $mysqli->prepare("ALTER TABLE users DROP COLUMN year");
     $adjust->execute();
     $adjust->close();
     echo "<div>ALTER TABLE users DROP COLUMN year</div>\n";

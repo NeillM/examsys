@@ -40,7 +40,7 @@
 
   <body>
 <?php
-  require'../include/user_search_options.inc';
+  require '../include/user_search_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
 <br />
@@ -156,8 +156,10 @@
               if (!in_array($module,$students[$username]['modules'])) {
                 $tmp_userID = $students[$username]['dbID'];
                 if ($tmp_userID != '') {
-                  $SQL = "INSERT INTO student_modules VALUES(NULL,$tmp_userID,'$module','$session',0)";
-                  $res = $mysqli->query($SQL) OR die(mysql_error());
+                  $update = $mysqli->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1, 0)");
+                  $update->bind_param('iss', $tmp_userID, $module, $session);
+                  $update->execute();
+                  $update->close();
                 } else {
                 }
                 $modulesAdded++;
@@ -166,10 +168,6 @@
                 $missing_users[$sid]['forname'] = $fields[2];
                 $missing_users[$sid]['surname'] = $fields[1];
               }
-            } else {
-              //$missing_users[$sid]['module'][] = $module;
-              //$missing_users[$sid]['forname'] = $fields[2];
-              //$missing_users[$sid]['surname'] = $fields[1];
             }
           }
         }
