@@ -23,7 +23,7 @@
 */
 
   require '../include/staff_auth.inc';
-  require '../include/std_set_marking_functions.inc';
+  require '../include/std_set_shared_functions.inc';
   $paperID = $_GET['paperID'];
 
   function displayReview($review) {
