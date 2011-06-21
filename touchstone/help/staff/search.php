@@ -142,7 +142,7 @@ a:visited.page {color:white}
         }
         echo "<a class=\"title\" href=\"index.php?id=$id&highlight=" . $_GET['searchstring'] . "\" target=\"_top\">" . displayTitle($title) . "</a><br /><div class=\"path\">" . getPath($title, $id, $_GET['searchstring']) . "<div></td></tr>\n";
         $link_no++;
-        if ($link_no > $page_size) {
+        if ($link_no >= $page_size) {
           $link_no = 0;
         }
       }
