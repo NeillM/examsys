@@ -75,9 +75,12 @@ if ($_GET['id'] != '1' and strpos($userroles,'SysAdmin') === false) {   // Don't
   $result->close();
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>Help and Support Center</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <style>
 body {background-color:white; color:black; margin:0px; font-family:Arial,sans-serif; font-size:85%; line-height:150%}
 p, div, td {color:#484848}
@@ -165,7 +168,7 @@ h2 {font-size:140%; color:#f27000; font-family:Verdana,sans-serif}
   }
   echo $tmp_body;
   if ($_GET['id'] > 1) {
-    echo "<br />\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n</div>\n";
+    echo "<br clear=\"all\" />\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n</div>\n";
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\"><tr>";
     echo "<td style=\"padding-left:20px\"><a style=\"color:#003366\" href=\"#top\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" border=\"0\" alt=\"Top\" /></a>&nbsp;<a style=\"color:#003366\" href=\"#top\">Top of Page</a></td><td style=\"padding-right:20px; text-align:right\">&copy; 2011, The University of Nottingham</td></tr>";
     if (strpos($userroles,'SysAdmin') !== false) {
