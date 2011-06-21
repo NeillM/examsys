@@ -68,6 +68,7 @@
     echo "</table>\n";
   }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 <title>TouchStone: Invigilator Screen</title>
@@ -166,7 +167,7 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
     echo 'Lab: ' . $room_name; 
   }
 ?>
-</div><div style="font-size:10pt; font-weight:bold">Invigilator Access</div></td>
+</div><div style="padding-left:10px; font-size:10pt; font-weight:bold">Invigilator Access</div></td>
 <td align="right"><input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" /></td></tr>
 <tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>
