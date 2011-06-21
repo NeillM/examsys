@@ -192,7 +192,7 @@ function deleteMedia($filename) {
   
   if ($filename != '') {
     if (@!unlink($cfg_web_root . 'touchstone/media/' . $filename)) {
-      display_error("Failed to delete " . $filename, '', false, true);
+      //display_error("Failed to delete " . $filename, '', false, true);
     }
   }
 }

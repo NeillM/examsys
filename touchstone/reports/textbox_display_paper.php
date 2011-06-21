@@ -97,7 +97,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
 <body onload="jumpTo()">
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
-  <?
+  <?php
 
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; border-bottom:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
@@ -167,7 +167,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
         echo "</td><td style=\"background-color:$tmp_color\">";
       }
       if ($q_media != '' and $q_media != NULL) {
-	echo '<p align="center">' . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
+        echo '<p align="center">' . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
       }
       echo "$leadin</td></tr>\n";
       
@@ -181,7 +181,6 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   }
 
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
-
 
   echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%; border-top:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
   echo '<tr><td style="color:white; font-size:80%; width:250px">&nbsp;&#169; 2011, The University of Nottingham</td><td style="color:white; width:75px; text-align:center">';
