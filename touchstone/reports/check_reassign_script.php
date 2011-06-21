@@ -16,6 +16,8 @@
 
 /**
 * 
+* Script is used to change the userID from a reservered temp_user account to a real user account.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2011 The University of Nottingham
@@ -41,6 +43,7 @@ function getModules($userID, $mysqlidb) {
   return $modules;
 }
 
+
 // Get all the details from 'temp_users' for given userID.
 $result = $mysqli->prepare("SELECT temp_users.id, temp_users.title, temp_users.first_names, temp_users.surname, student_id, assigned_account, username FROM users, temp_users WHERE users.id=? AND users.username=temp_users.assigned_account");
 $result->bind_param('i', $_GET['userID']);
@@ -48,6 +51,14 @@ $result->execute();
 $result->bind_result($temp_account_id, $temp_title, $temp_first_names, $temp_surname, $temp_student_id, $assigned_account, $temp_username);
 $result->fetch();
 $result->close();
+
+if (isset($_POST['submit'])) {
+  $temp_title = $_POST['title'];
+  $temp_first_names = $_POST['first_names'];
+  $temp_surname = $_POST['surname'];
+  $temp_student_id = $_POST['student_id'];
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html>
@@ -132,11 +143,10 @@ if ($target_userID == '') {
   $result->close();
 }
 
-echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " was reserved with the following details:</p>\n<table border=\"0\" style=\"width:100%\">\n";
-if ($temp_student_id == '') $temp_student_id = '<span style="color:#808080">&lt;unset&gt;</span>';
-echo "<tr><th>Title</th><th>Last Name</th><th>First Names</th><th>Student ID</th></tr>\n";
-echo "<tr><td>$temp_title</td><td>$temp_surname</td><td>$temp_first_names</td><td>$temp_student_id</td></tr>\n";
-echo "</table>\n<br />\n";
+echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " was reserved with the following details:</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=" . $_GET['userID'] . "\">\n<table border=\"0\" style=\"width:100%\">\n";
+echo "<tr><th>Title</th><th>Last Name</th><th>First Names</th><th>Student ID</th><th></th></tr>\n";
+echo "<tr><td><input type=\"text\" name=\"title\" value=\"$temp_title\" size=\"5\" /></td><td><input type=\"text\" name=\"surname\" value=\"$temp_surname\" size=\"15\" /></td><td><input type=\"text\" name=\"first_names\" value=\"$temp_first_names\" size=\"15\" /></td><td><input type=\"text\" name=\"student_id\" value=\"$temp_student_id\" size=\"6\" /></td><td><input type=\"submit\" name=\"submit\" value=\"Search\" style=\"width:80px\" /></tr>\n";
+echo "</table>\n</form>\n";
 
 if (count($target_student) == 0) {
   echo "<div>No user found matching above details.</div>\n";
