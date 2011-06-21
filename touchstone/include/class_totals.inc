@@ -322,13 +322,13 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           }
         } else {
           $match = false;
-          //if (isset($paper_buffer[$q_id]['correct'][$a])) {
+          if (isset($paper_buffer[$q_id]['correct'][$a])) {
             foreach ($paper_buffer[$q_id]['correct'][$a] as $check_correct) {
               if ($user_answers[$a+1] == $check_correct) {
                 $match = true;
               }
             }
-          //}
+          }
           if ($match == true) {
             $tmp_mark++;
             $tmp_user_mark_array[] = 1;
