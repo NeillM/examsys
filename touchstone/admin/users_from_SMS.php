@@ -39,7 +39,7 @@
   $session = DateUtils::get_current_academic_year();
   $session_parts = explode('/',$session);
 
-  $module_data = $mysqli->prepare("SELECT moduleid, sms FROM modules WHERE sms != ''");
+  $module_data = $mysqli->prepare("SELECT moduleid, sms FROM modules WHERE sms != '' AND moduleid='A14ACE'");
   $module_data->execute();
   $module_data->store_result();
   $module_data->bind_result($module, $sms);
@@ -80,6 +80,8 @@
     // Look up SMS
     $returned_data = file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
     $xml = new SimpleXMLElement($returned_data);
+    var_dump($xml);
+    exit;
     
     if (is_object($xml) and !isset($xml->ErrorMessage)){
       foreach ($xml->Module->Membership->Student as $sms) {
