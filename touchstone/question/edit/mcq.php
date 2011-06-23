@@ -74,19 +74,19 @@ $q_id = $_GET['q_id'];
       saveObjMappings($_POST['paperID'],$q_id,$mysqli);
 
       $changes = false;
-      $leadin = $_POST['leadin'];
-      $scenario =  $_POST['scenario'];
+      $leadin = stripslashes($_POST['leadin']);
+      $scenario =  stripslashes($_POST['scenario']);
       $part_names = array('theme','notes','bloom','correct_fback','incorrect_fback','score_method','status','option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = $_POST["$section_name"];
+          $$section_name = stripslashes($_POST["$section_name"]);
         }
       }
       if (trim(strip_tags($scenario)) == '') $scenario = '';
       $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_correct_fback','old_incorrect_fback','old_score_method','old_status','old_option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = $_POST["$section_name"];
+          $$section_name = stripslashes($_POST["$section_name"]);
         }
       }
 
@@ -182,29 +182,31 @@ $q_id = $_GET['q_id'];
           // Add operation.
           $tmp_width = 0;
           $tmp_height = 0;
-          if ($tmp_option_media != '') {
-            $tmp_option_media = uploadFile("new_option_media$option_no",$tmp_width,$tmp_height);
-          }
+          $tmp_option_media = uploadFile("new_option_media$option_no", $tmp_width, $tmp_height);
+          
           $option_changes = true;
+          $tmp_new_option_text = stripslashes($_POST["new_option_text$option_no"]);
+          $tmp_feedback_right = stripslashes($_POST["feedback_right$option_no"]);
           $result = $mysqli->prepare("INSERT INTO options VALUES (?,?,?, '$tmp_width', '$tmp_height', ?, '',?, NULL, 1)");
-          $result->bind_param('issss', $q_id, $_POST["new_option_text$option_no"], $tmp_option_media, $_POST["feedback_right$option_no"],$_POST['correct']);
+          $result->bind_param('issss', $q_id, $tmp_new_option_text, $tmp_option_media, $tmp_feedback_right,$_POST['correct']);
           $result->execute();  
           $option_id = $mysqli->insert_id;
           $result->close();
     
           $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'New Option',?,$userID,'',?,NOW(),'Option #" . $option_no . "')");
-          $result->bind_param('is', $q_id, $_POST["new_option_text$option_no"]);
+          $result->bind_param('is', $q_id, $tmp_new_option_text);
           $result->execute();  
           $result->close();
         }
-        if($option_changes == true) {
+        if ($option_changes == true) {
           $temp_id = $_POST["optionid$option_no"];
           $result = $mysqli->prepare("UPDATE options SET option_text=?, o_media=?, o_media_width='$tmp_width', o_media_height='$tmp_height', correct=?, feedback_right=? WHERE id_num=?");
-          $tmp_option_text =  $_POST["new_option_text$option_no"];
-          $result->bind_param('ssssi',$tmp_option_text, $tmp_option_media, $_POST['correct'], $_POST["feedback_right$option_no"], $temp_id);
+          $tmp_option_text =  stripslashes($_POST["new_option_text$option_no"]);
+          $tmp_feedback_right =  stripslashes($_POST["feedback_right$option_no"]);
+          $result->bind_param('ssssi',$tmp_option_text, $tmp_option_media, $_POST['correct'], $tmp_feedback_right, $temp_id);
           $result->execute();  
           $result->close();
-          record_trackChanges('Edit Question', $q_id, $old_option_text, $_POST["new_option_text$option_no"], 'Option #' . $option_no, $userID, $changes);
+          record_trackChanges('Edit Question', $q_id, $old_option_text, $tmp_option_text, 'Option #' . $option_no, $userID, $changes);
         }
       }
       
