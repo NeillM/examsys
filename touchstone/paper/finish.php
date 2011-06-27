@@ -32,7 +32,7 @@
   require '../include/mapping.inc';
 
   if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
-    $stmt->bind_param('i',$userID);
+    $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
@@ -156,6 +156,16 @@
       } else {
         $survey = 0;
       }
+      
+      if (strpos($userroles,'Staff') !== false and isset($_GET['userid']) and $_GET['userid'] != $userID) {
+        // Turn on all feedback if staff and a student exam script is being reviewed.
+        $display_correct_answer = 1;
+        $display_question_mark = 1;
+        $display_students_response = 1;
+        $display_feedback = 1;
+        $hide_if_unanswered = 0;
+      }
+
       if ($userroles == 'Student') {
         if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
@@ -342,9 +352,9 @@ table {font-size:100%}
         echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>Thank you for completing <strong>' . $paper_title . '</strong>. Your responses have been recorded.</p><br />';
         if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
         echo '</blockquote>';
-        echo '<table cellpadding="0" cellspacing="1" width="100%" border="0">';
-        echo "<tr>\n<td width=\"21\" style=\"border-bottom:dotted red 1px; font-size:90%; font-weight:bold\">&nbsp;</td><td style=\"border-bottom: dotted red 1px; color:red; font-size:90%; font-weight:bold\">Student view ends here&nbsp;</td></tr>\n";
-        echo "<tr>\n<td width=\"21\">&nbsp;</td><td style=\"color:red; font-size:90%\"><strong>Staff only view below here </strong>(students will not see this)</td></tr>\n";
+        echo '<table cellpadding="0" cellspacing="0" width="100%" border="0">';
+        echo "<tr>\n<td width=\"21\" style=\"font-weight:bold\">&nbsp;</td><td style=\"color:#800000; font-size:90%; font-weight:bold\">Student view ends here&nbsp;</td></tr>\n";
+        echo "<tr style=\"height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x\">\n<td width=\"21\">&nbsp;</td><td style=\"color:#800000; font-size:90%\"><strong>Staff only view below here </strong>(students will not see this)</td></tr>\n";
         echo '</table>';
       }
     }
