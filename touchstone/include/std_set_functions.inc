@@ -200,7 +200,7 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         } else {
           echo '<td>';
         }
-        if ($display_option['option_text'] != '') echo stripslashes($display_option['option_text']);
+        if ($display_option['option_text'] != '') echo $display_option['option_text'];
         if ($display_option['o_media'] != '') {
           if ($display_option['option_text'] != '') echo '<br />';
           echo display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']);
@@ -307,34 +307,34 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
             if ($display_option['score_method'] == 'AllItemsCorrect') {
               echo "<tr><td>&nbsp;</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td><td";
               if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
-              echo ">" . stripslashes($display_option['option_text']) . "</td></tr>\n";
+              echo ">" . $display_option['option_text'] . "</td></tr>\n";
             } else {
               echo "<tr><td>" .  reviewScale('mrq', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td><td";
               if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
-              echo ">" . stripslashes($display_option['option_text']) . "</td></tr>\n";
+              echo ">" . $display_option['option_text'] . "</td></tr>\n";
               $mrq_part++;
             }
           } else {
             echo "<tr><td></td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td><td";
             if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
-            echo "><span id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span></td></tr>\n";
+            echo "><span id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
           }
         } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and image
           if ($display_option['correct'] == 'y') {
             if ($display_option['score_method'] == 'AllItemsCorrect') {
-              echo "<tr><td>&nbsp;</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
+              echo "<tr><td>&nbsp;</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
             } else {
-              echo "<tr><td>" .  reviewScale('mrq', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
+              echo "<tr><td>" .  reviewScale('mrq', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
               $mrq_part++;
             }
           } else {
-            echo "<tr><td></td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\">" . stripslashes($display_option['option_text']) . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
+            echo "<tr><td></td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
           }
         } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and image
           if ($display_option['correct'] == 'y' and $display_option['score_method'] != 'AllItemsCorrect') {
-            echo "<tr><td>&nbsp;</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . stripslashes($display_option['o_media_height']) . "\" border=\"0\"/></td></tr>\n";
+            echo "<tr><td>&nbsp;</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
           } else {
-            echo "<tr><td>" .  reviewScale('mrq', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . stripslashes($display_option['o_media_height']) . "\" border=\"0\"/></td></tr>\n";
+            echo "<tr><td>" .  reviewScale('mrq', $q_id, $question_no, $part_id, $std_method, $tmp_reviews, substr($tmp_exclude,0,1)) . "</td><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td></tr>\n";
             $mrq_part++;
           }
         }
@@ -703,8 +703,8 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
         
         echo '<div align="center">';
         echo '<script language="JavaScript">';
-        $options[0]['correct'] = str_replace('"','&#034;',stripslashes($options[0]['correct']));
-        $options[0]['correct'] = str_replace("'",'&#039;',stripslashes($options[0]['correct']));
+        $options[0]['correct'] = str_replace('"','&#034;',$options[0]['correct']);
+        $options[0]['correct'] = str_replace("'",'&#039;',$options[0]['correct']);
 ?> 
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);

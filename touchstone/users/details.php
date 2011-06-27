@@ -137,9 +137,9 @@
     }
     if ($grade == 'inactive') $tmp_roles = 'inactive';
 
-    $tmp_first_names = stripslashes($_POST['first_names']);
-    $tmp_surname = stripslashes($_POST['surname']);
-    $tmp_email = stripslashes($_POST['email']);
+    $tmp_first_names = $_POST['first_names'];
+    $tmp_surname = $_POST['surname'];
+    $tmp_email = $_POST['email'];
         
     if (isset($_POST['password']) and $_POST['password'] != '') {
       $result = $mysqli->prepare("UPDATE users SET roles=?, title=?, initials=?, surname=?, grade=?, yearofstudy=?, username=?, password=?, email=?, first_names=?, gender=?, faculty=? WHERE id=?");

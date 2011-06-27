@@ -54,7 +54,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['stdset'])) $checklist .= ',stdset';
   if (isset($_POST['mapping'])) $checklist .= ',mapping';
 
-  $fullname = trim(stripslashes($_POST['fullname']));
+  $fullname = trim($_POST['fullname']);
   $tmp_checklist = substr($checklist,1);
   
   $result = $mysqli->prepare("INSERT INTO modules VALUES (NULL,?,?,?,?,?,?,?)");

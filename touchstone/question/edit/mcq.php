@@ -74,19 +74,19 @@ $q_id = $_GET['q_id'];
       saveObjMappings($_POST['paperID'],$q_id,$mysqli);
 
       $changes = false;
-      $leadin = stripslashes($_POST['leadin']);
-      $scenario =  stripslashes($_POST['scenario']);
+      $leadin = $_POST['leadin'];
+      $scenario =  $_POST['scenario'];
       $part_names = array('theme','notes','bloom','correct_fback','incorrect_fback','score_method','status','option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = stripslashes($_POST["$section_name"]);
+          $$section_name = $_POST["$section_name"];
         }
       }
       if (trim(strip_tags($scenario)) == '') $scenario = '';
       $part_names = array('old_theme','old_scenario','old_leadin','old_notes','old_bloom','old_correct_fback','old_incorrect_fback','old_score_method','old_status','old_option_order');
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
-          $$section_name = stripslashes($_POST["$section_name"]);
+          $$section_name = $_POST["$section_name"];
         }
       }
 
@@ -185,8 +185,8 @@ $q_id = $_GET['q_id'];
           $tmp_option_media = uploadFile("new_option_media$option_no", $tmp_width, $tmp_height);
           
           $option_changes = true;
-          $tmp_new_option_text = stripslashes($_POST["new_option_text$option_no"]);
-          $tmp_feedback_right = stripslashes($_POST["feedback_right$option_no"]);
+          $tmp_new_option_text = $_POST["new_option_text$option_no"];
+          $tmp_feedback_right = $_POST["feedback_right$option_no"];
           $result = $mysqli->prepare("INSERT INTO options VALUES (?,?,?, '$tmp_width', '$tmp_height', ?, '',?, NULL, 1)");
           $result->bind_param('issss', $q_id, $tmp_new_option_text, $tmp_option_media, $tmp_feedback_right,$_POST['correct']);
           $result->execute();  
@@ -201,8 +201,8 @@ $q_id = $_GET['q_id'];
         if ($option_changes == true) {
           $temp_id = $_POST["optionid$option_no"];
           $result = $mysqli->prepare("UPDATE options SET option_text=?, o_media=?, o_media_width='$tmp_width', o_media_height='$tmp_height', correct=?, feedback_right=? WHERE id_num=?");
-          $tmp_option_text =  stripslashes($_POST["new_option_text$option_no"]);
-          $tmp_feedback_right =  stripslashes($_POST["feedback_right$option_no"]);
+          $tmp_option_text =  $_POST["new_option_text$option_no"];
+          $tmp_feedback_right =  $_POST["feedback_right$option_no"];
           $result->bind_param('ssssi',$tmp_option_text, $tmp_option_media, $_POST['correct'], $tmp_feedback_right, $temp_id);
           $result->execute();  
           $result->close();
@@ -404,7 +404,7 @@ $q_id = $_GET['q_id'];
     <td colspan="2"><input id="nextOption" type="button" value="Add More Options..." onclick="showNextOption(4)"/></td>
   </tr>
   <?php
-    echo "<tr>\n<td class=\"field\">General Feedback</td>\n<td colspan=\"2\"><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . stripslashes($correct_fback) . "</textarea><input type=\"hidden\" name=\"old_correct_fback\" value=\"" . htmlentities(stripslashes($correct_fback),ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
+    echo "<tr>\n<td class=\"field\">General Feedback</td>\n<td colspan=\"2\"><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">$correct_fback</textarea><input type=\"hidden\" name=\"old_correct_fback\" value=\"" . htmlentities($correct_fback,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
     echo echoMetadata($bloom, $q_id, $q_group, 3, $mysqli, true, $status, $disabled);
   ?>
   <tr>

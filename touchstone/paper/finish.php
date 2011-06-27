@@ -265,7 +265,7 @@ table {font-size:100%}
 .theme {margin-left:15px;font-size:150%;font-weight:bold;color:<?php echo $themecolor; ?>}
 .objH {font-weight:bold;color:<?php echo $themecolor; ?>}
 .notes {color:<?php echo $labelcolor; ?>}
-.feedback {font-family:<?php echo $font; ?>,sans-serif;font-style:italic;color:<?php echo $labelcolor; ?>;white-space: pre}
+.feedback {font-family:<?php echo $font; ?>,sans-serif; font-style:italic; color:<?php echo $labelcolor; ?>}
 .label {color:<?php echo $labelcolor; ?>}
 .mk {background-color:#FFFF00;font-weight:bold}
 .answerindent {margin-left:17px;margin-right:15px}
@@ -1957,11 +1957,11 @@ table {font-size:100%}
           echo '<script language="JavaScript">';
           if ($tmp_display_correct_answer == '0' or $tmp_display_students_response == '0') {
           	if(!empty($paper[$question]['user_answer'])) {
-	            $paper[$question]['user_answer'] = str_replace('"','&#034;',stripslashes($paper[$question]['user_answer']));
-	            $paper[$question]['user_answer'] = str_replace("'",'&#039;',stripslashes($paper[$question]['user_answer']));
+	            $paper[$question]['user_answer'] = str_replace('"','&#034;',$paper[$question]['user_answer']);
+	            $paper[$question]['user_answer'] = str_replace("'",'&#039;',$paper[$question]['user_answer']);
           	}
-            $paper[$question]['correct'][0] = str_replace('"','&#034;',stripslashes($paper[$question]['correct'][0]));
-            $paper[$question]['correct'][0] = str_replace("'",'&#039;',stripslashes($paper[$question]['correct'][0]));
+            $paper[$question]['correct'][0] = str_replace('"','&#034;',$paper[$question]['correct'][0]);
+            $paper[$question]['correct'][0] = str_replace("'",'&#039;',$paper[$question]['correct'][0]);
 ?> 
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
@@ -1988,11 +1988,11 @@ table {font-size:100%}
     }
 
     if (isset($paper[$question]['user_answer'])) {
-      $paper[$question]['user_answer'] = str_replace('"','&#034;',stripslashes($paper[$question]['user_answer']));
-      $paper[$question]['user_answer'] = str_replace("'",'&#039;',stripslashes($paper[$question]['user_answer']));
+      $paper[$question]['user_answer'] = str_replace('"','&#034;',$paper[$question]['user_answer']);
+      $paper[$question]['user_answer'] = str_replace("'",'&#039;',$paper[$question]['user_answer']);
     }
-    $paper[$question]['correct'][0] = str_replace('"','&#034;',stripslashes($paper[$question]['correct'][0]));
-    $paper[$question]['correct'][0] = str_replace("'",'&#039;',stripslashes($paper[$question]['correct'][0]));
+    $paper[$question]['correct'][0] = str_replace('"','&#034;',$paper[$question]['correct'][0]);
+    $paper[$question]['correct'][0] = str_replace("'",'&#039;',$paper[$question]['correct'][0]);
 ?> 
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
@@ -2050,7 +2050,7 @@ table {font-size:100%}
           foreach($module_list as $thisModuleid) {
             if(isset($objByModule[$thisModuleid])) {
               foreach($objByModule[$thisModuleid] as $id => $mappingData) {
-                echo "<li>" . stripslashes($mappingData['content']);
+                echo "<li>" . $mappingData['content'];
                 if ($mappingData['session']['source_url'] != '') echo "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" border=\"0\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
                 echo "</li>\n";
               }
