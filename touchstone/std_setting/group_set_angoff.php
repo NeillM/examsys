@@ -24,23 +24,23 @@
 
 require '../include/staff_auth.inc';
 require '../include/media.inc';
-require 'angoff_group_functions.inc';
+require '../include/std_set_functions.inc';
 
 $rater_query = '';
 $rater_names = array();
 $review_string = '';
 if (isset($_GET['reviewers'])) {
   $paperID = $_GET['paperID'];
-  $module = $_GET['module'];
-  $folder = $_GET['folder'];
-  $reviews = explode(';',$_GET['reviewers']);
+  $module = (isset($_GET['module'])) ? $_GET['module'] : '';
+  $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
+  $prev_reviews = explode(';',$_GET['reviewers']);
   $row_no = 0;
-  foreach ($reviews as $individual_review) {
+  foreach ($prev_reviews as $individual_review) {
     $parts = explode(',',$individual_review);
     if ($row_no == 0) {
       $setterID = $parts[0];
       $dateID = $parts[1];
-      $rater_query = " AND ((setterID=$parts[0] AND std_set=$parts[1])";
+//      $rater_query = " AND ((setterID=$parts[0] AND std_set=$parts[1])";
     } else {
       if ($rater_query == '') {
         $rater_query = " AND ((setterID=$parts[0] AND std_set=$parts[1])";
@@ -74,7 +74,6 @@ if (isset($_GET['reviewers'])) {
 $reviews = array();
 $review_string = substr($review_string,1);
 
-$hidden_fields = '';
 if ($setterID != '') {
   $query_string = "SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=$paperID AND setterID=$setterID AND std_set=$dateID";
   $results = $mysqli->query($query_string);
@@ -83,48 +82,32 @@ if ($setterID != '') {
     $reviews[$questionID] = $row['rating'];
   }
   $results->close();
-  
-  $query_string = "SELECT question, std FROM (papers, questions) WHERE paper=$paperID AND papers.question=questions.q_id";
-  $results = $mysqli->query($query_string);
-  while ($row = $results->fetch_assoc()) {
-    $hidden_fields .= "<input type=\"hidden\" name=\"old" . $row['question'] . "\" value=\"" . $row['std'] . "\" />";
-  }
-  $results->close();
 }
 
 if ($rater_query != '') {
-  $query_string = "SELECT std_set, rating, setterID, method, title, initials, surname, questionID FROM (standards_setting, users) WHERE standards_setting.setterID=users.id AND paperID=$paperID $rater_query) ORDER BY std_set, setterID";
-  $results = $mysqli->query($query_string);
-  while ($row = $results->fetch_assoc()) {
-    $tmp_userID = $row['setterID'];
-    $questionID = $row['questionID'];
-    $reviews[$tmp_userID][$questionID] = $row['rating'];
-    $reviews[$tmp_userID]['name'] = $row['title'] . ' ' . $row['surname'];
+  $stmt = $mysqli->prepare("SELECT rating, setterID, method, title, surname, questionID FROM (standards_setting, users) WHERE standards_setting.setterID=users.id AND paperID=? $rater_query) ORDER BY std_set, setterID");
+  $stmt->bind_param('i', $paperID);
+  $stmt->execute();
+  $stmt->bind_result($rating, $setter_id, $method, $title, $surname, $questionID);
+  while($stmt->fetch()) {
+    $tmp_userID = $setter_id;
+    $reviews['user'][$tmp_userID][$questionID] = $rating;
+    $reviews['user'][$tmp_userID]['name'] = $title . ' ' .$surname;
   }
-  $results->close();
+  $stmt->close();
 }
 
 // Get how many screens make up the question paper.
 if (!isset($no_screens)) {
   $screen_data = array();
-  $paper_properties = $mysqli->query("SELECT DISTINCT paper_title, paper_type, paper_prologue, marking, screen, leadin, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, bidirectional FROM (properties, papers, questions) WHERE papers.question=questions.q_id AND properties.property_id=papers.paper AND paper=$paperID ORDER BY screen, display_pos");
-  if (!$paper_properties) {
-    echo $mysqli->error;
-    $mysqli->close();
-    exit();
-  }
-  while ($row = $paper_properties->fetch_assoc()) {
-    $no_screens = strval($row['screen']);
+  
+  $paper_properties = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, paper_prologue, marking, screen, bgcolor, fgcolor, themecolor, labelcolor, bidirectional FROM (properties, papers, questions) WHERE papers.question=questions.q_id AND properties.property_id=papers.paper AND paper=? ORDER BY screen, display_pos");
+  $paper_properties->bind_param('i', $paperID);
+  $paper_properties->execute();
+  $paper_properties->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
+  while($paper_properties->fetch()) {
+    $no_screens = strval($screen);
     $screen_data[$no_screens] = (isset($screen_data[$no_screens])) ? $screen_data[$no_screens] + 1 : 1;
-    $bgcolor = $row['bgcolor'];
-    $fgcolor = $row['fgcolor'];
-    $themecolor = $row['themecolor'];
-    $labelcolor = $row['labelcolor'];
-    $bidirectional = $row['bidirectional'];
-    $marking = $row['marking'];
-    $paper_type = $row['paper_type'];
-    $paper_prologue = $row['paper_prologue'];
-    $paper_title = $row['paper_title'];
   }
   $paper_properties->close();
   $current_screen = 1;
@@ -152,6 +135,9 @@ if (!isset($no_screens)) {
   .inactive {color:#C0C0C0}
   .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
 </style>
+
+<script src="../javascript/ie_fix.js" type="text/javascript"></script>
+<script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 
 </head>
@@ -180,110 +166,150 @@ if (!isset($no_screens)) {
   <td style="margin:0px">Use the light blue dropdown lists next to each question to indicate the percentage of <strong>borderline</strong> candidates expected to get each question correct.<br /><br /><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> = reviews differ by more than 10%</td>
   </tr>
   </table>
+<?php
+if(count($rater_names) > count($reviews['user'])) {
+?>
+  </div>
+  <div align="center" style="margin-top: 12px">
+  <table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#DFE8FF; border:1px solid #5582D2;">
+  <tr>
+  <td style="background-color: #FFC0C0; margin:0px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <strong>Warning</strong>: One or more of the individual reviews on which this group review is based has changed since the review took place. These reviews are not included in the mean values shown below.</td>
+  </tr>
+  </table>
   </div>
   <br />
 <?php
-  $query_string = "SELECT screen, q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM papers, questions, options WHERE paper=$paperID AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num";
-  $question_data = $mysqli->query($query_string);
-  $num_rows = $question_data->num_rows;
-  $old_leadin = '';
-  $old_q_type = '';
-  $old_q_id = 0;
-  $question_no = 0;
-  $old_theme = '';
-  $old_screen = 1;
-  $question_offset = 1;
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  while ($row = $question_data->fetch_assoc()) {
-    if ($question_no == 0 and $current_screen == 1 and $paper_prologue != '') {
-      echo '<tr><td colspan="2" style="padding: 20px; text-align:justify">' . $paper_prologue . '</td></tr>';
+}
+// Get any questions to exclude.
+$excluded = array();
+$result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+$result->bind_param('i', $_GET['paperID']);
+$result->execute();
+$result->bind_result($q_id, $parts);
+while ($row = $result->fetch()) {
+  $excluded[$q_id] = $parts;
+}
+$result->close();
+
+$old_leadin = '';
+$old_q_type = '';
+$old_q_id = 0;
+$question_no = 0;
+$old_theme = '';
+$old_screen = 1;
+$question_offset = 1;
+$prologue_show = 1;
+
+$stmt = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+$stmt->bind_param('i', $paperID);
+$stmt->execute();
+$stmt->store_result();
+$num_rows = $stmt->num_rows;
+$stmt->bind_result($screen, $q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);  
+
+echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+
+while($stmt->fetch()) {
+//  $tmp_userID = $setter_id;
+//  $reviews[$tmp_userID][$questionID] = $rating;
+//  $reviews[$tmp_userID]['name'] = $title . ' ' .$surname;
+
+  if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
+    echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
+    $prologue_show = 0;
+  }
+  
+  if ($question_no == 0) echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+  if ($old_q_id != $q_id) {          // New Question
+    // Print the options of the previous question
+    $li_set = 0;
+    if ($old_leadin != '') {
+      if ($li_set == 1) echo "</td></tr>\n";
+//      display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $setterID);
+      display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
+      
+      if ($old_screen != $screen) {
+        echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
+        echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
+        echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;" . $screen . "</td>\n</tr>\n";
+        echo '</table></td></tr>';
+      }
+    }
+    if (($old_q_type == 'likert' and $q_type != 'likert') or ($old_q_type != 'likert' and $q_type == 'likert')) echo "</table>\n<br />\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+
+    if ($theme != '') {
+      if ($old_q_type == 'likert') echo '</table><br /><table cellpadding="4" cellspacing="0" border="0" width="100%">';  // Close off table if last question was likert scale.
+      echo '<tr><td class="question_no">&nbsp;</td><td><p class="theme">' . $theme . '</p></td></tr>';
     }
 
-    if ($question_no == 0) echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    if ($old_q_id != $row['q_id']) {          // New Question
-      // Print the options of the previous question
-      $li_set = 0;
-      if ($old_leadin != '') {
-        if ($li_set == 1) echo "</td></tr>\n";
-        display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $setterID);
-        
-        if ($old_screen != $row['screen']) {
-          echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
-          echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-          echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;" . $row['screen'] . "</td>\n</tr>\n";
-          echo '</table></td></tr>';
-        }
-      }
-      if (($old_q_type == 'likert' and $row['q_type'] != 'likert') or ($old_q_type != 'likert' and $row['q_type'] == 'likert')) echo "</table>\n<br />\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+    if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $notes . '</td></tr>';
 
-      if ($row['theme'] != '') {
-        if ($old_q_type == 'likert') echo '</table><br /><table cellpadding="4" cellspacing="0" border="0" width="100%">';  // Close off table if last question was likert scale.
-        echo '<tr><td class="question_no">&nbsp;</td><td><p class="theme">' . $row['theme'] . '</p></td></tr>';
-      }
-
-      if ($row['notes'] != '' and $row['q_type'] != 'likert') echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $row['notes'] . '</td></tr>';
-
-      if ($row['scenario'] != '' and $row['q_type'] != 'extmatch' and $row['q_type'] != 'matrix' and $row['q_type'] != 'likert') {
-        echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td valign="top"><p>' . $row['scenario'] . '</p>';
+    if ($scenario != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert') {
+      echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td valign="top"><p>' . $scenario . '</p>';
+      $li_set = 1;
+    }
+    if ($q_media != '' and $q_media != NULL and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
+      if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
+        if ($li_set == 0) echo '<tr><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
         $li_set = 1;
-      }
-      if ($row['q_media'] != '' and $row['q_media'] != NULL and $row['q_type'] != 'hotspot' and $row['q_type'] != 'labelling' and $row['q_type'] != 'flash' and $row['q_type'] != 'extmatch') {
-        if (substr($row['q_media'], -4) == '.gif' or substr($row['q_media'], -4) == '.jpg' or substr($row['q_media'], -4) == 'jpeg' or substr($row['q_media'], -4) == '.png') {
-          if ($li_set == 0) echo '<tr><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
-          $li_set = 1;
-          echo "<p align=\"center\">" . display_media($row['q_media'],$row['q_media_width'],$row['q_media_height'],$question_no) . "</p>\n";
-        } else {
-          if ($li_set == 0) {
-            echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
-          }
-          $li_set = 1;
-          echo "<p>" . display_media($row['q_media'],$row['q_media_width'],$row['q_media_height'],$question_no) . "</p>\n";
-        }
-      }
-      if ($row['q_type'] != 'likert') {
+        echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, $question_no) . "</p>\n";
+      } else {
         if ($li_set == 0) {
           echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
         }
         $li_set = 1;
-        echo '<p>' . $row['leadin'] . '</p>';
+        echo "<p>" . display_media($q_media, $q_media_width, $q_media_height, $question_no) . "</p>\n";
       }
-
-      $old_leadin = $row['leadin'];
-      $old_scenario = $row['scenario'];
-      $old_notes = $row['notes'];
-      $old_q_type = $row['q_type'];
-      $old_q_id = $row['q_id'];
-      $old_theme = $row['theme'];
-      $old_screen = $row['screen'];
-      $options_array = array();          // Clear options array
-      $question_no++;
     }
+    if ($q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info') {
+      if ($li_set == 0) {
+        echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
+      }
+      $li_set = 1;
+      echo '<p>' . $leadin . '</p>';
+    }
+    if ($q_type == 'info') {
+      if ($li_set == 0) echo '<tr><td colspan="2" style="padding-left:20px; padding-right:20px">' . $leadin;
+      $li_set = 1;
+      $question_no--;
+    }
+  
+    $old_leadin = $leadin;
+    $old_scenario = $scenario;
+    $old_notes = $notes;
+    $old_q_type = $q_type;
+    $old_q_id = $q_id;
+    $old_theme = $theme;
+    $old_screen = $screen;
+    $options_array = array();          // Clear options array
+    $question_no++;
+  }
 
-    $options_array[] = $row;
-  }         // End of While loop
-  $question_data->close();
+  $options_array[] = array('q_type'=>$q_type, 'score_method'=>$score_method, 'correct'=>$correct, 'scenario'=>$scenario, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+}         // End of While loop
+$stmt->close();
 
-  // Print the options for the last question on the screen.
-  display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $setterID);
+// Print the options for the last question on the screen.
+//display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $setterID);
+display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
 
-  echo '</td></tr></table></td></tr>';
-  echo "<tr><td colspan=\"2\" style=\"border-top:dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
-  echo '</table>';
-  echo '<input type="hidden" name="module" value="' . $module . '" />';
-  echo '<input type="hidden" name="folder" value="' . $folder . '" />';
-  echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';
-  echo '<input type="hidden" name="setterID" value="' . $setterID . '" />';
-  echo '<input type="hidden" name="dateID" value="' . $dateID . '" />';
-  echo '<input type="hidden" name="review_string" value="' . $review_string . '" />';
-  echo "<input type=\"hidden\" name=\"method\" value=\"Modified Angoff\" />\n";
-  $mysqli->close();
+echo '</td></tr></table></td></tr>';
+echo "<tr><td colspan=\"2\" style=\"border-top:dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
+echo '</table>';
+echo '<input type="hidden" name="module" value="' . $module . '" />';
+echo '<input type="hidden" name="folder" value="' . $folder . '" />';
+echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';
+echo '<input type="hidden" name="setterID" value="' . $setterID . '" />';
+echo '<input type="hidden" name="dateID" value="' . $dateID . '" />';
+echo '<input type="hidden" name="review_string" value="' . $review_string . '" />';
+echo "<input type=\"hidden\" name=\"method\" value=\"Modified Angoff\" />\n";
+$mysqli->close();
 ?>
 <div align="center">
 <input type="checkbox" name="alterpassmark" value="1" checked /> Update paper pass mark<br />
 <input type="submit" name="submit" value="Save Ratings" style="width:150px" />&nbsp;<input onclick="javascript: history.back()" type="button" name="cancel" value="Cancel" style="width:100px" />
 </div>
 <br />
-<?php echo $hidden_fields ?>
 </form>
 </body>
 </html>
