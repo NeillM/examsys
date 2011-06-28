@@ -2086,7 +2086,7 @@ table {font-size:100%}
     }
     echo "</table>\n";
 
-    // Division by zero check.
+    // Marks summary
     if ($total_marks > 0 and $survey == 0) {
       echo '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#E4EEFC; border:1px solid #B5C4DF">';
       echo '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
@@ -2099,7 +2099,7 @@ table {font-size:100%}
         if (isset($_GET['percent'])) {
           echo $_GET['percent'];
         } else {
-          if ((($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100 > 0) {
+          if ( ($total_marks-$total_random_mark) > 0 and (($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100 > 0) {
             echo number_format((($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100, 1, '.', ',');
           } else {
             echo '0';
