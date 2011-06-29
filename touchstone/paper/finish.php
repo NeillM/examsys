@@ -1818,20 +1818,19 @@ table {font-size:100%}
             reset_feedback($hide_if_unanswered);
           }
           $paper[$question]['mark'] = 0;
-          if (isset($paper[$question]['user_answer']) and substr($tmp_exclude,0,1) == '0') {
+          if (isset($paper[$question]['user_answer'])) {
             $parts = explode('|',$paper[$question]['user_answer']);
+            $i = 0;
             foreach ($parts as $part) {
-              $paper[$question]['mark'] += substr($part,0,1);
+              if(substr($tmp_exclude, $i, 1) == '0') {
+                $paper[$question]['mark'] += substr($part,0,1);
+              }
+              $i++;
             }            
           }
           
           if ($paper[$question]['scenario'] != '') {
             echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
-          }
-          echo '<p';
-          if (substr($tmp_exclude,0,1) == '1') {
-            echo ' style="color:red; text-decoration:line-through"';
-            $paper[$question]['mark'] = 0;
           }
           if ($tmp_display_correct_answer == '0') {
 ?>

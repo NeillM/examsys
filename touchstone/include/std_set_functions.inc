@@ -281,13 +281,13 @@ function display_options($options,$q_id, $current_theme, $current_scenario, $cur
       $part_id = 1;
       echo "<table summary=\"Options for Hotspot question\">\n";
       $excl_string = '';
-      if (isset($exclude[$q_id])) {
-        $excl_string = ' ;color:red; text-decoration:line-through';
-      }
       foreach ($matching_options as $single_option) {
+        if (substr($tmp_exclude,$part_id - 1,1) == '1') {
+          $excl_string = ' ;color:red; text-decoration:line-through';
+        }
         $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $part_id, $tmp_reviews, $is_group);
         echo "<tbody><tr><td style=\"padding-right: 12px$excl_string\">" .  chr($part_id+64) . ')&nbsp;' . $single_option . "</td><td>&nbsp;</td><td>";
-        echo reviewScale($question_no, $part_id, $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $is_group);
+        echo reviewScale($question_no, $part_id, $std_method, substr($tmp_exclude,$part_id - 1,1), $review_val, $stdID, $is_group);
         echo "</td></tr></tbody>\n";
         $part_id++;
       }

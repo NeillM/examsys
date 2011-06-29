@@ -157,9 +157,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'hotspot':
-      if (substr($tmp_exclude,0,1) == '0' and $correct[0] != '') {
-        $marks += (substr_count($correct[0],'|') + 1);
-      }
+      $marks += (substr_count($correct[0],'|') + 1) - substr_count($tmp_exclude, '1');
       break;
   }
   return $marks;
