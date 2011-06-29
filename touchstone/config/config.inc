@@ -41,26 +41,30 @@ $news_msg = '';
 switch (strtolower($_SERVER['HTTP_HOST'])) {
   case 'touchstone.nottingham.ac.uk':
     $cfg_install_type = '';
+    error_reporting(0);           // Turn error reporting off for the live server 
     break;
   case 'touchstone.nottingham.ac.uk:8080':
     $cfg_db_database = 'staging';
     $cfg_install_type = '(Staging)';
+    error_reporting(-1); 
     break;
   case 'touchstone2.nottingham.ac.uk':
     $cfg_install_type = '(backup)';
+    error_reporting(-1); 
     break;
   case 'suivarro.nottingham.ac.uk':
     $cfg_install_type = '(dev)';
+    error_reporting(-1); 
     break;
   case 'touchstone.local':
     $cfg_install_type = '(local)';
   	$cfg_db_passwd   = 'touchstone';
+    error_reporting(-1); 
     break;
 }
 
 //Warnings
   $cfg_hour_warning = 10;       // Warning for summative exams
-  error_reporting(-1);          // PHP error reporting 
   
 //Assistance
   $support_email = 'learning-team-support@nottingham.ac.uk';

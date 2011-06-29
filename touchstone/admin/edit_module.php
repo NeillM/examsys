@@ -45,6 +45,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   } else {
     $active = 0;
   }
+  if (isset($_POST['selfenroll'])) {
+    $selfenroll = 1;
+  } else {
+    $selfenroll = 0;
+  }
   $checklist = '';
   if (isset($_POST['peer'])) $checklist .= ',peer';
   if (isset($_POST['external'])) $checklist .= ',external';
@@ -60,8 +65,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $tmp_old_moduleid = $_POST['old_moduleid'];
   $tmp_checklist = substr($checklist,1); 
   
-  $result = $mysqli->prepare("UPDATE modules SET moduleid=?,fullname=?,active=?, school=?, sms=?, vle_api=?, checklist=? WHERE moduleid=?");
-  $result->bind_param('ssisssss', $tmp_moduleid, $tmp_fullname, $active, $tmp_school, $tmp_sms_api, $tmp_vle_api, $tmp_checklist, $tmp_old_moduleid);
+  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, school=?, sms=?, vle_api=?, checklist=?, selfenroll=? WHERE moduleid=?");
+  $result->bind_param('ssissssis', $tmp_moduleid, $tmp_fullname, $active, $tmp_school, $tmp_sms_api, $tmp_vle_api, $tmp_checklist, $selfenroll, $tmp_old_moduleid);
   $result->execute();
   $result->close();
 
@@ -113,11 +118,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_modules.php");
 } else {
   $moduleid = $_GET['moduleid'];
-  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms FROM modules WHERE moduleid=?");
+  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll FROM modules WHERE moduleid=?");
   $stmt->bind_param('s', $moduleid);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms);
+  $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll);
   $stmt->fetch();
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -236,6 +241,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field">Objectives API</td><td><select name="vle_api"><option value="">&lt;No lookup&gt;</option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option></select></td></tr>
     <tr><td class="field">Summative Checklist</td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> Peer Review, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> External Examiners, <input type="checkbox" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> Standards Setting, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> Mapping</td></tr>
     <tr><td class="field">Active</td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field">allow Self-enroll</td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
   <?php
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_moduleid\" value=\"" . $_GET['moduleid'] . "\" />\n";

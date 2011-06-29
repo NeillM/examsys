@@ -49,6 +49,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   } else {
     $active = 0;
   }
+  if (isset($_POST['selfenroll'])) {
+    $selfenroll = 1;
+  } else {
+    $selfenroll = 0;
+  }
   $checklist = '';
   if (isset($_POST['peer'])) $checklist .= ',peer';
   if (isset($_POST['external'])) $checklist .= ',external';
@@ -59,8 +64,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $tmp_checklist = substr($checklist,1);
   
   //TODO this has been moved to moduleutils
-  $result = $mysqli->prepare("INSERT INTO modules VALUES (NULL,?,?,?,?,?,?,?)");
-  $result->bind_param('ssissss', $moduleid, $fullname, $active, $_POST['school'], $_POST['vle_api'], $tmp_checklist, $_POST['sms_api']);
+  $result = $mysqli->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $result->bind_param('ssissssi', $moduleid, $fullname, $active, $_POST['school'], $_POST['vle_api'], $tmp_checklist, $_POST['sms_api'], $selfenroll);
   $result->execute();
   $result->close();
 
@@ -111,7 +116,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
           $initials .= substr($tmp_name,0,1);
         }
         
-        $result = $mysqli->prepare("INSERT INTO users VALUES ('',?,?,?,?,?,?,'Student',NULL,?,?,?,NULL,0,?)");
+        $result = $mysqli->prepare("INSERT INTO users VALUES ('', ?, ?, ?, ?, ?, ?, 'Student', NULL, ?, ?, ?, NULL, 0, ?)");
         $result->bind_param('sssssssssi', $student->CourseCode, $student->Surname, $initials, $student->Title, $student->Username, $student->Email, $student->Faculty, $student->Forename, $student->Gender, $sms->YearofStudy);
         $result->execute();
         $result->close();
@@ -127,7 +132,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $result->close();
 
       // Add student onto the module
-      $result = $mysqli->prepare("INSERT INTO student_modules VALUES (NULL,?,?,?,1,1)");
+      $result = $mysqli->prepare("INSERT INTO student_modules VALUES (NULL, ?, ?, ?, 1, 1)");
       $result->bind_param('iss', $tmp_userID, $module, $session);
       $result->execute();
       $result->close();
@@ -149,7 +154,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         $import_type = 'SATURN UK';
       }
       
-      $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL,NOW(),?,?,?,0,'',?)");
+      $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, 0, '', ?)");
       $result->bind_param('siss', $module, $enrolements, $enrolement_details, $import_type);
       $result->execute();
       $result->close();
@@ -241,6 +246,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     </select></td></tr>
     <tr><td class="field">Summative Checklist</td><td><input type="checkbox" name="peer" checked /> Peer Review, <input type="checkbox" name="external" checked /> External Examiners, <input type="checkbox" name="stdset" /> Standards Setting, <input type="checkbox" name="mapping" /> Mapping</td></tr>
     <tr><td class="field">Active</td><td><input type="checkbox" name="active" checked /></td></tr>
+    <tr><td class="field">allow Self-enroll</td><td><input type="checkbox" name="selfenroll" /></td></tr>
     </table>
     <p><input type="submit" style="width:100px" name="submit" value="Add">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="Cancel" onclick="javascript:history.back();" /></p>
   </form>

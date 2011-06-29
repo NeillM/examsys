@@ -171,12 +171,13 @@ function displayPaperIcon($row) {
   if ($folder != '') {
     $folders_array = explode(';',$folder_name);
     $parts = count($folders_array) - 1;
+    $selfenroll = 0;
   } elseif ($module != '') {
-    $module_data = $mysqli->prepare("SELECT fullname, checklist FROM modules WHERE moduleid=?");
+    $module_data = $mysqli->prepare("SELECT fullname, checklist, selfenroll FROM modules WHERE moduleid=?");
     $module_data->bind_param('s', $module);
     $module_data->execute();
     $module_data->store_result();
-    $module_data->bind_result($module_fullname, $checklist);
+    $module_data->bind_result($module_fullname, $checklist, $selfenroll);
     $module_data->fetch();
     $module_data->close();
   }
@@ -279,6 +280,12 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   }
   echo "$tmp_html</div>\n";
   $member_details->close();
+}
+
+// Is it a self-enroll module.
+if ($selfenroll == 1) {
+  $selfenroll_url = $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/folder/enroll.php?moduleid=A11SELF';
+  echo "<div style=\"padding-left:10px\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /> <span style=\"color:#C00000\">Self-enroll URL:</span> <a href=\"$selfenroll_url\">$selfenroll_url</a></div>\n<br />";
 }
 
 // Get any sub-folders first.

@@ -118,6 +118,24 @@
   }
   $group_reviews->close();  
   
+  // 29/07/2011
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='selfenroll'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN selfenroll tinyint");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE modules ADD COLUMN selfenroll tinyint</div>\n";
+
+    $adjust = $mysqli->prepare("UPDATE modules SET selfenroll=0");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>UPDATE modules SET selfenroll=0</div>\n";
+  }
+
   //Close the database
   $mysqli->close();
   ob_end_flush();
