@@ -105,9 +105,9 @@ if (isset($_GET['calendar_year'])) {
   $team_sql = implode("','", $teams);
   if ($team_sql != '') $team_sql = "'$team_sql'";
   if (strpos($userroles,'SysAdmin') !== false) {
-    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules, schools ORDER BY moduleID");
+    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
   } elseif (strpos($userroles,'Admin') !== false) {
-    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE modules.school=schools.school AND faculty='$faculty' ORDER BY moduleID");
+    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE modules.schoolid=schools.id AND faculty='$faculty' ORDER BY moduleID");
   } else {
     $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
   }
