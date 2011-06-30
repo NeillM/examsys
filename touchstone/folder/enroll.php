@@ -29,7 +29,7 @@ require '../classes/dateutils.class.php';
 check_var('moduleid', 'GET', true, false);
 $session = DateUtils::get_current_academic_year();
 
-$result = $mysqli->prepare("SELECT fullname, school, active, selfenroll FROM modules WHERE moduleid=?");
+$result = $mysqli->prepare("SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
 $result->bind_param('s', $_GET['moduleid']);
 $result->execute();
 $result->bind_result($fullname, $school, $active, $selfenroll);

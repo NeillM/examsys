@@ -65,7 +65,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   
   //TODO this has been moved to moduleutils
   $result = $mysqli->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $result->bind_param('ssissssi', $moduleid, $fullname, $active, $_POST['school'], $_POST['vle_api'], $tmp_checklist, $_POST['sms_api'], $selfenroll);
+  $result->bind_param('ssisssii', $moduleid, $fullname, $active, $_POST['vle_api'], $tmp_checklist, $_POST['sms_api'], $selfenroll, $_POST['schoolid']);
   $result->execute();
   $result->close();
 
@@ -168,7 +168,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-  <title>Create new Module</title>
+  <title>Create new Module<?php echo " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
   <style>
@@ -217,18 +217,18 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     
 <?php
   $old_faculty = '';
-  echo "<tr><td class=\"field\">School</td><td><select name=\"school\">\n<option value=\"\"></option>\n";
-  $query_string = "SELECT school, faculty FROM schools ORDER BY faculty, school";
+  echo "<tr><td class=\"field\">School</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
+  $query_string = "SELECT id, school, faculty FROM schools ORDER BY faculty, school";
   $results = $mysqli->query($query_string);
   while ($row = $results->fetch_assoc()) {
     if ($old_faculty != $row['faculty']) {
       if ($old_faculty != '') echo "</optgroup>\n";
       echo "<optgroup label=\"" . $row['faculty'] . "\">\n";
     }
-    if (isset($_POST['school']) and $_POST['school'] == $row['school']) {
-      echo "<option value=\"" . $row['school'] . "\" selected>" . $row['school'] . "</option>\n";
+    if (isset($_POST['schoolid']) and $_POST['schoolid'] == $row['id']) {
+      echo "<option value=\"" . $row['id'] . "\" selected>" . $row['school'] . "</option>\n";
     } else {
-      echo "<option value=\"" . $row['school'] . "\">" . $row['school'] . "</option>\n";
+      echo "<option value=\"" . $row['id'] . "\">" . $row['school'] . "</option>\n";
     }
     $old_faculty = $row['faculty'];
   }

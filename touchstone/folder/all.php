@@ -28,7 +28,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone</title>
+<title>TouchStone<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style>
 .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
@@ -75,9 +75,9 @@
   $module_block = false;
   $block_id=0;
   if (strpos($userroles,'SysAdmin') !== false) {
-    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.school=modules.school ORDER BY faculty, school, moduleid");
+    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.id=modules.schoolid ORDER BY faculty, school, moduleid");
   } else {
-    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.school=modules.school WHERE faculty='$faculty' ORDER BY school, moduleid");
+    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.id=modules.schoolid WHERE faculty='$faculty' ORDER BY school, moduleid");
   }
   while ($row = $results->fetch_assoc()) {
     if ($old_faculty != $row['faculty'] or $old_school != $row['school']) {
@@ -124,9 +124,9 @@
   $module_block = false;
   //$block_id=0;
   if (strpos($userroles,'SysAdmin') !== false) {
-    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.school=modules.school ORDER BY moduleid");
+    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.id=modules.schoolid ORDER BY moduleid");
   } else {
-    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.school=modules.school WHERE faculty='$faculty' ORDER BY moduleid");
+    $results = $mysqli->query("SELECT DISTINCT faculty, schools.school, moduleid, fullname FROM schools LEFT JOIN modules ON schools.id=modules.schoolid WHERE faculty='$faculty' ORDER BY moduleid");
   }
   while ($row = $results->fetch_assoc()) {
     if ($old_letter != substr($row['moduleid'],0,1)) {

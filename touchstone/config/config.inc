@@ -9,7 +9,7 @@
 * @package
 */
 
-$ts_version = '4.0';
+$ts_version = '4.0.1';
 define('TOUCHSTONE', 'true');
 define('DIR_SEPARATOR', '/');
 $cfg_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;

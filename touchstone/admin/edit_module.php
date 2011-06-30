@@ -59,14 +59,10 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   // Update the properties of the module.
   $tmp_moduleid = trim($_POST['moduleid']);
   $tmp_fullname = trim($_POST['fullname']);
-  $tmp_school = $_POST['school'];
-  $tmp_sms_api = $_POST['sms_api'];
-  $tmp_vle_api = $_POST['vle_api'];
-  $tmp_old_moduleid = $_POST['old_moduleid'];
   $tmp_checklist = substr($checklist,1); 
   
-  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, school=?, sms=?, vle_api=?, checklist=?, selfenroll=? WHERE moduleid=?");
-  $result->bind_param('ssissssis', $tmp_moduleid, $tmp_fullname, $active, $tmp_school, $tmp_sms_api, $tmp_vle_api, $tmp_checklist, $selfenroll, $tmp_old_moduleid);
+  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=? WHERE moduleid=?");
+  $result->bind_param('ssisssiis', $tmp_moduleid, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $_POST['old_moduleid']);
   $result->execute();
   $result->close();
 
@@ -105,7 +101,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $stmt->store_result();
     $stmt->bind_result($q_id, $question_moduleID);
     while ($stmt->fetch()) {
-      $question_moduleID = str_replace($_POST['old_moduleid'],trim($_POST['moduleid']),$question_moduleID);
+      $question_moduleID = str_replace($_POST['old_moduleid'], trim($_POST['moduleid']), $question_moduleID);
       $result = $mysqli->prepare("UPDATE questions SET q_group=? WHERE q_id=?");
       $result->bind_param('si', $question_moduleID, $q_id);
       $result->execute();
@@ -118,7 +114,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_modules.php");
 } else {
   $moduleid = $_GET['moduleid'];
-  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll FROM modules WHERE moduleid=?");
+  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
   $stmt->bind_param('s', $moduleid);
   $stmt->execute();
   $stmt->store_result();
@@ -128,7 +124,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-  <title>Edit Module</title>
+  <title>Edit Module<?php echo " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
   <style>
@@ -190,8 +186,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field">Full name</td><td><input type="text" size="70" name="fullname" value="<?php echo $fullname; ?>" /></td></tr>
   <?php
     $old_faculty = '';
-    echo "<tr><td class=\"field\">School</td><td><select name=\"school\">\n<option value=\"\"></option>\n";
-    $query_string = "SELECT school, faculty FROM schools ORDER BY faculty, school";
+    echo "<tr><td class=\"field\">School</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
+    $query_string = "SELECT id, school, faculty FROM schools ORDER BY faculty, school";
     $results = $mysqli->query($query_string);
     while ($row = $results->fetch_assoc()) {
       if ($old_faculty != $row['faculty']) {
@@ -199,9 +195,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         echo "<optgroup label=\"" . $row['faculty'] . "\">\n";
       }
       if ($row['school'] == $school) {
-        echo "<option value=\"" . $row['school'] . "\" selected>" . $row['school'] . "</option>\n";
+        echo "<option value=\"" . $row['id'] . "\" selected>" . $row['school'] . "</option>\n";
       } else {
-        echo "<option value=\"" . $row['school'] . "\">" . $row['school'] . "</option>\n";
+        echo "<option value=\"" . $row['id'] . "\">" . $row['school'] . "</option>\n";
       }
       $old_faculty = $row['faculty'];
     }
