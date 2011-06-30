@@ -112,7 +112,7 @@
     }
     
     // Send out email welcome.
-    if (isset($_POST['welcome']) and $_POST['welcome'] != '') {
+    if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
       $result = $mysqli->query("SELECT email FROM users WHERE username='" . $_SERVER['PHP_AUTH_USER'] . "'");
       $row = $result->fetch_assoc();
       $result->close();
@@ -131,20 +131,20 @@ h2 {font-size:120%}
 </style>
 </head>
 <body>
-<p>Dear " . $_POST['users_title'] . " " . ucwords($_POST['surname']) . ",</p>
+<p>Dear " . $_POST['new_users_title'] . " " . ucwords($_POST['new_surname']) . ",</p>
 <p>A new account has been created to access the online assessment and survey system TouchStone. Your personal authentication details are:</p>
-<p>Username: " . $_POST['username'] . "<br />
-Password: " . $_POST['password'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">(case-sensitive)</span></p>";
+<p>Username: " . $_POST['new_username'] . "<br />
+Password: " . $_POST['new_password'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">(case-sensitive)</span></p>";
 
       if (strpos($tmp_roles,'Staff') !== false) {
-        $message .= "<p>To log into the system goto: <a href=\"https://touchstone.nottingham.ac.uk/touchstone/\">https://touchstone.nottingham.ac.uk/touchstone/</a></p>";
+        $message .= "<p>To log into the system goto: <a href=\"https://{$_SERVER['HTTP_HOST']}/touchstone/\">https://{$_SERVER['HTTP_HOST']}/touchstone/</a></p>";
       } elseif (strpos($tmp_roles,'Student') !== false) {
       } else {
-        $message .= "<p>To log into the system goto: <a href=\"https://touchstone.nottingham.ac.uk/touchstone/\">https://touchstone.nottingham.ac.uk/touchstone/</a></p>";
+        $message .= "<p>To log into the system goto: <a href=\"https://{$_SERVER['HTTP_HOST']}/touchstone/\">https://{$_SERVER['HTTP_HOST']}/touchstone/</a></p>";
         $message .= "<p>When you log in you will be taken to a personal screen listing all the papers that require your attention for review.</p>";
       }
       $message .= "</body>\n</html>";
-      mail ($to, $subject, $message, $headers) or print "<p>Could not send mail to <strong>" . $_POST['email'] . "</strong>.</p>";
+      mail ($to, $subject, $message, $headers) or print "<p>Could not send mail to <strong>" . $_POST['new_email'] . "</strong>.</p>";
     }
     ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
