@@ -284,7 +284,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 
 // Is it a self-enroll module.
 if ($selfenroll == 1) {
-  $selfenroll_url = $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/folder/enroll.php?moduleid=A11SELF';
+  $selfenroll_url = $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/folder/enroll.php?moduleid=' . $_GET['module'];
   echo "<div style=\"padding-left:10px\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /> <span style=\"color:#C00000\">Self-enroll URL:</span> <a href=\"$selfenroll_url\">$selfenroll_url</a></div>\n<br />";
 }
 
