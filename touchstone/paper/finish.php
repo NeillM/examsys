@@ -1736,7 +1736,7 @@ table {font-size:100%}
           $blank_count = 1;
           
           while ($blank_count < $no_blanks) {
-            if ($user_choices[$blank_count] == 'u') {
+            if (!isset($user_choices[$blank_count]) or $user_choices[$blank_count] == 'u') {
               reset_feedback($hide_if_unanswered);
             }
           
@@ -1779,7 +1779,7 @@ table {font-size:100%}
               }
               echo "<select name=\"\">\n<option value=\"\"></option>";
               foreach ($answer_list as $answer_option) {
-                if (html_entity_decode(trim($answer_option)) == html_entity_decode(trim($user_choices[$blank_count]))) {
+                if (isset($user_choices[$blank_count]) and html_entity_decode(trim($answer_option)) == html_entity_decode(trim($user_choices[$blank_count]))) {
                   echo "<option value=\"\" selected>$answer_option</option>\n";
                 } else {
                   echo "<option value=\"\">$answer_option</option>\n";
@@ -1787,13 +1787,13 @@ table {font-size:100%}
               }
               echo "</select>\n";
 
-              if (str_replace('&nbsp;',' ',html_entity_decode(trim($answer_list[0]))) == str_replace('&nbsp;',' ',html_entity_decode(trim($user_choices[$blank_count])))) {
+              if (isset($user_choices[$blank_count]) and str_replace('&nbsp;',' ',html_entity_decode(trim($answer_list[0]))) == str_replace('&nbsp;',' ',html_entity_decode(trim($user_choices[$blank_count])))) {
                 if (substr($tmp_exclude,$blank_count-1,1) == '0') {
                   $paper[$question]['mark']++;
                   if ($tmp_display_students_response == '1') echo  '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                 }
               } else {
-                if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0' and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
+                if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
                   echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                 } else {
                   echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
