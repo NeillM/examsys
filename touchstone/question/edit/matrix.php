@@ -95,7 +95,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     }
     $part_names = array('old_theme','old_leadin','old_notes','old_bloom','old_status', 'old_feedback','old_option_order');
     foreach($part_names as $section_name) {
-      $$section_name = html_entity_decode($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
 
     // Strip MS Office HTML.
@@ -155,8 +155,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         $result->close();
       }
     
-      $new_stem = html_entity_decode($_POST["stem$qcount"]);
-      $old_stem = html_entity_decode($_POST["old_stem$qcount"]);
+      $new_stem = $_POST["stem$qcount"];
+      $old_stem = $_POST["old_stem$qcount"];
     
       if ($new_stem != $old_stem) {
         $changes = true;
@@ -192,8 +192,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         $result->close();
       }
 
-      $new_option_text = html_entity_decode($_POST["option_text$ocount"]);
-      $old_option_text = html_entity_decode($_POST["old_option_text$ocount"]);
+      $new_option_text = $_POST["option_text$ocount"];
+      $old_option_text = $_POST["old_option_text$ocount"];
     
       if ($new_option_text != $old_option_text) {
         $changes = true;
@@ -359,11 +359,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     <tr><td colspan="2"><div class="section">General Information</div></td></tr>
     <tr>
       <td class="field" style="text-align: right">Theme/Heading</td>
-      <td><input type="text" name="theme" size="82" value="<?php echo $theme; ?>" /><input type="hidden" name="old_theme" value="<?php echo htmlentities($theme,ENT_NOQUOTES,'UTF-8'); ?>" /></td>
+       <td><textarea name="theme" cols="100" style="width:700px" ><?php echo $theme; ?></textarea><textarea style="display:none" name="old_theme"/><?php echo $theme; ?></textarea><input type="hidden" name="checkout_author" value="<?php echo $checkout_authorID; ?>" /></td>
     </tr>
     <tr>
       <td class="field" style="text-align: right">Notes<br /><span class="note">(visible to students)</span></td>
-      <td><textarea name="notes" cols="100" style="width:700px" rows="2" wrap="virtual"><?php echo $notes; ?></textarea><input type="hidden" name="old_notes" value="<?php echo htmlentities($notes,ENT_NOQUOTES,'UTF-8'); ?>" /></td>
+      <td><textarea name="notes" cols="100" style="width:700px" rows="2" wrap="virtual"><?php echo $notes; ?></textarea><textarea style="display:none" name="old_notes" /><?php echo $notes; ?></textarea></td>
     </tr>
     <?php
     if ($matching_media != '') {
@@ -383,7 +383,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 </tr>
 <tr>
 <td class="field" style="text-align: right"><span class="mandatory">*</span>&nbsp;Lead-in</td>
-      <td><textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo htmlentities($leadin,ENT_NOQUOTES,'UTF-8'); ?></textarea>
+      <td><textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo $leadin; ?></textarea>
 	  <?php echo wysiwyg_editor('oEdit1','leadin',$leadin); ?>        
       </td>
     </tr>
@@ -407,9 +407,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
           if ($question == 0 and $col_no == 0) {
             echo '<td style="border-right:solid #CFCFCF 1px">&nbsp;</td>';
           } elseif ($question == 0 and $col_no > 0) {
-            echo '<td style="border-right: solid #CFCFCF 1px"><input type="text" name="option_text' . ($col_no - 1) . '" size="6"  value="' . htmlentities($matching_options[$col_no - 1],ENT_NOQUOTES,'UTF-8') . '" /><input type="hidden" name="old_option_text' . ($col_no - 1) . '" value="' . htmlentities($matching_options[$col_no - 1],ENT_NOQUOTES,'UTF-8') . '" /></td>';
+            echo '<td style="border-right: solid #CFCFCF 1px"><textarea style="width:70px; white-space:nowrap; overflow:hidden" rows="1"; name="option_text' . ($col_no - 1) . '">' . $matching_options[$col_no - 1] . '</textarea><textarea style="display:none" name="old_option_text' . ($col_no - 1) . '" >' . $matching_options[$col_no - 1] . '</textarea></td>';
           } elseif ($col_no == 0 and $question > 0) {
-            echo '<td style="border-right:solid #CFCFCF 1px; border-top: solid #CFCFCF 1px"><input type="text" name="stem' . ($question - 1) . '" size="6" value="' . htmlentities($matching_scenarios[$question - 1],ENT_NOQUOTES,'UTF-8') . '" /><input type="hidden" name="old_stem' . ($question - 1) . '" value="' . htmlentities($matching_scenarios[$question - 1],ENT_NOQUOTES,'UTF-8') . '" /></td>';
+            echo '<td style="border-right:solid #CFCFCF 1px; border-top: solid #CFCFCF 1px"><textarea style="width:70px; white-space:nowrap; overflow:hidden" rows="1" name="stem' . ($question - 1) . '">' . $matching_scenarios[$question - 1] . '</textarea><textarea style="display:none" name="old_stem' . ($question - 1) . '" >' . $matching_scenarios[$question - 1] . '</textarea></td>';
           } else {
             if ($matching_correct[$question - 1] == $col_no) {
               echo '<td style="border-right:solid #CFCFCF 1px; border-top:solid #CFCFCF 1px"><div align="center"><input type="radio" name="correct' . ($question - 1) . '" value="' . $col_no . '" checked /></div></td>';

@@ -185,7 +185,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
     if (trim(strip_tags($scenario)) == '') $scenario = '';
     $part_names = array('old_theme','old_scenario','old_notes','old_bloom','old_feedback','old_points','old_status');
     foreach($part_names as $section_name) {
-      $$section_name = html_entity_decode($_POST["$section_name"]);
+      $$section_name = $_POST["$section_name"];
     }
 
     // Strip MS Office HTML.
@@ -304,15 +304,15 @@ $qNo_parm = (isset($_GET['qNo'])) ? '&qNo=' . $_GET['qNo'] : '';
     <table cellpadding="3" cellspacing="0" border="0" align="center">
     <tr>
       <td class="field">Theme/Heading&nbsp;</td>
-      <td><input type="text" name="theme" value="<?php echo $theme; ?>" size="80" /><input type="hidden" name="old_theme" value="<?php echo htmlentities($theme,ENT_NOQUOTES,'UTF-8'); ?>" /><input type="hidden" name="checkout_author" value="<?php echo $checkout_authorID; ?>" /></td>
+        <td><textarea name="theme" cols="100" style="width:700px" ><?php echo $theme; ?></textarea><textarea style="display:none" name="old_theme"/><?php echo $theme; ?></textarea><input type="hidden" name="checkout_author" value="<?php echo $checkout_authorID; ?>" /></td>
     </tr>
     <tr>
       <td class="field">Notes<br /><span class="note">(visible to students)</span></td>
-      <td><textarea name="notes" cols="100" style="width:700px" rows="2" wrap="virtual"><?php echo $notes; ?></textarea><input type="hidden" name="old_notes" value="<?php echo htmlentities($notes,ENT_NOQUOTES,'UTF-8'); ?>" /></td>
+      <td><textarea name="notes" cols="100" style="width:700px" rows="2" wrap="virtual"><?php echo $notes; ?></textarea><textarea style="display:none" name="old_notes" /><?php echo $notes; ?></textarea></td>
     </tr>
     <tr>
     <td class="field">Scenario<br /><span class="note">(background info)</span></td>
-        <td><textarea style="display:none" name="old_scenario" id="old_scenario"><?php echo htmlentities($scenario,ENT_NOQUOTES,'UTF-8'); ?></textarea>
+        <td><textarea style="display:none" name="old_scenario" id="old_scenario"><?php echo $scenario; ?></textarea>
         <?php echo wysiwyg_editor('oEdit1','scenario',$scenario);?>          
     </td>
     </tr>
@@ -341,7 +341,7 @@ $qNo_parm = (isset($_GET['qNo'])) ? '&qNo=' . $_GET['qNo'] : '';
 </tr>
     <tr>
       <td valign="top" align="right" class="field">General Feedback</td>
-      <td><textarea name="feedback" cols="100" style="width:700px" rows="4" wrap="virtual"><?php echo $correct_fback; ?></textarea><input type="hidden" name="old_feedback" value="<?php echo htmlentities($correct_fback,ENT_NOQUOTES,'UTF-8'); ?>" /></td>
+      <td><textarea name="feedback" cols="100" style="width:700px" rows="4" wrap="virtual"><?php echo $correct_fback; ?></textarea><textarea style="display:none" name="old_feedback"><?php echo $correct_fback; ?></textarea></td>
     </tr>
     <?php
       echo echoMetadata($bloom, $q_id, $q_group, 1, $mysqli, true, $status, $disabled);

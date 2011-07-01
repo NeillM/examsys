@@ -163,7 +163,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $part_names = array('old_theme','old_scenario','old_leadin','old_feedback','old_correct','old_notes','old_bloom','old_format','old_start_year','old_end_year','old_score_method','old_terms','old_answer_day','old_answer_month','old_answer_year','old_answer_hour','old_answer_minute','old_answer_second','old_status','old_question_terms');
     foreach($part_names as $section_name) {
       if(isset($_POST["$section_name"])) {
-        $$section_name = html_entity_decode($_POST["$section_name"]);
+        $$section_name = $_POST["$section_name"];
       } else {
         $$section_name = '';
       }
@@ -363,16 +363,16 @@ function checkForm() {
 
       echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" align=\"center\">\n";
       echo "<tr><td colspan=\"4\"><div class=\"section\">General Information</div></td></tr>\n";
-      echo "<tr><td class=\"field\">Theme/Heading</td><td colspan=\"3\"><input type=\"text\" name=\"theme\" size=\"80\" value=\"$theme\" /><input type=\"hidden\" name=\"old_theme\" value=\"" . htmlentities($theme,ENT_NOQUOTES,'UTF-8') . "\" /></td></tr>\n";
-      echo "<tr><td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"3\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">$notes</textarea><input type=\"hidden\" name=\"old_notes\" value=\"" . htmlentities($notes,ENT_NOQUOTES,'UTF-8') . "\" /></td></tr>\n";
-      echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td colspan=\"3\">\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . htmlentities($scenario,ENT_NOQUOTES,'UTF-8') . "</textarea>";
+      echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"6\"><textarea name=\"theme\" cols=\"100\" style=\"width:700px\" >$theme</textarea><textarea style=\"display:none\" name=\"old_theme\"/>$theme</textarea><input type=\"hidden\" name=\"checkout_author\" value=\"$checkout_authorID\" /></td>\n</tr>\n";
+      echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"6\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">" . $notes . "</textarea><textarea style=\"display:none\" name=\"old_notes\" />$notes</textarea></td>\n</tr>\n";
+      echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td colspan=\"3\">\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . $scenario . "</textarea>";
       echo wysiwyg_editor('oEdit1','scenario',$scenario);
       echo "</td>\n</tr>\n";
       if ($q_media != '') {
         echo "<tr><td class=\"field\">Current Media</td><td colspan=\"3\">" . display_media($q_media,$q_media_width,$q_media_height,0) . "</td></tr>\n";
       }
       echo "<tr><td class=\"field\">Change Media</td><td colspan=\"3\"><input type=\"file\" size=\"65\" name=\"q_media\" /><input type=\"hidden\" name=\"old_q_media\" value=\"$q_media\" /><input type=\"hidden\" name=\"old_q_media_width\" value=\"$q_media_width\" /><input type=\"hidden\" name=\"old_q_media_height\" value=\"$q_media_height\" /></td></tr>\n";
-      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:9pt; color:#808080\">(the question)</span></td>\n<td colspan=\"3\">\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . htmlentities($leadin,ENT_NOQUOTES,'UTF-8') . "</textarea>";
+      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:9pt; color:#808080\">(the question)</span></td>\n<td colspan=\"3\">\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . $leadin . "</textarea>";
       echo wysiwyg_editor('oEdit2','leadin',$leadin);
       echo "</td>\n</tr>";
       $format_info = explode("|",$score_method);
@@ -526,7 +526,7 @@ function checkForm() {
     </tr>
     <tr>
       <td class="field">Feedback<br /><span class="note">(only for assessments)</span></td>
-      <td colspan="3"><textarea name="feedback" cols="100" style="width:700px" rows="4" wrap="virtual"><?php echo $correct_fback; ?></textarea><input type="hidden" name="old_feedback" value="<?php echo htmlentities($correct_fback,ENT_NOQUOTES,'UTF-8'); ?>" /></td>
+      <td colspan="3"><textarea name="feedback" cols="100" style="width:700px" rows="4" wrap="virtual"><?php echo $correct_fback; ?></textarea><textarea style="display:none" name="old_feedback" ><?php echo $correct_fback; ?></textarea></td>
     </tr>
     <tr><td colspan="4">&nbsp;</td></tr>
     <?php

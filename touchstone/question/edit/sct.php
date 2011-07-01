@@ -316,9 +316,9 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo "<tr>\n<td style=\"text-align:center\">\n";
       echo "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\">\n";
       echo "<tr>\n<td colspan=\"3\" class=\"section\">General Information</td>\n</tr>\n";
-      echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"2\"><input type=\"text\" name=\"theme\" value=\"$theme\" size=\"80\" /><input type=\"hidden\" name=\"old_theme\" value=\"" . htmlentities($theme,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
-      echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"2\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">$notes</textarea><input type=\"hidden\" name=\"old_notes\" value=\"" . htmlentities($notes,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
-      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Clinical Vignette</td><td colspan=\"2\"><textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . htmlentities($scenario,ENT_NOQUOTES,'UTF-8') . "</textarea>";
+      echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"6\"><textarea name=\"theme\" cols=\"100\" style=\"width:700px\" >$theme</textarea><textarea style=\"display:none\" name=\"old_theme\"/>$theme</textarea><input type=\"hidden\" name=\"checkout_author\" value=\"$checkout_authorID\" /></td>\n</tr>\n";
+      echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"6\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">" . $notes . "</textarea><textarea style=\"display:none\" name=\"old_notes\" />$notes</textarea></td>\n</tr>\n";
+      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Clinical Vignette</td><td colspan=\"2\"><textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . $scenario . "</textarea>";
       echo wysiwyg_editor('oEdit1','scenario',$scenario,740);
       echo "</td></tr>\n";
       if ($q_media != '') {
@@ -328,8 +328,8 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo "<tr>\n<td class=\"field\">Change Media</td><td colspan=\"2\"><input type=\"file\" name=\"q_media\" size=\"65\" /></td>\n</tr>\n";
       
       $tmp_parts = explode('~',$leadin);
-      echo "<tr>\n<td class=\"field\">Hypothesis</td><td>" . wysiwyg_editor('oEdit2','leadin1',$tmp_parts[0],740) . "<input type=\"hidden\" name=\"old_leadin1\" value=\"" . $tmp_parts[0] . "\" /></td></tr>\n";
-      echo "<tr>\n<td class=\"field\">New Information</td><td>" . wysiwyg_editor('oEdit3','leadin2',$tmp_parts[1],740) . "<input type=\"hidden\" name=\"old_leadin2\" value=\"" . $tmp_parts[1] . "\" /></td></tr>\n";
+      echo "<tr>\n<td class=\"field\">Hypothesis</td><td>" . wysiwyg_editor('oEdit2','leadin1',$tmp_parts[0],740) . "<textarea style=\"display:none;\" name=\"old_leadin1\" >" . $tmp_parts[0] . "</textarea></td></tr>\n";
+      echo "<tr>\n<td class=\"field\">New Information</td><td>" . wysiwyg_editor('oEdit3','leadin2',$tmp_parts[1],740) . "<textarea style=\"display:none;\" name=\"old_leadin2\" >" . $tmp_parts[1] . "</textarea></td></tr>\n";
       
       echo "<tr>\n<td colspan=\"3\">&nbsp;</td>\n</tr>\n";
       echo "<tr>\n<td colspan=\"3\"><span class=\"section\">Options</span></td>\n</tr>\n";
@@ -352,7 +352,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     echo "<tr class=\"option\"><td colspan=\"3\">&nbsp;</td></tr>\n";
     $option_no++;
   }
-  echo "<tr>\n<td class=\"field\">General<br />Feedback</span></td>\n<td colspan=\"2\"><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">$correct_fback</textarea><input type=\"hidden\" name=\"old_correct_fback\" value=\"" . htmlentities($correct_fback,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
+  echo "<tr>\n<td class=\"field\">General<br />Feedback</span></td>\n<td colspan=\"2\"><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">$correct_fback</textarea><textarea style=\"display:none\" name=\"old_correct_fback\" >" . $correct_fback . "</textarea></td>\n</tr>\n";
   echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
 
   echo echoMetadata($bloom, $q_id, $q_group, 3, $mysqli, true, $status, $disabled);

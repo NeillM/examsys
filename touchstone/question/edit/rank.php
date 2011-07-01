@@ -345,9 +345,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
            }
            
            echo "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\">\n";
-           echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td><input type=\"text\" name=\"theme\" size=\"80\" value=\"$theme\" /><input type=\"hidden\" name=\"old_theme\" value=\"" . htmlentities($theme,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
-           echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\">$notes</textarea><input type=\"hidden\" name=\"old_notes\" value=\"" . htmlentities($notes,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
-           echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . htmlentities($scenario,ENT_NOQUOTES,'UTF-8') . "</textarea>";
+           echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"6\"><textarea name=\"theme\" cols=\"100\" style=\"width:700px\" >$theme</textarea><textarea style=\"display:none\" name=\"old_theme\"/>$theme</textarea><input type=\"hidden\" name=\"checkout_author\" value=\"$checkout_authorID\" /></td>\n</tr>\n";
+           echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"6\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">" . $notes . "</textarea><textarea style=\"display:none\" name=\"old_notes\" />$notes</textarea></td>\n</tr>\n";
+           echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . $scenario . "</textarea>";
            echo wysiwyg_editor('oEdit1','scenario',$scenario);
            echo "</td>\n</tr>\n";
            echo "<tr>\n<td class=\"field\">Current Media<input type=\"hidden\" name=\"old_q_media\" value=\"$q_media\"><input type=\"hidden\" name=\"old_q_media_width\" value=\"$q_media_width\"><input type=\"hidden\" name=\"old_q_media_height\" value=\"$q_media_height\"></td>\n<td>";
@@ -358,7 +358,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
            }
            echo "</td>\n</tr>\n";
            echo "<tr>\n<td class=\"field\">Change Media</td><td><input type=\"file\" size=\"60\" name=\"q_media\" /></td>\n</tr>\n";
-           echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . htmlentities($leadin,ENT_NOQUOTES,'UTF-8') . "</textarea>";
+           echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . $leadin . "</textarea>";
            echo wysiwyg_editor('oEdit2','leadin',$leadin);
            echo "</td>\n</tr>";
            echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Scoring method</td>\n";
@@ -391,7 +391,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
          }
 
          echo "<tr>\n<td style=\"text-align: right\"><strong>" . $option_no . ".&nbsp;</strong></td>\n";
-         echo "<td><input type=\"text\" name=\"new_option_text" . $option_no . "\" id=\"new_option_text" . $option_no . "\" size=\"73\" style=\"width:650px\" value=\"" . htmlentities($option_text,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"old_option_text" . $option_no . "\" value=\"" . htmlentities($option_text,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"optionid$option_no\" value=\"" . $id_num . "\" />&nbsp;";
+         echo "<td><textarea name=\"new_option_text" . $option_no . "\" id=\"new_option_text" . $option_no . "\" rows=\"1\" style=\"width:640px\" >" . $option_text . "</textarea><textarea style=\"display:none;\" name=\"old_option_text" . $option_no . "\">$option_text</textarea><input type=\"hidden\" name=\"optionid$option_no\" value=\"" . $id_num . "\" />&nbsp;";
          echo "<input type=\"hidden\" name=\"old_answer" . $option_no . "\" value=\"$correct\" /><select name=\"answer" . $option_no . "\" id=\"answer" . $option_no . "\">\n<option value=\"\"></option>\n";
          if ($correct == '0') {
            echo "<option value=\"0\" selected>N/A</option>\n";
@@ -444,8 +444,8 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 	   <td colspan="2"><input id="nextOption" type="button" value="Add More Options..." onclick="showNextOption(1)"/></td>
 	   </tr>
 	   <?php
-       echo "<tr>\n<td class=\"field\">Feedback if Correct<br /><span style=\"font-weight:normal; font-size:90%; color:red\">(default feedback)</span></td>\n<td><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $correct_fback . "</textarea><input type=\"hidden\" name=\"old_correct_fback\" value=\"" . htmlentities($correct_fback,ENT_NOQUOTES,'UTF-8') . "\" /></td>\n</tr>\n";
-       echo "<tr>\n<td class=\"field\">Feedback if Wrong<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(leave blank to use default)</span></td>\n<td><textarea name=\"incorrect_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $incorrect_fback . "</textarea><input type=\"hidden\" name=\"old_incorrect_fback\" value=\"" . htmlentities($incorrect_fback,ENT_NOQUOTES,'UTF-8') . "\" /><input type=\"hidden\" name=\"options\" value=\"" . $option_no . "\"></td>\n</tr>\n";
+       echo "<tr>\n<td class=\"field\">Feedback if Correct<br /><span style=\"font-weight:normal; font-size:90%; color:red\">(default feedback)</span></td>\n<td><textarea name=\"correct_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $correct_fback . "</textarea><textarea style=\"display:none\" name=\"old_correct_fback\">" . $correct_fback . "</textarea></td>\n</tr>\n";
+       echo "<tr>\n<td class=\"field\">Feedback if Wrong<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(leave blank to use default)</span></td>\n<td><textarea name=\"incorrect_fback\" cols=\"100\" style=\"width:700px\" rows=\"4\" wrap=\"virtual\">" . $incorrect_fback . "</textarea><textarea style=\"display:none\" name=\"old_incorrect_fback\">" . $incorrect_fback . "</textarea><input type=\"hidden\" name=\"options\" value=\"" . $option_no . "\"></td>\n</tr>\n";
 
        echo echoMetadata($bloom, $q_id, $q_group, 2, $mysqli, true, $status, $disabled);
       ?>
