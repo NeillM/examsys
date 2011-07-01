@@ -27,7 +27,7 @@
 
 Class ModuleUtils {
 
-  static function addModules($moduleid, $fullname, $active, $school, $vle_api, $sms_api, $peer, $external, $stdset, $mapping, $db) {
+  static function addModules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $db) {
     
     if(ModuleUtils::moduleExists($moduleid,$db) === false) {
       return false;
@@ -41,8 +41,9 @@ Class ModuleUtils {
 
     $tmp_checklist = substr($checklist,1);
     
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL,?,?,?,?,?,?,?)");
-    $result->bind_param('ssissss', $moduleid, $fullname, $active, $school, $vle_api, $tmp_checklist, $sms_api);
+    $result = $db->prepare( "INSERT INTO modules VALUES (NULL,?,?,?,?,?,?,?,?)" );
+    echo $db->error;
+    $result->bind_param('ssiiissi', $moduleid, $fullname, $active, $vle_api, $selfEnroll, $tmp_checklist, $sms_api, $schoolID);
     $result->execute();
     $result->close();
     if($db->errno != 0) {

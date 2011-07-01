@@ -178,7 +178,6 @@ Class InstallUtils {
     
     //create 100 guest accounts
     for ($i=1; $i<=100; $i++) {
-    
       UserUtils::createUser(  'user' . $i, 
                               '', //blank password will be generated
                               'Dr',
@@ -195,18 +194,19 @@ Class InstallUtils {
      }
      
      //add traing school
-     SchoolUtils::addSchool(  'Administrative and Support Units',
-                              'Training',
-                               self::$db
-                            );
+     $scoolID = SchoolUtils::addSchool(  'Administrative and Support Units',
+                                         'Training',
+                                         self::$db
+                                      );
      
      //create special modules
      ModuleUtils::addModules(  'TRAIN', 
                                 'Training Module', 
                                 1, 
-                                'Training', 
+                                $scoolID, 
                                 '',
                                 '', 
+                                0, 
                                 false, 
                                 false, 
                                 false, 
@@ -217,9 +217,10 @@ Class InstallUtils {
     ModuleUtils::addModules(   'SYSTEM', 
                                 'Online Help', 
                                 1, 
-                                'Training', 
+                                $scoolID, 
                                 '',
-                                '', 
+                                '',
+                                0,                                
                                 true, 
                                 true, 
                                 true, 
@@ -462,7 +463,7 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
 CONFIG;
 
     $config = str_replace('{ts_version}',self::$ts_version,$config);
-    $config = str_replace('{SysAdmin_username}','');
+    $config = str_replace('{SysAdmin_username}','',$config);
     $config = str_replace('{cfg_db_host}',self::$cfg_db_host,$config);
     $config = str_replace('{cfg_db_port}',self::$cfg_db_port,$config);
     $config = str_replace('{cfg_db_database}',self::$cfg_db_name,$config);
@@ -470,7 +471,7 @@ CONFIG;
     $config = str_replace('{cfg_db_passwd}',self::$cfg_db_password,$config);
     
     $config = str_replace('{support_email}',self::$support_email,$config);
-    $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers = '',$config);
+    $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers = 'array()',$config);
     
     $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);
@@ -801,10 +802,11 @@ QUERY;
           `moduleid` char(25) default NULL,
           `fullname` text,
           `active` tinyint(4) default NULL,
-          `school` varchar(255) default NULL,
           `vle_api` varchar(255) default NULL,
           `checklist` varchar(255) default NULL,
           `sms` varchar(255) default NULL,
+          `selfenroll` tinyint default NULL,
+          `schoolid` int default NULL,
           PRIMARY KEY  (`id`),
           KEY `guideid` (`moduleid`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1

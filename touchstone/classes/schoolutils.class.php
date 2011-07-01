@@ -37,7 +37,7 @@ Class SchoolUtils {
       return false;
     }
     
-    return true;
+    return $db->insert_id;
   }  
   
 }
