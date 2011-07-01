@@ -84,6 +84,9 @@ function clearMSOtags($sHTML) {
 
 function insert_into_options($o_id,$option_text,$o_media,$o_media_width,$o_media_height,$feedback_right,$feedback_wrong,$correct,$marks) {
   global $mysqli;
+  $option_text = htmlspecialchars($option_text);
+  $feedback_right = htmlspecialchars($feedback_right);
+  $feedback_wrong = htmlspecialchars($feedback_wrong);
   if ($result = $mysqli->prepare("INSERT INTO options VALUES (?,?,?,?,?,?,?,?,NULL,?)")) {
     $result->bind_param('isssssssd', $o_id,$option_text,$o_media,$o_media_width,$o_media_height,$feedback_right,$feedback_wrong,$correct,$marks);
     $result->execute();
