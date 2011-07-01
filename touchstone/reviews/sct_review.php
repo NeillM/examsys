@@ -7,7 +7,8 @@
 * @package
 */
 
-  require_once $_SERVER['DOCUMENT_ROOT'] . 'touchstone/config/config.inc';
+  $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
+  require_once $root . 'touchstone/config/config.inc';
   require '../include/media.inc';
   require '../include/errors.inc';
   

@@ -91,6 +91,7 @@
     }
     $initials = strtoupper($initials);
   
+    //TODO this function has been moved to passwordutils.class.php
     $new_password = encpw($_POST['new_username'],trim($_POST['new_password']));
     $new_surname = my_ucwords(trim($_POST['new_surname']));
     $new_username = trim($_POST['new_username']);

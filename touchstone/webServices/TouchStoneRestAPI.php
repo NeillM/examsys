@@ -21,8 +21,9 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-require $_SERVER['DOCUMENT_ROOT'] . 'touchstone/include/staff_student_auth.inc';
-require $_SERVER['DOCUMENT_ROOT'] . 'touchstone/config/config.inc';
+$root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
+require $root . 'touchstone/include/staff_student_auth.inc';
+require_once $root . 'touchstone/config/config.inc';
 require './restAPI.class';
 
 Class TouchStoneRestAPI extends restAPI {

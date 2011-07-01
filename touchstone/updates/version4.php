@@ -173,7 +173,24 @@
     $adjust->close();
     echo "<div>ALTER TABLE modules DROP COLUMN school</div>\n";
   }
+  
 
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='password_tokens' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE password_tokens (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, token CHAR(16) NOT NULL, time DATETIME NOT NULL);");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>CREATE TABLE password_tokens (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, token CHAR(16) NOT NULL, time DATETIME NOT NULL);</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  
   //Close the database
   $mysqli->close();
   ob_end_flush();

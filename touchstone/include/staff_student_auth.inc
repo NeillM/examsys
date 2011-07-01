@@ -24,9 +24,12 @@
 * @package
 */
 
-require_once $_SERVER['DOCUMENT_ROOT'] . 'touchstone/config/config.inc';
+$root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
+require_once $root . 'touchstone/config/config.inc';
 require_once $cfg_web_root . 'touchstone/include/auth.inc';
 require_once $cfg_web_root . 'touchstone/include/custom_error_handler.inc';
+
+$fp_link = "<p style=\"margin-left:60px\"><a href=\"/touchstone/users/forgotten_password.php\">Forgotten Password</p>\n";
 
 if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
   echo "<html>\n<body style=\"font-family:Arial,sans-serif;font-size:100%;color:#C00000\">\n<p><strong>WARNING:</strong> TouchStone can only be accessed through a secure web connection.</p>\n<p>Instead use: <a href=\"https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "\">https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "</a>.\n</body>\n</html>\n";
@@ -52,7 +55,9 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
     if ($_SERVER['PHP_SELF'] == '/index.php') {
       echo "<li>If you are still stuck ask an invigilator for a <a href=\"guest_account.php\" style=\"color:blue\"><strong>Temporary Account</strong></a></li>";
     }
-    echo "</ul>\n</body>\n</html>\n";
+    echo "</ul>\n";
+    if($cfg_use_ldap != true) echo $fp_link;
+    echo "</body>\n</html>\n";
     $mysqli->close();
     exit;
   } else {
@@ -114,7 +119,9 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
         if ($_SERVER['PHP_SELF'] == '/index.php') {
           echo "<li>If you are still stuck as an invigilator for a <a href=\"guest_account.php\" style=\"color:blue\"><strong>Temporary Account</strong></a></li>";
         }
-        echo "</ul>\n</body>\n</html>\n";
+        echo "</ul>\n";
+        echo $fp_link;
+        echo "</body>\n</html>\n";
         exit;
       }
     } 
