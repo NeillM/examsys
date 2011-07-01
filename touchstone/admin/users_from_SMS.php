@@ -25,13 +25,19 @@
 */
 
   // Only run from the command line!
-  //if (PHP_SAPI != 'cli') {
-  //  die("Please run this test from CLI!\n");
-  //}
+  if (PHP_SAPI != 'cli') {
+    die("Please run this test from CLI!\n");
+  }
 
   set_time_limit(0);
+  $path = str_replace('/touchstone/admin/users_from_SMS.php','',$_SERVER['SCRIPT_NAME']);
+  if($path == '') {
+    $path = $_SERVER['DOCUMENT_ROOT'];
+  }
+
+  require_once $path . '/touchstone/config/config.inc';
+  require $path . '/touchstone/classes/dateutils.class.php';
   
-  require_once '/var/www/touchstone/touchstone/config/config.inc';
 	require '../classes/dateutils.class.php';
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
 
