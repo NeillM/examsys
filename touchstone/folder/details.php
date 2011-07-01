@@ -294,14 +294,18 @@ if ($folder != '') {
     $tmp_string = " OR team_name IN ('" . implode("','",$teams) . "')";
   }
 
-  $folder_details = $mysqli->query("SELECT id, name, team_name, color FROM folders WHERE (ownerID=$userID $tmp_string) AND name LIKE \"" .  mysql_real_escape_string($folder_name) . ";%\" AND deleted IS NULL ORDER BY name, id");
-  while ($row = $folder_details->fetch_assoc()) {
-    $display_name = str_replace("$folder_name;","",$row['name']);
+  $tmp_folder_name = $folder_name . ';%';
+  $folder_details = $mysqli->prepare("SELECT id, name, team_name, color FROM folders WHERE (ownerID=? $tmp_string) AND name LIKE ? AND deleted IS NULL ORDER BY name, id");
+  $folder_details->bind_param('is', $userID, $tmp_folder_name);
+  $folder_details->execute();
+  $folder_details->bind_result($id, $name, $team_name, $color);
+  while ($folder_details->fetch()) {
+    $display_name = str_replace("$folder_name;","",$name);
     if (substr_count($display_name,';') == 0) {
-      if ($row['team_name'] == '') {
-        echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=" . $row['id'] . "\"><img src=\"../artwork/" . $row['color'] . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=" . $row['id'] . "\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
+      if ($team_name == '') {
+        echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
       } else {
-        echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=" . $row['id'] . "\"><img src=\"../artwork/shared_" . $row['color'] . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=" . $row['id'] . "\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
+        echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/shared_" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
       }
     }
   }
