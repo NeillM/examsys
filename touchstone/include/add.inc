@@ -56,12 +56,12 @@ function redirect($p_id) {
 function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $status, $option_order) {
   global $mysqli;
   
-  $theme = htmlspecialchars($theme);
-  $scenario = htmlspecialchars($scenario);
-  $leadin = htmlspecialchars($leadin);
-  $correct_fback = htmlspecialchars($correct_fback);
-  $incorrect_fback = htmlspecialchars($incorrect_fback);
-  $notes = htmlspecialchars($notes);
+  //$theme = htmlspecialchars($theme);
+  //$scenario = htmlspecialchars($scenario);
+  //$leadin = htmlspecialchars($leadin);
+  //$correct_fback = htmlspecialchars($correct_fback);
+  //$incorrect_fback = htmlspecialchars($incorrect_fback);
+  //$notes = htmlspecialchars($notes);
   
   $scenario_plain = trim(strip_tags($scenario));
   $leadin_plain = trim(strip_tags($leadin));
