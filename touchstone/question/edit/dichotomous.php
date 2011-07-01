@@ -483,7 +483,7 @@ for ($i=$question_no; $i<=15; $i++) {
   echo "<input type=\"radio\" id=\"correct$i\" name=\"correct$i\" value=\"t\" />&nbsp;<span id=\"true$i\" style=\"font-weight:bold; font-size:90%\">$label_true</span>&nbsp;&nbsp;&nbsp;<input type=\"radio\" name=\"correct$i\" value=\"f\" />&nbsp;<span id=\"false$i\" style=\"font-family:Arial,sans-serif; font-weight:bold; font-size:10pt\">$label_false</span>";
   echo "</td></tr>\n";
 
-  echo "<tr class=\"option\" $hidden>\n<td class=\"field\">Media</td><td><input type=\"file\" size=\"65\" name=\"option_media" . $i . "\" /></td>\n</tr>\n";
+  echo "<tr class=\"option\" $hidden>\n<td class=\"field\">Media</td><td><input type=\"file\" size=\"65\" name=\"option_media" . $i . "\" /><input type=\"hidden\"  name=\"old_option_media" . $i . "\" value=\"\" /></td>\n</tr>\n";
 
   echo "<tr class=\"option\" $hidden><td class=\"field\">Feedback if Right<br /><span style=\"font-weight:normal; font-size:90%; color:red\">(default feedback)</span></td>";
   echo "<td><textarea name=\"option_right_fback$i\" rows=\"2\" cols=\"100\" style=\"width:700px\" wrap=\"virtual\"></textarea><input type=\"hidden\" name=\"old_option_right_fback$i\" value=\"\" /></td></tr>\n";
