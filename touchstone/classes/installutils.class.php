@@ -61,6 +61,10 @@ Class InstallUtils {
   static function displayForm() {
     ?>
     <script>
+      $(document).ready(function(){
+          $("#installForm").validate();
+      });
+      
       $(document).ready(function() {
         $('#useLdap').change(function() {
             $('#ldapOptions').toggle();
@@ -68,65 +72,68 @@ Class InstallUtils {
       });
     </script> 
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-      <h2>Database Admin User</h2>
-      <fieldset>
+      
+      <table class="header"><tr><td><nobr>Database Admin User</nobr></td><td class="line"><hr /></td></tr></table> 
         <div>The installer need the username and password of a MySQL admin user to create the database and required tables. This username is not saved to the server and is only used by this install script.</div>
         <br />
-        <div>Username: <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
-        <div>Password: <input type="password" value="" name="mysql_admin_pass"/></div>
-      </fieldset>
+        <div><label for="mysql_admin_user">DB Username:</label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
+        <div><label for="mysql_admin_pass">DB Password:</label> <input type="password" value="" name="mysql_admin_pass"/></div>
       
-      <h2>Database Setup</h2>
-      <fieldset>
+      <table class="header"><tr><td><nobr>Database Setup</nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
-        <div>Database host: <input type="text" value="127.0.0.1" name="mysql_db_host" class="required" /> </div>
-        <div>Database port: <input type="text" value="3306" name="mysql_db_port" class="required" /> </div>
-        <div>Database Name: <input type="text" value="" name="mysql_db_name" class="required" minlength="3" /> </div>
-        <h3>Database user</h3>
-        <div>username: <input type="text" value="" name="mysql_touchstone_username" class="required" minlength="3"/></div>
-        <div>password: <input type="password" value="" name="mysql_touchstone_passwd" class="required" minlength="8" /></div>
-      </fieldset>
-      <h2>TouchStone LDAP configuration</h2>
-      <fieldset>
-        <div>Use LDAP: <input id="useLdap" name="useLdap" type="checkbox" /></div>
+        <div><label for="mysql_db_host">Database host:</label> <input type="text" value="127.0.0.1" name="mysql_db_host" class="required" /> </div>
+        <div><label for="mysql_db_port">Database port:</label> <input type="text" value="3306" name="mysql_db_port" class="required" /> </div>
+        <div><label for="mysql_db_name">Database Name:</label> <input type="text" value="" name="mysql_db_name" class="required" minlength="3" /> </div>
+      
+      <table class="header"><tr><td><nobr>TouchStone Database user</nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="mysql_touchstone_username">Username</label> <input type="text" value="" name="mysql_touchstone_username" class="required" minlength="3"/></div>
+        <div><label for="mysql_touchstone_passwd">Password:</label> <input type="password" value="" name="mysql_touchstone_passwd" class="required" minlength="8" /></div>
+      
+      <table class="header"><tr><td><nobr>TouchStone LDAP configuration</nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="useLdap">Use LDAP:</label><input id="useLdap" name="useLdap" type="checkbox" /></div>
         <div id="ldapOptions" style="display:none;">
-          <div>LDAP server: <input type="text" value="" name="ldap_server" /> </div>
-          <div>Search dn: <input type="text" value="" name="ldap_search_dn" /> </div>
-          <div>bind username: <input type="text" value="" name="ldap_bind_rdn" /> </div>
-          <div>bind password: <input type="password" value="" name="ldap_bind_password" /> </div>
+          <br/>
+          <div><label for="ldap_server">LDAP server:</label> <input type="text" value="" name="ldap_server" /> </div>
+          <div><label for="ldap_search_dn">Search dn:</label> <input type="text" value="" name="ldap_search_dn" /> </div>
+          <div><label for="ldap_bind_rdn">bind username:</label> <input type="text" value="" name="ldap_bind_rdn" /> </div>
+          <div><label for="ldap_bind_password">bind password:</label> <input type="password" value="" name="ldap_bind_password" /> </div>
         </div>
-      </fieldset> 
-      <h2>TouchStone SysAdmin User</h2>
-      <fieldset>
+      
+      <table class="header"><tr><td><nobr>TouchStone SysAdmin User</nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
-        <div>Title: <input type="text" value="" name="SysAdmin_title" class="required" /> </div>
-        <div>First Name: <input type="text" value="" name="SysAdmin_first" class="required" /> </div>
-        <div>Surname: <input type="text" value="" name="SysAdmin_last" class="required" minlength="3" /> </div>
-        <div>Email Address: <input type="text" value="" name="SysAdmin_email" class="required email" /></div>
-        <div>username: <input type="text" value="" name="SysAdmin_username" class="required" minlength="3"/></div>
-        <div>password: <input type="password" value="" name="SysAdmin_password" class="required" minlength="8" /></div>
-      </fieldset>
+        <div><label for="SysAdmin_title">Title:</label> 
+          <select name="SysAdmin_title" class="required">
+            <option value=""></option>
+            <option value="Dr">Dr</option>
+            <option value="Mr">Mr</option>
+            <option value="Mrs">Mrs</option>
+            <option value="Miss">Miss</option>
+            <option value="Ms">Ms</option>
+            <option value="Professor">Professor</option>
+          </select>
+        </div>
+        <div><label for="SysAdmin_first">First Name:</label> <input type="text" value="" name="SysAdmin_first" class="required" /> </div>
+        <div><label for="SysAdmin_last">Surname:</label> <input type="text" value="" name="SysAdmin_last" class="required" minlength="3" /> </div>
+        <div><label for="SysAdmin_email">Email Address:</label> <input type="text" value="" name="SysAdmin_email" class="required email" /></div>
+        <div><label for="SysAdmin_username">username:</label> <input type="text" value="" name="SysAdmin_username" class="required" minlength="3"/></div>
+        <div><label for="SysAdmin_password">password:</label> <input type="password" value="" name="SysAdmin_password" class="required" minlength="8" /></div>
       
-      <h2>TouchStone Help Database</h2>
-      <fieldset>
-        <div>Load Help: <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked"/></div>
-      </fieldset>
+      <table class="header"><tr><td><nobr>TouchStone Help Database</nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="loadHelp">Load Help:</label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked"/></div>
       
-      <h2>Assistance</h2>
-      <fieldset>
+      <table class="header"><tr><td><nobr>Support Email</nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
-        <div>Support Email: <input type="text" value="" name="support_email" class="" class="email"/> </div>
-        <br />
-        <div>Emergency Support Numbers: </div>
-        <div>Type: <input type="text" value="" name="emergency_support1" class="" /> Number: <input type="text" value="" name="emergency_support_number1" class="" /></div>
-        <div>Type: <input type="text" value="" name="emergency_support2" class="" /> Number: <input type="text" value="" name="emergency_support_number2" class="" /></div>
-        <div>Type: <input type="text" value="" name="emergency_support3" class="" /> Number: <input type="text" value="" name="emergency_support_number3" class="" /></div>
-      </fieldset>
+        <div><label for="">Support Email:</label> <input type="text" value="" name="support_email" class="" class="email"/> </div>
+      
+      <table class="header"><tr><td><nobr>Emergency Support Numbers</nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="emergency_support1">Type:</label> <input type="text" value="" name="emergency_support1" class="" /> Number: <input type="text" value="" name="emergency_support_number1" class="" /></div>
+        <div><label for="emergency_support2">Type:</label> <input type="text" value="" name="emergency_support2" class="" /> Number: <input type="text" value="" name="emergency_support_number2" class="" /></div>
+        <div><label for="emergency_support3">Type:</label> <input type="text" value="" name="emergency_support3" class="" /> Number: <input type="text" value="" name="emergency_support_number3" class="" /></div>
         
-      <div> <input type="submit" name="install" value="Install Touchstone" /> </div>
+      <div class="submit"> <input type="submit" name="install" value="Install Touchstone" /> </div>
     </form>
     <?php
   }
@@ -487,21 +494,37 @@ Class InstallUtils {
     <head>
       <title>TouchStone Install script</title>
       <style type="text/css">
-        label { width: 10em; float: left; }
-        label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+        html { padding: 0em; margin: 0em; width: 100%}
+        body { padding: 0em; margin: 0em; width: 100%; font-family:Arial,sans-serif; font-size:100%; background-color:white; color:black }
+        .error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+        .warning { float: none; color: red; padding-left: .5em; vertical-align: top; }
+        label { float:left; width:7.5em; padding-left:0em; text-align:left;}
         p { clear: both; }
-        .submit { margin-left: 12em; }
-        em { font-weight: bold; padding-right: 1em; vertical-align: top; }
+        .submit { margin-left: 42%; padding-top:2em; }
+        table {border:none;}
+        table.topbar {font-weight: bold; width:100%; border-collapse:collapse;}
+        .topbar td {background-color:#F1F5FB;}
+        .header {font-weight: bold; margin-top:1.5em;  margin-bottom:0.5em;  width:97%; color:#1E3287}
+        .header hr  {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:97%;}
+        td.line {width:98%}
+        
+        input {width:200px}
+        form {padding: 1em}
+        form div {padding-left: 2em}
       </style>
       <script language="text/javascript" type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
       <script language="text/javascript" type="text/javascript" src="../javascript/jquery.validate.min.js"></script>
-      <script>
-        $(document).ready(function(){
-          $("#installForm").validate();
-        });
-      </script>
     </head>
     <body>
+    <table class="topbar"> 
+      <tr> 
+        <td><div style="font-size:22pt; font-weight:bold">&nbsp;TouchStone </div><div style="position:relative; left:12px; top:-3px; font-size:8pt">Assessment Management System</div></td> 
+        <td style="text-align:right"><img src="../artwork/touchstone_logo_330_85.png" width="330" height="85" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
+      </tr> 
+      <tr> 
+        <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td> 
+      </tr> 
+    </table> 
     <?php
   }
   
