@@ -31,7 +31,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/touchstone/classes/schoolutils.class.
 Class InstallUtils {
 	
   public static $db;
-   public static $touchstone_path;
+  public static $touchstone_path;
+  
+  public static $warnings;
   
   //database config options
   public static $cfg_db_host;
@@ -45,7 +47,6 @@ Class InstallUtils {
   public static $ts_version = '4.0';
   public static $support_email;
   public static $cfg_SysAdmin_username;
-  public static $emergency_support_numbers;
   
   public static $cfg_ldap_server;
   public static $cfg_ldap_search_dn;
@@ -53,8 +54,19 @@ Class InstallUtils {
   public static $cfg_ldap_bind_password;
   public static $cfg_use_ldap = 'false';
   
+  public static $cfg_support_email;
+  public static $emergency_support_numbers;
+    
+  
   static function displayForm() {
     ?>
+    <script>
+      $(document).ready(function() {
+        $('#useLdap').change(function() {
+            $('#ldapOptions').toggle();
+          });
+      });
+    </script> 
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <h2>Database Admin User</h2>
       <fieldset>
@@ -75,7 +87,16 @@ Class InstallUtils {
         <div>username: <input type="text" value="" name="mysql_touchstone_username" class="required" minlength="3"/></div>
         <div>password: <input type="password" value="" name="mysql_touchstone_passwd" class="required" minlength="8" /></div>
       </fieldset>
-      
+      <h2>TouchStone LDAP configuration</h2>
+      <fieldset>
+        <div>Use LDAP: <input id="useLdap" name="useLdap" type="checkbox" /></div>
+        <div id="ldapOptions" style="display:none;">
+          <div>LDAP server: <input type="text" value="" name="ldap_server" /> </div>
+          <div>Search dn: <input type="text" value="" name="ldap_search_dn" /> </div>
+          <div>bind username: <input type="text" value="" name="ldap_bind_rdn" /> </div>
+          <div>bind password: <input type="password" value="" name="ldap_bind_password" /> </div>
+        </div>
+      </fieldset> 
       <h2>TouchStone SysAdmin User</h2>
       <fieldset>
         <div></div>
@@ -87,13 +108,31 @@ Class InstallUtils {
         <div>username: <input type="text" value="" name="SysAdmin_username" class="required" minlength="3"/></div>
         <div>password: <input type="password" value="" name="SysAdmin_password" class="required" minlength="8" /></div>
       </fieldset>
+      
+      <h2>TouchStone Help Database</h2>
+      <fieldset>
+        <div>Load Help: <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked"/></div>
+      </fieldset>
+      
+      <h2>Assistance</h2>
+      <fieldset>
+        <div></div>
+        <br />
+        <div>Support Email: <input type="text" value="" name="support_email" class="" class="email"/> </div>
+        <br />
+        <div>Emergency Support Numbers: </div>
+        <div>Type: <input type="text" value="" name="emergency_support1" class="" /> Number: <input type="text" value="" name="emergency_support_number1" class="" /></div>
+        <div>Type: <input type="text" value="" name="emergency_support2" class="" /> Number: <input type="text" value="" name="emergency_support_number2" class="" /></div>
+        <div>Type: <input type="text" value="" name="emergency_support3" class="" /> Number: <input type="text" value="" name="emergency_support_number3" class="" /></div>
+      </fieldset>
+        
       <div> <input type="submit" name="install" value="Install Touchstone" /> </div>
     </form>
     <?php
   }
   
   static function  processForm() {
-    
+     
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
     self::$cfg_db_port = $_POST['mysql_db_port'];
@@ -102,18 +141,84 @@ Class InstallUtils {
     self::$db_admin_passwd = $_POST['mysql_admin_pass'];
     self::$cfg_db_username = $_POST['mysql_touchstone_username'];
     self::$cfg_db_password = $_POST['mysql_touchstone_passwd'];
-    
     self::$cfg_SysAdmin_username = $_POST['SysAdmin_username'];
-
     
+    //LDAP
+    self::$cfg_ldap_server = $_POST['ldap_server'];
+    self::$cfg_ldap_search_dn = $_POST['ldap_search_dn'];
+    self::$cfg_ldap_bind_rdn = $_POST['ldap_bind_rdn'];
+    self::$cfg_ldap_bind_password = $_POST['ldap_bind_password'];
+    if( self::$cfg_ldap_server != '' ) { 
+      self::$cfg_use_ldap = 'true';
+    } else {
+      self::$cfg_use_ldap = 'false';
+    }
+    
+    //ASISTANCE
+    self::$cfg_support_email = $_POST['support_email'];
+    self::$emergency_support_numbers = 'array(';
+    for($i = 1; $i<=3; $i++) {
+      if($_POST["emergency_support$i"] != '') {
+        self::$emergency_support_numbers .= "'" . $_POST["emergency_support$i"] . "'=>'" . $_POST["emergency_support_number$i"] . "'";
+      }
+    }
+    self::$emergency_support_numbers .= ')';
 
+    //CREATE and populate DB
     self::$db = new mysqli(self::$cfg_db_host , self::$db_admin_username, self::$db_admin_passwd,'',self::$cfg_db_port);
     if (mysqli_connect_error()) {
       self::displayError(array('001' => mysqli_connect_error()));  
     }
     self::createDatabase(self::$cfg_db_name);
     
+    //LOAD help if requested
+    if(isset($_POST['loadHelp'])) {
+      self::loadHelp();
+    }
+    
+    //Write out the config file
     self::writeConfigFile();
+    
+    echo "<h1>Touchstone Installed</h1>";
+    
+    self::displayWarnings();
+    
+  }
+  
+  
+  /**
+  * Load the UoN help databases
+  *
+  */
+  static function loadHelp() {
+    $staff_help = './staff_help.sql';
+    $student_help = './student_help.sql';
+    
+    //make sure we are using the right DB
+    self::$db->select_db(self::$cfg_db_name);
+    
+    if (file_exists($staff_help)) {
+      $query = file_get_contents($staff_help);
+      self::$db->query("TRUNCATE staff_help");
+      self::$db->query($query);
+      if (self::$db->errno != 0) {
+        self::logWarning(array('501' => "could not load staff_hlep.sql, could not install staff help" . self::$db->error )); 
+      }
+    } else {
+      self::logWarning(array('502'=>'cannot find staff_hlep.sql, could not install staff help'));
+    }
+    
+    if (file_exists($student_help)) {
+      $query = file_get_contents($student_help);
+      self::$db->query("TRUNCATE student_help");
+      self::$db->query($query);
+      if (self::$db->errno != 0) {
+        self::logWarning(array('503' => "could not load student_help.sql, could not install student help " . self::$db->error )); 
+      }
+    } else {
+      self::logWarning(array('504'=>'cannot find student_help.sql, could not install student help'));
+    }
+    
   }
   
   /**
@@ -152,13 +257,13 @@ Class InstallUtils {
     //create touchstone 'database user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_username . "'@'localhost'");
     if (self::$db->errno != 0) {
-      self::displayWarning(array('013'=>'Database user ' . self::$cfg_db_username . ' could not be created'));
+      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_username . ' could not be created'));
     } 
     
-    self::$db->query("GRANT SELECT,INSERT,UPDATE,DELETE ON " . self::$cfg_db_name . ".* TO '" . self::$cfg_db_name . "'@'localhost' IDENTIFIED BY '" . self::$cfg_db_password . "'");
+    self::$db->query("GRANT SELECT,INSERT,UPDATE,DELETE ON " . self::$cfg_db_name . ".* TO '" . self::$cfg_db_username . "'@'localhost' IDENTIFIED BY '" . self::$cfg_db_password . "'");
     echo self::$db->error;
     if (self::$db->errno != 0) {
-      self::displayWarning(array('013'=>'Database user ' . self::$cfg_db_username . ' could not set permissions'));
+      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_username . ' could not set permissions'));
     }  
     
     //create touchstone sysadmin user 
@@ -231,7 +336,7 @@ Class InstallUtils {
     //FLUSH PRIVILEGES
     self::$db->query("FLUSH PRIVILEGES");
     if (self::$db->errno != 0) {
-      self::displatWarning(array('014'=>'Unable to FLUSH PRIVILEGES'));
+      self::logWarning(array('014'=>'Unable to FLUSH PRIVILEGES'));
     }  
   }
   
@@ -344,17 +449,32 @@ Class InstallUtils {
   }
   
   /**
-  * Display errors with a nice message 
+  * Log warnings with a nice message 
   *
   */
-  static function displayWarning($warning = '') {
-    echo "<div class=\"error\">\n";
+  static function logWarning($warning = '') {
     if (is_array($warning)) {
-      foreach($warning as $code => $message) {
-        echo "\t<div>Warning $code:: $message</div>\n";
+      foreach($warning as $key => $val) {
+        self::$warnings[$key] = $val;
       }
     }
-    echo "</div>\n";
+  }
+  
+  /**
+  * Display warnings with a nice message 
+  *
+  */
+  static function displayWarnings() {
+    
+    if (is_array(self::$warnings)) {
+      echo "<h2>The folowing warnings were generated</h2>";
+      echo "<div class=\"warning\">\n";
+      foreach(self::$warnings as $code => $message) {
+        echo "\t<div>Warning $code:: $message</div>\n";
+      }
+      echo "</div>\n";
+    }
+    
   }
   
   /**
@@ -450,7 +570,7 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   error_reporting(-1);          // PHP error reporting 
   
 //Assistance
-  \$support_email = '{support_email}';
+  \$support_email = '{cfg_support_email}';
   \$emergency_support_numbers = {emergency_support_numbers};
 
 //Global DEBUG OUTPUT
@@ -470,8 +590,8 @@ CONFIG;
     $config = str_replace('{cfg_db_username}',self::$cfg_db_username,$config);
     $config = str_replace('{cfg_db_passwd}',self::$cfg_db_password,$config);
     
-    $config = str_replace('{support_email}',self::$support_email,$config);
-    $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers = 'array()',$config);
+    $config = str_replace('{cfg_support_email}',self::$cfg_support_email,$config);
+    $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers,$config);
     
     $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);
