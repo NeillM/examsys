@@ -23,6 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../classes/schoolutils.class.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -409,7 +410,8 @@ require '../include/staff_auth.inc';
   if (strpos($userroles,'SysAdmin') !== false) {
     $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules, schools ORDER BY moduleID");
   } elseif (strpos($userroles,'Admin') !== false) {
-    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE modules.school=schools.school AND faculty='$faculty' ORDER BY moduleID");
+    $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
+    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
   } else {
     $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
   }

@@ -125,11 +125,7 @@
   $result->close();
 
   echo "<div style=\"width:100%; height:660px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list\">";
-  if (strpos($userroles,'SysAdmin') !== false) {
-    $query_string = $mysqli->query("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') AND grade != 'left' ORDER BY surname, initials");
-  } else {
-    $query_string = $mysqli->query("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') AND faculty='$faculty' AND grade != 'left' ORDER BY surname, initials");
-  }
+  $query_string = $mysqli->query("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND roles LIKE 'Staff%' AND grade != 'left' ORDER BY surname, initials");
   $staff_no = 0;
   $old_letter = '';
   while ($row = $query_string->fetch_assoc()) {

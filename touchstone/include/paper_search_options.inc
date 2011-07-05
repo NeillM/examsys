@@ -22,6 +22,7 @@
 * @package
 */
 
+require_once '../classes/schoolutils.class.php';
 ?>
 <script language="JavaScript">
   function updateCookies(ID) {
@@ -222,7 +223,14 @@
   $team_sql = implode("','", $teams);
   if ($team_sql != '') $team_sql = "'$team_sql'";
   if ($team_sql != '') {
-    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    if (strpos($userroles,'SysAdmin') !== false) {
+      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
+    } elseif (strpos($userroles,'Admin') !== false) {
+      $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
+      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
+    } else {
+      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    }
     while ($row = $search_results->fetch_assoc()) {
       if (isset($_POST['moduleid']) and $row['moduleid'] == $_POST['moduleid']) {
         echo "<option value=\"" . $row['moduleid'] . "\" selected>" . $row['moduleid'] . ": " . $row['fullname'] . "</option>\n";
@@ -241,9 +249,9 @@
 <?php
   $old_letter = '';
   if (strpos($userroles,'Admin') !== false) {
-    $search_results = $mysqli->query("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') AND faculty='$faculty' ORDER BY surname, initials");
+    $search_results = $mysqli->query("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' ORDER BY surname, initials");
   } else {
-    $search_results = $mysqli->query("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users, teams WHERE users.id=teams.memberID AND name IN (\"" . implode('","', $teams) . "\") AND (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') ORDER BY surname, initials");
+    $search_results = $mysqli->query("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users, teams WHERE users.id=teams.memberID AND name IN (\"" . implode('","', $teams) . "\") AND roles LIKE 'Staff%' ORDER BY surname, initials");
   }
   while ($row = $search_results->fetch_assoc()) {
     if ($old_letter != strtoupper(substr($row['surname'],0,1))) {

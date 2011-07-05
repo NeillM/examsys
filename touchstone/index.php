@@ -305,7 +305,7 @@ require './include/staff_auth.inc';
     if (strpos($userroles,'SysAdmin') !== false) {
       echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"./folder/all.php\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"./folder/all.php\" class=\"blacklink\"><strong>All Modules...</strong></a><br /><span style=\"color:#C00000\">(SysAdmin only)</span></td></tr></table></div>\n";
     } elseif (strpos($userroles,'Admin') !== false) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"./folder/all.php\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"./folder/all.php\" class=\"blacklink\"><strong>All Modules in Faculty...</strong></a><br /><span style=\"color:#C00000\">(Admin only)</span></td></tr></table></div>\n";
+      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"./folder/all.php\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"./folder/all.php\" class=\"blacklink\"><strong>All Modules in School...</strong></a><br /><span style=\"color:#C00000\">(Admin only)</span></td></tr></table></div>\n";
       //echo '<div style="font-weight:normal">&nbsp;<a style="color:blue" href="/folder/all.php">All modules</a> (Admin)</div>';
     }
     foreach ($modules_array as $folder_title => $url) {

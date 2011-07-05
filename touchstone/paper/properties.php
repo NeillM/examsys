@@ -26,6 +26,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/add_edit.inc';  // to clear MS Office tags
+require_once '../classes/schoolutils.class.php';
 
 function modulo($n,$b) {
   return $n-$b*floor($n/$b);
@@ -603,7 +604,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <td style="text-align:left; vertical-align:top" colspan="2">
    <?php
      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; font-weight:bold; border-bottom: 1px solid #CFDBEB\">&nbsp;Paper Details</td></tr>\n";
+     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;Paper Details</td></tr>\n";
      if ($paper_type == '2') {
        echo "<tr><td align=\"right\" valign=\"top\">URL&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "</a> (only on exam day)</td></tr>\n";
      } elseif ($paper_type == '4') {
@@ -711,7 +712,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        echo '<input type="hidden" name="themecolor" value="' . $themecolor . '" />';
        echo '<input type="hidden" name="labelcolor" value="' . $labelcolor . '" />';
      } else {
-       echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E;font-weight:bold;border-bottom:1px solid #CFDBEB\">&nbsp;Display Options</td></tr>\n";
+       echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;Display Options</td></tr>\n";
        if ($fullscreen == 0) {
          echo "<tr><td align=\"right\">Display&nbsp;</td><td><select name=\"fullscreen\">\n<option value=\"0\" selected>Windowed</option><option value=\"1\">Full Screen (IE only)</option>\n</select></td>";
        } else {
@@ -745,7 +746,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        }
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
-     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E;font-weight:bold;border-bottom:1px solid #CFDBEB\">&nbsp;Marking</td></tr>\n";
+     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;Marking</td></tr>\n";
      if ($paper_type == '4') {
        echo "<tr><td align=\"right\" valign=\"top\">Overall&nbsp;Classification&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
      ?>
@@ -1035,7 +1036,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<tr><td colspan=\"3\">&nbsp;</td></tr></table>\n";
 
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#E5EFFA;color:#00156E;font-weight:bold;border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Module(s)</td><td style=\"background-color:#E5EFFA;color:#00156E;font-weight:bold;border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Restrict to Labs</td></tr>";
+    echo "<tr><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Module(s)</td><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Restrict to Labs</td></tr>";
     echo "<td>";
     
     echo "<div style=\"display:block; height:278px; overflow-y:scroll; border:1px solid #1E3287; font-size:90%\">";
@@ -1052,7 +1053,8 @@ if ($paper_type != '4' and $paper_type != '5') {
       if (strpos($userroles,'SysAdmin') !== false) {
         $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
       } elseif (strpos($userroles,'Admin') !== false) {
-        $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE modules.school=schools.school AND faculty='$faculty' ORDER BY moduleID");
+        $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
+        $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
       } else {
         $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($module_sql) ORDER BY moduleID");
       }
@@ -1124,7 +1126,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <td align="center" colspan="2">
 <table cellpadding="2" cellspacing="2" border="0">
 <tr><td colspan="3">&nbsp;</td></tr>
-<tr><td style="background-color:#E5EFFA;color:#00156E;font-weight:bold;border-bottom:1px solid #CFDBEB">&nbsp;Internal Reviewers</td><td>&nbsp;&nbsp;</td><td style="background-color:#E5EFFA;color:#00156E;font-weight:bold;border-bottom:1px solid #CFDBEB">&nbsp;External Examiners</td></tr>
+<tr><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB">&nbsp;Internal Reviewers</td><td>&nbsp;&nbsp;</td><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB">&nbsp;External Examiners</td></tr>
 <tr><td>Deadline:&nbsp;
 <?php
     // Split the end date
@@ -1264,9 +1266,9 @@ if ($paper_type != '4' and $paper_type != '5') {
 ?>
 </td></tr>
   <?php
-  echo "<tr><td><div style=\"width:320px; height:325px; overflow-y:scroll; border:1px solid #1E3287; font-size:90%\">";
+  echo "<tr><td><div style=\"width:320px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_internals = explode(',',$internal_reviewers);
-  $internal_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') AND faculty='$faculty' AND grade != 'left' ORDER BY surname, initials");
+  $internal_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles LIKE 'Staff%' AND grade != 'left' ORDER BY surname, initials");
   $internal_details->execute();
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
   $internal_no = 0;
@@ -1285,9 +1287,9 @@ if ($paper_type != '4' and $paper_type != '5') {
   $internal_details->close();
   echo "<input type=\"hidden\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-  echo "<td><div style=\"width:320px; height:325px; overflow-y:scroll; border:1px solid #1E3287; font-size:90%\">";
+  echo "<td><div style=\"width:320px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_externals = explode(',',$externals);
-  $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND faculty='$faculty' AND grade != 'left' ORDER BY surname, initials");
+  $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND grade != 'left' ORDER BY surname, initials");
   $external_details->execute();
   $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
   $examiner_no = 0;

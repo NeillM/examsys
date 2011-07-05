@@ -98,8 +98,8 @@
     $new_email = trim($_POST['new_email']);
     $new_first_names = my_ucwords(trim($_POST['new_first_names']));
   
-    $result = $mysqli->prepare("INSERT INTO users VALUES (?,?,?,?,?,?,?,?,NULL,?,?,?,NULL,0,?)");
-    $result->bind_param('sssssssssssi', $new_password, $_POST['new_grade'], $new_surname , $initials, $_POST['new_users_title'], $new_username, $new_email, $tmp_roles, $_POST['new_faculty'], $new_first_names, $_POST['new_gender'], $_POST['new_year']);
+    $result = $mysqli->prepare("INSERT INTO users VALUES (?,?,?,?,?,?,?,?,NULL,?,?,NULL,0,?)");
+    $result->bind_param('ssssssssssi', $new_password, $_POST['new_grade'], $new_surname , $initials, $_POST['new_users_title'], $new_username, $new_email, $tmp_roles, $new_first_names, $_POST['new_gender'], $_POST['new_year']);
     $result->execute();  
     $result->close();
     $userid = $mysqli->insert_id;
@@ -212,11 +212,6 @@ function checkForm() {
     alert("Please enter a default Password for the user.");
     return false;
   }
-  if (document.newUser.new_faculty.options[document.newUser.new_faculty.selectedIndex].value == "") {
-    alert("Please select a Faculty for the user.");
-    return false;
-  }
-  
 }
 
 function ldaplookup() {
@@ -298,11 +293,7 @@ function ldaplookup() {
 <option value="Invigilator">Invigilator</option>
 <?php
   $old_school = '';
-  if (strpos($userroles,'SysAdmin') !== false) {
-    $degree_details = $mysqli->query("SELECT DISTINCT degree, description, school FROM degrees WHERE school NOT IN ('university','NHS','N/A') ORDER BY school, degree");
-  } else {
-    $degree_details = $mysqli->query("SELECT DISTINCT degree, description, degrees.school FROM degrees, schools WHERE degrees.school=schools.school AND degrees.school NOT IN ('university','NHS','N/A') AND faculty='$faculty' ORDER BY school, degree");
-  }  
+  $degree_details = $mysqli->query("SELECT DISTINCT degree, description, school FROM degrees WHERE school NOT IN ('university','NHS','N/A') ORDER BY school, degree");
   while ($degree_row = $degree_details->fetch_assoc()) {
     if ($old_school != $degree_row['school']) {
       echo "</optgroup>\n<optgroup label=\"Students - " . $degree_row['school'] . "\">\n";    
@@ -315,29 +306,6 @@ function ldaplookup() {
 </optgroup>
 </select>
 </td></tr>
-
-<tr>
-<td align="right"><span class="field">Faculty</span></td><td>
-<select id="new_faculty" name="new_faculty" size="1">
-<?php
-  if (strpos($userroles,'SysAdmin') !== false) {
-    echo "<option value=\"\"></option>\n";
-    $faculty_details = $mysqli->query("SELECT name FROM faculty ORDER BY name");
-    while ($faculty_row = $faculty_details->fetch_assoc()) {
-      if (isset($_POST['faculty']) and $faculty_row['name'] == $_POST['faculty']) {
-        echo "<option value=\"" . $faculty_row['name'] . "\" selected>" . $faculty_row['name'] . "/option>\n";
-      } else {
-        echo "<option value=\"" . $faculty_row['name'] . "\">" . $faculty_row['name'] . "</option>\n";
-      }
-    }
-    $faculty_details->close();
-  } else {
-    echo "<option value=\"$faculty\" selected>$faculty</option>\n";
-  }
-?>
-</select>
-</td>
-</tr>
 
 <tr>
 <td align="right"><span class="field">Gender</span></td><td>

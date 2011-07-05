@@ -142,11 +142,11 @@
     $tmp_email = $_POST['email'];
         
     if (isset($_POST['password']) and $_POST['password'] != '') {
-      $result = $mysqli->prepare("UPDATE users SET roles=?, title=?, initials=?, surname=?, grade=?, yearofstudy=?, username=?, password=?, email=?, first_names=?, gender=?, faculty=? WHERE id=?");
-      $result->bind_param('sssssissssssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $_POST['password'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['faculty'], $_POST['old_userID']); 
+      $result = $mysqli->prepare("UPDATE users SET roles=?, title=?, initials=?, surname=?, grade=?, yearofstudy=?, username=?, password=?, email=?, first_names=?, gender=? WHERE id=?");
+      $result->bind_param('sssssisssssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $_POST['password'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['old_userID']); 
     } else {
-      $result = $mysqli->prepare("UPDATE users SET roles=?, title=?, initials=?, surname=?, grade=?, yearofstudy=?, username=?, email=?, first_names=?, gender=?, faculty=? WHERE id=?");
-      $result->bind_param('sssssisssssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['faculty'], $_POST['old_userID']);
+      $result = $mysqli->prepare("UPDATE users SET roles=?, title=?, initials=?, surname=?, grade=?, yearofstudy=?, username=?, email=?, first_names=?, gender=? WHERE id=?");
+      $result->bind_param('sssssissssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['old_userID']);
     }
     $result->execute();
     $result->close();
@@ -316,10 +316,10 @@ a.access:hover {color:white}
   if ($needs_result->num_rows > 0) $special_needs = true;
   $needs_result->close();
 
-  $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, faculty, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE users.id=?");
+  $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE users.id=?");
   $user_result->bind_param('i', $_GET['userID']);
   $user_result->execute();
-  $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $faculty, $student_id);
+  $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id);
   $user_result->fetch();
   $user_result->close();
   
@@ -414,17 +414,7 @@ a.access:hover {color:white}
       }
       if ($found == 0) echo "<option value=\"" . $grade . "\" selected>" . $grade . ": &lt;unknown degree&gt;</option>\n";
       $degree_details->close();
-      echo "</select></td><td>&nbsp;Faculty</td><td colspan=\"2\"><select name=\"faculty\">\n<option value=\"\"></option>\n";
-      $faculty_details = $mysqli->query("SELECT name FROM faculty ORDER BY name");
-      while ($faculty_row = $faculty_details->fetch_assoc()) {
-        if ($faculty_row['name'] == $faculty) {
-          echo "<option value=\"" . $faculty_row['name'] . "\" selected>" . $faculty_row['name'] . "</option>\n";
-        } else {
-          echo "<option value=\"" . $faculty_row['name'] . "\">" . $faculty_row['name'] . "</option>\n";
-        }
-      }
-      
-      echo "</select></td></tr>\n";
+      echo "</select></td><td colspan=\"3\">&nbsp;</td></tr>\n";
       echo "<tr><td>&nbsp;Year of Study</td><td><select name=\"year\">";
       for ($i=1; $i<=6; $i++) {
         if ($i == $tmp_year) {
@@ -478,16 +468,7 @@ a.access:hover {color:white}
       
       echo "<input type=\"hidden\" name=\"roles\" value=\"$tmp_roles\" /></td>\n";
       
-      echo "<td>&nbsp;Faculty</td><td colspan=\"2\"><select name=\"faculty\">\n<option value=\"\"></option>\n";
-      $faculty_details = $mysqli->query("SELECT name FROM faculty ORDER BY name");
-      while ($faculty_row = $faculty_details->fetch_assoc()) {
-        if ($faculty_row['name'] == $faculty) {
-          echo "<option value=\"" . $faculty_row['name'] . "\" selected>" . $faculty_row['name'] . "</option>\n";
-        } else {
-          echo "<option value=\"" . $faculty_row['name'] . "\">" . $faculty_row['name'] . "</option>\n";
-        }
-      }
-      echo "</select></td></tr>\n";
+      echo "<td colspan=\"3\">&nbsp;</td></tr>\n";
     }
 
     if (strpos($userroles,'SysAdmin') !== false ) {
