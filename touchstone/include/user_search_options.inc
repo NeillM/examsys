@@ -24,6 +24,8 @@
 * @package
 */
 
+require_once '../classes/schoolutils.class.php';
+
 if (isset($_GET['moduleID'])) {
   $moduleID = $_GET['moduleID'];
 } else {
@@ -92,7 +94,7 @@ if (isset($_GET['calendar_year'])) {
 <tr><td>
 <div><strong>Search by any or all of the criteria below.</strong></div>
 <div style="font-size:50%">&nbsp;</div>
-<div>Name<br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php if (isset($_GET['search_surname'])) echo $_GET['search_surname']; ?>" /></div>
+<div>Name<br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php if (isset($_GET['search_surname'])) echo stripslashes($_GET['search_surname']); ?>" /></div>
 
 <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
 <tr><td>Username</td><td>&nbsp;</td><td>Student ID</td></tr>
@@ -105,9 +107,10 @@ if (isset($_GET['calendar_year'])) {
   $team_sql = implode("','", $teams);
   if ($team_sql != '') $team_sql = "'$team_sql'";
   if (strpos($userroles,'SysAdmin') !== false) {
-    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
+    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules, schools ORDER BY moduleID");
   } elseif (strpos($userroles,'Admin') !== false) {
-    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE modules.schoolid=schools.id AND faculty='$faculty' ORDER BY moduleID");
+    $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
+    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
   } else {
     $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
   }

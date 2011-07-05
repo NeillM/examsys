@@ -281,7 +281,6 @@ Class InstallUtils {
                             $_POST['SysAdmin_last'], 
                             $_POST['SysAdmin_email'], 
                             'University Lecturer', 
-                            '',
                             '', 
                             '1', 
                             'Staff,SysAdmin', 
@@ -296,8 +295,7 @@ Class InstallUtils {
                               'A',
                               'User' . $i, 
                               '', 
-                              'none', 
-                              '',
+                              'none',
                               '', 
                               '1', 
                               'Student', 
@@ -1390,7 +1388,6 @@ QUERY;
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
           `id` smallint(6) NOT NULL auto_increment,
-          `faculty` varchar(80) default NULL,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female') default NULL,
           `last_login` datetime default NULL,
@@ -1400,6 +1397,16 @@ QUERY;
           KEY `username_index` (`username`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
 QUERY;
+
+    $this->tableList['admin_access'] = <<<QUERY
+      CREATE TABLE `admin_access` (
+        `adminID` int(11) NOT NULL AUTO_INCREMENT,
+        `userID` int(11) DEFAULT NULL,
+        `schools_id` int(11) DEFAULT NULL,
+        PRIMARY KEY (`adminID`)
+      ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1
+QUERY;
+
 
   }
   

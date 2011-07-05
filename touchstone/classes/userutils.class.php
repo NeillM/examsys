@@ -28,7 +28,7 @@ require_once ($_SERVER['DOCUMENT_ROOT'] . '/touchstone/classes/passwordutils.cla
 
 Class UserUtils {
 
-  static function createUser($username, $password, $title, $forname, $surname, $email, $degree, $faculty, $gender, $year, $role, $db) {
+  static function createUser($username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $db) {
     
     if (!self::usernameExists($username, $db) and $username != '' and stristr('ps_',$username) === false) {
       $initial = explode(' ',$forname);
@@ -41,13 +41,13 @@ Class UserUtils {
       $title = self::my_ucwords(trim($title));  
 
       //if there is no password georate one
-      if($password == '') {
+      if ($password == '') {
         $password =  PasswordUtils::gen_password();
       }
       
       //add new users
-      $result = $db->prepare("INSERT INTO users VALUES(?,?,?,?,?,?,?,?,NULL,?,?,?,NULL,0,?)");
-      $result->bind_param('sssssssssssi', PasswordUtils::encpw($username, $password), $degree, $surname, $initials, $title, $username, $email, $role, $faculty,  $forname, $gender, $year);
+      $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?)");
+      $result->bind_param('ssssssssssi', PasswordUtils::encpw($username, $password), $degree, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
       $userID = $db->insert_id;
@@ -61,7 +61,6 @@ Class UserUtils {
     }
     
     return false;
-    
   }
   
   static function usernameExists($username, $db) {
@@ -71,7 +70,7 @@ Class UserUtils {
     $stmt->store_result();
     $stmt->bind_result($userID);
     $stmt->fetch();
-    if($stmt->num_rows == 0) {
+    if ($stmt->num_rows == 0) {
       return false;
     } else {
       return true;
@@ -101,6 +100,5 @@ Class UserUtils {
     $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils','fixcase_callback'), $s); 
     return $s;         
   }
-  
 }
 ?>

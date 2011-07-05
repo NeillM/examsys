@@ -11,10 +11,10 @@
   if (!defined('STDIN')) {
 //    exit;
   }
-  require_once '../config/config.inc';
+  //require '../config/config.inc';
   set_time_limit(0);
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
-  echo "\nStarting update from version 4.0 to 4.0.1\n";
+  echo "\nStarting update from version 4.0 to 4.1\n";
   ob_start();
   
   // 15/06/2011
@@ -118,7 +118,7 @@
   }
   $group_reviews->close();  
   
-  // 29/07/2011
+  // 29/06/2011
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='selfenroll'");
   $result->execute();
   $result->store_result();
@@ -136,7 +136,7 @@
     echo "<div>UPDATE modules SET selfenroll=0</div>\n";
   }
   
-  // 30/07/2011 - Change schools from text to integers
+  // 30/06/2011 - Change schools from text to integers
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='schoolid'");
   $result->execute();
   $result->store_result();
@@ -175,6 +175,33 @@
   }
   
 
+  // 04/07/2011 - Drop 'Faculty' column from users.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='faculty'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 1) {
+    $adjust = $mysqli->prepare("ALTER TABLE users DROP COLUMN faculty");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE users DROP COLUMN faculty</div>\n";
+  }
+  
+  // 04/07/2011 - Create new 'admin_access' table to hold which modules 'Admin' can access.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='admin_access' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='adminID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE admin_access (adminID int not null primary key auto_increment, userID int, schools_id int)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>CREATE TABLE admin_access (adminID int not null primary key auto_increment, userID int, schools_id int)</div>\n";
+  }
+  
+  // 04/07/2011 - New table to handle forgotten password requests.
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='password_tokens' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
   $result->execute();
   $result->store_result();
