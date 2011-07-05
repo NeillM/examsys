@@ -911,11 +911,13 @@ a.access:hover {color:white}
   }
   echo drawTabs('Teams',3,'',$tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;Team</td><td class=\"coltitle\">Date Added</td><td class=\"coltitle\">Type</td></tr>\n";
-  echo "<tr><td colspan=\"3\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">Edit Teams...</a></td></tr>\n";
-  $query_string = "SELECT name, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM teams WHERE memberID=$tmp_id ORDER BY name";
+  if (strpos($userroles,'Admin') !== false) {
+  echo "<tr><td colspan=\"3\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;Edit Teams...</a></td></tr>\n";
+  }
+  $query_string = "SELECT name, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM teams, modules WHERE teams.name=modules.moduleid AND memberID=$tmp_id ORDER BY name";
   $results = $mysqli->query($query_string);
   while ($row = $results->fetch_assoc()) {
-    echo "<tr><td>&nbsp;" . $row['name'] . "</td><td>" . $row['added'] . "</td><td>" . $row['type'] . "</td></tr>\n";
+    echo "<tr><td>&nbsp;" . $row['name'] . ": " . $row['fullname'] . "</td><td>" . $row['added'] . "</td><td>" . $row['type'] . "</td></tr>\n";
   }
   $mysqli->close();
 ?>
