@@ -33,6 +33,12 @@ $news_msg = '';
   $cfg_ldap_bind_password = 'T0uch5t0ne';
   $cfg_use_ldap           = true;
 
+  
+// Institutional email domains
+// If using external authentication (e.g. LDAP) list the domains that will authenticate against the external system
+// This will allow you to change the password of any users that do not match against those domains (e.g. external examiners)
+$cfg_institutional_domains = array('rji.ac.uk', 'nottingham.ac.uk');
+  
 //Editor
   $cfg_editor_name = 'tinymce';
   $cfg_editor_javascript = "<script language=\"JavaScript\" src=\"/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n<script language=\"JavaScript\" src=\"/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";

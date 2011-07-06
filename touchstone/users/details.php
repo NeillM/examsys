@@ -31,6 +31,15 @@
   require '../include/demo_replace.inc';
   require_once '../classes/schoolutils.class.php';
 
+  function check_email_domain($output, $domain) {
+    global $email;
+    
+    if($output !== true) {
+      $output = (substr($email, (strlen($domain) * -1)) == $domain);
+    }
+    return $output;
+  }
+  
   check_var('userID', 'GET', true, false);
 
   if (strpos($userroles,'Demo') !== false) {
@@ -319,8 +328,8 @@ a.access:hover {color:white}
     }  
   }
   
-  function resetPassword(username) {
-    editwin=window.open("reset_pwd.php?userID=<?php echo $_GET['userID']; ?>&username=" + username + "","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+  function resetPassword(email) {
+    editwin=window.open("forgotten_password.php?email=" + email + "","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       editwin.focus();
     }    
@@ -502,10 +511,11 @@ a.access:hover {color:white}
 
     if (strpos($userroles,'SysAdmin') !== false ) {
       echo "<tr><td>&nbsp;Username&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"username\" value=\"$username\" /></td><td>&nbsp;Password</td><td colspan=\"2\">";
-      if( strpos($email,'nottingham.ac.uk') === false ) {
-        echo "<input type=\"button\" onclick=\"resetPassword('$username')\" value=\"Reset\" />";
+      if($cfg_use_ldap and array_reduce($cfg_institutional_domains, 'check_email_domain')) {
+        echo "[Using external auth]";
       } else {
-        echo "[Using LDAP]";
+        $url_email = urlencode($email);
+        echo "<input type=\"button\" onclick=\"resetPassword('$url_email')\" value=\"Reset\" />";
       } 
       echo "<input type=\"hidden\" name=\"old_userID\" value=\"$tmp_id\" /></td></tr>\n";
     } else {

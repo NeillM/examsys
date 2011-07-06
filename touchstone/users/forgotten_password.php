@@ -28,7 +28,7 @@ require_once $cfg_web_root . 'touchstone/classes/formutils.class.php';
 
 $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
 
-$email = '';
+$email = (isset($_GET['email'])) ? $_GET['email'] : '';
 $message = '';
 $errors = array();
 $form_util = new FormUtils();
