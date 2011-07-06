@@ -222,7 +222,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" align=\"center\">\n";
       echo "<tr><td class=\"field\">Theme/Heading</td><td colspan=\"3\"><input type=\"text\" name=\"theme\" size=\"75\" value=\"$theme\" /><input type=\"hidden\" name=\"old_theme\" value=\"" . htmlentities($theme,ENT_NOQUOTES,'UTF-8') . "\" /></td></tr>\n";
       echo "<tr><td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"3\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">$notes</textarea><input type=\"hidden\" name=\"old_notes\" value=\"" . htmlentities($notes,ENT_NOQUOTES,'UTF-8') . "\" /></td></tr>\n";
-      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td colspan=\"3\">\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . encodeHTML($leadin) . "</textarea>";
+      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td colspan=\"3\">\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . htmlentities($leadin) . "</textarea>";
       echo wysiwyg_editor('oEdit1','leadin',$leadin);
       echo "</td>\n</tr>";
       echo "<tr><td class=\"field\">Current Question SWF</td><td colspan=\"3\">" . display_media($q_media,$q_media_width,$q_media_height,1) . "</td></tr>\n";

@@ -26,13 +26,6 @@
 
 require_once 'errors.inc';
 
-function encodeHTML($sHTML) {
-  $sHTML=str_replace("&","&amp;",$sHTML);
-  $sHTML=str_replace("<","&lt;",$sHTML);
-  $sHTML=str_replace(">","&gt;",$sHTML);
-  return $sHTML;
-}
-
 /**
  * Takes in an HTML string and trys to remove as much superfluous formatting as possible.
  *
