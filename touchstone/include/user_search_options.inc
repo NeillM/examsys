@@ -110,7 +110,11 @@ if (isset($_GET['calendar_year'])) {
     $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules, schools ORDER BY moduleID");
   } elseif (strpos($userroles,'Admin') !== false) {
     $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
-    $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
+    if ($schoolIDs == ''){
+      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    } else {
+      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
+    }
   } else {
     $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
   }
@@ -185,6 +189,11 @@ if (isset($_GET['calendar_year'])) {
   } else {
     echo "<div><input type=\"checkbox\" id=\"checkbox5\" onclick=\"updateCookies(5);\" name=\"staff\" /> search Staff</div>\n";
   }
+  if (isset($_COOKIE['caausermgt'][12]) and $_COOKIE['caausermgt'][12] == 'checked') {
+    echo "<div><input type=\"checkbox\" id=\"checkbox12\" onclick=\"updateCookies(12);\" name=\"adminstaff\" checked /> search Staff (Admin)</div>\n";
+  } else {
+    echo "<div><input type=\"checkbox\" id=\"checkbox12\" onclick=\"updateCookies(12);\" name=\"adminstaff\" /> search Staff (Admin)</div>\n";
+  }
   if (isset($_COOKIE['caausermgt'][9]) and $_COOKIE['caausermgt'][9] == 'checked') {
     echo "<div><input type=\"checkbox\" id=\"checkbox9\" onclick=\"updateCookies(9);\" name=\"inactive\" checked /> search Inactive Staff</div>\n";
   } else {
@@ -195,7 +204,7 @@ if (isset($_GET['calendar_year'])) {
   } else {
     echo "<div><input type=\"checkbox\" id=\"checkbox6\" onclick=\"updateCookies(6);\" name=\"externals\" /> search External Examiners</div>\n";
   }
-  if (isset($_COOKIE['caausermgt'][113]) and $_COOKIE['caausermgt'][11] == 'checked') {
+  if (isset($_COOKIE['caausermgt'][11]) and $_COOKIE['caausermgt'][11] == 'checked') {
     echo "<div><input type=\"checkbox\" id=\"checkbox11\" onclick=\"updateCookies(11);\" name=\"invigilators\" checked /> search Invigilators</div>\n";
   } else {
     echo "<div><input type=\"checkbox\" id=\"checkbox11\" onclick=\"updateCookies(11);\" name=\"invigilators\" /> search Invigilators</div>\n";
@@ -301,7 +310,7 @@ if (isset($_GET['calendar_year'])) {
 <table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu3b">
 <?php
   if (strpos($userroles,'Admin') !== false) {
-    echo '<tr><td><img src="../artwork/load_cohort_icon_grey_16.gif" width="16" height="16" alt="Import Students" /></td><td class="greymenuitem">Import Students (.CSV)</td></tr>';
+    echo '<tr><td><a href="load_cohort.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Students" border="0" /></a></td><td class="menuitem"><a href="import_students.php">Import Students (.CSV)</a></td></tr>';
     echo '<tr><td><a href="import_student_module_info.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Update Cohort" border="0" /></a></td><td class="menuitem"><a href="import_student_module_info.php">Import Modules (.CSV)</a></td></tr>';
   }
 ?>

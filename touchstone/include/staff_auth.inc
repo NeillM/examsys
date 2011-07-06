@@ -94,22 +94,36 @@
     }
     
     if (isset($_GET['module'])) {
-      // Check which Schools the moduleID(s) are in.
-      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid=?");
+      // Is 'Admin' on the module as normal
+      $result = $mysqli->prepare("SELECT groupID FROM teams WHERE memberID=? AND name=?");
       $result->bind_param('is', $userID, $_GET['module']);
       $result->execute();
       $result->store_result();
-      $result->bind_result($paper_school);
+      $result->bind_result($groupID);
       if ($result->num_rows() > 0) {
         $on_team = true;
       } else {
         $on_team = false;
       }
       $result->close();
-
+      
+      if ($on_team == false) { // Check which Schools the moduleID(s) are in and match school to 'Admin' person.
+        $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid=?");
+        $result->bind_param('is', $userID, $_GET['module']);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($paper_school);
+        if ($result->num_rows() > 0) {
+          $on_team = true;
+        } else {
+          $on_team = false;
+        }
+        $result->close();
+      }
+        
       // Override access for the system training module.
       if ($on_team == false and strpos($_GET['module'],'SYSTEM') === false) {
-        access_denied('You are attempting to access a <strong>paper you do not have rights to</strong>!',false);
+        access_denied('You are attempting to access a <strong>folder you do not have rights to</strong>!',false);
       }
     }
     

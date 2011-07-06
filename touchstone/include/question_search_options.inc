@@ -319,7 +319,11 @@ require_once '../classes/schoolutils.class.php';
       $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
     } elseif (strpos($userroles,'Admin') !== false) {
       $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
-      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
+      if ($schoolIDs == '') {
+        $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+      } else {
+        $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
+      }
     } else {
       $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
     }

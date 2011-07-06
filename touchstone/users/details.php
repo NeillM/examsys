@@ -29,6 +29,7 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   require '../include/demo_replace.inc';
+  require_once '../classes/schoolutils.class.php';
 
   check_var('userID', 'GET', true, false);
 
@@ -47,7 +48,9 @@
     $html = "<tr><td colspan=\"" . ($col_span - 1) . "\" style=\"background-color:#F1F5FB\">";
     $html .= '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr>';
     $tab_array = array('Log','Modules','Notes','Accessibility');
-    if (strpos($user_roles,'Admin') !== false or strpos($user_roles,'SysAdmin') !== false or strpos($user_roles,'Staff') !== false) {
+    if (strpos($user_roles,'Admin') !== false and strpos($user_roles,'SysAdmin') === false) {
+      $tab_array = array('Log','Teams','Admin','Notes','Accessibility');
+    } elseif (strpos($user_roles,'Staff') !== false) {
       $tab_array = array('Log','Teams','Notes','Accessibility');
     } else {
       $tab_array = array('Log','Modules','Notes','Accessibility');
@@ -115,7 +118,6 @@
   }
 
   if (isset($_POST['update']) and $demo == false) {
-    
     $initials = '';
     $first_names_array = explode(' ',$_POST['first_names']);
     foreach ($first_names_array as $individual_name) {
@@ -171,6 +173,20 @@
       $result->execute();
       $result->close();
     }
+  } elseif (isset($_POST['updateadmin'])) {
+    $result = $mysqli->prepare("DELETE FROM admin_access WHERE userID=?");
+    $result->bind_param('i', $_GET['userID']);
+    $result->execute();
+    $result->close();
+    
+    for ($i=0; $i<$_POST['admin_school_no']; $i++) {
+      if (isset($_POST["sch$i"])) {
+        $result = $mysqli->prepare("INSERT INTO admin_access VALUES (NULL, ?, ?)");
+        $result->bind_param('ii', $_GET['userID'], $_POST["sch$i"]);
+        $result->execute();
+        $result->close();
+      }
+    }
   } elseif (isset($_POST['updateaccess'])) {
     $background = $_POST['background'];
     if ($_POST['bg_radio'] == '0') $background = 'NULL';
@@ -214,6 +230,7 @@
 body {font-size:100%}
 td {padding-top:1px}
 .coltitle {cursor:hand; background-color:#1E3C7B; color:white}
+.sch_check {text-align:right; width:40px; padding-right:6px}
 a.paper {color:black}
 a.paper:hover {color:white; background-color:#000080}
 a.access:link {color:blue}
@@ -232,30 +249,42 @@ a.access:hover {color:white}
     if (tabID == 'Log') {
       document.getElementById('Log').style.display = '';
       document.getElementById('Modules').style.display = 'none';
+      document.getElementById('Admin').style.display = 'none';
       document.getElementById('Notes').style.display = 'none';
       document.getElementById('Accessibility').style.display = 'none';
       document.getElementById('Teams').style.display = 'none';
     } else if (tabID == 'Modules') {
       document.getElementById('Log').style.display = 'none';
       document.getElementById('Modules').style.display = '';
+      document.getElementById('Admin').style.display = 'none';
+      document.getElementById('Notes').style.display = 'none';
+      document.getElementById('Accessibility').style.display = 'none';
+      document.getElementById('Teams').style.display = 'none';
+    } else if (tabID == 'Admin') {
+      document.getElementById('Log').style.display = 'none';
+      document.getElementById('Modules').style.display = 'none';
+      document.getElementById('Admin').style.display = '';
       document.getElementById('Notes').style.display = 'none';
       document.getElementById('Accessibility').style.display = 'none';
       document.getElementById('Teams').style.display = 'none';
     } else if (tabID == 'Notes') {
       document.getElementById('Log').style.display = 'none';
       document.getElementById('Modules').style.display = 'none';
+      document.getElementById('Admin').style.display = 'none';
       document.getElementById('Notes').style.display = '';
       document.getElementById('Accessibility').style.display = 'none';
       document.getElementById('Teams').style.display = 'none';
     } else if (tabID == 'Accessibility') {
       document.getElementById('Log').style.display = 'none';
       document.getElementById('Modules').style.display = 'none';
+      document.getElementById('Admin').style.display = 'none';
       document.getElementById('Notes').style.display = 'none';
       document.getElementById('Teams').style.display = 'none';
       document.getElementById('Accessibility').style.display = '';
     } else {
       document.getElementById('Log').style.display = 'none';
       document.getElementById('Modules').style.display = 'none';
+      document.getElementById('Admin').style.display = 'none';
       document.getElementById('Notes').style.display = 'none';
       document.getElementById('Accessibility').style.display = 'none';
       document.getElementById('Teams').style.display = '';
@@ -717,6 +746,46 @@ a.access:hover {color:white}
 </table>
 
 <?php
+  if ($tab == 'admin') {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin\" style=\"width:100%\">\n";
+  } else {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin\" style=\"width:100%; display:none\">\n";
+  }
+  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=admin\" method=\"post\">";
+  
+  echo drawTabs('Admin',1,'',$tmp_roles);
+  echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
+  echo "<tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
+  
+  $current_schools = SchoolUtils::getAdminSchools($_GET['userID'], $mysqli);
+   
+  $old_faculty = '';
+  $admin_school_no = 0;
+  $result = $mysqli->prepare("SELECT id, faculty, school FROM schools ORDER BY faculty, school");
+  $result->execute();  
+  $result->bind_result($schoolID, $faculty, $school);
+  while ($result->fetch()) {
+    if ($old_faculty != $faculty) {
+      echo '<tr><td colspan="2"><table border="0" style="padding-top:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $faculty . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
+    }
+    echo '<tr><td class="sch_check">';
+    if (in_array($schoolID,$current_schools)) {
+      echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" checked />";
+    } else {
+      echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" />";
+    }
+    echo "</td><td>$school</td></tr>\n";
+    $old_faculty = $faculty;
+    $admin_school_no++;
+  }
+  $result->close();
+  echo "</table>\n</td></tr>\n";
+  ?>
+  <tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="Save" style="width:100px" /><input type="hidden" name="admin_school_no" value="<?php echo $admin_school_no; ?>" /></td></tr>
+  </form>
+  </table>
+  <?php
+
   if ($tab == 'notes') {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes\" style=\"width:100%\">\n";
   } else {
@@ -732,6 +801,7 @@ a.access:hover {color:white}
   }
   $notes_results->close();
 ?>
+
 </table>
 
 <?php
