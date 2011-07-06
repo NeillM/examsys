@@ -739,7 +739,8 @@ if (isset($_GET['change_screen'])) {
     if ($temp_array[$x]['status'] == 'Retired') $paper_warnings['Retired'][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {
-        if ($paper_type == '2' and $question_number > 2 and ($screen_marks / $total_marks) * 100 > 25 and $screen_marks > 3) echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;Screen $old_screen has $screen_marks marks which is " . round(($screen_marks / $total_marks) * 100) . "% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.</td></tr>\n";
+        $tmp_screen_mean = ($total_marks == 0) ? 0 : ($screen_marks / $total_marks);
+        if ($paper_type == '2' and $question_number > 2 and $tmp_screen_mean * 100 > 25 and $screen_marks > 3) echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;Screen $old_screen has $screen_marks marks which is " . round(($screen_marks / $total_marks) * 100) . "% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.</td></tr>\n";
       }
       $screen_marks = 0;
       if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
