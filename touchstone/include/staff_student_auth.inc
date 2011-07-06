@@ -83,7 +83,6 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
           db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, $ldap_user_data);
         } else {
           //Ad Account NOT OK
-          $stmt->close();
           $message = "Authentication with TouchStone has failed, please remember:</p>\n<ul style=\"margin-left:80px\">\n<li>Usernames/passwords are case-sensitive</li>\n";
           if ($cfg_use_ldap == true) {
             $message .= "<li>TouchStone now uses the LDAP passwords</li>\n";
