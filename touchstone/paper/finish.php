@@ -1822,7 +1822,7 @@ table {font-size:100%}
             $parts = explode('|',$paper[$question]['user_answer']);
             $i = 0;
             foreach ($parts as $part) {
-              if(substr($tmp_exclude, $i, 1) == '0') {
+              if (substr($tmp_exclude, $i, 1) == '0') {
                 $paper[$question]['mark'] += substr($part,0,1);
               }
               $i++;
@@ -1832,31 +1832,14 @@ table {font-size:100%}
           if ($paper[$question]['scenario'] != '') {
             echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
           }
-          if ($tmp_display_correct_answer == '0') {
-?>
-    <div>
-		<script language="JavaScript">
-			function swfLoaded<?php echo $question_no; ?>(message) {
-				var num = message.substring(5,message.length);
-				setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','0');
-			}
-			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 300); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 2); ?>" align="middle">');
-			write_string('<param name="allowScriptAccess" value="always" />');
-			write_string('<param name="movie" value="/touchstone/paper/hotspot_question.swf" />');
-			write_string('<param name="quality" value="high" />');
-			write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-			write_string('<embed src="/touchstone/paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 300); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 2); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-			write_string('</object>');
-		</script>
-    </div>
-<?php
-          } else {
+          
+          $extra = $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude;
 ?>
     <div>
     <script language="JavaScript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>');
+        setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>', '<?php echo $extra; ?>');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 300); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 2); ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
@@ -1868,7 +1851,6 @@ table {font-size:100%}
     </script>
     </div>
 <?php
-          }
 
           if ($tmp_display_correct_answer == '1') {
             echo '<br />';
