@@ -229,11 +229,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     if ($changes == true) {
       $bloom = (empty($bloom)) ? NULL : $bloom;
     	$result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, bloom=?, q_group=?, scenario_plain=?, leadin_plain=?, last_edited=NOW(), status=?, correct_fback=?, q_option_order=? WHERE q_id=?");
-      $tmp_scenario = trim(strip_tags($tmp_scenario));
-      $leadin = trim(strip_tags($leadin));
-      $tmp_scenario = trim(strip_tags($tmp_scenario));
-      $leadin = trim(strip_tags($leadin));
-      $result->bind_param('ssssssssssssssi', $theme, $tmp_scenario, $leadin, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $tmp_scenario, $leadin, $status, $feedback, $option_order, $_GET['q_id']);
+      $tmp_scenario_plain = trim(strip_tags($tmp_scenario));
+      $leadin_plain = trim(strip_tags($leadin));
+      $result->bind_param('ssssssssssssssi', $theme, $tmp_scenario, $leadin, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $tmp_scenario_plain, $leadin_plain, $status, $feedback, $option_order, $_GET['q_id']);
       $result->execute();  
       $result->close();
     }
@@ -383,7 +381,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 </tr>
 <tr>
 <td class="field" style="text-align: right"><span class="mandatory">*</span>&nbsp;Lead-in</td>
-      <td><textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo $leadin; ?></textarea>
+      <td><textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo htmlentities($leadin); ?></textarea>
 	  <?php echo wysiwyg_editor('oEdit1','leadin',$leadin); ?>        
       </td>
     </tr>

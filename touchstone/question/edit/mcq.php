@@ -223,7 +223,9 @@ $q_id = $_GET['q_id'];
       if ($changes == true) {
       	$bloom = (empty($bloom)) ? NULL : $bloom;
         $result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, correct_fback=?, incorrect_fback=?, score_method=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, bloom=?, q_group=?, last_edited=NOW(), scenario_plain=?, leadin_plain=?, status=?, q_option_order=? WHERE q_id=?");
-        $result->bind_param('ssssssssssssssssi', $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $scenario = trim(strip_tags($scenario)), $leadin = trim(strip_tags($leadin)), $status, $option_order, $q_id);
+        $scenario_plain = trim(strip_tags($scenario));
+        $leadin_plain = trim(strip_tags($leadin));
+        $result->bind_param('ssssssssssssssssi', $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $scenario_plain, $leadin_plain, $status, $option_order, $q_id);
         $result->execute();  
         $result->close();
       }
@@ -327,7 +329,7 @@ $q_id = $_GET['q_id'];
       echo "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\" style=\"font-size:100%\">\n";
       echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"6\"><textarea name=\"theme\" cols=\"100\" style=\"width:700px\" >$theme</textarea><textarea style=\"display:none\" name=\"old_theme\"/>$theme</textarea><input type=\"hidden\" name=\"checkout_author\" value=\"$checkout_authorID\" /></td>\n</tr>\n";
       echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"6\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">" . $notes . "</textarea><textarea style=\"display:none\" name=\"old_notes\" />$notes</textarea></td>\n</tr>\n";
-      echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td colspan=\"2\"><textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . $scenario . "</textarea>";
+      echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td colspan=\"2\"><textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . htmlentities($scenario) . "</textarea>";
       echo wysiwyg_editor('oEdit1','scenario',$scenario);
       echo "</td>\n</tr>\n";
       if ($q_media != '') {
@@ -335,7 +337,7 @@ $q_id = $_GET['q_id'];
       }
       echo "<input type=\"hidden\" name=\"old_q_media\" value=\"$q_media\" /><input type=\"hidden\" name=\"old_q_media_width\" value=\"$q_media_width\" /><input type=\"hidden\" name=\"old_q_media_height\" value=\"$q_media_height\" /></td>\n</tr>\n";
       echo "<tr>\n<td class=\"field\">Change Media</td><td colspan=\"2\"><input type=\"file\" name=\"q_media\" size=\"65\" /></td>\n</tr>\n";
-      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td colspan=\"2\"><textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . $leadin . "</textarea>";
+      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td colspan=\"2\"><textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . htmlentities($leadin) . "</textarea>";
       echo wysiwyg_editor('oEdit2','leadin',$leadin);
 	  
       echo "</td>\n</tr>";

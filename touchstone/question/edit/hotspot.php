@@ -312,7 +312,7 @@ $qNo_parm = (isset($_GET['qNo'])) ? '&qNo=' . $_GET['qNo'] : '';
     </tr>
     <tr>
     <td class="field">Scenario<br /><span class="note">(background info)</span></td>
-        <td><textarea style="display:none" name="old_scenario" id="old_scenario"><?php echo $scenario; ?></textarea>
+        <td><textarea style="display:none" name="old_scenario" id="old_scenario"><?php echo htmlentities($scenario); ?></textarea>
         <?php echo wysiwyg_editor('oEdit1','scenario',$scenario);?>          
     </td>
     </tr>

@@ -211,7 +211,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
           $new_section_name = $_POST[$new_section_name];
           $old_section_name = 'old_' . $section_name . "$option_no";
           $old_section_name = $_POST[$old_section_name];
-          if ($new_section_name != $old_section_name) {
+          if (trim($new_section_name) != trim($old_section_name)) {
             $changes = true;
             $stem_changes = true;
             $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),'$section_name #$option_no')");
@@ -381,14 +381,14 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     echo "<tr><td colspan=\"2\"><div class=\"section\">General Information</div></td></tr>\n";
     echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"6\"><textarea name=\"theme\" cols=\"100\" style=\"width:700px\" >$theme</textarea><textarea style=\"display:none\" name=\"old_theme\"/>$theme</textarea><input type=\"hidden\" name=\"checkout_author\" value=\"$checkout_authorID\" /></td>\n</tr>\n";
     echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"6\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">" . $notes . "</textarea><textarea style=\"display:none\" name=\"old_notes\" />$notes</textarea></td>\n</tr>\n";
-    echo "<tr><td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td><td>\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . $scenario . "</textarea>";
+    echo "<tr><td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td><td>\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . htmlentities($scenario) . "</textarea>";
     echo wysiwyg_editor('oEdit1','scenario',$scenario);
     echo "<input type=\"hidden\" name=\"old_q_media\" value=\"$q_media\"><input type=\"hidden\" name=\"old_q_media_width\" value=\"$q_media_width\"><input type=\"hidden\" name=\"old_q_media_height\" value=\"$q_media_height\"></td></tr>\n";
     if ($q_media != '') {
       echo "<tr><td class=\"field\">Current Media</td><td>" . display_media($q_media,$q_media_width,$q_media_height,0) . "</td></tr>\n";
     }
     echo "<tr><td class=\"field\">Change Media</td><td><input type=\"file\" size=\"65\" name=\"q_media\" /></td></tr>\n";
-    echo "<tr><td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Leadin<br /><span class=\"note\">(the question)</span></td><td>\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . $leadin . "</textarea>";
+    echo "<tr><td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Leadin<br /><span class=\"note\">(the question)</span></td><td>\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . htmlentities($leadin) . "</textarea>";
     echo wysiwyg_editor('oEdit2','leadin',$leadin);
     echo "</td></tr>\n";
     echo "<tr><td class=\"field\">General Feedback</td><td><textarea name=\"general_feedback\" rows=\"3\" cols=\"100\" style=\"width:700px\" wrap=\"virtual\">$correct_fback</textarea><textarea style=\"display:none\" name=\"old_general_feedback\">$correct_fback</textarea></td></tr>\n";

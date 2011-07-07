@@ -346,7 +346,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
            echo "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" align=\"center\">\n";
            echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"6\"><textarea name=\"theme\" cols=\"100\" style=\"width:700px\" >$theme</textarea><textarea style=\"display:none\" name=\"old_theme\"/>$theme</textarea><input type=\"hidden\" name=\"checkout_author\" value=\"$checkout_authorID\" /></td>\n</tr>\n";
            echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"6\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">" . $notes . "</textarea><textarea style=\"display:none\" name=\"old_notes\" />$notes</textarea></td>\n</tr>\n";
-           echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . $scenario . "</textarea>";
+           echo "<tr>\n<td class=\"field\">Scenario<br /><span class=\"note\">(background info)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . htmlentities($scenario) . "</textarea>";
            echo wysiwyg_editor('oEdit1','scenario',$scenario);
            echo "</td>\n</tr>\n";
            echo "<tr>\n<td class=\"field\">Current Media<input type=\"hidden\" name=\"old_q_media\" value=\"$q_media\"><input type=\"hidden\" name=\"old_q_media_width\" value=\"$q_media_width\"><input type=\"hidden\" name=\"old_q_media_height\" value=\"$q_media_height\"></td>\n<td>";
@@ -357,7 +357,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
            }
            echo "</td>\n</tr>\n";
            echo "<tr>\n<td class=\"field\">Change Media</td><td><input type=\"file\" size=\"60\" name=\"q_media\" /></td>\n</tr>\n";
-           echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . $leadin . "</textarea>";
+           echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td>\n<textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . htmlentities($leadin) . "</textarea>";
            echo wysiwyg_editor('oEdit2','leadin',$leadin);
            echo "</td>\n</tr>";
            echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Scoring method</td>\n";

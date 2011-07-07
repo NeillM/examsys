@@ -144,9 +144,9 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     if ($changes == true) {
       $bloom = (empty($bloom)) ? NULL : $bloom;
     	$result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, score_method=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, bloom=?, q_group=?, last_edited=NOW(), scenario_plain=?, leadin_plain=?, status=?, q_option_order=?, correct_fback=? WHERE q_id=?");
-      $scenario_striped = trim(strip_tags($scenario));
-      $scenario_striped = trim(strip_tags($scenario));
-      $result->bind_param('sssssssssssssssi', $theme, $scenario, $leadin, $scttype, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $scenario_striped, $leadin_striped, $status, $option_order, $correct_fback, $q_id);
+      $scenario_stripped = trim(strip_tags($scenario));
+      $leadin_stripped = trim(strip_tags($leadin));
+      $result->bind_param('sssssssssssssssi', $theme, $scenario, $leadin, $scttype, $notes, $unique_name, $tmp_media_width, $tmp_media_height, $bloom, $question_teams, $scenario_stripped, $leadin_stripped, $status, $option_order, $correct_fback, $q_id);
       $result->execute();  
       $result->close();
     }
@@ -318,7 +318,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo "<tr>\n<td colspan=\"3\" class=\"section\">General Information</td>\n</tr>\n";
       echo "<tr>\n<td class=\"field\">Theme/Heading</td>\n<td colspan=\"6\"><textarea name=\"theme\" cols=\"100\" style=\"width:700px\" >$theme</textarea><textarea style=\"display:none\" name=\"old_theme\"/>$theme</textarea><input type=\"hidden\" name=\"checkout_author\" value=\"$checkout_authorID\" /></td>\n</tr>\n";
       echo "<tr>\n<td class=\"field\">Notes<br /><span class=\"note\">(visible to students)</span></td><td colspan=\"6\"><textarea name=\"notes\" cols=\"100\" style=\"width:700px\" rows=\"2\" wrap=\"virtual\">" . $notes . "</textarea><textarea style=\"display:none\" name=\"old_notes\" />$notes</textarea></td>\n</tr>\n";
-      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Clinical Vignette</td><td colspan=\"2\"><textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . $scenario . "</textarea>";
+      echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Clinical Vignette</td><td colspan=\"2\"><textarea style=\"display:none\" name=\"old_scenario\" id=\"old_scenario\">" . htmlentities($scenario) . "</textarea>";
       echo wysiwyg_editor('oEdit1','scenario',$scenario,740);
       echo "</td></tr>\n";
       if ($q_media != '') {
@@ -328,8 +328,8 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       echo "<tr>\n<td class=\"field\">Change Media</td><td colspan=\"2\"><input type=\"file\" name=\"q_media\" size=\"65\" /></td>\n</tr>\n";
       
       $tmp_parts = explode('~',$leadin);
-      echo "<tr>\n<td class=\"field\">Hypothesis</td><td>" . wysiwyg_editor('oEdit2','leadin1',$tmp_parts[0],740) . "<textarea style=\"display:none;\" name=\"old_leadin1\" >" . $tmp_parts[0] . "</textarea></td></tr>\n";
-      echo "<tr>\n<td class=\"field\">New Information</td><td>" . wysiwyg_editor('oEdit3','leadin2',$tmp_parts[1],740) . "<textarea style=\"display:none;\" name=\"old_leadin2\" >" . $tmp_parts[1] . "</textarea></td></tr>\n";
+      echo "<tr>\n<td class=\"field\">Hypothesis</td><td>" . wysiwyg_editor('oEdit2','leadin1',$tmp_parts[0],740) . "<textarea style=\"display:none;\" name=\"old_leadin1\" >" . htmlentities($tmp_parts[0]) . "</textarea></td></tr>\n";
+      echo "<tr>\n<td class=\"field\">New Information</td><td>" . wysiwyg_editor('oEdit3','leadin2',$tmp_parts[1],740) . "<textarea style=\"display:none;\" name=\"old_leadin2\" >" . htmlentities($tmp_parts[1]) . "</textarea></td></tr>\n";
       
       echo "<tr>\n<td colspan=\"3\">&nbsp;</td>\n</tr>\n";
       echo "<tr>\n<td colspan=\"3\"><span class=\"section\">Options</span></td>\n</tr>\n";

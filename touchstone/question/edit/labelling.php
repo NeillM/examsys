@@ -95,9 +95,9 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     if ($changes == true) {
       $bloom = (empty($bloom)) ? NULL : $bloom;
     	$result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, notes=?, correct_fback=?, last_edited=NOW(), bloom=?, q_group=?, scenario_plain=?, leadin_plain=?, status=? WHERE q_id=?");
-      $scenario = trim(strip_tags($scenario));
-      $leadin = trim(strip_tags($leadin));
-      $result->bind_param('ssssssssssi', $theme, $scenario, $leadin, $notes, $feedback, $bloom, $question_teams, $scenario, $leadin, $status, $_GET['q_id']);
+      $scenario_plain = trim(strip_tags($scenario));
+      $leadin_plain = trim(strip_tags($leadin));
+      $result->bind_param('ssssssssssi', $theme, $scenario, $leadin, $notes, $feedback, $bloom, $question_teams, $scenario_plain, $leadin_plain, $status, $_GET['q_id']);
       $result->execute();  
       $result->close();
 
@@ -228,13 +228,13 @@ while ($row = $result->fetch()) {
 </tr>
 <tr>
 <td class="field">Scenario<br /><span class="note">(background info)</span></td>
-    <td><textarea style="display:none" name="old_scenario" id="old_scenario"><?php echo $scenario ?></textarea>
+    <td><textarea style="display:none" name="old_scenario" id="old_scenario"><?php echo htmlentities($scenario) ?></textarea>
     <?php echo wysiwyg_editor('oEdit1','scenario',$scenario); ?>         
 </td>
 </tr>
 <tr>
 <td class="field"><span class="mandatory">*</span>&nbsp;Lead-in<br /><span class="note">(the question)</span></td>
-      <td><textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo $leadin; ?></textarea>
+      <td><textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo htmlentities($leadin); ?></textarea>
        <?php echo wysiwyg_editor('oEdit2','leadin',$leadin); ?>         
       </td>
     </tr>

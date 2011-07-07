@@ -301,9 +301,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     if ($changes == true) {
       $bloom = (empty($bloom)) ? NULL : $bloom;
     	$result = $mysqli->prepare("UPDATE questions SET theme=?, scenario=?, leadin=?, correct_fback=?, incorrect_fback=?, notes=?, q_media=?, q_media_width=?, q_media_height=?, q_group=?, bloom=?, scenario_plain=?, leadin_plain=?, last_edited=NOW(), status=?, q_option_order=? WHERE q_id=?");
-      $tmp_scenario = trim(strip_tags($tmp_scenario));
-      $tmp_leadin = trim(strip_tags($tmp_leadin));
-      $result->bind_param('sssssssssssssssi', $tmp_theme, $tmp_scenario, $tmp_leadin, $tmp_correct_feedback, $tmp_incorrect_feedback, $tmp_notes, $tmp_media, $tmp_media_width, $tmp_media_height, $question_teams, $bloom, $tmp_scenario, $tmp_leadin, $status, $option_order, $_GET['q_id']);
+      $tmp_scenario_plain = trim(strip_tags($tmp_scenario));
+      $tmp_leadin_plain = trim(strip_tags($tmp_leadin));
+      $result->bind_param('sssssssssssssssi', $tmp_theme, $tmp_scenario, $tmp_leadin, $tmp_correct_feedback, $tmp_incorrect_feedback, $tmp_notes, $tmp_media, $tmp_media_width, $tmp_media_height, $question_teams, $bloom, $tmp_scenario_plain, $tmp_leadin_plain, $status, $option_order, $_GET['q_id']);
       $result->execute();  
       $result->close();
       $question_id = $_GET['q_id'];
@@ -485,7 +485,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     </tr>
     <tr>
       <td class="field" style="text-align:right">Theme/Heading</td>
-      <td><textarea name="theme" cols="83" rows="2" wrap="virtual" ><?php echo $theme; ?></textarea><textarea style="display:none" name="old_theme" ><?php echo $theme; ?>"</textarea></td>
+      <td><textarea name="theme" cols="83" rows="2" wrap="virtual" ><?php echo $theme; ?></textarea><textarea style="display:none" name="old_theme" ><?php echo $theme; ?></textarea></td>
       <td width="20">&nbsp;</td>
       <td rowspan="67" valign="top" style="text-align:right; padding-right:6px">
         <?php
@@ -508,7 +508,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
 <td width="20">&nbsp;</td>
 </tr>
 <tr>
-      <td class="field" style="text-align:right"><span class="mandatory">*</span>&nbsp;Lead-in<textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo $leadin;?>"</textarea></td>
+      <td class="field" style="text-align:right"><span class="mandatory">*</span>&nbsp;Lead-in<textarea style="display:none" name="old_leadin" id="old_leadin"><?php echo htmlentities($leadin);?></textarea></td>
       <td><?php echo wysiwyg_editor('oEditLeadin','leadin',$leadin); ?>         
       </td>
       <td width="20">&nbsp;</td>
@@ -549,7 +549,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         if ($question < 2) {
           echo '<span class="mandatory">*</span>&nbsp;';
         }
-        echo "Stem</td>\n<td><textarea style=\"display:none\" name=\"old_scenario_text$question\" id=\"old_scenario_text$question\">" . $matching_scenarios[$question] . "</textarea>";
+        echo "Stem</td>\n<td><textarea style=\"display:none\" name=\"old_scenario_text$question\" id=\"old_scenario_text$question\">" . htmlentities($matching_scenarios[$question]) . "</textarea>";
         echo wysiwyg_editor("oEdit$question","scenario_text$question",$matching_scenarios[$question]);
         echo "</td>\n<td width=\"20\">&nbsp;</td>\n</tr>\n";
         if ($matching_media[$question + 1] != '') {
