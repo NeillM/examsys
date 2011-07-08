@@ -191,8 +191,10 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         $changes = true;
         $tmp_option_media = uploadFile("new_option_media$option_no", $tmp_width, $tmp_height);
         
-        $result = $mysqli->prepare("INSERT INTO options VALUES (?,?,?,?,?,'','',?,NULL,1)");
-        $result->bind_param('isssss', $q_id, $_POST["option_text$option_no"], $tmp_option_media, $tmp_width, $tmp_height, $tmp_correct);
+        $fb_correct = (isset($_POST["option_right_fback$option_no"])) ? $_POST["option_right_fback$option_no"] : '';
+        $fb_incorrect = (isset($_POST["option_wrong_fback$option_no"])) ? $_POST["option_wrong_fback$option_no"] : '';
+        $result = $mysqli->prepare("INSERT INTO options VALUES (?,?,?,?,?,?,?,?,NULL,1)");
+        $result->bind_param('isssssss', $q_id, $_POST["option_text$option_no"], $tmp_option_media, $tmp_width, $tmp_height, $fb_correct, $fb_incorrect, $tmp_correct);
         $result->execute();
         $option_id = $mysqli->insert_id;
         $result->close();
