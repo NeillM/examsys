@@ -56,7 +56,7 @@
   if (isset($_POST['submit'])) {
     // Get the moduleid
     $stmt = $mysqli->prepare("SELECT id FROM modules WHERE moduleid=?");
-    $stmt->bind_param('i', $_GET['module']);
+    $stmt->bind_param('s', $_GET['module']);
     $stmt->execute();
     $stmt->bind_result($moduleID);
     $stmt->fetch();
