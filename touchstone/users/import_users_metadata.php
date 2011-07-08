@@ -150,10 +150,10 @@
 <div align="center">
 <table border="0" cellpadding="4" cellspacing="0" style="width:100%; border:1px solid #95AEC8">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/modules_icon_32.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Import Metadata</span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%">Import Metadata</span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB">
+<td align="left" style="background-color:#F1F5FB" colspan="2">
 
 <p style="text-align:justify">CSV file should had a header file with the field names in. Next the first column should be username followed by the data. The example below shows two metadata pieces of information ('Site' and 'Project Group').</p>
 <br />
@@ -166,8 +166,10 @@
 <?php
   $current_year = DateUtils::get_current_academic_year();
 
-  echo "<option value=\"2010/11\">2010/11</option>\n";
   echo "<option value=\"$current_year\">$current_year</option>\n";
+  $parts = explode('/', $current_year);
+  echo "<option value=\"" . ($parts[0]+1) . "/" . ($parts[1]+1) . "\">" . ($parts[0]+1) . "/" . ($parts[1]+1) . "</option>\n";
+  
 ?>
 </select></td></tr>
 <tr><td>File</td><td><input type="file" size="50" name="csvfile" /></td></tr>
