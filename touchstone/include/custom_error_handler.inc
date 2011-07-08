@@ -69,7 +69,10 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
       $log_error->close();
     }
   }
-  $mysqli->close();
+  
+  if(isset($mysqli)) {
+    $mysqli->close();
+  }
   
   return false;
 }
