@@ -38,12 +38,11 @@ Class ModuleUtils {
     if ($external == true)  $checklist .= ',external';
     if ($stdset == true)    $checklist .= ',stdset';
     if ($mapping == true)   $checklist .= ',mapping';
-
     $tmp_checklist = substr($checklist,1);
     
     $result = $db->prepare( "INSERT INTO modules VALUES (NULL,?,?,?,?,?,?,?,?)" );
     echo $db->error;
-    $result->bind_param('ssiiissi', $moduleid, $fullname, $active, $vle_api, $selfEnroll, $tmp_checklist, $sms_api, $schoolID);
+    $result->bind_param('ssiissii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID);
     $result->execute();
     $result->close();
     if($db->errno != 0) {

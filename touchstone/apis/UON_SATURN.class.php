@@ -54,7 +54,7 @@ Class UON_SATURN extends SmsUtils {
       }
     }
 
-    if (count($user) > 0) {
+    if (count($users) > 0) {
       return $user;
     } else {
       //no user found return false
@@ -63,9 +63,19 @@ Class UON_SATURN extends SmsUtils {
   }
   
   function getModuleEnrolements($moduleID) {
+    
+    $users = array();
+    
     // Calculate what the current academic session is.
     $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : DateUtils::get_current_academic_year();
     $session_parts = explode('/',$session);
+    
+    if (count($users) > 0) {
+      return $users;
+    } else {
+      //no user found return false
+      return false;
+    }
   }
   
   function getStudentSources() {
@@ -78,4 +88,3 @@ Class UON_SATURN extends SmsUtils {
   
 }
 ?>
-  

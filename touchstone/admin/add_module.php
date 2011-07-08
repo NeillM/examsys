@@ -25,6 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/SMSutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 $SMS = SMSutils::GetSmsUtils();
 $cfg_sms_sources =  $SMS->getModuleSources();
@@ -58,21 +59,20 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   } else {
     $selfenroll = 0;
   }
-  $checklist = '';
-  if (isset($_POST['peer'])) $checklist .= ',peer';
-  if (isset($_POST['external'])) $checklist .= ',external';
-  if (isset($_POST['stdset'])) $checklist .= ',stdset';
-  if (isset($_POST['mapping'])) $checklist .= ',mapping';
-
-  $fullname = trim($_POST['fullname']);
-  $tmp_checklist = substr($checklist,1);
+  $fullname = $schoolid = $vle_api = $sms_api = '';
+  $peer = $stdset = $mapping = false;
   
-  //TODO this has been moved to moduleutils
-  $result = $mysqli->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $result->bind_param('ssisssii', $moduleid, $fullname, $active, $_POST['vle_api'], $tmp_checklist, $_POST['sms_api'], $selfenroll, $_POST['schoolid']);
-  $result->execute();
-  $result->close();
-
+  if (isset($_POST['fullname']))  $fullname = trim($_POST['fullname']);
+  if (isset($_POST['peer']))      $peer = true;
+  if (isset($_POST['external']))  $external = true;
+  if (isset($_POST['stdset']))    $stdset = true;
+  if (isset($_POST['mapping']))   $mapping = true;
+  if (isset($_POST['schoolid']))  $schoolid = $_POST['schoolid'];
+  if (isset($_POST['vle_api']))   $vle_api = $_POST['vle_api'];
+  if (isset($_POST['sms_api']))   $sms_api = $_POST['sms_api'];
+  
+  ModuleUtils::addModules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $mysqli);
+  
   if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     // Look up SATURN
     $enrolments = 0;
