@@ -69,10 +69,10 @@ a.user:hover {color:white; background-color:#000080}
   // POP UP MENU
   function ItemSelMenu(tmpStarted, tmpUserID, tmpUsername, tmpDisplayName, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
     if (!e) var e = window.event;
-	var currentX = e.clientX;
-	var currentY = e.clientY;
+    var currentX = e.clientX;
+    var currentY = e.clientY;
     var scrOfX = getScrollX();
-	var scrOfY = getScrollY();
+    var scrOfY = getScrollY();
 
     document.getElementById('started').value = tmpStarted;
     document.getElementById('userID').value = tmpUserID;
@@ -336,7 +336,13 @@ a.user:hover {color:white; background-color:#000080}
 </div>
 <?php
   for ($i=1; $i<=100; $i++) $distribution[$i] = 0;
-
+  
+  if (isset($user_results[0]['metadata'])) {
+    $metadata_cols = count($user_results[0]['metadata']);
+  } else {
+    $metadata_cols = 0;
+  }
+  
   $notes = array();
   // Query any student notes for the current paper
   $result = $mysqli->prepare("SELECT userID FROM student_notes WHERE paper_id=?");
@@ -375,10 +381,10 @@ a.user:hover {color:white; background-color:#000080}
     $marking_label = 'Adjusted %';
   }
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  if ($paper_type == 2) {
-    echo "<tr><td class=\"h\" colspan=\"10\">";
+  if ($paper_type == '2') {
+    echo "<tr><td class=\"h\" colspan=\"" . (10 + $metadata_cols) . "\">";
   } else {
-    echo "<tr><td class=\"h\" colspan=\"9\">";
+    echo "<tr><td class=\"h\" colspan=\"" . (9 + $metadata_cols) . "\">";
   }
   if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = 'Class Totals (' . $_GET['repmodule'] . ' students only)';
@@ -507,9 +513,16 @@ a.user:hover {color:white; background-color:#000080}
       echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] . "&startdate=$startdate&enddate=$enddate&sortby=room&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Room</a>&nbsp;</td>";
     }
   }
+  
+  // Output metadata headings
+  if ($meta_col_count > 0) {
+    foreach($user_results[0]['metadata'] as $type=>$value) {
+      echo "<td class=\"h\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;$type</td>";
+    }
+  }
 
   echo '</tr>';
-  echo '<tr style="height:4px"><td valign="top" colspan="11"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>';
+  echo '<tr style="height:4px"><td valign="top" colspan="' . (11 + $metadata_cols) . '"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>';
 
   // Check for any temporary accounts and if so display warning banner
   $temp_user_no = 0;
@@ -686,6 +699,13 @@ a.user:hover {color:white; background-color:#000080}
           }
           echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">&nbsp;" . $user_results[$i]['room'] . "</td>";
         }
+        
+        // Display any associated metadata
+        if ($meta_col_count > 0) {
+          foreach ($user_results[$i]['metadata'] as $type=>$value) {
+            echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">&nbsp;$value</td>";
+          }
+        }
         echo "</tr>\n";
 
         if ($completed_no > 0) {
@@ -711,15 +731,15 @@ a.user:hover {color:white; background-color:#000080}
 
   if ($user_no > 0) {
     //Check for any paper notes
-    echo "<tr><td colspan=\"11\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"11\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"11\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Paper Notes</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Paper Notes</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i'), note_workstation FROM paper_notes WHERE paper_id=?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->store_result();
     $result->bind_result($note, $note_date, $note_workstation);
-    echo "<tr><td colspan=\"11\">";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\">";
     while ($row = $result->fetch()) {
       $lab_name = '';
       $result2 = $mysqli->prepare("SELECT name FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab AND address=?");
@@ -737,19 +757,19 @@ a.user:hover {color:white; background-color:#000080}
   
   
   
-    echo "<tr><td colspan=\"11\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"11\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"11\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Distribution Chart</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Distribution Chart</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
     echo "<tr><td>&nbsp;</td><td colspan=\"10\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking,0,1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
 
-    echo "<tr><td colspan=\"11\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"11\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Scatter Plot</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Scatter Plot</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     echo "<tr><td>&nbsp;</td><td colspan=\"10\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking,0,1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
 
     // Display summary -------------------------------------------------------------------------------------
-    echo "<tr><td colspan=\"11\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"11\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>Summary</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>Summary</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
     echo "<tr><td>&nbsp;</td><td colspan=\"10\">\n";
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
@@ -762,9 +782,9 @@ a.user:hover {color:white; background-color:#000080}
         echo ' (bottom ' . $_GET['percent'] . '%)';
       }
     }
-    echo ":</td><td align=\"right\">$cohort_size</td>";
-    if ($completed_no < $cohort_size) {
-      echo '<td>(' . ($cohort_size - $completed_no). ' candidates did not complete all screens)</td>';
+    echo ":</td><td align=\"right\">$display_no</td>";
+    if ($completed_no < $display_no) {
+      echo '<td>(' . ($display_no - $completed_no). ' candidates did not complete all screens)</td>';
     } else {
       echo '<td>';
       if ($absent_no == 1) {
@@ -849,7 +869,7 @@ a.user:hover {color:white; background-color:#000080}
       echo ")</td></tr>\n";
    	}
     echo "</table>\n</td></tr>\n";
-    echo "<tr><td colspan=\"10\" height=\"9\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\" height=\"9\">&nbsp;</td></tr>\n";
 
     // Email Class -----------------------------------------------------------------------------------------
     if (isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {

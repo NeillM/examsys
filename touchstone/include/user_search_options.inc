@@ -298,8 +298,8 @@ if (isset($_GET['calendar_year'])) {
 <table style="font-size:100%; line-height: 160%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu3a">
 <?php
   if (strpos($userroles,'Admin') !== false) {
-    echo '<tr><td><a href="load_cohort.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Students" border="0" /></a></td><td class="menuitem"><a href="import_students.php">Import Students (.CSV)</a></td></tr>';
-    echo '<tr><td><a href="import_student_module_info.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Modules" border="0" /></a></td><td class="menuitem"><a href="import_modules.php">Import Modules (.CSV)</a></td></tr>';
+    echo '<tr><td><a href="load_cohort.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Students" border="0" /></a></td><td class="menuitem"><a href="import_students.php">Import Students (.CSV)</a></td></tr>';
+    echo '<tr><td><a href="import_student_module_info.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Modules" border="0" /></a></td><td class="menuitem"><a href="import_modules.php">Import Modules (.CSV)</a></td></tr>';
   } else {
     echo '<tr><td><img src="../artwork/import_grey_16.gif" width="16" height="16" alt="Import Students" /></td><td class="greymenuitem">Import Students (.CSV)</td></tr>';
   }
@@ -310,8 +310,8 @@ if (isset($_GET['calendar_year'])) {
 <table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu3b">
 <?php
   if (strpos($userroles,'Admin') !== false) {
-    echo '<tr><td><a href="load_cohort.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Students" border="0" /></a></td><td class="menuitem"><a href="import_students.php">Import Students (.CSV)</a></td></tr>';
-    echo '<tr><td><a href="import_student_module_info.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Update Cohort" border="0" /></a></td><td class="menuitem"><a href="import_student_module_info.php">Import Modules (.CSV)</a></td></tr>';
+    echo '<tr><td><a href="load_cohort.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Students" border="0" /></a></td><td class="menuitem"><a href="import_students.php">Import Students (.CSV)</a></td></tr>';
+    echo '<tr><td><a href="import_student_module_info.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="Update Cohort" border="0" /></a></td><td class="menuitem"><a href="import_student_module_info.php">Import Modules (.CSV)</a></td></tr>';
   }
 ?>
 <tr><td><a id="copy" href="#" onclick="emailCohort(); return false;"><img src="../artwork/small_email.png" width="16" height="16" alt="Email" border="0" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="emailCohort(); return false;">Email Cohort</a></td></tr>
@@ -320,8 +320,8 @@ if (isset($_GET['calendar_year'])) {
 <table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu3c">
 <?php
   if (strpos($userroles,'Admin') !== false) {
-    echo '<tr><td><a href="load_cohort.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Students" border="0" /></a></td><td class="menuitem"><a href="import_students.php">Import Students (.CSV)</a></td></tr>';
-    echo '<tr><td><a href="import_student_module_info.php" target="body"><img src="../artwork/import_16.gif" width="16" height="16" alt="Update Cohort" border="0" /></a></td><td class="menuitem"><a href="import_modules.php">Import Modules (.CSV)</a></td></tr>';
+    echo '<tr><td><a href="load_cohort.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Students" border="0" /></a></td><td class="menuitem"><a href="import_students.php">Import Students (.CSV)</a></td></tr>';
+    echo '<tr><td><a href="import_student_module_info.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="Update Cohort" border="0" /></a></td><td class="menuitem"><a href="import_modules.php">Import Modules (.CSV)</a></td></tr>';
   }
 ?>
 <tr><td><a id="copy" href="#" onclick="emailCohort(); return false;"><img src="../artwork/small_email.png" width="16" height="16" alt="Email" border="0" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="emailCohort(); return false;">Email Cohort</a></td></tr>

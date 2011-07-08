@@ -172,14 +172,6 @@ function displayPaperIcon($row) {
     $folders_array = explode(';',$folder_name);
     $parts = count($folders_array) - 1;
     $selfenroll = 0;
-  } elseif ($module != '') {
-    $module_data = $mysqli->prepare("SELECT fullname, checklist, selfenroll FROM modules WHERE moduleid=?");
-    $module_data->bind_param('s', $module);
-    $module_data->execute();
-    $module_data->store_result();
-    $module_data->bind_result($module_fullname, $checklist, $selfenroll);
-    $module_data->fetch();
-    $module_data->close();
   }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

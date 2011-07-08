@@ -57,7 +57,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
   }
 
   if ($error_type != 'Notice') {  // Record errors that are not notices.
-    if(is_object($mysqli)) {
+    if (is_object($mysqli)) {
       // Query may fail if we try to insert while another statement is open.
       // Since we don't have a handle on the original statement, close the DB link and create another
       $mysqli->close();
@@ -68,10 +68,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
       $log_error->execute();
       $log_error->close();
     }
-  }
-  
-  if(isset($mysqli)) {
-    $mysqli->close();
   }
   
   return false;

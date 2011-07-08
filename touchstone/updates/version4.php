@@ -217,6 +217,22 @@
   }
   $result->close();
 
+  // 06/07/2011 - New table users_metadata.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users_metadata' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE users_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, userID INT, moduleID int, type varchar(255), value varchar(255), calendar_year enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20'));");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>CREATE TABLE users_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, userID INT, moduleID int, type varchar(255), value varchar(255), calendar_year enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20'));</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
   
   //Close the database
   $mysqli->close();

@@ -40,42 +40,60 @@
     }
   
     $total_time = 0;
-    echo "Title,Surname$user_no,First Names,Student ID,Course,Mark,$marking_label,Classification,Start Date,Duration,IP Address,Room\n";
-    for ($i=0; $i<$user_no; $i++) {
-      $total_time += $user_results[$i]['duration'];
-      echo $user_results[$i]['title'] . "," . $user_results[$i]['surname'] . "," . $user_results[$i]['first_names'] . ",";
-      if ($user_results[$i]['student_id'] == '') {
-        echo "Unknown,";
-      } else {
-        echo $user_results[$i]['student_id'] . ",";
+    echo "Title,Surname$user_no,First Names,Student ID,Course,Mark,$marking_label,Classification,Start Date,Duration,IP Address,Room";
+    // Output metadata headings
+    if (isset($user_results[0]['metadata'])) {
+      foreach($user_results[0]['metadata'] as $type=>$value) {
+        echo ",$type";
       }
-      if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
-        echo $user_results[$i]['module'] . ",,,,No Attendance,,,\n";
-      } else {
-  	  	// If room is unknown then it will contain HTML that we want to discard
-  	  	$user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
-  
-      	echo $user_results[$i]['module'] . "," . $user_results[$i]['mark'] . "," . $user_results[$i]['adj_percent'] . "%,";
-        
-        
-        if ($user_results[$i]['adj_percent'] < $pass_mark) {
-          echo "Fail,";
+    }
+    echo "\n";
+    
+    for ($i=0; $i<$user_no; $i++) {
+      if ($user_results[$i]['visible'] == 1) {
+        $total_time += $user_results[$i]['duration'];
+        echo $user_results[$i]['title'] . "," . $user_results[$i]['surname'] . "," . $user_results[$i]['first_names'] . ",";
+        if ($user_results[$i]['student_id'] == '') {
+          echo "Unknown,";
         } else {
-          if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
-            echo "Distinction,";
-          } else {
-            echo "Pass,";
-          }
+          echo $user_results[$i]['student_id'] . ",";
         }
-        echo $user_results[$i]['display_started'] . "," . formatsec($user_results[$i]['duration']) . "," . $user_results[$i]['ipaddress'] . "," . $user_results[$i]['room'] . "\n";
+        if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
+          echo $user_results[$i]['module'] . ",,,,No Attendance,,,\n";
+        } else {
+          // If room is unknown then it will contain HTML that we want to discard
+          $user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
+    
+          echo $user_results[$i]['module'] . "," . $user_results[$i]['mark'] . "," . $user_results[$i]['adj_percent'] . "%,";
+          
+          
+          if ($user_results[$i]['adj_percent'] < $pass_mark) {
+            echo "Fail,";
+          } else {
+            if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
+              echo "Distinction,";
+            } else {
+              echo "Pass,";
+            }
+          }
+          echo $user_results[$i]['display_started'] . "," . formatsec($user_results[$i]['duration']) . "," . $user_results[$i]['ipaddress'] . "," . $user_results[$i]['room'];
+          
+          // Display any associated metadata
+          if (isset($user_results[$i]['metadata'])) {
+            foreach($user_results[$i]['metadata'] as $type=>$value) {
+              echo ",$value";
+            }
+          }
+          echo "\n";
+        }
       }
     }
     echo ",,,,,,,,,,,\n";
   
-    echo "Cohort Size,$cohort_size,,,,,,,,,,\n";
-    echo "# Failures,$failures,(" . round(($failures / $cohort_size) * 100) . "% of cohort),,,,,,,,,\n";
+    echo "Cohort Size,$display_no,,,,,,,,,,\n";
+    echo "# Failures,$failures,(" . round(($failures / $display_no) * 100) . "% of cohort),,,,,,,,,\n";
     if (isset($ss_hon)) {
-      echo "# Distinction,$honours,(" . round(($honours / $cohort_size) * 100) . "% of cohort),,,,,,,,,\n";
+      echo "# Distinction,$honours,(" . round(($honours / $display_no) * 100) . "% of cohort),,,,,,,,,\n";
     }
     echo "Total available marks,$total_marks,,,,,,,,,,\n";
     echo "Pass Mark,$pass_mark%,,,,,,,,,,\n";

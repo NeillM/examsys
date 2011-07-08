@@ -107,7 +107,7 @@
   echo ' </Style>';
   echo ' </Styles>';
   echo ' <Worksheet ss:Name="Marks">';
-  echo '  <Table ss:ExpandedColumnCount="13" ss:ExpandedRowCount="' . ($user_no + 3) . '" x:FullColumns="1" x:FullRows="1">';
+  echo '  <Table ss:ExpandedColumnCount="' . (13 + $meta_col_count) .'" ss:ExpandedRowCount="' . ($user_no + 3) . '" x:FullColumns="1" x:FullRows="1">';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="35"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="80"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="130"/>';
@@ -123,6 +123,11 @@
   if ($paper_type == 2) {
     echo '   <Column ss:AutoFitWidth="0" ss:Width="90"/>';
   }
+  if (isset($user_results[0]['metadata'])) {
+    for ($i=0; $i<$meta_col_count; $i++) {
+      echo '   <Column ss:AutoFitWidth="0" ss:Width="90"/>';    
+    }
+  }
   echo '   <Row ss:AutoFitHeight="0" ss:Height="26.25">';
   echo '    <Cell ss:StyleID="s27"><Data ss:Type="String">' . $paper . '</Data></Cell>';
   echo '    <Cell ss:StyleID="s28"/>';
@@ -137,6 +142,11 @@
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
+  if (isset($user_results[0]['metadata'])) {
+    for ($i=0; $i<count($user_results[0]['metadata']); $i++) {
+      echo '    <Cell ss:StyleID="s28"/>';    
+    }
+  }
   echo '   </Row>';
   echo '   <Row>';
   echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Title</Data></Cell>';
@@ -158,66 +168,80 @@
   if ($paper_type == 2) {
     echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Room</Data></Cell>';
   }
+  // Output metadata headings
+  if (isset($user_results[0]['metadata'])) {
+    foreach($user_results[0]['metadata'] as $type=>$value) {
+      echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $type . '</Data></Cell>';
+    }
+  }
   echo '  </Row>';
 
   $absent_no = 0;
   $xmean2_total = 0;
   for ($i=0; $i<$user_no; $i++) {
-    echo '<Row>';
-    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname']) . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names']) . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['username'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['module'] . '</Data></Cell>';
-    if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{
-      echo '<Cell/>';
-      echo '<Cell/>';
-      echo '<Cell/>';
-      echo '<Cell><Data ss:Type="String">No Attendance</Data></Cell>';
-      echo '<Cell/>';
-      echo '<Cell/>';
-      echo '</Row>';
-      $absent_no++;
-    } else {
-      $temp_percent = $user_results[$i]['adj_percent'];
-      if ($temp_percent < $pass_mark) {
-        echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
+    if ($user_results[$i]['visible'] == 1) {
+      echo '<Row>';
+      echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname']) . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names']) . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . $user_results[$i]['username'] . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . $user_results[$i]['module'] . '</Data></Cell>';
+      if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{
+        echo '<Cell/>';
+        echo '<Cell/>';
+        echo '<Cell/>';
+        echo '<Cell><Data ss:Type="String">No Attendance</Data></Cell>';
+        echo '<Cell/>';
+        echo '<Cell/>';
+        echo '</Row>';
+        $absent_no++;
       } else {
-        echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
-      }
-      $total_time += $user_results[$i]['duration'];
-      if ($user_results[$i]['adj_percent'] < $pass_mark) {
-        echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
-        echo '<Cell ss:StyleID="s25"><Data ss:Type="String">Fail</Data></Cell>';
-      } else {
-        if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
-          echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
-          echo '<Cell ss:StyleID="s31"><Data ss:Type="String">Distinction</Data></Cell>';
+        $temp_percent = $user_results[$i]['adj_percent'];
+        if ($temp_percent < $pass_mark) {
+          echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
         } else {
-          echo '<Cell><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
-          echo '<Cell><Data ss:Type="String">Pass</Data></Cell>';
+          echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['mark'] . '</Data></Cell>';
         }
-      }
-      echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';
-      echo '<Cell><Data ss:Type="String">' . formatsec($user_results[$i]['duration']) . '</Data></Cell>';
-      echo '<Cell><Data ss:Type="String">' . $user_results[$i]['ipaddress'] . '</Data></Cell>';
-      if ($paper_type = 2) {
-        echo '<Cell><Data ss:Type="String">' . $user_results[$i]['room'] . '</Data></Cell>';
-      }
-      echo '</Row>';
-      if ($user_results[$i]['mark'] > $max_mark) {
-        $max_mark = $user_results[$i]['mark'];
-      }
-      if ($user_results[$i]['mark'] < $min_mark) {
-        $min_mark = $user_results[$i]['mark'];
-      }
+        $total_time += $user_results[$i]['duration'];
+        if ($user_results[$i]['adj_percent'] < $pass_mark) {
+          echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
+          echo '<Cell ss:StyleID="s25"><Data ss:Type="String">Fail</Data></Cell>';
+        } else {
+          if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
+            echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
+            echo '<Cell ss:StyleID="s31"><Data ss:Type="String">Distinction</Data></Cell>';
+          } else {
+            echo '<Cell><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
+            echo '<Cell><Data ss:Type="String">Pass</Data></Cell>';
+          }
+        }
+        echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . formatsec($user_results[$i]['duration']) . '</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . $user_results[$i]['ipaddress'] . '</Data></Cell>';
+        if ($paper_type = 2) {
+          echo '<Cell><Data ss:Type="String">' . $user_results[$i]['room'] . '</Data></Cell>';
+        }
+        // Display any associated metadata
+        if (isset($user_results[$i]['metadata'])) {
+          foreach($user_results[$i]['metadata'] as $type=>$value) {
+            echo '<Cell><Data ss:Type="String">' . $value . '</Data></Cell>';
+          }
+        }      
+        echo '</Row>';
+        if ($user_results[$i]['mark'] > $max_mark) {
+          $max_mark = $user_results[$i]['mark'];
+        }
+        if ($user_results[$i]['mark'] < $min_mark) {
+          $min_mark = $user_results[$i]['mark'];
+        }
 
-      $user_results[$i]['xmean'] = $user_results[$i]['mark'] - ($total_mark / $completed_no);
-      $user_results[$i]['xmean2'] = $user_results[$i]['xmean'] * $user_results[$i]['xmean'];
+        $user_results[$i]['xmean'] = $user_results[$i]['mark'] - ($total_mark / $completed_no);
+        $user_results[$i]['xmean2'] = $user_results[$i]['xmean'] * $user_results[$i]['xmean'];
 
-      if ($user_results[$i]['questions'] >= $question_no) {
-        $xmean2_total += $user_results[$i]['xmean2'];
+        if ($user_results[$i]['questions'] >= $question_no) {
+          $xmean2_total += $user_results[$i]['xmean2'];
+        }
       }
     }
   }
@@ -254,12 +278,17 @@
   $exp_row_count = 17;
   $exp_row_count += ($marking > 1) ? '2' : $marking;
   $exp_row_count += (count($warnings['deleted_qns']) > 0) ? 1 : 0;
-  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="'.$exp_row_count.'" x:FullColumns="1" x:FullRows="1">';
+  
+  if (isset($user_results[0]['metadata'])) {
+    $exp_row_count += $meta_col_count;
+  }
+  
+  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="' . $exp_row_count . '" x:FullColumns="1" x:FullRows="1">';
   echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
 
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Students Submitted</Data></Cell>';
-  echo '<Cell><Data ss:Type="Number">' . ($user_no - $absent_no) . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' . ($display_no - $absent_no) . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Total Possible Marks</Data></Cell>';

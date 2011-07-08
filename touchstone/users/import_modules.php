@@ -32,7 +32,8 @@
   <title>TouchStone: Import Modules<?php echo " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
-    p {color:#003366; font-family:Arial,sans-serif; margin:0px; padding:0px}
+    body {font-family:Arial,sans-serif; background-color:white; colour:black}
+    p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
     img { border-style:none; border-width:0px)
   </style>
@@ -68,12 +69,12 @@
         ?>
         <br /><br /><br />
         <div align="center">
-        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; font-size:120%">
+        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
         <tr>
         <td valign="middle" align="left" style="background-color:white"><img src="/touchstone/artwork/users_icon_big.gif" width="32" height="26" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Adding Modules From (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
         </tr>
         <tr>
-        <td align="left" style="background-color:#DFE8FF">
+        <td align="left" style="background-color:#F1F5FB">
 
         <?php
         //get a list of touchstone modules
@@ -199,12 +200,12 @@
 <table border="0" width="100%" height="100%">
 <tr><td valign="middle">
 <div align="center">
-<table border="0" cellpadding="4" cellspacing="0" style="width:70%; border:1px solid #5582D2">
+<table border="0" cellpadding="4" cellspacing="0" style="width:70%; border:1px solid #95AEC8">
 <tr>
 <td valign="middle" align="left" style="background-color:white"><img src="../artwork/modules_icon_32.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Import Modules</span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#DFE8FF">
+<td align="left" style="background-color:#F1F5FB">
 
 <p>CSV file should be in the SATURN export format. Each csv file should contain all the students registered
 to the school. (Data can be obtained from SATURN using 'Student Exports / Modules II / Faculty of Medicine')</p>

@@ -62,7 +62,7 @@
     } elseif (strpos($user_roles,'Staff') !== false) {
       $tab_array = array('Log','Teams','Notes','Accessibility');
     } else {
-      $tab_array = array('Log','Modules','Notes','Accessibility');
+      $tab_array = array('Log','Modules','Notes','Accessibility','Metadata');
     }
     foreach($tab_array as $individual_tab) {
       if ($individual_tab == $current_tab) {
@@ -227,6 +227,14 @@
       $result->execute();
       $result->close();
     }
+  } elseif (isset($_POST['save_metadata'])) {
+    for ($i=0; $i<$_POST['metadata_no']; $i++) {
+      //echo $i . '=' . $_POST["meta_value$i"] . ' (' . $_POST["meta_id$i"] . ')<br />';
+      $result = $mysqli->prepare("UPDATE users_metadata SET value=? WHERE id=?");
+      $result->bind_param('si', $_POST["meta_value$i"], $_POST["meta_id$i"]);
+      $result->execute();
+      $result->close();
+    }
   }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -255,49 +263,15 @@ a.access:hover {color:white}
   }
 
   function showTab(tabID) {
-    if (tabID == 'Log') {
-      document.getElementById('Log').style.display = '';
-      document.getElementById('Modules').style.display = 'none';
-      document.getElementById('Admin').style.display = 'none';
-      document.getElementById('Notes').style.display = 'none';
-      document.getElementById('Accessibility').style.display = 'none';
-      document.getElementById('Teams').style.display = 'none';
-    } else if (tabID == 'Modules') {
-      document.getElementById('Log').style.display = 'none';
-      document.getElementById('Modules').style.display = '';
-      document.getElementById('Admin').style.display = 'none';
-      document.getElementById('Notes').style.display = 'none';
-      document.getElementById('Accessibility').style.display = 'none';
-      document.getElementById('Teams').style.display = 'none';
-    } else if (tabID == 'Admin') {
-      document.getElementById('Log').style.display = 'none';
-      document.getElementById('Modules').style.display = 'none';
-      document.getElementById('Admin').style.display = '';
-      document.getElementById('Notes').style.display = 'none';
-      document.getElementById('Accessibility').style.display = 'none';
-      document.getElementById('Teams').style.display = 'none';
-    } else if (tabID == 'Notes') {
-      document.getElementById('Log').style.display = 'none';
-      document.getElementById('Modules').style.display = 'none';
-      document.getElementById('Admin').style.display = 'none';
-      document.getElementById('Notes').style.display = '';
-      document.getElementById('Accessibility').style.display = 'none';
-      document.getElementById('Teams').style.display = 'none';
-    } else if (tabID == 'Accessibility') {
-      document.getElementById('Log').style.display = 'none';
-      document.getElementById('Modules').style.display = 'none';
-      document.getElementById('Admin').style.display = 'none';
-      document.getElementById('Notes').style.display = 'none';
-      document.getElementById('Teams').style.display = 'none';
-      document.getElementById('Accessibility').style.display = '';
-    } else {
-      document.getElementById('Log').style.display = 'none';
-      document.getElementById('Modules').style.display = 'none';
-      document.getElementById('Admin').style.display = 'none';
-      document.getElementById('Notes').style.display = 'none';
-      document.getElementById('Accessibility').style.display = 'none';
-      document.getElementById('Teams').style.display = '';
-    }
+    document.getElementById('Log').style.display = 'none';
+    document.getElementById('Modules').style.display = 'none';
+    document.getElementById('Admin').style.display = 'none';
+    document.getElementById('Notes').style.display = 'none';
+    document.getElementById('Accessibility').style.display = 'none';
+    document.getElementById('Teams').style.display = 'none';
+    document.getElementById('Metadata').style.display = 'none';
+    
+    document.getElementById(tabID).style.display = '';
   }
 
   function newStudentNote() {
@@ -980,6 +954,47 @@ a.access:hover {color:white}
 
 </td>
 </tr>
+</form>
+</table>
+
+<?php
+  $metadata_no = 0;
+  if ($tab == 'metadata') {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata\" style=\"width:100%\">\n";
+  } else {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata\" style=\"width:100%; display:none\">\n";
+  }
+  echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
+  echo drawTabs('Metadata',5,'',$tmp_roles);
+  echo "<tr><td class=\"coltitle\">&nbsp;Module ID</td><td class=\"coltitle\">Academic Year</td><td class=\"coltitle\">Type</td><td class=\"coltitle\">Value</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
+  $stmt = $mysqli->prepare("SELECT users_metadata.id, modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND userID=?");
+  $stmt->bind_param('i', $_GET['userID']);
+  $stmt->execute();
+  $stmt->store_result();
+  $stmt->bind_result($meta_id, $mod_id, $moduleID, $fullname, $calendar_year, $type, $value);
+  while ($stmt->fetch()) {
+    echo "<tr><td>&nbsp;$moduleID: $fullname</td><td>$calendar_year</td><td>$type</td><td><input type=\"hidden\" name=\"meta_id$metadata_no\" value=\"$meta_id\" /><select name=\"meta_value$metadata_no\">";
+    $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE calendar_year=? AND moduleID=? AND type=?");
+    $result->bind_param('sis', $calendar_year, $mod_id, $type);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($unique_value);
+    while($result->fetch()) {
+      if ($unique_value == $value) {
+        echo "<option value=\"$unique_value\" selected>$unique_value</option>\n";
+      } else {
+        echo "<option value=\"$unique_value\">$unique_value</option>\n";
+      }
+    }
+    $result->close();
+    echo "</select></td><td></td></tr>\n";
+    $metadata_no++;
+  }
+  $stmt->close();
+
+  echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
+  echo "<tr><td colspan=\"5\" style=\"text-align:center\"><input type=\"submit\" name=\"save_metadata\" value=\"Save\" style=\"width:100px\" /><input type=\"hidden\" name=\"metadata_no\" value=\"$metadata_no\" /></td></tr>\n";
+?>
 </form>
 </table>
 
