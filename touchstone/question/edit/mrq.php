@@ -162,13 +162,22 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       } else {
         $tmp_correct = 'n';
       }
+      
+      $old_media_deleted = false;
+      if (isset($_POST["delete_media$option_no"]) and $_POST["delete_media$option_no"] == '1') {
+        deleteMedia($_POST["old_option_media$option_no"]);
+        $tmp_option_media = '';
+        $tmp_width = 0;
+        $tmp_height = 0;
+        $old_media_deleted = true;
+      }
       $tmp_option_media = '';
       if(isset($_FILES["new_option_media$option_no"])) $tmp_option_media = $_FILES["new_option_media$option_no"]['name'];
-      if (isset($_POST["option_text$option_no"]) and $_POST["option_text$option_no"] == '' and $tmp_option_media == '' and $_POST["old_option_text$option_no"] != "") {
+      if ($_POST["optionid$option_no"] != '' and isset($_POST["option_text$option_no"]) and $_POST["option_text$option_no"] == '' and $tmp_option_media == '' and ($_POST["old_option_media$option_no"] == '' or $old_media_deleted)) {
         // Delete operation.
         $changes = true;
         $temp_id = $_POST["optionid$option_no"];
-        if ($_POST["old_option_media$option_no"] != '') {
+        if (!$old_media_deleted and isset($_POST["old_option_media$option_no"]) and $_POST["old_option_media$option_no"] != '') {
           deleteMedia($_POST["old_option_media$option_no"]);
         }
         $result = $mysqli->prepare("DELETE FROM options WHERE id_num=?");
@@ -193,7 +202,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
         // Edit operation.
         $stem_changes = false;
         if ($tmp_option_media != '' and $tmp_option_media != $_POST["old_option_media$option_no"]) {
-          if (isset($_POST["old_option_media$option_no"])) {
+          if (!$old_media_deleted and isset($_POST["old_option_media$option_no"]) and $_POST["old_option_media$option_no"] != '') {
             deleteMedia($_POST["old_option_media$option_no"]);
           }
           $tmp_option_media = uploadFile("new_option_media$option_no", $tmp_width, $tmp_height);
@@ -203,11 +212,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
           $tmp_option_media = $_POST["old_option_media$option_no"];
           $tmp_width = $_POST["old_option_media_width$option_no"];
           $tmp_height = $_POST["old_option_media_height$option_no"];
-          if (isset($_POST["delete_media$option_no"]) and $_POST["delete_media$option_no"] == '1') {
-            deleteMedia($_POST["old_option_media$option_no"]);
-            $tmp_option_media = '';
-            $tmp_width = 0;
-            $tmp_height = 0;
+          if ($old_media_deleted) {
             $stem_changes = true;
             record_trackChanges('Edit Question', $q_id, $_POST["old_option_media$option_no"], '', 'Delete Media #' . $option_no, $userID, $changes);
           }

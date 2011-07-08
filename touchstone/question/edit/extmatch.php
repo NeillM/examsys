@@ -166,7 +166,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $tmp_old_scenario = '';
 
     for ($qcount=0; $qcount<10; $qcount++) {
-      if (isset($_FILES["media$qcount"])) {
+      if (isset($_FILES["media$qcount"]) and $_FILES["media$qcount"]['error'] != 4) {
         $media_name = $_FILES["media$qcount"]['name'];
         $media_type = $_FILES["media$qcount"]['type'];
       } else {
@@ -236,15 +236,21 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       if (trim(strip_tags(nl2br(str_replace('&nbsp;','',$_POST["scenario_text$qcount"])))) != '' or $media_name != '' or (isset($_POST["old_media$qcount"]) and $_POST["old_media$qcount"] != '') ) {
         $tmp_scenario .= '|' . clearMSOtags($_POST["scenario_text$qcount"]);
         $tmp_old_scenario .= '|' . $_POST["old_scenario_text$qcount"];
-        $addr = $_POST["correct_options$qcount"];
-        $count = count($addr);
-        for ($i=0; $i<$count; $i++) {
-          if ($i == 0) {
-            $store_answer = ($addr[$i] + 1);
-          } else {
-            $store_answer .= '$' . ($addr[$i] + 1);
+        if(isset($_POST["correct_options$qcount"])) {
+          $addr = $_POST["correct_options$qcount"];
+          $count = count($addr);
+          for ($i=0; $i<$count; $i++) {
+            if ($i == 0) {
+              $store_answer = ($addr[$i] + 1);
+            } else {
+              $store_answer .= '$' . ($addr[$i] + 1);
+            }
           }
+        } else {
+          $addr = '';
+          $store_answer = 0;
         }
+        
         $tmp_answer .= '|' . $store_answer;
         $old_tmp_answer .= '|' . $_POST["old_correct_options$qcount"];
         if ($tmp_correct_feedback == '') {
@@ -368,20 +374,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       $matching_correct_fback = explode("|", $correct_fback);
       $matching_incorrect_fback = explode("|", $incorrect_fback);
       
-      $tmp_text_no = 0;
-      $tmp_media_no = 0;
-      foreach ($matching_scenarios as $single_scenario) {
-        if (trim($single_scenario) != '') $tmp_text_no++;
-      }          
-      foreach ($matching_media as $single_media) {
-        if (trim($single_media) != '') $tmp_media_no++;
+      $loop_limit = min(array(count($matching_scenarios), count($matching_media)));
+      for($i = 0; $i < $loop_limit; $i++) {
+        if (trim($matching_scenarios[$i]) != '' or (isset($matching_media[$i + 1]) and trim($matching_media[$i + 1]) != '')) $question_no++;
       }
-      if ($tmp_text_no > $tmp_media_no) {
-        $question_no = $tmp_text_no;
-      } else {
-        $question_no = $tmp_media_no;
-      }
-      
+
       $group = $q_group;
     }
     $matching_options[] = $option_text;
