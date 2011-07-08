@@ -24,7 +24,11 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../classes/dateutils.class.php';
+require_once '../classes/SMSutils.class.php';
 
+$SMS = SMSutils::GetSmsUtils();
+$cfg_sms_sources =  $SMS->getModuleSources();
+  
 $unique_moduleid = true;
 if (isset($_POST['submit'])) {
   // Check for unique moduleID

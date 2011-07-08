@@ -120,6 +120,12 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $stmt->store_result();
   $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll);
   $stmt->fetch();
+  
+  require '../classes/SMSutils.class.php';
+
+  $SMS = SMSutils::GetSmsUtils();
+  $cfg_sms_sources =  $SMS->getModuleSources();
+   
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>

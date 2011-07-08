@@ -283,7 +283,8 @@ Class InstallUtils {
                             'University Lecturer', 
                             '', 
                             '1', 
-                            'Staff,SysAdmin', 
+                            'Staff,SysAdmin',
+                            '',
                             self::$db
                           );
     
@@ -298,8 +299,9 @@ Class InstallUtils {
                               'none',
                               '', 
                               '1', 
-                              'Student', 
-                               self::$db
+                              'Student',
+                              '',                              
+                              self::$db
                             );
      }
      
@@ -566,7 +568,7 @@ define('DIR_SEPARATOR', '/');
   \$cfg_db_host 	   = '{cfg_db_host}';
 
 // SMS Imports
-  \$cfg_sms_sources = array('&lt;No lookup&gt;'=>'');
+  \$cfg_sms_api = '';
   
 //LDAP
   \$cfg_ldap_server        = '{cfg_ldap_server}';
@@ -604,7 +606,7 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
 CONFIG;
 
     $config = str_replace('{ts_version}',self::$ts_version,$config);
-    $config = str_replace('{SysAdmin_username}','',$config);
+    $config = str_replace('{SysAdmin_username}','USERNMAE_FOR_DEBUG',$config);
     $config = str_replace('{cfg_db_host}',self::$cfg_db_host,$config);
     $config = str_replace('{cfg_db_port}',self::$cfg_db_port,$config);
     $config = str_replace('{cfg_db_database}',self::$cfg_db_name,$config);

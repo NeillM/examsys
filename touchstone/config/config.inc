@@ -24,7 +24,7 @@ $news_msg = '';
   $cfg_db_host 	   = 'localhost';
 
 // SMS Imports
-  $cfg_sms_sources = array('&lt;No lookup&gt;'=>'','UK'=>'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=uk','Malaysia'=>'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia','China'=>'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china');
+  $cfg_sms_api = 'UON_SATURN';
   
 //LDAP
   $cfg_ldap_server        = 'iLDAP.nottingham.ac.uk';

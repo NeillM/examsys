@@ -22,12 +22,43 @@
 * @package
 */
 
-require '../include/staff_student_auth.inc';
-require '../include/errors.inc';
-require '../classes/dateutils.class.php';
+require './touchstone/include/staff_student_auth.inc';
+require './touchstone/include/errors.inc';
+require './touchstone/classes/dateutils.class.php';
+require './touchstone/classes/userutils.class.php';
+require './touchstone/classes/SMSutils.class.php';
 
 check_var('moduleid', 'GET', true, false);
 $session = DateUtils::get_current_academic_year();
+
+//dose the user have an account?
+if (UserUtils::usernameExists($_SERVER['PHP_AUTH_USER'],$mysqli) == FALSE ) {
+   //the user has no TouchStone Account but has an LDAP acount so lets make one !
+   $SMS = SMSutils::GetSmsUtils();
+   $user_data = $SMS->getUserData($_SERVER['PHP_AUTH_USER']);
+   if (count($user_data) > 0) {
+     //valid acount found create user
+     UserUtils::createUser(
+                            $_SERVER['PHP_AUTH_USER'], 
+                            $_SERVER['PHP_AUTH_PW'], 
+                            $user_data['Title'], 
+                            $user_data['Forename'], 
+                            $user_data['Surname'], 
+                            $user_data['Email'], 
+                            $user_data['Degree'], 
+                            $user_data['Gender'], 
+                            $user_data['YearofStudy'], 
+                            'Student',
+                            '',
+                            $mysqli
+                           );
+     db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli);
+   } else {
+     //no account information found
+     display_error('No account found in the student managment system', '', false, true);
+   }
+   
+}
 
 $result = $mysqli->prepare("SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
 $result->bind_param('s', $_GET['moduleid']);
@@ -42,17 +73,12 @@ if ($fullname == '') {
 
 if ($active == 1 and $selfenroll == 1 and isset($_POST['submit'])) {
   // Delete any previous records for this user
-  $result = $mysqli->prepare("DELETE FROM student_modules WHERE userID=? AND moduleid=?");
-  $result->bind_param('is', $userID, $_GET['moduleid']);
-  $result->execute();
-  $result->close();
+  UserUtils::removeUserFromModule($userID,$_GET['moduleid'],$_POST['session'],$mysqli);
   
   // Insert new module enrollment
-  $result = $mysqli->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1, 0)");
-  $result->bind_param('iss', $userID, $_GET['moduleid'], $_POST['session']);
-  $result->execute();
-  $result->close();
+  UserUtils::addUserToModule($userID,$_GET['moduleid'],$_POST['session'],$mysqli);
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -75,7 +101,7 @@ body {background-color:white; color:black; font-family:Arial,sans-serif; font-si
   $years = array($session, $next_session);
   
   echo '<br /><div align="center"><table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">';
-  echo '<tr style="height:70px; width:100%; background-image:url(../artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:115px"><img src="../artwork/modules_icon.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;Module Self-Enrollment</td></tr>';
+  echo '<tr style="height:70px; width:100%; background-image:url(./touchstone/artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:115px"><img src="./touchstone/artwork/modules_icon.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;Module Self-Enrollment</td></tr>';
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2"><table border="0" style="width:100%; text-align:left"><tr><td class="field" style="width:120px">Module ID</td><td>' . $_GET['moduleid'] . '</td></tr>';
   echo '<tr><td class="field">Name</td><td>' . $fullname . '</td></tr>';
@@ -92,6 +118,7 @@ body {background-color:white; color:black; font-family:Arial,sans-serif; font-si
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   if (isset($_POST['submit'])) {
     echo '<tr><td colspan="2"><strong>Enrollment completed</strong></td></tr>';
+    echo '<tr><td colspan="2"><strong><a href="/touchstone/">Show papers I can Access.</a></strong></td></tr>';
   } else {
     echo '<tr><td colspan="2">I (' . $title . ' ' . $surname . ') would like to self-enroll on the above module.</td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';

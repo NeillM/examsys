@@ -28,7 +28,7 @@ require_once ($_SERVER['DOCUMENT_ROOT'] . '/touchstone/classes/passwordutils.cla
 
 Class UserUtils {
 
-  static function createUser($username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $db) {
+  static function createUser($username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $sid, $db) {
     
     if (!self::usernameExists($username, $db) and $username != '' and stristr('ps_',$username) === false) {
       $initial = explode(' ',$forname);
@@ -47,7 +47,8 @@ Class UserUtils {
       
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?)");
-      $result->bind_param('ssssssssssi', PasswordUtils::encpw($username, $password), $degree, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
+      $password = PasswordUtils::encpw($username, $password);
+      $result->bind_param('ssssssssssi', $password, $degree, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
       $userID = $db->insert_id;
@@ -75,7 +76,29 @@ Class UserUtils {
     } else {
       return true;
     }
+  }
+
+  static function addUserToModule($userID, $module, $session, $db) {
+    $result = $db->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1, 0)");
+    $result->bind_param('iss', $userID, $module, $session);
+    $result->execute();
+    $result->close();
+    if($db->errno != 0) {
+      return false;
+    }
+    return true;
   } 
+
+  static function removeUserFromModule($userID, $module, $session, $db) {
+    $result = $db->prepare("DELETE FROM student_modules WHERE userID=? AND moduleid=?");
+    $result->bind_param('is', $userID, $module);
+    $result->execute();
+    $result->close();
+    if($db->errno != 0) {
+      return false;
+    }
+    return true;
+  }   
  
   static function fixcase_callback($word) { 
     $word = $word[1]; 

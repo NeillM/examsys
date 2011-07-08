@@ -81,6 +81,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
           }
           $stmt->close();
           db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, $ldap_user_data);
+          
         } else {
           //Ad Account NOT OK
           $message = "Authentication with TouchStone has failed, please remember:</p>\n<ul style=\"margin-left:80px\">\n<li>Usernames/passwords are case-sensitive</li>\n";
@@ -95,20 +96,23 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
           access_denied($message, true);
         }
       } else {
-        // Internal DB authentication failed and not to use LDAP.
-        $message = "Authentication with TouchStone has failed, please remember:</p>\n<ul style=\"margin-left:80px\">\n<li>Usernames/passwords are case-sensitive</li>\n<li>Press 'F5' on the keyboard to try logging in again</li>";
-        if ($db_errors != '') {
-          $message .= "<li>$db_errors</li>\n";
+        // Internal DB authentication failed.
+        if ($cfg_use_ldap == true and  ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true and  strpos($_SERVER['SCRIPT_FILENAME'],'self_enroll.php') !== FALSE ) {
+          //we have a valid LDAP account - we are in the self enrol script allow execution to continue
+          //continue
+        } else {
+          $message = "Authentication with TouchStone has failed, please remember:</p>\n<ul style=\"margin-left:80px\">\n<li>Usernames/passwords are case-sensitive</li>\n<li>Press 'F5' on the keyboard to try logging in again</li>";
+          if ($db_errors != '') {
+            $message .= "<li>$db_errors</li>\n";
+          }
+          if ($_SERVER['PHP_SELF'] == '/index.php') {
+            $message .= "<li>If you are still stuck as an invigilator for a <a href=\"guest_account.php\" style=\"color:blue\"><strong>Temporary Account</strong></a></li>\n</ul>";
+          }
+          $message .= $fp_link;
+          access_denied($message, true);
         }
-        if ($_SERVER['PHP_SELF'] == '/index.php') {
-          $message .= "<li>If you are still stuck as an invigilator for a <a href=\"guest_account.php\" style=\"color:blue\"><strong>Temporary Account</strong></a></li>\n</ul>";
-        }
-        $message .= $fp_link;
-        access_denied($message, true);
       }
     } 
-    //pasword strength check could be added here!!
-    
   }
 } else {
   echo "<html>\n<body style=\"font-family:Arial,sans-serif\">\n<p style=\"font-size:150%;color:#C00000\"><strong>WARNING:</strong> Incompatible Browser</p>\n<p><strong>TouchStone currently requires MS Internet Explorer 5 (or above) or Firefox 2 (or above).</strong></p>\n<p><strong>You are running </strong>" . $_SERVER['HTTP_USER_AGENT'] . "</p>\n</body>\n</html>\n";
