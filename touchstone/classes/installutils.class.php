@@ -241,9 +241,8 @@ Class InstallUtils {
       self::displayError(array('010' => "The database name '$dbname' is in use please use a different one")); 
     }
     $res->close();
-    
-    $res = self::$db->prepare("CREATE DATABASE $dbname");
-    $res->execute();
+  
+    self::$db->query("CREATE DATABASE $dbname"); //have to use query here oldvers of php throw an error 
     if (self::$db->errno != 0) {
       self::displayError(array('011' => "The database '$dbname' could not be created please check the admin users permissions")); 
     }
