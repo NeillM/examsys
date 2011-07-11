@@ -68,18 +68,15 @@
 ?>
 <br />
 <br />
-<table border="0" width="100%" height="100%" style="font-size:100%">
-<tr><td valign="middle">
-<div align="center">
 
-<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; width:700px">
+<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; width:700px; margin-left:auto; margin-right:auto">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/user_female_32.png" width="32" height="26" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Import Students</span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%">Import Students</span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB">
+<td align="left" style="background-color:#F1F5FB" colspan="2">
 
-<p>CSV file should contain the columns in the following order: student_id, Full name, First names, surname, title , Course code, Degree qual aim, Degree Title, Year of course, Mode of study, School, Subject, Attendance status, Registered, Fee Status, Fee band, Date of entry, Local email (NB this is the SATURN export format).</p>
+<p style="text-align:justify">CSV file should contain the columns in the following order: student_id, Full name, First names, surname, title , Course code, Degree qual aim, Degree Title, Year of course, Mode of study, School, Subject, Attendance status, Registered, Fee Status, Fee band, Date of entry, Local email (NB this is the SATURN export format).</p>
 
 <div>Please select the CVS file you wish to load:</div>
 
@@ -96,9 +93,6 @@
 </tr>
 </table>
 
-</div>
-</td></tr>
-</table>
 <?php
   }
   $mysqli->close();

@@ -14,7 +14,7 @@
   //require '../config/config.inc';
   set_time_limit(0);
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
-  echo "\nStarting update from version 4.0 to 4.1\n";
+  echo "\nStarting update from version 4.0 to 4.0.1\n";
   ob_start();
   
   // 15/06/2011
@@ -228,6 +228,22 @@
     $adjust->execute();
     $adjust->close();
     echo "<div>CREATE TABLE users_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, userID INT, moduleID int, type varchar(255), value varchar(255), calendar_year enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20'));</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 11/07/2011 - Add new column for retiring papers.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='properties' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='retired'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE properties ADD COLUMN retired datetime");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE properties ADD COLUMN retired datetime</div>\n";
     ob_flush();
     flush();
   }

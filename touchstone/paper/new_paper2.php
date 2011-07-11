@@ -166,7 +166,7 @@ require_once '../classes/schoolutils.class.php';
     exit;
   }
   
-  $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20030101090000','20250101090000','Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',NULL,'$session','',NULL,NULL,'0',0,'')");
+  $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20030101090000','20250101090000','Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',NULL,'$session','',NULL,NULL,'0',0,'',NULL)");
   $result->bind_param('sssss', $paper_name, $paper_types[$_POST['paper_type']], $userID, $folder, $default_rubric);
   $result->execute();  
   $property_id = $mysqli->insert_id;

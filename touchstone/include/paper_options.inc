@@ -159,6 +159,14 @@ $stmt->close();
     }
   }
 
+  function retirePaper() {
+    notice=window.open("check_retire_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    if (window.focus) {
+      notice.focus();
+    }
+  }
+
   function editScreenNo() {
     notice=window.open("/touchstone/paper/edit_screen_no.php?questionID=" + document.PapersMenu.pID.value + "&paperID=<?php echo $paperID; ?>&screen=" + document.PapersMenu.screenNo.value + "&display_pos=" + document.PapersMenu.oldQuestionID.value + "&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=" + document.getElementById('scrOfY').value + "","properties","width=300,height=200,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-150,screen.height/2-100);
@@ -368,6 +376,8 @@ $stmt->close();
   } else {
     echo '<tr><td><img src="/touchstone/artwork/delete_paper_grey_16.gif" width="16" height="16" alt="Delete Icon" /></td><td class="greymenuitem">Delete Paper</td></tr>';
   }
+  
+  echo '<tr><td><a href="#" onclick="retirePaper(); return false;"><img src="/touchstone/artwork/retire_16.png" width="16" height="16" border="0" alt="Retire Icon" /></a></td><td class="menuitem"><a href="#" onclick="retirePaper(); return false;">Retire Paper</a></td></tr>';
 
   if ($p_id_count == 0) {
     echo "<tr><td><img src=\"/touchstone/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"Print Icon\" border=\"0\" /></td><td class=\"greymenuitem\">Print Hardcopy version</td></tr>\n";

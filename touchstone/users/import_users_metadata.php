@@ -29,7 +29,9 @@
   require '../include/errors.inc';
   require '../classes/dateutils.class.php';
   
-  check_var('module', 'GET', true, false); 
+  check_var('module', 'GET', true, false);
+  set_time_limit(0);
+  ob_start();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -37,6 +39,11 @@
   <title>TouchStone: Import Metadata<?php echo " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <script src="../javascript/sidebar.js" type="text/javascript"></script>
+  <script language="JavaScript">
+    function changeMsg() {
+      document.getElementById('msg').innerHTML = 'Finished';
+    }
+  </script>
   <style>
     body {font-family:Arial,sans-serif; background-color:white; colour:black}
     p {margin:0px; padding:0px}
@@ -45,15 +52,25 @@
   </style>
   </head>
 
-  <body onclick="hideMenus()">
-<?php
-  require '../include/folder_options.inc';
-?>
-<div id="content" class="content" style="font-size:90%">
-<br />
-<br />
+
 <?php
   if (isset($_POST['submit'])) {
+    echo "<body onclick=\"hideMenus()\" onload=\"changeMsg()\">\n";
+  } else {
+    echo "<body onclick=\"hideMenus()\">\n";
+  }
+  require '../include/folder_options.inc';
+?>
+<div id="content" class="content" style="font-size:90%; padding-left:10px">
+<br />
+
+<?php
+
+  if (isset($_POST['submit'])) {
+    echo '<div id="msg">Loading data...</div>';
+    ob_flush();
+    flush();
+  
     // Get the moduleid
     $stmt = $mysqli->prepare("SELECT id FROM modules WHERE moduleid=?");
     $stmt->bind_param('s', $_GET['module']);
@@ -80,6 +97,17 @@
         }
         exit;
       } else {
+        // Load the IDs for all students in the module
+        $student_id_array = array();
+        $stmt = $mysqli->prepare("SELECT users.id, username FROM users, student_modules WHERE users.id=student_modules.userID AND moduleid=? AND calendar_year=? ORDER BY username");
+        $stmt->bind_param('ss', $_GET['module'], $_POST['session']);
+        $stmt->execute();
+        $stmt->bind_result($id, $username);
+        while ($stmt->fetch()) {
+          $student_id_array[$username] = $id;
+        }
+        $stmt->close();
+        
         $lines = file("/tmp/" . $userID . "_import_metadata.csv");
         $type = '';
         $value = '';
@@ -88,8 +116,8 @@
         $col_no = 0;
         $unknown_users = array();
         $headings = array();
-        $user_stmt = $mysqli->prepare("SELECT id FROM users WHERE username=?");
-        $user_stmt->bind_param('s', $username);
+        $stmt = $mysqli->prepare("INSERT INTO users_metadata VALUES (NULL, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('iisss', $student_id, $moduleID, $type, $value, $_POST['session']);
         foreach($lines as $separate_line) {
           $cols = explode(',', $separate_line);
           if ($line_no == 0) {  // Read the header row
@@ -104,33 +132,26 @@
             $delete_stmt->close();
           } else {
             $username = trim($cols[0]);
-
-            $user_stmt->execute();
-            $user_stmt->store_result();
-            $user_stmt->bind_result($student_userID);
-            $user_stmt->fetch();
             
             // Check see if user was found
-            if ($user_stmt->num_rows == 0) {
+            if (!isset($student_id_array[$username])) {
               $unknown_users[] = $username;
             } else {
-              $stmt = $mysqli->prepare("INSERT INTO users_metadata VALUES (NULL, ?, ?, ?, ?, ?)");
-              $stmt->bind_param('iisss', $student_userID, $moduleID, $type, $value, $_POST['session']);
+              $student_id = $student_id_array[$username];
               for ($i=1; $i<$col_no; $i++) {
                 $type = trim($heading[$i]);
                 $value = trim($cols[$i]);
                 $stmt->execute();
               }
-              $stmt->close();
             }
           }
           $line_no++;
         }
-        $user_stmt->close();
+        $stmt->close();
       }
     }
 
-    echo "<div style=\"margin-left:10px\">" . (count($lines) - count($unknown_users) - 1) . " uploaded correctly.<br />\n";
+    echo "<br />\n<div>" . (count($lines) - count($unknown_users) - 1) . " uploaded correctly.<br />\n";
     echo count($unknown_users) . " usernames not recognised:\n<ul>\n";
     foreach ($unknown_users as $unknown) {
       echo "<li>$unknown</li>\n";
@@ -139,13 +160,12 @@
     
     unlink("/tmp/" . $userID . "_import_metadata.csv");
 
-    
     $mysqli->close();
     exit;
   } else {
 ?>
-<div style="text-align:center">
-<table border="0" width="100%" height="100%" style="width:700px">
+
+<table border="0" width="100%" height="100%" style="width:700px; margin-left:auto; margin-right:auto">
 <tr><td valign="middle">
 <div align="center">
 <table border="0" cellpadding="4" cellspacing="0" style="width:100%; border:1px solid #95AEC8">
@@ -166,8 +186,9 @@
 <?php
   $current_year = DateUtils::get_current_academic_year();
 
-  echo "<option value=\"$current_year\">$current_year</option>\n";
   $parts = explode('/', $current_year);
+  echo "<option value=\"" . ($parts[0]-1) . "/" . ($parts[1]-1) . "\">" . ($parts[0]-1) . "/" . ($parts[1]-1) . "</option>\n";
+  echo "<option value=\"$current_year\">$current_year</option>\n";
   echo "<option value=\"" . ($parts[0]+1) . "/" . ($parts[1]+1) . "\">" . ($parts[0]+1) . "/" . ($parts[1]+1) . "</option>\n";
   
 ?>
@@ -182,12 +203,12 @@
 </tr>
 </table>
 
-</div>
 </td></tr>
 </table>
 </div>
 <?php
   $mysqli->close();
+  ob_end_flush();
 }
 ?>
 </body>

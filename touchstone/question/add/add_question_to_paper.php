@@ -133,7 +133,7 @@ td {font-size:80%}
     $tmp_paper_title = $_POST['new_paper'];
     
     // Create the new paper.
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20030101090000','20250101090000','Europe/London','0','','','white','black','#316AC5','#C00000','0',1,'0',40,70,?,'','','',0,'',NULL,NULL,NOW(),0,0,'1','1','1','1','0',NULL,?,'',NULL,NULL,'0',0,'')");
+    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20030101090000','20250101090000','Europe/London','0','','','white','black','#316AC5','#C00000','0',1,'0',40,70,?,'','','',0,'',NULL,NULL,NOW(),0,0,'1','1','1','1','0',NULL,?,'',NULL,NULL,'0',0,'',NULL)");
     $result->bind_param('sis', $tmp_paper_title, $userID, $session);
     $result->execute();  
     $property_id = $mysqli->insert_id;

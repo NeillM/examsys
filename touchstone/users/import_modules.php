@@ -197,18 +197,14 @@
     <?php
   } else {
 ?>
-<table border="0" width="100%" height="100%">
-<tr><td valign="middle">
-<div align="center">
-<table border="0" cellpadding="4" cellspacing="0" style="width:70%; border:1px solid #95AEC8">
+<table border="0" cellpadding="4" cellspacing="0" style="width:70%; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/modules_icon_32.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Import Modules</span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%">Import Modules</span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB">
+<td align="left" style="background-color:#F1F5FB" colspan="2">
 
-<p>CSV file should be in the SATURN export format. Each csv file should contain all the students registered
-to the school. (Data can be obtained from SATURN using 'Student Exports / Modules II / Faculty of Medicine')</p>
+<p style="text-align:justify">CSV file should be in the SATURN export format. Each csv file should contain all the students registered to the school. (Data can be obtained from SATURN using 'Student Exports / Modules II / Faculty of Medicine')</p>
 <br />
 <div>Please select the CVS file you wish to load:</div>
 <br />
@@ -223,9 +219,6 @@ to the school. (Data can be obtained from SATURN using 'Student Exports / Module
 </tr>
 </table>
 
-</div>
-</td></tr>
-</table>
 </div>
 <?php
   }
