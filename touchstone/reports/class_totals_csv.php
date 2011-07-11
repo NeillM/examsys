@@ -35,17 +35,30 @@
   if($cohort_size > 0) {
     if ($marking == '0') {
       $marking_label = '%';
+      $marking_key = 'percent';
     } else {
       $marking_label = 'Adjusted %';
+      $marking_key = 'adj_percent';
     }
   
     $total_time = 0;
-    echo "Title,Surname$user_no,First Names,Student ID,Course,Mark,$marking_label,Classification,Start Date,Duration,IP Address,Room";
-    // Output metadata headings
-    if (isset($user_results[0]['metadata'])) {
-      foreach($user_results[0]['metadata'] as $type=>$value) {
-        echo ",$type";
+    
+    //output table heading
+    $table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
+    $table_order['Room'] = 'room';
+    $metadata_cols = array();
+    if (isset($user_results[0])){
+      foreach($user_results[0] as $key => $val) {
+        if(strrpos($key,'meta_') !== false) {
+          $key_display = ucfirst(str_replace('meta_','',$key));
+          $table_order[$key_display] = $key;
+          $metadata_cols[$key] = $key;
+        }
       }
+    }
+    
+    foreach($table_order as $display => $key) {
+      echo $display . ',';
     }
     echo "\n";
     
@@ -79,9 +92,9 @@
           echo $user_results[$i]['display_started'] . "," . formatsec($user_results[$i]['duration']) . "," . $user_results[$i]['ipaddress'] . "," . $user_results[$i]['room'];
           
           // Display any associated metadata
-          if (isset($user_results[$i]['metadata'])) {
-            foreach($user_results[$i]['metadata'] as $type=>$value) {
-              echo ",$value";
+          if (count($metadata_cols) > 0) {
+            foreach ( $metadata_cols as $type) {
+              echo "," . $user_results[$i][$type];
             }
           }
           echo "\n";

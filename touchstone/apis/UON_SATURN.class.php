@@ -54,7 +54,7 @@ Class UON_SATURN extends SmsUtils {
       }
     }
 
-    if (count($users) > 0) {
+    if (count($user) > 0) {
       return $user;
     } else {
       //no user found return false

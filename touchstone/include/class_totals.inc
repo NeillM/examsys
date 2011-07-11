@@ -210,7 +210,7 @@ function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mar
   return round($cranked);
 }
 
-function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array) {
+function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array, $student_met_array) {
   global $student_cohort, $cohort_size, $total_random_mark, $total_marks, $marking, $ss_pass, $ss_hon, $pass_mark, $demo, $display_no, $meta_col_count;
 
   $master_array[$user_number]['name'] = $tmp['name'];
@@ -254,10 +254,12 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['visible'] = 1;    // Default to visible unless switched off below.
   
   // Add metadata
-  if ($meta_col_count > 0) {
-    if (isset($tmp['tmp_userID'])) {
-      foreach ($met_array[$tmp['tmp_userID']] as $type=>$value) {
-        $master_array[$user_number]['metadata'][$type] = $value;
+  if (count($met_array) > 0) {
+    foreach ($met_array as $type) {
+      if (isset($student_met_array[$tmp['tmp_userID']][$type]) ) {
+        $master_array[$user_number]['meta_' . $type] = $student_met_array[$tmp['tmp_userID']][$type];
+      } else {
+        $master_array[$user_number]['meta_' . $type] = '';
       }
     }
   }
@@ -267,7 +269,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   while (isset($_GET["meta$i"])) {
     $meta_parts = explode('=', $_GET["meta$i"]);
     if ($meta_parts[1] != '%') {
-      if ($master_array[$user_number]['metadata'][$meta_parts[0]] != $meta_parts[1]) {
+      if ($master_array[$user_number][$meta_parts[0]] != $meta_parts[1]) {
         $master_array[$user_number]['visible'] = 0;
       }
     }
@@ -450,6 +452,7 @@ function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
   foreach ($marray as $row) {
     $sortarr[] = $row[$column];
   }
+  
   $sortarr = array_map('strtolower',$sortarr);
   $sort_method = SORT_STRING;
   if ($column == 'mark' or $column == 'duration') $sort_method = SORT_NUMERIC;
@@ -718,15 +721,18 @@ if (isset($_GET['absent'])) {
 
 // Query for metadata
 $metadata_array = array();
+$student_metadata_array = array();
 $stmt = $mysqli->prepare('SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND modules.moduleid=?');
 $stmt->bind_param('s', $moduleID);
 $stmt->execute();
 $stmt->bind_result($student_userID, $type, $value);
+
 while ($stmt->fetch()) {
-  $metadata_array[$student_userID][$type] = $value;
+  $student_metadata_array[$student_userID][$type] = $value;
+  $metadata_array[$type] = $type;
 }
 $stmt->close();
-$meta_col_count = count($metadata_array[$student_userID]);
+
     
 $warnings = array('deleted_qns' => array());
 if ($log_query->num_rows > 0) {
@@ -739,7 +745,7 @@ if ($log_query->num_rows > 0) {
     }
     if (($old_username != $username) or ($old_started != $started)) {
       if ($old_username != '') {
-        writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array);
+        writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
         $tmp_array['questions'] = 0;
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
@@ -801,7 +807,7 @@ if ($log_query->num_rows > 0) {
     $user_duration += $old_duration;
     $log_query->free_result();
     $log_query->close();
-    writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array);
+    writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
   
     if ($percent < 100) {
       // Sort by mark order.

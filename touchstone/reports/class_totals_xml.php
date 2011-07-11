@@ -30,6 +30,33 @@
   header("Content-type: application/vnd.ms-excel");
   header("Content-Disposition: attachment; filename=" . $paper . ".xml");
 
+  if ($marking == '0') {
+    $marking_label = '%';
+    $marking_key = 'percent';
+  } else {
+    $marking_label = 'Adjusted %';
+    $marking_key = 'adj_percent';
+  }
+
+  $total_time = 0;
+  
+  //output table heading
+  $table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
+  $table_order['Room'] = 'room';
+  $metadata_cols = array();
+  $meta_col_count = 0;
+  if (isset($user_results[0])){
+    foreach($user_results[0] as $key => $val) {
+      if(strrpos($key,'meta_') !== false) {
+        $key_display = ucfirst(str_replace('meta_','',$key));
+        $table_order[$key_display] = $key;
+        $metadata_cols[$key_display] = $key;
+        $meta_col_count++;
+      }
+    }
+  }
+  
+  
   // Write results to XML ---------------------------------------------------------------------------
   echo '<?xml version="1.0"?>';
   echo '<?mso-application progid="Excel.Sheet"?>';
@@ -142,11 +169,11 @@
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
-  if (isset($user_results[0]['metadata'])) {
-    for ($i=0; $i<count($user_results[0]['metadata']); $i++) {
-      echo '    <Cell ss:StyleID="s28"/>';    
-    }
+  
+  foreach ($metadata_cols as $key) {
+    echo '    <Cell ss:StyleID="s28"/>';    
   }
+  
   echo '   </Row>';
   echo '   <Row>';
   echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Title</Data></Cell>';
@@ -169,10 +196,8 @@
     echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Room</Data></Cell>';
   }
   // Output metadata headings
-  if (isset($user_results[0]['metadata'])) {
-    foreach($user_results[0]['metadata'] as $type=>$value) {
-      echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $type . '</Data></Cell>';
-    }
+  foreach ($metadata_cols as $key => $col) {
+    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $key . '</Data></Cell>';
   }
   echo '  </Row>';
 
@@ -219,14 +244,12 @@
         echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';
         echo '<Cell><Data ss:Type="String">' . formatsec($user_results[$i]['duration']) . '</Data></Cell>';
         echo '<Cell><Data ss:Type="String">' . $user_results[$i]['ipaddress'] . '</Data></Cell>';
-        if ($paper_type = 2) {
+        if ($paper_type == 2) {
           echo '<Cell><Data ss:Type="String">' . $user_results[$i]['room'] . '</Data></Cell>';
         }
         // Display any associated metadata
-        if (isset($user_results[$i]['metadata'])) {
-          foreach($user_results[$i]['metadata'] as $type=>$value) {
-            echo '<Cell><Data ss:Type="String">' . $value . '</Data></Cell>';
-          }
+        foreach ($metadata_cols as $key => $col) {
+          echo '<Cell><Data ss:Type="String">' . $user_results[$i][$col] . '</Data></Cell>';
         }      
         echo '</Row>';
         if ($user_results[$i]['mark'] > $max_mark) {
