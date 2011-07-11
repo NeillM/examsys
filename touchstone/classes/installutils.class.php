@@ -246,7 +246,6 @@ Class InstallUtils {
     if (self::$db->errno != 0) {
       self::displayError(array('011' => "The database '$dbname' could not be created please check the admin users permissions")); 
     }
-    $res->close();
     
     //select the newly created database
     self::$db->change_user(self::$db_admin_username, self::$db_admin_passwd,self::$cfg_db_name);
