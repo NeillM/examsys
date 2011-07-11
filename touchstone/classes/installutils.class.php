@@ -1409,6 +1409,27 @@ QUERY;
       ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1
 QUERY;
 
+    $this->tableList['password_tokens'] = <<<QUERY
+      CREATE TABLE `password_tokens` (
+        `id` int(11) NOT NULL auto_increment,
+        `user_id` int(11) NOT NULL,
+        `token` char(16) NOT NULL,
+        `time` datetime NOT NULL,
+        PRIMARY KEY  (`id`)
+      ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+QUERY;
+
+    $this->tableList['users_metadata'] = <<<QUERY
+      CREATE TABLE `users_metadata` (
+        `id` int(11) NOT NULL auto_increment,
+        `userID` int(11) default NULL,
+        `moduleID` int(11) default NULL,
+        `type` varchar(255) default NULL,
+        `value` varchar(255) default NULL,
+        `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
+        PRIMARY KEY  (`id`)
+      ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+QUERY;
 
   }
   
