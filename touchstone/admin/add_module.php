@@ -24,7 +24,7 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../classes/dateutils.class.php';
-require_once '../classes/SMSutils.class.php';
+require_once '../classes/smsutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
 
