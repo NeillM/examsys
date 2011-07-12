@@ -119,6 +119,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         }
         // Add student onto the module
         UserUtils::addUserToModule($tmp_userID, $module, $session, $mysqli);
+        echo "$tmp_userID, $module, $session<br />\n";
         
         $enrolments++;
         if ($enrolement_details == '') {
@@ -128,6 +129,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         }
       }
     }
+    exit;
 
     // Write in a record to sms_imports table
     if ($enrolments > 0) {
