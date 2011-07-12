@@ -75,8 +75,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   ModuleUtils::addModules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $mysqli);
   
   if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
-    // Look up SATURN
-    $enrolments = 0;
+    $enrolements = 0;
       
     // Get the current academic session
     $session = DateUtils::get_current_academic_year();
@@ -106,6 +105,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         $student->Gender = trim($student->Gender);
         $student->YearofStudy = trim($student->YearofStudy);
         $student->Faculty = trim($student->Faculty);
+        
+        echo $student->Username . '=' . $student->YearofStudy . '<br />';
        
         // Create new account for the user
         $names = explode(' ',$student->Forename);
@@ -120,7 +121,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         // Add student onto the module
         UserUtils::addUserToModule($tmp_userID, $module, $session, $mysqli);
         
-        $enrolments++;
+        $enrolements++;
         if ($enrolement_details == '') {
           $enrolement_details = $student->Username;
         } else {
@@ -130,7 +131,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
 
     // Write in a record to sms_imports table
-    if ($enrolments > 0) {
+    if ($enrolements > 0) {
       if ($_POST['sms_api'] == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
         $import_type = 'SATURN Malaysia';
       } elseif ($_POST['sms_api'] == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
