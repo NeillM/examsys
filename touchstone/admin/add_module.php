@@ -106,8 +106,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         $student->YearofStudy = trim($student->YearofStudy);
         $student->Faculty = trim($student->Faculty);
         
-        echo $student->Username . '=' . $student->YearofStudy . '<br />';
-       
         // Create new account for the user
         $names = explode(' ',$student->Forename);
         $initials = '';
