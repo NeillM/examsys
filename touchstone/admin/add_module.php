@@ -26,6 +26,7 @@ require '../include/sysadmin_auth.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/SMSutils.class.php';
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/userutils.class.php';
 
 $SMS = SMSutils::GetSmsUtils();
 $cfg_sms_sources =  $SMS->getModuleSources();
@@ -89,62 +90,50 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     //------------------------------------
     
     $url = $_POST['sms_api'] . "&code=$replaced_module&year=" . $session_parts[0];
-    $returned_data = file_get_contents($url);
-    $xml = new SimpleXMLElement($returned_data);
-    $enrolement_details = '';
+    $returned_data = @file_get_contents($url);
+    if ($returned_data !== false) {
+      $xml = new SimpleXMLElement($returned_data);
+      $enrolement_details = '';
 
-    foreach ($xml->Module->Membership->Student as $student) {
-      $student->Title = trim($student->Title);
-      $student->Surname = trim($student->Surname);
-      $student->Forename = trim($student->Forename);
-      $student->CourseCode = trim($student->CourseCode);
-      $student->Username = trim($student->Username);
-      $student->Email = trim($student->Email);
-      $student->Faculty = trim($student->Faculty);
-      $student->Gender = trim($student->Gender);
-      $student->YearofStudy = trim($student->YearofStudy);
-      $student->Faculty = trim($student->Faculty);
-     
-      $student_data = $mysqli->prepare("SELECT id FROM users WHERE username=? LIMIT 1");            // Do they have a TouchStone user record?
-      $student_data->bind_param('s', $student->Username);
-      $student_data->execute();
-      $student_data->store_result();
-      $student_data->bind_result($tmp_userID);
-      $student_data->fetch();
-      if ($student_data->num_rows == 0) {
-        // Create new account for the user
-        $tmp_year = 'year' . $student->YearofStudy;
-        $names = explode(' ',$student->Forename);
-        $initials = '';
-        foreach ($names as $tmp_name) {
-          $initials .= substr($tmp_name,0,1);
+      foreach ($xml->Module->Membership->Student as $student) {
+        $student->Title = trim($student->Title);
+        $student->Surname = trim($student->Surname);
+        $student->Forename = trim($student->Forename);
+        $student->CourseCode = trim($student->CourseCode);
+        $student->Username = trim($student->Username);
+        $student->Email = trim($student->Email);
+        $student->Faculty = trim($student->Faculty);
+        $student->Gender = trim($student->Gender);
+        $student->YearofStudy = trim($student->YearofStudy);
+        $student->Faculty = trim($student->Faculty);
+       
+        $student_data = $mysqli->prepare("SELECT id FROM users WHERE username=? LIMIT 1");            // Do they have a TouchStone user record?
+        $student_data->bind_param('s', $student->Username);
+        $student_data->execute();
+        $student_data->store_result();
+        $student_data->bind_result($tmp_userID);
+        $student_data->fetch();
+        if ($student_data->num_rows == 0) {
+          // Create new account for the user
+          $names = explode(' ',$student->Forename);
+          $initials = '';
+          foreach ($names as $tmp_name) {
+            $initials .= substr($tmp_name,0,1);
+          }
+          
+          UserUtils::createUser($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $sms->YearofStudy, 'Student', $student->StudentID, $mysqli);
         }
+        $student_data->close();
         
-        $result = $mysqli->prepare("INSERT INTO users VALUES ('', ?, ?, ?, ?, ?, ?, 'Student', NULL, ?, ?, ?, NULL, 0, ?)");
-        $result->bind_param('sssssssssi', $student->CourseCode, $student->Surname, $initials, $student->Title, $student->Username, $student->Email, $student->Faculty, $student->Forename, $student->Gender, $sms->YearofStudy);
-        $result->execute();
-        $result->close();
-         
-        $tmp_userID = $mysqli->insert_id;    // Get the new TouchStone userID
-      }
-      $student_data->close();
-      
-      $tmp_studentID = trim($student->StudentID);
-      $result = $mysqli->prepare("INSERT INTO sid VALUES (?,?)");
-      $result->bind_param('si', $tmp_studentID, $tmp_userID);
-      $result->execute();
-      $result->close();
-
-      // Add student onto the module
-      $result = $mysqli->prepare("INSERT INTO student_modules VALUES (NULL, ?, ?, ?, 1, 1)");
-      $result->bind_param('iss', $tmp_userID, $module, $session);
-      $result->execute();
-      $result->close();
-      $enrolments++;
-      if ($enrolement_details == '') {
-        $enrolement_details = $student->Username;
-      } else {
-        $enrolement_details .= ',' . $student->Username;
+        // Add student onto the module
+        UserUtils::addUserToModule($tmp_userID, $module, $session, $mysqli);
+        
+        $enrolments++;
+        if ($enrolement_details == '') {
+          $enrolement_details = $student->Username;
+        } else {
+          $enrolement_details .= ',' . $student->Username;
+        }
       }
     }
 
