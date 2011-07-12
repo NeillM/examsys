@@ -107,24 +107,16 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         $student->YearofStudy = trim($student->YearofStudy);
         $student->Faculty = trim($student->Faculty);
        
-        $student_data = $mysqli->prepare("SELECT id FROM users WHERE username=? LIMIT 1");            // Do they have a TouchStone user record?
-        $student_data->bind_param('s', $student->Username);
-        $student_data->execute();
-        $student_data->store_result();
-        $student_data->bind_result($tmp_userID);
-        $student_data->fetch();
-        if ($student_data->num_rows == 0) {
-          // Create new account for the user
-          $names = explode(' ',$student->Forename);
-          $initials = '';
-          foreach ($names as $tmp_name) {
-            $initials .= substr($tmp_name,0,1);
-          }
-          
-          UserUtils::createUser($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $sms->YearofStudy, 'Student', $student->StudentID, $mysqli);
+        // Create new account for the user
+        $names = explode(' ',$student->Forename);
+        $initials = '';
+        foreach ($names as $tmp_name) {
+          $initials .= substr($tmp_name,0,1);
         }
-        $student_data->close();
-        
+        $tmp_userID = usernameExists($student->Username, $mysqli);
+        if ($tmp_userID === false) {
+          $tmp_userID = UserUtils::createUser($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $sms->YearofStudy, 'Student', $student->StudentID, $mysqli);
+        }
         // Add student onto the module
         UserUtils::addUserToModule($tmp_userID, $module, $session, $mysqli);
         
@@ -161,7 +153,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-  <title>2Create new Module<?php echo " $cfg_install_type"; ?></title>
+  <title>Create new Module<?php echo " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
   <style>
