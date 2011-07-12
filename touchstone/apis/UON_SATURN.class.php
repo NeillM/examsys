@@ -37,6 +37,7 @@ Class UON_SATURN extends SmsUtils {
         $returned_data = file_get_contents($source . "&username=$username");
         $xml = new SimpleXMLElement($returned_data);
         if ($xml->AttendStatus == 'Studying at the University') {
+          $user['StudentID'] = trim($xml->StudentID);
           $user['Title'] = trim($xml->Title);
           $user['Surname'] = trim($xml->Surname);
           $user['Forename'] = trim($xml->Forename);
@@ -47,6 +48,7 @@ Class UON_SATURN extends SmsUtils {
           $user['YearofStudy'] = trim($xml->YearofStudy);
           $user['School'] = trim($xml->School);
           $user['Degree'] = trim($xml->Degree);
+          $user['CourseCode'] = trim($xml->CourseCode);
           $user['CourseTitle'] = trim($xml->CourseTitle);
           $user['AttendStatus'] = trim($xml->AttendStatus);
           break; //we have found the student so stop looking

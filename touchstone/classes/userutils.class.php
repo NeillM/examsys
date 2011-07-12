@@ -52,7 +52,7 @@ Class UserUtils {
       $result->execute();
       $result->close();
       $userID = $db->insert_id;
-      if(isset($sid) and $sid != '') {
+      if (isset($sid) and $sid != '') {
         $result = $db->prepare("INSERT INTO sid VALUES(?,?)");
         $result->bind_param('si', $sid, $userID);
         $result->execute();
@@ -64,17 +64,25 @@ Class UserUtils {
     return false;
   }
   
+  /**
+   * Check if username exists and if so return ID.
+   *
+   * @param string $username username
+   * @param object $db mysqli database connection
+   * @return mixed user ID if exists, otherwise false
+   *
+   */
   static function usernameExists($username, $db) {
     $stmt = $db->prepare("SELECT id FROM users WHERE username=?");
     $stmt->bind_param('s', $username);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($userID);
+    $stmt->bind_result($tmp_userID);
     $stmt->fetch();
     if ($stmt->num_rows == 0) {
       return false;
     } else {
-      return true;
+      return $tmp_userID;
     }
   }
 
@@ -94,7 +102,7 @@ Class UserUtils {
     $result->bind_param('is', $userID, $module);
     $result->execute();
     $result->close();
-    if($db->errno != 0) {
+    if ($db->errno != 0) {
       return false;
     }
     return true;

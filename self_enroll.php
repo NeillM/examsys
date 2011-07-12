@@ -32,32 +32,31 @@ check_var('moduleid', 'GET', true, false);
 $session = DateUtils::get_current_academic_year();
 
 //dose the user have an account?
-if (UserUtils::usernameExists($_SERVER['PHP_AUTH_USER'],$mysqli) == FALSE ) {
-   //the user has no TouchStone Account but has an LDAP acount so lets make one !
-   $SMS = SMSutils::GetSmsUtils();
-   $user_data = $SMS->getUserData($_SERVER['PHP_AUTH_USER']);
-   if (count($user_data) > 0) {
-     //valid acount found create user
-     UserUtils::createUser(
-                            $_SERVER['PHP_AUTH_USER'], 
-                            $_SERVER['PHP_AUTH_PW'], 
-                            $user_data['Title'], 
-                            $user_data['Forename'], 
-                            $user_data['Surname'], 
-                            $user_data['Email'], 
-                            $user_data['Degree'], 
-                            $user_data['Gender'], 
-                            $user_data['YearofStudy'], 
-                            'Student',
-                            '',
-                            $mysqli
-                           );
-     db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli);
-   } else {
-     //no account information found
-     display_error('No account found in the student managment system', '', false, true);
-   }
-   
+if (UserUtils::usernameExists($_SERVER['PHP_AUTH_USER'],$mysqli) === false ) {
+  //the user has no TouchStone Account but has an LDAP acount so lets make one !
+  $SMS = SMSutils::GetSmsUtils();
+  $user_data = $SMS->getUserData($_SERVER['PHP_AUTH_USER']);
+  if (count($user_data) > 0) {
+    //valid acount found create user
+    UserUtils::createUser(
+                          $_SERVER['PHP_AUTH_USER'], 
+                          $_SERVER['PHP_AUTH_PW'], 
+                          $user_data['Title'], 
+                          $user_data['Forename'], 
+                          $user_data['Surname'], 
+                          $user_data['Email'], 
+                          $user_data['CourseCode'], 
+                          $user_data['Gender'], 
+                          $user_data['YearofStudy'], 
+                          'Student',
+                          $user_data['StudentID'],
+                          $mysqli
+                         );
+    db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli);
+  } else {
+    //no account information found
+    display_error('No account found in the student managment system', '', false, true);
+  }
 }
 
 $result = $mysqli->prepare("SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");

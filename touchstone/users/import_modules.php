@@ -25,6 +25,7 @@
 */
 
   require '../include/admin_auth.inc';
+  require '../classes/userutils.class.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -49,7 +50,7 @@
 <?php
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/cohort_update.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/" . $userID . "_cohort_update.csv"))  {
         echo 'Problem - ';
         if ($_FILES['csvfile']['error'] == "0") {
           echo("Value 0: No problem, the file is uploaded.");
@@ -71,7 +72,7 @@
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="/touchstone/artwork/users_icon_big.gif" width="32" height="26" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Adding Modules From (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
+        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2">Adding Modules From (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
         </tr>
         <tr>
         <td align="left" style="background-color:#F1F5FB">
@@ -87,7 +88,7 @@
 
         $modulesAdded = 0;
         $missing_users = Array();
-        $lines = file("/tmp/cohort_update.csv");
+        $lines = file("/tmp/" . $userID . "_cohort_update.csv");
 
         // Build an array of unique student names.
         $students = array();
@@ -110,31 +111,23 @@
 
         // Query the modules for each student
         foreach ($students as $student) {
-
-          $result = $mysqli->prepare("SELECT id FROM users WHERE username=?");
-          $result->bind_param('s', $student['username']);
-          $result->execute();
-          $result->store_result();
-          $result->bind_result($student_databaseID);
-
-          if ($result->num_rows() > 0) {
-            $result->fetch();
+          $student_databaseID = UserUtils::usernameExists($student['username'], $mysqli);
+          
+          if ($student_databaseID !== false) {
             $students[$student['username']]['dbID'] = $student_databaseID;
 
-            $result2 = $mysqli->prepare("SELECT moduleid FROM student_modules WHERE userID=? AND calendar_year=?");
-            $result2->bind_param('is', $student_databaseID, $student['session']);
-            $result2->execute();
-            $result2->store_result();
-            $result2->bind_result($moduleid);
-            while ($result2->fetch()) {
-              if (in_array($moduleid,$touchstone_modules)) {
+            $result = $mysqli->prepare("SELECT moduleid FROM student_modules WHERE userID=? AND calendar_year=?");
+            $result->bind_param('is', $student_databaseID, $student['session']);
+            $result->execute();
+            $result->store_result();
+            $result->bind_result($moduleid);
+            while ($result->fetch()) {
+              if (in_array($moduleid, $touchstone_modules)) {
                 $students[$student['username']]['modules'][] = $moduleid;
               }
             }
-            $result2->close();
+            $result->close();
           }
-
-          $result->close();
         }
 
         foreach($lines as $separate_line) {
@@ -155,13 +148,8 @@
             $username = $username[0];
             if (in_array($module,$touchstone_modules)) {
               if (!in_array($module,$students[$username]['modules'])) {
-                $tmp_userID = $students[$username]['dbID'];
-                if ($tmp_userID != '') {
-                  $update = $mysqli->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1, 0)");
-                  $update->bind_param('iss', $tmp_userID, $module, $session);
-                  $update->execute();
-                  $update->close();
-                } else {
+                if (isset($students[$username]['dbID'])) {
+                  UserUtils::addUserToModule($students[$username]['dbID'], $module, $session, $mysqli);
                 }
                 $modulesAdded++;
               } else {
@@ -174,9 +162,9 @@
         }
       }
     }
-    unlink("/tmp/cohort_update.csv");
+    unlink("/tmp/" . $userID . "_cohort_update.csv");
 
-    echo "<h2>$modules Added Modules added</h2>";
+    echo "<h2>$modulesAdded Added Modules added</h2>";
     echo "<p>" . count($missing_users) . " Missing users</p>";
     foreach($missing_users as $sid => $module) {
       echo "<p>$sid:" . $module['surname'] . ', ' . $module['forname'] . "</p>";

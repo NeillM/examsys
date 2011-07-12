@@ -24,31 +24,8 @@
 * @package
 */
 
-//TODO this function has been moved to userutils.class.inc
-function my_ucwords($s) { 
-  $s = preg_replace_callback("/(\b[\w|']+\b)/s", fixcase_callback, $s); 
-  return $s;         
-} 
-
-//TODO this function has been moved to userutils.class.inc    
-function fixcase_callback($word) { 
-  $word = $word[1]; 
-  $word = strtolower($word); 
-        
-  if ($word == "de") return $word; 
-   
-  $word = ucfirst($word); 
-       
-  if (substr($word,1,1) == "'") { 
-    if (substr($word,0,1) == "D") { 
-      $word = strtolower($word); 
-    } 
-    $next = substr($word,2,1); 
-    $next = strtoupper($next); 
-    $word = substr_replace($word, $next, 2, 1); 
-  }
-  return $word; 
-} 
+require_once '../classes/userutils.class.php';
+require_once '../classes/passwordutils.class.php';
 
 $header = array();
 $needed_cols = array('student_id','full name','first names','surname','title','course code','year of course','local email');
@@ -96,15 +73,15 @@ function add_users_from_file($fileName) {
     $fields = explode($split_on,$separate_line);
                      
     $sid = str_replace('"','',trim($fields[$header['student_id']]));
-    $forname = my_ucwords(trim($fields[$header['first names']])); 
+    $forname = UserUtils::my_ucwords(trim($fields[$header['first names']])); 
     $initial = explode(' ',$forname);
     $initials = '';
     foreach ($initial as $name) {
       $initials .= substr($name,0,1);
     }
     $initials = strtoupper($initials);
-    $surname = my_ucwords(trim($fields[$header['surname']]));
-    $title = my_ucwords(trim($fields[$header['title']]));
+    $surname = UserUtils::my_ucwords(trim($fields[$header['surname']]));
+    $title = UserUtils::my_ucwords(trim($fields[$header['title']]));
     $degree = trim($fields[$header['course code']]); 
     $year = trim($fields[$header['year of course']]);
     $email = trim($fields[$header['local email']]);
@@ -114,8 +91,6 @@ function add_users_from_file($fileName) {
       $username = explode("@",$email);
       $username = $username[0];
     }
-      
-    //echo "$title $surname ($username)<br />";
                             
     if ($degree == "A101") { //Do extra work for GEM
       if (date("m") >= 2 and date("m") <= 6 and $year == 2) {
@@ -135,38 +110,22 @@ function add_users_from_file($fileName) {
       $gender = 'NULL';
     }
     
-    //TODO this function has been moved to userutils.class.inc  
-    $stmt = $mysqli->prepare("SELECT id FROM users WHERE username=?");
-    $stmt->bind_param('s', $username);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($userID);
-    $stmt->fetch();
     $invalid_user = false;
-    if ($stmt->num_rows == 0 and $username != '' and stristr('ps_',$username) === false) {
+    if (UserUtils::usernameExists($username, $mysqli) === false) {
       //add new users
-      //TODO this function has been moved to passwordutils.class.inc  
-      $password =  gen_password();
-      $encpw_password = encpw($username, $password);
-      //TODO this function has been moved to userutils.class.inc  
-      $result = $mysqli->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, 'Student', NULL, ?, ?, ?, NULL, 0)");
-      $result->bind_param('sssssssssi', $encpw_password, $degree, $surname, $initials, $title, $username, $email, $forname, $gender, $year);
-      $result->execute();
-      $result->close();
-        
-      $userID = $mysqli->insert_id;
+       
+      $password = PasswordUtils::gen_password();
+      $encpw_password = PasswordUtils::encpw($username, $password);
 
-      $result = $mysqli->prepare("INSERT INTO sid VALUES(?, ?)");
-      $result->bind_param('si', $sid, $userID);
-      $result->execute();
-      $result->close();
+      $added = UserUtils::createUser($username, $encpw_password, $title, $forname, $surname, $email, $degree, $gender, $year, 'Student', $sid, $mysqli);
 
-      $users['added'][] = $username;
+      if ($added == true) {
+        $users['added'][] = $username;
+      }
       $users['degrees'][$degree] = $degree;
-      $users['year_string'][$year_string] = $year_string;  
       
       //send Welcome Email if ticked
-      if ($_POST['welcome'] != '') {
+      if (isset($_POST['welcome']) and $_POST['welcome'] != '') {
         send_welcome_email($title, $surname, $username, $password, $email);
       }
     } elseif ($username != '' and stristr('ps_',$username) === false) {
@@ -178,7 +137,6 @@ function add_users_from_file($fileName) {
 
       $users['updated'][] = $username;
       $users['degrees'][$degree] = $degree;
-      $users['year_string'][$year_string] = $year_string;
     } else {
       $invalid_user = true;
     }
@@ -187,15 +145,12 @@ function add_users_from_file($fileName) {
       //add students to modules
       $module = trim($fields[$header['modules']]);
       $session = trim($fields[$header['session']]);
-      echo "Insert " . trim($fields[$header['modules']]) . " $userID - " . trim($fields[$header['session']]) . "<br />\n";
-      $result = $mysqli->prepare("INSERT INTO student_modules VALUES(NULL,?,?,?,1)");
-      $result->bind_param('iss',$userID,$module,$session);
+      echo "Insert " . trim($fields[$header['modules']]) . " $tmp_userID - " . trim($fields[$header['session']]) . "<br />\n";
+      $result = $mysqli->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1)");
+      $result->bind_param('iss', $tmp_userID, $module, $session);
       $result->execute();
       $result->close();
     }
-	  
-    $stmt->free_result();
-    $stmt->close();
   }
 
   return $users;
