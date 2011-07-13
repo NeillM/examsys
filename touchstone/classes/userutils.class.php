@@ -53,7 +53,7 @@ Class UserUtils {
       $result->close();
       $userID = $db->insert_id;
       if (isset($sid) and $sid != '') {
-        $result = $db->prepare("INSERT INTO sid VALUES(?,?)");
+        $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
         $result->bind_param('si', $sid, $userID);
         $result->execute();
         $result->close();
@@ -86,12 +86,21 @@ Class UserUtils {
     }
   }
 
+  /**
+   * Enrole a student on a module.
+   *
+   * @param int $userID ID of the student to be enroled.
+   * @param string $module Module ID for the enrolement.
+   * @param object $db $mysqli database connection.
+   * @return bool return true if successful.
+   *
+   */
   static function addUserToModule($userID, $module, $session, $db) {
     $result = $db->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1, 0)");
     $result->bind_param('iss', $userID, $module, $session);
     $result->execute();
     $result->close();
-    if($db->errno != 0) {
+    if ($db->errno != 0) {
       return false;
     }
     return true;

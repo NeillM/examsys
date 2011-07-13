@@ -247,7 +247,7 @@
     $result->close();
 
     //if we are copying in the same session we can copy the objctives
-    if($new_calendar_year == $calendar_year) {
+    if ($new_calendar_year == $calendar_year) {
       $i = 0;
       foreach ($old_qids as $old_id) {
         $new_question_id = $new_qids[$i];
@@ -342,7 +342,7 @@
     $result->bind_param('i', $_POST['paperID']);
     $result->execute();
     $result->store_result();
-    $result->bind_result($property_id, $paper_title, $start_date, $end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $paper_owner, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $deleted, $created, $random_mark, $total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $moduleID, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $latex_needed, $password);
+    $result->bind_result($property_id, $paper_title, $start_date, $end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $paper_owner, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $deleted, $created, $random_mark, $total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $moduleID, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $latex_needed, $password, $retired);
     while ($row = $result->fetch()) {
 			$tmp_exam_duration = $exam_duration;
     	
