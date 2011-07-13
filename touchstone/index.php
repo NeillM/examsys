@@ -265,7 +265,7 @@ require './include/staff_auth.inc';
   // -- Display personal folders --------------------------------------
   $module_sql = '';
   foreach ($teams as $individual_team){
-    $module_sql .= " OR team_name LIKE '%$individual_team%'";
+    if (trim($individual_team) != '') $module_sql .= " OR team_name LIKE '%$individual_team%'";
   }
 
   $folder_details = $mysqli->query("SELECT id, name, team_name, color FROM folders WHERE (ownerID=$userID $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");

@@ -134,8 +134,8 @@
       } else {
         $tmp_q_id = $_POST['q_id'];
       }
-      $result = $mysqli->prepare("SELECT q_group, ownerID, faculty FROM questions LEFT JOIN modules ON q_group=modules.moduleid LEFT JOIN schools ON modules.school=schools.school WHERE q_id=?");
-      $result->bind_param('i',$tmp_q_id);
+      $result = $mysqli->prepare("SELECT q_group, ownerID, faculty FROM questions LEFT JOIN modules ON q_group=modules.moduleid LEFT JOIN schools ON modules.schoolid=schools.id WHERE q_id=?");
+      $result->bind_param('i', $tmp_q_id);
       $result->execute();  
       $result->bind_result($q_group, $ownerID, $question_faculty);
       while ($result->fetch()) {

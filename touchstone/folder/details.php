@@ -216,14 +216,14 @@ function displayPaperIcon($row) {
   }
 
   function newPaper(paperID) {
-    notice = window.open("../paper/new_paper1.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice = window.open("../paper/new_paper1.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
   
   function addTeamMember() {
-    notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
