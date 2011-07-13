@@ -32,9 +32,9 @@
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style>
 .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
-.sch {padding-left:12px}
+.sch {padding-left:32px; text-indent:-20px}
 .greysch {padding-left:12px; color:#808080}
-.mod {padding-left:32px}
+.mod {padding-left:60px; text-indent:-20px}
 </style>
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
