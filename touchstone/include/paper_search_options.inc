@@ -23,6 +23,7 @@
 */
 
 require_once '../classes/schoolutils.class.php';
+require_once '../classes/searchutils.class.php';
 ?>
 <script language="JavaScript">
   function updateCookies(ID) {
@@ -217,62 +218,8 @@ require_once '../classes/schoolutils.class.php';
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px">Team: <select style="width:175px" name="moduleid"><br />
-  <option value=""<?php if (isset($_COOKIE['papersearch'][1]) and $_COOKIE['papersearch'][1] == '') echo ' selected'; ?>>(any team)</option>
-<?php
-  $team_sql = implode("','", $teams);
-  if ($team_sql != '') $team_sql = "'$team_sql'";
-  if ($team_sql != '') {
-    if (strpos($userroles,'SysAdmin') !== false) {
-      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
-    } elseif (strpos($userroles,'Admin') !== false) {
-      $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
-      if ($schoolIDs == '') {
-        $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
-      } else {
-        $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
-      }
-    } else {
-      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
-    }
-    while ($row = $search_results->fetch_assoc()) {
-      if (isset($_POST['moduleid']) and $row['moduleid'] == $_POST['moduleid']) {
-        echo "<option value=\"" . $row['moduleid'] . "\" selected>" . $row['moduleid'] . ": " . $row['fullname'] . "</option>\n";
-      } else {
-        echo "<option value=\"" . $row['moduleid'] . "\">" . $row['moduleid'] . ": " . $row['fullname'] . "</option>\n";
-      }
-    }
-    $search_results->close();
-  }
-?>
-  </select></div>
-  <div style="margin-left:4px">Owner: <select style="width:175px" name="owner"><br />
-  <option value=""<?php if (isset($_COOKIE['papersearch'][2]) and $_COOKIE['papersearch'][2] == '') echo ' selected'; ?>>(any owner)</option>
-  <option value="<?php echo $userID; ?>">(my papers only)</option>
-  <option value="" style="background-color:#ECE9D8"></option>
-<?php
-  $old_letter = '';
-  if (strpos($userroles,'Admin') !== false) {
-    $search_results = $mysqli->query("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' ORDER BY surname, initials");
-  } else {
-    $search_results = $mysqli->query("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users, teams WHERE users.id=teams.memberID AND name IN (\"" . implode('","', $teams) . "\") AND roles LIKE 'Staff%' ORDER BY surname, initials");
-  }
-  while ($row = $search_results->fetch_assoc()) {
-    if ($old_letter != strtoupper(substr($row['surname'],0,1))) {
-      if ($old_letter != '') echo "</optgroup>\n";
-      echo "<optgroup label=\"" . strtoupper(substr($row['surname'],0,1)) . "\">\n";
-    }
-    if ((isset($_COOKIE['papersearch'][2]) and $_COOKIE['papersearch'][2] == $row['id']) or (isset($_POST['owner']) and $_POST['owner'] == $row['id'])) {
-      echo "<option value=\"" . $row['id'] . "\" selected>"  . ucwords(strtolower($row['surname'])) . ", " . $row['initials'] . ". "  . $row['title'] . "</option>\n";
-    } else {
-      echo "<option value=\"" . $row['id'] . "\">"  . ucwords(strtolower($row['surname'])) . ", " . $row['initials'] . ". " . $row['title'] . "</option>\n";
-    }
-    $old_letter = strtoupper(substr($row['surname'],0,1));
-  }
-  $search_results->close();
-?>
-  </select>
-  </div>
+  <div style="margin-left:4px">Team: <?php SearchUtils::displayTeamDropdown($teams, $userroles, $userID, $mysqli); ?></div>
+  <div style="margin-left:4px">Owner: <?php SearchUtils::displayOwnersDropdown($teams, $userroles, $userID, $mysqli); ?></div>
 </td></tr>
 </table>
 

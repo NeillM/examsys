@@ -25,6 +25,7 @@
 */
 
 require_once '../classes/schoolutils.class.php';
+require_once '../classes/searchutils.class.php';
 ?>
 <script language="JavaScript">
   function checkForm() {
@@ -309,90 +310,11 @@ require_once '../classes/schoolutils.class.php';
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px">Team: <select style="width:175px" onchange="updateCookieOwner(this,'team')" name="team"><br />
-  <option value="">(any team)</option>
-<?php
-  $team_sql = implode("','", $teams);
-  if ($team_sql != '') $team_sql = "'$team_sql'";
-  if ($team_sql != '') {
-    if (strpos($userroles,'SysAdmin') !== false) {
-      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
-    } elseif (strpos($userroles,'Admin') !== false) {
-      $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
-      if ($schoolIDs == '') {
-        $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
-      } else {
-        $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
-      }
-    } else {
-      $search_results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
-    }
-    while ($row = $search_results->fetch_assoc()) {
-      if (isset($_POST['moduleid']) and $row['moduleid'] == $_POST['moduleid']) {
-        echo "<option value=\"" . $row['moduleid'] . "\" selected>" . $row['moduleid'] . ": " . $row['fullname'] . "</option>\n";
-      } else {
-        echo "<option value=\"" . $row['moduleid'] . "\">" . $row['moduleid'] . ": " . $row['fullname'] . "</option>\n";
-      }
-    }
-    $search_results->close();
-  }
-?>
-  </select></div>
-  <div style="margin-left:4px">Owner: <select style="width:175px" onchange="updateCookieOwner(this,'owner')" name="owner"><br />
-  <option value="">(any owner)</option>
-  <option value="<?php echo $userID; ?>">(my questions only)</option>
-  <option value="%" style="background-color:#ECE9D8"></option>
-<?php
-  $old_letter = '';
-  if (strpos($userroles,'Admin') !== false) {
-    $stmt = $mysqli->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' ORDER BY surname, initials");
-  } else {
-    $stmt = $mysqli->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users, teams WHERE users.id=teams.memberID AND name IN (\"" . implode('","', $teams) . "\") AND (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') ORDER BY surname, initials");
-  }
-  $stmt->execute();
-  $stmt->bind_result($id, $title, $initials, $surname);
-  while ($stmt->fetch()) {
-    if ($old_letter != strtoupper(substr($surname,0,1))) {
-      if ($old_letter != '') echo "</optgroup>\n";
-      echo "<optgroup label=\"" . strtoupper(substr($surname,0,1)) . "\">\n";
-    }
-    if (isset($_COOKIE['owner']) and $_COOKIE['owner'] == $id) {
-      echo "<option value=\"$id\" selected>" . ucwords(strtolower($surname)) . ", $initials. $title</option>\n";
-    } else {
-      echo "<option value=\"$id\">" . ucwords(strtolower($surname)) . ", $initials. $title</option>\n";
-    }
-    $old_letter = strtoupper(substr($surname,0,1));
-  }
-  $stmt->close();
-?>
-  </select>
-  </div>
-  <div style="margin-left:4px">Status:<br /><select style="width:175px" onchange="updateCookieOwner(this,'status')" name="status">
-  <option value="%">(any status)</option>
-  <?php
-    $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
-    foreach ($status_array as $individual_status) {
-      if (isset($_COOKIE['status']) and $_COOKIE['status'] == $individual_status) {
-        echo "<option value=\"$individual_status\" selected>$individual_status</option>"; 
-      } else {
-        echo "<option value=\"$individual_status\">$individual_status</option>"; 
-      }
-    }
-  ?>
-  </select></div>
-  <div style="margin-left:4px">Blooms:<br /><select style="width:175px" onchange="updateCookieOwner(this,'bloom')" name="bloom">
-  <option value="%">(all levels)</option>
-  <?php
-    $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');
-    foreach ($blooms_array as $individual_bloom) {
-      if (isset($_COOKIE['bloom']) and $_COOKIE['bloom'] == $individual_bloom) {
-        echo "<option value=\"$individual_bloom\" selected>$individual_bloom</option>"; 
-      } else {
-        echo "<option value=\"$individual_bloom\">$individual_bloom</option>"; 
-      }
-    }
-  ?>
-  </select></div>
+  <div style="margin-left:4px">Team: <?php SearchUtils::displayTeamDropdown($teams, $userroles, $userID, $mysqli); ?></div>
+  <div style="margin-left:4px">Owner: <?php SearchUtils::displayOwnersDropdown($teams, $userroles, $userID, $mysqli); ?></div>
+  <div style="margin-left:4px">Status:<br /><?php SearchUtils::displayStatusDropdown(); ?></div>
+  <div style="margin-left:4px">Blooms:<br /><?php SearchUtils::displayBloomsDropdown(); ?></div>
+  
   <div style="margin-left:4px">Keyword: <select style="width:175px" name="keywordID"><br />
   <option value=""></option>
 <?php

@@ -90,9 +90,9 @@
     $lab = '';
   }
   $moduleid = '';
-  if (isset($_POST['moduleid']) and $_POST['moduleid'] != '') {
+  if (isset($_POST['team']) and $_POST['team'] != '') {
     $moduleid = 'AND moduleid LIKE ?';
-    $variables[] = '%' . $_POST['moduleid'] . '%';
+    $variables[] = '%' . $_POST['team'] . '%';
     $params .= 's';
   } else {
     if (strpos($userroles,'SysAdmin') === false) {

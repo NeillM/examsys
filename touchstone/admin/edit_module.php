@@ -121,7 +121,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll);
   $stmt->fetch();
   
-  require '../classes/SMSutils.class.php';
+  require '../classes/smsutils.class.php';
 
   $SMS = SMSutils::GetSmsUtils();
   $cfg_sms_sources =  $SMS->getModuleSources();

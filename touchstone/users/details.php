@@ -447,7 +447,7 @@ a.access:hover {color:white}
       echo "</select></td></tr>\n";
     } else {
       // Staff editing
-      echo "<tr><td>&nbsp;Type</td><td>";
+      echo "<tr><td>&nbsp;Type<input type=\"hidden\" name=\"year\" value=\"$tmp_year\" /></td><td>";
       echo "<select name=\"grade\">\n<option value=\"\"></option>\n";
       ?>
       <option value="University Lecturer"<?php if ($grade == 'University Lecturer' and $tmp_roles != 'inactive') echo ' selected'; ?>>University Lecturer</option>
