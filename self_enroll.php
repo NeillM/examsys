@@ -26,7 +26,7 @@ require './touchstone/include/staff_student_auth.inc';
 require './touchstone/include/errors.inc';
 require './touchstone/classes/dateutils.class.php';
 require './touchstone/classes/userutils.class.php';
-require './touchstone/classes/SMSutils.class.php';
+require './touchstone/classes/smsutils.class.php';
 
 check_var('moduleid', 'GET', true, false);
 $session = DateUtils::get_current_academic_year();
