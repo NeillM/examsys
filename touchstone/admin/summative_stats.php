@@ -34,6 +34,11 @@
 .n {text-align:right}
 </style>
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script language="JavaScript">
+  function jumpTo() {
+    document.location = 'summative_stats.php?year=' + document.getElementById('year').value;
+  }
+</script>
 </head>
 
 <body>
@@ -41,10 +46,24 @@
   require '../include/admin_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
-<table cellpadding="0" cellspacing="0" border="1" width="100%">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr>
-<td colspan="2" style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php">Administrative Tools</a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $_GET['year']; ?> Summative Exam Stats</td>
+<td colspan="2" style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php">Administrative Tools</a></div></td>
 <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
+</tr>
+<tr>
+<td colspan="2" style="background-color:#F1F5FB"><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $_GET['year']; ?> Summative Exam Stats</td>
+<td style="background-color:#F1F5FB; text-align:right; vertical-align:bottom; padding-bottom:2px; padding-right:6px"><select name="year" id="year" onchange="jumpTo()">
+<?php
+for ($i=2005; $i<=date('Y'); $i++) {
+  if ($i == $_GET['year']) {
+    echo "<option value=\"$i\" selected>$i</option>\n";
+  } else {
+    echo "<option value=\"$i\">$i</option>\n";
+  }
+}
+?>
+</select></td>
 </tr>
 <tr><td colspan="3" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>
