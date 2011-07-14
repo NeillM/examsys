@@ -533,17 +533,18 @@ if (isset($_POST['Submit'])) {
         }
       ?>
 
-      document.getElementById('button_'+sectionID).style.background='url(../artwork/2007_button_on.png)';
+      document.getElementById('button_'+sectionID).style.background='url("../artwork/2007_button_on.png")';
     }
 
     function buttonover(buttonID) {
-      if (document.getElementById('button_'+buttonID).style.backgroundImage != 'url(../artwork/2007_button_on.png)') {
-        document.getElementById('button_'+buttonID).style.backgroundImage='url(../artwork/2007_button_over.png)';
+      if (document.getElementById('button_'+buttonID).style.backgroundImage != 'url("../artwork/2007_button_on.png")') {
+        document.getElementById('button_'+buttonID).style.backgroundImage='url("../artwork/2007_button_over.png")';
       }
     }
 
     function buttonout(buttonID) {
-      if (document.getElementById('button_'+buttonID).style.backgroundImage != 'url(../artwork/2007_button_on.png)') {
+      
+      if (document.getElementById('button_'+buttonID).style.backgroundImage != 'url("../artwork/2007_button_on.png")') {
         document.getElementById('button_'+buttonID).style.backgroundImage='';
       }
     }
@@ -1266,7 +1267,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 ?>
 </td></tr>
   <?php
-  echo "<tr><td><div style=\"width:334px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<tr><td><div style=\"width:330px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_internals = explode(',',$internal_reviewers);
   $internal_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles LIKE 'Staff%' AND grade != 'left' ORDER BY surname, initials");
   $internal_details->execute();
@@ -1287,7 +1288,7 @@ if ($paper_type != '4' and $paper_type != '5') {
   $internal_details->close();
   echo "<input type=\"hidden\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-  echo "<td><div style=\"width:334px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<td><div style=\"width:330px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_externals = explode(',',$externals);
   $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND grade != 'left' ORDER BY surname, initials");
   $external_details->execute();
