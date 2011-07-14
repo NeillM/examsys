@@ -64,7 +64,7 @@ Class SearchUtils {
     $teams = self::getTeams($teams, $userroles, $userID, $db);
     
     echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'team')\" name=\"team\">\n";
-    echo "<option value=\"\">(any team)</option>\n";
+    echo "<option value=\"\">(any module)</option>\n";
     
     $old_school = '';
     foreach ($teams as $team) {

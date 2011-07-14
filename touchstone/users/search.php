@@ -108,7 +108,7 @@
     
     $user_no = 0;
     if ($roles_sql != '') {
-      if (isset($_GET['staff']) and $_GET['staff'] != '') {
+      if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
         $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN teams ON users.id=teams.memberID AND teams.name LIKE '" . $_GET['team'] . "' WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
       } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
         $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;

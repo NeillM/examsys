@@ -310,7 +310,7 @@ require_once '../classes/searchutils.class.php';
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px">Team: <?php SearchUtils::displayTeamDropdown($teams, $userroles, $userID, $mysqli); ?></div>
+  <div style="margin-left:4px">Module: <?php SearchUtils::displayTeamDropdown($teams, $userroles, $userID, $mysqli); ?></div>
   <div style="margin-left:4px">Owner: <?php SearchUtils::displayOwnersDropdown($teams, $userroles, $userID, $mysqli, 'questions'); ?></div>
   <div style="margin-left:4px">Status:<br /><?php SearchUtils::displayStatusDropdown(); ?></div>
   <div style="margin-left:4px">Blooms:<br /><?php SearchUtils::displayBloomsDropdown(); ?></div>
