@@ -84,7 +84,7 @@ function displayPaperIcon($row) {
     $access = false;
     $paper_modules = explode(',',$row['moduleID']);
     foreach ($paper_modules as $individual_module) {
-      if (in_array($individual_module,$teams)) $access = true;
+      if (in_array($individual_module, $teams)) $access = true;
     }
   
     if ($access == true) {

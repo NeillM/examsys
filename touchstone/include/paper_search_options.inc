@@ -219,7 +219,7 @@ require_once '../classes/searchutils.class.php';
 ?>
   <tr><td>
   <div style="margin-left:4px">Team: <?php SearchUtils::displayTeamDropdown($teams, $userroles, $userID, $mysqli); ?></div>
-  <div style="margin-left:4px">Owner: <?php SearchUtils::displayOwnersDropdown($teams, $userroles, $userID, $mysqli); ?></div>
+  <div style="margin-left:4px">Owner: <?php SearchUtils::displayOwnersDropdown($teams, $userroles, $userID, $mysqli, 'papers'); ?></div>
 </td></tr>
 </table>
 

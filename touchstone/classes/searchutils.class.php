@@ -101,12 +101,12 @@ Class SearchUtils {
     return $owners;
   }
 
-  static function displayOwnersDropdown($teams, $userroles, $userID, $db) {
+  static function displayOwnersDropdown($teams, $userroles, $userID, $db, $type) {
     $owners = self::getOwners($teams, $userroles, $db);
     
     echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'owner')\" name=\"owner\">\n";
     echo "<option value=\"\">(any owner)</option>\n";
-    echo "<option value=\"$userID\">(my questions only)</option>\n";
+    echo "<option value=\"$userID\">(my $type only)</option>\n";
     echo "<option value=\"%\" style=\"background-color:#ECE9D8\"></option>\n";
     
     $old_letter = '';

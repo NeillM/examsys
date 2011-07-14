@@ -27,6 +27,7 @@
 require '../include/staff_auth.inc';
 require '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../classes/schoolutils.class.php';
+require_once '../classes/searchutils.class.php';
 
 function modulo($n,$b) {
   return $n-$b*floor($n/$b);
@@ -248,6 +249,7 @@ if (isset($_POST['Submit'])) {
       $editPaper->close();
     }
     $result->close();
+
   ?>
     <html>
     <head>
@@ -258,13 +260,13 @@ if (isset($_POST['Submit'])) {
         <?php
           if ($_POST['noadd'] == 'y') {
         ?>
-            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php echo $_POST['folderID']; ?>&school=";
+            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
             window.opener.close();
             window.close();
         <?php
           } else {
         ?>
-            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php echo $_POST['folderID']; ?>&school=";
+            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
             window.close();
         <?php
           }
@@ -633,10 +635,12 @@ if ($paper_type != '4' and $paper_type != '5') {
      $team_query->store_result();
      $team_query->bind_result($team_name);
      while ($row = $team_query->fetch()) {
-       if ($additional == '') {
-         $additional = ' OR team_name IN ("' . $team_name . '"';
-       } else {
-         $additional .= ',"' . $team_name . '"';
+       if ($team_name != '') {
+         if ($additional == '') {
+           $additional = ' OR team_name IN ("' . $team_name . '"';
+         } else {
+           $additional .= ',"' . $team_name . '"';
+         }
        }
      }
      $team_query->close();
@@ -823,7 +827,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="prologue" style="width:100%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/prologue_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;Text displayed at the top of screen 1 when paper is started.</td></tr>
   <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit2','paper_prologue',$paper_prologue,684,398);
+    echo "<tr><td>" . wysiwyg_editor('oEdit2','paper_prologue',$paper_prologue,688,398);
   ?>
 </td></tr>
 </table>
@@ -831,7 +835,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="postscript" style="width:100%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/postscript_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;Text displayed after the student clicks 'Finish' at the end.</td></tr>
 <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit3','paper_postscript',$paper_postscript,684,398);
+    echo "<tr><td>" . wysiwyg_editor('oEdit3','paper_postscript',$paper_postscript,688,398);
   ?>
 </td></tr>
 </table>
@@ -1039,7 +1043,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "<tr><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Module(s)</td><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Restrict to Labs</td></tr>";
     echo "<td>";
     
-    echo "<div style=\"display:block; height:278px; overflow-y:scroll; border:1px solid #1E3287; font-size:90%\">";
+    echo "<div style=\"display:block; height:278px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
     
     $modules_array = explode(',',$moduleID);
     $total_modules = array_merge($teams, $modules_array);
@@ -1050,38 +1054,34 @@ if ($paper_type != '4' and $paper_type != '5') {
     if ($module_sql == '') {
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"0\" /></div>\n";
     } else {
-      if (strpos($userroles,'SysAdmin') !== false) {
-        $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
-      } elseif (strpos($userroles,'Admin') !== false) {
-        $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
-        $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
-      } else {
-        $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($module_sql) ORDER BY moduleID");
-      }
+      $module_array = SearchUtils::getTeams($teams, $userroles, $userID, $mysqli);
       $module_no = 0;
-      $modules_array = explode(',',$moduleID);
-      while ($row = $module_details->fetch_assoc()) {
+      $old_school = '';
+      foreach ($module_array as $module) {
+        if ($module['school'] != $old_school) {
+          echo "<div style=\"padding-top:2px\"><strong>" . $module['school'] . "</strong></div>";
+        }
         $match = false;
         foreach ($modules_array as $separate_module) {
-          if ($separate_module == $row['moduleid']) $match = true;
+          if ($separate_module == $module['id']) $match = true;
         }
         if ($match == true) {
-          if (in_array($row['moduleid'],$teams) or strpos($userroles,'SysAdmin') !== false) {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $row['moduleid'] . "\" checked>&nbsp;" . $row['moduleid'] . ": " . substr($row['fullname'],0,60) . "</div>\n";
+          if (in_array($module['id'],$teams) or strpos($userroles,'SysAdmin') !== false) {
+            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $row['moduleid'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $row['moduleid'] . "\" checked>&nbsp;" . $row['moduleid'] . ": " . substr($row['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           }
         } else {
-          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $row['moduleid'] . "\">&nbsp;" . $row['moduleid'] . ": " . substr($row['fullname'],0,60) . "</div>\n";
+          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
         }
-        $module_no++;
+        $module_no++;  
+        $old_school = $module['school'];        
       }
-      $module_details->close();
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
     }
     echo "</td>\n";
     
-    echo "<td><div style=\"height:278px;overflow-y:scroll;border:1px solid #1E3287;font-size:90%\">";
+    echo "<td><div style=\"height:278px;overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
     $current_labs = explode(',',$labs);
     
     $lab_details = $mysqli->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
@@ -1115,7 +1115,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="rubric" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;Exam rubric displayed to students before they start a summative exam.</td></tr>
   <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit4','rubric_text',$rubric,684,398);
+    echo "<tr><td>" . wysiwyg_editor('oEdit4','rubric_text',$rubric,686,398);
   ?>
   </td></tr>
 </table>
@@ -1124,7 +1124,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/reviewers_heading_icon.png" width="32" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;Set internal/external reviewers and deadlines.</td></tr>
 <tr>
 <td align="center" colspan="2">
-<table cellpadding="2" cellspacing="2" border="0">
+<table cellpadding="2" cellspacing="2" border="0" style="width:100%">
 <tr><td colspan="3">&nbsp;</td></tr>
 <tr><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB">&nbsp;Internal Reviewers</td><td>&nbsp;&nbsp;</td><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB">&nbsp;External Examiners</td></tr>
 <tr><td>Deadline:&nbsp;
@@ -1266,7 +1266,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 ?>
 </td></tr>
   <?php
-  echo "<tr><td><div style=\"width:320px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<tr><td><div style=\"width:334px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_internals = explode(',',$internal_reviewers);
   $internal_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles LIKE 'Staff%' AND grade != 'left' ORDER BY surname, initials");
   $internal_details->execute();
@@ -1287,7 +1287,7 @@ if ($paper_type != '4' and $paper_type != '5') {
   $internal_details->close();
   echo "<input type=\"hidden\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-  echo "<td><div style=\"width:320px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<td><div style=\"width:334px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_externals = explode(',',$externals);
   $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND grade != 'left' ORDER BY surname, initials");
   $external_details->execute();

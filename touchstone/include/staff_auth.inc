@@ -38,7 +38,7 @@
 
   // Get teams.
   $teams = array();
-  $team_details = $mysqli->query("SELECT name FROM teams WHERE memberID=$userID ORDER BY name");
+  $team_details = $mysqli->query("SELECT name FROM teams WHERE memberID=$userID AND name IS NOT NULL ORDER BY name");
   while ($team_row = $team_details->fetch_assoc()) {
     $teams[strtoupper($team_row['name'])] = strtoupper($team_row['name']);
   }

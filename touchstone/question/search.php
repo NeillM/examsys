@@ -31,9 +31,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>TouchStone: Question Search<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style style="text/css">
+input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
 .owner {color:#A5A5A5}
 </style>
 
