@@ -243,7 +243,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field">Objectives API</td><td><select name="vle_api"><option value="">&lt;No lookup&gt;</option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option></select></td></tr>
     <tr><td class="field">Summative Checklist</td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> Peer Review, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> External Examiners, <input type="checkbox" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> Standards Setting, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> Mapping</td></tr>
     <tr><td class="field">Active</td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field">allow Self-enroll</td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field">Allow Self-enroll</td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
   <?php
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_moduleid\" value=\"" . $_GET['moduleid'] . "\" />\n";
