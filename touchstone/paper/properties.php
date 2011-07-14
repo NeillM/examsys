@@ -1126,7 +1126,18 @@ if ($paper_type != '4' and $paper_type != '5') {
 <tr>
 <td align="center" colspan="2">
 <table cellpadding="2" cellspacing="2" border="0" style="width:100%">
-<tr><td colspan="3">&nbsp;</td></tr>
+<tr><td colspan="3">&nbsp;<?php
+  $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type='sct'");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($sct_no);
+  $result->fetch();
+  $result->close();
+  if ($sct_no > 0) {
+    echo '<a href="' . $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '" target="_blank" style="color:blue">' . $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '</a>';
+  }
+
+?></td></tr>
 <tr><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB">&nbsp;Internal Reviewers</td><td>&nbsp;&nbsp;</td><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB">&nbsp;External Examiners</td></tr>
 <tr><td>Deadline:&nbsp;
 <?php
