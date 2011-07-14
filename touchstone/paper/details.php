@@ -602,7 +602,7 @@ if (isset($_GET['change_screen'])) {
     $old_q_media_height = $q_media_height;
     $old_option_text[] = $option_text;
     $old_marks = $marks;
-    if(!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'timedate')))) or in_array($q_type, array('likert', 'flash'))) $options++;
+    if(!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'timedate')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
 
