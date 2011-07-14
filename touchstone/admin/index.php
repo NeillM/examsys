@@ -94,7 +94,7 @@
     $added_string = ' <span style="background-color:red; color:white; font-weight:bold">&nbsp;' . $temp_account_no . '&nbsp;</span>';
   }
   $titles = array('Calendar','Clear Guest Accounts' . $added_string,'Clear Old Logs','Clear Orphan Media','Clear Training','Computer Labs','Degrees','Modules','Optimize Tables','Schools','SMS Imports','Summative Exam Stats','System Errors','System Information','Trac (issue tracking)','User Management');
-  $paths = array('calendar.php#' . date("n"),'clear_guest_users.php','clear_old_logs.php','orphan_media.php','clear_training_module.php','list_labs.php','list_degrees.php','list_modules.php','optimize_tables.php','list_schools.php','sms_import_summary.php','summative_stats.php?year=2011','sys_error_list.php','system_info.php','https://suivarro.nottingham.ac.uk/trac/touchstone/','../users/search.php');
+  $paths = array('calendar.php#' . date("n"),'clear_guest_users.php','clear_old_logs.php','orphan_media.php','clear_training_module.php','list_labs.php','list_degrees.php','list_modules.php','optimize_tables.php','list_schools.php','sms_import_summary.php','summative_stats.php?year=' . date('Y'),'sys_error_list.php','system_info.php','https://suivarro.nottingham.ac.uk/trac/touchstone/','../users/search.php');
   $images = array('calendar_icon.png','clear_guest_users.png','clear_logs.png','remove_orphan_icon.png','training.png','computer_lab_48.png','degrees_icon.png','modules_icon.png','optimize_tables_icon.png','school_icon.png','sms_import_icon.png','summative_stats.png','bug.png','information.png','trac_logo.png','user_accounts_icon.png');
 
   for ($icon_no=0; $icon_no<count($titles); $icon_no++) {
