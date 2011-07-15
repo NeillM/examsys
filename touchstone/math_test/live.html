@@ -1,0 +1,66 @@
+<HTML>
+	<HEAD>
+		<meta http-equiv="x-ua-compatible" content="IE=9">
+        <link rel="stylesheet" type="text/css" href="mee/css/main.css"> 
+        <script src="mee/jquery/jquery-1.6.1.js"></script>
+        <script src="mee/js/mee.js"></script>
+	</HEAD>
+
+    <script>
+        $().ready(function () {
+            $('.latex').each(function () {
+                //alert(window.location.hash);
+                if (window.location.hash != "#undefined" && window.location.hash != "") {
+                    this.value = window.location.hash.substr(1);
+                    this.value = decodeURI(this.value);
+                    //doit(this);
+                    setTimeout("doit()", 1);
+                }
+            });
+            $('.latex').keyup(function (event) {
+                doit();
+            });
+        });
+
+        function doit() {
+            var input = $('.latex');
+            $('.mee').html($(input)[0].value);
+            var mee = new MEE.Edit($('.latex'));
+            window.location.hash = $(input)[0].value;
+        }
+
+
+
+        $().ready(function () {
+            /*var result = $.json2xml(MEE.Toolbar.defs['test'], {
+                formatOutput: true,
+                formatTextNodes: false,
+                indentString: '\t',
+                rootTagName: 'toolbar',
+                ignore: [],
+                replace: [],
+                nodes: [],
+                ///TODO: exceptions system
+                exceptions: []
+            });
+            var div = $('<pre>');
+            div.text(result);
+            $('.xml').append(div);*/
+            /*$.ajax({
+                type: "GET",
+                url: "mee/js/toolbars/toolbar.xml",
+                dataType: "xml",
+                success: function (xml) {
+                    
+                }
+            });*/
+        });
+    </script>
+	<BODY>
+    <h2>Mathematical Equation Editor</h2>
+        <input class='mee toolbar:test' name='equation' id='equation' value=''/>
+        
+        <div class='dump' style="font-size:75%;"></div>
+        <div class='xml' style="font-size:75%;"></div>
+    </BODY>
+</HTML>
