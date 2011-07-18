@@ -81,7 +81,7 @@ Class UON_SATURN extends SmsUtils {
   }
   
   function getStudentSources() {
-   return array('&lt;No lookup&gt;'=>'','UK'=>'http://webexports-uat.nottingham.ac.uk/touchstonestudent.ashx?campus=uk');
+   return array('&lt;No lookup&gt;'=>'','UK'=>'http://saturn-exports.nottingham.ac.uk/touchstonestudent.ashx?campus=uk');
   }
   
   function getModuleSources() {
