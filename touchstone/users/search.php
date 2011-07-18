@@ -42,8 +42,8 @@
 
     if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
     if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
-    if (isset($_GET['team'])) $moduleID = $_GET['team'];
-    if (isset($_GET['calendar_year'])) $calendar_year = $_GET['calendar_year'];
+    if (isset($_GET['team']) and $_GET['team'] != '') $moduleID = $_GET['team'];
+    if (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '') $calendar_year = $_GET['calendar_year'];
     
     if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
       $tmp_surname = str_replace("*","%",trim($_GET['search_surname']));
@@ -118,7 +118,17 @@
           $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN sid ON users.id=sid.userID WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
         } else {
           $roles_sql = 'AND ' . $roles_sql;
-          $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID AND moduleid LIKE '$moduleID' AND calendar_year LIKE '$calendar_year' $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+          if ($moduleID == '%') {
+            $module_sql = '';
+          } else {
+            $module_sql = " AND moduleid LIKE '$moduleID'";
+          }
+          if ($calendar_year == '%') {
+            $calendar_year_sql = '';
+          } else {
+            $calendar_year_sql = " AND calendar_year LIKE '$calendar_year'";
+          }
+          $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
         }
       }
       $user_data = $mysqli->query($query_string);
