@@ -582,26 +582,24 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $blank_count = 1;
           while ($blank_count < $array_size) {
             $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
-                  $answer_list = explode(',',$blank_details[$i]);
-                  $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
-
-
+            $answer_options = explode('[/blank]',$blank_details[$blank_count]);
+            $answer_list = explode(',',str_replace('[blank]', '', $answer_options[0]));
+            
             $results = array();
-            $not_used = ereg("size=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
-         
-            if ($results[1]) {
+            $not_used = preg_match("|size=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);         
+            if (isset($results[1]) and $results[1] != '') {
               $blank_size[$blank_count] = $results[1];
             } else {
               $blank_size[$blank_count] = 15;
             }
             $results=array();
             $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
-            if ($results[1]) {
+            if (isset($results[1]) and $results[1] != '') {
               $blank_mark[$blank_count] = $results[1];
             } else {
               $blank_mark[$blank_count] = 1;
             }
-            $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"" . $ans. "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
+            $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"" . $answer_list[0] . "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
             $blank_count++;
           }
           $screen_output_all = '';
@@ -686,7 +684,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {
             var num = message.substring(5,message.length);
-            setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '');
+            setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '', '1,1,0000000000000000000000000000000000000000');
           }
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="always" />');
