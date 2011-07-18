@@ -130,10 +130,6 @@ function db_auth($u, $p, $db) {
   $split_username = explode('_', $u);
   $tmp_u = $split_username[0];
   
-  // Check for additional password on the end.
-  //$split_password = explode('_', $p);
-  //$tmp_p = $split_password[0];
-
   $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, grade, yearofstudy, special_needs FROM users WHERE username=?");
   $stmt->bind_param('s', $tmp_u);
   $stmt->execute();
@@ -210,6 +206,22 @@ function gen_password() {
     $pass .= substr($chars[$i],rand(0,51),1);
   }
   return $pass;
+}
+
+function getUserTeams($userID, $db) {
+  $teams = array();
+
+  $result = $db->prepare("SELECT name FROM teams WHERE memberID=? AND name IS NOT NULL ORDER BY name");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->bind_result($team_name);
+  while ($result->fetch()) {
+    $team_name = strtoupper($team_name);
+    $teams[$team_name] = $team_name;
+  }
+  $result->close();
+  
+  return $teams;
 }
 
 ?>
