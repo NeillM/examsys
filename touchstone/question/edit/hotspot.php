@@ -327,7 +327,7 @@ $qNo_parm = (isset($_GET['qNo'])) ? '&qNo=' . $_GET['qNo'] : '';
     <script language="JavaScript">
       function swfLoaded1(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>');
+        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo str_replace("'", "\'", trim($correct)); ?>');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($q_media_width + 306); ?>" height="<?php echo $plugin_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
