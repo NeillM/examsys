@@ -101,7 +101,7 @@ Class TouchStoneRestAPI extends restAPI {
         //process url
         $username = '';
         $module = '';
-        $tmp = explode('/',$parms);
+        $tmp = explode('/', $parms);
         if (isset($tmp[0])) $username = $tmp[0];
         if (isset($tmp[1])) $module = $tmp[1];
         if ($username == '') {
@@ -117,12 +117,17 @@ Class TouchStoneRestAPI extends restAPI {
         }
         break;
       case 'getOwnerPaperList':
-        $username = $parms;
+        $username = '';
+        $types = '';
+        $tmp = explode('/', $parms);
+        if (isset($tmp[0])) $username = $tmp[0];
+        if (isset($tmp[1])) $types = $tmp[1];
+        
         if ($username == '') {
           $this->sendResponse(400, '', '');
         } else {
           //return the module Available Feedback
-          $this->data = $this->getOwnerPaperList($username);
+          $this->data = $this->getOwnerPaperList($username, $types);
           if ($this->data == '') {
             $this->sendResponse(400, '', '');
           } else {
@@ -187,7 +192,7 @@ Class TouchStoneRestAPI extends restAPI {
     return $papers;
   }
 
-  public function getOwnerPaperList($username) {
+  public function getOwnerPaperList($username, $types) {
     global $protocol;
         
     $tmp_userID = $this->getUserID($username, true);
@@ -205,9 +210,36 @@ Class TouchStoneRestAPI extends restAPI {
       }
     }
     
+    switch($types) {
+      case 'formative':
+        $typeSQL = " AND paper_type='0'";
+        break;
+      case 'progresstest':
+        $typeSQL = " AND paper_type='1'";
+        break;
+      case 'summative':
+        $typeSQL = " AND paper_type='2'";
+        break;
+      case 'survey':
+        $typeSQL = " AND paper_type='3'";
+        break;
+      case 'osce':
+        $typeSQL = " AND paper_type='4'";
+        break;
+      case 'offline':
+        $typeSQL = " AND paper_type='5'";
+        break;
+      case 'notsummative':
+        $typeSQL = " AND paper_type!='2'";
+        break;
+      case default:  // return all paper types
+        $typeSQL = '';
+        break;
+    }
+    
     $papers = array();
     $paper_no = 0;
-    $res = $this->db->prepare("SELECT property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname FROM properties, papers, users WHERE properties.paper_ownerID=users.id AND properties.property_id=papers.paper AND (paper_ownerID=? $moduleSQL) AND deleted IS NULL GROUP BY property_id ORDER BY paper_title");
+    $res = $this->db->prepare("SELECT property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname FROM properties, papers, users WHERE properties.paper_ownerID=users.id AND properties.property_id=papers.paper AND (paper_ownerID=? $moduleSQL)$typeSQL AND deleted IS NULL GROUP BY property_id ORDER BY paper_title");
     $res->bind_param('i', $tmp_userID);
     $res->execute();
     $res->store_result();
