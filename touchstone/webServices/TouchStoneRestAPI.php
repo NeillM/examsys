@@ -311,7 +311,7 @@ Class TouchStoneRestAPI extends restAPI {
     
     if (!$success) {
       return false;
-    } else
+    } else {
       return true;
     }
   }
