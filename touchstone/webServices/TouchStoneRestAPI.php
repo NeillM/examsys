@@ -287,9 +287,9 @@ Class TouchStoneRestAPI extends restAPI {
       return 'accessdenied';
     }
     
-    $xml = new SimpleXMLElement($_POST['xml']);
+    //$xml = new SimpleXMLElement($_POST['xml']);
 
-    return $xml->surname;
+    return $_POST;
     exit;
     
     createUser($xml->username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $sid, $db);
