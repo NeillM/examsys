@@ -16,7 +16,7 @@
 
 /**
 *
-* @author Anthony Brown
+* @author Anthony Brown, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
@@ -29,144 +29,208 @@ require './restAPI.class';
 Class TouchStoneRestAPI extends restAPI {
 
   var $db;
+  private $qtypes = array(
+					'0' => 'Formative Quiz',
+					'1' => 'Progress Test',
+					'2' => 'Summative Exam',
+					'3' => 'Survey (Questionnaire)',
+					'4' => 'OSCE Station',
+					'5' => 'Offline Paper'
+					);
 
   public function __construct($mysqli) {
     $this->db = $mysqli;
     parent::__construct();
   }
 
+  function write(XMLWriter $xml, $data, $tmp_tag){
+    foreach($data as $key => $value){
+      if (is_array($value)){
+        if (is_numeric($key)) {
+          $xml->startElement($tmp_tag);
+        } else {
+          echo $key . '<br />';
+          $xml->startElement($key);
+        }
+        $this->write($xml, $value, $tmp_tag);
+        $xml->endElement();
+        continue;
+      }
+      $xml->writeElement($key, $value);
+    }
+  }
+      
+  public function formatData($data, $root_tag, $tmp_tag) {
+    if ($this->http_accept == 'json') {
+      $data = json_encode($data);
+    } else {
+      //$data = array_flip($data);
+      $xml = new XmlWriter();
+      $xml->openMemory();
+      $xml->startDocument('1.0', 'UTF-8');
+      $xml->startElement($root_tag);
+
+      $this->write($xml, $data, $tmp_tag);
+
+      $xml->endElement();
+      $data = $xml->outputMemory(true);
+    }
+    
+    return $data;
+  }
+  
+  public function getUserID($username, $staff = false) {
+    if ($staff == true) {
+      $res = $this->db->prepare("SELECT id FROM users WHERE username=? AND roles LIKE 'Staff%'");
+    } else {
+      $res = $this->db->prepare("SELECT id FROM users WHERE username=? AND roles = 'Student'");
+    }
+    $res->bind_param('s', $username);
+    $res->execute();
+    $res->bind_result($tmp_userID);
+    $res->fetch();
+    $res->close();
+    
+    return $tmp_userID;  
+  }
 
   public function processRequest() {
-    //we only output jason from touchstone from now
-	$this->http_accept = 'application/json';
-
-    list($action,$parms) = explode('/',$_GET['url'],2);
-	switch($action) {
+    list($action, $parms) = explode('/',$_GET['url'],2);
+    switch($action) {
       case 'getAvailableFeedback':
-	    //process url
-      $username = '';
-      $module = '';
-	    $tmp = explode('/',$parms);
-      if(isset($tmp[0])) $username = $tmp[0];
-      if(isset($tmp[1])) $module = $tmp[1];
-		if($username == '') {
-		  $this->sendResponse(400,'','');
-		} else {
-	    //return the module Available Feedback
-		  $this->data = $this->getAvailableFeedback($username,$module);
-		  if($this->data == '') {
-		    $this->sendResponse(400,'','');
-		  } else {
-	        $this->sendResponse(200,json_encode($this->data),$this->http_accept);
-		  }
-		}
-	  break;
-	  default:
-      case 'getExamInformation':
-	    //process url
-	    list($paperid) = explode('/',$parms);
-		if($username == '') {
-		  $this->sendResponse(400,'','');
-		} else {
-	      //return the module Available Feedback
-		  $this->data = $this->getExamInformation($paperid);
-		  if($this->data == '') {
-		    $this->sendResponse(400,'','');
-		  } else {
-	        $this->sendResponse(200,json_encode($this->data),$this->http_accept);
-		  }
-		}
-	  break;
-	    //if we get here the action is unsupported so give a http 400 bad request
-	    $this->sendResponse(405,'','');
-	  break;
-	}
+        //process url
+        $username = '';
+        $module = '';
+        $tmp = explode('/',$parms);
+        if (isset($tmp[0])) $username = $tmp[0];
+        if (isset($tmp[1])) $module = $tmp[1];
+        if ($username == '') {
+          $this->sendResponse(400, '', '');
+        } else {
+          //return the module Available Feedback
+          $this->data = $this->getAvailableFeedback($username, $module);
+          if ($this->data == '') {
+            $this->sendResponse(400, '', '');
+          } else {
+            $this->sendResponse(200, $this->formatData($this->data, 'feedbacklist', 'paper'), $this->http_accept);
+          }
+        }
+        break;
+      case 'getOwnerPaperList':
+        $username = $parms;
+        if ($username == '') {
+          $this->sendResponse(400, '', '');
+        } else {
+          //return the module Available Feedback
+          $this->data = $this->getOwnerPaperList($username);
+          if ($this->data == '') {
+            $this->sendResponse(400, '', '');
+          } else {
+            $this->sendResponse(200, $this->formatData($this->data, 'paperlist', 'paper'), $this->http_accept);
+          }
+        }
+        break;
+      default:
+        //if we get here the action is unsupported so give a http 400 bad request
+        $this->sendResponse(405, '', '');
+        break;
+    }
   }
 
   public function getAvailableFeedback ($username,$moduleID) {
-	$qtypes = array(
-					'0' => 'Formative Self-Assessment',
-					'1' => 'Progress Test',
-					'2' => 'Summative Exam',
-					'3' => 'Survey (Questionnaire)',
-					'4' => 'OSCE',
-					'5' => 'Offline'
-					);
-
-    $sql = "SELECT id FROM users WHERE username='$username'";
-    $res = $this->db->query($sql);
-    $row = $res->fetch_assoc();
-    $tmp_userID = $row['id'];
+    $tmp_userID = $this->getUserID($username);
+    
+    $paper_no = 0;
+    $old_yearID = -1;
+    $papers = array();
 
     $moduleID = '%' . $moduleID . '%';
-    $sql = "SELECT student_modules.moduleID,properties.calendar_year,paper_id,date,UNIX_TIMESTAMP(date) AS is_live,paper_type,paper_title,start_date,end_date,properties.calendar_year FROM feedback_release LEFT JOIN properties ON feedback_release.paper_id = properties.property_id LEFT JOIN student_modules ON properties.moduleID LIKE CONCAT('%',student_modules.moduleID,'%') AND properties.calendar_year = student_modules.calendar_year WHERE userID=$tmp_userID AND properties.moduleID LIKE '$moduleID'";
-    $res = $this->db->query($sql);
+    $sql = "SELECT student_modules.moduleID, paper_id, date, UNIX_TIMESTAMP(date) AS is_live, paper_type, paper_title, start_date, end_date, properties.calendar_year FROM feedback_release LEFT JOIN properties ON feedback_release.paper_id = properties.property_id LEFT JOIN student_modules ON properties.moduleID LIKE CONCAT('%',student_modules.moduleID,'%') AND properties.calendar_year = student_modules.calendar_year WHERE userID=? AND properties.moduleID LIKE '$moduleID'";
+    $res = $this->db->prepare($sql);
+    $res->bind_param('i', $tmp_userID);
+    $res->execute();
+    $res->store_result();
+    $res->bind_result($moduleID, $paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year);
+    while ($res->fetch()) {
 
-    $i = 0;
-    $old_yearID = -1;
-    $papers = Array();
-    while($row = $res->fetch_assoc()) {
-
-      if($row['is_live'] < time()) {
+      if ($is_live < time()) {
         //have they sat the paper?
-        $sql = "SELECT userID FROM log" . $row['paper_type'] ." WHERE userID=$tmp_userID AND q_paper = " . $row['paper_id'] . ' LIMIT 1';
-        $tmp[] = $sql;
-        $log = $this->db->query($sql);
-        if($log->num_rows != 1) {
+        $log = $this->db->prepare("SELECT userID FROM log_metadata WHERE userID=? AND paperID=? LIMIT 1");
+        $log->bind_param('ii', $tmp_userID, $paperID);
+        $log->execute();
+        $log->store_result();
+        $log->bind_result($log_userID);
+
+        if ($log->num_rows != 1) {
           $log->close();
           continue;
         } else {
-          $papers[$row['calendar_year']][$row['moduleID']][$i]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/touchstone/mapping/user_feedback.php?paperID=' .  $row['paper_id'] . '&userID=' . $tmp_userID;
+          $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/touchstone/mapping/user_feedback.php?paperID=' .  $paperID . '&userID=' . $tmp_userID;
           $log->close();
         }
-
       } else {
-		$papers[$row['calendar_year']][$row['moduleID']][$i]['feedback_url'] = '';
+        $papers[$paper_no]['feedback_url'] = '';
       }
+      
+      $papers[$paper_no]['title'] = $paper_title;
+      $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
+      $papers[$paper_no]['start_date'] = $start_date;
+      $papers[$paper_no]['release_date'] = $date;
+      $papers[$paper_no]['calendar_year'] = $calendar_year;
+      $papers[$paper_no]['moduleID'] = $moduleID;
 
-	  $papers[$row['calendar_year']][$row['moduleID']][$i]['calendar_year'] = $row['calendar_year'];
-	  $papers[$row['calendar_year']][$row['moduleID']][$i]['release_date'] = $row['date'];
-	  $papers[$row['calendar_year']][$row['moduleID']][$i]['paper_title'] = $row['paper_title'];
-	  $papers[$row['calendar_year']][$row['moduleID']][$i]['start_date'] = $row['start_date'];
-	  $papers[$row['calendar_year']][$row['moduleID']][$i]['paper_type'] = $qtypes[$row['paper_type']];
+      $paper_no++;
 
-      $i++;
-
-	  $old_yearID = $row['calendar_year'] . $row['moduleID'];
     }
     $res->close();
-
+    
     return $papers;
   }
 
-  public function getExamInformation($paperID) {
-
-    $qtypes = array(
-					'0' => 'Formative Self-Assessment',
-					'1' => 'Progress Test',
-					'2' => 'Summative Exam',
-					'3' => 'Survey (Questionnaire)',
-					'4' => 'OSCE',
-					'5' => 'Offline'
-					);
-
-    $sql = "SELECT moduleID,calendar_year,paper_type,paper_title,start_date FROM properties WHERE property_id='$paperID'";
-    $res = $this->db->query($sql);
-
-    if(!$res) {
-      return json_encode($this->db->error);
+  public function getOwnerPaperList($username) {
+    global $protocol;
+        
+    $tmp_userID = $this->getUserID($username, true);
+    if ($tmp_userID == '') {
+      return '';
     }
-    $paper = Array();
-    while($row = $res->fetch_assoc()) {
-      $paper['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/touchstone/mapping/user_feedback.php?paperID=' .  $paperID;
-      $paper['calendar_year'] = $row['calendar_year'];
-      $paper['paper_title'] = $row['paper_title'];
-      $paper['paper_type'] = $qtypes[$row['paper_type']];
-      $paper['start_date'] = $row['start_date'];
+    
+    $teams = getUserTeams($tmp_userID, $this->db);
+    
+    // Get the papers for the current owner
+    $moduleSQL = '';
+    if (count($teams) > 0) {
+      foreach ($teams as $team) {
+        $moduleSQL .= " OR moduleID LIKE '%$team%'";
+      }
+    }
+    
+    $papers = array();
+    $paper_no = 0;
+    $res = $this->db->prepare("SELECT property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname FROM properties, papers, users WHERE properties.paper_ownerID=users.id AND properties.property_id=papers.paper AND (paper_ownerID=? $moduleSQL) AND deleted IS NULL GROUP BY property_id ORDER BY paper_title");
+    $res->bind_param('i', $tmp_userID);
+    $res->execute();
+    $res->store_result();
+    $res->bind_result($property_id, $paper_title, $paper_type, $start_date, $end_date, $created, $screens, $title, $surname);
+    if ($res->num_rows == 0) {
+      return json_encode($this->db->error);
+    } else {
+      while($res->fetch()) {
+        $papers[$paper_no]['title'] = $paper_title;
+        $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
+        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/user_index.php?paperID=' . $property_id;
+        $papers[$paper_no]['start_date'] = $start_date;
+        $papers[$paper_no]['end_date'] = $end_date;
+        $papers[$paper_no]['created'] = $created;
+        $papers[$paper_no]['screens'] = $screens;
+        $papers[$paper_no]['owner'] = $title . ' ' . $surname;
+        $paper_no++;
+      }
     }
     $res->close();
-
-    return $paper;
+    
+    return $papers;
   }
 
   function __destruct() {
