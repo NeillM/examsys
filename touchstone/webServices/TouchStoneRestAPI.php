@@ -24,6 +24,7 @@
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 require $root . 'touchstone/include/staff_student_auth.inc';
 require_once $root . 'touchstone/config/config.inc';
+require_once $root . 'touchstone/classes/userutils.class.php';
 require './restAPI.class';
 
 Class TouchStoneRestAPI extends restAPI {
@@ -286,7 +287,12 @@ Class TouchStoneRestAPI extends restAPI {
       return 'accessdenied';
     }
     
-    return $_POST;
+    $xml = new SimpleXMLElement($_POST);
+
+    return $xml->surname;
+    exit;
+    
+    createUser($xml->username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $sid, $db)
   }
   
   function __destruct() {
