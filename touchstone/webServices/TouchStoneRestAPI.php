@@ -95,7 +95,11 @@ Class TouchStoneRestAPI extends restAPI {
   }
 
   public function processRequest() {
-    list($action, $parms) = explode('/',$_GET['url'],2);
+    if (substr_count($_GET['url'], '/') > 0) {
+      list($action, $parms) = explode('/',$_GET['url'],2);
+    } else {
+      $action = $_GET['url'];
+    }
     switch($action) {
       case 'getAvailableFeedback':
         //process url
