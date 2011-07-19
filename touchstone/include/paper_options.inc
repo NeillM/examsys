@@ -566,7 +566,7 @@ if ($paper_type == '2') {
 		} else {
 		  $tmp_color = '#F27000';
 		}
-        echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/reports/external_comments.php?paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">External Reviews</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
+        echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">External Reviews</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
       } else {
         echo "<tr><td><img src=\"/touchstone/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">External Reviews</a></td><td style=\"color:#008000\"><strong>OK</strong></td></tr>\n";
       }
