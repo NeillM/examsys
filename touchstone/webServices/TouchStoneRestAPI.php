@@ -232,7 +232,7 @@ Class TouchStoneRestAPI extends restAPI {
       case 'notsummative':
         $typeSQL = " AND paper_type!='2'";
         break;
-      case default:  // return all paper types
+      default:  // return all paper types
         $typeSQL = '';
         break;
     }
