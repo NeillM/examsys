@@ -290,7 +290,7 @@ Class TouchStoneRestAPI extends restAPI {
     
     $xml = new SimpleXMLElement($_POST['data']);
 
-    createUser($xml->username, $xml->password, $xml->title, $xml->firstnames, $xml->surname, $xml->email, $xml->course, $xml->gender, $xml->yearofstudy, $xml->role, $xml->sid, $this->db);
+    UserUtils::createUser($xml->username, $xml->password, $xml->title, $xml->firstnames, $xml->surname, $xml->email, $xml->course, $xml->gender, $xml->yearofstudy, $xml->role, $xml->sid, $this->db);
   }
   
   function __destruct() {
