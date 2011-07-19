@@ -142,13 +142,12 @@ Class TouchStoneRestAPI extends restAPI {
         break;
       case 'createAccount':
         $this->data = $this->createAccount();
-        if ($this->data == '') {
-          $this->sendResponse(400, '', '');
-        } elseif ($this->data == 'accessdenied') {
+        if ($this->data == 'accessdenied') {
           $this->sendResponse(401, '', '');
+        } elseif ($this->data === true) {
+          $this->sendResponse(400, '', '');
         } else {
           $this->sendResponse(200, $this->formatData($this->data, 'user', 'paper'), $this->http_accept);
-          //$this->sendResponse(200, serialize($this->data), $this->http_accept);
         }
         break;
       default:
@@ -290,7 +289,7 @@ Class TouchStoneRestAPI extends restAPI {
     
     $xml = new SimpleXMLElement($_POST['data']);
 
-    UserUtils::createUser($xml->username, $xml->password, $xml->title, $xml->firstnames, $xml->surname, $xml->email, $xml->course, $xml->gender, $xml->yearofstudy, $xml->role, $xml->sid, $this->db);
+    return UserUtils::createUser($xml->username, $xml->password, $xml->title, $xml->firstnames, $xml->surname, $xml->email, $xml->course, $xml->gender, $xml->yearofstudy, $xml->role, $xml->studentid, $this->db);
   }
   
   function __destruct() {
