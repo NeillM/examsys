@@ -288,8 +288,14 @@ Class TouchStoneRestAPI extends restAPI {
     }
     
     $xml = new SimpleXMLElement($_POST['data']);
+    
+    if (isset($xml->roles)) {
+      $roles = $xml->roles;
+    } else {
+      $roles = 'Student';  // Fail safe to student access if not set
+    }
 
-    return UserUtils::createUser($xml->username, $xml->password, $xml->title, $xml->firstnames, $xml->surname, $xml->email, $xml->course, $xml->gender, $xml->yearofstudy, $xml->roles, $xml->studentid, $this->db);
+    return UserUtils::createUser($xml->username, $xml->password, $xml->title, $xml->firstnames, $xml->surname, $xml->email, $xml->course, $xml->gender, $xml->yearofstudy, $roles, $xml->studentid, $this->db);
   }
   
   function __destruct() {
