@@ -135,6 +135,16 @@ Class TouchStoneRestAPI extends restAPI {
           }
         }
         break;
+      case 'createAccount':
+        $this->data = $this->createAccount();
+        if ($this->data == '') {
+          $this->sendResponse(400, '', '');
+        } elseif ($this->data == 'accessdenied') {
+          $this->sendResponse(401, '', '');
+        } else {
+          $this->sendResponse(200, $this->formatData($this->data, 'user', 'paper'), $this->http_accept);
+        }
+        break;
       default:
         //if we get here the action is unsupported so give a http 400 bad request
         $this->sendResponse(405, '', '');
@@ -265,6 +275,16 @@ Class TouchStoneRestAPI extends restAPI {
     return $papers;
   }
 
+  public function createAccount() {
+    global $userroles;
+    
+    if (strpos($userroles,'SysAdmin') === false) {
+      return 'accessdenied';
+    }
+    
+    return $_POST;
+  }
+  
   function __destruct() {
     parent::__destruct();
   }
