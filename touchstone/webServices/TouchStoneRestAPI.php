@@ -142,7 +142,7 @@ Class TouchStoneRestAPI extends restAPI {
         break;
       case 'createAccount':
         $this->data = $this->createAccount();
-        if ($this->data == 'accessdenied') {
+        if ($this->data === 'accessdenied') {
           $this->sendResponse(401, '', '');
         } elseif ($this->data === false) {
           $this->sendResponse(400, '', '');
