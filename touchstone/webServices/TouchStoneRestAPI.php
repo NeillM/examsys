@@ -288,67 +288,32 @@ Class TouchStoneRestAPI extends restAPI {
     }
     
     $xml = new SimpleXMLElement($_POST['data']);
+    $fields = array('username', 'password', 'firstnames', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles');
     
-    if (isset($xml->username)) {
-      $username = $xml->username;
-    } else {
-      return 'Missing data: username';
+    foreach ($fields as $field) {
+      if (isset($xml->$field)) {
+        $$field = $xml->$field;
+      } else {
+        return 'Missing data: ' . $field;
+      }
     }
-    if (isset($xml->password)) {
-      $password = $xml->password;
-    } else {
-      return 'Missing data: password';
-    }
-    if (isset($xml->title)) {
-      $title = $xml->title;
-    } else {
-      return 'Missing data: title';
-    }
-    if (isset($xml->firstnames)) {
-      $firstnames = $xml->firstnames;
-    } else {
-      return 'Missing data: firstnames';
-    }
-    if (isset($xml->surname)) {
-      $surname = $xml->surname;
-    } else {
-      return 'Missing data: surname';
-    }
-    if (isset($xml->email)) {
-      $email = $xml->email;
-    } else {
-      return 'Missing data: email';
-    }
-    if (isset($xml->course)) {
-      $course = $xml->course;
-    } else {
-      return 'Missing data: course';
-    }
-    if (isset($xml->gender)) {
-      $gender = $xml->gender;
-    } else {
-      return 'Missing data: gender';
-    }
-    if (isset($xml->yearofstudy)) {
-      $yearofstudy = $xml->yearofstudy;
-    } else {
-      return 'Missing data: yearofstudy';
-    }
+    
     if (isset($xml->studentid)) {
       $studentid = $xml->studentid;
     } else {
       $studentid = '';
     }
-    if (isset($xml->roles)) {
-      $roles = $xml->roles;
-      if ($roles != 'Student' and $roles != 'Staff' and $roles != 'Staff,Admin' and $roles != 'Staff,SysAdmin') {
-        return 'Incorrect value for roles: ' . $roles;
-      }
-    } else {
-      return 'Missing data: roles';
+    if ($roles != 'Student' and $roles != 'Staff' and $roles != 'Staff,Admin' and $roles != 'Staff,SysAdmin') {
+      return 'Incorrect value for roles: ' . $roles;
     }
-
-    return UserUtils::createUser($username, $password, $title, $firstnames, $surname, $email, $course, $gender, $yearofstudy, $roles, $studentid, $this->db);
+    
+    $success = UserUtils::createUser($username, $password, $title, $firstnames, $surname, $email, $course, $gender, $yearofstudy, $roles, $studentid, $this->db);
+    
+    if (!$success) {
+      return false;
+    } else
+      return true;
+    }
   }
   
   function __destruct() {
