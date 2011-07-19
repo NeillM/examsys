@@ -413,7 +413,7 @@ require_once '../classes/schoolutils.class.php';
     $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
     $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE schoolid IN ($schoolIDs) ORDER BY moduleID");
   } else {
-    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN ($team_sql) ORDER BY moduleID");
   }
   $result->execute();
   $result->bind_result($module_id, $module_name);
@@ -436,7 +436,7 @@ require_once '../classes/schoolutils.class.php';
   echo "<input type=\"hidden\" name=\"folder\" value=\"" . $_POST['folder'] . "\" />\n";
 ?>
 <br />
-<div style="text-align:right"><input type="submit" name="back2" value="&lt Back" style="width:100px" />&nbsp;&nbsp;<input type="submit" name="submit2" value="Finish" style="width:100px" /></div>
+<div style="text-align:right"><input type="submit" name="submit2" value="Finish" style="width:100px" /></div>
 
 </td>
 </tr>

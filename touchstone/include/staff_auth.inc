@@ -53,7 +53,7 @@
     //For 'Admin' users look up permissions from 'admin_access' table.
     
     //Can the user access the paper?
-    if (isset($_GET['paperID']) or isset($_POST['paperID'])) {
+    if ((isset($_GET['paperID']) and $_GET['paperID'] != '') or (isset($_POST['paperID']) and $_POST['paperID'] != '')) {
       $on_team = false;
 
       if (isset($_GET['paperID'])) {
@@ -89,7 +89,7 @@
       }
     }
     
-    if (isset($_GET['module'])) {
+    if (isset($_GET['module']) and $_GET['module'] != '') {
       // Is 'Admin' on the module as normal
       $result = $mysqli->prepare("SELECT groupID FROM teams WHERE memberID=? AND name=?");
       $result->bind_param('is', $userID, $_GET['module']);

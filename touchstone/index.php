@@ -34,8 +34,10 @@
     exit;
   } elseif ($userroles == 'External Examiner') {
     header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/reviews/");
+    exit;
   } elseif ($userroles == 'Invigilator') {
     header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/invigilator/");
+    exit;
   }
 
 // If we're still here we should be staff
@@ -70,7 +72,7 @@ require './include/staff_auth.inc';
   }
 
   function newPaper(paperID) {
-    notice = window.open("./paper/new_paper1.php?folder=","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice = window.open("./paper/new_paper1.php?folder=","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
