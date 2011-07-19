@@ -288,7 +288,7 @@ Class TouchStoneRestAPI extends restAPI {
     }
     
     $xml = new SimpleXMLElement($_POST['data']);
-    $fields = array('username', 'password', 'firstnames', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles');
+    $fields = array('username', 'password', 'firstnames', 'title', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles');
     
     foreach ($fields as $field) {
       if (isset($xml->$field)) {
