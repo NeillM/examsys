@@ -292,7 +292,7 @@ Class TouchStoneRestAPI extends restAPI {
     return $xml->surname;
     exit;
     
-    createUser($xml->username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $sid, $db)
+    createUser($xml->username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $sid, $db);
   }
   
   function __destruct() {
