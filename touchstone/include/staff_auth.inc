@@ -25,6 +25,7 @@
 */
 
   require_once 'staff_student_auth.inc';
+  
   if (strpos($userroles,'Staff') === false AND strpos($userroles,'External Examiner') === false) {
     access_denied('You are attempting to access a <strong>Staff Only</strong> page.',true);
   }
@@ -37,13 +38,8 @@
   }
 
   // Get teams.
-  $teams = array();
-  $team_details = $mysqli->query("SELECT name FROM teams WHERE memberID=$userID AND name IS NOT NULL ORDER BY name");
-  while ($team_row = $team_details->fetch_assoc()) {
-    $teams[strtoupper($team_row['name'])] = strtoupper($team_row['name']);
-  }
-  $team_details->close();
-
+  $teams = getUserTeams($userID, $mysqli);
+  
   $types_array = array('Formative Self-Assessments','Progress Tests','Summative Exams','Surveys','OSCE Stations','Offline Papers');
 
   //
