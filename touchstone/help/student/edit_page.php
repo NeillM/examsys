@@ -73,7 +73,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   </style>
   
   <script language="JavaScript" src="/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script language="JavaScript" src="/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
+  <script language="JavaScript" src="/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_config_help_student.js"></script>
   <script language="JavaScript">
     function getSize() {
       if (parseInt(navigator.appVersion)>3) {
