@@ -53,7 +53,7 @@ $module_details->close();
     $module_data->bind_param('s', $module);
     $module_data->execute();
     $module_data->store_result();
-    $module_data->bind_result($module_fullname, $checklist, $selfenroll);
+    $module_data->bind_result($module_fullname, $checklist, $selfenrol);
     $module_data->fetch();
     $module_data->close();
   } else {

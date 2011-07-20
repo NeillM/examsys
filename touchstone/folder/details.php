@@ -183,7 +183,7 @@ function displayPaperIcon($row) {
   if ($folder != '') {
     $folders_array = explode(';',$folder_name);
     $parts = count($folders_array) - 1;
-    $selfenroll = 0;
+    $selfenrol = 0;
   }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -308,10 +308,10 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   $member_details->close();
 }
 
-// Is it a self-enroll module.
-if ($selfenroll == 1) {
-  $selfenroll_url = $protocol . $_SERVER['HTTP_HOST'] . '/self_enroll.php?moduleid=' . $_GET['module'];
-  echo "<div style=\"padding-left:10px\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /> <span style=\"color:#C00000\">Self-enroll URL:</span> <a href=\"$selfenroll_url\">$selfenroll_url</a></div>\n<br />";
+// Is it a self-enrol module.
+if ($selfenrol == 1) {
+  $selfenrol_url = $protocol . $_SERVER['HTTP_HOST'] . '/self_enrol.php?moduleid=' . $_GET['module'];
+  echo "<div style=\"padding-left:10px\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /> <span style=\"color:#C00000\">Self-enrol URL:</span> <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n<br />";
 }
 
 // Get any sub-folders first.
