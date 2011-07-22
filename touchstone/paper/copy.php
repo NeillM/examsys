@@ -259,33 +259,35 @@
       }
     } else {
       //we are copying between sessions we need to check for changed sessions/objectives
-      $old_course = getObjectives($moduleID,$calendar_year,$_POST['paperID'],'',$mysqli);
-      $new_course = getObjectives($moduleID,$new_calendar_year,$_POST['paperID'],'',$mysqli);
-      foreach ($old_course as $module=>&$sessions) {
-        foreach ($sessions as $identifier=>&$session) {
-          foreach ($session['objectives'] as &$obj) {
-            $old_objID = $obj['id'];
-              foreach($new_course[$module][$identifier]['objectives'] as $new_obj) {
-              if ($new_obj['id'] == $old_objID AND $new_obj['content'] == $obj['content']) {
-                //build a list of objectives that are still in both sessions
-                $mappings_copy_objID[$old_objID] = $old_objID;
-                break;
+      $old_course = getObjectives($moduleID, $calendar_year, $_POST['paperID'], '', $mysqli);
+      $new_course = getObjectives($moduleID, $new_calendar_year, $_POST['paperID'], '', $mysqli);
+      if (count($old_course) > 0 and count($new_course) > 0) {
+        foreach ($old_course as $module=>&$sessions) {
+          foreach ($sessions as $identifier=>&$session) {
+            foreach ($session['objectives'] as &$obj) {
+              $old_objID = $obj['id'];
+                foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
+                if ($new_obj['id'] == $old_objID AND $new_obj['content'] == $obj['content']) {
+                  //build a list of objectives that are still in both sessions
+                  $mappings_copy_objID[$old_objID] = $old_objID;
+                  break;
+                }
               }
             }
           }
         }
-      }
-      $mappings_copy_objID = implode(',',$mappings_copy_objID);
-      
-      //copy the objectives for each session where the objective still exists
-      $i = 0;
-      foreach ($old_qids as $old_id) {
-        $new_question_id = $new_qids[$i];
-        $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, module_id, '$new_paper_id', '$new_question_id', obj_id, '$new_calendar_year' FROM relationships WHERE question_id = $old_id AND paper_id = ? AND obj_id IN ($mappings_copy_objID))"); 
-        $result->bind_param('i', $_POST['paperID']);
-        $result->execute();
-        $result->close();
-        $i++;
+        $mappings_copy_objID = implode(',', $mappings_copy_objID);
+        
+        //copy the objectives for each session where the objective still exists
+        $i = 0;
+        foreach ($old_qids as $old_id) {
+          $new_question_id = $new_qids[$i];
+          $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, module_id, '$new_paper_id', '$new_question_id', obj_id, '$new_calendar_year' FROM relationships WHERE question_id = $old_id AND paper_id = ? AND obj_id IN ($mappings_copy_objID))"); 
+          $result->bind_param('i', $_POST['paperID']);
+          $result->execute();
+          $result->close();
+          $i++;
+        }
       }
     }
   }
