@@ -104,10 +104,31 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
   }
 
 if (isset($_POST['submit'])) {
+  $error = '';
   if ($_POST['theme'] == '' and $_POST['scenario'] == '' and $_POST['leadin'] == '' and $_POST['options'] == '' and $_POST['keywords'] == '') {
-    echo "<br /><div style=\"text-align:center\">\n<table cellpadding=\"10\" cellspacing=\"0\" border=\"0\" style=\"width:400px; border:1px solid red; color:red\">\n<tr><td style=\"width:36px\"><img src=\"../artwork/red_exclamation_icon.gif\" width=\"36\" height=\"34\" alt=\"!\" /></td><td style=\"color:red\"><strong>Search Failure</strong><br />You have not ticked any fields to search for.</td></tr>\n</table>\n</div>\n</body></html>";
+    $error = 'You have not ticked any fields to search for.';
+  }
+  
+  if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['team'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
+    $error = 'Please narrow your search by entering a search term, question type, date modified or metadata.';
+  }
+  
+  if($error != '') {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>Question Search</div></td></tr>";
+    ?>
+    <tr>
+    <td style="background-color:#F1F5FB" align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></td>
+    <td style="background-color:#F1F5FB">&nbsp;Question&nbsp;</td>
+    <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Type&nbsp;</td>
+    <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Modified&nbsp;</td></tr>
+    <tr style="height:4px"><td valign="top" colspan="4"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+    </table>
+    <?php
+    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;$error.</td></tr></table>\n";
     exit;
   }
+  
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
   $params = '';
