@@ -111,6 +111,8 @@ function redirect() {
   } else {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/");
   }
+  $mysqli->close();
+  exit;   // Stop script execution after the redirect.
 }
 
 function save_external_responses($dblink) {

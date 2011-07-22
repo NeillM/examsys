@@ -56,15 +56,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
         unlink("../media/" . $_POST['old_q_media']); 
       }
       $unique_question_name = uploadFile('new_question_swf', $tmp_q_width, $tmp_q_height);
-      //$unique_question_name = unique_filename($_FILES['new_question_swf']['name']);
-      //if (!move_uploaded_file($_FILES['new_question_swf']['tmp_name'], "../media/$unique_question_name"))  {
-      //  echo uploadError($_FILES['new_question_swf']['error']);
-      //  exit;
-      //} else {
-      //  $identifier_size = GetImageSize("../media/$unique_question_name");
-      //  $tmp_q_width = $identifier_size[0];
-      //  $tmp_q_height = $identifier_size[1];
-      //}
+
       $changes = true;
       $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,?,?,NOW(),'Question SWF')");
       $result->bind_param('iss', $q_id, $_POST['old_q_media'], $unique_question_name);

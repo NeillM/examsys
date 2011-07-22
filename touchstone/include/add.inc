@@ -40,7 +40,8 @@ function displayEditTab() {
 }
 
 function redirect($p_id) {
-  global $protocol;
+  global $protocol, $mysqli;
+  
   if (substr($p_id,0,5) == 'list:') {
     $type = substr($p_id,5);
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/question/list.php");
@@ -51,6 +52,8 @@ function redirect($p_id) {
   } else {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/");
   }
+  $mysqli->close();
+  exit;   // Stop script execution after the redirect.
 }
 
 function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $status, $option_order) {
