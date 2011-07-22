@@ -21,10 +21,10 @@ set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline) {
   global $mysqli, $userID, $debug_pagestart, $dbclass, $cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database;
-      
+  
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them
-    return false;
+    return;
   }
 
   switch ($errno) {
@@ -53,6 +53,9 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
       return true;
     } elseif (strpos($errstr,'ldap_bind()') !== false) {
       return true;
+    } elseif (strpos($errstr,'simplexml_load_string()') !== false) {
+      //QTI imports with invalid XML cause lots of warnings in the error logs. Filter them out.
+      return false;  
     }
   }
 
