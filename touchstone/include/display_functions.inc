@@ -833,7 +833,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
               $screen_output_all .= $value;
             }
           }
-          echo "<p class=\"stem\">" . $blank_details[0]. $screen_output_all . "</p>\n";
+          echo "<p class=\"stem\">" . $blank_details[0] . $screen_output_all . "</p>\n";
         } else {
           // Dropdown lists.
           $no_blanks = count($blank_details);
