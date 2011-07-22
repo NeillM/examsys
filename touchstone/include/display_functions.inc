@@ -782,6 +782,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'blank':
         $ans = '';
+        $blank_mark = array();
         $display_option['option_text'] = str_replace('&nbsp;',' ',$display_option['option_text']);
         $blank_details = explode('[blank',$display_option['option_text']);
         if (isset($user_answers[$current_screen][$q_id])) {
@@ -795,6 +796,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         
         if ($question['score_method'] == 'textboxes') {
+          $screen_output = array();
           $array_size = count($blank_details);
           $blank_count = 1;
           while ($blank_count < $array_size) {
@@ -826,10 +828,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             $blank_count++;
           }
           $screen_output_all = '';
-          foreach ($screen_output as $value) {
-            $screen_output_all .= $value;
+          if (count($screen_output) > 0) {     // Check there are actually some blanks
+            foreach ($screen_output as $value) {
+              $screen_output_all .= $value;
+            }
           }
-          echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n";
+          echo "<p class=\"stem\">" . $blank_details[0]. $screen_output_all . "</p>\n";
         } else {
           // Dropdown lists.
           $no_blanks = count($blank_details);
