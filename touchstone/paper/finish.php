@@ -16,7 +16,7 @@
 
 /**
 * 
-* Completes final log of the last screen to the ‘log’ table and then will display feedback if the paper is in ‘formative’ 
+* Completes final log of the last screen to the ‘logX’ table and then will display feedback if the paper is in ‘formative’ 
 * mode or will display a confirmation notice to the examinee stating all answers and marks have been successfully recorded.
 * 
 * @author Simon Wilkinson, Anthony Brown
@@ -172,23 +172,13 @@
         // Check for additional password on the paper
         if ($password != '') {
           if ($password != $_COOKIE['paperpwd']) {
-            Header("WWW-authenticate: basic realm=\"TouchStone\"");
-            Header("HTTP/1.0 401 Unauthorised");
-            echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-            echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-            echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">There is a specific password assigned to this paper.</p>\n<p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"OK\" style=\"width:100px\" name=\"ok\" onclick=\"window.close();\"></form></p>\n</body>\n</html>";
-            $mysqli->close();
-            exit;
+            access_denied('There is a specific password assigned to this paper.', $output_header = false);
           }
         }
  
         // Check time security
         if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-          echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:$font,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/clock_48.png\" width=\"48\" height=\"48\" /></div>\n";
-          echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-          echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">The paper you are attempting to access is only available between the following times:</p>\n<ul style=\"margin-left:80px\">\n<li>From - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>To - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"OK\" style=\"width:100px\" name=\"ok\" onclick=\"window.close();\"></form></p>\n</body>\n</html>";
-          $mysqli->close();
-          exit;
+          access_denied('The paper you are attempting to access is only available between ' . date('d/m/Y H:i',$start_date) . ' and ' . date('d/m/Y H:i',$end_date), $output_header = false);
         }
         //Check room security
         if ($labs != '') {
@@ -199,26 +189,19 @@
           $lab_info->store_result();
           $lab_info->fetch();
           if ($lab_info->num_rows == 0) {
-            echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"./artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-            echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-            echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Access to this paper is not permitted from your current location.</p>\n</body>\n</html>";
-            exit;
+            access_denied('Access to this paper is not permitted from your current location.', $output_header = false);
           }
           $lab_info->close();
         }
         
-        //get modules if the user is a student and the paper is not formative
+        // get modules if the user is a student and the paper is not formative
         if (stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
            if ($moduleID != '') {
             $cal_year_sql = '';
             if($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
             $module_info = $mysqli->query("SELECT moduleid,attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql");
             if ($module_info->num_rows == 0) {
-              echo "<html>\n<head>\n<title>Access Denied - Title</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-              echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-              echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-              echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">$title $surname ($username) is not registered on <strong>$moduleID</strong> in <strong>$calendar_year</strong>.</p>\n</body>\n</html>";
-              exit;
+              access_denied("$title $surname ($username) is not registered on <strong>$moduleID</strong> in <strong>$calendar_year</strong>.", $output_header = false);
             } else {
               $row = $module_info->fetch_array(MYSQLI_ASSOC);
               if(is_array($row)) {
@@ -227,16 +210,31 @@
             }
             $module_info->close();
           } else {
-            echo "<html>\n<head>\n<title>Access Denied - Year</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-            echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-            echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-            echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This paper is not on any module.</p>\n</body>\n</html>";
-            exit;
+            access_denied('This paper is not on any module.', $output_header = false);
           }
         }
         if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
           $paper_type = '_late';
         }
+        
+        // Check for any metadata security restrictions
+        $metadata_security = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
+        $metadata_security->bind_param('i', $_GET['paperID']);
+        $metadata_security->execute();
+        $metadata_security->bind_result($security_type, $security_value);
+        $metadata_security->store_result();
+        while ($metadata_security->fetch()) {
+          $check_security = $mysqli->prepare("SELECT users_metadata.id FROM users_metadata, modules WHERE users_metadata.moduleid=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $moduleID) . "') AND userID=? AND type=? AND value=?");
+          $check_security->bind_param('iss', $userID, $security_type, $security_value);
+          $check_security->execute();
+          $check_security->store_result();
+          if ($check_security->num_rows == 0) {
+            access_denied('User metadata does not match <strong>' . $security_type . ': ' . $security_value . '</strong>', $output_header = false);
+          }
+          $check_security->close();
+        }      
+        $metadata_security->close();
+        
       }
       if (isset($_GET['type'])) $log_type = $_GET['type'];
     }

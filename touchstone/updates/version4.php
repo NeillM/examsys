@@ -249,6 +249,21 @@
   }
   $result->close();
 
+  // 25/07/2011 - New table paper_metadata_security.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='paper_metadata_security' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE paper_metadata_security (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, paperID int, name varchar(255), value varchar(255))");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>CREATE TABLE paper_metadata_security (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, paperID int, name varchar(255), value varchar(255))</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
   
   //Close the database
   $mysqli->close();
