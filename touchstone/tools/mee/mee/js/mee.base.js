@@ -176,7 +176,7 @@ $.Class.extend("MEE.Base",
         MEE.Base.displays = new Array();
         MEE.Base.edits = new Array();
 
-        MEE.Base.buildDefs();
+        //MEE.Base.buildDefs();
         MEE.Base.to_process = new Array();
 
         if (!source)
