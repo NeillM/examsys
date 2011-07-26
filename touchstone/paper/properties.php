@@ -249,6 +249,24 @@ if (isset($_POST['Submit'])) {
       $editPaper->close();
     }
     $result->close();
+    
+    // Set any metadata security
+    for ($i=0; $i<$_POST['meta_dropdown_no']; $i++) {
+      $meta_type = $_POST['meta_type' . $i];
+      $meta_value = $_POST['meta_value' . $i];
+      
+      $editProperties = $mysqli->prepare("DELETE FROM paper_metadata_security WHERE paperID=? AND name=?");
+      $editProperties->bind_param('is', $paperID, $meta_type);
+      $editProperties->execute();
+      $editProperties->close();
+
+      if ($meta_value != '') {
+        $editProperties = $mysqli->prepare("INSERT INTO paper_metadata_security VALUES (NULL, ?, ?, ?)");
+        $editProperties->bind_param('iss', $paperID, $meta_type, $meta_value);
+        $editProperties->execute();
+        $editProperties->close();
+      }
+    }
 
   ?>
     <html>
@@ -329,7 +347,24 @@ if (isset($_POST['Submit'])) {
   </style>
 
   <?php echo $cfg_editor_javascript; ?>
+  <script type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
+    $(getMetadataDropdowns);
+  
+    function getMetadataDropdowns() {
+      var mod_codes = '';
+      for (i=0; i<=100; i++) {
+        if (document.getElementById('module' + i).checked == true) {
+          if (mod_codes == '') {
+            mod_codes = document.getElementById('module' + i).value;
+          } else {
+            mod_codes += ',' + document.getElementById('module' + i).value;
+          }
+        }
+      }
+      $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>&session=' + $('#session').val() );
+    }
+  
     function objreportURL() {
       if (document.getElementById('objectives_report').checked == true) {
         document.getElementById('objreport').style.display = 'block';
@@ -575,12 +610,12 @@ if (isset($_POST['Submit'])) {
     }
   </script>
 </head>
-<body onload="window.focus();" onclick="hidePicker();">
+<body onload="window.focus()" onclick="hidePicker();">
 <form name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <?php
   require '../tools/colour_picker/colour_picker.inc';
 ?>
-<table border="0" cellpadding="1" cellspacing="5" style="width:100%; height:100%; font-size:90%">
+<table border="0" cellpadding="1" cellspacing="5" style="width:100%; height:645px; font-size:90%">
 <tr><td valign="top" style="background-color:white; border:1px solid #7F9DB9; width:120px">
 
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:120px">
@@ -602,12 +637,14 @@ if ($paper_type != '4' and $paper_type != '5') {
 
 <td style="background-color:white; border:1px solid #7F9DB9" valign="top">
 
-<table id="general" style="height:460px; width:100%; font-size:90%<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo ';display:none'; ?>" cellpadding="0" cellspacing="0" border="0">
+<table id="general" style="height:590px; width:100%; font-size:90%<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo ';display:none'; ?>" cellpadding="0" cellspacing="0" border="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/general_heading_icon.png" width="32" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;Paper name, marking and display options</td></tr>
 <td style="text-align:left; vertical-align:top" colspan="2">
    <?php
      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;Paper Details</td></tr>\n";
+     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '2') {
        echo "<tr><td align=\"right\" valign=\"top\">URL&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "</a> (only on exam day)</td></tr>\n";
      } elseif ($paper_type == '4') {
@@ -710,7 +747,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<br />&nbsp;</div>";
      
      echo "<tr>\n";
-     
+     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";     
      if ($paper_type == '4') {
        echo '<input type="hidden" name="bgcolor" value="' . $bgcolor . '" />';
        echo '<input type="hidden" name="fgcolor" value="' . $fgcolor . '" />';
@@ -718,6 +755,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        echo '<input type="hidden" name="labelcolor" value="' . $labelcolor . '" />';
      } else {
        echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;Display Options</td></tr>\n";
+       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        if ($fullscreen == 0) {
          echo "<tr><td align=\"right\">Display&nbsp;</td><td><select name=\"fullscreen\">\n<option value=\"0\" selected>Windowed</option><option value=\"1\">Full Screen (IE only)</option>\n</select></td>";
        } else {
@@ -752,6 +790,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;Marking</td></tr>\n";
+     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
        echo "<tr><td align=\"right\" valign=\"top\">Overall&nbsp;Classification&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
      ?>
@@ -825,35 +864,35 @@ if ($paper_type != '4' and $paper_type != '5') {
 </tr>
 </table>
 
-<table id="prologue" style="width:100%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="prologue" style="width:100%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/prologue_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;Text displayed at the top of screen 1 when paper is started.</td></tr>
   <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit2','paper_prologue',$paper_prologue,688,398);
+    echo "<tr><td>" . wysiwyg_editor('oEdit2','paper_prologue',$paper_prologue,688,498);
   ?>
 </td></tr>
 </table>
 
-<table id="postscript" style="width:100%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="postscript" style="width:100%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/postscript_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;Text displayed after the student clicks 'Finish' at the end.</td></tr>
 <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit3','paper_postscript',$paper_postscript,688,398);
+    echo "<tr><td>" . wysiwyg_editor('oEdit3','paper_postscript',$paper_postscript,688,498);
   ?>
 </td></tr>
 </table>
 
 <?php
   if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
-    echo '<table id="security" style="width:100%; font-size:90%; height:460px; display:block" border="0" cellpadding="0" cellspacing="0">';
+    echo '<table id="security" style="width:100%; font-size:90%; height:590px; display:block" border="0" cellpadding="0" cellspacing="0">';
   } else {
-    echo '<table id="security" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">';
+    echo '<table id="security" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">';
   }
 ?>
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/security_heading_icon.png" width="30" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;Control the access rights over which students can see the paper.</td></tr>
 <tr>
-<td style="text-align:center" colspan="2">
+<td style="text-align:center; vertical-align:top" colspan="2">
 <?php
-    echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td align=\"right\">Session</td><td><select name=\"calendar_year\">\n<option value=\"\">N/A</option>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
+    echo "<tr><td align=\"right\">Session</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMetadataDropdowns();\">\n<option value=\"\">N/A</option>\n";
     $academic_years = array('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16');
     foreach ($academic_years as $value) {
       echo "<option value=\"" . $value . "\"";
@@ -1038,13 +1077,13 @@ if ($paper_type != '4' and $paper_type != '5') {
        }
      }
      echo "</select>\n</td></tr>\n";
-     echo "<tr><td colspan=\"3\">&nbsp;</td></tr></table>\n";
+     echo "</table>\n";
 
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Module(s)</td><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Restrict to Labs</td></tr>";
-    echo "<td>";
+    echo "<tr><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px; width:400px\">&nbsp;Module(s)</td><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;Restrict to Labs</td></tr>";
+    echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
     
-    echo "<div style=\"display:block; height:278px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+    echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
     
     $modules_array = explode(',',$moduleID);
     $total_modules = array_merge($teams, $modules_array);
@@ -1068,12 +1107,12 @@ if ($paper_type != '4' and $paper_type != '5') {
         }
         if ($match == true) {
           if (in_array($module['id'],$teams) or strpos($userroles,'SysAdmin') !== false) {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
             echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           }
         } else {
-          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
         }
         $module_no++;  
         $old_school = $module['school'];        
@@ -1082,7 +1121,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</td>\n";
     
-    echo "<td><div style=\"height:278px;overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
+    echo "<td><div style=\"height:278px; overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
     $current_labs = explode(',',$labs);
     
     $lab_details = $mysqli->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
@@ -1109,14 +1148,19 @@ if ($paper_type != '4' and $paper_type != '5') {
     $lab_details->close();
     echo "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div></td>\n</tr>";
     
-    echo "</table>\n";
+    //echo "</table>\n";
   ?>
+  </td></tr>
+  <tr><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px" colspan="2">&nbsp;Restrict to Metadata</td></tr>
+  <tr><td style="vertical-align:top; height:110px" colspan="2"><div style="height:116px; overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%" id="metadata_security"></div></td></tr>
+  </table>
+  </td></tr>
 </table>
 
 <table id="rubric" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;Exam rubric displayed to students before they start a summative exam.</td></tr>
   <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit4','rubric_text',$rubric,686,398);
+    echo "<tr><td>" . wysiwyg_editor('oEdit4','rubric_text',$rubric,686,498);
   ?>
   </td></tr>
 </table>
@@ -1278,7 +1322,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 ?>
 </td></tr>
   <?php
-  echo "<tr><td><div style=\"width:330px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<tr><td><div style=\"width:330px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_internals = explode(',',$internal_reviewers);
   $internal_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles LIKE 'Staff%' AND grade != 'left' ORDER BY surname, initials");
   $internal_details->execute();
@@ -1299,7 +1343,7 @@ if ($paper_type != '4' and $paper_type != '5') {
   $internal_details->close();
   echo "<input type=\"hidden\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-  echo "<td><div style=\"width:330px; height:325px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+  echo "<td><div style=\"width:330px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_externals = explode(',',$externals);
   $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND grade != 'left' ORDER BY surname, initials");
   $external_details->execute();

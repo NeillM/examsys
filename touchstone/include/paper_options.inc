@@ -126,7 +126,7 @@ $stmt->close();
   }
 
   function paperProperties() {
-    notice=window.open("/touchstone/paper/properties.php?paperID=<?php echo $paperID; ?>","properties","width=832,height=515,left="+(screen.width/2-412)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/touchstone/paper/properties.php?paperID=<?php echo $paperID; ?>","properties","width=832,height=650,left="+(screen.width/2-412)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
