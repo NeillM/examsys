@@ -302,6 +302,13 @@ a.access:hover {color:white}
     }  
   }
   
+  function forceResetPassword(username) {
+    editwin=window.open("reset_pwd.php?userID=<?php echo $_GET['userID']; ?>&username=" + username + "","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (window.focus) {
+      editwin.focus();
+    }
+  }    
+
   function resetPassword(email) {
     editwin=window.open("forgotten_password.php?email=" + email + "","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
@@ -490,6 +497,11 @@ a.access:hover {color:white}
       } else {
         $url_email = urlencode($email);
         echo "<input type=\"button\" onclick=\"resetPassword('$url_email')\" value=\"Reset\" />";
+
+        if(strpos($userroles, 'SysAdmin')) {
+          echo "&nbsp;<input type=\"button\" onclick=\"forceResetPassword('$username')\" value=\"Force reset\" />";
+        }
+        
       } 
       echo "<input type=\"hidden\" name=\"old_userID\" value=\"$tmp_id\" /></td></tr>\n";
     } else {
