@@ -28,10 +28,11 @@ require_once '../classes/userutils.class.php';
 require_once '../classes/passwordutils.class.php';
 
 $header = array();
-$needed_cols = array('student_id','full name','first names','surname','title','course code','year of course','local email');
+$needed_cols1 = array('student_id','first names','surname','title','course code','year of course','local email');
+$needed_cols2 = array('id','forenames','family name','title','degree','year of study','email');
 
 function add_users_from_file($fileName) {
-  global $header, $needed_cols, $mysqli;
+  global $header, $needed_cols1, $needed_cols2, $mysqli;
   
   $degrees = array();
   $users[] = array();
@@ -51,16 +52,15 @@ function add_users_from_file($fileName) {
       //build the header array
       $separate_line = strtolower($separate_line);
       $error = array();
-      $tmp_header = explode($split_on,$separate_line);
+      $tmp_header = explode($split_on, $separate_line);
       foreach ($tmp_header as $tmp_string) {
-        $tmp_string = str_replace('"','',$tmp_string);
+        $tmp_string = str_replace('"', '', $tmp_string);
         $header[] = $tmp_string;
       }
       $header = array_flip($header);
-      foreach ($needed_cols as $col) {
-        $col = str_replace('"','',$col);
-        if (!isset($header[$col])) {
-          $error['error'][] = "<li>Missing '$col' Colum from import please add it.</li>";
+      for ($i=0; $i<count($needed_cols1); $i++) {
+        if (!isset($header[$needed_cols1[$i]]) and !isset($header[$needed_cols2[$i]])) {
+          $error['error'][] = "<li>Missing '" . $needed_cols1[$i] . "' Colum from import please add it.</li>";
         }
       }
       if (count($error) > 0) {
@@ -70,21 +70,44 @@ function add_users_from_file($fileName) {
       }
     }
 
-    $fields = explode($split_on,$separate_line);
-                     
-    $sid = str_replace('"','',trim($fields[$header['student_id']]));
-    $forname = UserUtils::my_ucwords(trim($fields[$header['first names']])); 
+    $fields = explode($split_on, $separate_line);
+    if (isset($header['student_id'])) {
+      $sid = str_replace('"','',trim($fields[$header['student_id']]));
+    } else {    
+      $sid = str_replace('"','',trim($fields[$header['id']]));
+    }
+    if (isset($header['first names'])) {
+      $forname = UserUtils::my_ucwords(trim($fields[$header['first names']])); 
+    } else {
+      $forname = UserUtils::my_ucwords(trim($fields[$header['forenames']])); 
+    }
     $initial = explode(' ',$forname);
     $initials = '';
     foreach ($initial as $name) {
       $initials .= substr($name,0,1);
     }
     $initials = strtoupper($initials);
-    $surname = UserUtils::my_ucwords(trim($fields[$header['surname']]));
+    if (isset($header['surname'])) {
+      $surname = UserUtils::my_ucwords(trim($fields[$header['surname']]));
+    } else {
+      $surname = UserUtils::my_ucwords(trim($fields[$header['family name']]));
+    }
     $title = UserUtils::my_ucwords(trim($fields[$header['title']]));
-    $degree = trim($fields[$header['course code']]); 
-    $year = trim($fields[$header['year of course']]);
-    $email = trim($fields[$header['local email']]);
+    if (isset($header['course code'])) {
+      $degree = trim($fields[$header['course code']]);
+    } else {
+      $degree = trim($fields[$header['degree']]);
+    }
+    if (isset($header['year of course'])) {
+      $year = trim($fields[$header['year of course']]);
+    } else {
+      $year = trim($fields[$header['year of study']]);
+    }
+    if (isset($header['local email'])) {
+      $email = trim($fields[$header['local email']]);
+    } else {
+      $email = trim($fields[$header['email']]);
+    }
     if (isset($header['username'])) {
       $username = $fields[$header['username']];
     } else {
@@ -100,8 +123,6 @@ function add_users_from_file($fileName) {
       }
     }
                         
-    $school = trim($fields[11]);
-    			
     if ($title == 'Mr') {
       $gender = 'Male'; 
     } elseif ($title == 'Miss' or $title == 'Mrs' or $title == 'Ms') {
@@ -117,9 +138,9 @@ function add_users_from_file($fileName) {
       $password = PasswordUtils::gen_password();
       $encpw_password = PasswordUtils::encpw($username, $password);
 
-      $added = UserUtils::createUser($username, $encpw_password, $title, $forname, $surname, $email, $degree, $gender, $year, 'Student', $sid, $mysqli);
+      $tmp_userID = UserUtils::createUser($username, $encpw_password, $title, $forname, $surname, $email, $degree, $gender, $year, 'Student', $sid, $mysqli);
 
-      if ($added == true) {
+      if ($tmp_userID !== false) {
         $users['added'][] = $username;
       }
       $users['degrees'][$degree] = $degree;
@@ -145,11 +166,7 @@ function add_users_from_file($fileName) {
       //add students to modules
       $module = trim($fields[$header['modules']]);
       $session = trim($fields[$header['session']]);
-      echo "Insert " . trim($fields[$header['modules']]) . " $tmp_userID - " . trim($fields[$header['session']]) . "<br />\n";
-      $result = $mysqli->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1)");
-      $result->bind_param('iss', $tmp_userID, $module, $session);
-      $result->execute();
-      $result->close();
+      UserUtils::addUserToModule($tmp_userID, $module, $session, $mysqli);
     }
   }
 

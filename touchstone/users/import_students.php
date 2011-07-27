@@ -102,10 +102,9 @@
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">
 
-<p style="text-align:justify">CSV file should contain the columns in the following order: student_id, Full name, First names, surname, title, Course code, Degree qual aim, Degree Title, Year of course, Mode of study, School, Subject, Attendance status, Registered, Fee Status, Fee band, Date of entry, Local email (NB this is the SATURN export format).</p>
+<p>CSV file should contain the columns:</p><blockquote>ID, First Names, Surname Title, Course code, Year of study, Email, [Modules, Session].</blockquote>
 
 <div>Please select the CVS file you wish to load:</div>
-
 
 <div align="center">
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
