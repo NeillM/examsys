@@ -14,7 +14,7 @@
   //require '../config/config.inc';
   set_time_limit(0);
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
-  echo "\nStarting update from version 4.0 to 4.0.1\n";
+  echo "\nStarting update from version 4.0 to 4.1\n";
   ob_start();
   
   // 15/06/2011
@@ -260,6 +260,22 @@
     $adjust->execute();
     $adjust->close();
     echo "<div>CREATE TABLE paper_metadata_security (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, paperID int, name varchar(255), value varchar(255))</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 27/07/2011 - New table questions_metadata.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions_metadata' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE questions_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, questionID int, type varchar(255), value varchar(255))");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>CREATE TABLE questions_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, questionID int, type varchar(255), value varchar(255))</div>\n";
     ob_flush();
     flush();
   }
