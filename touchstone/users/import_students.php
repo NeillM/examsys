@@ -24,7 +24,7 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
+  require '../include/admin_auth.inc';
   require '../include/errors.inc';
   require '../include/import_users.inc';
   
@@ -95,20 +95,23 @@
 <br />
 <br />
 
-<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; width:700px; margin-left:auto; margin-right:auto">
+<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; width:730px; margin-left:auto; margin-right:auto">
 <tr>
 <td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%">Import Students</span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">
 
-<p>CSV file should contain the columns:</p><blockquote>ID, First Names, Surname Title, Course code, Year of study, Email, [Modules, Session].</blockquote>
+<p>TouchStone can bulk upload student details and create new accounts from CSV files. The first row should be a header row containing the following fields:</p>
+<blockquote>ID, First Names, Family Name, Title, Degree, Year of Study and Email</blockquote>
+<p>The extra fields 'Modules' and 'Session' can be added to enrol the new students on the specified module at the same time.</p> 
 
-<div>Please select the CVS file you wish to load:</div>
-
-<div align="center">
+<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="695" height="59" alt="Headings" border="1" /></div>
+<br />
+<br />
+<div style="text-align:center">
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
-<p><input type="file" size="50" name="csvfile" /></p>
+<p><strong>CSV File:</strong> <input type="file" size="50" name="csvfile" /></p>
 
 <div align="center"><input type="checkbox" name="welcome" value="1" />&nbsp;Send welcome email to user</div>
 <p><input type="submit" style="width:100px" value="Import" name="submit" />&nbsp;<input style="width:100px" type="button" value="Cancel" name="cancel" onclick="history.go(-1)" /></p>
