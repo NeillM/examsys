@@ -376,7 +376,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       
       $loop_limit = max(count($matching_scenarios), count($matching_media));
       for($i = 0; $i <= $loop_limit; $i++) {
-        if (trim($matching_scenarios[$i]) != '' or (isset($matching_media[$i + 1]) and trim($matching_media[$i + 1]) != '')) $question_no++;
+        if (isset($matching_scenarios[$i]) and trim($matching_scenarios[$i]) != '' or (isset($matching_media[$i + 1]) and trim($matching_media[$i + 1]) != '')) $question_no++;
       }
 
       $group = $q_group;
@@ -463,17 +463,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
   echo displayEditTab($created, $modified, $locked);
 ?>
 </table>
-      <?php
-      if ($locked != '') {
-        echo "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"width:100%; font-size:90%\">\n";
-        echo "<tr><td style=\"width:35px; height:32px; text-align:right; background-image:url('../../artwork/locked_gradient.png'); background-repeat:repeat-x\"><img src=\"../../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../../artwork/locked_gradient.png'); background-repeat:repeat-x\"><strong>Question Locked</strong>&nbsp;&nbsp;&nbsp;This question is now locked and cannot be modified. <a style=\"color:black\" href=\"#\" onclick=\"launchHelp(161); return false;\">Click for more details.</a></td></tr>\n";
-        echo "</table>\n";
-        $disabled = ' disabled';
-      } else {
-        $disabled = check_edit_rights($tmp_ownerID, $mysqli);
-        $checkout_author = check_lock_status($checkout_authorID, $checkout_time, $disabled, $mysqli, $q_id);
-      }
-      ?>
+  <?php
+    $disabled = check_edit_rights($q_id, $checkout_authorID, $checkout_time, $locked, $mysqli);
+  ?>
   <table cellpadding="3" cellspacing="0" border="0" align="center">
     <tr>
       <td class="section" colspan="2">General Details</td>
