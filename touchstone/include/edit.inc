@@ -47,6 +47,10 @@ function displayEditTab($created, $modified, $locked) {
 }
 
 function check_fullSave($q_id, $mysqli) {
+  if ($_POST['submit'] == 'Limited Save') {
+    return false;
+  }
+
   $result = $mysqli->prepare("SELECT locked FROM questions WHERE q_id=?");
   $result->bind_param('i',$q_id);
   $result->execute();  
@@ -76,6 +80,7 @@ function do_limitedSave($q_id, $mysqli, $userID) {
     
   $question_teams = getTeams();
   record_trackChanges('Edit Question', $q_id, $_POST['old_teams'], $question_teams, 'teams', $userID, $changes);
+  
 
   if ($changes == true) {
     $result = $mysqli->prepare("UPDATE questions SET bloom=?, q_group=?, status=?, last_edited=NOW() WHERE q_id=?");

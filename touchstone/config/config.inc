@@ -77,7 +77,7 @@ switch (strtolower($_SERVER['HTTP_HOST'])) {
   $emergency_support_numbers = array('07909 684985'=>'On Call member of staff','0115 846 6122'=>'Learning Technology Section');
 
 //Global DEBUG OUTPUT
-  if (isset($_SERVER['PHP_AUTH_USER']) AND ($_SERVER['PHP_AUTH_USER'] == 'cczab1' OR $_SERVER['PHP_AUTH_USER'] == 'brzsw3' OR $_SERVER['PHP_AUTH_USER'] == 'nazrji')) {
+  if (isset($_SERVER['PHP_AUTH_USER']) AND ($_SERVER['PHP_AUTH_USER'] == 'cczab1' OR $_SERVER['PHP_AUTH_USER'] == 'brzsw' OR $_SERVER['PHP_AUTH_USER'] == 'nazrji')) {
     require_once $_SERVER['DOCUMENT_ROOT'] . 'touchstone/include/debug.inc';
   } else {
     $dbclass = 'mysqli';
