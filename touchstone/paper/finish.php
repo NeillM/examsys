@@ -307,7 +307,6 @@ table {font-size:100%}
     record_marks($paperID, $_POST['old_screen'], $mysqli, $_POST, $userID, $_POST['previous_duration'], $paper_type, $grade, $year, $attempt);
   }
 
-  // Delete any duplicate entries from the database.
   if (isset($_GET['userid'])) {
     $temp_userID = $_GET['userid'];
   } else {
