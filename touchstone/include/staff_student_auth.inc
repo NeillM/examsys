@@ -25,7 +25,7 @@
 */
 
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-require_once $root . 'touchstone/config/config.inc';
+require_once $root . 'touchstone/config/config.inc.php';
 require_once $cfg_web_root . 'touchstone/include/auth.inc';
 require_once $cfg_web_root . 'touchstone/include/custom_error_handler.inc';
 
