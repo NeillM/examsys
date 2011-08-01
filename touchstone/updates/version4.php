@@ -281,6 +281,38 @@
   }
   $result->close();
   
+  // 01/08/2011 - Add new column for paperID in the errors table.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='paperID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN paperID int");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE sys_errors ADD COLUMN paperID int</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 01/08/2011 - Add new column for paperID in the errors table.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='post_data'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN post_data text");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE sys_errors ADD COLUMN post_data text</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
   //Close the database
   $mysqli->close();
   ob_end_flush();

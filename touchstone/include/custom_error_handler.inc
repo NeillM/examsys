@@ -20,6 +20,7 @@ require_once $root . 'touchstone/config/config.inc';
 set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline) {
+  echo "Error handler<br />";
   global $mysqli, $userID, $debug_pagestart, $dbclass, $cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database;
   
   if (isset($debug_pagestart)) {
@@ -66,8 +67,26 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
       $mysqli->close();
       $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
       
-      $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-      $log_error->bind_param('isssssss', $userID, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD']);
+      $paperID = NULL;
+      if (isset($_GET['paperID'])) {
+        $paperID = $_GET['paperID'];
+      } elseif (isset($_POST['paperID'])) {
+        $paperID = $_POST['paperID'];
+      }
+      
+      $post_data = '';
+      if (isset($_POST)) {
+        foreach ($_POST as $key=>$value) {
+          if ($post_data == '') {
+            $post_data = "$key=$value";
+          } else {
+            $post_data .= ", $key=$value";
+          }
+        }
+      }
+      
+      $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)");
+      $log_error->bind_param('isssssssis', $userID, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
       $log_error->execute();
       $log_error->close();
     }

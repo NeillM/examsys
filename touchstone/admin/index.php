@@ -75,8 +75,14 @@
 <?php
   require '../include/admin_options.inc';
   
+  // How many guest accounts are reserved
   $results = $mysqli->query("SELECT id FROM temp_users");
   $temp_account_no = $results->num_rows;
+  $results->close();
+  
+  // How many system errors are there
+  $results = $mysqli->query("SELECT id FROM sys_errors WHERE fixed IS NULL");
+  $sys_error_no = $results->num_rows;
   $results->close();
 
   $mysqli->close();
@@ -93,7 +99,10 @@
   if ($temp_account_no > 0) {
     $added_string = ' <span style="background-color:red; color:white; font-weight:bold">&nbsp;' . $temp_account_no . '&nbsp;</span>';
   }
-  $titles = array('Calendar','Clear Guest Accounts' . $added_string,'Clear Old Logs','Clear Orphan Media','Clear Training','Computer Labs','Degrees','Modules','Optimize Tables','Schools','SMS Imports','Summative Exam Stats','System Errors','System Information','Trac (issue tracking)','User Management');
+  if ($sys_error_no > 0) {
+    $err_added_string = ' <span style="background-color:red; color:white; font-weight:bold">&nbsp;' . $sys_error_no . '&nbsp;</span>';
+  }
+  $titles = array('Calendar','Clear Guest Accounts' . $added_string,'Clear Old Logs','Clear Orphan Media','Clear Training','Computer Labs','Degrees','Modules','Optimize Tables','Schools','SMS Imports','Summative Exam Stats','System Errors' . $err_added_string,'System Information','Trac (issue tracking)','User Management');
   $paths = array('calendar.php#' . date("n"),'clear_guest_users.php','clear_old_logs.php','orphan_media.php','clear_training_module.php','list_labs.php','list_degrees.php','list_modules.php','optimize_tables.php','list_schools.php','sms_import_summary.php','summative_stats.php?year=' . date('Y'),'sys_error_list.php','system_info.php','https://suivarro.nottingham.ac.uk/trac/touchstone/','../users/search.php');
   $images = array('calendar_icon.png','clear_guest_users.png','clear_logs.png','remove_orphan_icon.png','training.png','computer_lab_48.png','degrees_icon.png','modules_icon.png','optimize_tables_icon.png','school_icon.png','sms_import_icon.png','summative_stats.png','bug.png','information.png','trac_logo.png','user_accounts_icon.png');
 
