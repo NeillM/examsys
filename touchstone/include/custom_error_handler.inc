@@ -24,7 +24,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
   
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them
-    return;
+    return false;
   }
 
   switch ($errno) {
