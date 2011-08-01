@@ -66,9 +66,9 @@
     }
     foreach($tab_array as $individual_tab) {
       if ($individual_tab == $current_tab) {
-        $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('$individual_tab')\">$individual_tab</td>";
+        $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('" . $individual_tab . "_tab')\">$individual_tab</td>";
       } else {
-        $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('$individual_tab')\">$individual_tab</td>";
+        $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('" . $individual_tab . "_tab')\">$individual_tab</td>";
       }
     }
     $html .= "</tr></table></td><td align=\"right\" style=\"background-color:#F1F5FB\">$right_text</td></tr>\n";
@@ -263,13 +263,13 @@ a.access:hover {color:white}
   }
 
   function showTab(tabID) {
-    document.getElementById('Log').style.display = 'none';
-    document.getElementById('Modules').style.display = 'none';
-    document.getElementById('Admin').style.display = 'none';
-    document.getElementById('Notes').style.display = 'none';
-    document.getElementById('Accessibility').style.display = 'none';
-    document.getElementById('Teams').style.display = 'none';
-    document.getElementById('Metadata').style.display = 'none';
+    document.getElementById('Log_tab').style.display = 'none';
+    document.getElementById('Modules_tab').style.display = 'none';
+    document.getElementById('Admin_tab').style.display = 'none';
+    document.getElementById('Notes_tab').style.display = 'none';
+    document.getElementById('Accessibility_tab').style.display = 'none';
+    document.getElementById('Teams_tab').style.display = 'none';
+    document.getElementById('Metadata_tab').style.display = 'none';
     
     document.getElementById(tabID).style.display = '';
   }
@@ -550,9 +550,9 @@ a.access:hover {color:white}
 </table>
 <?php
   if ($tab == 'log') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Log\" style=\"width:100%\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Log_tab\" style=\"width:100%\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Log\" style=\"width:100%; display:none\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Log_tab\" style=\"width:100%; display:none\">\n";
   }
   echo drawTabs('Log',6,'',$tmp_roles);
   
@@ -698,9 +698,9 @@ a.access:hover {color:white}
 
 <?php
   if ($tab == 'modules') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Modules\" style=\"width:100%\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Modules_tab\" style=\"width:100%\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Modules\" style=\"width:100%; display:none\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Modules_tab\" style=\"width:100%; display:none\">\n";
   }
   $results = $mysqli->query("SELECT MAX(calendar_year) AS calendar_year FROM student_modules");
   $row = $results->fetch_assoc();
@@ -743,9 +743,9 @@ a.access:hover {color:white}
 
 <?php
   if ($tab == 'admin') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin\" style=\"width:100%\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin_tab\" style=\"width:100%\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin\" style=\"width:100%; display:none\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin_tab\" style=\"width:100%; display:none\">\n";
   }
   echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=admin\" method=\"post\">";
   
@@ -783,9 +783,9 @@ a.access:hover {color:white}
   <?php
 
   if ($tab == 'notes') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes\" style=\"width:100%\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes_tab\" style=\"width:100%\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes\" style=\"width:100%; display:none\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes_tab\" style=\"width:100%; display:none\">\n";
   }
   $link_html = '<img src="../artwork/shortcut.png" onclick="newStudentNote()" width="10" height="10" border="0" />&nbsp;<a href="" onclick="newStudentNote(); return false;" class="access">create New Note</a>&nbsp;';
   echo drawTabs('Notes',4,$link_html,$tmp_roles);
@@ -797,14 +797,13 @@ a.access:hover {color:white}
   }
   $notes_results->close();
 ?>
-
 </table>
 
 <?php
   if ($tab == 'accessibility') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility\" style=\"width:100%; text-align:left\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility_tab\" style=\"width:100%; text-align:left\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility\" style=\"width:100%; text-align:left; display:none\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility_tab\" style=\"width:100%; text-align:left; display:none\">\n";
   }
   echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=accessibility\" method=\"post\">";
   echo drawTabs('Accessibility',1,'',$tmp_roles);
@@ -972,9 +971,9 @@ a.access:hover {color:white}
 <?php
   $metadata_no = 0;
   if ($tab == 'metadata') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata\" style=\"width:100%\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata_tab\" style=\"width:100%\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata\" style=\"width:100%; display:none\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata_tab\" style=\"width:100%; display:none\">\n";
   }
   echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
   echo drawTabs('Metadata',5,'',$tmp_roles);
@@ -1012,9 +1011,9 @@ a.access:hover {color:white}
 
 <?php
   if ($tab == 'teams') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams\" style=\"width:100%\" onclick=\"hideAll()\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams_tab\" style=\"width:100%\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams\" style=\"width:100%; display:none\" onclick=\"hideAll()\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams_tab\" style=\"width:100%; display:none\">\n";
   }
   echo drawTabs('Teams',3,'',$tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;Team</td><td class=\"coltitle\">Date Added</td><td class=\"coltitle\">Type</td></tr>\n";
