@@ -266,11 +266,13 @@
           foreach ($sessions as $identifier=>&$session) {
             foreach ($session['objectives'] as &$obj) {
               $old_objID = $obj['id'];
-                foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
-                if ($new_obj['id'] == $old_objID AND $new_obj['content'] == $obj['content']) {
-                  //build a list of objectives that are still in both sessions
-                  $mappings_copy_objID[$old_objID] = $old_objID;
-                  break;
+                if (isset($new_course[$module][$identifier]['objectives'])){
+                  foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
+                  if ($new_obj['id'] == $old_objID AND $new_obj['content'] == $obj['content']) {
+                    //build a list of objectives that are still in both sessions
+                    $mappings_copy_objID[$old_objID] = $old_objID;
+                    break;
+                  }
                 }
               }
             }
@@ -338,8 +340,7 @@
   }
   $mysqli->close();
   
-  function copyProperties($userID, $mysqli, &$calendar_year, &$new_calendar_year, &$moduleID)
-  {
+  function copyProperties($userID, $mysqli, &$calendar_year, &$new_calendar_year, &$moduleID) {
     $result = $mysqli->prepare("SELECT * FROM properties WHERE property_id=?");
     $result->bind_param('i', $_POST['paperID']);
     $result->execute();
@@ -368,8 +369,8 @@
 
       $new_calendar_year = checkSession($calendar_year);
       
-      $addPaper = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL)");
-      $addPaper->bind_param('ssssssssssssisiiisssisisdisssssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $externals, $tmp_exam_duration, $created, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $moduleID, $new_calendar_year, $internal_reviewers, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
+      $addPaper = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL,NOW(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL)");
+      $addPaper->bind_param('ssssssssssssisiiisssisidisssssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $externals, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $moduleID, $new_calendar_year, $internal_reviewers, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
       $addPaper->execute();
       $new_paper_id = $mysqli->insert_id;
       $addPaper->close();
