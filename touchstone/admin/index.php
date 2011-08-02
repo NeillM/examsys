@@ -99,6 +99,7 @@
   if ($temp_account_no > 0) {
     $added_string = ' <span style="background-color:red; color:white; font-weight:bold">&nbsp;' . $temp_account_no . '&nbsp;</span>';
   }
+  $err_added_string = '';
   if ($sys_error_no > 0) {
     $err_added_string = ' <span style="background-color:red; color:white; font-weight:bold">&nbsp;' . $sys_error_no . '&nbsp;</span>';
   }
