@@ -757,7 +757,7 @@ a.access:hover {color:white}
    
   $old_faculty = '';
   $admin_school_no = 0;
-  $result = $mysqli->prepare("SELECT id, faculty, school FROM schools ORDER BY faculty, school");
+  $result = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY faculty.name, school");
   $result->execute();  
   $result->bind_result($schoolID, $faculty, $school);
   while ($result->fetch()) {
