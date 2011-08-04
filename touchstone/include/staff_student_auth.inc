@@ -93,6 +93,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
             $message .= "<li>If you are still stuck ask an invigilator for a <a href=\"guest_account.php\" style=\"color:blue\"><strong>Temporary Account</strong></a></li>";
           }
           $message .= "<li>" . $ldap_user_data['error'] . "</li></ul>";
+          if(strpos($userroles,'External Examiner') !== false) $message .= $fp_link;
           access_denied($message, true);
         }
       } else {
