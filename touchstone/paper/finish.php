@@ -381,10 +381,10 @@ table {font-size:100%}
     $total_marks = 0;
     $user_mark = 0;
     
-    $answer_data = $mysqli->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqli->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('i', $_GET['paperID']);
     $answer_data->execute();
-    $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks, $display_pos, $status);
+    $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $display_pos, $status);
     while ($row = $answer_data->fetch()) {
       if ($old_q_id != $q_id or $old_display_pos != $display_pos) {  // New question.
         if ($old_q_id != 0) {
@@ -393,12 +393,12 @@ table {font-size:100%}
           } else {
             $tmp_exclude = '';
           }
-          $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_score_method);
+          $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_score_method);
           if ($paper[$q_no]['status'] != 'Experimental') $total_marks += $paper[$q_no]['totalpos'];
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_score_method, $old_q_media_width, $old_q_media_height);
         }
         $correct_no = 0;
-        $old_marks = 0;
+        $old_marks_correct = 0;
         $q_no++;
         $paper[$q_no]['q_id'] = $q_id;
         $paper[$q_no]['screen'] = $screen;
@@ -408,7 +408,7 @@ table {font-size:100%}
         $paper[$q_no]['q_type'] = $q_type;
         $paper[$q_no]['leadin'] = $leadin;
         $paper[$q_no]['notes'] = $notes;
-        $paper[$q_no]['qmarks'] = $marks;
+        $paper[$q_no]['qmarks'] = $marks_correct;
         $paper[$q_no]['q_media'] = $q_media;
         $paper[$q_no]['q_media_height'] = $q_media_height;
         $paper[$q_no]['q_media_width'] = $q_media_width;
@@ -446,7 +446,7 @@ table {font-size:100%}
       $old_q_media_width = $q_media_width;
       $old_q_media_height = $q_media_height;
       $old_status = $status;
-      $old_marks = $marks;
+      $old_marks_correct = $marks_correct;
     }
     $answer_data->close();
     if(isset($excluded[$old_q_id])) {
@@ -454,7 +454,7 @@ table {font-size:100%}
     } else {
       $tmp_excluded = '';
     }
-    $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_excluded, $old_marks, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_score_method);
+    $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_score_method);
     if ($paper[$q_no]['status'] != 'Experimental') $total_marks += $paper[$q_no]['totalpos'];
     $total_random_mark += qRandomMarks($old_q_type, $tmp_excluded, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_score_method, $old_q_media_width, $old_q_media_height);
     

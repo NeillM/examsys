@@ -76,11 +76,11 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
   $branch_no = 0;
   $option_order = '';
   $old_display_pos = 0;
-  $questions = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, score_method, marks, display_pos FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+  $questions = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, score_method, marks_correct, display_pos FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
   $questions->bind_param('ii', $paper_id, $screen_no); 
   $questions->execute();
   $questions->store_result();
-  $questions->bind_result($q_id, $scenario, $q_type, $option_text, $q_media, $correct, $score_method, $marks, $display_pos);
+  $questions->bind_result($q_id, $scenario, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct, $display_pos);
   while ($row = $questions->fetch()) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
       if ($q_type != 'info') $tmp_question_no++;
@@ -103,13 +103,13 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach($selected_q_id as &$used_qid) {
 	        // Look up database.
-          $random_data = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, score_method, marks FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+          $random_data = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, score_method, marks_correct FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
           $random_data->bind_param('i', $used_qid); 
           $random_data->execute();
           $random_data->store_result();
-          $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $score_method, $marks);
+          $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct);
           while ($random_row = $random_data->fetch()) {
-            $paper_array[] = array('q_id'=>$new_q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'score_method'=>$score_method,'marks'=>$marks,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
+            $paper_array[] = array('q_id'=>$new_q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'score_method'=>$score_method,'marks'=>$marks_correct,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
           }
           $random_data->close();
         }
@@ -117,7 +117,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         $random_on = true;
       }
     } else {
-      $paper_array[] = array('q_id'=>$q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'score_method'=>$score_method,'marks'=>$marks,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
+      $paper_array[] = array('q_id'=>$q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'score_method'=>$score_method,'marks'=>$marks_correct,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
     }
     $old_q_type = $q_type;
     $old_q_id = $q_id;

@@ -471,11 +471,11 @@ if (isset($_GET['change_screen'])) {
   $options = 0;
   
   // Get the questions (if any).
-  $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, correct, score_method, q_media, q_media_width, q_media_height, marks, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
+  $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, correct, score_method, q_media, q_media_width, q_media_height, marks_correct, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $correct, $score_method, $q_media, $q_media_width, $q_media_height, $marks, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
+  $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $correct, $score_method, $q_media, $q_media_width, $q_media_height, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
   $temp_array = array();
   while ($row = $result->fetch()) {
     // latex check [tex]
@@ -601,7 +601,7 @@ if (isset($_GET['change_screen'])) {
     $old_q_media_width = $q_media_width;
     $old_q_media_height = $q_media_height;
     $old_option_text[] = $option_text;
-    $old_marks = $marks;
+    $old_marks = $marks_incorrect;
     if(!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'timedate')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
@@ -730,7 +730,7 @@ if (isset($_GET['change_screen'])) {
   $screen_marks = 0;
   $old_screen = 0;
   $question_number = 0;
-  $marks_error = false;
+  $marks_incorrect_error = false;
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
     if($temp_array[$x]['options'] == 0) $temp_array[$x]['warnings'] .= 'No options defined for question';
@@ -889,7 +889,7 @@ if (isset($_GET['change_screen'])) {
     } else {
       if ($temp_array[$x]['status'] !== 'Experimental' and $temp_array[$x]['marks'] === 'ERR') {
         echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Warning: Variable number of marks" border="0" /></td>';
-        $marks_error = true;
+        $marks_incorrect_error = true;
       } elseif ($temp_array[$x]['status'] === 'Experimental') {
         echo '<td style="text-align:right; vertical-align:top">N/A</td>';
       } else {
@@ -922,7 +922,7 @@ if (isset($_GET['change_screen'])) {
 
     if ($row_no > 0 and $paper_type != '3' and $paper_type != '4') {
       echo "<tr><td colspan=\"4\"></td><td style=\"border-top:1px solid black\" align=\"right\">";
-      if ($marks_error == true) {
+      if ($marks_incorrect_error == true) {
         echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Warning: Variable number of marks" border="0" />';
       } else {
         echo $total_marks;

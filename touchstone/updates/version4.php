@@ -313,6 +313,170 @@
   }
   $result->close();
 
+  // 01/08/2011 - Change to database structure for more flexible marking
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='display_method'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN score_method display_method text");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE questions CHANGE COLUMN score_method display_method text</div>\n";
+    ob_flush();
+    flush();
+    
+    $adjust = $mysqli->prepare("ALTER TABLE questions ADD COLUMN score_method enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark')");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE questions ADD COLUMN score_method enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark')</div>\n";
+    ob_flush();
+    flush();
+    
+    $adjust = $mysqli->prepare("UPDATE questions SET score_method = 'Mark per Option'");
+    $adjust->execute();
+    $adjust->close();
+    
+    // Update the BonusMark setting
+    $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method='BonusMark'");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($q_id);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE questions SET display_method='', score_method='Bonus Mark' WHERE q_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+    
+    // Update the StrictOrder setting
+    $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method='StrictOrder'");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($q_id);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE questions SET display_method='', score_method='Mark per Option' WHERE q_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+    
+    // Update the AllItemsCorrect setting
+    $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method='AllItemsCorrect'");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($q_id);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE questions SET display_method='', score_method='Mark per Question' WHERE q_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+    
+    // Update the OrderNeighbours setting
+    $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method='OrderNeighbours'");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($q_id);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE questions SET display_method='', score_method='Allow partial Marks' WHERE q_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+    
+    $adjust = $mysqli->prepare("ALTER TABLE options CHANGE COLUMN marks marks_correct float");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE options CHANGE COLUMN marks marks_correct float</div>\n";
+    ob_flush();
+    flush();
+    
+    $adjust = $mysqli->prepare("ALTER TABLE options ADD COLUMN marks_incorrect float");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE options ADD COLUMN marks_incorrect float</div>\n";
+    ob_flush();
+    flush();
+    
+    $adjust = $mysqli->prepare("ALTER TABLE options ADD COLUMN marks_partial float");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE options ADD COLUMN marks_partial float</div>\n";
+    ob_flush();
+    flush();
+
+    $adjust = $mysqli->prepare("UPDATE options SET marks_incorrect=0");
+    $adjust->execute();
+    $adjust->close();
+
+    $adjust = $mysqli->prepare("UPDATE options SET marks_partial=0");
+    $adjust->execute();
+    $adjust->close();
+    
+    // Update options for negative marking
+    $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method='TF_NegativeAbstain' OR display_method='YN_NegativeAbstain'");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($q_id);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE options SET marks_incorrect=-1 WHERE o_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+
+    // Update options for half-negative marking
+    $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method='TF_NegativeAbstainHalf'");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($q_id);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE options SET marks_incorrect=-0.5 WHERE o_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+  }
+  $result->close();
+
+  // 01/08/2011 - Change to database structure for more flexible marking
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='schools' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='facultyID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE schools ADD COLUMN facultyID int");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE schools ADD COLUMN facultyID int</div>\n";
+    ob_flush();
+    flush();
+    
+    // Populate the new field with Faculty IDs
+    $q_data = $mysqli->prepare("SELECT id, name FROM faculty");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($faculty_id, $faculty_name);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE schools SET facultyID=$faculty_id WHERE faculty='$faculty_name'");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+    
+    $adjust = $mysqli->prepare("ALTER TABLE schools DROP COLUMN faculty");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE schools DROP COLUMN faculty</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+
   //Close the database
   $mysqli->close();
   ob_end_flush();

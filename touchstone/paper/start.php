@@ -589,11 +589,11 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   $old_theme = '';
   $previous_q_type = '';
 
-  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
   $question_data->bind_param('ii', $_GET['paperID'], $current_screen);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
+  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
   $num_rows = $question_data->num_rows;
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
@@ -618,6 +618,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
       $tmp_questions_array[$q_no]['q_id'] = $q_id;
       $tmp_questions_array[$q_no]['display_pos'] = $display_pos;
       $tmp_questions_array[$q_no]['score_method'] = $score_method;
+      $tmp_questions_array[$q_no]['display_method'] = $display_method;
       $tmp_questions_array[$q_no]['q_media'] = $q_media;
       $tmp_questions_array[$q_no]['q_media_width'] = $q_media_width;
       $tmp_questions_array[$q_no]['q_media_height'] = $q_media_height;
@@ -625,7 +626,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
       $tmp_questions_array[$q_no]['dismiss'] = '';
       $used_questions[$q_id] = 1;
     }
-    $tmp_questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+    $tmp_questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   } 
   $question_data->close();
   
