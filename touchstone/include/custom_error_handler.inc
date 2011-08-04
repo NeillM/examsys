@@ -20,7 +20,6 @@ require_once $root . 'touchstone/config/config.inc.php';
 set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline) {
-  echo "Error handler<br />";
   global $mysqli, $userID, $debug_pagestart, $dbclass, $cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database;
   
   if (isset($debug_pagestart)) {
