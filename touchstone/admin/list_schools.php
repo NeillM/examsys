@@ -99,7 +99,7 @@
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT schools.id, schools.school, faculty, COUNT(modules.id) FROM schools LEFT JOIN modules ON schools.id=modules.schoolid GROUP BY school ORDER BY faculty, school");
+$result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id GROUP BY school ORDER BY faculty.name, school");
 $result->execute();
 $result->bind_result($id, $school, $faculty, $module_no);
 while ($result->fetch()) {
