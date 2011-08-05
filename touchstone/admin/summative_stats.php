@@ -52,14 +52,14 @@
 <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
 </tr>
 <tr>
-<td colspan="2" style="background-color:#F1F5FB"><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $_GET['year']; ?> Summative Exam Stats</td>
+<td colspan="2" style="background-color:#F1F5FB"><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $_GET['year']; ?>/<?php echo (substr($_GET['year'],2,2)+1); ?> Summative Exam Stats</td>
 <td style="background-color:#F1F5FB; text-align:right; vertical-align:bottom; padding-bottom:2px; padding-right:6px"><select name="year" id="year" onchange="jumpTo()">
 <?php
 for ($i=2005; $i<=date('Y'); $i++) {
   if ($i == $_GET['year']) {
-    echo "<option value=\"$i\" selected>$i</option>\n";
+    echo "<option value=\"$i\" selected>$i/" . substr(($i+1),2,2) . "</option>\n";
   } else {
-    echo "<option value=\"$i\">$i</option>\n";
+    echo "<option value=\"$i\">$i/" . substr(($i+1),2,2) . "</option>\n";
   }
 }
 ?>
@@ -82,7 +82,7 @@ $month_max = 0;
 $old_month = '';
 $distinct_users = array();
 
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%M'), start_date, end_date, labs FROM properties WHERE start_date > " . $year . "0101000000 AND end_date < " . $year . "1231235959 AND labs != '' AND deleted IS NULL ORDER BY start_date");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%M'), start_date, end_date, labs FROM properties WHERE start_date > " . $year . "0901000000 AND end_date < " . ($year+1) . "0831235959 AND labs != '' AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->store_result();
 $result->bind_result($property_id, $paper_title, $month, $start_date, $end_date, $labs);
