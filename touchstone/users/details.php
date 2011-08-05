@@ -702,37 +702,44 @@ a.access:hover {color:white}
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Modules_tab\" style=\"width:100%; display:none\">\n";
   }
-  $results = $mysqli->query("SELECT MAX(calendar_year) AS calendar_year FROM student_modules");
-  $row = $results->fetch_assoc();
-  $most_recent_year = $row['calendar_year'];  
+  
+  $results = $mysqli->prepare("SELECT MAX(calendar_year) AS calendar_year FROM student_modules");
+  $results->execute();
+  $results->bind_result($most_recent_year);
+  $results->fetch();
+  $results->close();
   
   echo drawTabs('Modules',4,'',$tmp_roles);
   echo "<tr><td class=\"coltitle\" style=\"width:20px\">&nbsp;</td><td class=\"coltitle\">&nbsp;Module ID</td><td class=\"coltitle\">Name</td><td class=\"coltitle\">Academic Year</td></tr>\n";
   $old_year = '';
   $html = '';
   $row_no = 0;
-  $query_string = "SELECT DISTINCT student_modules.moduleid, fullname, student_modules.calendar_year, attempt FROM (student_modules, modules) WHERE student_modules.moduleid=modules.moduleid AND userID=$tmp_id ORDER BY student_modules.calendar_year DESC, student_modules.moduleid";
-  $results = $mysqli->query($query_string);
+  $results = $mysqli->prepare("SELECT DISTINCT student_modules.moduleid, fullname, student_modules.calendar_year, attempt FROM (student_modules, modules) WHERE student_modules.moduleid=modules.moduleid AND userID=? ORDER BY student_modules.calendar_year DESC, student_modules.moduleid");
+  $results->bind_param('i', $tmp_id);
+  $results->execute();
+  $results->store_result();
+  $results->bind_result($moduleid, $fullname, $calendar_year, $attempt);
+  $results->fetch();
   if ($results->num_rows == 0) {
     $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>$most_recent_year&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('$most_recent_year','$grade'); return false;\">Edit Modules...</a></nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
-  while ($row = $results->fetch_assoc()) {
-    if ($row_no == 0 and $row['calendar_year'] != $most_recent_year and $tmp_roles == 'Student') {
+  while ($results->fetch()) {
+    if ($row_no == 0 and $calendar_year != $most_recent_year and $tmp_roles == 'Student') {
       $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>$most_recent_year&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('$most_recent_year','$grade'); return false;\">Edit Modules...</a></nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
-    if ($row['calendar_year'] != $old_year) {
-      $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $row['calendar_year'];
-      if ($row['calendar_year'] == $most_recent_year) $html .= "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . $row['calendar_year'] . "','$grade'); return false;\">Edit Modules...</a>";
+    if ($calendar_year != $old_year) {
+      $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $calendar_year;
+      if ($calendar_year == $most_recent_year) $html .= "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('$calendar_year','$grade'); return false;\">Edit Modules...</a>";
       $html .= "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
     $html .= '<tr>';
-    if ($row['attempt'] == 1) {
+    if ($attempt == 1) {
       $html .= '<td></td>';
     } else {
       $html .= '<td><img src="../artwork/resit.png" width="16" height="16" alt="Resit" border="0" /></td>';
     }
-    $html .= "<td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module=" . $row['moduleid'] . "\">" . $row['moduleid'] . "</a></td><td><a style=\"color:blue\" href=\"../folder/details.php?module=" . $row['moduleid'] . "\" target=\"_top\">" . $row['fullname'] . "</a></td><td>" . $row['calendar_year'] . "</td></tr>\n";
-    $old_year = $row['calendar_year'];
+    $html .= "<td>&nbsp;<a styele=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">$moduleid</a></td><td><a style=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">$fullname</a></td><td>$calendar_year</td></tr>\n";
+    $old_year = $calendar_year;
     $row_no++;
   }
   
@@ -757,10 +764,10 @@ a.access:hover {color:white}
    
   $old_faculty = '';
   $admin_school_no = 0;
-  $result = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY faculty.name, school");
-  $result->execute();  
-  $result->bind_result($schoolID, $faculty, $school);
-  while ($result->fetch()) {
+  $results = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY faculty.name, school");
+  $results->execute();  
+  $results->bind_result($schoolID, $faculty, $school);
+  while ($results->fetch()) {
     if ($old_faculty != $faculty) {
       echo '<tr><td colspan="2"><table border="0" style="padding-top:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $faculty . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
     }
@@ -774,7 +781,7 @@ a.access:hover {color:white}
     $old_faculty = $faculty;
     $admin_school_no++;
   }
-  $result->close();
+  $results->close();
   echo "</table>\n</td></tr>\n";
   ?>
   <tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="Save" style="width:100px" /><input type="hidden" name="admin_school_no" value="<?php echo $admin_school_no; ?>" /></td></tr>
@@ -790,12 +797,21 @@ a.access:hover {color:white}
   $link_html = '<img src="../artwork/shortcut.png" onclick="newStudentNote()" width="10" height="10" border="0" />&nbsp;<a href="" onclick="newStudentNote(); return false;" class="access">create New Note</a>&nbsp;';
   echo drawTabs('Notes',4,$link_html,$tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;Date</td><td class=\"coltitle\">Paper</td><td class=\"coltitle\">Note</td><td class=\"coltitle\">Author</td></tr>\n";
-  $query = "SELECT note, note_date, paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=$tmp_id";
-  $notes_results = $mysqli->query($query);
-  while ($row = $notes_results->fetch_assoc()) {
-    echo "<tr><td>&nbsp;<img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;" . $row['note_date'] . "</td><td><a href=\"../paper/details.php?paperID=" . $row['paper_id'] . "&module=" . $row['moduleID'] . "\">" . $row['paper_title'] . "</a></td><td>" . $row['note'] . "</td><td>" . $row['note_author'] . "</td></tr>";
+  
+  $results = $mysqli->prepare("SELECT note, note_date, paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=?");
+  $results->bind_param('i', $tmp_id)
+  $results->execute();
+  $results->store_result();
+  $results->bind_result($note, $note_date, $note_paper_id, $note_moduleID, $paper_title, $note_author);
+  $results->fetch();
+
+  
+  //$query = "SELECT note, note_date, paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=$tmp_id";
+  //$notes_results = $mysqli->query($query);
+  while ($results->fetch()) {
+    echo "<tr><td>&nbsp;<img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;$note_date</td><td><a href=\"../paper/details.php?paperID=" . $note_paper_id . "&module=" . $note_moduleID . "\">$paper_title</a></td><td>$note</td><td>$note_author</td></tr>";
   }
-  $notes_results->close();
+  $results->close();
 ?>
 </table>
 

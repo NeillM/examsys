@@ -76,11 +76,11 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
   $branch_no = 0;
   $option_order = '';
   $old_display_pos = 0;
-  $questions = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, score_method, marks_correct, display_pos FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+  $questions = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
   $questions->bind_param('ii', $paper_id, $screen_no); 
   $questions->execute();
   $questions->store_result();
-  $questions->bind_result($q_id, $scenario, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct, $display_pos);
+  $questions->bind_result($q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $score_method, $marks_correct, $marks_incorrect, $marks_partial, $display_pos);
   while ($row = $questions->fetch()) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
       if ($q_type != 'info') $tmp_question_no++;
@@ -103,13 +103,13 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach($selected_q_id as &$used_qid) {
 	        // Look up database.
-          $random_data = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, score_method, marks_correct FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+          $random_data = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
           $random_data->bind_param('i', $used_qid); 
           $random_data->execute();
           $random_data->store_result();
-          $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct);
+          $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $score_method, $marks_correct);
           while ($random_row = $random_data->fetch()) {
-            $paper_array[] = array('q_id'=>$new_q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'score_method'=>$score_method,'marks'=>$marks_correct,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
+            $paper_array[] = array('q_id'=>$new_q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'display_method'=>$display_method,'score_method'=>$score_method,'marks_correct'=>$marks_correct,'marks_incorrect'=>$marks_incorrect,'marks_partial'=>$marks_partial,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
           }
           $random_data->close();
         }
@@ -117,7 +117,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         $random_on = true;
       }
     } else {
-      $paper_array[] = array('q_id'=>$q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'score_method'=>$score_method,'marks'=>$marks_correct,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
+      $paper_array[] = array('q_id'=>$q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'display_method'=>$display_method,'score_method'=>$score_method,'marks_correct'=>$marks_correct,'marks_incorrect'=>$marks_incorrect,'marks_partial'=>$marks_partial,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
     }
     $old_q_type = $q_type;
     $old_q_id = $q_id;
@@ -167,7 +167,9 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
     $q_media = $row['q_media'];
     $correct = $row['correct'];
     $score_method = $row['score_method'];
-    $marks = $row['marks'];
+    $marks_correct = $row['marks_correct'];
+    $marks_incorrect = $row['marks_incorrect'];
+    $marks_partial = $row['marks_partial'];
     $dismiss = '';
     $display_pos = $row['display_pos'];
     if ($old_q_id != $q_id or  $display_pos != $old_display_pos) { 
@@ -177,13 +179,13 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         $mark++;  // Add one mark if the user has all options in the correct order
       }
       if ($old_type == 'mrq') {
-        if ($old_score_method == 'AllItemsCorrect') {
+        if ($old_score_method == 'Mark per Question') {
           if ($correct_rank == true) {
             $mark = 1;
           } else {
             $mark = 0;
           }
-        } elseif ($old_score_method == 'SelectedPositive' and $mrq_options_selected > $totalpos) {
+        } elseif ($old_score_method == 'Mark per Option' and $mrq_options_selected > $totalpos) {
           $mark = 0;
         } elseif ($old_score_method == 'other') {
           $question_part++;
@@ -239,7 +241,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
     switch ($q_type) {
       case 'calculation':
         // Log format is 'users answer', 'correct answer', 'variable values used'.
-        $score_array = explode(',', $score_method);
+        $score_array = explode(',', $display_method);
       
         $qid = 'q' . $question_no;
         if(isset($posted_vars[$qid])) {
@@ -286,17 +288,23 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
               case 8:
                 $H = $individual_variable;
                 break;
+              case 9:
+                $I = $individual_variable;
+                break;
+              case 10:
+                $J = $individual_variable;
+                break;
             }
             $var_no++;
           }
           $answer_equation = $correct;
-          if($score_array[2] == 'Formula') {
+          if ($score_array[2] == 'Formula') {
             // formula answer just do a string comp on the useranswer and the correct one (replace with CAS system later)
             if ($answer_equation != '') {
               eval ("\$answer = \"" . $answer_equation . "\";");
             }
             if ($saved_response_clean == $answer) {
-              $mark = $marks;
+              $mark = $marks_correct;
             }
           } else {
             if ($answer_equation != '') {
@@ -304,9 +312,11 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
               $answer = round($answer, $score_array[0]);
             }
             if ($saved_response_clean == $answer) {
-              $mark = $marks;
+              $mark = $marks_correct;
             } elseif (abs($saved_response_clean - $answer) <= $score_array[1]) {
-              $mark = $marks;
+              $mark = $marks_correct;
+            } else {
+              $mark = $marks_incorrect;
             }
           }
         } else {
@@ -315,7 +325,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         }
         
         $saved_response .= '|' . $answer . '|' . $question_variables;
-        $totalpos = $marks;
+        $totalpos = $marks_correct;
         break;
       case 'dichotomous':
         $qid = 'q' . $question_no . '_' . $question_part;
@@ -355,7 +365,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         }
         break;
       case 'mcq':
-        if(isset($_POST["dismiss$question_no"])) {
+        if (isset($_POST["dismiss$question_no"])) {
           $dismiss = $_POST["dismiss$question_no"];
         } else {
           $dismiss = '';
@@ -372,8 +382,14 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         }
         if ($saved_response == '') $saved_response = '0';
         if ($totalpos == 0) {
-          if ($saved_response == $correct) $mark += $marks;
-          $totalpos += $marks;
+          if ($saved_response == $correct) {
+            $mark += $marks_correct;
+          } elseif ($saved_response != '0') {
+            $mark += $marks_incorrect;
+            //echo $marks_incorrect;
+            //exit;
+          }
+          $totalpos += $marks_correct;
         }
         break;
       case 'mrq':
@@ -390,18 +406,18 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
           $user_response = 'n';
         }
         $saved_response .= $user_response;
-        if ($score_method == 'SelectedPositive') {
-          if ($user_response == 'y' and $correct == 'y') $mark++;
+        if ($score_method == 'Mark per Option') {
+          if ($user_response == 'y' and $correct == 'y') $mark += $marks_correct;
         } else {
           if ($user_response == $correct) {
-            $mark++;
+            $mark += $marks_correct;
           } else {
-            $mark--;
+            $mark += $marks_incorrect;
           }
         }
-        if ($score_method == 'SelectedPositive') {
-          if ($correct == 'y') $totalpos++;
-        } elseif ($score_method == 'AllItemsCorrect') {
+        if ($score_method == 'Mark per Option') {
+          if ($correct == 'y') $totalpos += $marks_correct;
+        } elseif ($score_method == 'Mark per Question') {
           $totalpos = 1;
           if (($user_response == 'y' and $correct == 'n') or ($user_response == 'n' and $correct == 'y')) {
             $correct_rank = false;
@@ -450,13 +466,17 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
               
               for ($x=0; $x<count($correct_answers); $x++) {
                 if ($answer_count == 1) {
-                  if ($posted_vars[$qid] == $correct_answers[0]) $mark++;
+                  if ($posted_vars[$qid] == $correct_answers[0]) {
+                    $mark += $marks_correct;
+                  } elseif ($posted_vars[$qid] != 'u') {
+                    $mark += $marks_incorrect;
+                  }
                 } else {
-                  if ($posted_vars[$qid][$i] == $correct_answers[$x]) $mark++;
+                  if ($posted_vars[$qid][$i] == $correct_answers[$x]) $mark += $marks_correct;
                 }
               }
             }
-            $totalpos += count($correct_answers);
+            $totalpos += count($correct_answers) * $marks_correct;
             $option_no++;
           }
         }
@@ -500,12 +520,12 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         } else {
           $saved_response .= ',' . $posted_vars[$qid];
         }
-        if ($score_method == 'StrictOrder') {
+        if ($score_method == 'Mark per Option') {
           if ($posted_vars[$qid] == $correct) $mark++;
-        } elseif ($score_method == 'AllItemsCorrect') {
+        } elseif ($score_method == 'Mark per Question') {
           if ($question_part == 1) $totalpos++;
           if ($posted_vars[$qid] <> $correct) $correct_rank = false;
-        } elseif ($score_method == 'OrderNeighbours') {
+        } elseif ($score_method == 'Allow partial Marks') {
           if ($posted_vars[$qid] != 0 and $correct != 0) {
             if ($posted_vars[$qid] == $correct) {
               $mark++;
@@ -515,16 +535,16 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
               $mark = $mark + 0.5;
             }
           }
-        } elseif ($score_method == 'BonusMark') {
+        } elseif ($score_method == 'Bonus Mark') {
           if ($posted_vars[$qid] != 0) {
             if ($correct != 0) $mark++;
             if ($posted_vars[$qid] <> $correct) $correct_rank = false;
           }
           if ($posted_vars[$qid] == 0 and $correct != 0) $correct_rank = false;
         }
-        if ($correct != 0 and $score_method != 'AllItemsCorrect') {
+        if ($correct != 0 and $score_method != 'Mark per Question') {
           $totalpos++;
-        } elseif ($score_method == 'StrictOrder') {
+        } elseif ($score_method == 'Mark per Option') {
           $totalpos++;
         }
         break;
@@ -543,10 +563,10 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         if ($saved_response == '') $saved_response = '0';
         
         if ($saved_response == $question_part) {
-          $mark = $marks;
+          $mark = $marks_correct;
         }
         if ($totalpos == 0) {
-          $totalpos += $marks;
+          $totalpos += $marks_correct;
         }
         break;
       case 'timedate':
@@ -668,7 +688,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
           $saved_response = '';
         }
         $mark = 'NULL';
-        $totalpos += $marks;
+        $totalpos += $marks_correct;
         break;
       case 'hotspot':
         $qid = 'q' . $question_no;
@@ -682,7 +702,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         } else {
           $saved_response = '';
         }
-        $totalpos += $marks;
+        $totalpos += $marks_correct;
         break;
       case 'labelling':
         $qid = 'q' . $question_no;
@@ -707,25 +727,25 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
         }
         $flash_args = explode(',',$saved_response);
         $mark = $flash_args[0];     // Get student marks from Flash.
-        $totalpos += $marks;
+        $totalpos += $marks_correct;
         break;
     }
   }                    // End of while loop.
 
   // Log the very last question block.
-  if ($old_type == 'rank' and $correct_rank == true and $mark == ($totalpos - 1) and $old_score_method == 'BonusMark') {
+  if ($old_type == 'rank' and $correct_rank == true and $mark == ($totalpos - 1) and $old_score_method == 'Bonus Mark') {
     $mark++;  // Add one mark if the user has all options in the correct order
-  } elseif ($old_type == 'rank' and $correct_rank == true and $old_score_method == 'AllItemsCorrect') {
+  } elseif ($old_type == 'rank' and $correct_rank == true and $old_score_method == 'Mark per Question') {
     $mark++;  // Add one mark if the user has all options in the correct order
   }
   if ($old_type == 'mrq') {
-    if ($old_score_method == 'AllItemsCorrect') {
+    if ($old_score_method == 'Mark per Question') {
       if ($correct_rank == true) {
         $mark = 1;
       } else {
         $mark = 0;
       }
-    } elseif ($old_score_method == 'SelectedPositive' and $mrq_options_selected > $totalpos) {
+    } elseif ($old_score_method == 'Mark per Option' and $mrq_options_selected > $totalpos) {
       $mark = 0;
     } elseif ($old_score_method == 'other') {
       $question_part++;
@@ -735,7 +755,7 @@ function record_marks($paper_id, $screen_no, $dblink, $posted_vars, $userid, $ex
       $saved_response .= ':' . $posted_vars[$qid];
     }
   }
-  if(isset($posted_vars["order$question_no"])) {
+  if (isset($posted_vars["order$question_no"])) {
     $option_order = $posted_vars["order$question_no"];
   } else {
     $option_order = '';

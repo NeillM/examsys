@@ -29,7 +29,7 @@ require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.cla
  * This number will adapt if the question (or parts) are excluded.
  *
  */
-function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $correct, $score_method) {
+function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $correct, $display_method, $score_method) {
   $marks = 0;
   if ($tmp_exclude == '') $tmp_exclude = '0000000000000000000000000000000000000000';
 
@@ -99,9 +99,9 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
     
       if (substr($tmp_exclude,0,1) == '0') {
-        if ($score_method == 'SelectedPositive') {
-          $marks += $correct_no;
-        } elseif ($score_method == 'AllItemsCorrect') {
+        if ($score_method == 'Mark per Option') {
+          $marks += ($correct_no * $question_marks);
+        } elseif ($score_method == 'Mark per Question') {
           $marks += 1;
         } else {
           $marks += count($option_text);
@@ -127,7 +127,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
           foreach ($sub_array as $subpart) {
             if (substr($tmp_exclude,$sub_part_no,1) == '0') {
               $correct_no++;
-              $marks++;
+              $marks += $question_marks;
             }
             $sub_part_no++;
           }
@@ -145,19 +145,19 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       if (substr($tmp_exclude,0,1) == '0') {
         $correct++;
-        if ($score_method == 'StrictOrder') {
+        if ($score_method == 'Mark per Option') {
           $marks += count($option_text);
-        } elseif ($score_method == 'AllItemsCorrect') {
+        } elseif ($score_method == 'Mark per Question') {
           $marks += 1;
-        } elseif ($score_method == 'OrderNeighbours') {
+        } elseif ($score_method == 'Allow partial Marks') {
           $marks += $correct_no;
-        } elseif ($score_method == 'BonusMark' and $correct_no > 0) {
+        } elseif ($score_method == 'Bonus Mark' and $correct_no > 0) {
           $marks += $correct_no + 1;
         }
       }
       break;
     case 'hotspot':
-      $marks += (substr_count($correct[0],'|') + 1) - substr_count($tmp_exclude, '1');
+      $marks += ((substr_count($correct[0],'|') + 1) - substr_count($tmp_exclude, '1')) * $question_marks;
       break;
   }
   return $marks;
@@ -168,7 +168,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
  * This number will adapt if the question (or parts) are excluded.
  *
  */
-function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $score_method, $old_q_media_width, $old_q_media_height) {
+function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $display_method, $score_method, $old_q_media_width, $old_q_media_height) {
   $random_mark = 0;
   if ($tmp_exclude == '') $tmp_exclude = '0000000000000000000000000000000000000000';
       
@@ -218,9 +218,9 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $sco
       }
 
       if (substr($tmp_exclude,0,1) == '0') {
-        if ($score_method == 'SelectedPositive') {
+        if ($score_method == 'Mark per Option') {
           $random_mark += ($correct_no * $correct_no) / count($option_text);
-        } elseif ($score_method == 'AllItemsCorrect') {
+        } elseif ($score_method == 'Mark per Question') {
           $figure = 1;
           for ($i=count($option_text); $i>(count($option_text)-$correct_no); $i--) {
             $figure *= (1/$i);
@@ -270,18 +270,18 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $sco
       }
       if (substr($tmp_exclude,0,1) == '0') {
         $correct++;
-        if ($score_method == 'StrictOrder') {
+        if ($score_method == 'Mark per Option') {
           if ($correct_no == count($option_text)) {
             $random_mark += 1;
           } else {
             $na = count($option_text) - $correct_no;
             $random_mark += ($correct_no / count($option_text)) + ((count($option_text) - $correct_no) / (count($option_text) / $na));
           }
-        } elseif ($score_method == 'AllItemsCorrect') {
+        } elseif ($score_method == 'Mark per Question') {
           $random_mark += 1 / MathsUtils::factorial(count($option_text));
-        } elseif ($score_method == 'OrderNeighbours') {
+        } elseif ($score_method == 'Allow partial Marks') {
           $random_mark += 1 + ((count($option_text) - 2) / count($option_text)) + (1/count($option_text));
-        } elseif ($score_method == 'BonusMark' and $correct_no > 0) {
+        } elseif ($score_method == 'Bonus Mark' and $correct_no > 0) {
           $random_mark += (($correct_no * $correct_no) / count($option_text)) + (MathsUtils::factorial(count($option_text)-$correct_no)/MathsUtils::factorial(count($option_text)));
         }
       }
@@ -298,9 +298,9 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $sco
         if (substr($tmp_exclude,$blank_count-1,1) == '0') {
           $results = array();
           if (preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results)) {
-            if ($score_method == 'dropdown') $random_mark += (1 / $choice_no) * $results[1];
+            if ($display_method == 'dropdown') $random_mark += (1 / $choice_no) * $results[1];
           } else {
-            if ($score_method == 'dropdown') $random_mark += 1 / $choice_no;
+            if ($display_method == 'dropdown') $random_mark += 1 / $choice_no;
           }
         }
         $blank_count++;

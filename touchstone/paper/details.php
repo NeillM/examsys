@@ -86,12 +86,12 @@ function randomDetails($questionID) {
   $old_correct = array();
   $old_option_text = array();
 
-  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks, options2.option_text, q_type, score_method, DATE_FORMAT(last_edited,'%d/%m/%y'), status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=? ");
+  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,'%d/%m/%y'), status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=? ");
   $result->bind_param('i', $questionID);
   $result->execute();
   $result->store_result();
   if ($result->num_rows > 0) {
-    $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $score_method, $display_last_edited, $status);
+    $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
     while ($row=$result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
@@ -105,8 +105,8 @@ function randomDetails($questionID) {
         $random_questions[$question_no]['correct'] = $old_correct;
         $random_questions[$question_no]['status'] = $old_status;
         $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
-        $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_score_method);
-        $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_score_method, $old_q_media_width, $old_q_media_height);
+        $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+        $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         $old_correct = array();
         $old_option_text = array();
         $question_no++;
@@ -120,6 +120,7 @@ function randomDetails($questionID) {
       $old_marks = $marks;
       $old_correct[] = $correct;
       $old_option_text[] = $option_text;
+      $old_display_method = $display_method;
       $old_score_method = $score_method;
       $old_q_media_width = $q_media_width;
       $old_q_media_height = $q_media_height;
@@ -136,8 +137,8 @@ function randomDetails($questionID) {
     $random_questions[$question_no]['correct'] = $old_correct;
     $random_questions[$question_no]['status'] = $old_status;
     $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
-    $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_score_method);
-    $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_score_method, $old_q_media_width, $old_q_media_height);
+    $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+    $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
   }
   $result->close();
 
@@ -461,6 +462,7 @@ if (isset($_GET['change_screen'])) {
   $old_marks  = 0;
   $old_option_text = '';
   $old_correct  = '';
+  $old_display_method = '';
   $old_score_method  = '';
   $old_q_media  = '';
   $old_q_media_width = '';
@@ -471,13 +473,13 @@ if (isset($_GET['change_screen'])) {
   $options = 0;
   
   // Get the questions (if any).
-  $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, correct, score_method, q_media, q_media_width, q_media_height, marks_correct, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
+  $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $correct, $score_method, $q_media, $q_media_width, $q_media_height, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
+  $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
   $temp_array = array();
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     // latex check [tex]
     if ($latex == 0) {
       if (strpos($leadin,'[tex]') !== false or strpos($scenario,'[tex]') !== false or strpos($option_text,'[tex]') !== false or strpos($score_method,'[tex]') !== false or strpos($correct_fback,'[tex]') !== false or strpos($feedback_right,'[tex]') !== false) {
@@ -508,13 +510,14 @@ if (isset($_GET['change_screen'])) {
         } else {
           $tmp_exclude = '';
         }
-        $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_score_method);
+        $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
         if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-          $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_option_text, $old_correct, $old_score_method, $old_q_media_width, $old_q_media_height);
+          $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
       }
       if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
+      $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_correct, $temp_array[$row_no2]['status']);
       $old_correct = array();
@@ -594,6 +597,7 @@ if (isset($_GET['change_screen'])) {
     $old_q_id = $q_id;
     $old_display_pos = $display_pos;
     $old_q_type = $q_type;
+    $old_display_method = $display_method;
     $old_score_method = $score_method;
     $old_correct[] = $correct;
     $old_scenario = $scenario;
@@ -602,10 +606,10 @@ if (isset($_GET['change_screen'])) {
     $old_q_media_height = $q_media_height;
     $old_option_text[] = $option_text;
     $old_marks = $marks_incorrect;
-    if(!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'timedate')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
+    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'timedate')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
-
+  
   if ($row_no > 0) {
     $temp_array[$row_no]['options'] = $options;
     if ($old_q_type == 'random') {
@@ -615,10 +619,10 @@ if (isset($_GET['change_screen'])) {
         $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
       }
     } else {
-      $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $excluded[$old_q_id], $old_marks, $old_option_text, $old_correct, $old_score_method);
+      $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $excluded[$old_q_id], $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
       if ($temp_array[$row_no2]['status'] != 'Experimental') {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-        $total_random_mark += qRandomMarks($old_q_type, $excluded[$old_q_id], $old_option_text, $old_correct, $old_score_method, $old_q_media_width, $old_q_media_height);
+        $total_random_mark += qRandomMarks($old_q_type, $excluded[$old_q_id], $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
     }
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
@@ -778,7 +782,7 @@ if (isset($_GET['change_screen'])) {
         echo "document.getElementById('promotetext').style.color = '#808080';\n";
         echo "document.getElementById('promoteicon').src = '../artwork/promote_disabled.gif';\n";
       } else {
-        echo "document.getElementById('promotetext').style.color = '#215DC6';\n";
+        echo "document.getElementById('promotetext').style.color = '#black';\n";
         echo "document.getElementById('promoteicon').src = '../artwork/promote.gif';\n";
       }
       echo "document.PapersMenu.next_screen.value = '" . $temp_array[$x + 1]['screen'] . "';\n";
@@ -786,7 +790,7 @@ if (isset($_GET['change_screen'])) {
         echo "document.getElementById('demotetext').style.color = '#808080';\n";
         echo "document.getElementById('demoteicon').src = '../artwork/demote_disabled.gif';\n";
       } else {
-        echo "document.getElementById('demotetext').style.color = '#215DC6';\n";
+        echo "document.getElementById('demotetext').style.color = '#black';\n";
         echo "document.getElementById('demoteicon').src = '../artwork/demote.gif';\n";
       }
       echo "document.PapersMenu.current_screen.value = '" . $temp_array[$x]['screen'] . "';\n";
@@ -807,7 +811,7 @@ if (isset($_GET['change_screen'])) {
 
     echo "<tr id=\"link$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" class=\"qline\" style=\"";
     if ($q_highlight == $temp_array[$x]['display_pos']) {
-      echo '; background-color:#316AC5; color:white';
+      echo '; background-color:#B3C8E8';
     } else {
       echo '; color:' . $forecolor;
     }

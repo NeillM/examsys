@@ -155,7 +155,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-      if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" />';
+      if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="25" alt="Calculator" />';
       echo "</td><td>";
       if ($question['notes'] != '') echo '<p class="note"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
@@ -164,7 +164,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" />';
+        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="25" alt="Calculator" />';
         echo '</td><td>';
       }
       echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
@@ -173,7 +173,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($question['q_type'] != 'likert' and $question['q_type'] != 'calculation') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" />';
+        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="25" alt="Calculator" />';
         echo '</td><td>';
       }
       $li_set = 1;
@@ -199,7 +199,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   // Pre-question processing
   switch ($question['q_type']) {
     case 'calculation':
-      $A = $B = $C = $D = $E = $F = $G = $H = '';    // Reset all variables initially
+      $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
       break;
     case 'dichotomous':
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -511,11 +511,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         echo "</td></tr>\n";
         if ($question['score_method'] == 'Mark per Option') {
-          if ($display_option['correct'] == 'y') $marks++;  // 1 mark for correct options only
+          if ($display_option['correct'] == 'y') $marks += $display_option['marks_correct'];  // Mark for correct options only
         } elseif ($question['score_method'] == 'Mark per Question') {
-          if ($part_id == 1) $marks++;
+          if ($part_id == 1) $marks += $display_option['marks_correct'];
         } else {
-          $marks++;  // 1 mark for each and every item
+          $marks += $display_option['marks_correct'];  // Mark for each and every item
         }
         break;
       case 'extmatch':
@@ -932,7 +932,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         } else {
           echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"u\" />\n";
         }
-        $marks = $display_option['marks'];
+        $marks += (substr_count($question['options'][0]['correct'],'|') + 1) * $display_option['marks_correct'];
         break;
       case 'labelling':
         $tmp_labels = 0;
@@ -1027,7 +1027,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   </div>
   <?php
       echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
-      $marks += $display_option['marks'];
+      $marks += $display_option['marks_correct'];
       break;
     }                  // End switch
   }                    // End foreach loop
@@ -1054,11 +1054,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" />';
       echo '</td><td>';
     }
-    $new_leadin = "";
-    $search = array('$A','$B','$C','$D','$E','$F','$G','$H');
-    $replace = array($A,$B,$C,$D,$E,$F,$G,$H);
-    $question['leadin'] = str_ireplace($search,$replace,$question['leadin']);
-    $question['leadin'] = str_replace('ERROR','<span style="color:red; font-weight:bold">Unanswered</span>',$question['leadin']);
+    $new_leadin = '';
+    $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
+    $replace = array($A,$B,$C,$D,$E,$F,$G,$H,$I,$J);
+    $question['leadin'] = str_ireplace($search, $replace, $question['leadin']);
+    $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">Unanswered</span>', $question['leadin']);
     echo "<p>" . $question['leadin'] . "</p>\n";
     if (in_array('ERROR',$replace,true)) {
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled /></p>\n";
@@ -1105,8 +1105,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if (isset($F)) echo ",$F";
     if (isset($G)) echo ",$G";
     if (isset($H)) echo ",$H";
+    if (isset($I)) echo ",$I";
+    if (isset($J)) echo ",$J";
     echo '" />';
-    $marks = $display_option['marks'];
+    $marks = $display_option['marks_correct'];
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['score_method'] == 'other') {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
@@ -1137,7 +1139,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo '<ol type="i">';
     for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
       $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
-      $marks += substr_count($matching_answers[$part_id-1],'$') + 1;
+      $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
 
       echo '<li>';
       if (isset($matching_scenarios[$part_id - 1]) and $matching_scenarios[$part_id - 1] != '') echo '<div>' . $matching_scenarios[$part_id - 1] . '</div>';

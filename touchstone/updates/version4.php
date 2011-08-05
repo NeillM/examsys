@@ -334,7 +334,7 @@
     ob_flush();
     flush();
     
-    $adjust = $mysqli->prepare("UPDATE questions SET score_method = 'Mark per Option'");
+    $adjust = $mysqli->prepare("UPDATE questions SET score_method = 'Mark per Option' WHERE q_type != 'Calculation'");
     $adjust->execute();
     $adjust->close();
     
@@ -369,6 +369,19 @@
     $q_data->bind_result($q_id);
     while ($q_data->fetch()) {
       $adjust = $mysqli->prepare("UPDATE questions SET display_method='', score_method='Mark per Question' WHERE q_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $q_data->close();
+    
+    
+    // Update the SelectedPositive setting
+    $q_data = $mysqli->prepare("SELECT q_id FROM questions WHERE display_method='SelectedPositive'");
+    $q_data->execute();
+    $q_data->store_result();
+    $q_data->bind_result($q_id);
+    while ($q_data->fetch()) {
+      $adjust = $mysqli->prepare("UPDATE questions SET display_method='', score_method='Mark per Option' WHERE q_id=$q_id");
       $adjust->execute();
       $adjust->close();
     }

@@ -77,7 +77,7 @@
   
   //get faculty and school info
   $schools = array("Default"=>array('-1'=>'&lt;All Schools&gt;'));
-  $stmt = $mysqli->prepare("SELECT id, faculty, school FROM schools ORDER BY faculty, school");
+  $stmt = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE faculty.id=schools.facultyID ORDER BY faculty.name, school");
   $stmt->execute();
   $stmt->bind_result($id, $faculty, $school);
   while ($stmt->fetch()) {
