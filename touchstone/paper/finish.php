@@ -306,7 +306,7 @@ table {font-size:100%}
   }
   if ($current_screen > 1 and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
     // Record answers from the previous screen.
-    record_marks($paperID, $_POST['old_screen'], $mysqli, $_POST, $userID, $_POST['previous_duration'], $paper_type, $grade, $year, $attempt);
+    record_marks($paperID, $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
   }
 
   if (isset($_GET['userid'])) {
@@ -811,7 +811,7 @@ table {font-size:100%}
           echo '<table cellpadding="0" cellspacing="1" border="0">';
           
           $abstain = false;
-          if ($paper[$question]['score_method'] == 'TF_NegativeAbstain' or $paper[$question]['score_method'] == 'TF_NegativeAbstainHalf' or $paper[$question]['score_method'] == 'TF_Positive') {
+          if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf' or $paper[$question]['display_method'] == 'TF_Positive') {
             echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">True</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">False</td>";
             $true_label = 'T';
             $false_label = 'F';
@@ -820,13 +820,13 @@ table {font-size:100%}
             $true_label = 'Y';
             $false_label = 'N';
           }
-          if ($paper[$question]['score_method'] == 'TF_NegativeAbstain' or $paper[$question]['score_method'] == 'YN_NegativeAbstain' or $paper[$question]['score_method'] == 'TF_NegativeAbstainHalf') {
+          if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'YN_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf') {
             echo "<td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">Abstain</td>";
             $abstain = true;
           }
           echo "</tr>\n";
           
-          if ($paper[$question]['score_method'] == 'TF_NegativeAbstain' or $paper[$question]['score_method'] == 'YN_NegativeAbstain') {
+          if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'YN_NegativeAbstain') {
             $right_add = 1;
             $wrong_add = -1;
           } elseif ($paper[$question]['score_method'] == 'TF_NegativeAbstainHalf') {

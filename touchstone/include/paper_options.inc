@@ -117,7 +117,7 @@ $stmt->close();
     ?>
   }
 
-  function addQuestion(qType,paperID) {
+  function addQuestion(qType, paperID) {
     if (paperID == 0) {
       document.location.href='/touchstone/question/add/' + qType + '.php?scrOfY=' + document.getElementById('scrOfY').value;
     } else {
@@ -240,31 +240,31 @@ $stmt->close();
   
   function showAssStatsMenu(e) {
     hideMenus();
-    document.getElementById('copy_submenu').style.display='none';
-    document.getElementById('stats_menu').style.display='block';
+    document.getElementById('copy_submenu').style.display = 'none';
+    document.getElementById('stats_menu').style.display = 'block';
     if (!e) var e = window.event;
     e.cancelBubble = true;
   }
   
   function showCopyMenu(e) {
     hideMenus();
-    document.getElementById('stats_menu').style.display='none';
-    document.getElementById('copy_submenu').style.display='block';
+    document.getElementById('stats_menu').style.display = 'none';
+    document.getElementById('copy_submenu').style.display = 'block';
     if (!e) var e = window.event;
     e.cancelBubble = true;
   }
   
   function showChangeScreen(e) {
     hideMenus();
-    document.getElementById('stats_menu').style.display='none';
-    document.getElementById('copy_submenu').style.display='none';
-    document.getElementById('change_screen_submenu').style.display='block';
+    document.getElementById('stats_menu').style.display = 'none';
+    document.getElementById('copy_submenu').style.display = 'none';
+    document.getElementById('change_screen_submenu').style.display = 'block';
     if (!e) var e = window.event;
     e.cancelBubble = true;
   }
   
   function hideAssStatsMenu(e) {
-    document.getElementById('stats_menu').style.display='none';
+    document.getElementById('stats_menu').style.display = 'none';
     if (!e) var e = window.event;
     e.cancelBubble = true;
   }  

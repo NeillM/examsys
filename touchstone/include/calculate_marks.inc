@@ -117,22 +117,26 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       $marks += $correct_no;
       break;
     case 'extmatch':
-      $correct_array = explode('|',$correct[0]);
-      $i = 0;
-      $sub_part_no = 0;
-      foreach ($correct_array as $individual_correct) {
-        if (trim($individual_correct) != '') {
-          $sub_array = explode('$',$individual_correct);
-          $correct_no = 0;
-          foreach ($sub_array as $subpart) {
-            if (substr($tmp_exclude,$sub_part_no,1) == '0') {
-              $correct_no++;
-              $marks += $question_marks;
+      if ($score_method == 'Marks per Question') {
+        $marks = $question_marks;
+      } else {
+        $correct_array = explode('|',$correct[0]);
+        $i = 0;
+        $sub_part_no = 0;
+        foreach ($correct_array as $individual_correct) {
+          if (trim($individual_correct) != '') {
+            $sub_array = explode('$',$individual_correct);
+            $correct_no = 0;
+            foreach ($sub_array as $subpart) {
+              if (substr($tmp_exclude,$sub_part_no,1) == '0') {
+                $correct_no++;
+                $marks += $question_marks;
+              }
+              $sub_part_no++;
             }
-            $sub_part_no++;
           }
+          $i++;
         }
-        $i++;
       }
       break;
     case 'sct':

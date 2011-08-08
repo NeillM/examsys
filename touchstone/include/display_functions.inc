@@ -1150,7 +1150,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $list_size = 10;
       if (count($matching_options) < 10) $list_size = count($matching_options);
       if ($answer_no == 1) {
-        if (isset($matching_users_answers[$part_id - 1]) AND $matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
+        if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
           echo "<select class=\"unans\" name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
         } else {
           echo "<select name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
@@ -1158,14 +1158,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo "<option value=\"u\"></option>\n";
       } else {
         echo "<br />\n";
-        if (isset($matching_users_answers[$part_id - 1]) AND $matching_users_answers[$part_id - 1] == '' AND $screen_pre_submitted == 1) {
+        if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
           echo "<div class=\"option\"><select class=\"unans\" onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
         } else {
           echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
         }
       }
       
-      $multi_answers = Array();
+      $multi_answers = array();
       if (isset($matching_users_answers[$part_id - 1])) {
         $multi_answers = explode('$', $matching_users_answers[$part_id - 1]);
       } 
@@ -1190,6 +1190,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '</div><br /></li>';
     }
     echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" />';
+    if ($question['score_method'] == 'Mark per Question') {
+      $marks = $display_option['marks_correct'];
+    }
   } elseif ($question['q_type'] == 'matrix') {
     $part_id = 1;
     if ($matching_media[0] != '') {
@@ -1204,7 +1207,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x');
     foreach ($matching_scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
-        if (isset($matching_users_answers[$part_id - 1]) AND $matching_users_answers[$part_id - 1] == '' AND $screen_pre_submitted == 1) {
+        if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
           echo "<tr class=\"unans\">\n";
         } else {
           echo "<tr>\n";
@@ -1213,7 +1216,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $answer_no = 1;
         foreach ($matching_options as $single_option) {
           $tmp_part_id = $question['option_order'][$answer_no-1] + 1;
-          if (isset($matching_users_answers[$part_id-1]) AND $matching_users_answers[$part_id-1] == $answer_no) {
+          if (isset($matching_users_answers[$part_id-1]) and $matching_users_answers[$part_id-1] == $answer_no) {
             echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" checked /></div></td>';
           } else {
             echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" /></div></td>';
@@ -1246,7 +1249,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     } else {
       echo "<div class=\"mk\">($marks mark";
-      if ($marks > 0) echo 's';
+      if ($marks <> 1) echo 's';
       if ($neg_marking) echo ', negative marking';
       if ($question['score_method'] == 'Bonus Mark') echo ' for correct options, plus 1 bonus mark for fully correct order';  // Used on ranking questions
       echo ")</div>\n<br /></td></tr>\n";

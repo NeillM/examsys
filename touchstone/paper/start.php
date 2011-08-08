@@ -502,7 +502,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   <tr><td valign="top">
 <?php
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    record_marks($_GET['paperID'],$_POST['old_screen'],$mysqli,$_POST,$userID,$_POST['previous_duration'],$paper_type,$grade,$year,$attempt);
+    record_marks($_GET['paperID'], $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
   }
 
   echo $top_table_html;
