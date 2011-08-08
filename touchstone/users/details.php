@@ -795,19 +795,14 @@ a.access:hover {color:white}
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes_tab\" style=\"width:100%; display:none\">\n";
   }
   $link_html = '<img src="../artwork/shortcut.png" onclick="newStudentNote()" width="10" height="10" border="0" />&nbsp;<a href="" onclick="newStudentNote(); return false;" class="access">create New Note</a>&nbsp;';
-  echo drawTabs('Notes',4,$link_html,$tmp_roles);
+  echo drawTabs('Notes', 4, $link_html, $tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;Date</td><td class=\"coltitle\">Paper</td><td class=\"coltitle\">Note</td><td class=\"coltitle\">Author</td></tr>\n";
   
   $results = $mysqli->prepare("SELECT note, note_date, paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=?");
-  $results->bind_param('i', $tmp_id)
+  $results->bind_param('i', $tmp_id);
   $results->execute();
   $results->store_result();
   $results->bind_result($note, $note_date, $note_paper_id, $note_moduleID, $paper_title, $note_author);
-  $results->fetch();
-
-  
-  //$query = "SELECT note, note_date, paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=$tmp_id";
-  //$notes_results = $mysqli->query($query);
   while ($results->fetch()) {
     echo "<tr><td>&nbsp;<img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;$note_date</td><td><a href=\"../paper/details.php?paperID=" . $note_paper_id . "&module=" . $note_moduleID . "\">$paper_title</a></td><td>$note</td><td>$note_author</td></tr>";
   }
@@ -822,7 +817,7 @@ a.access:hover {color:white}
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility_tab\" style=\"width:100%; text-align:left; display:none\">\n";
   }
   echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=accessibility\" method=\"post\">";
-  echo drawTabs('Accessibility',1,'',$tmp_roles);
+  echo drawTabs('Accessibility', 1, '', $tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"text-align:left\">";
   $query = "SELECT * FROM special_needs WHERE userID=$tmp_id";
@@ -862,7 +857,7 @@ a.access:hover {color:white}
 <select name="extra_time">
 <option value="null">no extra time</option>
 <?php
-  $times = array(10,25,33,50,100);
+  $times = array(10, 25, 33, 50, 100);
   foreach ($times as $individual_time) {
     if ($individual_time == $extra_time) {
       echo "<option value=\"$individual_time\" selected>$individual_time%</option>\n";
@@ -880,7 +875,7 @@ a.access:hover {color:white}
 <select name="textsize">
 <option value="null">&lt;default&gt;</option>
 <?php
-  $fontsizes = array(90,100,120,150,200,300,400);
+  $fontsizes = array(90, 100, 120, 150, 200, 300, 400);
   foreach ($fontsizes as $individual_fontsize) {
     if ($individual_fontsize == $textsize) {
       echo "<option value=\"$individual_fontsize\" selected>$individual_fontsize%</option>\n";
@@ -992,7 +987,7 @@ a.access:hover {color:white}
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata_tab\" style=\"width:100%; display:none\">\n";
   }
   echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
-  echo drawTabs('Metadata',5,'',$tmp_roles);
+  echo drawTabs('Metadata', 5, '', $tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;Module ID</td><td class=\"coltitle\">Academic Year</td><td class=\"coltitle\">Type</td><td class=\"coltitle\">Value</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
   $stmt = $mysqli->prepare("SELECT users_metadata.id, modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND userID=?");
   $stmt->bind_param('i', $_GET['userID']);
@@ -1031,7 +1026,7 @@ a.access:hover {color:white}
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo drawTabs('Teams',3,'',$tmp_roles);
+  echo drawTabs('Teams', 3, '', $tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;Team</td><td class=\"coltitle\">Date Added</td><td class=\"coltitle\">Type</td></tr>\n";
   if (strpos($userroles,'Admin') !== false) {
   echo "<tr><td colspan=\"3\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;Edit Teams...</a></td></tr>\n";
