@@ -482,7 +482,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
 
         if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
-          if ($mark == totalpos) {
+          if ($mark == $totalpos) {
             $mark = $marks_correct;
           } elseif ($all_items_abstain) {
             $mark = 0;
@@ -501,7 +501,12 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           foreach ($matching_scenarios as $single_scenario) {
             if (trim($single_scenario) != '') {
               $qid = 'q' . $question_no . '_' . $option_no;
-              if (isset($_POST[$qid]) and $_POST[$qid] == $correct_options[$option_no - 1]) $mark++;
+              if (isset($_POST[$qid]) and $_POST[$qid] == $correct_options[$option_no - 1]) {
+                $mark += $marks_correct;
+              } elseif (isset($_POST[$qid]) and $_POST[$qid] != 'u') {
+                $mark += $marks_incorrect;
+                $all_items_abstain = false;
+              }
               if ($option_no == 1) {
                 if(isset($_POST[$qid])) {
                   $saved_response = $_POST[$qid];
@@ -516,6 +521,17 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             }
           }
           $totalpos = $option_no - 1;
+        }
+
+        if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
+          if ($mark == $totalpos) {
+            $mark = $marks_correct;
+          } elseif ($all_items_abstain) {
+            $mark = 0;
+          } else {
+            $mark = $marks_incorrect;
+          }
+          $totalpos = $marks_correct;
         }
         break;
       case 'rank':
@@ -707,25 +723,53 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $saved_response = $_POST[$qid];
           $sub_parts = explode('|',$saved_response);
           foreach ($sub_parts as $sub_part) {
-            if ($sub_part{0} == 1) $mark++;
+            if ($sub_part{0} == 1) {
+              $mark += $marks_correct;
+            } else {
+              $mark += $marks_incorrect;
+            }
+            $totalpos += $marks_correct;
           }
         } else {
           $saved_response = '';
         }
-        $totalpos += $marks_correct;
+        if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
+          if ($mark == $totalpos) {
+            $mark = $marks_correct;
+          } elseif ($saved_response == 'u') {
+            $mark = 0;
+          } else {
+            $mark = $marks_incorrect;
+          }
+          $totalpos = $marks_correct;
+        }
         break;
       case 'labelling':
         $qid = 'q' . $question_no;
-        if(isset($_POST[$qid])) {
+        if (isset($_POST[$qid])) {
           $saved_response = $_POST[$qid];
         } else {
           $saved_response = '';
         }
-        if($saved_response != '') {
+        if ($saved_response != '') {        
           $tmp_first_split = explode(';',$saved_response);
           $tmp_second_split = explode('$',$tmp_first_split[0]);
+          if ($tmp_first_split[1] != '') {
+            $all_items_abstain = false;
+          }
           $mark += $tmp_second_split[0];
           $totalpos += $tmp_second_split[1];
+        }
+        
+        if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
+          if ($mark == $totalpos) {
+            $mark = $marks_correct;
+          } elseif (strlen($saved_response) < 6) {
+            $mark = 0;
+          } else {
+            $mark = $marks_incorrect;
+          }
+          $totalpos = $marks_correct;
         }
         break;
       case 'flash':

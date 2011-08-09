@@ -109,15 +109,19 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'matrix':
-      $correct_no = 0;
-      $matching_correct = explode('|', $correct[0]);
-      for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
-        if ($matching_correct[$part_id] != '' and substr($tmp_exclude,$part_id,1) == '0') $correct_no++;
+      if ($score_method == 'Mark per Question') {
+        $marks = $question_marks;
+      } else {
+        $correct_no = 0;
+        $matching_correct = explode('|', $correct[0]);
+        for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
+          if ($matching_correct[$part_id] != '' and substr($tmp_exclude,$part_id,1) == '0') $correct_no++;
+        }
+        $marks += $correct_no * $question_marks;
       }
-      $marks += $correct_no;
       break;
     case 'extmatch':
-      if ($score_method == 'Marks per Question') {
+      if ($score_method == 'Mark per Question') {
         $marks = $question_marks;
       } else {
         $correct_array = explode('|',$correct[0]);

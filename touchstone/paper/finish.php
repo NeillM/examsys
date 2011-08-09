@@ -260,16 +260,18 @@ select,input {font-family:<?php echo $font; ?>,sans-serif;font-size:100%}
 blockquote {font-size:90%}
 table {font-size:100%}
 .paper {margin-left:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:180%;color:white;font-weight:bold}
-.question_no {width:40px;text-align:right;vertical-align:top}
+.q_no {width:40px;text-align:right;vertical-align:top}
 .theme {margin-left:15px;font-size:150%;font-weight:bold;color:<?php echo $themecolor; ?>}
 .objH {font-weight:bold;color:<?php echo $themecolor; ?>}
 .notes {color:<?php echo $labelcolor; ?>}
-.feedback {font-family:<?php echo $font; ?>,sans-serif; font-style:italic; color:<?php echo $labelcolor; ?>}
+.fback {font-family:<?php echo $font; ?>,sans-serif; font-style:italic; color:<?php echo $labelcolor; ?>}
 .label {color:<?php echo $labelcolor; ?>}
 .mk {padding-left:8px;padding-right:8px;background-color:#FFFF00}
 .mkpad {padding-top:10px}
 .answerindent {margin-left:17px;margin-right:15px}
 .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
+.matrix {border:1px solid #808080; border-collapse:collapse}
+.matrix td {border:1px solid #808080}
 </style>
 <?php if ($latex_needed == 1) {?>
   <script src="/touchstone/javascript/MathJaxConfig.js"></script>
@@ -597,7 +599,7 @@ table {font-size:100%}
       <div><img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /> Correct answer<br />
       <img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /> Incorrect answer<br />
       <strong>Emboldened</strong> words represent the correct response for each question (not the user's answer).<br />
-      <span class="feedback">Feedback is displayed in dark red italics</span><br />
+      <span class="fback">Feedback is displayed in dark red italics</span><br />
       <?php
       if (substr($marking,0,1) == '2') echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> difficulty of the question (i.e. standards set). Roll over for full category title.</div></td>';
       ?>
@@ -626,12 +628,12 @@ table {font-size:100%}
         echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
         if ($paper[$question]['q_type'] != 'info') {
           if ($paper[$question]['theme'] != '') echo "<tr><td colspan=\"2\" class=\"theme\">" . $paper[$question]['theme'] . "</td></tr>\n";
-          echo "<tr><td class=\"question_no\">" . $display_no . ".</td><td>";
+          echo "<tr><td class=\"q_no\">" . $display_no . ".</td><td>";
         }
       } else {
         if ($paper[$question]['q_type'] != 'info') {
           if ($paper[$question]['theme'] != '') echo "<tr><td colspan=\"2\" class=\"theme\">" . $paper[$question]['theme'] . "</td></tr>\n";
-          echo "<tr><td class=\"question_no\">" . $display_no . ".</td><td>";
+          echo "<tr><td class=\"q_no\">" . $display_no . ".</td><td>";
         }
       }
       if (trim($paper[$question]['notes']) != '') {
@@ -787,7 +789,7 @@ table {font-size:100%}
           
           if ($tmp_exclude == '1')  echo '</span>';
           echo "</td></tr>\n</table>\n";
-          if ($tmp_fback != '' and $tmp_display_feedback == '1') echo "<div class=\"feedback\" style=\"margin-left:17px\">&nbsp;$tmp_fback</div>\n";
+          if ($tmp_fback != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">&nbsp;$tmp_fback</div>\n";
           break;
         case 'dichotomous':
           // Check to see if the user has answered any options.
@@ -900,17 +902,17 @@ table {font-size:100%}
                 if ($paper[$question]['feedback_right'][$tmp_part_id] != '') {
                   echo '<tr><td></td><td></td><td></td><td></td>';
                   if ($abstain == true) echo '<td></td>';
-                  echo "<td class=\"feedback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+                  echo "<td class=\"fback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
                 }
               } else {
                 if ($paper[$question]['feedback_wrong'][$tmp_part_id] != '') {
                   echo '<tr><td></td><td></td><td></td><td></td>';
                   if ($abstain == true) echo '<td></td>';
-                  echo "<td class=\"feedback\">" . $paper[$question]['feedback_wrong'][$tmp_part_id] . "</td></tr>\n";
+                  echo "<td class=\"fback\">" . $paper[$question]['feedback_wrong'][$tmp_part_id] . "</td></tr>\n";
                 } elseif ($paper[$question]['feedback_right'][$tmp_part_id] != '') {
                   echo '<tr><td></td><td></td><td></td><td></td>';
                   if ($abstain == true) echo '<td></td>';
-                  echo "<td class=\"feedback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+                  echo "<td class=\"fback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
                 }
               }
             }
@@ -1014,7 +1016,7 @@ table {font-size:100%}
               }
             }
             if ($paper[$question]['feedback_right'][$part_id] != '' and $tmp_display_feedback == '1') {
-              echo "<tr><td></td><td></td><td></td><td class=\"feedback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+              echo "<tr><td></td><td></td><td></td><td class=\"fback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
             }
           }
           if (!isset($paper[$question]['user_answer'])) {
@@ -1025,16 +1027,16 @@ table {font-size:100%}
           if ($tmp_display_feedback == '1') {
             if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
               if ($paper[$question]['correct_fback'] != '') {
-                echo "<tr><td class=\"feedback\" colspan=\"4\">&nbsp;</td></tr>\n";
-                echo "<tr><td class=\"feedback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+                echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
+                echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
               }
             } else {
               if ($paper[$question]['incorrect_fback'] != '') {
-                echo "<tr><td class=\"feedback\" colspan=\"4\">&nbsp;</td></tr>\n";
-                echo "<tr><td class=\"feedback\" colspan=\"4\">" . $paper[$question]['incorrect_fback'] . "</td></tr>\n";
+                echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
+                echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['incorrect_fback'] . "</td></tr>\n";
               } elseif ($paper[$question]['correct_fback'] != '') {
-                echo "<tr><td class=\"feedback\" colspan=\"4\">&nbsp;</td></tr>\n";
-                echo "<tr><td class=\"feedback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+                echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
+                echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
               }
             }
           }
@@ -1087,7 +1089,7 @@ table {font-size:100%}
                   echo "<tr><td></td><td></td><td>" . display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "</td><tr>>\n";
                 }
                 if ($paper[$question]['feedback_right'][$tmp_part_id] != '' and $tmp_display_feedback == '1') {
-                  echo "<tr><td></td><td></td><td></td><td class=\"feedback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+                  echo "<tr><td></td><td></td><td></td><td class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
                 }
               } else {
                 if ($tmp_display_students_response == '1') {
@@ -1105,9 +1107,9 @@ table {font-size:100%}
                 }
                 if ($tmp_display_feedback == '1') {
                   if ($paper[$question]['feedback_wrong'][$tmp_part_id] != '') {
-                    echo "<tr><td></td><td></td><td></td><td class=\"feedback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_wrong'][$tmp_part_id] . "</td></tr>\n";
+                    echo "<tr><td></td><td></td><td></td><td class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_wrong'][$tmp_part_id] . "</td></tr>\n";
                   } elseif ($paper[$question]['feedback_right'][$tmp_part_id] != '') {
-                    echo "<tr><td></td><td></td><td></td><td class=\"feedback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+                    echo "<tr><td></td><td></td><td></td><td class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
                   }
                 }
               }
@@ -1138,9 +1140,9 @@ table {font-size:100%}
                 }
                 if ($tmp_display_feedback == '1') {
                   if ($paper[$question]['feedback_wrong'][$tmp_part_id] != '') {
-                    echo "<tr><td></td><td></td><td></td><td class=\"feedback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_wrong'][$tmp_part_id] . "</td></tr>\n";
+                    echo "<tr><td></td><td></td><td></td><td class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_wrong'][$tmp_part_id] . "</td></tr>\n";
                   } elseif ($paper[$question]['feedback_right'][$tmp_part_id] != '') {
-                    echo "<tr><td></td><td></td><td></td><td class=\"feedback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+                    echo "<tr><td></td><td></td><td></td><td class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
                   }
                 }
               } else {
@@ -1158,7 +1160,7 @@ table {font-size:100%}
                   echo "<tr><td></td><td>" . display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "</td></tr>\n";
                 }
                 if ($paper[$question]['feedback_right'][$tmp_part_id] != '' and $tmp_display_feedback == '1') {
-                  echo "<tr><td></td><td></td><td></td><td class=\"feedback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+                  echo "<tr><td></td><td></td><td></td><td class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
                 }
               }
             }
@@ -1166,7 +1168,7 @@ table {font-size:100%}
           echo "</table>\n";
           if (!$answered) echo "<br />\n<div style=\"color:#808080\">&lt;unanswered&gt;</div>\n";
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-            echo "<br /><div class=\"feedback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
+            echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
           }
           break;
         case 'sct':
@@ -1264,15 +1266,15 @@ table {font-size:100%}
             }
             
             if ($paper[$question]['feedback_right'][$tmp_part_id] != '' and $tmp_display_feedback == '1') {
-              echo "<tr><td colspan=\"4\"></td><td class=\"feedback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
+              echo "<tr><td colspan=\"4\"></td><td class=\"fback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
             }
           }
 
           if (!isset($paper[$question]['user_answer']) OR $paper[$question]['user_answer'] == 0) echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"3\">&lt;unanswered&gt;</td></tr>\n";
           if ($tmp_display_feedback == '1') {
             if ($paper[$question]['correct_fback'] != '') {
-              echo "<tr><td class=\"feedback\" colspan=\"5\">&nbsp;</td></tr>\n";
-              echo "<tr><td class=\"feedback\" colspan=\"5\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"5\">&nbsp;</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"5\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
             }
           }
           echo "</table>\n";
@@ -1387,10 +1389,10 @@ table {font-size:100%}
           echo "</table>\n";
           if ($tmp_display_feedback == '1') {
             if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
-              echo "<br /><div class=\"feedback\" style=\"margin-left:17px\">" . $paper[$question]['incorrect_fback'] . "</div>\n";
+              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['incorrect_fback'] . "</div>\n";
             } else {
               if ($paper[$question]['correct_fback'] != '') {
-                echo "<br /><div class=\"feedback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
               }
             }
           }
@@ -1556,7 +1558,7 @@ table {font-size:100%}
             echo '</table>';
             echo '<br />';
             if (isset($matching_media_correct_fback[$i]) and $matching_media_correct_fback[$i] != '' and $tmp_display_feedback == '1') {
-              echo '<div class="feedback">' . $matching_media_correct_fback[$i] . '</div>';
+              echo '<div class="fback">' . $matching_media_correct_fback[$i] . '</div>';
             }            
             echo '</li>';
             $i++;
@@ -1582,7 +1584,7 @@ table {font-size:100%}
             echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0],$question_no) . '</p>';
           }
 
-          echo '<table cellpadding="2" cellspacing="0" border="1" style="border-collapse:collapse">';
+          echo '<blockquote><table cellpadding="2" cellspacing="0" border="1" class="matrix">';
           if (!isset($paper[$question]['std'][0]) or display_std($paper[$question]['std'][0]) == '') {
             echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
           } else {
@@ -1594,7 +1596,7 @@ table {font-size:100%}
           echo "</tr>\n";
           $row_no = 0;
           $part_id = 0;
-          $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x');
+          $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
           foreach ($matching_scenarios as $single_scenario) {
             if (trim($single_scenario) != '') {
               echo "<tr>\n";
@@ -1618,9 +1620,10 @@ table {font-size:100%}
                 echo ' />';
                 if ($correct_answers[$row_no] == $tmp_col_no and $tmp_answer == $tmp_col_no) {
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-                  if (substr($tmp_exclude,$row_no,1) == '0') $paper[$question]['mark']++;
+                  if (substr($tmp_exclude,$row_no,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 } elseif ($correct_answers[$row_no] != $tmp_col_no and $tmp_answer == $tmp_col_no) {
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+                  if (substr($tmp_exclude,$row_no,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 } else {
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';       
                 }
@@ -1634,9 +1637,19 @@ table {font-size:100%}
               $row_no++;
             }
           }    
-          echo '</table>';
+          echo '</table></blockquote>';
           if ($tmp_display_feedback == '1' and trim($paper[$question]['correct_fback']) != '') {
-            echo "<p class=\"feedback\">" . $paper[$question]['correct_fback'] . "</p>\n";
+            echo "<p class=\"fback\">" . $paper[$question]['correct_fback'] . "</p>\n";
+          }
+          
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
+            if ($paper[$question]['mark'] == $paper[$question]['marks_correct'] * $row_no) {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } elseif ((strlen($paper[$question]['user_answer']) + 1)  == $row_no) {
+              $paper[$question]['mark'] = 0;
+            } else {
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+            }
           }
           break;
         case 'textbox':
@@ -1670,7 +1683,7 @@ table {font-size:100%}
           }
           echo "<div style=\"border:1px solid #164994; padding:12px; text-align:justify; line-height:150%\">" . $tmp_answer . "</div>\n<br />\n";
           if ($paper[$question]['correct_fback'] != '') {
-            echo '<p class="feedback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
+            echo '<p class="fback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
           }
           break;
         case 'timedate':
@@ -1711,7 +1724,7 @@ table {font-size:100%}
             if ($tmp_display_correct_answer == '1') echo " <strong>(" . $paper[$question]['correct'][0] . ")</strong></p>\n";
           }
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-            echo '<div class="feedback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
+            echo '<div class="fback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
           break;
         case 'likert':
@@ -1830,7 +1843,7 @@ table {font-size:100%}
           }
           echo "</span></p>\n";
           if ($paper[$question]['correct_fback'] != '') {
-            echo '<div class="feedback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
+            echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
           break;
         case 'hotspot':
@@ -1887,7 +1900,7 @@ table {font-size:100%}
           }
           
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-            echo '<div class="feedback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
+            echo '<div class="fback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
           break;
         case 'labelling':
@@ -2017,7 +2030,7 @@ table {font-size:100%}
     <div align="center" style="color:#808080">(Move the mouse over incorrect labels to reveal the correct answer)</div>
 <?php
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-            echo '<div class="feedback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
+            echo '<div class="fback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
           break;
         case 'flash':

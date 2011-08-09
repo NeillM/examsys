@@ -411,6 +411,8 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 .s0 {width:18px;text-align:center;background-color:#003366;font-size:80%}
 .s1 {width:18px;text-align:center;background-color:#C00000;font-size:80%}
 .unans {background-color:#FFC0C0}
+.matrix {border:1px solid #808080; border-collapse:collapse}
+.matrix td {border:1px solid #808080}
 <?php
 if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;vertical-align:top}\n";
 if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";

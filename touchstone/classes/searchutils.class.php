@@ -33,15 +33,15 @@ Class SearchUtils {
     $team_sql = implode("','", $teams);
     if ($team_sql != '') $team_sql = "'$team_sql'";
     
-    if ($team_sql != '') {
+    if ($team_sql != '' or strpos($userroles,'Admin') !== false) {
       if (strpos($userroles,'SysAdmin') !== false) {
         $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID");
       } elseif (strpos($userroles,'Admin') !== false) {
         $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $db));
-        if ($schoolIDs == '') {
-          $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($team_sql) ORDER BY school, moduleID");
-        } else {
+        if ($schoolIDs != '') {
           $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID");
+        } elseif ($team_sql != '') {
+          $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($team_sql) ORDER BY school, moduleID");
         }
       } else {
         $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($team_sql) ORDER BY school, moduleID");
