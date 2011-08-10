@@ -489,6 +489,25 @@
   }
   $result->close();
 
+  // 10/08/2011 - Add new column for negative marking setting for modules.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='neg_marking'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN neg_marking TINYINT(1)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE modules ADD COLUMN neg_marking TINYINT(1)</div>\n";
+    ob_flush();
+    flush();
+    
+    $adjust = $mysqli->prepare("UPDATE modules SET neg_marking=1");
+    $adjust->execute();
+    $adjust->close();
+  }
+  $result->close();
 
   //Close the database
   $mysqli->close();

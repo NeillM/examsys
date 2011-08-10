@@ -50,6 +50,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   } else {
     $selfenroll = 0;
   }
+  if (isset($_POST['neg_marking'])) {
+    $neg_marking = 1;
+  } else {
+    $neg_marking = 0;
+  }
   $checklist = '';
   if (isset($_POST['peer'])) $checklist .= ',peer';
   if (isset($_POST['external'])) $checklist .= ',external';
@@ -61,8 +66,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $tmp_fullname = trim($_POST['fullname']);
   $tmp_checklist = substr($checklist,1); 
   
-  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=? WHERE moduleid=?");
-  $result->bind_param('ssisssiis', $tmp_moduleid, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $_POST['old_moduleid']);
+  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=? WHERE moduleid=?");
+  $result->bind_param('ssisssiiis', $tmp_moduleid, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['old_moduleid']);
   $result->execute();
   $result->close();
 
@@ -85,7 +90,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $stmt->store_result();
     $stmt->bind_result($paper_property_id, $paper_moduleID);
     while ($stmt->fetch()) {
-      $paper_moduleID = str_replace($_POST['old_moduleid'],trim($_POST['moduleid']),$paper_moduleID);
+      $paper_moduleID = str_replace($_POST['old_moduleid'], trim($_POST['moduleid']), $paper_moduleID);
       $result = $mysqli->prepare("UPDATE properties SET moduleID=? WHERE property_id=?");
       $result->bind_param('si', $paper_moduleID, $paper_property_id);
       $result->execute();
@@ -114,11 +119,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_modules.php");
 } else {
   $moduleid = $_GET['moduleid'];
-  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
+  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
   $stmt->bind_param('s', $moduleid);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll);
+  $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking);
   $stmt->fetch();
   
   require '../classes/smsutils.class.php';
@@ -193,20 +198,22 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <?php
     $old_faculty = '';
     echo "<tr><td class=\"field\">School</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
-    $query_string = "SELECT id, school, faculty FROM schools ORDER BY faculty, school";
-    $results = $mysqli->query($query_string);
-    while ($row = $results->fetch_assoc()) {
-      if ($old_faculty != $row['faculty']) {
+    $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY faculty.name, school");
+    $result->execute();
+    $result->bind_result($id, $list_school, $faculty);
+    while ($result->fetch()) {
+      if ($old_faculty != $faculty) {
         if ($old_faculty != '') echo "</optgroup>\n";
-        echo "<optgroup label=\"" . $row['faculty'] . "\">\n";
+        echo "<optgroup label=\"$faculty\">\n";
       }
-      if ($row['school'] == $school) {
-        echo "<option value=\"" . $row['id'] . "\" selected>" . $row['school'] . "</option>\n";
+      if ($school == $list_school) {
+        echo "<option value=\"$id\" selected>$school</option>\n";
       } else {
-        echo "<option value=\"" . $row['id'] . "\">" . $row['school'] . "</option>\n";
+        echo "<option value=\"$id\">$school</option>\n";
       }
-      $old_faculty = $row['faculty'];
+      $old_faculty = $faculty;
     }
+    $result->close();
     echo "</optgroup>\n</select></td></tr>\n";
     
     if (strpos($checklist,'peer') !== false) {
@@ -243,7 +250,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field">Objectives API</td><td><select name="vle_api"><option value="">&lt;No lookup&gt;</option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option></select></td></tr>
     <tr><td class="field">Summative Checklist</td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> Peer Review, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> External Examiners, <input type="checkbox" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> Standards Setting, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> Mapping</td></tr>
     <tr><td class="field">Active</td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field">Allow Self-enroll</td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field">allow Self-enroll</td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field">Negative Marking</td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked'; ?> /></td></tr>
   <?php
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_moduleid\" value=\"" . $_GET['moduleid'] . "\" />\n";

@@ -63,6 +63,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   } else {
     $selfenroll = 0;
   }
+  if (isset($_POST['neg_marking'])) {
+    $neg_marking = 1;
+  } else {
+    $neg_marking = 0;
+  }
   $fullname = $schoolid = $vle_api = $sms_api = '';
   $peer = $stdset = $mapping = false;
   
@@ -75,7 +80,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['vle_api']))   $vle_api = $_POST['vle_api'];
   if (isset($_POST['sms_api']))   $sms_api = $_POST['sms_api'];
   
-  ModuleUtils::addModules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $mysqli);
+  ModuleUtils::addModules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $mysqli);
   
   if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     $enrolements = 0;
@@ -205,20 +210,22 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 <?php
   $old_faculty = '';
   echo "<tr><td class=\"field\">School</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
-  $query_string = "SELECT id, school, faculty FROM schools ORDER BY faculty, school";
-  $results = $mysqli->query($query_string);
-  while ($row = $results->fetch_assoc()) {
-    if ($old_faculty != $row['faculty']) {
+  $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY faculty.name, school");
+  $result->execute();
+  $result->bind_result($id, $school, $faculty);
+  while ($result->fetch()) {
+    if ($old_faculty != $faculty) {
       if ($old_faculty != '') echo "</optgroup>\n";
-      echo "<optgroup label=\"" . $row['faculty'] . "\">\n";
+      echo "<optgroup label=\"$faculty\">\n";
     }
-    if (isset($_POST['schoolid']) and $_POST['schoolid'] == $row['id']) {
-      echo "<option value=\"" . $row['id'] . "\" selected>" . $row['school'] . "</option>\n";
+    if (isset($_POST['schoolid']) and $_POST['schoolid'] == $id) {
+      echo "<option value=\"$id\" selected>$school</option>\n";
     } else {
-      echo "<option value=\"" . $row['id'] . "\">" . $row['school'] . "</option>\n";
+      echo "<option value=\"$id\">$school</option>\n";
     }
-    $old_faculty = $row['faculty'];
+    $old_faculty = $faculty;
   }
+  $result->close();
   echo "</optgroup>\n</select></td></tr>\n";
   
   echo '<tr><td class="field">SMS API</td><td><select name="sms_api">';
@@ -234,6 +241,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <tr><td class="field">Summative Checklist</td><td><input type="checkbox" name="peer" checked /> Peer Review, <input type="checkbox" name="external" checked /> External Examiners, <input type="checkbox" name="stdset" /> Standards Setting, <input type="checkbox" name="mapping" /> Mapping</td></tr>
     <tr><td class="field">Active</td><td><input type="checkbox" name="active" checked /></td></tr>
     <tr><td class="field">allow Self-enroll</td><td><input type="checkbox" name="selfenroll" /></td></tr>
+    <tr><td class="field">Negative Marking</td><td><input type="checkbox" name="neg_marking" checked /></td></tr>
     </table>
     <p><input type="submit" style="width:100px" name="submit" value="Add">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="Cancel" onclick="javascript:history.back();" /></p>
   </form>
