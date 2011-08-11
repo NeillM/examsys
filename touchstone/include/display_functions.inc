@@ -525,7 +525,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'rank':
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
         if (isset($user_answers[$current_screen][$q_id])) {
-                $rank_answers = explode(',', $user_answers[$current_screen][$q_id]);
+          $rank_answers = explode(',', $user_answers[$current_screen][$q_id]);
         } else {
           $rank_answers = '';
         }
@@ -544,9 +544,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
         }
 
-        if ($tmp_part_id == 1 and $question['score_method'] == 'Bonus Mark') {
-          $marks++;  // Add one mark at start in case all options are answered correctly
-        }
         echo '<tr';
         if (isset($rank_answers[$tmp_part_id - 1]) AND $rank_answers[$tmp_part_id - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $total_rank_no) {
           echo ' class="unans"';
@@ -587,12 +584,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo "<td><span class=\"$class_type\" onclick=\"onoff($question_no,$tmp_part_id)\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
         if ($question['score_method'] == 'Mark per Question') {
           if ($tmp_part_id == 1) {
-            $marks++;
+            $marks += $display_option['marks_correct'];
           }
         } elseif ($display_option['correct'] != 0) {
-          $marks++;
+          $marks += $display_option['marks_correct'];
         } elseif ($question['score_method'] == 'Mark per Option') {
-          $marks++;
+          $marks += $display_option['marks_correct'];
         }
         break;
       case 'sct':
@@ -924,7 +921,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('<embed src="/touchstone/paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
           write_string('</object>');
         </script>
-        <br /><span class="mk">(Select a tab firstly then single click with the mouse to record your answer. Single click again if you need to change that answer.)</span>
         </div>
         <?php
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] != '') {
@@ -1074,12 +1070,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($score_array[2] == 'Formula') {
         if (isset($user_answers[$current_screen][$q_id]) AND $user_answers[$current_screen][$q_id] == '') {
           echo "<p><input type=\"hidden\" style=\"text-align:right\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" />";
-	  output_Math_Editor("q$question_no");
-	  echo "</p>\n";
+          output_Math_Editor("q$question_no");
+          echo "</p>\n";
         } else {
           if ((isset($tmp_user_answers[0]) and $tmp_user_answers[0] != '') or $screen_pre_submitted == 0) {
             echo "<p><input type=\"hidden\" style=\"text-align:right\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $tmp_user_answers[0] . "\" />";
-	    output_Math_Editor("q$question_no");
+            output_Math_Editor("q$question_no");
             echo "</p>\n";
           } else {
             echo "<p class=\"unans\"><input type=\"hidden\" style=\"text-align:right\"  id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" />";
@@ -1144,7 +1140,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($matching_media[$part_id] != '') $media_scenarios++;
     }
     $scenario_no = max($text_scenarios, $media_scenarios);
-    echo '<ol type="i">';
+    echo '<ol class="extmatch">';
     for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
       $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
       $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];

@@ -36,7 +36,7 @@ function display_media($filename, $width, $height, $imageid=-1) {
   if ($imageid > -1) $html .= "<span style=\"display:block\" id=\"media$imageid\">";
   // Is the file an image or something else (e.g. RasMol)?
   if (strtolower(substr($filename, -4)) == '.gif' or strtolower(substr($filename, -4)) == '.jpg' or strtolower(substr($filename, -4)) == 'jpeg' or strtolower(substr($filename, -4)) == '.png') {
-    $html .= "<img src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" />";
+    $html .= "<img src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top\" />";
   } elseif (strtolower(substr($filename, -4)) == '.wav' or strtolower(substr($filename, -4)) == '.wma' or strtolower(substr($filename, -4)) == '.mid') {
     $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"/touchstone/media/$filename\">Audio Clip</a>";
   } elseif (strtolower(substr($filename, -4)) == '.doc' or strtolower(substr($filename, -4)) == '.ppt' or strtolower(substr($filename, -4)) == '.xls' or strtolower(substr($filename, -4)) == '.pdf') {

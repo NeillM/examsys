@@ -172,15 +172,24 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
     $marks_partial = $row['marks_partial'];
     $dismiss = '';
     $display_pos = $row['display_pos'];
-    if ($old_q_id != $q_id or  $display_pos != $old_display_pos) { 
-      if ($old_type == 'rank' and $correct_rank == true and $mark == ($totalpos - 1) and $old_score_method == 'BonusMark') {
-        $mark++;  // Add one mark if the user has all options in the correct order
-      } elseif ($old_type == 'rank' and $correct_rank == true and $old_score_method == 'AllItemsCorrect') {
-        $mark++;  // Add one mark if the user has all options in the correct order
-      }
-      if ($old_type == 'mrq') {
+    if ($old_q_id != $q_id or $display_pos != $old_display_pos) {
+      if ($old_type == 'rank') {
+        if ($old_score_method == 'Bonus Mark') {
+          $totalpos++;
+          if ($correct_rank == true and $mark == ($totalpos - 1)) {
+            $mark++;  // Add one mark if the user has all options in the correct order
+          }
+        } elseif ($old_score_method == 'Mark per Question') {
+          $totalpos = $old_marks_correct;
+          if ($correct_rank) {
+            $mark = $old_marks_correct;
+          } else {
+            $mark = $old_marks_incorrect;
+          }
+        }
+      } elseif ($old_type == 'mrq') {
         if ($old_score_method == 'Mark per Question') {
-          if ($correct_rank == true) {
+          if ($correct_rank) {
             $mark = 1;
           } else {
             $mark = 0;
@@ -212,8 +221,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         if (isset($log_ids[$old_q_id])) {
           $q_log_id = $log_ids[$old_q_id];
         }
-        $save_answers->execute();
-        
+        $save_answers->execute();     // Save to the database.
+     
         $saved_response = '';
         $dismiss = '';
       }      
@@ -223,11 +232,17 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       $old_type = $q_type;
       $old_score_method = $score_method;
       $old_display_pos = $display_pos;
+      
+      $old_marks_correct = $marks_correct;
+      $old_marks_incorrect = $marks_incorrect;
+      $old_marks_partial = $marks_partial;
+
       $correct_rank = true;
       $mrq_options_selected = 0;
       $mark = 0;
       $totalpos = 0;
       $saved_response = '';
+
     }  
 
     $log_id = $q_id;
@@ -551,7 +566,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           if ($_POST[$qid] == $correct) $mark++;
         } elseif ($score_method == 'Mark per Question') {
           if ($question_part == 1) $totalpos++;
-          if ($_POST[$qid] <> $correct) $correct_rank = false;
+          if ($_POST[$qid] != 'u' and $_POST[$qid] <> $correct) $correct_rank = false;
         } elseif ($score_method == 'Allow partial Marks') {
           if ($_POST[$qid] != 0 and $correct != 0) {
             if ($_POST[$qid] == $correct) {
@@ -787,14 +802,20 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   }                    // End of while loop.
 
   // Log the very last question block.
-  if ($old_type == 'rank' and $correct_rank == true and $mark == ($totalpos - 1) and $old_score_method == 'Bonus Mark') {
-    $mark++;  // Add one mark if the user has all options in the correct order
-  } elseif ($old_type == 'rank' and $correct_rank == true and $old_score_method == 'Mark per Question') {
-    $mark++;  // Add one mark if the user has all options in the correct order
-  }
-  if ($old_type == 'mrq') {
+  if ($old_type == 'rank') {
+    if ($correct_rank == true and $mark == ($totalpos - 1) and $old_score_method == 'Bonus Mark') {
+      $mark++;  // Add one mark if the user has all options in the correct order
+    } elseif ($old_score_method == 'Mark per Question') {
+      $totalpos = $old_marks_correct;
+      if ($correct_rank) {
+        $mark = $old_marks_correct;
+      } else {
+        $mark = $old_marks_incorrect;
+      }
+    }
+  } elseif ($old_type == 'mrq') {
     if ($old_score_method == 'Mark per Question') {
-      if ($correct_rank == true) {
+      if ($correct_rank) {
         $mark = 1;
       } else {
         $mark = 0;
@@ -804,26 +825,34 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
     } elseif ($old_score_method == 'other') {
       $question_part++;
       $qid = 'q' . $question_no . '_' . $question_part;
-      $saved_response .= (isset($_POST[$qid])) ? $_POST[$qid] : 'n';
-      $qid = 'q' . $question_no . '_other';
-      $saved_response .= ':' . $_POST[$qid];
+      if (isset($_POST[$qid]) and $_POST[$qid] == 'y') {
+        $saved_response .= 'y';
+        $qid = 'q' . $question_no . '_other';
+        $saved_response .= $_POST[$qid];
+      } else {
+        $saved_response .= 'n';
+      }
     }
   }
   if (isset($_POST["order$question_no"])) {
     $option_order = $_POST["order$question_no"];
   } else {
     $option_order = '';
-  } 
-  $tmp_duration = time_to_seconds($submit_time) - time_to_seconds($_POST['page_start']);
-  if ($tmp_duration < 0) $tmp_duration += 86400;
-  $tmp_duration += $extra_duration;
-  if ($old_q_type != 'info') {
+  }
+  if ($question_no > 0 and $q_type != 'info') {
+    $tmp_duration = time_to_seconds($submit_time) - time_to_seconds($_POST['page_start']);
+    if ($tmp_duration < 0) $tmp_duration += 86400;
+    $tmp_duration += $extra_duration;
+
     if (isset($log_ids[$old_q_id])) {
       $q_log_id = $log_ids[$old_q_id];
     }
-    $save_answers->execute();
-  }
-  
+    $save_answers->execute();     // Save to the database.
+ 
+    $saved_response = '';
+    $dismiss = '';
+  }      
+        
   // Close still open database prepared queries
   $save_answers->close();
 }

@@ -30,7 +30,7 @@ require '../include/staff_student_auth.inc';
 require '../include/display_functions.inc';
 require '../include/media.inc';
 
-function randomQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,$current_screen,$q_no) {
+function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions;
  
   $selected_q_id = '';
@@ -58,11 +58,11 @@ function randomQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,$
   }
   
   // Look up selected question and overwrite data.
-  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
   $question_data->bind_param('i', $selected_q_id);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
   while ($row = $question_data->fetch()) {
     if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
       $question['theme'] = $theme;
@@ -73,13 +73,14 @@ function randomQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,$
       $question['q_id'] = $q_id;
       $question['display_pos'] = $q_no;
       $question['score_method'] = $score_method;
+      $question['display_method'] = $display_method;
       $question['q_media'] = $q_media;
       $question['q_media_width'] = $q_media_width;
       $question['q_media_height'] = $q_media_height;
       $question['q_option_order'] = $q_option_order;
       $question['dismiss'] = '';
     }
-    $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+    $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
   $questions[] = $question;
   echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
@@ -113,11 +114,11 @@ function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_ans
     
   foreach ($target_questionIDs as $target_questionID) {
     // Look up selected question and overwrite data.
-    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
     $question_data->bind_param('i', $target_questionID);
     $question_data->execute();
     $question_data->store_result();
-    $question_data->bind_result($q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
     $question = array();
     while ($row = $question_data->fetch()) {
       if ($question['q_id'] != $q_id or $question['display_pos'] != $display_pos) {
@@ -129,24 +130,25 @@ function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_ans
         $question['q_id'] = $q_id;
         $question['display_pos'] = $display_pos;
         $question['score_method'] = $score_method;
+        $question['display_method'] = $display_method;
         $question['q_media'] = $q_media;
         $question['q_media_width'] = $q_media_width;
         $question['q_media_height'] = $q_media_height;
         $question['q_option_order'] = $q_option_order;
         $question['dismiss'] = $dismiss;
       }
-      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
    }
    $questions[] = $question;
   }
   echo "\n<input type=\"hidden\" name=\"q" . $branching_q_data['q_id'] . '_' . ($previous_user_answer-1) . "_branchID\" value=\"" . ($previous_user_answer-1) . "\" />\n";
 }
 
-function keywordQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,$current_screen,$q_no) {
+function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions;
   
   $selected_q_id = '';
-  if(isset($user_answers[$current_screen])) {
+  if (isset($user_answers[$current_screen])) {
     //match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
     $selected_q_id = current($question_on_screen);
@@ -180,11 +182,11 @@ function keywordQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,
   
   if ($unique) {
     // Look up selected question and overwrite data.
-    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
-    $question_data->bind_result($q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
     while ($question_data->fetch()) {
       if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
         $question['theme'] = $theme;
@@ -195,13 +197,14 @@ function keywordQOverwrite(&$questions,$random_q_data,$paper_type,$user_answers,
         $question['q_id'] = $q_id;
         $question['display_pos'] = $q_no;
         $question['score_method'] = $score_method;
+        $question['display_method'] = $display_method;
         $question['q_media'] = $q_media;
         $question['q_media_width'] = $q_media_width;
         $question['q_media_height'] = $q_media_height;
         $question['q_option_order'] = $q_option_order;
         $question['dismiss'] = '';
       }
-      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
     }
     echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
   } else {
@@ -413,6 +416,7 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 .unans {background-color:#FFC0C0}
 .matrix {border:1px solid #808080; border-collapse:collapse}
 .matrix td {border:1px solid #808080}
+.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:lower-roman}
 <?php
 if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;vertical-align:top}\n";
 if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
