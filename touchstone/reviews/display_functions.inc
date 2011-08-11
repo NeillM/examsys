@@ -989,13 +989,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($matching_media[0] != '') {
       echo "<p align=\"center\">" . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0]) . "</p>\n";
     }
-    echo '<table cellpadding="2" cellspacing="0" border="1">'; 
+    echo '<blockquote><table cellpadding="2" cellspacing="0" border="1" class="matrix">';
+    //echo '<table cellpadding="2" cellspacing="0" border="1">'; 
     echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
     foreach ($matching_options as $single_option) {
       echo '<td>' . $single_option . '</td>';
     }
     echo "<tr>\n";
-    $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x');
+    $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
     foreach ($matching_scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
         echo "<tr>\n";
