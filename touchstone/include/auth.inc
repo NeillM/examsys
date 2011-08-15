@@ -118,7 +118,13 @@ function ldap_auth($u, $p, &$data){
  *
  */
 function db_auth($u, $p, $db) {
-  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $grade, $year, $special_needs, $db_errors, $cfg_install_type;
+  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database;
+  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
+  global $cfg_db_admin_user, $cfg_db_admin_passwd;
+  global $cfg_db_staff_user, $cfg_db_staff_passwd;
+  global $cfg_db_student_user, $cfg_db_student_passwd;
+  global $cfg_db_external, $cfg_db_external_passwd;
+
   if ($u == '') {
     return false;
   }
@@ -158,6 +164,29 @@ function db_auth($u, $p, $db) {
           $cfg_install_type .= " as $title $surname";
         }
       }
+            
+      //select the aproprate database user
+      if (strpos($userroles,'SysAdmin') !== false) {
+        $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
+        //echo "using sysadmin db conection";
+      } else if (strpos($userroles,'Student') !== false) {
+        //echo "using Student db conection";
+        $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
+      } else if (strpos($userroles,'Staff') !== false or strpos($userroles,'Admin') !== false) {
+        $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
+        //echo "using staff db conection";
+      } else if (strpos($userroles,'External Examiner') !== false) {
+        $result = $db->change_user($cfg_db_external, $cfg_db_external_passwd, $cfg_db_database);
+        //echo "using External Examiner db conection";
+      } else {
+        $result = false;
+      }
+            
+      if($result === false) {
+        $db_errors = "<strong>Could not connect to the database please contact your administrator</strong>";
+        return false;
+      }
+      
       return true;
     } else {
       $db_errors = '<strong>Local TouchStone authentication failed.</strong>';
