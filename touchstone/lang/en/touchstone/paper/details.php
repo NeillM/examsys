@@ -1,0 +1,81 @@
+<?php
+$string['home'] = '1Home';
+$string['start'] = '1Start';
+$string['owner'] = '1Owner';
+$string['question'] = '1Question';
+$string['type'] = '1Type';
+$string['marks'] = '1Marks';
+$string['modified'] = '1Modified';
+$string['passmark'] = '1Pass Mark';
+$string['papertasks'] = '1Paper Tasks';
+$string['testpreview'] = '1Test &amp; Preview';
+$string['addquestionspaper'] = '1Add Questions to Paper';
+$string['editproperties'] = '1Edit Properties';
+$string['reports'] = '1Reports';
+$string['mappedobjectives'] = '1Mapped Objectives';
+$string['importmarks'] = '1Import Marks';
+$string['standardssetting'] = '1Standards Setting';
+$string['importoscemarks'] = '1Import OSCE Marks';
+$string['copypaper'] = '1Copy Paper';
+$string['deletepaper'] = '1Delete Paper';
+$string['retirepaper'] = '1Retire Paper';
+$string['printhardcopy'] = '1Print Hardcopy version';
+$string['qtiimportexport'] = '1QTI Import/Export';
+$string['currentquestiontasks'] = '1Current Question Tasks';
+$string['editquestion'] = '1Edit Question';
+$string['information'] = '1Information';
+$string['copyontopaperx'] = '1Copy onto Paper X...';
+$string['moveup'] = '1Move up';
+$string['movedown'] = '1Move down';
+$string['changescreenno'] = '1Change Screen No.';
+$string['removefrompaper'] = '1Remove from Paper';
+
+$string['summativechecklist'] = '1Summative Checklist';
+$string['session'] = '1Session';
+$string['mismatch'] = '1Mismatch';
+$string['examtime'] = '1Exam Time';
+$string['incorrect'] = '1Incorrect';
+$string['incomplete'] = '1Incomplete';
+$string['duration'] = '1Duration';
+$string['unset'] = '1Unset';
+$string['computerlabs'] = '1Computer Labs';
+$string['peerreviewed'] = '1Peer Reviewed';
+$string['peerreviewes'] = '1Peer Reviews';
+$string['ok'] = '1OK';
+$string['externalreviews'] = '1External Reviews';
+$string['standardsset'] = '1Standards Set';
+$string['mapping'] = '1Mapping';
+
+$string['questionbanktasks'] = '1Question Bank Tasks';
+$string['questionsbytype'] = '1Questions by Type';
+$string['questionsbyteam'] = '1Questions by Team';
+$string['questionsbykeyword'] = '1Questions by Keyword';
+$string['search'] = '1Search';
+$string['createnewquestion'] = '1Create new Question';
+
+$string['informationblock'] = '1Information Block';
+$string['keywordbasedquestion'] = '1Keyword-based Question';
+$string['randomquestionblock'] = '1Random Question Block';
+$string['calculation'] = '1Calculation';
+$string['dichotomous'] = '1Dichotomous (Yes/No and True/False)';
+$string['extendedmatching'] = '1Extended Matching';
+$string['fillintheblank'] = '1Fill-in-the-Blank';
+$string['flash'] = '1Flash Interface';
+$string['imagehotspot'] = '1Image Hotspot';
+$string['labelling'] = '1Labelling';
+$string['likertscale'] = '1Likert Scale';
+$string['matrix'] = '1Matrix';
+$string['mcq'] = '1Multiple Choice (MCQ)';
+$string['mrq'] = '1Multiple Response (MRQ)';
+$string['ranking'] = '1Ranking';
+$string['sct'] = '1Script Concordance Test (SCT)';
+$string['textbox'] = '1Text Box';
+$string['timedate'] = '1Time/Date';
+$string['questions'] = '1Questions';
+$string['papers'] = '1Papers';
+$string['people'] = '1People';
+
+$string['help'] = '1Help';
+$string['screen'] = '1Screen';
+
+?>

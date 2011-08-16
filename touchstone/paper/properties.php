@@ -314,6 +314,20 @@ if (isset($_POST['Submit'])) {
 } else {
   $option_no = 1;
   
+  // Work out if any negative marking is used
+  $neg_marking = false;
+  $result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND paper=?");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($marks_incorrect);
+  while ($result->fetch()) {
+    if ($marks_incorrect < 0) {
+      $neg_marking = true;
+    }
+  }
+  $result->close();
+  
+  // Get the main properties of the paper
   $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, hide_if_unanswered, paper_title, paper_type, start_date, end_date, timezone, paper_prologue, paper_postscript, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, moduleID, calendar_year, internal_reviewers, external_review_deadline, internal_review_deadline, sound_demo, password FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
@@ -793,71 +807,82 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
        echo "<tr><td align=\"right\" valign=\"top\">Overall&nbsp;Classification&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
-     ?>
-       <option value="5"<?php if ($marking == '5') echo ' selected'; ?> />&lt;Automatic&gt;</option>
-       <option value="3"<?php if ($marking == '3') echo ' selected'; ?> />Clear Fail | Borderline | Clear Pass</option>
-       <option value="4"<?php if ($marking == '4') echo ' selected'; ?> />Fail | Borderline fail | Borderline pass | Pass | Good pass</option>
-       <option value="6"<?php if ($marking == '6') echo ' selected'; ?> />Clear FAIL | BORDERLINE | Clear PASS | Honours PASS</option>
+    ?>
+      <option value="5"<?php if ($marking == '5') echo ' selected'; ?> />&lt;Automatic&gt;</option>
+      <option value="3"<?php if ($marking == '3') echo ' selected'; ?> />Clear Fail | Borderline | Clear Pass</option>
+      <option value="4"<?php if ($marking == '4') echo ' selected'; ?> />Fail | Borderline fail | Borderline pass | Pass | Good pass</option>
+      <option value="6"<?php if ($marking == '6') echo ' selected'; ?> />Clear FAIL | BORDERLINE | Clear PASS | Honours PASS</option>
   <?php
     echo "<tr><td colspan=\"4\">" . wysiwyg_editor('oEdit1','osce_marking_guidance',$paper_prologue,684,230);
   ?>
 </td></tr>
-     <?php
-       echo "</select></td></tr>\n";
-     } else {
-       echo "<tr><td align=\"right\" valign=\"top\">Pass&nbsp;Mark&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\"";
-       if ($paper_type == '3') echo ' disabled';
-       echo '>';
-       for ($i=0; $i<=100; $i++) {
-         if ($i == $pass_mark) {
-           echo "<option value=\"$i\" selected>$i%</option>\n";
-         } else {
-           echo "<option value=\"$i\">$i%</option>\n";
-         }
-       }
-       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">Method&nbsp;</td><td rowspan=\"2\">";
-     ?>
+    <?php
+      echo "</select></td></tr>\n";
+    } else {
+      echo "<tr><td align=\"right\" valign=\"top\">Pass&nbsp;Mark&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\"";
+      if ($paper_type == '3') echo ' disabled';
+      echo '>';
+      for ($i=0; $i<=100; $i++) {
+        if ($i == $pass_mark) {
+          echo "<option value=\"$i\" selected>$i%</option>\n";
+        } else {
+          echo "<option value=\"$i\">$i%</option>\n";
+        }
+      }
+      echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">Method&nbsp;</td><td rowspan=\"2\">";
+    ?>
        <input type="radio" id="marking1" name="marking" value="0"<?php if ($marking == '0') echo ' checked'; ?> />No Adjustment<br />
-       <input type="radio" id="marking2" name="marking" value="1"<?php if ($marking == '1') echo ' checked'; ?> />Calculate Random Mark<br />
-     <?php
-       // Look for any Standard Setting reviews for the paper.
-       $std_set_details = $mysqli->prepare("SELECT DISTINCT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, group_review FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY std_set DESC");
-       $std_set_details->bind_param('i', $_GET['paperID']);
-       $std_set_details->execute();
-       $std_set_details->store_result();
-       if ($std_set_details->num_rows > 0) {
-         echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
-         if (substr($marking,0,1) == '2') echo ' checked';
-         echo " />";
-         echo 'Std Set <select name="std_set">';
-         $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date, $group_review);
-         while ($row = $std_set_details->fetch()) {
-           if ($group_review == 'No') {
-             echo "<option value=\"2,$std_set_reviewer,$std_set_date\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
-           } else {
-             echo "<option value=\"2,$std_set_reviewer,$std_set_date\">Group Review - $std_set_display_date</option>";
-           }
-         }
-         echo "</select>\n";
-         $std_set_details->close();
+       <input type="radio" id="marking2" name="marking" value="1"<?php
+       if ($marking == '1') {
+          echo ' checked';
+       }
+       if ($neg_marking) {
+        echo ' disabled';
+       }
+       if ($neg_marking) {
+         echo '><span style="color:#808080">Calculate Random Mark</span><br />';
        } else {
-         echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\" disabled />";
-         echo '<span style="color:#808080">Std Set</span>';
+        echo '>Calculate Random Mark<br />';
        }
-     }
-     if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
-       echo "<tr><td align=\"right\" valign=\"top\">Distinction</td><td><select name=\"distinction_mark\">";
-       for ($i=0; $i<=100; $i++) {
-         if ($i == $distinction_mark) {
-           echo "<option value=\"$i\" selected>$i%</option>\n";
-         } else {
-           echo "<option value=\"$i\">$i%</option>\n";
-         }
-       }
-       echo "</select></td></tr>\n";
-     } else {
-       echo "<tr><td></td><td></td></tr>\n";
-     }
+     
+      // Look for any Standard Setting reviews for the paper.
+      $std_set_details = $mysqli->prepare("SELECT DISTINCT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, group_review FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY std_set DESC");
+      $std_set_details->bind_param('i', $_GET['paperID']);
+      $std_set_details->execute();
+      $std_set_details->store_result();
+      if ($std_set_details->num_rows > 0) {
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
+        if (substr($marking,0,1) == '2') echo ' checked';
+        echo " />";
+        echo 'Std Set <select name="std_set">';
+        $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date, $group_review);
+        while ($row = $std_set_details->fetch()) {
+          if ($group_review == 'No') {
+            echo "<option value=\"2,$std_set_reviewer,$std_set_date\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
+          } else {
+            echo "<option value=\"2,$std_set_reviewer,$std_set_date\">Group Review - $std_set_display_date</option>";
+          }
+        }
+        echo "</select>\n";
+        $std_set_details->close();
+      } else {
+        echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\" disabled />";
+        echo '<span style="color:#808080">Std Set</span>';
+      }
+    }
+    if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
+      echo "<tr><td align=\"right\" valign=\"top\">Distinction</td><td><select name=\"distinction_mark\">";
+      for ($i=0; $i<=100; $i++) {
+        if ($i == $distinction_mark) {
+          echo "<option value=\"$i\" selected>$i%</option>\n";
+        } else {
+          echo "<option value=\"$i\">$i%</option>\n";
+        }
+      }
+      echo "</select></td></tr>\n";
+    } else {
+      echo "<tr><td></td><td></td></tr>\n";
+    }
    ?>
    </table>
 </td>

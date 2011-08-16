@@ -12,7 +12,7 @@ require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 
 set_time_limit(0);
-if(!isset($_POST['update'])) {
+if (!isset($_POST['update'])) {
   ?>
   <html>
     <head>
@@ -61,7 +61,7 @@ if(!isset($_POST['update'])) {
       });
     </script>
     <?php
-    if(!InstallUtils::configFileIsWriteable()) {
+    if (!InstallUtils::configFileIsWriteable()) {
       ?>
        <h2>Update from version 4.0 to 4.1</h2>
        <div>This update requires that /touchstone/config/config.inc.php is writeable.</div>
@@ -90,7 +90,7 @@ if(!isset($_POST['update'])) {
   
   $mysqli = new $dbclass($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database);
   
-  if($mysqli->connect_error) {
+  if ($mysqli->connect_error) {
     echo "<div>Filded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
     echo "</body>";
     echo "</html>";
@@ -397,12 +397,12 @@ if(!isset($_POST['update'])) {
   
   
   //ADD new role based MySQL users
-  $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_stu_ARSE'");
+  $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_stu'");
   $result->execute();
   $result->store_result();
   $result->bind_result($tmp_user);
   $result->fetch();
-  if($result->num_rows() == 0) {
+  if ($result->num_rows() == 0) {
     
     $cfg_db_username = $cfg_db_database . '_auth';
     $cfg_db_password = PasswordUtils::gen_password(16);
@@ -543,7 +543,7 @@ if(!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $cfg_db_database . ".* TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
     
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       $mysqli->query($sql);
       if ($mysqli->errno != 0) {
         echo '<div> ERROR:: could not set permissions ' . $sql . '</div>';
@@ -578,15 +578,15 @@ if(!isset($_POST['update'])) {
     //remove refrances to old vars
     $cfg_new = array();
     $remove_array = array('Local database', 'cfg_db_username', 'cfg_db_passwd', 'cfg_db_database', 'cfg_db_host');
-    foreach($cfg as $line) {
+    foreach ($cfg as $line) {
        $remove = false;
        foreach($remove_array as $needle) {
-         if(stripos($line,$needle) !== false) {
+         if (stripos($line,$needle) !== false) {
             $remove = true;
             break 1;
          }
        }
-       if(!$remove) {
+       if (!$remove) {
          $cfg_new[] = $line;
        }
     }
@@ -798,6 +798,22 @@ if(!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("UPDATE modules SET neg_marking=1");
     $adjust->execute();
     $adjust->close();
+  }
+  $result->close();
+
+  // 15/08/2011 - Add new table to hold Ebel grid defaults.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='ebel_grid_defaults' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE ebel_grid_defaults (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>CREATE TABLE ebel_grid_defaults (id INT NOT NULL PRIMARY_KEY AUTO INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint)</div>\n";
+    ob_flush();
+    flush();
   }
   $result->close();
 

@@ -28,6 +28,7 @@ $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT
 require_once $root . 'touchstone/config/config.inc.php';
 require_once $cfg_web_root . 'touchstone/include/auth.inc';
 require_once $cfg_web_root . 'touchstone/include/custom_error_handler.inc';
+require_once $cfg_web_root . 'touchstone/classes/lang.class.php';
 
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"/touchstone/users/forgotten_password.php\">Forgotten Password</p>\n";
 

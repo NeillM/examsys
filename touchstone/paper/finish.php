@@ -39,6 +39,13 @@
     $stmt->fetch();
   }
   $stmt->close();
+  
+  function echo_content($html) {
+    echo $html;
+    if (strpos($html,'<div>') === false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {
+      echo "<br />\n<br />\n";
+    }
+  }
 
   function reset_feedback($hide) {
     // Set all the feedback display options to '0' so that they become hidden.
@@ -273,15 +280,15 @@ table {font-size:100%}
 .matrix {border:1px solid #808080; border-collapse:collapse}
 .matrix td {border:1px solid #808080}
 </style>
-<?php if ($latex_needed == 1) {?>
-  <script src="/touchstone/javascript/MathJaxConfig.js"></script>
 <?php
- }
+  if ($latex_needed == 1) {
+    echo "<script language=\"JavaScript\" src=\"../javascript/MathJaxConfig.js\"></script>\n";
+  }
   if (($userroles == 'Student' and $paper_type < 2) or strpos($userroles,'Staff') !== false) {
     echo "<script src=\"../javascript/ie_fix.js\" type=\"text/javascript\"></script>\n";
   }
 ?>
-<script language="JavaScript" src="/touchstone/javascript/flash_include.js"></script>
+<script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="JavaScript">
   window.history.go(1);
 
@@ -743,7 +750,7 @@ table {font-size:100%}
           if ($paper[$question]['scenario'] != '') echo "<p>" . $paper[$question]['scenario'] . "</p>\n";
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
           
-          echo "<p>" . $tmp_leadin . "</p>\n";
+          echo_content($tmp_leadin);
           
           $score_array = explode(',',$paper[$question]['display_method']);
           echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
@@ -807,9 +814,9 @@ table {font-size:100%}
           }
         
           $paper[$question]['mark'] = 0;
-          if (!empty($paper[$question]['scenario'])) echo "<p class=\"scenario\">" . $paper[$question]['scenario'] . "</p>\n";
+          if (!empty($paper[$question]['scenario'])) echo_content($paper[$question]['scenario']);
           if (!empty($paper[$question]['q_media'])) echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
-          echo "<p class=\"leadin\">" . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
           echo '<table cellpadding="0" cellspacing="1" border="0">';
           
           $abstain = false;
@@ -936,9 +943,9 @@ table {font-size:100%}
             reset_feedback($hide_if_unanswered);
           }
              
-          if ($paper[$question]['scenario'] != '') echo "<p class=\"leadin\">" . $paper[$question]['scenario'] . "</p>\n";
+          if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
-          echo "<p class=\"leadin\">" . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
           echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\">\n";
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             $tmp_part_id = $option_order[$part_id];
@@ -1045,9 +1052,9 @@ table {font-size:100%}
           break;
         case 'mrq':
           $std_part = 0;
-          if ($paper[$question]['scenario'] != '') echo "<p class=\"leadin\">" . $paper[$question]['scenario'] . "</p>\n";
+          if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
-          echo "<p class=\"leadin\">" . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
           
           // Check to see if the user has answered any options.
           $answered = false;
@@ -1172,7 +1179,7 @@ table {font-size:100%}
           }
           break;
         case 'sct':
-          if ($paper[$question]['scenario'] != '') echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td colspan=\"3\" style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">Clinical Vignette</td></tr>\n<tr><td colspan=\"2\" class=\"leadin\">" . $paper[$question]['scenario'] . "</td></tr>\n";
+          if ($paper[$question]['scenario'] != '') echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td colspan=\"3\" style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">Clinical Vignette</td></tr>\n<tr><td colspan=\"2\">" . $paper[$question]['scenario'] . "</td></tr>\n";
           if ($paper[$question]['q_media'] != '') echo "<tr><td colspan=\"3\"><p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p></td></tr>\n";
       
           $sct_parts = explode('~',$paper[$question]['leadin']);
@@ -1183,7 +1190,7 @@ table {font-size:100%}
           echo "<tr><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">If you were thinking of the following " . $sct_intros[$paper[$question]['score_method']] . "</span><br />" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">And then you find:</span><br />" . $sct_parts[1] . "</td></tr>\n";
           echo '</table>';
       
-          echo "\n<p class=\"leadin\"><strong>Then this " . strtolower($sct_titles[$paper[$question]['score_method']]) . " is:</strong></p>\n";
+          echo "\n<p><strong>Then this " . strtolower($sct_titles[$paper[$question]['score_method']]) . " is:</strong></p>\n";
 
           $max = -1;
           $reviewers_total = 0;
@@ -1281,9 +1288,9 @@ table {font-size:100%}
           
           break;
         case 'rank':
-          if ($paper[$question]['scenario'] != '') echo "<p class=\"leadin\">" . $paper[$question]['scenario'] . "</p>\n";
+          if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
-          echo "<p class=\"leadin\">" . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
 
           $na_count = 0;
           foreach ($paper[$question]['correct'] as $correct_option) {
@@ -1401,7 +1408,7 @@ table {font-size:100%}
           break;
         case 'extmatch':
           $paper[$question]['mark'] = 0;
-          echo "<p class=\"leadin\">" . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
           echo '<ol type="i">';
           $matching_scenarios = array();
           $matching_scenarios = explode('|', $paper[$question]['scenario']);
@@ -1440,7 +1447,7 @@ table {font-size:100%}
               $single_scenario = '';
             }
             echo '<li>';
-            if ($single_scenario != '') echo "<div class=\"leadin\">$single_scenario</div>";
+            if ($single_scenario != '') echo "$single_scenario<br />";
             if (isset($matching_media[$i+1]) and $matching_media[$i+1] != '') {
               echo "<p>" . display_media($matching_media[$i+1], $matching_media_width[$i+1], $matching_media_height[$i+1], $question . '_' . ($i+1)) . "</p>\n";
             }
@@ -1579,7 +1586,7 @@ table {font-size:100%}
             $user_answers = array();
           }
           $correct_answers = explode('|', $paper[$question]['correct'][0]);
-          echo "<p>" . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
           if ($matching_media[0] != '') {
             echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0],$question_no) . '</p>';
           }
@@ -1655,11 +1662,11 @@ table {font-size:100%}
         case 'textbox':
           $textbox_size = explode('x',$paper[$question]['score_method']);
           if ($paper[$question]['scenario'] != '') {
-            echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
+            echo echo_content($paper[$question]['scenario']);
             if ($paper[$question]['q_media'] != '') {
               echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
-            echo '<p class="leadin"';
+            echo '<p';
             if (substr($tmp_exclude,0,1) == '1') echo ' style="color:red; text-decoration:line-through"';
             echo '>' . $paper[$question]['leadin'] . "</p>\n";
           } else {
@@ -1688,16 +1695,16 @@ table {font-size:100%}
           break;
         case 'timedate':
           if ($paper[$question]['scenario'] != '') {
-            echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
+            echo_content($paper[$question]['scenario']);
             if ($paper[$question]['q_media'] != '') {
               echo '<p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
-            echo '<p class="leadin">' . $paper[$question]['leadin'] . "</p>\n";
+            echo echo_content($paper[$question]['leadin']);
           } else {
             if ($paper[$question]['q_media'] != '') {
               echo '<br /><p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
-            echo '<p class="leadin">' . $paper[$question]['leadin'] . "</p>\n";
+            echo_content($paper[$question]['leadin']);
           }
           if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
             echo '<p>';
@@ -1729,31 +1736,31 @@ table {font-size:100%}
           break;
         case 'likert':
           if ($paper[$question]['scenario'] != '') {
-            echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
+            echo_content($paper[$question]['scenario']);
             if ($paper[$question]['q_media'] != '') {
               echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
-            echo '<p class="leadin">' . $paper[$question]['leadin'] . "</p>\n";
+            echo_content($paper[$question]['leadin']);
           } else {
             if ($paper[$question]['q_media'] != '') {
               echo '<br /><p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }            
-            echo '<p class="leadin">' . $paper[$question]['leadin'] . "</p>\n";
+            echo_content($paper[$question]['leadin']);
           }
           break;
         case 'blank':
           $paper[$question]['mark'] = 0;
           if ($paper[$question]['scenario'] != '') {
-            echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
+            echo_content($paper[$question]['scenario']);
             if ($paper[$question]['q_media'] != '') {
               echo '<p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
-            echo '<p class="leadin">' . $paper[$question]['leadin'] . "</p>\n";
+            echo_content($paper[$question]['leadin']);
           } else {
             if ($paper[$question]['q_media'] != '') {
               echo '<br /><p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
-            echo "<p class=\"leadin\">" . $paper[$question]['leadin'] . "</p>\n";
+            echo_content($paper[$question]['leadin']);
           }
 
           if (isset($paper[$question]['user_answer'])) {
@@ -1865,7 +1872,7 @@ table {font-size:100%}
           }
           
           if ($paper[$question]['scenario'] != '') {
-            echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
+            echo_content($paper[$question]['scenario']);
           }
           
           $extra = $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude;
@@ -1965,9 +1972,9 @@ table {font-size:100%}
           }
         
           if ($paper[$question]['scenario'] != '') {
-            echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
+            echo_content($paper[$question]['scenario']);
           }
-          echo '<p class="leadin">' . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
           echo '<div align="center">';
           echo '<script language="JavaScript">';
           if ($tmp_display_correct_answer == '0' or $tmp_display_students_response == '0') {
@@ -2035,9 +2042,9 @@ table {font-size:100%}
           break;
         case 'flash':
           if ($paper[$question]['scenario'] != '') {
-            echo '<p class="leadin">' . $paper[$question]['scenario'] . "</p>\n";
+            echo_content($paper[$question]['scenario']);
           }
-          echo '<p class="leadin">' . $paper[$question]['leadin'] . "</p>\n";
+          echo_content($paper[$question]['leadin']);
 ?>
     <div align="center">
     <script language="JavaScript">
