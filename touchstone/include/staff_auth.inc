@@ -39,9 +39,8 @@
 
   // Get teams.
   $teams = getUserTeams($userID, $mysqli);
+  require_once "$cfg_web_root/touchstone/lang/$language/touchstone/include/staff_auth.inc";
   
-  $types_array = array('Formative Self-Assessments','Progress Tests','Summative Exams','Surveys','OSCE Stations','Offline Papers');
-
   //
   //default security checkes
   //

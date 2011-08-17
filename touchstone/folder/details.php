@@ -36,34 +36,33 @@ if (isset($_GET['module'])) {
 }
 
 function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked, $retired) {
-  if ($retired != '') {
-    $retired = '_retired';
-  }
+  global $string, $type;
   switch ($paper_type) {
     case 0:
-      $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"Type: Formative Self-Assessment&#013;Author: $title $initials $surname\" border=\"0\" />";
+      $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
       break;
     case 1:
-      $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"Type: Progress Test&#013;Author: $title $initials $surname\" border=\"0\" />";
+      $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progresstest'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
       break;
     case 2:
-      $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"Type: Summative Exam&#013;Author: $title $initials $surname\" border=\"0\" />";
+      $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
       break;
     case 3:
-      $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"Type: Survey&#013;Author: $title $initials $surname\" border=\"0\" />";
+      $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
       break;
     case 4:
-      $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"Type: OSCE Station&#013;Author: $title $initials $surname\" border=\"0\" />";
+      $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['oscestation'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
       break;
     case 5:
-      $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"Type: Offline Paper&#013;Author: $title $initials $surname\" border=\"0\" />";
+      $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offlinepaper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
       break;
   }
   return $html;
 }
 
+
 function displayPaperIcon($row) {
-  global $userroles, $type, $folder, $module, $mysqli, $userID, $teams;
+  global $userroles, $type, $folder, $module, $mysqli, $userID, $teams, $string;
   echo '<div class="file">';
   echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
   $icon_type = $row['paper_type'];
@@ -105,11 +104,11 @@ function displayPaperIcon($row) {
     echo '  <span style="color:#C0C0C0">';
   }
   if ($row['screens'] == NULL) {
-    echo '0 Screens, ';
+    echo '0 ' . $string['screens'] . ', ';
   } elseif ($row['screens'] == 1) {
-    echo $row['screens'] . ' Screen';
+    echo $row['screens'] . ' ' . $string['screen'];
   } else {
-    echo $row['screens'] . ' Screens';
+    echo $row['screens'] . ' ' . $string['screens'];
   }
   if ($row['moduleID'] == '') {
     echo ', <span style="color:red">No modules set</span>';
@@ -119,7 +118,7 @@ function displayPaperIcon($row) {
   echo '<br />';
   echo '  ' . $row['display_start_date'];
   if ($icon_type == 2) {
-    if ($row['exam_duration'] != '') echo ', ' . $row['exam_duration'] . 'mins';
+    if ($row['exam_duration'] != '') echo ', ' . $row['exam_duration'] . $string['mins'];
   } else {
     echo ' to ' . $row['display_end_date'];
   }
@@ -258,9 +257,9 @@ function displayPaperIcon($row) {
 <?php
 echo '<tr><td style="background-color:#F1F5FB">';
 if (isset($parent_id)) {
-  echo '<div class="breadcrumb"><a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . $parent_name . '</a></div>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . $parent_name . '</a></div>';
 } else {
-  echo '<div class="breadcrumb"><a href="../index.php">Home</a></div>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div>';
 }
 echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
 
@@ -273,7 +272,7 @@ if ($folder != '') {
 echo '</td>';
 echo "<td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input type=\"checkbox\" name=\"showretired\" value=\"on\" onclick=\"updateCookies();\"";
 if (isset($_COOKIE['showretired']) and $_COOKIE['showretired'] == 'checked') echo ' checked';
-echo " /> Show retired</td></tr>\n";
+echo " /> " . $string['showretired'] . "</td></tr>\n";
 
 echo "<tr><td colspan=\"2\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n<br />\n";
 
@@ -300,11 +299,11 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
   echo '<div style="float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC; filter:progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=2)">';
   if ($add_member == true or strpos($userroles,'Admin') !== false) {
-    echo '<div style="padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">Team Members</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="" onclick="addTeamMember(); return false;">Edit</a></div>';
+    echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;">' . $string['edit'] . '</a></div></div>';
   } else {
-    echo '<div style="padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB">Team Members</div>';
+    echo '<div style="padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB">' . $string['teammembers'] . '</div>';
   }
-  echo "$tmp_html</div>\n";
+  echo "<br clear=\"all\" />$tmp_html</div>\n";
   $member_details->close();
 }
 
@@ -375,7 +374,7 @@ if ($display_papers) {
         $sent_clear_all = true;
         echo "<table border=\"0\" style=\"margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287\"><tr><td><nobr>" . $types_array[$row['paper_type']] . " (" . $paper_types[$row['paper_type']] . ")";
         if ($row['paper_type'] == 2) {
-          echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" border=\"0\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">Calendar</a></span>\n";
+          echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" border=\"0\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
         }
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
         echo "<br />\n";

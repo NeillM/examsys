@@ -90,7 +90,7 @@
 
 <div id="content" class="content" style="font-size:80%">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">Home</a></div><div style="margin-left:10px; font-size:200%; font-weight:bold">Administrative Tools</div></td></tr>
+<tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></td></tr>
 <tr><td style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>
 
@@ -103,7 +103,7 @@
   if ($sys_error_no > 0) {
     $err_added_string = ' <span style="background-color:red; color:white; font-weight:bold">&nbsp;' . $sys_error_no . '&nbsp;</span>';
   }
-  $titles = array('Calendar','Clear Guest Accounts' . $added_string,'Clear Old Logs','Clear Orphan Media','Clear Training','Computer Labs','Degrees','Faculties','Modules','Optimize Tables','Schools','SMS Imports','Summative Exam Stats','System Errors' . $err_added_string,'System Information','Trac (issue tracking)','User Management');
+  $titles = array($string['calendar'],$string['clearguestaccounts'] . $added_string,$string['clearoldlogs'],$string['clearorphanmedia'],$string['cleartraining'],$string['computerlabs'],$string['degrees'],$string['faculties'],$string['modules'],$string['optimizetables'],$string['schools'],$string['smsimports'],$string['summativeexamstats'],$string['systemerrors'] . $err_added_string,$string['systeminformation'],$string['trac'],$string['usermanagement']);
   $paths = array('calendar.php#' . date("n"),'clear_guest_users.php','clear_old_logs.php','orphan_media.php','clear_training_module.php','list_labs.php','list_degrees.php','list_faculties.php','list_modules.php','optimize_tables.php','list_schools.php','sms_import_summary.php','summative_stats.php?year=' . date('Y'),'sys_error_list.php','system_info.php','https://suivarro.nottingham.ac.uk/trac/touchstone/','../users/search.php');
   $images = array('calendar_icon.png','clear_guest_users.png','clear_logs.png','remove_orphan_icon.png','training.png','computer_lab_48.png','degrees_icon.png','faculty.png','modules_icon.png','optimize_tables_icon.png','school_icon.png','sms_import_icon.png','summative_stats.png','bug.png','information.png','trac_logo.png','user_accounts_icon.png');
 

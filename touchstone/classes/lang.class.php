@@ -35,8 +35,8 @@ Class LangUtils {
     while ($i < count($langs) and $language == '') {
       $parts = explode(';',$langs[$i]);
       $test_lang = $parts[0];
-      if (file_exists($web_root . "/touchstone/lang/" . substr($test_lang,0,4) . "/")) {
-        $language = substr($test_lang,0,4);
+      if (file_exists($web_root . "/touchstone/lang/" . substr($test_lang,0,5) . "/")) {
+        $language = substr($test_lang,0,5);
       } elseif (file_exists($web_root . "/touchstone/lang/" . substr($test_lang,0,2) . "/")) {
         $language = substr($test_lang,0,2);
       }
@@ -57,4 +57,4 @@ $language = LangUtils::getLang($cfg_web_root);
 if (file_exists("$cfg_web_root/touchstone/lang/$language" . $_SERVER['PHP_SELF'])) {
   require "$cfg_web_root/touchstone/lang/$language" . $_SERVER['PHP_SELF'];
 }
-?> 
+?>
