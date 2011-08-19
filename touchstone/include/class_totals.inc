@@ -352,10 +352,8 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         } else {
           $match = false;
           if (isset($paper_buffer[$q_id]['correct'][$a])) {
-            foreach ($paper_buffer[$q_id]['correct'][$a] as $check_correct) {
-              if ($user_answers[$a+1] == $check_correct) {
-                $match = true;
-              }
+            if ($user_answers[$a+1] == $paper_buffer[$q_id]['correct'][$a]) {
+              $match = true;
             }
           }
           if ($match == true) {
@@ -545,6 +543,7 @@ $old_correct = array();
 $old_option_text = array();
 $stems = 0;
 while ($result->fetch()) {
+  //echo $q_id . '<br />';
   if ($q_id != $old_q_id) {
     if ($old_q_id != 0) {
       if ($old_status != 'Experimental') {

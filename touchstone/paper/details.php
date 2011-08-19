@@ -709,7 +709,7 @@ if (isset($_GET['change_screen'])) {
   <?php
 
   if ($summative_lock == 1) {
-    echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"3\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><strong>Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified. <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">Click for more details.</a></td><td style=\"text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\">";
+    echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"3\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">Click for more details.</a></td><td style=\"text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\">";
     if (strpos($userroles,'Admin') !== false) {
       $record_no = 0;
       $result = $mysqli->prepare("SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE paperID=? AND log_metadata.userID=users.id AND roles='Student'");
@@ -720,9 +720,9 @@ if (isset($_GET['change_screen'])) {
       $result->close();
    
       if ($record_no == 0) {
-        echo '<span style="align:right"><input type="button" name="unlock" value="Unlock" onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" /></span>';
+        echo '<span style="align:right"><input type="button" name="unlock" value="' . $string['unlock'] . '" onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" /></span>';
       } else {
-        echo '<span style="align:right"><input type="button" name="unlock" value="Unlock" disabled /></span>';
+        echo '<span style="align:right"><input type="button" name="unlock" value="' . $string['unlock'] . '" disabled /></span>';
       }
     }
     echo "</td></tr>\n";
@@ -730,9 +730,13 @@ if (isset($_GET['change_screen'])) {
     $tmp_hour = substr($display_start_date,0,2);
     if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
     if (substr($display_start_date,12,4) > (date("Y")+1)) {
-      echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>Time/Date Warning</strong>&nbsp;&nbsp;&nbsp;This paper is scheduled for a long way in the future ($display_start_date)</td></tr>\n";
+      echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">";
+      printf($string['farfuturewarning'], $display_start_date); 
+      echo "</td></tr>\n";
     } elseif ($tmp_hour < $cfg_hour_warning) {
-      echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>Time/Date Warning</strong>&nbsp;&nbsp;&nbsp;This paper is scheduled to start before " . $cfg_hour_warning . "am</td></tr>\n";
+      echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">";
+      printf($string['earlywarning'], $cfg_hour_warning);
+      echo "</td></tr>\n";
     }
   }
 
@@ -742,20 +746,25 @@ if (isset($_GET['change_screen'])) {
   $marks_incorrect_error = false;
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
-    if($temp_array[$x]['options'] == 0) $temp_array[$x]['warnings'] .= 'No options defined for question';
+    if($temp_array[$x]['options'] == 0) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
     if ($temp_array[$x]['status'] == 'Incomplete') $paper_warnings['Incomplete'][] = $question_number + 1;
     if ($temp_array[$x]['status'] == 'Beta') $paper_warnings['Beta'][] = $question_number + 1;
     if ($temp_array[$x]['status'] == 'Retired') $paper_warnings['Retired'][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {
         $tmp_screen_mean = ($total_marks == 0) ? 0 : ($screen_marks / $total_marks);
-        if ($paper_type == '2' and $question_number > 2 and $tmp_screen_mean * 100 > 25 and $screen_marks > 3) echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;Screen $old_screen has $screen_marks marks which is " . round(($screen_marks / $total_marks) * 100) . "% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.</td></tr>\n";
+        if ($paper_type == '2' and $question_number > 2 and $tmp_screen_mean * 100 > 25 and $screen_marks > 3) {
+          echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;";
+          $percent = round(($screen_marks / $total_marks) * 100);
+          printf($string['markswarning'], $old_screen, $screen_marks, $percent);
+          echo "</td></tr>\n";
+        }
       }
       $screen_marks = 0;
       if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
         for ($missing=1; $missing<($temp_array[$x]['screen'] - $old_screen); $missing++) {
           echo "<tr><td colspan=\"6\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#C00000\"><tr><td style=\"font-weight:bold\"><nobr>" . $string['screen'] . " " . ($old_screen + $missing) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#C00000; background-color:#C00000; width:100%\" /></td></tr></table></td></tr>\n";
-          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; background-color:#FFC0C0; padding-left:15px; padding-top:4x"><strong>Warning:</strong> there are no questions on this screen.<br />This will produce an error if the paper is tested!</td></tr>';
+          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; background-color:#FFC0C0; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
         }
       }
       echo '<tr><td colspan="6" style="height:10px"></td></tr>';
@@ -927,8 +936,13 @@ if (isset($_GET['change_screen'])) {
   }
 
   if ($total_marks != 0) {
-    if ($paper_type == '2' and $question_number > 2 and ($screen_marks / $total_marks) * 100 > 25 and $screen_marks > 3)  echo "\n<tr><td colspan=\"6\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;Screen $old_screen has $screen_marks marks which is " . round(($screen_marks / $total_marks) * 100) . "% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.</td></tr>\n";
-
+    if ($paper_type == '2' and $question_number > 2 and ($screen_marks / $total_marks) * 100 > 25 and $screen_marks > 3) {
+      //echo "\n<tr><td colspan=\"6\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;Screen $old_screen has $screen_marks marks which is " . round(($screen_marks / $total_marks) * 100) . "% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.</td></tr>\n";
+      echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;";
+      $percent = round(($screen_marks / $total_marks) * 100);
+      printf($string['markswarning'], $old_screen, $screen_marks, $percent);
+      echo "</td></tr>\n";
+    }
     if ($row_no > 0 and $paper_type != '3' and $paper_type != '4') {
       echo "<tr><td colspan=\"4\"></td><td style=\"border-top:1px solid black\" align=\"right\">";
       if ($marks_incorrect_error == true) {

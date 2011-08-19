@@ -19,6 +19,8 @@ $string['recyclebin'] = '1Recycle Bin';
 $string['allmodules'] = '1All Modules...';
 $string['allmodulesinschool'] = '1All Modules in School...';
 $string['myrecentpapers'] = '1My Recent Papers';
+$string['create'] = '1Create';
+$string['newfolder'] = '1New Folder';
 
 
 $string['questionbanktasks'] = '1Question Bank Tasks';

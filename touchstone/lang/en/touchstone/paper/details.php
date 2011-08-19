@@ -77,5 +77,54 @@ $string['people'] = '1People';
 
 $string['help'] = '1Help';
 $string['screen'] = '1Screen';
+$string['paperlockedwarning'] = '<strong>1Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified.';
+$string['earlywarning'] = '<strong>1Time/Date Warning</strong>&nbsp;&nbsp;&nbsp;This paper is scheduled to start before %sam';
+$string['farfuturewarning'] = '<strong>1Time/Date Warning</strong>&nbsp;&nbsp;&nbsp;This paper is scheduled for a long way in the future (%s)';
+$string['unlock'] = '1Unlock';
+$string['nooptionsdefined'] = '1No options defined for question';
+$string['noquestionscreen'] = '<strong>1Warning:</strong> there are no questions on this screen.<br />This will produce an error if the paper is tested!';
+$string['markswarning'] = '1Screen %d has %d marks which is %d%% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.';
+
+$string['startdate'] = '1Start Date';
+$string['enddate'] = '1End Date';
+$string['course'] = '1Course';
+$string['anycourse'] = '1&lt;Any Course&gt;';
+$string['module'] = '1Module';
+$string['anymodule'] = '1&lt;Any Module&gt;';
+$string['cohort'] = '1Cohort';
+$string['allcandidates'] = '1All candidates';
+$string['top'] = '1Top';
+$string['bottom'] = '1Bottom';
+$string['year'] = '1Year';
+$string['reviews'] = '1Reviews';
+$string['internalpeerreview'] = '1Internal Peer Review';
+$string['externalexaminers'] = '1External Examiners';
+$string['sctresponses'] = '1SCT Responses/Reasons';
+$string['classtotals'] = '1Class Totals';
+$string['classtotalsexcel2003'] = '1Class Totals (Excel 2003)';
+$string['classtotalscsv'] = '1Class Totals (CSV file)';
+$string['textboxmarking'] = '1Textbox Marking';
+$string['primarymarkbyquestion'] = '1Primary Mark by Question';
+$string['selectpapersforremarking'] = '1Select Papers for Remarking';
+$string['secondmarkbyquestion'] = '1Second Mark by Question';
+$string['finalisemarks'] = '1Finalise Marks';
+$string['frequencyanalysis'] = '1Frequency &amp; Discrimination (U-L) Analysis';
+$string['learningobjectiveanalysis'] = '1Learning Objective Analysis';
+$string['exportresponsescsv'] = '1Export responses as CSV file';
+$string['exportmarkscsv'] = '1Export marks as CSV file';
+$string['individualportfoliosheets'] = '1Individual Portfolio Sheets';
+$string['exportratingscsv'] = '1Export ratings as CSV file';
+$string['xhtml'] = '1XHTML';
+$string['word2003format'] = '1Word 2003 format';
+$string['rawdataxml'] = '1Raw data as XML file';
+$string['rawdatacsv'] = '1Raw data as CSV file';
+$string['itemanalysis'] = '1Item Analysis';
+$string['cohortreports'] = '1Cohort Reports';
+$string['exports'] = '1Exports';
+$string['quantitativereports'] = '1Quantitative Reports';
+$string['qualitativeanalysis'] = '1Qualitative Analysis';
+$string['incabsentcandidates'] = '1inc. absent candidates';
+$string['completedatasets'] = '1Show complete datasets only';
+
 
 ?>
