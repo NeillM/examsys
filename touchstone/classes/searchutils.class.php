@@ -61,10 +61,12 @@ Class SearchUtils {
   }
 
   static function displayTeamDropdown($teams, $userroles, $userID, $db) {
+    global $string;
+    
     $teams = self::getTeams($teams, $userroles, $userID, $db);
     
     echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'team')\" name=\"team\">\n";
-    echo "<option value=\"\">(any module)</option>\n";
+    echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
     
     $old_school = '';
     foreach ($teams as $team) {
@@ -102,11 +104,16 @@ Class SearchUtils {
   }
 
   static function displayOwnersDropdown($teams, $userroles, $userID, $db, $type) {
+    global $string;
     $owners = self::getOwners($teams, $userroles, $db);
     
     echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'owner')\" name=\"owner\">\n";
-    echo "<option value=\"\">(any owner)</option>\n";
-    echo "<option value=\"$userID\">(my $type only)</option>\n";
+    echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
+    if ($type == 'questions') {
+      echo "<option value=\"$userID\">" . $string['myquestionsonly']. "</option>\n";
+    } else {
+      echo "<option value=\"$userID\">" . $string['mypaperssonly']. "</option>\n";
+    }
     echo "<option value=\"%\" style=\"background-color:#ECE9D8\"></option>\n";
     
     $old_letter = '';
@@ -126,15 +133,17 @@ Class SearchUtils {
   }
   
   static function displayStatusDropdown() {
+    global $string;
+    
     echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'status')\" name=\"status\">\n";
-    echo "<option value=\"%\">(any status)</option>\n";
+    echo "<option value=\"%\">" . $string['anystatus'] . "</option>\n";
 
     $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
     foreach ($status_array as $individual_status) {
       if (isset($_COOKIE['status']) and $_COOKIE['status'] == $individual_status) {
-        echo "<option value=\"$individual_status\" selected>$individual_status</option>"; 
+        echo "<option value=\"$individual_status\" selected>" . $string[strtolower($individual_status)] . "</option>"; 
       } else {
-        echo "<option value=\"$individual_status\">$individual_status</option>"; 
+        echo "<option value=\"$individual_status\">" . $string[strtolower($individual_status)] . "</option>"; 
       }
     }
     echo "</select>\n";    
@@ -142,15 +151,17 @@ Class SearchUtils {
   }
 
   static function displayBloomsDropdown() {
+    global $string;
+    
     echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'bloom')\" name=\"bloom\">\n";
-    echo "<option value=\"%\">(all levels)</option>\n";
+    echo "<option value=\"%\">" . $string['alllevels'] . "</option>\n";
 
     $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');
     foreach ($blooms_array as $individual_bloom) {
       if (isset($_COOKIE['bloom']) and $_COOKIE['bloom'] == $individual_bloom) {
-        echo "<option value=\"$individual_bloom\" selected>$individual_bloom</option>"; 
+        echo "<option value=\"$individual_bloom\" selected>" . $string[strtolower($individual_bloom)] . "</option>"; 
       } else {
-        echo "<option value=\"$individual_bloom\">$individual_bloom</option>"; 
+        echo "<option value=\"$individual_bloom\">" . $string[strtolower($individual_bloom)] . "</option>"; 
       }
     }
     echo "</select>\n";

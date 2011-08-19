@@ -48,17 +48,4 @@ $string['papernotes'] = '1Paper Notes';
 $string['distributionchart'] = '1Distribution Chart';
 $string['scatterplot'] = '1Scatter Plot';
 $string['summary'] = '1Summary';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-
-
 ?>
