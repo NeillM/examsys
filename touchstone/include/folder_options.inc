@@ -85,30 +85,36 @@ $module_details->close();
 
 <?php
   } else {
-  if ($module != '' and (strpos($checklist,'mapping') !== false or strpos($userroles,'SysAdmin') !== false)) {   // Curriculum mapping switched on for the module
-?>
-<table cellpadding="0" cellspacing="0" border="0" width="185" style="margin-left:2px; font-size:100%">
-<tr><td style="font-weight:bold"><?php echo $string['module']; ?></td></tr>
-<tr><td style="margin:4px">
-<table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:7px">
-<?php
-  if (strpos($userroles,'SysAdmin') !== false) {
-    echo "<tr><td width=\"16\"><a href=\"../admin/edit_module.php?moduleid=$module\"><img src=\"../artwork/admin_icon_16.gif\" width=\"16\" height=\"16\" alt=\"cog\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"../admin/edit_module.php?moduleid=$module\">" . $string['editpropertiessysadmin'] . "</a></td></tr>";
-  }
-  if (strpos($checklist,'mapping') !== false and (in_array($module, $teams) == true or strpos($userroles,'SysAdmin') !== false)) {
-    echo "<tr><td width=\"16\"><a href=\"../mapping/sessions_list.php?module=" . $module . "\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"../mapping/sessions_list.php?module=" . $_GET['module'] . "\">" . $string['manageobjectives'] . "</a></td></tr>\n";
-  } else {
-    echo "<tr><td width=\"16\"><img src=\"../artwork/module_icon_grey_16.png\" width=\"16\" height=\"16\" alt=\"modules\" border=\"0\" /></td><td class=\"menuitem\" style=\"color:#808080\">" . $string['manageobjectives'] . "</td></tr>\n";
-  }
-  echo "<tr><td width=\"16\"><a href=\"list_keywords.php?module=$module\"><img src=\"../artwork/key.png\" width=\"16\" height=\"16\" alt=\"key\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"list_keywords.php?module=$module\">" . $string['managekeywords'] . "</a></td></tr>";
-  echo '<tr><td><a href="../users/load_users_metadata.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Metadata" border="0" /></a></td><td class="menuitem"><a href="../users/import_users_metadata.php?module=' . $_GET['module'] . '">' . $string['importstudentmetadata'] . '</a></td></tr>';
-?>
-</table>
-</td></tr>
-</table>
+  
+    if ($module != '' and (strpos($checklist,'mapping') !== false or strpos($userroles,'SysAdmin') !== false or strpos($userroles,'Admin') !== false)) {   // Curriculum mapping switched on for the module
+    ?>
+      <table cellpadding="0" cellspacing="0" border="0" width="185" style="margin-left:2px; font-size:100%">
+      <tr><td style="font-weight:bold"><?php echo $string['module']; ?></td></tr>
+      <tr><td style="margin:4px">
+      <table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:7px">
+    <?php
 
-<br />
-<br />
+    if (strpos($userroles,'SysAdmin') !== false) {
+      echo "<tr><td width=\"16\"><a href=\"../admin/edit_module.php?moduleid=$module\"><img src=\"../artwork/admin_icon_16.gif\" width=\"16\" height=\"16\" alt=\"cog\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"../admin/edit_module.php?moduleid=$module\">" . $string['editpropertiessysadmin'] . "</a></td></tr>";
+    }
+    if (strpos($checklist,'mapping') !== false ) {
+      if (in_array($module, $teams) == true or strpos($userroles,'SysAdmin') !== false or strpos($userroles,'Admin') !== false ) {
+        echo "<tr><td width=\"16\"><a href=\"../mapping/sessions_list.php?module=" . $module . "\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"../mapping/sessions_list.php?module=" . $_GET['module'] . "\">" . $string['manageobjectives'] . "</a></td></tr>\n";
+      } else {
+        echo "<tr><td width=\"16\"><img src=\"../artwork/module_icon_grey_16.png\" width=\"16\" height=\"16\" alt=\"modules\" border=\"0\" /></td><td class=\"menuitem\" style=\"color:#808080\">" . $string['manageobjectives'] . "</td></tr>\n";
+      }
+    }
+    if (strpos($userroles,'SysAdmin') !== false or strpos($userroles,'Admin') !== false) {
+      echo "<tr><td width=\"16\"><a href=\"list_keywords.php?module=$module\"><img src=\"../artwork/key.png\" width=\"16\" height=\"16\" alt=\"key\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"list_keywords.php?module=$module\">" . $string['managekeywords'] . "</a></td></tr>";
+      echo '<tr><td><a href="../users/load_users_metadata.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import Metadata" border="0" /></a></td><td class="menuitem"><a href="../users/import_users_metadata.php?module=' . $_GET['module'] . '">' . $string['importstudentmetadata'] . '</a></td></tr>';
+    }
+  ?>
+  </table>
+  </td></tr>
+  </table>
+
+  <br />
+  <br />
 
 <?php
     }

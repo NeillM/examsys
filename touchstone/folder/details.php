@@ -248,7 +248,7 @@ function displayPaperIcon($row) {
 
 <body onclick="hideMenus()">
 <?php
-  include '../include/folder_options.inc';
+  require '../include/folder_options.inc';
 ?>
 
 <div id="content" class="content" style="font-size:80%">
