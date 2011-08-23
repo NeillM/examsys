@@ -1,3 +1,3 @@
 <?php
-  $types_array = array('1Formative Self-Assessments','1Progress Tests','1Summative Exams','1Surveys','1OSCE Stations','1Offline Papers');
+  $types_array = array('Formative Self-Assessments','Progress Tests','Summative Exams','Surveys','OSCE Stations','Offline Papers');
 ?>

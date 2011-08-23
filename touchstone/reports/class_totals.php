@@ -670,7 +670,7 @@ a.user:hover {color:white; background-color:#000080}
       $result2->bind_result($lab_name);
       $result2->fetch();
       $result2->close();
-      echo "<div style=\"margin-left:20px; border: 1px solid #FFFF40; padding:10px; background-color:#FFFF80; float:left; width:200px; height:100px\"><strong>$note_date</strong><br />$note<br /><br /><span style=\"font-size:80%\">$note_workstation";
+      echo "<div style=\"margin-left:20px; border: 1px solid #FFFF40; padding:10px; background-color:#FFFF80; float:left; min-width:200px;max-width:400px; min-height:100px\"><strong>$note_date</strong><br />$note<br /><br /><span style=\"font-size:80%\">$note_workstation";
       if ($lab_name != '') echo " ($lab_name)";
       echo "</span></div>\n";
     }

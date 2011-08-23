@@ -68,12 +68,12 @@ $module_details->close();
 <?php
 
   if ($folder_ownerID == $userID or (in_array($team_name,$teams)) == true or strpos($userroles,'SysAdmin') !== false) {
-    echo '<tr><td width="16"><a href="#" onclick="folderProperties(); return false;"><img src="../artwork/properties_icon.gif" width="16" height="16" alt="Properties" border="0" /></a></td><td class="menuitem"><a href="#" onclick="folderProperties(); return false;">Folder Properties</a></td></tr>';
-    echo '<tr><td width="16"><a href="/touchstone/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="../artwork/folder_16.png" width="16" height="16" alt="New Folder" border="0" /></a></td><td class="menuitem"><a href="/touchstone/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y&newteam=' . $team_name . '">Make a new sub-folder</a></td></tr>';
-    echo '<tr><td width="16"><a href="#" onclick="deleteFolder(); return false;"><img src="../artwork/red_cross.png" width="16" height="16" alt="Delete Folder" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deleteFolder(); return false;">Delete this folder</a></td></tr>';
+    echo '<tr><td width="16"><a href="#" onclick="folderProperties(); return false;"><img src="../artwork/properties_icon.gif" width="16" height="16" alt="Properties" border="0" /></a></td><td class="menuitem"><a href="#" onclick="folderProperties(); return false;">' . $string['folderproperties'] . '</a></td></tr>';
+    echo '<tr><td width="16"><a href="/touchstone/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="../artwork/folder_16.png" width="16" height="16" alt="New Folder" border="0" /></a></td><td class="menuitem"><a href="/touchstone/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y&newteam=' . $team_name . '">' . $string['makesubfolder'] . '</a></td></tr>';
+    echo '<tr><td width="16"><a href="#" onclick="deleteFolder(); return false;"><img src="../artwork/red_cross.png" width="16" height="16" alt="Delete Folder" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deleteFolder(); return false;">' . $string['deletefolder'] . '</a></td></tr>';
   } else {
-    echo '<tr><td width="16"><img src="../artwork/properties_icon_grey.gif" width="16" height="16" alt="Properties" border="0" /></td><td class="greymenuitem">Folder Properties</td></tr>';
-    echo '<tr><td width="16"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Delete Folder" border="0" /></td><td class="greymenuitem">Delete this folder</td></tr>';
+    echo '<tr><td width="16"><img src="../artwork/properties_icon_grey.gif" width="16" height="16" alt="Properties" border="0" /></td><td class="greymenuitem">' . $string['folderproperties'] . '</td></tr>';
+    echo '<tr><td width="16"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Delete Folder" border="0" /></td><td class="greymenuitem">' . $string['deletefolder'] . '</td></tr>';
   }
 ?>
 </table>
