@@ -51,7 +51,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 ?>
 <html>
 <head>
-<title>Add Faculty</title>
+<title><?php echo $string['addfaculty']; ?></title>
 </head>
 <?php
   if ($add_faculty != '') {
@@ -70,7 +70,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Add Faculty</title>
+<title><?php echo $string['addfaculty']; ?></title>
 <style>
 body {font-family:Arial,sans-serif; font-size:90%; background-color:#EEEEEE; color:black}
 textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
@@ -79,18 +79,18 @@ h1 {font-size:120%}
 </head>
 
 <body onload="document.myform.new_faculty.focus();">
-<h1>Add Faculty</h1>
+<h1><?php echo $string['addfaculty']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div><?php
 if ($duplicate) {
   echo '<input type="text" style="width:100%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="add_faculty" value="' . $_POST['add_faculty'] . '" />';
-  echo "<script language=\"JavaScript\">\nalert('Faculty name already exists. Please choose a different name.');\n</script>\n";
+  echo "<script language=\"JavaScript\">\nalert('" . $string['warning'] . "');\n</script>\n";
 } else {
   echo '<input type="text" style="width:100%" name="add_faculty" />';
 }
 ?>
 </div>
-<div align="right"><input type="submit" name="ok" value="OK" style="width:80px" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
+<div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 
 </body>

@@ -1,7 +1,7 @@
 <?php
+require '../lang/' . $language . '/touchstone/include/common.inc';
 require '../lang/' . $language . '/touchstone/include/paper_options.inc';
 
-$string['home'] = '1Home';
 $string['start'] = '1Start';
 $string['owner'] = '1Owner';
 $string['question'] = '1Question';

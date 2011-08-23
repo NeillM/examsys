@@ -34,7 +34,7 @@
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone: Class Totals<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
 a.user {color:black}
@@ -400,9 +400,9 @@ a.user:hover {color:white; background-color:#000080}
     echo "<tr><td class=\"h\" colspan=\"" . ($cols - 1) . "\">";
   }
   if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-    $report_title = 'Class Totals (' . $_GET['repmodule'] . ' students only)';
+    $report_title = $string['classtotals'] . ' (' . $_GET['repmodule'] . ' ' . $string['studentsonly'] . ')';
   } else {
-    $report_title = 'Class Totals';
+    $report_title = $string['classtotals'];
   }
   
   $folder = '';
@@ -670,7 +670,7 @@ a.user:hover {color:white; background-color:#000080}
       $result2->bind_result($lab_name);
       $result2->fetch();
       $result2->close();
-      echo "<div style=\"margin-left:20px; border: 1px solid #FFFF40; padding:10px; background-color:#FFFF80; float:left; min-width:200px;max-width:400px; min-height:100px\"><strong>$note_date</strong><br />$note<br /><br /><span style=\"font-size:80%\">$note_workstation";
+      echo "<div style=\"margin-left:20px; box-shadow: 2px 2px 2px #C0C0C0; padding:10px; background-color:#FFFFC0; float:left; min-width:200px; max-width:400px; min-height:100px; line-height:150%\"><strong>$note_date</strong><br />$note<br /><br /><span style=\"font-size:80%\">$note_workstation";
       if ($lab_name != '') echo " ($lab_name)";
       echo "</span></div>\n";
     }

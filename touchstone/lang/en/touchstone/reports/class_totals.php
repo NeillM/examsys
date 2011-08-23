@@ -1,5 +1,7 @@
 <?php
 $string['home'] = '1Home';
+$string['classtotals'] = '1Class Totals';
+$string['studentsonly'] = '1students only';
 $string['temporaryaccountswarning'] = '1<strong>Temporary Accounts Warning</strong>&nbsp;&nbsp;&nbsp;Please reassign to the proper student accounts.';
 $string['moredetails'] = '1Click for more details.';
 $string['latesubmissions'] = '1<strong>Late Submissions</strong>&nbsp;&nbsp;&nbsp;Users have data saved after the end of the assessment';

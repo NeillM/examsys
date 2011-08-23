@@ -787,7 +787,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $blank_user_answers = array();
         }
         
-        if ($question['score_method'] == 'textboxes') {
+        if ($question['display_method'] == 'textboxes') {
           $screen_output = array();
           $array_size = count($blank_details);
           $blank_count = 1;
@@ -812,8 +812,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             if ( (isset($blank_user_answers[$blank_count]) and $blank_user_answers[$blank_count] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1) ) {
               $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" class=\"unans\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
             } else { 
-              if(isset($blank_user_answers[$blank_count])) {
-                $ans .= $blank_user_answers[$blank_count];
+              if (isset($blank_user_answers[$blank_count])) {
+                $ans = $blank_user_answers[$blank_count];
               }
               $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"" . $ans. "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
             }
@@ -906,6 +906,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
         $tmp_correct = str_replace("'", "\'", trim($question['options'][0]['correct']));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
+        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct); 
         ?>
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {

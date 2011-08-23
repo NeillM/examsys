@@ -26,7 +26,7 @@
 
 ob_start('ob_gzhandler');
 require '../include/staff_auth.inc';
-require '../lang/' . $language . '/touchstone/include/question_types.inc';
+require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 
@@ -895,7 +895,8 @@ if (isset($_GET['change_screen'])) {
         display_error("Paper order Error","Problem with query: $editPaper");
       }
     }
-    echo fullQuestionType($temp_array[$x]['q_type']) . '</td>';
+    //echo fullQuestionType($temp_array[$x]['q_type']) . '</td>';
+    echo $string[$temp_array[$x]['q_type']] . '</td>';
     if ($paper_type == '3') {
       echo '<td style="text-align:right; vertical-align:top; color:#C0C0C0">n/a</td>';
     } elseif ($paper_type == '4') {
@@ -937,7 +938,6 @@ if (isset($_GET['change_screen'])) {
 
   if ($total_marks != 0) {
     if ($paper_type == '2' and $question_number > 2 and ($screen_marks / $total_marks) * 100 > 25 and $screen_marks > 3) {
-      //echo "\n<tr><td colspan=\"6\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;Screen $old_screen has $screen_marks marks which is " . round(($screen_marks / $total_marks) * 100) . "% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.</td></tr>\n";
       echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;";
       $percent = round(($screen_marks / $total_marks) * 100);
       printf($string['markswarning'], $old_screen, $screen_marks, $percent);

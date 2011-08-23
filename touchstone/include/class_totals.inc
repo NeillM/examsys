@@ -813,7 +813,7 @@ if ($log_query->num_rows > 0) {
       // Sort by mark order.
       $sortby = 'mark';
       $ordering = $direction;
-      $user_results = array_csort($user_results,$sortby,$ordering);
+      $user_results = array_csort($user_results, $sortby, $ordering);
       $cohort_size = round(($user_no/100)*$percent);
       // Set visible/invisible flag where necessary.
       for ($i=0; $i<$user_no; $i++) {
@@ -912,7 +912,8 @@ if ($log_query->num_rows > 0) {
     }
     
     $tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
-    $user_results = array_csort($user_results,$tmp_sort,$ordering);
+    if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
+    $user_results = array_csort($user_results, $tmp_sort, $ordering);
   }
 }
 

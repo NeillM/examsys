@@ -47,13 +47,13 @@
 <tr><td>
 
 <table style="display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
-<tr><td><a href="" onclick="addFaculty(); return false;"><img src="../artwork/faculty_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="" onclick="addFaculty(); return false;">Create new Faculty</a></td></tr>
-<tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem">Edit Faculty</td></tr>
+<tr><td><a href="" onclick="addFaculty(); return false;"><img src="../artwork/faculty_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="" onclick="addFaculty(); return false;"><?php echo $string['createfaculty']; ?></a></td></tr>
+<tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editfaculty']; ?></td></tr>
 </table>
 
 <table style="display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
-<tr><td><a href="" onclick="addFaculty(); return false;"><img src="../artwork/faculty_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="" onclick="addFaculty(); return false;">Create new Faculty</a></td></tr>
-<tr><td><img onclick="editFaculty()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editFaculty(); return false;">Edit Faculty</a></td></tr>
+<tr><td><a href="" onclick="addFaculty(); return false;"><img src="../artwork/faculty_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="" onclick="addFaculty(); return false;"><?php echo $string['createfaculty']; ?></a></td></tr>
+<tr><td><img onclick="editFaculty()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editFaculty(); return false;"><?php echo $string['editfaculty']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>

@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
   ?>
 <html>
 <head>
-<title>Edit Faculty</title>
+<title><?php echo $string['editfaculty']; ?></title>
 </head>
 <body onload="window.opener.location.href='list_faculties.php'; window.close();">
 </body>
@@ -65,7 +65,7 @@ $result->close();
 ?>
 <html>
 <head>
-<title>Edit Faculty</title>
+<title><?php echo $string['editfaculty']; ?></title>
 <style>
 body {font-family:Arial,sans-serif; font-size:90%; background-color:#EEEEEE; color:black}
 h1 {font-size:120%}
@@ -73,20 +73,20 @@ h1 {font-size:120%}
 </head>
 
 <body onload="document.myform.new_keyword.focus();">
-<h1>Edit Faculty</h1>
+<h1><?php echo $string['editfaculty']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div>
 <?php
 if ($duplicate) {
   echo '<input type="text" style="width:100%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $_POST['new_faculty'] . '" />';
-  echo "<script language=\"JavaScript\">\nalert('Faculty name already exists. Please choose a different name.');\n</script>\n";
+  echo "<script language=\"JavaScript\">\nalert('" . $string['warning'] . "');\n</script>\n";
 } else {
   echo '<input type="text" style="width:100%" name="new_faculty" value="' . $name . '" />';
 }
 ?>
 <input type="hidden" name="facultyID" value="<?php echo $_GET['facultyID']; ?>" />
 </div>
-<div align="right"><input type="submit" name="submit" value="OK" style="width:80px" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
+<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
 </form>
 
 </body>
