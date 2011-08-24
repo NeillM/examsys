@@ -1,6 +1,4 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/common.inc';
-
 $string['administrativetools'] = '1Administrative Tools';
 $string['calendar'] = '1Calendar';
 $string['clearguestaccounts'] = '1Clear Guest Accounts';

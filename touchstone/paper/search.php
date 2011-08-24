@@ -164,7 +164,7 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
     echo "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"2\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
     if ($results->num_rows > 0) {
       echo '<br />';
-      while ($row = $results->fetch()) {
+      while ($results->fetch()) {
         echo '<div class="f">';
         echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px; text-align:center">';
         $type = $paper_type;
@@ -204,7 +204,7 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
     ?>
     <table cellpadding="1" cellspacing="1" border="0" style="margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left">
     <tr><td colspan="2" style="background-color:#F2B100; height:3px"> </td></tr>
-    <tr><td style="width:16px; padding-top:5px; padding-bottom:5px"><img src="../artwork/information_icon.gif" width="16" height="16" alt="i" border="0" /></td><td style="padding-top:5px; padding-bottom:5px">&nbsp;" . $string['nothingfound'] . " "<?php echo $_POST['searchterm']; ?>"</td></tr>
+    <tr><td style="width:16px; padding-top:5px; padding-bottom:5px"><img src="../artwork/information_icon.gif" width="16" height="16" alt="i" border="0" /></td><td style="padding-top:5px; padding-bottom:5px">&nbsp;<?php echo $string['nothingfound']; ?> "<?php echo $_POST['searchterm']; ?>"</td></tr>
     </table>
     <?php
     }

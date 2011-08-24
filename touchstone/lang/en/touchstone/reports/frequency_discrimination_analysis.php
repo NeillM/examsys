@@ -1,6 +1,4 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/common.inc';
-
 $string['reporttitle'] = '1Frequency & Discrimination (U-L) Analysis Report';
 $string['totalcandidatenumber'] = '1Total candidate number';
 $string['groupsizes'] = '1Upper/lower group sizes';

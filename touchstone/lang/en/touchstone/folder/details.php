@@ -1,7 +1,6 @@
 <?php
 require '../lang/' . $language . '/touchstone/include/paper_options.inc';
 
-$string['home'] = '1Home';
 $string['showretired'] = '1Show retired';
 $string['teammembers'] = '1Team Members';
 $string['calendar'] = '1Calendar';
@@ -19,27 +18,18 @@ $string['module'] = '1Module';
 $string['papertasks'] = '1Paper Tasks';
 $string['questionbank'] = '1Question Bank';
 $string['foldertasks'] = '1Folder Tasks';
-
 $string['folderproperties'] = '1Folder Properties';
 $string['makesubfolder'] = '1Make a new sub-folder';
 $string['deletefolder'] = '1Delete this folder';
-
 $string['questionsbytype'] = '1Questions by Type';
 $string['questionsbyteam'] = '1Questions by Team';
 $string['questionsbykeyword'] = '1Questions by Keyword';
 $string['search'] = '1Search';
 $string['createnewquestion'] = '1Create new Question';
-
 $string['questions'] = '1Questions';
 $string['papers'] = '1Papers';
 $string['people'] = '1People';
-
 $string['mins'] = '1mins';
 $string['type'] = '1Type';
 $string['author'] = '1Author';
-
-
-$string[''] = '';
-
-
 ?>

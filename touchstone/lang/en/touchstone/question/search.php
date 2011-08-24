@@ -3,7 +3,6 @@ require '../lang/' . $language . '/touchstone/include/blooms.inc';
 require '../lang/' . $language . '/touchstone/include/status.inc';
 require '../lang/' . $language . '/touchstone/include/question_types.inc';
 
-$string['home'] = '1Home';
 $string['question'] = '1Question';
 $string['questions'] = '1Questions';
 $string['questionsearch'] = '1Question Search';
@@ -22,8 +21,6 @@ $string['owner'] = '1Owner:';
 $string['anyowner'] = '1(any owner)';
 $string['myquestionsonly'] = '1(my questions only)';
 $string['status'] = '1Status';
-
-
 $string['keyword'] = '1Keyword';
 $string['back'] = '1Back';
 $string['search'] = '1Search';
@@ -34,7 +31,6 @@ $string['linktopaper'] = '1Link to paper';
 $string['deletequestion'] = '1Delete Question';
 $string['noquestionleadin'] = '1WARNING: no question lead-in!';
 $string['currentquestiontasks'] = '1Current Question Tasks';
-
 $string['theme'] = '1Theme';
 $string['scenario'] = '1Scenario';
 $string['leadin'] = '1Lead-in';
@@ -46,14 +42,4 @@ $string['year'] = '1Within the past year';
 $string['specify'] = '1Specify dates';
 $string['from'] = '1from';
 $string['to'] = '1to';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-
 ?>

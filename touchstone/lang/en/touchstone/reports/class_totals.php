@@ -1,5 +1,4 @@
 <?php
-$string['home'] = '1Home';
 $string['classtotals'] = '1Class Totals';
 $string['studentsonly'] = '1students only';
 $string['temporaryaccountswarning'] = '1<strong>Temporary Accounts Warning</strong>&nbsp;&nbsp;&nbsp;Please reassign to the proper student accounts.';

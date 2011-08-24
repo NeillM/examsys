@@ -1,8 +1,6 @@
 <?php
 require '../lang/' . $language . '/touchstone/include/user_search_options.inc';
 
-$string['home'] = '1Home';
-$string['help'] = '1Help';
 $string['status'] = '1Status';
 $string['student'] = '1Student';
 $string['externalexaminer'] = '1External Examiner';
@@ -68,5 +66,4 @@ $string['save'] = '1Save';
 $string['dateadded'] = '1Date Added';
 $string['editteams'] = '1Edit Teams...';
 $string['editmodules'] = '1Edit Modules...';
-
 ?>

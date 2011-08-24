@@ -1,6 +1,4 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/common.inc';
-
 $string['machine'] = '1machine';
 $string['machines'] = '1machines';
 $string['createnewlab'] = '1Create new lab';

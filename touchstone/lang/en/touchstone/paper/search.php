@@ -1,6 +1,4 @@
 <?php
-
-$string['home'] = '1Home';
 $string['papersearch'] = '1Paper Search';
 $string['wordorphrase'] = '1Word or phrase';
 $string['formative'] = '1Formative Self-Assessment';
@@ -28,5 +26,4 @@ $string['mypaperssonly'] = '1(My papers only)';
 $string['type'] = '1Type';
 $string['author'] = '1Author';
 $string['to'] = '1to';
-
 ?>

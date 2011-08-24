@@ -23,7 +23,6 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/question_types.inc';
 
 function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
   foreach ($marray as $row) {
@@ -57,7 +56,7 @@ if (isset($_GET['folder'])) {
 <html>
 <head>
 
-<title>TouchStone: Recycle Bin<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone: <?php echo $string['recyclebin'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style>
   .f {float:left; width:375px; height:74px; padding-left:12px}
@@ -207,7 +206,7 @@ for ($item=0; $item<$i; $item++) {
   } elseif ($recycle_bin[$item]['type'] == 'folder') {
     echo "<tr id=\"line$item\" onmouseover=\"lon('line$item')\" onmouseout=\"loff('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'folder'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $recycle_bin[$item]['name'] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string['folder'] . "</nobr></td></tr>\n";
   } else {
-    echo "<tr id=\"line$item\" onmouseover=\"lon('line$item')\" onmouseout=\"loff('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'question'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $recycle_bin[$item]['name'] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string[strtolower(fullQuestionType($recycle_bin[$item]['subtype']))] . "</nobr></td></tr>\n";
+    echo "<tr id=\"line$item\" onmouseover=\"lon('line$item')\" onmouseout=\"loff('line$item')\" style=\"cursor:pointer\" onclick=\"selQ('line$item'," . $recycle_bin[$item]['id'] . ",'question'); event.cancelBubble=true;\"><td style=\"width:20px; text-align:right\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td>&nbsp;" . $recycle_bin[$item]['name'] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
   }
 }
 echo "</table>\n";

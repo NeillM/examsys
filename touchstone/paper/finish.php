@@ -179,13 +179,14 @@
         // Check for additional password on the paper
         if ($password != '') {
           if ($password != $_COOKIE['paperpwd']) {
-            access_denied('There is a specific password assigned to this paper.', $output_header = false);
+            access_denied($string['specificpassword'], $output_header = false);
           }
         }
  
         // Check time security
         if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-          access_denied('The paper you are attempting to access is only available between ' . date('d/m/Y H:i',$start_date) . ' and ' . date('d/m/Y H:i',$end_date), $output_header = false);
+          $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
+          access_denied($tmp_string, $output_header = false);
         }
         //Check room security
         if ($labs != '') {
@@ -196,7 +197,7 @@
           $lab_info->store_result();
           $lab_info->fetch();
           if ($lab_info->num_rows == 0) {
-            access_denied('Access to this paper is not permitted from your current location.', $output_header = false);
+            access_denied($string['denied_location'], false);
           }
           $lab_info->close();
         }
@@ -208,7 +209,8 @@
             if($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
             $module_info = $mysqli->query("SELECT moduleid,attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql");
             if ($module_info->num_rows == 0) {
-              access_denied("$title $surname ($username) is not registered on <strong>$moduleID</strong> in <strong>$calendar_year</strong>.", $output_header = false);
+              $tmp_string = sprintf($string['notregistered'], $title, $surname, $username, $moduleID, $calendar_year);
+              access_denied($tmp_string, $output_header = false);
             } else {
               $row = $module_info->fetch_array(MYSQLI_ASSOC);
               if(is_array($row)) {
@@ -217,7 +219,7 @@
             }
             $module_info->close();
           } else {
-            access_denied('This paper is not on any module.', $output_header = false);
+            access_denied($string['error_module'], false);
           }
         }
         if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
@@ -236,7 +238,8 @@
           $check_security->execute();
           $check_security->store_result();
           if ($check_security->num_rows == 0) {
-            access_denied('User metadata does not match <strong>' . $security_type . ': ' . $security_value . '</strong>', $output_header = false);
+            $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
+            access_denied($tmp_string, false);
           }
           $check_security->close();
         }      
@@ -254,7 +257,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Exam Script<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['examscript'] . ' ' . $cfg_install_type; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
@@ -335,7 +338,7 @@ table {font-size:100%}
   echo $top_table_html;
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
   if ($paper_type < 2 or strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false) {
-    echo '<span style="font-size:90%; color:white; font-weight:bold">Answers Screen';
+    echo '<span style="font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
     if (isset($_GET['surname'])) echo ' for ' . $_GET['surname'];
     echo '</span>';
   }
@@ -357,12 +360,13 @@ table {font-size:100%}
 
     if ($paper_type == '2' and (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false)) {
       if (!isset($_GET['userid'])) {
-        echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>Thank you for completing <strong>' . $paper_title . '</strong>. Your responses have been recorded.</p><br />';
+        $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
+        echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
         if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
         echo '</blockquote>';
         echo '<table cellpadding="0" cellspacing="0" width="100%" border="0">';
-        echo "<tr>\n<td width=\"21\" style=\"font-weight:bold\">&nbsp;</td><td style=\"color:#800000; font-size:90%; font-weight:bold\">Student view ends here&nbsp;</td></tr>\n";
-        echo "<tr style=\"height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x\">\n<td width=\"21\">&nbsp;</td><td style=\"color:#800000; font-size:90%\"><strong>Staff only view below here </strong>(students will not see this)</td></tr>\n";
+        echo "<tr>\n<td width=\"21\" style=\"font-weight:bold\">&nbsp;</td><td style=\"color:#800000; font-size:90%; font-weight:bold\">" . $string['studentviewend'] . "&nbsp;</td></tr>\n";
+        echo "<tr style=\"height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x\">\n<td width=\"21\">&nbsp;</td><td style=\"color:#800000; font-size:90%\">" . $string['staffviewbelow'] . "</td></tr>\n";
         echo '</table>';
       }
     }
@@ -602,11 +606,11 @@ table {font-size:100%}
       <div align="center">
       <table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; width:90%; background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left">
       <tr>
-      <td style="margin:0px"><div style="font-weight:bold; font-size:120%">Key:</div>
-      <div><img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /> Correct answer<br />
-      <img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /> Incorrect answer<br />
-      <strong>Emboldened</strong> words represent the correct response for each question (not the user's answer).<br />
-      <span class="fback">Feedback is displayed in dark red italics</span><br />
+      <td style="margin:0px"><div style="font-weight:bold; font-size:120%"><?php echo $string['key']; ?></div>
+      <div><img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /> <?php echo $string['correctanswer']; ?><br />
+      <img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /> <?php echo $string['incorrectanswer']; ?><br />
+      <?php echo $string['boldwords'] ; ?><br />
+      <span class="fback"><?php echo $string['feedbackinred']; ?></span><br />
       <?php
       if (substr($marking,0,1) == '2') echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> difficulty of the question (i.e. standards set). Roll over for full category title.</div></td>';
       ?>
@@ -644,7 +648,7 @@ table {font-size:100%}
         }
       }
       if (trim($paper[$question]['notes']) != '') {
-        echo "<p class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;" . $paper[$question]['notes'] . "</p>\n";
+        echo "<p class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"" . $string['note']  . "\" />&nbsp;<strong>" . $string['note']  . ":</strong>&nbsp;" . $paper[$question]['notes'] . "</p>\n";
       }
       $no_options = count($paper[$question]['option_text']);
 

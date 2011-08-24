@@ -1,7 +1,6 @@
 <?php
 require '../lang/' . $language . '/touchstone/include/months.inc';
 
-$string['home'] = '1Home';
 $string['administrativetools'] = '1Administrative Tools';
 $string['allschools'] = '&lt;1All Schools&gt;';
 $string['calendar'] = '1Calendar';
@@ -12,20 +11,4 @@ $string['wednesday'] = '1Wednesday';
 $string['thursday'] = '1Thursday';
 $string['friday'] = '1Friday';
 $string['saturday'] = '1Saturday';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-$string[''] = '';
-
-
 ?>

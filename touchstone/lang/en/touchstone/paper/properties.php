@@ -50,132 +50,25 @@ $string['restricttolabs'] = '1Restrict to Labs';
 $string['restricttometadata'] = '1Restrict to Metadata';
 $string['na'] = '1N/A';
 
-
 // Reviewers tab
 $string['reviewerstab'] = '1Reviewers';
 $string['reviewersheading'] = '1Set internal/external reviewers and deadlines.';
 $string['internalreviewers'] = '1Internal Reviewers';
 $string['externalexaminers'] = '1External Examiners';
 $string['deadline'] = '1Deadline:';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
 
 // Exam Rubric tab
 $string['rubrictab'] = '1Exam Rubric';
 $string['rubricheading'] = '1Exam rubric displayed to students before they start a summative exam.';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
 
 // Prologue tab
 $string['prologuetab'] = '1Prologue';
 $string['prologueheading'] = '1Text displayed at the top of screen 1 when paper is started.';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
 
 // Postscript tab
 $string['postscripttab'] = '1Postscript';
 $string['postscriptheading'] = "1Text displayed after the student clicks 'Finish' at the end.";
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-
-
-
 
 $string['ok'] = '1OK';
 $string['cancel'] = '1Cancel';
-
-
-
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
 ?>

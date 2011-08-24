@@ -1,7 +1,6 @@
 <?php
 require '../lang/' . $language . '/touchstone/include/paper_options.inc';
 
-$string['home'] = '1Home';
 $string['start'] = '1Start';
 $string['owner'] = '1Owner';
 $string['question'] = '1Question';
@@ -9,8 +8,6 @@ $string['type'] = '1Type';
 $string['marks'] = '1Marks';
 $string['modified'] = '1Modified';
 $string['passmark'] = '1Pass Mark';
-
-$string['help'] = '1Help';
 $string['screen'] = '1Screen';
 $string['paperlockedwarning'] = '<strong>1Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified.';
 $string['earlywarning'] = '<strong>1Time/Date Warning</strong>&nbsp;&nbsp;&nbsp;This paper is scheduled to start before %sam';

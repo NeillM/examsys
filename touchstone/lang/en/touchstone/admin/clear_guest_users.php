@@ -1,6 +1,4 @@
 <?php
-$string['home'] = '1Home';
-$string['help'] = '1Help';
 $string['administrativetools'] = '1Administrative Tools';
 $string['clearguestaccounts'] = '1Clear Guest Accounts';
 $string['clear'] = '1Clear';

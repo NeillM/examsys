@@ -1,6 +1,4 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/common.inc';
-
 $string['editfaculty'] = '1Edit Faculty';
 $string['ok'] = '1OK';
 $string['cancel'] = '1Cancel';

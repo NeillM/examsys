@@ -12,12 +12,4 @@ $string['loading'] = '1Loading...';
 $string['followingerrors'] = '1No users added due to the following errors:';
 $string['usersadded'] = '1users added';
 $string['usersupdated'] = '1existing users updated';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-
-
-
-
 ?>

@@ -208,7 +208,7 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
     }
     echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
   } else {
-    $question['leadin'] = '<span style="color: #f00;">ERROR: unable to find unique question for supplied keywords</span>';
+    $question['leadin'] = '<span style="color: #f00;">' . $string['error_keywords'] . '</span>';
     $question['q_type'] = 'keyword_based';
     $question['q_id'] = -1;
     $question['display_pos'] = $q_no;
@@ -240,7 +240,7 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $latex_needed, $password);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
-  access_denied('The requested paper cannot be found.', $output_header = false);
+  access_denied($string['error_paper'], $output_header = false);
 }
 while ($row = $stmt->fetch()) {
   $row_no++;
@@ -267,13 +267,14 @@ while ($row = $stmt->fetch()) {
 	    // Check for additional password on the paper
       if ($password != '') {
         if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
-          access_denied('There is a specific password assigned to this paper.', $output_header = false);
+          access_denied($string['specificpassword'], $output_header = false);
         }
       }
 	  
       // Check time security
       if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-        access_denied('The paper you are attempting to access is only available between ' . date('d/m/Y H:i',$start_date) . ' and ' . date('d/m/Y H:i',$end_date), $output_header = false);
+        $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
+        access_denied($tmp_string, $output_header = false);
       }
 	  
       //Check room security
@@ -285,7 +286,7 @@ while ($row = $stmt->fetch()) {
         $lab_info->store_result();
         $lab_info->fetch();
         if ($lab_info->num_rows == 0) {
-          access_denied('Access to this paper is not permitted from your current location.', $output_header = false);
+          access_denied($string['denied_location'], $output_header = false);
         }
         $lab_info->close();
       } else {
@@ -309,7 +310,7 @@ while ($row = $stmt->fetch()) {
           }
           $module_info->close();
         } else {
-          access_denied('This paper is not on any module.', $output_header = false);
+          access_denied($string['error_module'], $output_header = false);
         }
       }
       if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
@@ -328,12 +329,12 @@ while ($row = $stmt->fetch()) {
         $check_security->execute();
         $check_security->store_result();
         if ($check_security->num_rows == 0) {
-          access_denied('User metadata does not match <strong>' . $security_type . ': ' . $security_value . '</strong>', $output_header = false);
+          $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
+          access_denied($tmp_string, $output_header = false);
         }
         $check_security->close();
       }      
       $metadata_security->close();
-      
     }
   }
 }
@@ -379,12 +380,10 @@ if (isset($_POST['sessionid'])) {
 
 require '../config/start.inc';
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n";
-if ($paper_type == '2') {
-  echo "<title>Exam Paper</title>\n";
-} elseif ($paper_type == '3') {
-  echo "<title>Survey</title>\n";
+if ($paper_type == '3') {
+  echo "<title>" . $string['survey'] . "</title>\n";
 } else {
-  echo "<title>Assessment</title>\n";
+  echo "<title>" . $string['assessment'] . "</title>\n";
 }
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -446,7 +445,7 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
     if (submitted == true) {
       return false;
     }
-    var agree = confirm("Have you completed all the questions on this screen, you will NOT be able to go back.\nAre you sure you wish to continue?");
+    var agree = confirm("<?php echo $string['javacheck1']; ?>");
     if (agree) {
       document.body.style.cursor = 'wait';
       submitted = true;
@@ -465,7 +464,7 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
       return false;
     }
     if (document.questions.button_pressed.value == 'finish') {
-      var agree = confirm("Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.");
+      var agree = confirm("<?php echo $string['javacheck2']; ?>");
       if (agree) {
         document.body.style.cursor = 'wait';
         submitted = true;
@@ -657,7 +656,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   
   //display the questions
   foreach($questions_array as &$question) {
-    if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> = unanswered question</td></tr>\n";
+    if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['uansweredquestion'] . "</td></tr>\n";
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset, $user_answers);	
@@ -677,20 +676,21 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
 
   if ($current_screen > $no_screens) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;';
-    echo "<strong>NOTE:</strong> Please complete all questions before clicking &#145;Finish&#146;, you will not be able to go back.";
-    if ($bidirectional == 1) echo "<br />When you go back unanswered questions will be highlighted in pink.";
+    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+    echo $string['finishnote'];
+    if ($bidirectional == 1) echo "<br />" . $string['gobackpink'];
     echo "</div>\n<br >\n";
   } elseif ($bidirectional == 0) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;';
-    echo "<strong>NOTE:</strong> Please complete all questions before clicking &#145;Screen $current_screen &#146;, you will not be able to go back.</div>\n<br >\n";
+    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+    printf($string['pleasecomplete'], $current_screen);
+    echo "</div>\n<br >\n";
   }
   if ($original_paper_type == '2') {
     if (isset($low_bandwidth) and $low_bandwidth == 1) {
-      echo '<table cellpadding="4" cellspacing="0" border="0" width="100%"><tr><td><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;Fire Exit&nbsp;</span></td><td style="text-align:right"><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;Fire Exit&nbsp;</span></td></tr></table>';
+      echo '<table cellpadding="4" cellspacing="0" border="0" width="100%"><tr><td><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;' . $string['fireexit'] . '&nbsp;</span></td><td style="text-align:right"><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;' . $string['fireexit'] . '&nbsp;</span></td></tr></table>';
     } else {
-      echo '<table cellpadding="4" cellspacing="0" border="0" width="100%"><tr><td><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="Fire Exit" style="cursor:hand" onclick="fire()" /></td><td style="text-align:right"><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="Fire Exit" style="cursor:hand" onclick="fire()" /></td></tr></table>';
+      echo '<table cellpadding="4" cellspacing="0" border="0" width="100%"><tr><td><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="' . $string['fireexit'] . '" style="cursor:hand" onclick="fire()" /></td><td style="text-align:right"><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="' . $string['fireexit'] . '" style="cursor:hand" onclick="fire()" /></td></tr></table>';
     }
   }
   echo $bottom_html;
@@ -710,9 +710,9 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     }
   }
   if ($current_screen > $no_screens) {
-    echo "<input type=\"submit\" style=\"width:120px; font-weight:bold\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"Finish\" />&nbsp;\n";
+    echo "<input type=\"submit\" style=\"width:120px; font-weight:bold\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;\n";
   } else {
-    echo "<input type=\"submit\" style=\"width:120px\" name=\"next\" value=\"Screen $current_screen &gt;\" />&nbsp;\n";
+    echo "<input type=\"submit\" style=\"width:120px\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;\n";
   }
   echo '</td></tr></table>';
   $mysqli->close();

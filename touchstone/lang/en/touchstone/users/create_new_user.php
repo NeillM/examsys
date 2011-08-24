@@ -1,8 +1,6 @@
 <?php
 require '../lang/' . $language . '/touchstone/include/user_search_options.inc';
 
-$string['home'] = '1Home';
-$string['help'] = '1Help';
 $string['createnewuser'] = '1Create new User';
 $string['getldapdetails'] = '1Get LDAP details';
 $string['lastname'] = '1Last Name';
@@ -28,17 +26,4 @@ $string['nhsadmin'] = '1NHS Admin';
 $string['externalexaminer'] = '1External Examiner';
 $string['invigilator'] = '1Invigilator';
 $string['students'] = '1Students';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
 ?>
