@@ -45,15 +45,17 @@ function findDecisionQ($question_array,$sourceID) {
 }
 
 function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $correct_array, $status) {
+  global $string;
+
   if (!isset($tmp_excluded) and ($status == 'Normal' or $status == 'Experimental' or $status == 'Beta')) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
-      if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = "Too many correct options";
+      if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
-      if ($question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = "$question_marks out of " . count($option_text);
+      if ($question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
     } elseif ($q_type == 'mcq' and $correct_array[0] == '') {
-      $temp_array[$row_no]['warnings'] = 'No correct answer specified';
+      $temp_array[$row_no]['warnings'] = $string['nocorrect'];
     } elseif ($q_type == 'calculation' and $correct_array[0] == '') {
-      $temp_array[$row_no]['warnings'] = 'No correct answer specified';
+      $temp_array[$row_no]['warnings'] = $string['nocorrect'];
     } elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
       $matching_scenarios = explode('|', $scenario);
       $matching_media = explode('|', $q_media);
@@ -66,10 +68,10 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
         if ($matching_media[$part_id] != '') $media_scenarios++;
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
-      if ($question_marks < $scenario_no) $temp_array[$row_no]['warnings'] = 'Correct answer missing for some options.';
+      if ($question_marks < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
     }
     if ($q_type == 'mcq' and $score_method == 'vertical_other' and $p_type != '3') {
-      $temp_array[$row_no]['warnings'] = "MCQ with 'other' should only be used on surveys";
+      $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
     }
   }
 }
@@ -876,7 +878,7 @@ if (isset($_GET['change_screen'])) {
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo "<td>" . $temp_array[$x]['leadin'];
       if ($excluded[$temp_array[$x]['q_id']] != NULL) echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
-      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Warning" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
       echo "</td>";
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
       echo "<td><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
@@ -907,7 +909,7 @@ if (isset($_GET['change_screen'])) {
       echo '<td>&nbsp;</td>';
     } else {
       if ($temp_array[$x]['status'] !== 'Experimental' and $temp_array[$x]['marks'] === 'ERR') {
-        echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Warning: Variable number of marks" border="0" /></td>';
+        echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['variablenomarks'] . '" border="0" /></td>';
         $marks_incorrect_error = true;
       } elseif ($temp_array[$x]['status'] === 'Experimental') {
         echo '<td style="text-align:right; vertical-align:top">N/A</td>';
@@ -938,7 +940,7 @@ if (isset($_GET['change_screen'])) {
 
   if ($total_marks != 0) {
     if ($paper_type == '2' and $question_number > 2 and ($screen_marks / $total_marks) * 100 > 25 and $screen_marks > 3) {
-      echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;";
+      echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" />&nbsp;";
       $percent = round(($screen_marks / $total_marks) * 100);
       printf($string['markswarning'], $old_screen, $screen_marks, $percent);
       echo "</td></tr>\n";
@@ -946,11 +948,11 @@ if (isset($_GET['change_screen'])) {
     if ($row_no > 0 and $paper_type != '3' and $paper_type != '4') {
       echo "<tr><td colspan=\"4\"></td><td style=\"border-top:1px solid black\" align=\"right\">";
       if ($marks_incorrect_error == true) {
-        echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Warning: Variable number of marks" border="0" />';
+        echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['variablenomarks'] . '" border="0" />';
       } else {
         echo $total_marks;
       }
-      echo "</td><td style=\"color:#808080\">&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</td></tr>\n";
+      echo "</td><td style=\"color:#808080\"><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</nobr></td></tr>\n";
     }
   }
 
@@ -964,7 +966,7 @@ if (isset($_GET['change_screen'])) {
     }
     foreach ($warning_types as $warning_type) {
       if (isset($paper_warnings[$warning_type]) AND count($paper_warnings[$warning_type]) > 0) {
-        echo "<tr><td colspan=\"6\" style=\"color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;<strong>The following questions are '$warning_type':</strong> ";
+        echo "<tr><td colspan=\"6\" style=\"color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" />&nbsp;<strong>The following questions are '$warning_type':</strong> ";
         foreach ($paper_warnings[$warning_type] as $question_warning) {
           echo ' Q' . $question_warning;
         }

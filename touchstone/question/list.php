@@ -148,17 +148,17 @@
   while ($row = $search_results->fetch_assoc()) {
 
     if ($row['locked'] != '') {
-      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('" . $row['q_id'] . "','line$display_no','" . fullQuestionType($row['q_type']) . "','menu2c')\" ondblclick=\"editQ('" . $row['q_id'] . "','" . $row['q_type'] . "'); return false;\">";
+      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('" . $row['q_id'] . "','line$display_no','" . $string[$row['q_type']] . "','menu2c')\" ondblclick=\"editQ('" . $row['q_id'] . "','" . $row['q_type'] . "'); return false;\">";
       echo "<td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"Question Locked\" /></td>";
     } else {
-      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('" . $row['q_id'] . "','line$display_no','" . fullQuestionType($row['q_type']) . "','menu2b')\" ondblclick=\"editQ('" . $row['q_id'] . "','" . $row['q_type'] . "'); return false;\">";
+      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('" . $row['q_id'] . "','line$display_no','" . $string[$row['q_type']] . "','menu2b')\" ondblclick=\"editQ('" . $row['q_id'] . "','" . $row['q_type'] . "'); return false;\">";
       echo "<td></td>";
     }
     $tmp_leadin = $row['leadin'];
     if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
     echo "<td class=\"d\">$tmp_leadin <span class=\"owner\">(" . $row['title'] . " " . $row['initials'] . " " . $row['surname'] . ")</span></td>";
-    echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . fullQuestionType($row['q_type']) . "</nobr></td>";
+    echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . $string[$row['q_type']] . "</nobr></td>";
     echo "<td class=\"d\" onclick=\"qOff()\">" . $row['last_edited'] . "</td>\n";
     echo "<td class=\"d\" onclick=\"qOff()\">" . $string[strtolower($row['status'])] . "</td></tr>\n";
     $display_no++;

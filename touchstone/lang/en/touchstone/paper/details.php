@@ -16,4 +16,13 @@ $string['unlock'] = '1Unlock';
 $string['nooptionsdefined'] = '1No options defined for question';
 $string['noquestionscreen'] = '<strong>1Warning:</strong> there are no questions on this screen.<br />This will produce an error if the paper is tested!';
 $string['markswarning'] = '1Screen %d has %d marks which is %d%% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.';
+$string['nocorrect'] = '1No correct answer specified';
+$string['toomanycorrect'] = '1Too many correct options';
+$string['answermissing'] = '1Correct answer missing for some options.';
+$string['mcqsurvey'] = "MCQ with 'other' should only be used on surveys";
+$string['dichotomouswarning'] = '%d out of %d';
+$string['warning'] = '1Warning';
+$string['variablenomarks'] = '1Warning: Variable number of marks';
+$string['export12'] = '1Export 1.2';
+$string['import'] = '1Import';
 ?>

@@ -178,7 +178,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   ?>
   <div id="content" class="content" style="font-size:80%">
   <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php">Administrative Tools</a></div><div style="margin-left:10px; font-size:200%; font-weight:bold">Edit Module</div></td></tr>
+  <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editmodule']; ?></div></td></tr>
   <tr><td style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr>
   </table>
   <br />
@@ -187,17 +187,17 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_moduleid == false) {
-      echo "<tr><td class=\"field\">Module ID</td><td><input type=\"text\" size=\"10\" name=\"moduleid\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_moduleid\" /><input type=\"hidden\" name=\"old_moduleid\" value=\"$tmp_moduleid\" /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"moduleid\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_moduleid\" /><input type=\"hidden\" name=\"old_moduleid\" value=\"$tmp_moduleid\" /></td></tr>\n";
     } else {
     ?>
-      <tr><td class="field">Module ID</td><td><input type="text" size="10" name="moduleid" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" /><input type="hidden" name="old_moduleid" value="<?php echo $moduleid; ?>" /></td></tr>
+      <tr><td class="field"><?php echo $string['moduleid']; ?></td><td><input type="text" size="10" name="moduleid" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" /><input type="hidden" name="old_moduleid" value="<?php echo $moduleid; ?>" /></td></tr>
     <?php
     }
     ?>
-    <tr><td class="field">Full name</td><td><input type="text" size="70" name="fullname" value="<?php echo $fullname; ?>" /></td></tr>
+    <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" name="fullname" value="<?php echo $fullname; ?>" /></td></tr>
   <?php
     $old_faculty = '';
-    echo "<tr><td class=\"field\">School</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
+    echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
     $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY faculty.name, school");
     $result->execute();
     $result->bind_result($id, $list_school, $faculty);
@@ -237,7 +237,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $mapping = 0;
     }
     
-  echo '<tr><td class="field">SMS API</td><td><select name="sms_api">';
+  echo '<tr><td class="field">' . $string['smsapi'] . '</td><td><select name="sms_api">';
   foreach ($cfg_sms_sources as $key=>$value) {
     if ($sms == $value) {
       echo "<option value=\"$value\" selected>$key</option>\n";
@@ -247,16 +247,16 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
   echo '</select></td></tr>';
   ?>
-    <tr><td class="field">Objectives API</td><td><select name="vle_api"><option value="">&lt;No lookup&gt;</option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option></select></td></tr>
-    <tr><td class="field">Summative Checklist</td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> Peer Review, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> External Examiners, <input type="checkbox" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> Standards Setting, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> Mapping</td></tr>
-    <tr><td class="field">Active</td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field">allow Self-enroll</td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
-    <tr><td class="field">Negative Marking</td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select name="vle_api"><option value="">&lt;No lookup&gt;</option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option></select></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input type="checkbox" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
+    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked'; ?> /></td></tr>
   <?php
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_moduleid\" value=\"" . $_GET['moduleid'] . "\" />\n";
   ?>
-    <p><input type="submit" style="width:100px" name="submit" value="Save">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="Cancel" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>
   </div>
 </div>

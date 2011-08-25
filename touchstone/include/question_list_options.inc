@@ -66,7 +66,7 @@
   }
 
   function deleteQuestion() {
-    notice=window.open("/touchstone/delete/check_delete_q_original.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/touchstone/delete/check_delete_q_original.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=420,height=190,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -90,7 +90,7 @@
   }
 
   function linkToPaper() {
-    notice=window.open("/touchstone/question/add/add_question_to_paper.php?q_id=" + document.PapersMenu.questionID.value + "","properties","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/touchstone/question/link_to_paper.php?q_id=" + document.PapersMenu.questionID.value + "","properties","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300,20);
     if (window.focus) {
       notice.focus();
@@ -232,11 +232,11 @@
   $result->close();
    
   //makeMenu($full_modules_array);
-  makeMenu(array($string['informationblock']=>'/touchstone/question/list.php?type=info',$string['keywordbasedquestion']=>'/touchstone/question/list.php?type=keyword',$string['randomquestionblock']=>'/touchstone/question/list.php?type=random','-'=>'-',$string['calculation']=>'/touchstone/question/list.php?type=calculation',$string['dichotomous']=>'/touchstone/question/list.php?type=dichotomous',$string['extendedmatching']=>'/touchstone/question/list.php?type=extmatch',$string['fillintheblank']=>'/touchstone/question/list.php?type=blank',$string['flash']=>'/touchstone/question/list.php?type=flash',$string['imagehotspot']=>'/touchstone/question/list.php?type=hotspot',$string['labelling']=>'/touchstone/question/list.php?type=labelling',$string['likertscale']=>'/touchstone/question/list.php?type=likert',$string['matrix']=>'/touchstone/question/list.php?type=matrix',$string['mcq']=>'/touchstone/question/list.php?type=mcq',$string['mrq']=>'/touchstone/question/list.php?type=mrq',$string['ranking']=>'/touchstone/question/list.php?type=rank',$string['sct']=>'/touchstone/question/list.php?type=sct',$string['textbox']=>'/touchstone/question/list.php?type=textbox',$string['timedate']=>'/touchstone/question/list.php?type=timedate'));
+  makeMenu(array($string['info']=>'/touchstone/question/list.php?type=info',$string['keyword_based']=>'/touchstone/question/list.php?type=keyword',$string['random']=>'/touchstone/question/list.php?type=random','-'=>'-',$string['calculation']=>'/touchstone/question/list.php?type=calculation',$string['dichotomous']=>'/touchstone/question/list.php?type=dichotomous',$string['extmatch']=>'/touchstone/question/list.php?type=extmatch',$string['blank']=>'/touchstone/question/list.php?type=blank',$string['flash']=>'/touchstone/question/list.php?type=flash',$string['hotspot']=>'/touchstone/question/list.php?type=hotspot',$string['labelling']=>'/touchstone/question/list.php?type=labelling',$string['likert']=>'/touchstone/question/list.php?type=likert',$string['matrix']=>'/touchstone/question/list.php?type=matrix',$string['mcq']=>'/touchstone/question/list.php?type=mcq',$string['mrq']=>'/touchstone/question/list.php?type=mrq',$string['rank']=>'/touchstone/question/list.php?type=rank',$string['sct']=>'/touchstone/question/list.php?type=sct',$string['textbox']=>'/touchstone/question/list.php?type=textbox',$string['timedate']=>'/touchstone/question/list.php?type=timedate'));
   makeMenu($teams_array);
   makeMenu($keywords_array);
   makeMenu(array($string['questions']=>'/touchstone/question/search.php',$string['papers']=>'/touchstone/paper/search.php',$string['people']=>'/touchstone/users/search.php'));
-  makeMenu(array($string['informationblock']=>"/touchstone/question/add/info.php",$string['keywordbasedquestion']=>"/touchstone/question/add/keyword_based.php",$string['randomquestionblock']=>"/touchstone/question/add/random.php","-"=>"-",$string['calculation']=>"/touchstone/question/add/calculation.php",$string['dichotomous']=>"/touchstone/question/add/dichotomous.php",$string['extendedmatching']=>"/touchstone/question/add/extmatch.php",$string['fillintheblank']=>"/touchstone/question/add/blank.php",$string['flash']=>"/touchstone/question/add/flash.php",$string['imagehotspot']=>"/touchstone/question/add/hotspot1.php",$string['labelling']=>"/touchstone/question/add/labelling1.php",$string['likertscale']=>"/touchstone/question/add/likert.php",$string['matrix']=>"/touchstone/question/add/matrix.php",$string['mcq']=>"/touchstone/question/add/mcq.php",$string['mrq']=>"/touchstone/question/add/mrq.php",$string['ranking']=>"/touchstone/question/add/rank.php",$string['sct']=>"/touchstone/question/add/sct.php",$string['textbox']=>"/touchstone/question/add/textbox.php",$string['timedate']=>"/touchstone/question/add/timedate.php"));
+  makeMenu(array($string['info']=>"/touchstone/question/add/info.php",$string['keyword_based']=>"/touchstone/question/add/keyword_based.php",$string['random']=>"/touchstone/question/add/random.php","-"=>"-",$string['calculation']=>"/touchstone/question/add/calculation.php",$string['dichotomous']=>"/touchstone/question/add/dichotomous.php",$string['extmatch']=>"/touchstone/question/add/extmatch.php",$string['blank']=>"/touchstone/question/add/blank.php",$string['flash']=>"/touchstone/question/add/flash.php",$string['hotspot']=>"/touchstone/question/add/hotspot1.php",$string['labelling']=>"/touchstone/question/add/labelling1.php",$string['likert']=>"/touchstone/question/add/likert.php",$string['matrix']=>"/touchstone/question/add/matrix.php",$string['mcq']=>"/touchstone/question/add/mcq.php",$string['mrq']=>"/touchstone/question/add/mrq.php",$string['rank']=>"/touchstone/question/add/rank.php",$string['sct']=>"/touchstone/question/add/sct.php",$string['textbox']=>"/touchstone/question/add/textbox.php",$string['timedate']=>"/touchstone/question/add/timedate.php"));
 
   hideMenuScript($menuNo);
 ?>

@@ -1036,7 +1036,7 @@ a.access:hover {color:white}
   $query_string = "SELECT name, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM teams, modules WHERE teams.name=modules.moduleid AND memberID=$tmp_id ORDER BY name";
   $results = $mysqli->query($query_string);
   while ($row = $results->fetch_assoc()) {
-    echo "<tr><td>&nbsp;" . $row['name'] . ": " . $row['fullname'] . "</td><td>" . $row['added'] . "</td><td>" . $row['type'] . "</td></tr>\n";
+    echo "<tr><td>&nbsp;" . $row['name'] . ": " . $row['fullname'] . "</td><td>" . $row['added'] . "</td><td>" . $string[strtolower($row['type'])] . "</td></tr>\n";
   }
   $mysqli->close();
 ?>
