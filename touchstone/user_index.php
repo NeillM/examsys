@@ -108,8 +108,13 @@ $display_end_date = new dateTime($display_end_date, $UK_time);
 $display_start_date->setTimezone($target_timezone);
 $display_end_date->setTimezone($target_timezone);
 
-$display_start_date = $display_start_date->format("d/m/Y H:i");
-$display_end_date = $display_end_date->format("d/m/Y H:i");
+$tmp_cfg_long_date_time = str_replace('%', '', $cfg_long_date_time);
+
+$display_start_date = $display_start_date->format($tmp_cfg_long_date_time);
+$display_end_date = $display_end_date->format($tmp_cfg_long_date_time);
+
+//$display_start_date = $display_start_date->format("d/m/Y H:i");
+//$display_end_date = $display_end_date->format("d/m/Y H:i");
 
 $previously_submitted = 0;
 

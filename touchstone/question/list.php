@@ -126,7 +126,7 @@
   $hits = 0;
   $display_no = 0;
   
-  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(creation_date,'%d/%m/%y') AS creation_date, DATE_FORMAT(last_edited,'%d/%m/%y') AS last_edited, locked, status FROM (users, questions)";
+  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, status FROM (users, questions)";
   if ($keyword != '%' and $keyword != '') {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }

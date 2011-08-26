@@ -42,4 +42,6 @@ $string['year'] = '1Within the past year';
 $string['specify'] = '1Specify dates';
 $string['from'] = '1from';
 $string['to'] = '1to';
+$string['locked'] = '1Locked';
+$string['noquestionsfound'] = '1No questions found for specified search criteria.';
 ?>

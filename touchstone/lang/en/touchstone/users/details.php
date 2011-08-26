@@ -67,4 +67,5 @@ $string['dateadded'] = '1Date Added';
 $string['editteams'] = '1Edit Teams...';
 $string['editmodules'] = '1Edit Modules...';
 $string['system'] = '1System';
+$string['na'] = 'N/A';
 ?>

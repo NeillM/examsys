@@ -1,4 +1,5 @@
 <?php
+$string['anytype'] = '1(any type)';
 $string['info'] = '1Information Block';
 $string['keyword_based'] = '1Keyword-based Question';
 $string['random'] = '1Random Question Block';
@@ -11,10 +12,10 @@ $string['hotspot'] = '1Image Hotspot';
 $string['labelling'] = '1Labelling';
 $string['likert'] = '1Likert Scale';
 $string['matrix'] = '1Matrix';
-$string['mcq'] = '1Multiple Choice (MCQ)';
-$string['mrq'] = '1Multiple Response (MRQ)';
+$string['mcq'] = '1Multiple Choice';
+$string['mrq'] = '1Multiple Response';
 $string['rank'] = '1Ranking';
-$string['sct'] = '1Script Concordance Test (SCT)';
+$string['sct'] = '1Script Concordance Test';
 $string['textbox'] = '1Text Box';
 $string['timedate'] = '1Time/Date';
 

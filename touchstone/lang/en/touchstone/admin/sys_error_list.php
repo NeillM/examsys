@@ -10,17 +10,4 @@ $string['user'] = '1User';
 $string['userid'] = '1UserID';
 $string['showfixed'] = '1Show fixed errors';
 $string['displaydetails'] = '1Display Details';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-
 ?>
