@@ -605,7 +605,17 @@ if (!isset($_POST['update'])) {
     ///////////////////////  update the config file!! //////////////////////////////////////
     
   } // END Create DB user
-
+  
+  // 26/08/2011 - Add date and time formats to config file.
+  $new_cfg_str[] =  "// Date formats in MySQL DATE_FORMAT format\n";
+  $new_cfg_str[] =  "\$cfg_short_date = '%m/%d/%y';\n";
+  $new_cfg_str[] =  "\$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
+  $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+  $cfg = file($touchstone_path . '/config/config.inc.php');
+  if (!in_array('// Date formats in MySQL DATE_FORMAT format', $cfg)) {
+    array_splice($cfg,36,0,$new_cfg_str);
+  }
+  
   // 01/08/2011 - Change to database structure for more flexible marking
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='display_method'");
   $result->execute();
