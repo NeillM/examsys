@@ -618,7 +618,7 @@ if (!isset($_POST['update'])) {
       rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old.php');
     }
     
-    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
       echo "300 => could not write config file !";
     }
     echo "<div>Added date and time formats to config file.</div>\n";
