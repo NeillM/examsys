@@ -614,6 +614,9 @@ if (!isset($_POST['update'])) {
   $cfg = file($touchstone_path . '/config/config.inc.php');
   if (!in_array('// Date formats in MySQL DATE_FORMAT format', $cfg)) {
     array_splice($cfg,36,0,$new_cfg_str);
+    echo "<div>Added date and time formats to config file.</div>\n";
+    ob_flush();
+    flush();
   }
   
   // 01/08/2011 - Change to database structure for more flexible marking
