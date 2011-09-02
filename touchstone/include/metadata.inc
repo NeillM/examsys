@@ -24,7 +24,230 @@
 
   require_once '../../classes/searchutils.class.php';
   require_once '../../classes/schoolutils.class.php';
+  require_once '../../classes/logger.class.php';
+  
+  function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled) {
+    global $teams, $userID, $userroles, $faculty;
 
+    $current_status = ($question->get_status() == '') ? 'Normal' : $question->get_status();
+    
+    $html = <<< META
+          <table id="q-metadata-basic" class="form" summary="Edit basic question metadata">
+            <tbody>
+              <tr>
+                <th>Status</th>
+                <td>
+                  <ul class="radio-list horizontal">
+
+META;
+
+    $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
+    foreach ($status_array as $status) {
+      $checked = ($current_status == $status) ? ' checked="checked"' : '';
+      if ($disabled != '' and $status != 'Normal' and $status != 'Retired') {
+        $disabled_mod = ' disabled="disabled"';
+        $disabled_class = ' class="disabled"';
+      } else {
+        $disabled_mod = $disabled_class = '';
+      }
+      
+      $status_str = strtolower($status);
+      $html .= <<< STATUS
+										<li><input id="status-{$status_str}" name="status" value="{$status}"{$checked} type="radio"{$disabled_mod} /> <label for="status-{$status_str}"{$disabled_class}>{$status}</label></li>
+
+STATUS;
+    }
+    
+    $html .= <<< META
+                  </ul>
+                </td>
+              </tr>
+
+META;
+
+    
+    if ($bloom_on) {
+      $html .= <<< META
+              <tr>
+                <th><label for="bloom">Bloom's Taxonomy</label></th>
+                <td>
+  								<select id="bloom" name="bloom">
+
+META;
+
+      $bloom_array = array('', 'Knowledge', 'Comprehension', 'Application', 'Analysis', 'Synthesis', 'Evaluation');
+      $blooms = $question->get_bloom();
+      foreach ($bloom_array as $individual_bloom) {
+        $selected =  ($individual_bloom == $blooms) ? ' selected="selected"' : '';
+        $html .= <<< BLOOM
+										<option{$selected} value="{$individual_bloom}">{$individual_bloom}</option>
+
+BLOOM;
+      }
+      $html .= <<< META
+  								</select>
+  							</td>
+  						</tr>
+
+META;
+    }
+    
+    $html .= <<< META
+  					</tbody>
+  				</table>
+
+META;
+    
+    
+    // Teams
+    $current_teams = $question->get_teams();
+    $teams_array = SearchUtils::getTeams($teams, $userroles, $userID, $mysqlidb);
+    
+    // Team keyword lists by module
+    if ($module == '') {
+      // No teams passed in, use all teams the current user is on.
+      $module = $teams;
+    }
+    
+    $html .= <<< META
+          <div class="form">
+            <div id="keyword-select" class="select-area">
+            <h3>Keywords</h3>
+              <div id="q-keywords" class="select-group">
+
+META;
+
+    if ($module != '') {
+      $keywords = SearchUtils::get_keywords($mysqlidb, $module, $userID);
+      $question_keywords = $question->get_keywords();
+      
+      $i = 0;
+      if (count($keywords['team']) > 0) {
+        $prev_heading = '';
+        foreach ($keywords['team'] as $keyword) {
+          if ($prev_heading != '') {
+          $html .= <<< META
+              	</ul>
+
+META;
+          }
+          
+          if ($keyword['module_id'] != $prev_heading) {
+          $html .= <<< META
+      					<h4>{$keyword['module_id']}</h4>
+                <ul class="radio-list clearfix">
+
+META;
+          }
+          
+          $checked = $on = ''; 
+          if(in_array($keyword['keyword_id'], $question_keywords)) {
+            $checked = ' checked="checked"';
+            $on = ' on';
+          }
+          $html .= <<< META
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$keyword['keyword']}</label></li>
+
+META;
+          $i++;
+        }
+              
+        $html .= <<< META
+      					</ul>
+
+META;
+      }
+      
+      if (count($keywords['personal']) > 0) {
+        $html .= <<< META
+                <h4>Personal Keywords</h4>
+                <ul class="radio-list clearfix">
+
+META;
+
+        foreach ($keywords['personal'] as $keyword) {
+          $checked = $on = ''; 
+          if(in_array($keyword['keyword_id'], $question_keywords)) {
+            $checked = ' checked="checked"';
+            $on = ' on';
+          }
+          $html .= <<< META
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$keyword['keyword']}</label></li>
+          
+META;
+        }
+        
+        $html .= <<< META
+          			</ul>
+              </div>
+
+META;
+      }
+      
+      $html .= <<< META
+      			</div>
+
+META;
+    }
+      
+    $html .= <<< META
+        		<div id="team-select" class="select-area">
+              <h3>Teams</h3>
+              <div id="q-teams" class="select-group">
+
+META;
+
+    $prev_heading = '';
+    $i = 0;
+    foreach ($teams_array as $individual_team) {
+      $team_name = $individual_team['id'];
+      $fullname = $individual_team['fullname'];
+      
+      if ($individual_team['school'] != $prev_heading) {
+        if ($prev_heading != '') {
+          $html .= <<< META
+              	</ul>
+
+META;
+        }
+        $html .= <<< HEADING
+  							<h4>{$individual_team['school']}</h4>
+                <ul class="radio-list clearfix">
+
+HEADING;
+        $prev_heading = $individual_team['school'];
+      }
+      
+      // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
+      $checked = $on = $disabled_mod = '';
+      if (in_array($team_name, $current_teams) or $team_name == $module) {
+        $checked = ' checked="checked"';
+        $on = ' on';
+      }
+      if (!in_array($team_name, $teams) and strpos($userroles,'SysAdmin') === false) {
+        $disabled_mod = ' disabled="disabled"';
+      }
+      
+      $html .= <<< META
+                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_name}" type="checkbox"{$checked}{$disabled_mod} /> {$team_name}: {$fullname}</label></li>
+
+META;
+
+      $i++;
+    }
+    
+
+    $html .= <<< META
+      					</ul>
+              </div>
+            </div>
+          </div>
+    
+META;
+    
+    return $html;
+  }
+  
   function echoMetadata($blooms, $questionID, $team, $colspan, $mysqlidb, $bloom_on, $current_status, $disabled) {
     global $teams, $userID, $userroles, $faculty;
 
@@ -222,6 +445,50 @@
       }
     }
     return $tmp_list;
+  }
+  
+  function save_keywords($question, $userID, $edit, $mysqlidb) {
+    $keyword_changes = false;
+    $updated_list = (isset($_POST['keywords'])) ? $_POST['keywords'] : array();
+    
+    if ($edit == true) {
+      $existing_list = $question->get_keywords();
+    } else {
+      $existing_list = array();
+    }
+    
+    // First go through the list of updated keywords looking for new ones to add.
+    foreach ($updated_list as $updated) {
+      if (!in_array($updated, $existing_list)) {
+        $query = $mysqlidb->prepare("INSERT INTO keywords_question VALUES (?, ?)");
+        $query->bind_param('ii', $question->id, $updated);
+        $query->execute();
+        $query->close();
+        
+        $keyword_changes = true;
+      }
+    }
+
+    if ($edit == true) {
+      // Next go through the list of old keywords looking for ones to delete.
+      foreach ($existing_list as $existing) {
+        if (!in_array($existing, $updated_list) and $existing != '') {
+          $query = $mysqlidb->prepare("DELETE FROM keywords_question WHERE q_id=? AND keywordID=?");
+          $query->bind_param('ii', $question->id, $existing);
+          $query->execute();
+          $query->close();
+          
+          $keyword_changes = true;
+        }
+      }
+      
+      if ($keyword_changes == true) {
+        $logger = new Logger($mysqlidb);
+        $logger->track_change('Edit Question', $question->id, $userID, keyword_id_to_text($existing_list, $mysqlidb), keyword_id_to_text($updated_list, $mysqlidb), 'keywords');
+
+        $question->set_keywords($updated_list);
+      }
+    }
   }
   
   function saveKeywords($questionID, $userID, $question_changes, $edit, $mysqlidb) {

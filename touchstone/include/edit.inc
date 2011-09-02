@@ -102,17 +102,17 @@ function redirect() {
     $result->close();
   }
 
-  if (substr($_POST['paperID'],0,5) == 'list:') {
-    $type = substr($_POST['paperID'],5);
+  if (substr($_POST['paper_id'],0,5) == 'list:') {
+    $type = substr($_POST['paper_id'],5);
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/question/list.php?keyword=" . $_POST['keyword'] . "&team=" . $_POST['team']);
   } elseif ($_POST['calling'] == 'find') {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/question/search.php");
   } elseif ($_POST['calling'] == 'paper') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/paper/details.php?paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/paper/details.php?paperID=" . $_POST['paper_id'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
   } elseif ($_POST['calling'] == 'external_comments') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/reports/review_comments.php?type=external&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/reports/review_comments.php?type=external&paperID=" . $_POST['paper_id'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
   } elseif ($_POST['calling'] == 'internal_comments') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/reports/review_comments.php?type=internal&paperID=" . $_POST['paper_id'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
   } else {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/");
   }
@@ -132,28 +132,45 @@ function save_external_responses($dblink) {
   }
 }
 
+function save_external_responses_new($dblink, $question, $ids, $actions, $responses, $paper_id = -1) {
+  // Record responses to external examiner comments.
+    $comments = $question->get_comments($paper_id);
+    $changed = false;
+    
+    $i = 0;
+    foreach ($ids as $id) {
+      $action = $actions[$i];
+      $response = $responses[$i];
+      
+      if($action != $comments[$id]['action'] or $response != $comments[$id]['response']) {
+        $result = $dblink->prepare("UPDATE review_comments SET action=?, response=? WHERE id=?");
+        $result->bind_param('ssi', $action, $response, $id);
+        $result->execute();  
+        $result->close();
+        
+        $comments[$id]['action'] = $action;
+        $comments[$id]['response'] = $response;
+        $changed = true;
+      }
+      $i++;
+    }
+    
+    if($changed) $question->set_comments($comments);
+  }
+
 function check_edit_rights($q_id, $checkout_authorID, $checkout_time, $locked, $dblink) {
-  global $tmp_ownerID;
+  global $tmp_ownerID, $userID;
   $disabled = '';
   
   if (check_MSCAA($q_id, $dblink)) {    // Check for MSC-AA question
-    echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; height:32px; font-size:90%\">\n";
-    echo "<tr><td style=\"width:60px; height:32px; text-align:right; background-image:url('../../artwork/mscaa_gradient.png'); background-repeat:repeat-x\"><img src=\"../../artwork/mscaa_logo_small.png\" width=\"49\" height=\"30\" alt=\"MSC-AA\" /></td><td style=\"height:32px; vertical-align:middle; background-image:url('../../artwork/mscaa_gradient.png'); background-repeat:repeat-x\">&nbsp;&nbsp;<strong>MSC-AA Question</strong>&nbsp;&nbsp;&nbsp;This question has been imported from the MSC-AA and cannot be modified.</td></tr>\n";
-    echo "</table>\n";
-    $disabled = ' disabled';
+    $disabled = 'mscaa';
   } elseif ($locked != '') {            // Check if locked
-    echo "<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"width:100%; font-size:90%\">\n";
-    echo "<tr><td style=\"width:35px; height:32px; text-align:right; background-image:url('../../artwork/locked_gradient.png'); background-repeat:repeat-x\"><img src=\"../../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../../artwork/locked_gradient.png'); background-repeat:repeat-x\"><strong>Question Locked</strong>&nbsp;&nbsp;&nbsp;This question is now locked and cannot be modified. <a style=\"color:black\" href=\"#\" onclick=\"launchHelp(161); return false;\">Click for more details.</a></td></tr>\n";
-    echo "</table>\n";
-    $disabled = ' disabled';
+    $disabled = 'locked';
+    $checkout_author = check_out_paper($dblink, $q_id, $userID);
   } else {                              // Check out editing rights against current user
     $checkout_author = check_lock_status($checkout_authorID, $checkout_time, $disabled, $dblink, $q_id);
   }
   
-  if ($disabled == '') {
-    echo "<div style=\"font-size:90%; color:#808080; text-align:center\"><span class=\"mandatory\">*</span> Indicates a <strong>mandatory</strong> field that must be completed.</div>\n";
-  }
-
   return $disabled;
 }
 
@@ -194,12 +211,7 @@ function check_lock_status($checkout_author, $checkout_time, &$disabled, $dblink
       echo "</script>\n";
       $disabled = ' disabled';
     } else {
-      // Set the lock to the current time/author.
-      $editLock = $dblink->prepare("UPDATE questions SET checkout_time=NOW(), checkout_authorID=? WHERE q_id=?");
-      $editLock->bind_param('ii', $userID, $questionID);
-      $editLock->execute();  
-      $editLock->close();
-      $checkout_author = $userID;
+      $checkout_author = check_out_paper($dblink, $questionID, $userID);
     }
   } elseif ($disabled == '' and $userID == $checkout_author) {
     // Set the lock to the current time/author.
@@ -207,10 +219,24 @@ function check_lock_status($checkout_author, $checkout_time, &$disabled, $dblink
     $editLock->bind_param('ii', $userID, $questionID);
     $editLock->execute();  
     $editLock->close();
-    $checkout_author = $userID;
+    $checkout_author = check_out_paper($dblink, $questionID, $userID);
   }
   
   return $checkout_author;
+}
+
+/**
+ * Set the edit lock to the current time and given author
+ * @param object $dblink mysqli link to database
+ * @param integer $q_id ID of question to be locked
+ * @param integer $user_id ID of the user to assign the lock
+ */
+function check_out_paper($dblink, $q_id, $user_id) {
+  $editLock = $dblink->prepare("UPDATE questions SET checkout_time=NOW(), checkout_authorID=? WHERE q_id=?");
+  $editLock->bind_param('ii', $user_id, $q_id);
+  $editLock->execute();  
+  $editLock->close();
+  return $user_id;
 }
 
 function record_trackChanges($type, $questionID, $old_value, $new_value, $part, $current_userID, &$changes) {
@@ -278,6 +304,42 @@ function hidden_edit_fields() {
     $html .= '<input type="hidden" name="checkout_author" value="" />';
   }
   
+  return $html;
+}
+
+function save_buttons_new($disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id) {
+  $html = '';
+  
+  $save_disabled = '';
+  $value = 'Save Changes';
+  $name = 'submit';
+  
+  if ($disabled != '') {
+    if ($locked != '' or $checkout_author == '') {
+      $value = 'Limited Save';
+    } elseif ($checkout_author != $userID) {
+      $save_disabled = ' disabled="disabled"';
+      $name = 'bogus';
+    }
+  }
+  
+  $html .= <<< HTML
+      <input id="submit-save" name="{$name}" value="{$value}" type="submit" class="submit"{$save_disabled} />
+
+HTML;
+
+  if ($allow_correct and $locked != '' and $paper_id != -1) {
+    $html .= <<< HTML
+      <input id="submit-correct" name="submit" value="Correct" type="submit" class="submit" />
+
+HTML;
+  }
+  
+  $html .= <<< HTML
+      <input id="submit-cancel" name="submit-cancel" value="Cancel" onclick="formCancel();" type="submit" class="submit" />
+
+HTML;
+    
   return $html;
 }
 
