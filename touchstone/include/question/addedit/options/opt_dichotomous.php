@@ -22,7 +22,7 @@
 * @package
 */
 
-$hidden = ($index > $num_options) ? ' hide' : '';
+$hidden = (($num_options == 0 and $index > 5) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
 $correct_t = ($option->get_correct() == 't') ? ' checked="checked"' : '';
 $correct_f = ($option->get_correct() == 'f') ? ' checked="checked"' : '';
 if ($index %2 == 0) {
