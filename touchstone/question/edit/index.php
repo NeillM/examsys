@@ -92,8 +92,14 @@ if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
 }
 
 // Handle upload of files for question types that require it
-if ($critical_error == '' and isset($_POST['submit_media'])) {
-  $new_media = uploadFile('q_media');
+if ($critical_error == '' and $question->requires_media() and (isset($_POST['submit_media']) or isset($_POST['q_media']))) {
+  if (isset($_POST['q_media']) and $_POST['q_media'] != '') {
+    $new_media['filename'] = $_POST['q_media'];
+    $new_media['width'] = (isset($_POST['q_media_width']) and $_POST['q_media_width'] != '') ? $_POST['q_media_width'] : 0;
+    $new_media['height'] = (isset($_POST['q_media_height']) and $_POST['q_media_height'] != '') ? $_POST['q_media_height'] : 0;
+  } else {
+    $new_media = uploadFile('q_media');
+  }
   if ($new_media !== false) {
     $question->set_media($new_media);
   } else {
