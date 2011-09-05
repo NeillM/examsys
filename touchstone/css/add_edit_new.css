@@ -261,7 +261,8 @@ td.separated:last-child {
 
 #tabbed-content {
   height: 100%;
-  padding: 85px 10px 0px 10px;
+  padding: 85px 10px 0 10px;
+  margin-bottom: 450px;
 }
 
 #tabbed-content.banner-spaced {
