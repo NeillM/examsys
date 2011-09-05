@@ -27,7 +27,7 @@
 Class QuestionTIMEDATE extends Question {
   
   protected $correct = '';
-  protected $format;
+  protected $format = '1';
   protected $start_year = '';
   protected $end_year = '';
   protected $td_year = '';
@@ -36,7 +36,8 @@ Class QuestionTIMEDATE extends Question {
   protected $td_hours = '';
   protected $td_minutes = '';
   protected $td_seconds = '';
-      
+  public $max_options = 1;
+  
   protected $formats = array('1' => 'dd/MM/yyyy hh:mm:ss', '2' => 'dd/MM/yyyy hh:mm', '3' => 'dd/MM/yyyy', '4' => 'mm/dd/yyyy', '5' => 'dd/MMMM/yyyy', '6' => 'hh:mm:ss', '7' => 'hh:mm (date)', '8' => 'hh:mm (duration)');
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'option_order', 'bloom', 'status', 'correct', 'format', 'start_year', 'end_year', 'td_year', 'td_month', 'td_day', 'td_hours', 'td_minutes', 'td_seconds');
@@ -258,7 +259,8 @@ Class QuestionTIMEDATE extends Question {
    */
   public function set_correct($value=-1) {
     if (count($this->options) == 0) {
-      $option = new Option($this->_mysqli, $this->_user_id, $this, 1);
+      $option = Option::option_factory($this->_mysqli, $this->_user_id, $this, 1);
+      $this->options[] = $option;
     } else {
       $option = reset($this->options);
     }

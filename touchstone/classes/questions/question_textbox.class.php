@@ -28,6 +28,8 @@ Class QuestionTEXTBOX extends Question {
   
   protected $columns = 10;
   protected $rows = 4;
+  protected $score_method = 'Mark per Option';
+  public $max_options = 1;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');
   protected $_fields_unified = array('correct' => 'Terms', 'text' => 'Editor', 'marks_correct' => 'Marks if Correct');
