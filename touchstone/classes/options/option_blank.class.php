@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Information Blocks
+ * Class for Multiple Response options
  *
  * @author Rob Ingram
  * @version 1.0
@@ -24,24 +24,17 @@
  * @package
  */
 
-Class QuestionINFO extends Question {
+Class OptionBLANK extends Option {
   
-  protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
-
   /**
-   * Does this question type use Bloom's Taxonomy?
+   * Check that the minimum set of fields exist in the given data to create a new option 
+   * @param array $data
+   * @param array $files expects PHP FILES array
+   * @param integer $index option number
    * @return boolean
    */
-  public function use_bloom() {
-    return false;
-  }
-
-  /**
-   * Does this question type allow changes to the correct answer after it is locked?
-   * @return boolean
-   */
-  public function allow_correction() {
-    return false;
+  public function minimum_fields_exist($data, $files, $index) {
+    return (!empty($data["option_text"]));
   }
 }
 

@@ -43,7 +43,7 @@ Class Question extends TouchStoneObject {
   protected $incorrect_fback = '';
   protected $score_method = 'Mark per Question';
   protected $display_method = '';
-  protected $option_order = null;
+  protected $option_order = 'display order';
   protected $standards_setting = '';
   protected $bloom = null;
   protected $owner_id = null;

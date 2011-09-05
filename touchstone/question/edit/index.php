@@ -169,7 +169,7 @@ if($critical_error == '') {
       
       $unified_part_names = $question->get_unified_fields();
       
-      for ($option_no = 1; $option_no < $question->max_options; $option_no++) {
+      for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
         $option = null;
         
         if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {

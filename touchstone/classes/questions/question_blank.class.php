@@ -26,6 +26,7 @@
 
 Class QuestionBLANK extends Question {
   
+  public $max_options = 1;
   protected $_answer_negative = null;
   
   protected $_display_methods = array('dropdown' => 'Dropdown Lists (randomised)', 'textboxes' => 'Blank Textboxes');
