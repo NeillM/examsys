@@ -23,7 +23,7 @@
 */
 
 $mandatory = ($index <= 3) ? '<span class="mandatory">*</span>' : '';
-$hidden = ($index > 5 and $index > $num_options) ? ' hide' : '';
+$hidden = (($num_options == 0 and $index > 5) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
 $correct = ($option->get_correct() == $index) ? ' checked="checked"' : '';
 if ($index %2 == 0) {
   $alt = ' alt';
