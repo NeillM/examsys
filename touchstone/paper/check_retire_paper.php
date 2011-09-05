@@ -32,7 +32,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Confirm Retire Paper<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['confirmretirepaper'] . ' ' . $cfg_install_type; ?></title>
 
 <style>
 body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed}
@@ -43,9 +43,9 @@ body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-s
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/formative_retired.png" width="48" height="48" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/formative_retired.png" width="48" height="48" border="0" alt="<?php echo $string['paper']; ?>" /></td>
 
-<td><p>Do you wish to retire:<br /><br />1) just the paper, or 2) the paper and the questions?</p>
+<td><p><?php echo $string['msg']; ?></p>
 <br />
 
 <div style="text-align:right">
@@ -53,8 +53,8 @@ body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-s
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
-<input style="width:140px" type="submit" name="paper" value="Paper" onclick="" />&nbsp;
-<input style="width:140px" type="submit" name="questions" value="Paper &amp; Questions" onclick="" />
+<input style="width:140px" type="submit" name="paper" value="<?php echo $string['paper']; ?>" onclick="" />&nbsp;
+<input style="width:140px" type="submit" name="questions" value="<?php echo $string['paperquestions']; ?>" onclick="" />
 </form>
 </div>
 </td></tr>

@@ -54,20 +54,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Paper Retired<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['paperretired'] . ' ' . $cfg_install_type; ?></title>
 </head>
 
 <body onload="closeWindow();" style="margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed">
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/formative_retired.png" width="48" height="48" border="0" alt="Retired Paper" /></td>
+<td valign="top"><img src="../artwork/formative_retired.png" width="48" height="48" border="0" alt="<?php echo $string['paperretired']; ?>" /></td>
 
-<td><p>Paper successfully retired.<p>
+<td><p><?php echo $string['msg']; ?><p>
 
 <div style="text-align:center">
 <form action="" method="get">
-<input type="button" name="cancel" value="    OK    " onclick="window.close();" />
+<input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="window.close();" />
 </form>
 </div>
 </td></tr>

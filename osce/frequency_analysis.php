@@ -45,7 +45,7 @@
 ?>
   <html>
   <head>
-  <title>OSCE: Frequency Analysis</title>
+  <title><?php echo $string['frequencyanalysis']; ?></title>
   <style>
     body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
     .h {background-color:#F1F5FB; color:black}
@@ -101,7 +101,7 @@
     $result->fetch();
     $result->close();
   }
-  echo '<div class="breadcrumb"><a href="../touchstone/index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../touchstone/index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../touchstone/artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../touchstone/folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -109,7 +109,7 @@
   }
   echo '&nbsp;&nbsp;<img src="../touchstone/artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../touchstone/paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../touchstone/artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../touchstone/artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
 
   echo '<tr><td colspan="2" style="height:3px"><img src="../touchstone/artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr></table>';
   
@@ -123,9 +123,9 @@
   $result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($q_id, $rating, $userID);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($userID != $old_userID) $user_no++;
-    if(!isset($frequencies[$q_id])) $frequencies[$q_id] = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
+    if (!isset($frequencies[$q_id])) $frequencies[$q_id] = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
     if (isset($frequencies[$q_id][$rating])) {
       $frequencies[$q_id][$rating]++;
     } else {
@@ -139,15 +139,15 @@
   $question_no = 1;
   $sub_totals = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
   $cell_colors = array('#FFCBCB','#FFE3B3','#C0FFC0');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, score_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $score_method);
-  while ($row = $result->fetch()) {
+  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
+  while ($result->fetch()) {
     if ($question_no == 1) {
       // Header row
-      $cols = substr_count($score_method,'|');
-      $headings = explode('|',$score_method);
+      $cols = substr_count($display_method, '|');
+      $headings = explode('|', $display_method);
       echo '<tr><td></td>';
       for ($i=0; $i<$cols; $i++) {
         echo "<td colspan=\"2\" style=\"text-align:center; color:$labelcolor; font-weight:bold\">" . $headings[$i] . "</td>";

@@ -92,7 +92,7 @@ require '../include/staff_auth.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Load Keywords</title>
+<title><?php echo $string['loadkeywords']; ?></title>
 <link rel="stylesheet" href="../css/submenu.css" type="text/css">
 <style>
   body, p {color:#003366; font-family:Arial,sans-serif}
@@ -114,14 +114,14 @@ require '../include/staff_auth.inc';
 
 <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; width:85%">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_csv_32.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2">Load Keywords (TXT) File</span></td>
+<td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_csv_32.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['loadkeywords']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#DFE8FF">
 
-<p>Keywords should be listed one per line.</p>
+<p><?php echo $string['msg1']; ?></p>
 
-<div>Please select the TXT file you wish to load:</div>
+<div><?php echo $string['msg2']; ?></div>
 
 
 <div align="center">
@@ -129,7 +129,7 @@ require '../include/staff_auth.inc';
 
 <p><input type="file" size="50" name="txtfile" /></p>
 
-<p><input type="submit" style="width:100px" value="Load Keywords" name="submit" />&nbsp;<input style="width:100px" type="button" value="Cancel" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" style="width:100px" value="<?php echo $string['loadkeywords']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>

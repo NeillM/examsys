@@ -25,4 +25,5 @@ $string['warning'] = '1Warning';
 $string['variablenomarks'] = '1Warning: Variable number of marks';
 $string['export12'] = '1Export 1.2';
 $string['import'] = '1Import';
+$string['insertscreenbreak'] = '1Insert screen break';
 ?>

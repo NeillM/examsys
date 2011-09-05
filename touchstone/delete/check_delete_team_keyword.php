@@ -39,7 +39,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Delete Team Keyword?</title>
+<title><?php echo $string['deletekeyword']; ?></title>
 
 <style>
 body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed}
@@ -51,17 +51,17 @@ p {padding-top:0px; margin-top:0px}
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td>
-<p><strong>Are you sure you wish to delete '<?php echo $keyword; ?>' keyword?</strong><p>
+<p><strong><?php printf($string['msg'], $keyword); ?></strong><p>
 
 <div style="text-align:right">
 <form action="do_delete_team_keyword.php" method="post">
 <input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="Delete" />&nbsp;
-<input style="width:80px" type="button" name="cancel" value=" Cancel " onclick="javascript:window.close();" />
+<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
+<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
 </td></tr>

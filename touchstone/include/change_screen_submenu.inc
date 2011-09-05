@@ -28,11 +28,11 @@
   $line = 0;
 
   $itemID = $menuNo . '_' . $line;
-  echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"incScreen()\" onmouseover=\"menuRowOn('$itemID');\" onmouseout=\"menuRowOff('$itemID');\">Insert screen break</div>\n";
+  echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"incScreen()\" onmouseover=\"menuRowOn('$itemID');\" onmouseout=\"menuRowOff('$itemID');\">" . $string['insertscreenbreak'] . "</div>\n";
   echo '<div class="popupitem"><hr nonshade="nonshade" style="height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0" /></div>';
   echo "<table>\n";
   for ($row=1; $row<=6; $row++) {
-    echo "<tr>";
+    echo '<tr>';
     for ($col=1; $col<=10; $col++) {
       $line++;
       $itemID = $menuNo . '_' . $line;

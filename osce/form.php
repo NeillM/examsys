@@ -137,11 +137,15 @@
       if (rating == 1) {
         document.getElementById('c' + q_id + '_1').style.backgroundColor = '#FF8080';
         document.getElementById('c' + q_id + '_2').style.backgroundColor = '';
-        document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
+        if (document.getElementById('c' + q_id + '_3')) {
+          document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
+        }
       } else if (rating == 2) {
         document.getElementById('c' + q_id + '_2').style.backgroundColor = '#FFC169';
         document.getElementById('c' + q_id + '_1').style.backgroundColor = '';
-        document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
+        if (document.getElementById('c' + q_id + '_3')) {
+          document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
+        }
       } else if (rating == 3) {
         document.getElementById('c' + q_id + '_3').style.backgroundColor = '#50E850';
         document.getElementById('c' + q_id + '_1').style.backgroundColor = '';
@@ -167,9 +171,11 @@
       }
       rated = fails + borderlines + passes;
 
+
       document.getElementById('fails').value = fails;
       document.getElementById('borderlines').value = borderlines;
       document.getElementById('passes').value = passes;
+
 
    <?php
      if ($marking == '5') {
@@ -248,15 +254,15 @@
   $question_no = 1;
   $cell_headings = array('#C00000','#C87602','#008000');
   $cell_colors = array('#FF8080','#FFC169','#50E850');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, score_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $score_method);
+  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
   while ($row = $result->fetch()) {
     if ($question_no == 1) {
       // Header row
-      $cols = substr_count($score_method,'|');
-      $headings = explode('|',$score_method);
+      $cols = substr_count($display_method,'|');
+      $headings = explode('|',$display_method);
       echo '<tr><td></td>';
       for ($i=0; $i<$cols; $i++) {
         echo "<td style=\"width:80px; background-color:" . $cell_headings[$i] . "; color:white; font-weight:bold\">" . $headings[$i] . "</td>";
@@ -277,6 +283,7 @@
       echo "<input type=\"hidden\" name=\"q" . $question_no . "_val\" id=\"q" . $question_no . "_val\" value=\"0\">";
     }
     echo "<input type=\"hidden\" name=\"q" . $question_no . "_id\" value=\"$q_id\"></td>";
+    
     for ($i=0; $i<$cols; $i++) {
       if (isset($stored_results[$q_id]) and $stored_results[$q_id] == $i) {
         echo "<td style=\"background-color:" . $cell_colors[$i] . "\" class=\"r\" id=\"c" . $question_no . "_" . ($i+1) . "\" onclick=\"ans($question_no," . ($i+1) . ")\"><br />&nbsp;</td>";
@@ -287,11 +294,15 @@
     echo "</tr>\n";
     $question_no++;
   }
-  echo "<tr><td></td><td class=\"r\"><input type=\"text\" name=\"fails\" id=\"fails\" size=\"4\" style=\"border:0px; text-align:right\" value=\"0\" /></td><td class=\"r\"><input type=\"text\" name=\"borderlines\" size=\"4\" id=\"borderlines\" style=\"border:0px; text-align:right\" value=\"0\" /></td><td class=\"r\"><input type=\"text\" name=\"passes\" size=\"4\" id=\"passes\" style=\"border:0px; text-align:right\" value=\"0\" /></td></tr>\n";
-
+  if ($cols == 2) {
+    echo "<tr><td></td><td class=\"r\"><input type=\"text\" name=\"fails\" id=\"fails\" size=\"4\" style=\"border:0px; text-align:right\" value=\"0\" /></td><td class=\"r\"><input type=\"text\" name=\"borderlines\" size=\"4\" id=\"borderlines\" style=\"border:0px; text-align:right\" value=\"0\" /></td></tr>\n";
+  } else {
+    echo "<tr><td></td><td class=\"r\"><input type=\"text\" name=\"fails\" id=\"fails\" size=\"4\" style=\"border:0px; text-align:right\" value=\"0\" /></td><td class=\"r\"><input type=\"text\" name=\"borderlines\" size=\"4\" id=\"borderlines\" style=\"border:0px; text-align:right\" value=\"0\" /></td><td class=\"r\"><input type=\"text\" name=\"passes\" size=\"4\" id=\"passes\" style=\"border:0px; text-align:right\" value=\"0\" /></td></tr>\n";
+  }
+  
   if ($marking == '3' or $marking == '4') {
     if (!isset($overall_rating)) $overall_rating = '0';
-    echo "<tr><td colspan=\"4\" style=\"text-align:left\">$postscript</td></tr><tr><td colspan=\"4\" style=\"font-weight:bold; text-align:left\">Overall Classification:<input type=\"hidden\" name=\"overall_val\" id=\"overall_val\" value=\"" . $overall_rating . "\" /></td></tr><tr><td colspan=\"4\" id=\"overall\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr>";
+    echo "<tr><td colspan=\"4\" style=\"text-align:left\">$postscript</td></tr><tr><td colspan=\"4\" style=\"font-weight:bold; text-align:left\">" . $string['overallclassification'] . "<input type=\"hidden\" name=\"overall_val\" id=\"overall_val\" value=\"" . $overall_rating . "\" /></td></tr><tr><td colspan=\"4\" id=\"overall\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr>";
 
     for ($i=0; $i<count($labels); $i++) {
       echo '<td';
@@ -300,15 +311,16 @@
     }
     echo "</tr></table>\n</td></tr>";
   }
+  
   echo "</table>\n";
 
   $result->close();
 ?>
   <br />
-  <div><strong>Feedback:</strong></div>
+  <div><strong><?php echo $string['feedback']; ?></strong></div>
   <textarea name="fback" id="fback" style="border:1px solid #7F9DB9; width:100%" cols="60" rows="4"><?php if (isset($feedback)) echo $feedback; ?></textarea>
   <br />
-  <div style="text-align:center"><input type="submit" name="submit" value="Save" style="font-size:120%; width:120px; height:40px; font-weight:bold" disabled /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /><input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" /></div>
+  <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:40px; font-weight:bold" disabled /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /><input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" /></div>
   </form>
 <?php
   $mysqli->close();

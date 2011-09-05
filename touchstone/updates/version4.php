@@ -596,7 +596,7 @@ if (!isset($_POST['update'])) {
     
     
     if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old.php');
+      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old1.php');
     }
     
     if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg_new) === false) {
@@ -615,13 +615,32 @@ if (!isset($_POST['update'])) {
   if (!in_array('// Date formats in MySQL DATE_FORMAT format', $cfg)) {
     array_splice($cfg,36,0,$new_cfg_str);
     if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old.php');
+      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old2.php');
     }
     
     if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
       echo "300 => could not write config file !";
     }
     echo "<div>Added date and time formats to config file.</div>\n";
+    ob_flush();
+    flush();
+  }
+  
+  // 05/09/2011 - Add company name config file.
+  $new_cfg_str = array();
+  $new_cfg_str[] =  "\$cfg_company = 'The University of Nottingham'\n";
+  $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+  $cfg = file($touchstone_path . '/config/config.inc.php');
+  if (!in_array('cfg_company', $cfg)) {
+    array_splice($cfg,16,0,$new_cfg_str);
+    if (file_exists($touchstone_path . '/config/config.inc.php')) {
+      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old3.php');
+    }
+    
+    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
+      echo "300 => could not write config file !";
+    }
+    echo "<div>Added company name config file.</div>\n";
     ob_flush();
     flush();
   }

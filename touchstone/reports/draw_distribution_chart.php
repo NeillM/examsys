@@ -24,6 +24,8 @@
 * @package
 */
 
+  require '../include/staff_auth.inc';
+
   $mydata = file("../temp/" . $_SERVER['PHP_AUTH_USER'] . "_distribution.dat");
   $mydata = unserialize($mydata[0]);
   
@@ -136,12 +138,12 @@
     ImageString($Image, 3, 345, 278, "Performance", $black);
   } else {
     if ($_GET['adjust'] == '0') {
-      ImageString($Image, 3, 355 + (abs($scale_start)*5), 278, "Percent", $black);
+      ImageString($Image, 3, 355 + (abs($scale_start)*5), 278, $string['percent'], $black);
     } else {
-      ImageString($Image, 3, 345 + (abs($scale_start)*5), 278, "Adjusted Percent", $black);
+      ImageString($Image, 3, 345 + (abs($scale_start)*5), 278, $string['adjustedpercent'], $black);
     }
   }
-  ImageStringUp($Image, 3, 0, 166, "Occurrance", $black);
+  ImageStringUp($Image, 3, 0, 166, $string['occurrance'], $black);
   
   if (isset($_GET['plotuser']) and $_GET['plotuser'] != '') {
     if ($label < 100) {

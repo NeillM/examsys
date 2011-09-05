@@ -29,7 +29,7 @@
      "DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-  <title>TouchStone: Class Totals</title>
+  <title>TouchStone: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
   <style type="text/css">
   body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
   a.user {color:black}
@@ -163,16 +163,16 @@
   <tr><td>
     <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
       <tr>
-        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="/touchstone/artwork/osce_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();">OSCE Mark Sheet</td>
+        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="/touchstone/artwork/osce_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['oscemarksheet']; ?></td>
       </tr>
       <tr>
-        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="/touchstone/artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();">Feedback</td>
+        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="/touchstone/artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
       </tr>
       <tr>
         <td style="background-color:#F1F5FB; width:22px"> </td><td style="padding-left:8px; text-align:right"><img src="/touchstone/artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
       </tr>
       <tr>
-        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="/touchstone/artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">Student Profile</td>
+        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="/touchstone/artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><?php echo $string['studentprofile']; ?></td>
       </tr>
     </table>
   </td></tr>
@@ -195,9 +195,9 @@
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td class=\"h\" colspan=\"7\">";
   if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-    $report_title = 'Class Totals (' . $_GET['repmodule'] . ' students only)';
+    $report_title = sprintf($string['classtotalsmodule'], $_GET['repmodule']);
   } else {
-    $report_title = 'Class Totals';
+    $report_title = $string['classtotals'];
   }
   
   $folder = '';
@@ -210,7 +210,7 @@
     $result->fetch();
     $result->close();
   }
-  echo '<div class="breadcrumb"><a href="../touchstone/index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../touchstone/index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../touchstone/artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../touchstone/folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -218,70 +218,70 @@
   }
   echo '&nbsp;&nbsp;<img src="../touchstone/artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../touchstone/paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../touchstone/artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../touchstone/artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
 
   echo '<tr><td class="h" style="width:16px">&nbsp;</td><td class="h"><img src="../touchstone/artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
   // Name
   if ($sortby == 'name' and $ordering == 'asc') {
-    echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=name&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">Name</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=name&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">" . $string['name'] . "</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } elseif ($sortby == 'name' and $ordering == 'desc') {
-    echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=name&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Name</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=name&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['name'] . "</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } else {
-    echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=name&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Name</a>&nbsp;</td>"; 
+    echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=name&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['name'] . "</a>&nbsp;</td>"; 
   }
   
   // Student ID
   if ($sortby == 'student_id' and $ordering == 'asc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=student_id&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">Student ID</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=student_id&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">" . $string['studentid'] . "</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } elseif ($sortby == 'student_id' and $ordering == 'desc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=student_id&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Student ID</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=student_id&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['studentid'] . "</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } else {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=student_id&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Student ID</a>&nbsp;</td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=student_id&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['studentid'] . "</a>&nbsp;</td>"; 
   }
   
   // Course
   if ($sortby == 'grade' and $ordering == 'asc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=grade&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">Course</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=grade&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">" . $string['course'] . "</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } elseif ($sortby == 'student_grade' and $ordering == 'desc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=grade&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Course</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=grade&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['course'] . "</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } else {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=grade&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Course</a>&nbsp;</td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=grade&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['course'] . "</a>&nbsp;</td>"; 
   }
   
   // Total
   if ($sortby == 'numeric_score' and $ordering == 'asc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=numeric_score&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">Total</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=numeric_score&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">" . $string['total'] . "</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } elseif ($sortby == 'numeric_score' and $ordering == 'desc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=numeric_score&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Total</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=numeric_score&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['total'] . "</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } else {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=numeric_score&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Total</a>&nbsp;</td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=numeric_score&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['total'] . "</a>&nbsp;</td>"; 
   }
   
   // Classification
   if ($sortby == 'classification' and $ordering == 'asc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=classification&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">Classification</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=classification&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">" . $string['classification'] . "</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } elseif ($sortby == 'classification' and $ordering == 'desc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=classification&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Classification</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=classification&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['classification'] . "</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } else {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=classification&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Classification</a>&nbsp;</td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=classification&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['classification'] . "</a>&nbsp;</td>"; 
   }
   
   // Start time/date
   if ($sortby == 'started' and $ordering == 'asc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=started&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">Start Time/Date</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=started&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">" . $string['starttime'] . "</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } elseif ($sortby == 'started' and $ordering == 'desc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=started&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Start Time/Date</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=started&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['starttime'] . "</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } else {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=started&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Start Time/Date</a>&nbsp;</td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=started&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['starttime'] . "</a>&nbsp;</td>"; 
   }
   
   // Examiner
   if ($sortby == 'examiner' and $ordering == 'asc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=examiner&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">Examiner</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=examiner&ordering=desc&percent=$percent&direction=$direction&absent=$absent\">" . $string['examiner'] . "</a>&nbsp;<img src=\"../touchstone/artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } elseif ($sortby == 'examiner' and $ordering == 'desc') {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=examiner&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Examiner</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=examiner&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['examiner'] . "</a>&nbsp;<img src=\"../touchstone/artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></td>"; 
   } else {
-    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=examiner&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">Examiner</a>&nbsp;</td>"; 
+    echo "<td class=\"h\"><img src=\"../touchstone/artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repdegree=" . $_GET['repdegree'] . "&module=" . $_GET['module'] .  "&startdate=$startdate&enddate=$enddate&sortby=examiner&ordering=asc&percent=$percent&direction=$direction&absent=$absent\">" . $string['examiner'] . "</a>&nbsp;</td>"; 
   }
   
   echo '</tr>';
@@ -289,7 +289,7 @@
 
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
-      echo "<tr style=\"background-color:#FFC0C0\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../touchstone/users/details.php?userID=" . $user_results[$i]['tmp_userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"5\" style=\"text-align:center; font-weight:bold\">No Attendance</td></tr>\n";
+      echo "<tr style=\"background-color:#FFC0C0\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../touchstone/users/details.php?userID=" . $user_results[$i]['tmp_userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"5\" style=\"text-align:center; font-weight:bold\">" . $string['noattendance'] . "</td></tr>\n";
     } else {
       echo "<tr><td><img src=\"../touchstone/artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['tmp_userID'] . "', event);\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" /></td>";
       echo '<td';
@@ -319,12 +319,12 @@
   }
 
   echo "<tr><td colspan=\"8\">&nbsp;</td></tr>\n";
-  echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>Summary</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+  echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
-  echo "<tr><td align=\"right\">Cohort Size:</td><td style=\"text-align:right\">" . $user_no . "</td></tr>\n";
+  echo "<tr><td align=\"right\">" . $string['cohortsize'] . "</td><td style=\"text-align:right\">" . $user_no . "</td></tr>\n";
   foreach ($labels as $i => $label) {
-    echo "<tr><td align=\"right\">" . $label . ":</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
+    echo "<tr><td align=\"right\">" . $string[strtolower($label)] . "</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
   }
   echo "</table>\n";
   

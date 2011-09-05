@@ -117,7 +117,7 @@ require_once '../classes/searchutils.class.php';
 <tr><td><input type="checkbox" name="progress" value="1"<?php echo $radio[1]; ?> /></td><td><?php echo $string['progresstest']; ?></td></tr>
 <tr><td><input type="checkbox" name="summative" value="1"<?php echo $radio[2]; ?> /></td><td><?php echo $string['summative']; ?></td></tr>
 <tr><td><input type="checkbox" name="survey" value="1"<?php echo $radio[3]; ?> /></td><td><?php echo $string['survey']; ?></td></tr>
-<tr><td><input type="checkbox" name="osce" value="1"<?php echo $radio[4]; ?> /></td><td><?php echo $string['osce']; ?></td></tr>
+<tr><td><input type="checkbox" name="osce" value="1"<?php echo $radio[4]; ?> /></td><td><?php echo $string['oscestation']; ?></td></tr>
 <tr><td><input type="checkbox" name="offline" value="1"<?php echo $radio[5]; ?> /></td><td><?php echo $string['offlinepaper']; ?></td></tr>
 </table>
 

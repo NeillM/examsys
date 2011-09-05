@@ -307,28 +307,28 @@ a.user:hover {color:white; background-color:#000080}
   <tr><td>
     <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
       <tr>
-        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="/touchstone/artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();">Exam Script</td>
+        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="/touchstone/artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
       </tr>
       <tr>
-        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="/touchstone/artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();">Feedback</td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="/touchstone/artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><img src="/touchstone/artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">Student Profile</td>
-      </tr>
-      <tr>
-        <td id="item4a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="" border="0" /></td><td id="item4b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();">New Note...</td>
+        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="/touchstone/artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
       </tr>
       <tr>
         <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="/touchstone/artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
       </tr>
       <tr>
-        <td id="item5a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">&nbsp;</td><td id="item5b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">Re-assign to User...</td>
+        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><img src="/touchstone/artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><?php echo $string['studentprofile']; ?></td>
       </tr>
       <tr>
-        <td id="item6a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();">&nbsp;</td><td id="item6b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();">Late Submissions</td>
+        <td id="item4a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="" border="0" /></td><td id="item4b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();"><?php echo $string['newnote']; ?></td>
+      </tr>
+      <tr>
+        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="/touchstone/artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
+      </tr>
+      <tr>
+        <td id="item5a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">&nbsp;</td><td id="item5b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();"><?php echo $string['reassigntouser']; ?></td>
+      </tr>
+      <tr>
+        <td id="item6a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();">&nbsp;</td><td id="item6b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();"><?php echo $string['latesubmissions']; ?></td>
       </tr>
     </table>
   </td></tr>
@@ -731,16 +731,16 @@ a.user:hover {color:white; background-color:#000080}
         if ($total_marks > 0) {
           echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
         } else {
-          echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">n/a</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
         }
       } else {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">No completions</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
       }
     } elseif ($marking == '0') {
       if ($completed_no > 0) {
         echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
       } else {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">No completions</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
       }
     } else {
       echo "<tr><td align=\"right\">" . $string['ss'] .  "</td><td align=\"right\">" . round($ss_pass,2) . "%</td></tr>\n";
@@ -748,13 +748,13 @@ a.user:hover {color:white; background-color:#000080}
       if ($completed_no > 0) {
         echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
       } else {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">No completions</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
       }
     }
     $mid_point = round($cohort_size / 2) - 1;
     echo "<tr><td align=\"right\">" . $string['medianmark'] . "</td><td align=\"right\">$median_mark</td><td>($median_percent%)</td></tr>\n";
     if ($completed_no == 0) {
-      echo "<tr><td align=\"right\">" . $string['stdevmark'] . "</td><td align=\"right\" style=\"color:#808080\">n/a</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td align=\"right\">" . $string['stdevmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
     } else {
       echo "<tr><td align=\"right\">" . $string['stdevmark'] . "</td><td align=\"right\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent,1) . "%)</td></tr>\n";
     }

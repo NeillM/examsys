@@ -68,29 +68,29 @@ require '../include/errors.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Add Keyword</title>
+<title><?php echo $string['newkeyword']; ?></title>
 <script language="JavaScript">
   function illegalChar(codeID) {
     if (codeID == 35) {
-      alert("Character '#' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 38) {
-      alert("Character '&' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '&' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 59) {
-      alert("Character ';' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> ';' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 63) {
-      alert("Character '?' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '?' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 64) {
-      alert("Character '@' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '@' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 94) {
-      alert("Character '^' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '^' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 126) {
-      alert("Character '~' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '~' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 13) {
       document.myform.returnhit.value = '1';
@@ -106,10 +106,10 @@ h1 {font-size:120%}
 </head>
 
 <body onload="document.myform.new_keyword.focus();">
-<h1>New Keyword</h1>
+<h1><?php echo $string['newkeyword']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div><input type="text" style="width:100%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" /></div>
-<div align="right"><input type="submit" name="ok" value="OK" style="width:80px" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
+<div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 
 </body>

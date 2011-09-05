@@ -51,8 +51,8 @@
   <h1><?php echo $paper_title; ?></h1>
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
   <tr>
-  <td style="text-align:left"><strong>Student:</strong></td>
-  <td style="text-align:left"><strong>Examiner:</strong></td>
+  <td style="text-align:left"><strong><?php echo $string['student']; ?></strong></td>
+  <td style="text-align:left"><strong><?php echo $string['examiner']; ?></strong></td>
   </tr>
   </table>
   
@@ -64,10 +64,10 @@
   // Get the questions.
   $question_no = 1;
   $cell_colors = array('#FF8080','#FFC169','#50E850');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, score_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, score_method, marking FROM properties, papers, questions WHERE property_id=? AND properties.property_id=papers.paper AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $score_method);
+  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $score_method, $marking);
   while ($row = $result->fetch()) {
     if ($question_no == 1) {
       // Header row
@@ -96,17 +96,26 @@
 ?>  
   </table>
   
-  <br /><div><strong>Overall Classification:</strong></div>
+  <br /><div><strong><?php echo $string['overallclassification']; ?></strong></div>
   <br />
-  <div>Please circle the most appropriate grading</div>
+  <div><?php echo $string['msg']; ?>Please circle the most appropriate grading</div>
   <br />
 
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
-  <tr><td>[Fail]</td><td class="overall">[Borderline Fail]</td><td class="overall">[Borderline pass]</td><td class="overall">[Pass]</td><td class="overall">[Good Pass]</td>
+  <tr>
+  <?php
+    if ($marking == '3') {
+      echo '<td>[' . $string['clear fail'] . ']</td><td class="overall">[' . $string['borderline'] . ']</td><td class="overall">[' . $string['clear pass'] . ']</td>';
+    } elseif ($marking == '4') {
+      echo '<td>[' . $string['fail'] . ']</td><td class="overall">[' . $string['borderline fail'] . ']</td><td class="overall">[' . $string['borderline pass'] . ']</td><td class="overall">[' . $string['pass'] . ']</td><td class="overall">[' . $string['good pass'] . ']</td>';
+    } else {
+      echo '<td>[' . $string['clear fail'] . ']</td><td class="overall">[' . $string['borderline'] . ']</td><td class="overall">[' . $string['clear pass'] . ']</td><td class="overall">[' . $string['honours pass'] . ']</td>';
+    }
+  ?>
   </tr>
   </table>
   <br />
-  <div><strong>Feedback:</strong></div>
+  <div><strong><?php echo $string['feedback']; ?></strong></div>
 
 <?php
   $result->close();

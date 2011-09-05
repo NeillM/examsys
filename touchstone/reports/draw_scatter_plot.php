@@ -24,6 +24,8 @@
 * @package
 */
 
+  require '../include/staff_auth.inc';
+
   $Image = ImageCreate(830, 300);
 
   $negative = 0;
@@ -92,11 +94,11 @@
   }
 
   if ($_GET['adjust'] == '0') {
-    ImageString($Image, 3, 355 + (abs($scale_start)*5), 278, "Percent", $black);
+    ImageString($Image, 3, 355 + (abs($scale_start)*5), 278, $string['percent'], $black);
   } else {
-    ImageString($Image, 3, 345 + (abs($scale_start)*5), 278, "Adjusted Percent", $black);
+    ImageString($Image, 3, 345 + (abs($scale_start)*5), 278, $string['adjustedpercent'], $black);
   }
-  ImageStringUp($Image, 3, 0, 166, "Time (Mins)", $black);
+  ImageStringUp($Image, 3, 0, 166, $string['time'], $black);
 
   ImagePNG($Image);
 

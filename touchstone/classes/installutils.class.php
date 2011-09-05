@@ -34,7 +34,11 @@ Class InstallUtils {
   public static $touchstone_path;
   
   public static $warnings;
-  
+
+  public static $cfg_company;
+  public static $cfg_short_date;
+  public static $cfg_long_date_time;
+
   //database config options
   public static $cfg_db_host;
   public static $cfg_db_port;
@@ -54,7 +58,7 @@ Class InstallUtils {
   public static $db_admin_username;
   public static $db_admin_passwd;
   
-  public static $ts_version = '4.0';
+  public static $ts_version = '4.1';
   public static $support_email;
   public static $cfg_SysAdmin_username;
   
@@ -83,6 +87,10 @@ Class InstallUtils {
     </script> 
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       
+      <table class="header"><tr><td><nobr>Company</nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="company_name">Company Name:</label> <input type="text" value="" name="company_name" class="required" minlength="2" /> </div>
+
+      
       <table class="header"><tr><td><nobr>Database Admin User</nobr></td><td class="line"><hr /></td></tr></table> 
         <div>The installer need the username and password of a MySQL admin user to create the database and required tables. This username is not saved to the server and is only used by this install script.</div>
         <br />
@@ -100,7 +108,13 @@ Class InstallUtils {
         <div><label for="mysql_touchstone_username">Username</label> <input type="text" value="" name="mysql_touchstone_username" class="required" minlength="3"/></div>
         <div><label for="mysql_touchstone_passwd">Password:</label> <input type="password" value="" name="mysql_touchstone_passwd" class="required" minlength="8" /></div>
       
-      <table class="header"><tr><td><nobr>TouchStone LDAP configuration</nobr></td><td class="line"><hr /></td></tr></table>
+      <table class="header"><tr><td><nobr>Time/Date formats</nobr></td><td class="line"><hr /></td></tr></table> 
+        <div>Time and date formats are in <a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format" target="_blank">MySQL DATE_FORMAT</a> style.</div>
+        <br />
+        <div><label for="cfg_short_date">Date:</label> <input type="text" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
+        <div><label for="cfg_long_date_time">Date/Time:</label> <input type="text"  name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+
+        <table class="header"><tr><td><nobr>TouchStone LDAP configuration</nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="useLdap">Use LDAP:</label><input id="useLdap" name="useLdap" type="checkbox" /></div>
         <div id="ldapOptions" style="display:none;">
           <br/>
@@ -111,7 +125,7 @@ Class InstallUtils {
         </div>
       
       <table class="header"><tr><td><nobr>TouchStone SysAdmin User</nobr></td><td class="line"><hr /></td></tr></table>
-        <div></div>
+        <div>An initial SysAdmin user accont is required to log in and create further normal staff accounts and generally administer the system.</div>
         <br />
         <div><label for="SysAdmin_title">Title:</label> 
           <select name="SysAdmin_title" class="required">
@@ -139,9 +153,9 @@ Class InstallUtils {
         <div><label for="">Support Email:</label> <input type="text" value="" name="support_email" class="" class="email"/> </div>
       
       <table class="header"><tr><td><nobr>Emergency Support Numbers</nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="emergency_support1">Type:</label> <input type="text" value="" name="emergency_support1" class="" /> Number: <input type="text" value="" name="emergency_support_number1" class="" /></div>
-        <div><label for="emergency_support2">Type:</label> <input type="text" value="" name="emergency_support2" class="" /> Number: <input type="text" value="" name="emergency_support_number2" class="" /></div>
-        <div><label for="emergency_support3">Type:</label> <input type="text" value="" name="emergency_support3" class="" /> Number: <input type="text" value="" name="emergency_support_number3" class="" /></div>
+        <div><label for="emergency_support1">Name:</label> <input type="text" value="" name="emergency_support1" class="" /> Number: <input type="text" value="" name="emergency_support_number1" class="" /></div>
+        <div><label for="emergency_support2">Name:</label> <input type="text" value="" name="emergency_support2" class="" /> Number: <input type="text" value="" name="emergency_support_number2" class="" /></div>
+        <div><label for="emergency_support3">Name:</label> <input type="text" value="" name="emergency_support3" class="" /> Number: <input type="text" value="" name="emergency_support_number3" class="" /></div>
         
       <div class="submit"> <input type="submit" name="install" value="Install Touchstone" /> </div>
     </form>
@@ -149,7 +163,7 @@ Class InstallUtils {
   }
   
   static function  processForm() {
-     
+    self::$cfg_company = $_POST['company_name'];
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
     self::$cfg_db_port = $_POST['mysql_db_port'];
@@ -162,6 +176,9 @@ Class InstallUtils {
     
     self::$cfg_SysAdmin_username = $_POST['SysAdmin_username'];
     
+    self::$cfg_short_date = $_POST['cfg_short_date'];
+    self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
+     
     //LDAP
     self::$cfg_ldap_server = $_POST['ldap_server'];
     self::$cfg_ldap_search_dn = $_POST['ldap_search_dn'];
@@ -173,11 +190,11 @@ Class InstallUtils {
       self::$cfg_use_ldap = 'false';
     }
     
-    //ASISTANCE
+    //ASSISTANCE
     self::$cfg_support_email = $_POST['support_email'];
     self::$emergency_support_numbers = 'array(';
-    for($i = 1; $i<=3; $i++) {
-      if($_POST["emergency_support$i"] != '') {
+    for ($i = 1; $i<=3; $i++) {
+      if ($_POST["emergency_support$i"] != '') {
         self::$emergency_support_numbers .= "'" . $_POST["emergency_support$i"] . "'=>'" . $_POST["emergency_support_number$i"] . "'";
       }
     }
@@ -191,7 +208,7 @@ Class InstallUtils {
     self::createDatabase(self::$cfg_db_name);
     
     //LOAD help if requested
-    if(isset($_POST['loadHelp'])) {
+    if (isset($_POST['loadHelp'])) {
       self::loadHelp();
     }
     
@@ -701,7 +718,7 @@ Class InstallUtils {
       <title>TouchStone Install script</title>
       <style type="text/css">
         html { padding: 0em; margin: 0em; width: 100%}
-        body { padding: 0em; margin: 0em; width: 100%; font-family:Arial,sans-serif; font-size:100%; background-color:white; color:black }
+        body { padding: 0em; margin: 0em; width: 100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black }
         .error { float: none; color: red; padding-left: .5em; vertical-align: top; }
         .warning { float: none; color: red; padding-left: .5em; vertical-align: top; }
         label { float:left; width:7.5em; padding-left:0em; text-align:left;}
@@ -710,7 +727,7 @@ Class InstallUtils {
         table {border:none;}
         table.topbar {font-weight: bold; width:100%; border-collapse:collapse;}
         .topbar td {background-color:#F1F5FB;}
-        .header {font-weight: bold; margin-top:1.5em;  margin-bottom:0.5em;  width:97%; color:#1E3287}
+        .header {margin-top:1.5em;  margin-bottom:0.5em;  width:97%; color:#1E3287}
         .header hr  {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:97%;}
         td.line {width:98%}
         
@@ -724,7 +741,7 @@ Class InstallUtils {
     <body>
     <table class="topbar"> 
       <tr> 
-        <td><div style="font-size:22pt; font-weight:bold">&nbsp;TouchStone </div><div style="position:relative; left:12px; top:-3px; font-size:8pt">Assessment Management System</div></td> 
+        <td><div style="font-size:26pt; font-weight:bold; color:#003163">&nbsp;System Installation</div></td> 
         <td style="text-align:right"><img src="../artwork/touchstone_logo_330_85.png" width="330" height="85" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
       </tr> 
       <tr> 
@@ -764,6 +781,7 @@ define('TOUCHSTONE', 'true');
 define('DIR_SEPARATOR', '/');
 \$cfg_web_root = (substr(\$_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? \$_SERVER['DOCUMENT_ROOT'] : \$_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
 \$protocol = 'https://';
+\$cfg_company = '{cfg_company}';
 
 \$news_msg = '';
 
@@ -784,6 +802,9 @@ define('DIR_SEPARATOR', '/');
 //sysdamin db user
   \$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
   \$cfg_db_sysadmin_passwd = '{cfg_db_sysadmin_passwd}';
+// Date formats in MySQL DATE_FORMAT format
+  \$cfg_short_date = '{$cfg_short_date}';
+  \$cfg_long_date_time = '{$cfg_long_date_time}';
   
 // SMS Imports
   \$cfg_sms_api = '';
@@ -831,6 +852,7 @@ CONFIG;
     $config = str_replace('{SysAdmin_username}','USERNMAE_FOR_DEBUG',$config);
     $config = str_replace('{cfg_db_host}',self::$cfg_db_host,$config);
     $config = str_replace('{cfg_db_port}',self::$cfg_db_port,$config);
+    $config = str_replace('{cfg_company}',self::$cfg_company,$config);
     
     $config = str_replace('{cfg_db_database}',self::$cfg_db_name,$config);
     $config = str_replace('{cfg_db_username}',self::$cfg_db_username,$config);
@@ -846,6 +868,9 @@ CONFIG;
     
     $config = str_replace('{cfg_support_email}',self::$cfg_support_email,$config);
     $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers,$config);
+    
+    $config = str_replace('{$cfg_short_date}',self::$cfg_short_date,$config);
+    $config = str_replace('{$cfg_long_date_time}',self::$cfg_long_date_time,$config);
     
     $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);

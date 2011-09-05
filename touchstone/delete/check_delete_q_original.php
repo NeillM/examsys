@@ -27,6 +27,8 @@ require '../include/errors.inc';
 
 check_var('q_id', 'GET', true, false);
 
+$icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline');
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -47,11 +49,11 @@ body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-s
 
 <td>
 <?php
-  $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper FROM (papers, properties) WHERE papers.paper=properties.property_id AND properties.deleted IS NULL AND question=?");
+  $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper, paper_type FROM (papers, properties) WHERE papers.paper=properties.property_id AND properties.deleted IS NULL AND question=?");
   $result->bind_param('i', $_GET['q_id']);
   $result->execute();  
   $result->store_result();
-  $result->bind_result($paper_title, $paper);
+  $result->bind_result($paper_title, $paper, $paper_type);
 
   if ($result->num_rows == 0) {
   ?>
@@ -66,11 +68,11 @@ body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-s
 </div>
     <?php
   } else {
-    echo "<p>" . $string['warning1'] . "</p>\n<ul>\n";
-    while ($row = $result->fetch()) {
-      echo "<li>" . $paper_title . "</li>\n";
+    echo "<p>" . $string['warning1'] . "</p>\n<blockquote>\n";
+    while ($result->fetch()) {
+      echo "<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" />&nbsp;" . $paper_title . "<br />\n";
     }
-    echo "</ul>\n";
+    echo "</blockquote>\n";
   ?>
 <p><?php echo $string['warning2']; ?></p>
 <div style="text-align:right">

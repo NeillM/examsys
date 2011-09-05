@@ -56,13 +56,13 @@ $mysqli->close();
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/assessment_bin.png" width="32" height="32" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/assessment_bin.png" width="32" height="32" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
-<td><p>Keyword successfully deleted.<p>
+<td><p><?php echo $string['msg']; ?><p>
 
 <div style="text-align:center">
 <form action="" method="get">
-<input type="button" name="cancel" value="    OK    " onclick="javascript:self.opener.location.href='/touchstone/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
+<input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="javascript:self.opener.location.href='/touchstone/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
 </form>
 </div>
 </td></tr>

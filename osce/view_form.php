@@ -52,7 +52,7 @@
 ?>
   <html>
   <head>
-  <title>OSCE: Form</title>
+  <title><?php echo $string['osceform']; ?></title>
   <style>
     body {font-family:Arial,sans-serif; font-size:90%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
     table {font-size:100%; border-collapse:collapse}
@@ -105,15 +105,15 @@
   $question_no = 1;
   $sub_totals = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
   $cell_colors = array('#FF8080','#FFC169','#50E850');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, score_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $score_method);
+  $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
   while ($row = $result->fetch()) {
     if ($question_no == 1) {
       // Header row
-      $cols = substr_count($score_method,'|');
-      $headings = explode('|',$score_method);
+      $cols = substr_count($display_method, '|');
+      $headings = explode('|', $display_method);
       echo '<tr><td></td>';
       for ($i=0; $i<$cols; $i++) {
         echo "<td style=\"width:80px; color:$labelcolor; font-weight:bold\">" . $headings[$i] . "</td>";
@@ -144,7 +144,7 @@
   for ($i=0; $i<$cols; $i++) {
     echo "<td class=\"rating\"><input type=\"text\" name=\"fails\" size=\"4\" style=\"border:0px; text-align:right\" value=\"" . $sub_totals[$i] . "\" /></td>";
   }  
-  echo "</tr></table>\n<br /><div><strong>Overall Classification:</strong></div><input type=\"hidden\" name=\"overallscore\" id=\"overallscore\" value=\"0\" /><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr id=\"row_overall\">";
+  echo "</tr></table>\n<br /><div><strong>" . $string['overallclassification'] . "</strong></div><input type=\"hidden\" name=\"overallscore\" id=\"overallscore\" value=\"0\" /><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr id=\"row_overall\">";
   $result->close();
 
   switch ($marking) {
@@ -167,17 +167,16 @@
   }
   for ($i=0; $i<count($labels); $i++) {
     if ($overall_rating == ($i+1)) {
-      echo "<td class=\"overall\" style=\"background-color:" . $colors[$i] . "\">" . $labels[$i] . "</td>\n";
+      echo "<td class=\"overall\" style=\"background-color:" . $colors[$i] . "\">" . $string[strtolower($labels[$i])] . "</td>\n";
     } else {
-      echo "<td class=\"overall\">" . $labels[$i] . "</td>\n";
+      echo "<td class=\"overall\">" . $string[strtolower($labels[$i])] . "</td>\n";
     }
   }
   ?>
-  </tr></table>
-  
+  </tr></table>  
 
   <br />
-  <div><strong>Feedback:</strong></div>
+  <div><strong><?php echo $string['feedback']; ?></strong></div>
   <textarea name="feedback" id="feedback" style="font-family:Arial,sans-serif; border:1px solid #7F9DB9; width:100%" cols="60" rows="4"><?php echo $feedback; ?></textarea>
 <?php
   $mysqli->close();

@@ -33,7 +33,7 @@ if (isset($_POST['submit'])) {
   ?>
 <html>
 <head>
-<title>Edit Keyword</title>
+<title><?php echo $string['editkeyword']; ?></title>
 </head>
 <body onload="window.opener.location.href='list_keywords.php?module=<?php echo $_POST['module']; ?>'; window.close();">
 </body>
@@ -49,29 +49,29 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
-<title>Edit Keyword</title>
+<title><?php echo $string['editkeyword']; ?></title>
 <script language="JavaScript">
   function illegalChar(codeID) {
     if (codeID == 35) {
-      alert("Character '#' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 38) {
-      alert("Character '&' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '&' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 59) {
-      alert("Character ';' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> ';' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 63) {
-      alert("Character '?' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '?' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 64) {
-      alert("Character '@' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '@' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 94) {
-      alert("Character '^' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '^' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 126) {
-      alert("Character '~' illegal - please use alternative characters in keyword.");
+      alert("<?php echo $string['character']; ?> '~' <?php echo $string['illegal']; ?>");
       event.returnValue = false;
     } else if (codeID == 13) {
       document.myform.returnhit.value = '1';
@@ -86,10 +86,10 @@ h1 {font-size:120%}
 </head>
 
 <body onload="document.myform.new_keyword.focus();">
-<h1>Edit Keyword</h1>
+<h1><?php echo $string['editkeyword']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div><input type="text" style="width:100%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
-<div align="right"><input type="submit" name="submit" value="OK" style="width:80px" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
+<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
 </form>
 
 </body>
