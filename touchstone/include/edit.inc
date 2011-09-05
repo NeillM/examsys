@@ -307,39 +307,53 @@ function hidden_edit_fields() {
   return $html;
 }
 
-function save_buttons_new($disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id) {
+function save_buttons_new($mode, $disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id) {
   $html = '';
   
-  $save_disabled = '';
-  $value = 'Save Changes';
-  $name = 'submit';
-  
-  if ($disabled != '') {
-    if ($locked != '' or $checkout_author == '') {
-      $value = 'Limited Save';
-    } elseif ($checkout_author != $userID) {
-      $save_disabled = ' disabled="disabled"';
-      $name = 'bogus';
+  if ($mode == 'Edit') {
+    $save_disabled = '';
+    $value = 'Save Changes';
+    $name = 'submit';
+    
+    if ($disabled != '') {
+      if ($locked != '' or $checkout_author == '') {
+        $value = 'Limited Save';
+      } elseif ($checkout_author != $userID) {
+        $save_disabled = ' disabled="disabled"';
+        $name = 'bogus';
+      }
     }
-  }
-  
-  $html .= <<< HTML
+    
+    $html .= <<< HTML
       <input id="submit-save" name="{$name}" value="{$value}" type="submit" class="submit"{$save_disabled} />
 
 HTML;
 
-  if ($allow_correct and $locked != '' and $paper_id != -1) {
-    $html .= <<< HTML
+    if ($allow_correct and $locked != '' and $paper_id != -1) {
+      $html .= <<< HTML
       <input id="submit-correct" name="submit" value="Correct" type="submit" class="submit" />
 
 HTML;
+    }
+  
+  } else {
+    $html .= <<< HTML
+<input type="submit" name="addbank" value="Add to Bank" onmousedown="AddToBank();" class="submit">
+
+HTML;
+    if (substr($paper_id, 0, 5) != 'list:') {
+      $html .= <<< HTML
+  <input type="submit" name="addpaper" value="Add to Bank &amp; Paper" class="submit form-small">
+
+HTML;
+    }
   }
   
   $html .= <<< HTML
       <input id="submit-cancel" name="submit-cancel" value="Cancel" onclick="formCancel();" type="submit" class="submit" />
 
 HTML;
-    
+  
   return $html;
 }
 
@@ -360,4 +374,54 @@ function save_buttons($disabled, $locked, $userID, $checkout_author) {
   
   return $html;
 }
+
+function insert_into_papers($p_id, $q_id, $branching_question=false) {
+  global $mysqli;
+  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper=?");
+  $result->bind_param('i', $p_id);
+  $result->execute();
+  $result->bind_result($screen, $display_pos);
+  $result->fetch();
+  $result->close();
+  $display_pos++;
+
+  if ($screen == 0) $screen++;
+  
+  if ($branching_question == true) {
+    //Get the Question ID of the source question
+    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id=?");
+    $result->bind_param('i', $q_id);
+    $result->execute();
+    $result->bind_result($scenario);
+    $result->fetch();
+    $result->close();
+    
+    //Get the screen number of the source question on the paper
+    $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper=? AND question=?");
+    $result->bind_param('ii', $p_id, $scenario);
+    $result->execute();
+    $result->bind_result($source_screen);
+    $result->fetch();
+    $result->close();
+    
+    if ($source_screen == $screen) $screen++;
+  }
+  
+  //force random mark to recaculate
+  $result = $mysqli->prepare("UPDATE properties SET random_mark=NULL, total_mark=NULL WHERE property_id=?");
+  $result->bind_param('i', $p_id);
+  $result->execute();  
+  $result->close();
+
+  if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL,?,?,?,?)")) {
+    $result->bind_param('iiii', $p_id, $q_id, $screen, $display_pos);
+    $result->execute();
+    $result->close();
+  } else {
+    display_error("Papers Add Error",$mysqli->error);
+  }
+  echo $mysqli->error;
+  return $mysqli->insert_id;
+}
+
 ?>

@@ -56,9 +56,10 @@ $q_no = (!isset($_GET['q_no'])) ? '' : $_GET['q_no'];
 $q_type_full = '';
 
 $errors = array();
- 
-if(!isset($_REQUEST['q_id'])) {
+
+if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   // We're adding a new question
+  $mode = 'Add';
   
   if (!isset($_GET['type'])) {
     $critical_error = 'No question type defined.';
@@ -68,12 +69,15 @@ if(!isset($_REQUEST['q_id'])) {
     try {
       $question = Question::question_factory($mysqli, $userID, $_GET['type']);
       $question->set_type($_GET['type']);
+      $question->set_owner_id($userID);
     } catch (ClassNotFoundException $ex) {
       $critical_error = $ex->getMessage();
     }
   }
 } else {
   // We're editing an existion question
+  $mode = 'Edit';
+  
   if($paper_id == -1) {
     $critical_error = 'No paper defined for question.';
   } elseif(!ctype_digit($paper_id)) {
@@ -130,7 +134,7 @@ if($critical_error == '') {
     }
   
 //    redirect();
-  } elseif (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['submit'] == 'Limited Save')) {
+  } elseif ((isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['submit'] == 'Limited Save')) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     // Save data
     if ($question->id == -1 or check_fullSave($question->id,$mysqli)) {
       
@@ -202,7 +206,7 @@ if($critical_error == '') {
             $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
             
             // Save fields that are the same across options
-            $option->populate_unified($unified_part_names, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+            $option->populate_unified($unified_part_names, $_POST, array_merge(array_keys($compound_fields)), 'option_');
 
             $question->options[] = $option;
           }
@@ -259,7 +263,12 @@ if($critical_error == '') {
     	      $question = $question->convert_to_mcq($correct_option);
     	    }
     	    
-        	// TODO: check usage of old saveKeywords function - USED IN LIMITED SAVE FUNCTION
+          // Insert into Papers
+          if (isset($_POST['addpaper'])) {
+            insert_into_papers($paper_id, $question->id);
+          }
+            	    
+          // TODO: check usage of old saveKeywords function - USED IN LIMITED SAVE FUNCTION
           save_keywords($question, $userID, true, $mysqli);
       
     	    // TODO: check usage of old save_external_responses function - USED IN LIMITED SAVE FUNCTION
@@ -292,8 +301,6 @@ if($critical_error == '') {
   // Bad things have happened
   $q_type_display = '';
 }
-
-$mode = (empty($_REQUEST['q_id'])) ? 'Add' : 'Edit';
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 ?>
@@ -481,7 +488,7 @@ echo render_objectives_mapping_form($mysqli, $paper_id);
     <div id="button-bar">
 <?php
 // TODO: check old save_buttons function - SAFE TO REMOVE
-echo save_buttons_new($disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id);
+echo save_buttons_new($mode, $disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id);
 // TODO: make cancel jQuery
 ?>
       <input type="hidden" name="q_id" value="<?php echo $question->id ?>" />

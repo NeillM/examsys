@@ -197,7 +197,7 @@ function displayPaperIcon($row) {
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript">
   function addQuestion(qType) {
-    top.location.href='../question/add/' + qType + '.php?folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>';
+    top.location.href='../question/edit/?type=' + qType + 'folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>';
   }
 
   function deleteFolder() {

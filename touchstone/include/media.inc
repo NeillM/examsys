@@ -76,7 +76,7 @@ OBJEMBED;
   }
   if ($imageid > -1) {
     $html .= <<< DELETE
-<a href="#" class="media-delete" rel="{$imageid}"><img src="/touchstone/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
+<a href="#" class="media-delete" rel="{$imageid}"><img class="align-bottom" src="/touchstone/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
 <label class="hide"><input type="checkbox" id="delete_media{$imageid}" name="delete_media{$imageid}" /> Delete image {$imageid}</label>
 DELETE;
   }

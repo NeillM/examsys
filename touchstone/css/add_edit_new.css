@@ -88,6 +88,10 @@ dd {
   vertical-align: top!important;
 }
 
+.align-bottom {
+  vertical-align: bottom!important;
+}
+
 .align-right {
   text-align: right!important;
 }

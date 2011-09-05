@@ -304,7 +304,7 @@ QUERY;
       if ($success) {
         if ($this->id == -1) {
           $this->id = $this->_mysqli->insert_id;
-          $logger->track_change('New Question', $this->question_id, $this->_user_id, $this->text, '', '');
+          $this->_logger->track_change('New Question', $this->id, $this->_user_id, $this->get_leadin(), '', '');
         } else {
           // Log any changes
           foreach($this->_modified_fields as $key => $value) {
@@ -1236,6 +1236,7 @@ QUERY;
           unset($this->options[$oid]);
         }
       } else {
+        $option->set_question_id($this->id);
         $success = $option->save($i);
         if ($success and $option->id != $oid) {
           // Unset temporary option index

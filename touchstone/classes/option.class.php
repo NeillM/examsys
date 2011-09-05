@@ -190,7 +190,7 @@ Class Option extends TouchStoneObject {
         $params = array_merge(array('issiisssddd'), $this->_data);
         $query = <<< QUERY
 INSERT INTO options(o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
       } else {
         // Otherwise we're updating an existing one
@@ -203,7 +203,7 @@ QUERY;
       }
       $result = $this->_mysqli->prepare($query);
       call_user_func_array (array($result,'bind_param'), $params);
-      $x = $result->execute();
+      $result->execute();
       $success = ($result->affected_rows > -1);
       
       if($success) {
@@ -291,6 +291,14 @@ QUERY;
    */
   public function get_question_id() {
     return $this->question_id;
+  }
+
+  /**
+   * Get the ID of the question to which this option relates
+   * @return string
+   */
+  public function set_question_id($value) {
+    $this->question_id = $value;
   }
 
   /**
@@ -544,6 +552,7 @@ QUERY;
    * @param integer $option_number
    */
   protected function track_new($logger, $option_number) {
+    $log_text = ($this->text != '') ? $this->text : $this->media;
     $logger->track_change('New Option', $this->question_id, $this->_user_id, '', $this->text, 'Option #' . $option_number);
   }
     
