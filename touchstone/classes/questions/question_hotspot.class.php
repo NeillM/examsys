@@ -75,7 +75,7 @@ Class QuestionHOTSPOT extends Question {
     }
     $marks = $i;
 
-    $this->leadin = $this->leadin_plain = $leadin;
+    $this->set_leadin($leadin);
     if (count($this->options) > 0) {
       $option = reset($this->options);
       $option->set_correct($value);
@@ -84,5 +84,18 @@ Class QuestionHOTSPOT extends Question {
       $this->options[] = new OptionHOTSPOT($this->_mysqli, $this->_user_id, $this, 1, array('correct' => $value, 'marks' => $marks));
     }
   }
+  
+  /**
+   * Set the question leadin, stripping any carriage returns
+   * @param string $value
+   */
+  public function set_leadin($value) {
+    $value = str_replace("\r\n", ' ', $value);
+    if ($value != $this->leadin) {
+      $this->set_modified_field('leadin', $this->leadin);
+      $this->leadin = $value;
+    }
+  }
+  
 }
 
