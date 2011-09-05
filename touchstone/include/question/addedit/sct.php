@@ -22,8 +22,9 @@
 * @package
 */
 
+$num_options = count($question->options);
 $types = $question->get_sct_types();
-$type = $types[$question->get_display_method() - 1];
+$type = ($question-> id != -1) ? $types[$question->get_display_method() - 1] : 1;
 
 $sct_type_js = '[';
 foreach ($question->get_sct_types() as $typs_js) {
@@ -96,6 +97,12 @@ foreach ($question->options as $o_id => $option) {
   include 'options/opt_sct.php';
   $index++;
 }
+
+for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
+  $option = Option::option_factory($mysqli, $userID, $question, $index);
+  include 'options/opt_sct.php';
+}
+
 ?>
           </tbody>
         </table>

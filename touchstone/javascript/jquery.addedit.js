@@ -30,6 +30,7 @@ $(function () {
   $('#scale_type').change(checkShowLikertCustom);
   
   addVariableLinks();
+  $('.sct-type').trigger('change');
 });
 
 function changeTab() {

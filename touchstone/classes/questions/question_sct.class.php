@@ -28,6 +28,7 @@ Class QuestionSCT extends Question {
   
   protected $hypothesis = '';
   protected $new_information = '';
+  public $max_options = 5;
   
   protected $sct_types = array(
     array('Hypothesis', 'very unlikely', 'unlikely', 'neither likely nor unlikely', 'more likely', 'very likely'),
