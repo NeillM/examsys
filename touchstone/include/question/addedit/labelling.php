@@ -60,6 +60,10 @@ require_once 'detail_parts/details_leadin.php';
           <tbody>
             <tr>
               <td>
+<?php
+if ($media['filename'] != ''):
+  $flash_path = (strtolower($mode) == 'edit') ? './label_edit.swf' : '../add/label_add.swf';
+?>
                 <script type="text/javascript">
                   function swfLoaded1(message) {
                     var num = message.substring(5,message.length);
@@ -67,14 +71,19 @@ require_once 'detail_parts/details_leadin.php';
                   }
                   write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($media['width'] + 220); ?>" height="<?php echo ($plugin_height + 25); ?>" align="middle">');
                   write_string('<param name="allowScriptAccess" value="always" />');
-                  write_string('<param name="movie" value="./label_edit.swf" />');
+                  write_string('<param name="movie" value="<?php echo $flash_path ?>" />');
                   write_string('<param name="quality" value="high" />');
                   write_string('<param name="bgcolor" value="white" />');
-                  write_string('<embed src="./label_edit.swf" quality="high" bgcolor="white" width="<?php echo ($media['width'] + 220); ?>" height="<?php echo ($plugin_height + 25); ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+                  write_string('<embed src="<?php echo $flash_path ?>" quality="high" bgcolor="white" width="<?php echo ($media['width'] + 220); ?>" height="<?php echo ($plugin_height + 25); ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                   write_string('</object>');
                 </script>
+<?php
+endif;
+?>                
                 <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
-                <input type="file" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" class="hide" />
+                <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
+                <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
+                <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />
               </td>
             </tr>
           </tbody>

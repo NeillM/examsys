@@ -356,7 +356,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
             }
           }
           //echo $master_area_total . '<br />';
-          $random_mark += ($master_area_total/$hotspot_image_area);
+          if ($hotspot_image_area > 0) $random_mark += ($master_area_total/$hotspot_image_area);
         }
       }
       break;

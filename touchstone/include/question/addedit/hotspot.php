@@ -59,6 +59,9 @@ require_once 'detail_parts/details_scenario.php';
           <tbody>
             <tr>
               <td>
+<?php
+if ($media['filename'] != ''):
+?>
                 <script type="text/javascript">
                   function swfLoaded1(message) {
                     var num = message.substring(5,message.length);
@@ -72,8 +75,13 @@ require_once 'detail_parts/details_scenario.php';
                   write_string('<embed src="../add/hotspot_add.swf" quality="high" bgcolor="#F1F5FB" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                   write_string('</object>');
                 </script>
+<?php
+endif;
+?>                
                 <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
-                <input type="file" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" class="hide" />
+                <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
+                <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
+                <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />
               </td>
             </tr>
           </tbody>

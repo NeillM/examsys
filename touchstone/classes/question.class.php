@@ -167,17 +167,19 @@ Class Question extends TouchStoneObject {
    * @param array $deletion_data the data source for flagging media to be deleted, normally the $_POST array
    */
   public function populate_media($field, $media_data, $deletion_data) {
-    $old_media = $this->get_media();
-    if ($media_data[$field]['name'] != $old_media['filename'] and ($media_data[$field]['name'] != 'none' and $media_data[$field]['name'] != '')) {
-      if ($old_media['filename'] != '') {
-        deleteMedia($old_media['filename']);
-      }
-      $this->set_media(uploadFile($field));
-    } else {
-      // Delete existing media if asked
-      if (isset($deletion_data['delete_media0']) AND $deletion_data['delete_media0'] == 'on') {
-        deleteMedia($old_media['filename']);
-        $this->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
+    if (is_array($media_data) and count($media_data) > 0) {
+      $old_media = $this->get_media();
+      if ($media_data[$field]['name'] != $old_media['filename'] and ($media_data[$field]['name'] != 'none' and $media_data[$field]['name'] != '')) {
+        if ($old_media['filename'] != '') {
+          deleteMedia($old_media['filename']);
+        }
+        $this->set_media(uploadFile($field));
+      } else {
+        // Delete existing media if asked
+        if (isset($deletion_data['delete_media0']) AND $deletion_data['delete_media0'] == 'on') {
+          deleteMedia($old_media['filename']);
+          $this->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
+        }
       }
     }
   }

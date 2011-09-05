@@ -72,7 +72,7 @@ Class QuestionLIKERT extends Question {
    * @return string
    */
   public function get_scale_type() {
-    $this->get_score_method();
+    $this->get_display_method();
     return $this->scale_type;
   }
 
@@ -85,7 +85,7 @@ Class QuestionLIKERT extends Question {
       $this->set_modified_field('scale_type', $this->scale_type);
       $this->scale_type = $value;
     }
-    $this->set_score_method();
+    $this->set_display_method();
   }
   
   /**
@@ -93,7 +93,7 @@ Class QuestionLIKERT extends Question {
    * @return string
    */
   public function get_not_applicable() {
-    $this->get_score_method();
+    $this->get_display_method();
     return $this->not_applicable;
   }
 
@@ -107,7 +107,7 @@ Class QuestionLIKERT extends Question {
       $this->set_modified_field('not_applicable', $this->not_applicable);
       $this->not_applicable = $value;
     }
-    $this->set_score_method();
+    $this->set_display_method();
   }
   
   /**
@@ -125,7 +125,7 @@ Class QuestionLIKERT extends Question {
   }
   
   /**
-   * Compound the scale items into a string and set as scale type (and hence score method) 
+   * Compound the scale items into a string and set as scale type (and hence display method) 
    * @return multitype:
    */
   public function set_all_custom_scales($value) {
@@ -137,24 +137,24 @@ Class QuestionLIKERT extends Question {
   }
   
   /**
-   * Get the question score method, populating pseudo-properties as we go
+   * Get the question display method, populating pseudo-properties as we go
    * @return string
    */
-  public function get_score_method() {
-    if ($this->score_method != '') {
-      $pos = strrpos($this->score_method, '|');
-      $this->scale_type = substr($this->score_method, 0, $pos);
-      $this->not_applicable = substr($this->score_method, $pos + 1);
+  public function get_display_method() {
+    if ($this->display_method != '') {
+      $pos = strrpos($this->display_method, '|');
+      $this->scale_type = substr($this->display_method, 0, $pos);
+      $this->not_applicable = substr($this->display_method, $pos + 1);
     }
-    return $this->score_method;
+    return $this->display_method;
   }
   
   /**
-   * Set the score method for the question - this is a composite of decimals, tolerance and units
+   * Set the display method for the question - this is a composite of decimals, tolerance and units
    * @param unknown_type $value
    */
-  public function set_score_method($value=-1) {
-    $this->score_method = $this->scale_type . '|' . $this->not_applicable;
+  public function set_display_method($value=-1) {
+    $this->display_method = $this->scale_type . '|' . $this->not_applicable;
   }
 
 	/**
