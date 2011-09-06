@@ -23,6 +23,12 @@
 */
 
 $num_options = count($question->options);
+if($num_options > 0) {
+  $option = reset($question->options);
+  $option_id = $option->id;
+} else {
+  $option_id = -1;
+}
 ?>
 				<table id="q-details" class="form" summary="Edit question details">
 					<tbody>
@@ -60,6 +66,7 @@ echo ViewHelper::render_options($question->get_formats(), $question->get_format(
                 <input type="text" id="td_minutes" name="td_minutes" value="<?php echo $question->get_td_minutes() ?>" class="clearinput form-tiny" title="mm" />:
                 <label for="td_seconds" class="heavy hide">Seconds</label>
                 <input type="text" id="td_seconds" name="td_seconds" value="<?php echo $question->get_td_seconds() ?>" class="clearinput form-tiny" title="ss" />
+                <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
               </td>
             </tr>
             <tr>
