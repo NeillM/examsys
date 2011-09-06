@@ -76,6 +76,7 @@ if ($media['filename'] != ''):
                   write_string('<param name="movie" value="<?php echo $flash_path ?>" />');
                   write_string('<param name="quality" value="high" />');
                   write_string('<param name="bgcolor" value="white" />');
+                  write_string('<param name="wmode" value="opaque" />');
                   write_string('<embed src="<?php echo $flash_path ?>" quality="high" bgcolor="white" width="<?php echo ($media['width'] + 220); ?>" height="<?php echo ($plugin_height + 25); ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                   write_string('</object>');
                 </script>

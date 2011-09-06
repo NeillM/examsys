@@ -70,9 +70,9 @@ OBJEMBED;
 </object>  
 OBJEMBED;
   } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-    $html .= "<embed src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\"></embed>";
+    $html .= "<embed src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   } else {
-    $html .= "<embed src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\"></embed>";
+    $html .= "<embed src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   }
   if ($imageid > -1) {
     $html .= <<< DELETE
