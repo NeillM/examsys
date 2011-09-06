@@ -63,10 +63,12 @@ Class Question extends TouchStoneObject {
   public $max_stems = 0;
   protected $_answer_positive = 'y';
   protected $_answer_negative = 'n';
+  
   protected $_allow_change_marking_method = true;
   protected $_allow_partial_marks = false;
   protected $_requires_media = false;
   protected $_requires_flash = false;
+  protected $_allow_mapping = true;
   
   // Imploded DB version of teams
   protected $group = '';
@@ -491,6 +493,14 @@ QUERY;
    */
   public function allow_partial_marks() {
     return $this->_allow_partial_marks;
+  }
+  
+  /**
+   * Does this question type allow mapping to learning outcomes?
+   * @return boolean
+   */
+  public function allow_mapping() {
+    return $this->_allow_mapping;
   }
   
   // ACCESSORS

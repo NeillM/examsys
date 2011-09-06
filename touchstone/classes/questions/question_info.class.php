@@ -26,6 +26,8 @@
 
 Class QuestionINFO extends Question {
   
+  protected $_allow_mapping = true;
+  
   protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
 
   /**

@@ -28,7 +28,6 @@
 // TODO: check - was leadin/scenario change tracking looking at the plain version?
 // TODO: validation in JS
 // TODO: replace comment OK etc. icons with CSS BG image?
-// TODO: disable mapping tab for info and likert
 
 require '../../include/staff_auth.inc';
 require_once '../../classes/question.class.php';
@@ -351,6 +350,7 @@ if ($question->requires_flash()) {
 
 <?php 
 if ($critical_error == '') {
+  $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
 ?>
     <div class="tab-bar">
       <div class="tab-holder">
@@ -361,7 +361,7 @@ if ($critical_error == '') {
           <li class="on"><a href="#">Editor</a></li>
           <li><a href="#">Changes</a></li>
           <li><a href="#">Comments</a></li>
-          <li><a href="#">Mapping</a></li>
+          <li<?php echo $mapping_enabled ?>><a href="#">Mapping</a></li>
         </ol>
       </div>
     </div>

@@ -251,6 +251,10 @@ td.separated:last-child {
   background-image: url('../artwork/tab_on.gif');
 }
 
+.tabs li.disabled {
+  background-image: url('../artwork/tab_disabled.gif');
+}
+
 .tabs li a {
 	display: block;
   color: white;

@@ -30,6 +30,7 @@ Class QuestionLIKERT extends Question {
   protected $not_applicable = 'false';
   protected $custom_scales = array();
   public $max_stems = 10;
+  protected $_allow_mapping = false;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'scale_type', 'not_applicable', 'option_order', 'bloom', 'status');
   protected $_fields_compound = array('custom_scale');

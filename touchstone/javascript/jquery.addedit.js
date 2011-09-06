@@ -37,16 +37,18 @@ $(function () {
 });
 
 function changeTab() {
-  if(!$(this).parent().hasClass('on')) {
-    $('.tab-area').hide();
-    $('.tabs li').each(function () {
-      $(this).removeClass('on');
-    });
-    $(this).parent().addClass('on');
-    
-    // Note: only works if the ID of the div matches the tab text
-    var id = $(this).text().toLowerCase();
-    $('#' +id).fadeIn();
+  if(!$(this).parent().hasClass('disabled')) {
+    if(!$(this).parent().hasClass('on')) {
+      $('.tab-area').hide();
+      $('.tabs li').each(function () {
+        $(this).removeClass('on');
+      });
+      $(this).parent().addClass('on');
+      
+      // Note: only works if the ID of the div matches the tab text
+      var id = $(this).text().toLowerCase();
+      $('#' +id).fadeIn();
+    }
   }
 
   return false;
