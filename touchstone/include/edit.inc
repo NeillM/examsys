@@ -350,7 +350,7 @@ HTML;
   }
   
   $html .= <<< HTML
-      <input id="submit-cancel" name="submit-cancel" value="Cancel" onclick="formCancel();" type="submit" class="submit" />
+      <input id="submit-cancel" name="submit-cancel" value="Cancel" type="submit" class="submit cancel" />
 
 HTML;
   

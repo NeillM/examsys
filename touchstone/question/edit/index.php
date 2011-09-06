@@ -252,7 +252,8 @@ if($critical_error == '') {
     // If not errored then save the question
     if (count($errors) == 0) {
       try {
-    	  if(!$question->save()) {
+//    	  if(!$question->save()) {
+    	  if(false) {
     	    $errors[] = 'Error saving data. Please try again';
     	  } else {
     	    // Possibility that we might be converting a MRQ to MCQ
@@ -321,6 +322,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit_new.css" type="text/css" />
 
 <?php echo $cfg_editor_javascript; ?>
+
 <script type="text/javascript" src="../../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../../javascript/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../../javascript/jquery.touchstone.js"></script>
@@ -328,6 +330,12 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <script type="text/javascript" src="../../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../../javascript/jquery.formhelpers.js"></script>
 <?php
+if (file_exists($cfg_web_root . 'touchstone/javascript/validation/jquery.' . $question->get_type() . '.js')) {
+?>
+<script type="text/javascript" src="../../javascript/jquery.validate.min.js"></script>
+<script type="text/javascript" src="../../javascript/validation/jquery.<?php echo $question->get_type() ?>.js"></script>
+<?php
+}
 if ($question->requires_flash()) {
 ?>
 <script language="JavaScript" src="../../javascript/ie_fix.js"></script>
@@ -416,7 +424,7 @@ if($critical_error != '') {
   }
 ?>
 
-	<form name="edit_form" method="post" action="./<?php echo $query_string ?>" enctype="multipart/form-data" class="clearinput">
+	<form id="edit_form" name="edit_form" method="post" action="./<?php echo $query_string ?>" enctype="multipart/form-data" class="clearinput">
     <div id="tabbed-content"<?php echo $banner_spacer ?>>
 			<div id="editor" class="tab-area">
         

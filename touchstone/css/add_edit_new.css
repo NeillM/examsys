@@ -383,6 +383,15 @@ div.form {
 /*  text-align: center; */
 }
 
+input.error, textarea.error, select.error {
+	border: 1px solid red;
+	background-color: #ffd6d6;
+}
+
+label.error {
+	font-weight: bold;
+}
+
 textarea, input[type=text], select {
 	font-family:Arail,sans-serif;
 	font-size:90%;
