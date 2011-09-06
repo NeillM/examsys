@@ -628,7 +628,7 @@ if (!isset($_POST['update'])) {
   
   // 05/09/2011 - Add company name config file.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_company = 'The University of Nottingham'\n";
+  $new_cfg_str[] =  "\$cfg_company = 'The University of Nottingham';\n";
   $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
   $cfg = file($touchstone_path . '/config/config.inc.php');
   if (!in_array('cfg_company', $cfg)) {
