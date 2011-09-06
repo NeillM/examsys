@@ -79,7 +79,7 @@
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     <head>
-    <title>TouchStone: Manage Objectives<?php echo " $cfg_install_type"; ?></title>
+    <title>TouchStone: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
     <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
     <style style="text/css">
       img {border:none;}
@@ -97,7 +97,7 @@
         }
         
       function clearTextbox(objectName) {
-        if (document.getElementById(objectName).value == 'Type New Objective here...') {
+        if (document.getElementById(objectName).value == '<?php echo $string['msg1']; ?>') {
           document.getElementById(objectName).value = '';
           document.getElementById(objectName).style.color = 'black';
         }
@@ -110,7 +110,7 @@
         li.id = 'li_' + ulId + ObjCount;
         li.style.margin = '0.5em';
         li.style.marginLeft = '3.5em';
-        li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="obj_' + ObjCount + '" id="obj_' + ObjCount + '" type="text" style="color:#808080" onfocus="clearTextbox(\'obj_' + ObjCount + '\');" value="Type New Objective here..." /></li>';
+        li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="obj_' + ObjCount + '" id="obj_' + ObjCount + '" type="text" style="color:#808080" onfocus="clearTextbox(\'obj_' + ObjCount + '\');" value="<?php echo $string['msg1']; ?>" /></li>';
         ul.insertBefore(li,ul.lastChild);
         updateButtons();
       }
@@ -186,17 +186,17 @@
     }
     echo '<div id="content" class="content" style="font-size:80%">';
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">Manage Objectives</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>New Session</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+    echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['newsession'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
     echo "<tr><td colspan=\"4\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
     echo '</table><br/>';
 
     echo "<form name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\" onsubmit=\"return checkForm();\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
-    echo "<tr><td style=\"width:92px\" class=\"field\">Title</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"\" /></td></tr>\n";
+    echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"\" /></td></tr>\n";
 
-    echo '<tr><td class="field">Session</td><td>';
+    echo '<tr><td class="field">' . $string['session'] . '</td><td>';
       $validfrom = '<select name="session">'."\n";
       $startyear = ( date('Y') - 1 );
-      for($i = 0; $i < 2; $i++){
+      for ($i = 0; $i < 2; $i++){
         $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
         if ($tmp_session == $session) {
           $validfrom .= '<option value="' . $tmp_session . '" selected>' . $tmp_session . '</option>';
@@ -207,18 +207,17 @@
       $validfrom .= "</select></td></tr>\n";
       echo $validfrom;
 
-      echo '<tr><td class="field">Date</td><td>';
-      if(isset($_POST['month'])) {
+      echo '<tr><td class="field">' . $string['date'] . '</td><td>';
+      if (isset($_POST['month'])) {
         $currentmonth = $_POST['month'];
       } else {
         $currentmonth   = date('m');
       }
       $validfrom = '<select name="session_month">'."\n";
-      $month_names = array(1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec');
-      //foreach ( range(12,1) as $month ){
+      $month_names = array(1=>'january',2=>'february',3=>'march',4=>'april',5=>'may',6=>'june',7=>'july',8=>'august',9=>'september',10=>'october',11=>'november',12=>'december');
       for ($month = 1; $month <= 12; $month++) {
         $selected = ($month == $currentmonth ) ? ' selected="selected"' : '';
-        $validfrom .= '<option value="'. $month .'"'. $selected .'>' . $month_names[$month] . '</option>'."\n";
+        $validfrom .= '<option value="'. $month .'"'. $selected .'>' . substr($string[$month_names[$month]],0,3) . '</option>'."\n";
       }
       $validfrom .= '</select>&nbsp;';
       echo $validfrom;
@@ -274,9 +273,9 @@
         }
       }
       echo "</select></td></tr>\n";
-      echo '<tr><td class="field">URL</td><td><input name="url" class="editBox" type="text" value="" /></td></tr>';
+      echo '<tr><td class="field">' . $string['url'] . '</td><td><input name="url" class="editBox" type="text" value="" /></td></tr>';
       echo "\n<tr><td colspan=\"2\"><ul id=\"objList\" style=\"margin-left:0px; list-style-type: none; width: 100%\">\t<li>\n\t<table callpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:93%; font-size:100%\">\n<tr>\n\t<td class=\"subheading\"></td>\n";
-    	echo "\t<td valign=\"center\" style=\"color:gray; padding-left:1em; font-size:75%; width:100%;\"></td>\t";
+    	echo "\t<td valign=\"center\" style=\"color:gray; padding-left:1em; font-size:75%; width:100%\"></td>\t";
       echo "\t<td></td></tr></table></li>\n";
       for($i = 0; $i < 3; $i++) {
         $id = $i;
@@ -285,14 +284,14 @@
         echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"Type New Objective here...\" />";
         echo "</li>\n";
       }
-      echo '<li style="margin:0.5em; margin-left:6em"><input style="width: 80px" type="button" value="New..."  onclick="addNew(\'objList\')"></li>';
+      echo '<li style="margin:0.5em; margin-left:6em"><input style="width: 80px" type="button" value="' . $string['new'] . '"  onclick="addNew(\'objList\')"></li>';
       echo '</ul>';
 
       //add the save buttens
       echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
       echo '<li style="margin:0.5em; margin-left:0.5em; text-align:center">';
-      echo '<input name="Save" style="width:120px" type="submit" value="Save" />&nbsp;&nbsp;';
-      echo '<input name="cancel" style="width:120px" type="button" value="Cancel" onclick="cancelForm();" />';
+      echo '<input name="Save" style="width:120px" type="submit" value="' . $string['save'] . '" />&nbsp;&nbsp;';
+      echo '<input name="cancel" style="width:120px" type="button" value="' . $string['cancel'] . '" onclick="cancelForm();" />';
       echo '</li>';
       echo "</ul>\n";
 	

@@ -32,9 +32,9 @@
   }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html onclick="hideSessCopyMenu(event);">
 <head>
-<title>TouchStone: Manage Objectives<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style>
 .obj_no {text-align:right; padding-right:6px}
@@ -45,6 +45,7 @@
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <script language="javascript">
   function selSession(divID, identifier, session, VLE, evt) {
+    hideSessCopyMenu(evt);
     tmp_ID = document.myform.oldDivID.value;
     if (tmp_ID != '') {
       document.getElementById(tmp_ID).style.backgroundColor = 'white';
@@ -105,10 +106,10 @@
   }
 
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>Manage Objectives</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\">&nbsp;Date&nbsp;</td>\n";
-  echo "<td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Name&nbsp;</td>\n";
-  echo "<td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Objectives&nbsp;</td><td style=\"background-color:#F1F5FB\">&nbsp;</td></tr>\n";
+  echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
+  echo "<tr><td style=\"background-color:#F1F5FB\">&nbsp;" . $string['date'] . "&nbsp;</td>\n";
+  echo "<td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['name'] . "&nbsp;</td>\n";
+  echo "<td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['objectives'] . "&nbsp;</td><td style=\"background-color:#F1F5FB\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"4\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
   $objectives = getObjectives($module,$session,'','',$mysqli, 'all');
   $old_session = '';
@@ -123,7 +124,7 @@
         $objectives_no = 0;
       }
       if ($old_session != $session['calendar_year']) {
-      	if(!$first) {
+      	if (!$first) {
 	      	echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
       	}
 	      $first = false;

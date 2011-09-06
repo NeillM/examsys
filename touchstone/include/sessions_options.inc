@@ -126,16 +126,16 @@
 <table style="display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
 <tr><td><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
 <?php
-if(strpos($userroles,'SysAdmin') !== false) {
+if (strpos($userroles,'SysAdmin') !== false) {
 ?>
-  <tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
+  <tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
 <?php
 }
 if ($vle_api != 'NLE') {
-  echo '<tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+  echo '<tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
 }
 ?>
-<tr><td><img src="../artwork/edit_session_grey_16.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editsession']; ?></td></tr>
+<tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editsession']; ?></td></tr>
 <tr><td><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deletesession']; ?></td></tr>
 <?php
 if ($vle_api != 'NLE') {
@@ -150,16 +150,16 @@ else {
 <table style="display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
 <tr><td><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
 <?php
-if(strpos($userroles,'SysAdmin') !== false) {
+if (strpos($userroles,'SysAdmin') !== false) {
 ?>
-  <tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
+  <tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
 <?php
 }
 if ($vle_api != 'NLE') {
-  echo '<tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+  echo '<tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
 }
 ?>
-<tr><td><img onclick="hideSessCopyMenu(event); editSession()" src="../artwork/edit_session_16.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editSession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
+<tr><td><img onclick="hideSessCopyMenu(event); editSession()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editSession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
 <tr><td><img onclick="hideSessCopyMenu(event); deleteSession()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteSession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
 <?php
 if ($vle_api != 'NLE') {
@@ -176,14 +176,14 @@ else {
 <?php
 if (strpos($userroles,'SysAdmin') !== false) {
 ?>
-  <tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
+  <tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
 <?php
 }
 if ($vle_api != 'NLE') {
-  echo '<tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+  echo '<tr><td><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
 }
 ?>
-<tr><td><img onclick="hideSessCopyMenu(event); editNLESession()" src="../artwork/edit_session_16.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editNLESession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
+<tr><td><img onclick="hideSessCopyMenu(event); editNLESession()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editNLESession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
 <tr><td><img onclick="hideSessCopyMenu(event); deleteNLESession()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteNLESession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
 <?php
 if ($vle_api != 'NLE') {

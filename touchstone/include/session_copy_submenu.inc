@@ -46,8 +46,7 @@ function get_existing_years($mysqli, $module) {
 }
 ?>
 <script type="text/javascript">
-function checkCopyYearForm()
-{
+function checkCopyYearForm() {
 	var formOK = true;
 	
 	sourceList = document.getElementById('source_y');
@@ -56,18 +55,13 @@ function checkCopyYearForm()
 	sourceYear = sourceList.options[sourceList.selectedIndex].value;
 	destYear = destList[destList.selectedIndex].value;
 
-	if(typeof(sourceYear) != 'undefined' && typeof(destYear) != 'undefined'
-		&& sourceYear != '' && destYear != '')
-	{
-		if(sourceYear == destYear)
-		{
-			alert('Source and destination years must be different.');
+	if (typeof(sourceYear) != 'undefined' && typeof(destYear) != 'undefined' && sourceYear != '' && destYear != '') {
+		if (sourceYear == destYear) {
+			alert('<?php echo $string['msg1']; ?>');
 			formOK = false;
 		}
-	}
-	else
-	{
-		alert('Please select years to copy from and to.');
+	}	else {
+		alert('<?php echo $string['msg2']; ?>');
 		formOK = false;
 	}
 
@@ -92,25 +86,25 @@ function checkCopyYearForm()
 	$source_years = get_existing_years($mysqli, $_GET['module']);
 
 	// Should never be a case where we don't have a source year but check anyway
-	if(count($source_years) > 0) {
+	if (count($source_years) > 0) {
 		$dest_years = array(end($source_years));
 
 		// Get a list of destination years. Selected year will be removed by JS
 		$start_year = substr(end($source_years), 0, 4);
 		
-		if(is_numeric($start_year)) {
-			for($i = $start_year + 1; $i <= $session_parts[0]; $i++) {
+		if (is_numeric($start_year)) {
+			for ($i = $start_year + 1; $i <= $session_parts[0]; $i++) {
 				$next = $i + 1;
 				array_unshift($dest_years, $i . '/' . substr($next, 2, 2));
 			}
 		} else {
-			$message = 'Invalid value in year list';
+			$message = $string['msg3'];
 		}
 	} else {
-		$message = 'No years available to copy';
+		$message = $string['msg4'];
 	}
 
-	if($message != '') {	
+	if ($message != '') {	
 ?>
 	<p><?php echo $message ?></p>
 <?php
@@ -119,7 +113,7 @@ function checkCopyYearForm()
 	<form action="copy_year.php" method="post" onsubmit="return checkCopyYearForm()">
 		<table width="100%">
 			<tr>
-				<td width="50%">Copy objectives from</td>
+				<td width="50%"><?php echo $string['msg5']; ?></td>
 				<td>
 					<select id="source_y" name="source_y">
 <?php
@@ -133,7 +127,7 @@ foreach($source_years as $s_year) {
 				</td>
 			</tr>
 			<tr>
-				<td>Copy objectives to</td>
+				<td><?php echo $string['msg6']; ?></td>
 				<td>
 					<select id="dest_y" name="dest_y">
 <?php
@@ -167,7 +161,7 @@ $sel_mod = '';
 				<td colspan="2" style="text-align: center">&nbsp;</td>
 			</tr>
 			<tr>
-				<td colspan="2" style="text-align: center"><input type="submit" value="Copy" /></td>
+				<td colspan="2" style="text-align: center"><input type="submit" value="  <?php echo $string['copy']; ?>  " /></td>
 			</tr>
 		</table>
 		<input type="hidden" name="moduleID" value="<?php echo $_GET['module'] ?>" />

@@ -24,34 +24,34 @@
 
 require '../include/sysadmin_auth.inc';
 
-  // Query 'objectives' to get the IDs of the 'relationships' records to delete.
-  $obj_data = $mysqli->prepare("SELECT obj_id FROM objectives WHERE identifier=? AND moduleID=? AND calendar_year=?");
-  $obj_data->bind_param('dss', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
-  $obj_data->execute();
-  $obj_data->store_result();
-  $obj_data->bind_result($obj_id);
-  while ($row = $obj_data->fetch()) {
-    // Delete from 'relationships' table.
-    $result = $mysqli->prepare("DELETE FROM relationships WHERE obj_id=? AND module_id=? AND calendar_year=?");
-    $result->bind_param('iss', $obj_id, $_POST['moduleID'], $_POST['session']);
-    $result->execute();  
-    $result->close();
-  }
-  $obj_data->close();
-  
-  // Delete from 'sessions' table.
-  $result = $mysqli->prepare("DELETE FROM sessions WHERE identifier=? AND moduleID=? AND calendar_year=?");
-  $result->bind_param('dss', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
+// Query 'objectives' to get the IDs of the 'relationships' records to delete.
+$obj_data = $mysqli->prepare("SELECT obj_id FROM objectives WHERE identifier=? AND moduleID=? AND calendar_year=?");
+$obj_data->bind_param('dss', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
+$obj_data->execute();
+$obj_data->store_result();
+$obj_data->bind_result($obj_id);
+while ($row = $obj_data->fetch()) {
+  // Delete from 'relationships' table.
+  $result = $mysqli->prepare("DELETE FROM relationships WHERE obj_id=? AND module_id=? AND calendar_year=?");
+  $result->bind_param('iss', $obj_id, $_POST['moduleID'], $_POST['session']);
   $result->execute();  
   $result->close();
-  
-  // Delete from 'objectives' table.
-  $result = $mysqli->prepare("DELETE FROM objectives WHERE identifier=? AND moduleID=? AND calendar_year=?");
-  $result->bind_param('dss', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
-  $result->execute();  
-  $result->close();
-  
-  $mysqli->close();
+}
+$obj_data->close();
+
+// Delete from 'sessions' table.
+$result = $mysqli->prepare("DELETE FROM sessions WHERE identifier=? AND moduleID=? AND calendar_year=?");
+$result->bind_param('dss', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
+$result->execute();  
+$result->close();
+
+// Delete from 'objectives' table.
+$result = $mysqli->prepare("DELETE FROM objectives WHERE identifier=? AND moduleID=? AND calendar_year=?");
+$result->bind_param('dss', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
+$result->execute();  
+$result->close();
+
+$mysqli->close();
 ?>
 
 <html>
@@ -69,13 +69,13 @@ require '../include/sysadmin_auth.inc';
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/assessment_bin.png" width="32" height="32" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
-<td><p>Session successfully deleted.<p>
+<td><p><?php echo $string['msg']; ?><p>
 
 <div style="text-align:center">
 <form action="" method="get">
-<input type="button" name="cancel" value="    OK    " onclick="javascript:window.close();" />
+<input type="button" name="cancel" value="    <?php echo $string['ok']; ?>    " onclick="javascript:window.close();" />
 </form>
 </div>
 </td></tr>
