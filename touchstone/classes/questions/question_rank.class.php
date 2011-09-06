@@ -27,9 +27,11 @@
 Class QuestionRANK extends Question {
   
   protected $_answer_negative = 0;
+  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
+  protected $_allow_partial_marks = true;
   
-  protected $_fields_unified = array();
-  
+  protected $_fields_unified = array('marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)', 'marks_partial' => 'Marks (Partial)');
+    
   function __construct($mysqli, $user_id, $data = null) {
     parent::__construct($mysqli, $user_id, $data);
     
