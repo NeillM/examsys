@@ -29,6 +29,8 @@ $(function () {
   
   $('#scale_type').change(checkShowLikertCustom);
   
+  $('.dichotomous-display').change(updateDichotomousLabels);
+  
   addVariableLinks();
   $('.sct-type').trigger('change');
 });
@@ -114,5 +116,17 @@ function checkShowLikertCustom() {
   } else {
     $('#extended-option-list').slideUp();
   }
+}
+
+function updateDichotomousLabels() {
+  var positive = 'T';
+  var negative = 'F';
   
+  if ($(this).val().substr(0, 2) == 'YN') {
+    positive = 'Y';
+    negative = 'N';
+  }
+
+  $('.dichotomous-true').html(positive);
+  $('.dichotomous-false').html(negative);
 }

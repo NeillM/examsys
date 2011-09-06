@@ -29,6 +29,7 @@ $labels = $question->get_tf_labels();
 					<tbody>
 <?php
 require_once 'details_common.php';
+$disp_method_class = 'dichotomous-display';
 require_once 'detail_parts/details_presentation.php';
 ?>
             <tr>
