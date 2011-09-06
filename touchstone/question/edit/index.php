@@ -23,7 +23,6 @@
 */
 
 // TODO: check all options work for EITHER text or media
-// TODO: JS for convert MRQ to MCQ
 // TODO: JS for changing labels for Dichotomous if score method changes
 // TODO: JS for changing message in fill-in-the-blank if score method changes
 // TODO: SCT - old SCT type
