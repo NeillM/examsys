@@ -27,8 +27,10 @@ $plugin_height = max($media['height'] + 25, 475);
 if (count($question->options) > 0) {
   $option = reset($question->options);
   $correct = $option->get_correct();
+  $option_id = $option->id;
 } else {
   $correct = '';
+  $option_id = -1;
 }
 ?>
 <script type="text/javascript">
@@ -80,6 +82,7 @@ if ($media['filename'] != ''):
 <?php
 endif;
 ?>                
+                <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
                 <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
                 <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
                 <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />

@@ -76,7 +76,7 @@ Class Question extends TouchStoneObject {
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
   protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
 //  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
-  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
+  protected $_score_methods = array('Mark per Question', 'Mark per Option');
   protected $_display_methods = array();
   protected $_option_orders = array('display order' => 'Display Order', 'alphabetic' => 'Alphabetic', 'random' => 'Random');
   protected $_mysqli = null;
