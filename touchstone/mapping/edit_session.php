@@ -344,11 +344,13 @@ require '../include/staff_auth.inc';
   echo "\n<tr><td colspan=\"2\"><ul id=\"objList\" style=\"margin-left:0px; list-style-type:none; width:100%\">\t<li>\n\t<table callpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:93%; font-size:100%\">\n<tr>\n\t<td class=\"subheading\"></td>\n";
 	echo "\t<td valign=\"center\" style=\"color:gray; padding-left:1em; font-size:75%; width:100%;\"></td>\t";
   echo "\t<td></td></tr></table></li>\n";
-  foreach($sess['objectives'] as $id => $obj) {
-    echo "\t<li id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
-    echo '<img src="./up_on.png" onclick="promote( \'li_' . $id . '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'li_' . $id . '\' )" />&nbsp';
-    echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"$obj\" />";
-    echo "</li>\n";
+  if(isset($sess['objectives'])) {
+    foreach($sess['objectives'] as $id => $obj) {
+      echo "\t<li id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
+      echo '<img src="./up_on.png" onclick="promote( \'li_' . $id . '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'li_' . $id . '\' )" />&nbsp';
+      echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"$obj\" />";
+      echo "</li>\n";
+    }
   }
   echo '<li style="margin: 0.5em; margin-left: 6em"><input style="width: 80px" type="button" value="New..."  onclick="addNew(\'objList\')"></li>';
   echo '</ul>';

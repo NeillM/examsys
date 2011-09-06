@@ -117,7 +117,11 @@
 
   if (count($objectives) > 0) {
     foreach ($objectives[$_GET['module']] as $session) {
-      if (isset($session['objectives'])) $objectives_no = count($session['objectives']);
+      if (isset($session['objectives'])) {
+        $objectives_no = count($session['objectives']);
+      } else {
+        $objectives_no = 0;
+      }
       if ($old_session != $session['calendar_year']) {
       	if(!$first) {
 	      	echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
