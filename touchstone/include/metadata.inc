@@ -175,6 +175,7 @@ META;
       						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$keyword['keyword']}</label></li>
           
 META;
+          $i++;
         }
         
         $html .= <<< META
