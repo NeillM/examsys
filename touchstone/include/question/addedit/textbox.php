@@ -65,6 +65,9 @@ echo ViewHelper::render_options($editors, $editor, 3);
                 </select>
               </td>
             </tr>
+<?php
+require_once 'detail_parts/details_marking.php';
+?>
 					</tbody>
 				</table>
 
@@ -75,21 +78,10 @@ echo ViewHelper::render_options($editors, $editor, 3);
         <table id="q-options" class="form" summary="Edit question assessment data">
           <tbody>
             <tr>
-              <th class="spaced-top"><label for="option_marks_correct">Marks</label></th>
-              <td class="spaced-top">
-                <select id="option_marks_correct" name="option_marks_correct">
-                  <option value="" />
-<?php
-echo ViewHelper::render_options(range(1, 20), $marks_correct, 3);
-?>
-                </select>
-                <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
-              </td>
-            </tr>            
-            <tr>
               <th><label for="terms">Terms</label><br /><span class="note">(separate with semicolons)</span></th>
               <td>
                 <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"><?php echo $terms ?></textarea>
+                <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
               </td>
             </tr>
           </tbody>

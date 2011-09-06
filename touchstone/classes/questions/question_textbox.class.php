@@ -30,9 +30,10 @@ Class QuestionTEXTBOX extends Question {
   protected $rows = 4;
   protected $score_method = 'Mark per Option';
   public $max_options = 1;
+  protected $_allow_change_marking_method = false;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');
-  protected $_fields_unified = array('correct' => 'Terms', 'text' => 'Editor', 'marks_correct' => 'Marks if Correct');
+  protected $_fields_unified = array('correct' => 'Terms', 'text' => 'Editor', 'marks_correct' => 'Marks if Correct', 'marks_incorrect' => 'Marks (Incorrect)');
   
   /**
    * Does this question type allow changes to the correct answer after it is locked

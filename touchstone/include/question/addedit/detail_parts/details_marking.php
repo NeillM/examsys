@@ -17,12 +17,18 @@ if (count($question->options) > 0) {
             <tr>
               <th>Marking</th>
               <td>
+<?php
+if ($question->allow_partial_marks()):
+?>
                 <label for="score_method" class="heavy">Method</label>
                 <select id="score_method" name="score_method" class="spaced-right-large">
 <?php
 echo ViewHelper::render_options($question->get_score_methods(), $question->get_score_method(), 3, true);
 ?>
                 </select>
+<?php
+endif;
+?>
                 <label for="option_marks_correct" class="heavy">Marks if Correct</label>
                 <select id="option_marks_correct" name="option_marks_correct" class="spaced-right-large">
 <?php
@@ -36,7 +42,7 @@ echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
 ?>
                 </select>
 <?php
-if ($question->allow_partial_marks()) {
+if ($question->allow_partial_marks()):
 ?>
                 <label for="option_marks_partial" class="heavy">Partial Marks</label>
                 <select id="option_marks_partial" name="option_marks_partial">
@@ -45,7 +51,7 @@ echo ViewHelper::render_options($marks_positive, $mark_partial, 3);
 ?>
                 </select>
 <?php
-}
+endif;
 ?>
               </td>
             </tr>
