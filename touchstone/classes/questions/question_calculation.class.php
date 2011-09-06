@@ -30,6 +30,7 @@ Class QuestionCALCULATION extends Question {
   protected $answer_decimals = 0;
   protected $tolerance = 0;
   public $max_options = 10;
+  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks');
   protected $_allow_partial_marks = true;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'units', 'answer_decimals', 'tolerance', 'bloom', 'status');

@@ -27,7 +27,7 @@
 Class OptionSCT extends Option {
   
   public function save($option_number = 0) {
-    $this->marks = $this->correct / $this->_question->get_max_experts();
+    $this->set_marks_correct($this->correct / $this->_question->get_max_experts());
     
     return parent::save($option_number);
   }
