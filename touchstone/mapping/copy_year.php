@@ -22,9 +22,9 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/errors.inc';
-require '../include/mapping.inc';
+require_once '../include/staff_auth.inc';
+require_once'../include/errors.inc';
+require_once '../include/mapping.inc';
 
 $errors = array();
 

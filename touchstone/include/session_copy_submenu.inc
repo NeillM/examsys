@@ -22,7 +22,7 @@
 * @package
 */
 
-require '../classes/dateutils.class.php';
+require_once '../classes/dateutils.class.php';
 
 /**
  * Get a list of years for which the module has mapped objectives
@@ -94,12 +94,12 @@ function checkCopyYearForm()
 	// Should never be a case where we don't have a source year but check anyway
 	if(count($source_years) > 0) {
 		$dest_years = array(end($source_years));
-		
+
 		// Get a list of destination years. Selected year will be removed by JS
 		$start_year = substr(end($source_years), 0, 4);
 		
 		if(is_numeric($start_year)) {
-			for($i = $start_year + 1; $i <= $session_parts[0] + 1; $i++) {
+			for($i = $start_year + 1; $i <= $session_parts[0]; $i++) {
 				$next = $i + 1;
 				array_unshift($dest_years, $i . '/' . substr($next, 2, 2));
 			}
