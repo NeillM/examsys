@@ -25,6 +25,9 @@
  */
 
 Class QuestionFLASH extends Question {
+
+  public $max_options = 1;
+
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
 }
 
