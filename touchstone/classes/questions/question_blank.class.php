@@ -31,7 +31,7 @@ Class QuestionBLANK extends Question {
   
   protected $_display_methods = array('dropdown' => 'Dropdown Lists (randomised)', 'textboxes' => 'Blank Textboxes');
   
-  protected $_fields_unified = array('text' => 'Question/Stem');
+  protected $_fields_unified = array('text' => 'Question/Stem', 'marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
 
   /**
    * Does this question type allow changes to the correct answer after it is locked

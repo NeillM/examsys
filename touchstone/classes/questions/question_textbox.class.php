@@ -28,7 +28,6 @@ Class QuestionTEXTBOX extends Question {
   
   protected $columns = 10;
   protected $rows = 4;
-  protected $score_method = 'Mark per Option';
   public $max_options = 1;
   protected $_allow_change_marking_method = false;
   

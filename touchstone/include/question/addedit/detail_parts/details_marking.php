@@ -18,7 +18,7 @@ if (count($question->options) > 0) {
               <th>Marking</th>
               <td>
 <?php
-if ($question->allow_partial_marks()):
+if ($question->allow_change_marking_method()):
 ?>
                 <label for="score_method" class="heavy">Method</label>
                 <select id="score_method" name="score_method" class="spaced-right-large">
