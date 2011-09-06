@@ -63,6 +63,7 @@ Class Question extends TouchStoneObject {
   public $max_stems = 0;
   protected $_answer_positive = 'y';
   protected $_answer_negative = 'n';
+  protected $_allow_partial_marks = false;
   protected $_requires_media = false;
   protected $_requires_flash = false;
   
@@ -473,6 +474,14 @@ QUERY;
    */
   public function requires_flash() {
     return $this->_requires_flash;
+  }
+  
+  /**
+   * Does this question type allow partial parking?
+   * @return boolean
+   */
+  public function allow_partial_marks() {
+    return $this->_allow_partial_marks;
   }
   
   // ACCESSORS

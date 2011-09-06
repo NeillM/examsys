@@ -35,6 +35,18 @@ echo ViewHelper::render_options($marks_positive, $mark_correct, 3);
 echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
 ?>
                 </select>
+<?php
+if ($question->allow_partial_marks()) {
+?>
+                <label for="option_marks_partial" class="heavy">Partial Marks</label>
+                <select id="option_marks_partial" name="option_marks_partial">
+<?php
+echo ViewHelper::render_options($marks_positive, $mark_partial, 3);
+?>
+                </select>
+<?php
+}
+?>
               </td>
             </tr>
           </tbody>

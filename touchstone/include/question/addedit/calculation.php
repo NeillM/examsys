@@ -107,16 +107,6 @@ echo ViewHelper::render_options($decimals, $question->get_answer_decimals(), 3);
               </td>
               <td class="spaced-top"><label for="tolerance" class="spaced-right"><strong>Tolerance</strong></label><input type="text" id="tolerance" name="tolerance" value="<?php echo $question->get_tolerance() ?>" /></td>
             </tr>
-            <tr>
-              <th class="spaced-top"><label for="marks"><strong>Marks</strong></label></th>
-              <td class="spaced-top">
-                <select id="option_marks" name="option_marks">
-<?php
-echo ViewHelper::render_options(range(1, 20), $marks, 3);
-?>
-                </select>
-              </td>
-            </tr>            
           </tbody>
         </table>
 
