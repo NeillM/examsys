@@ -73,6 +73,7 @@ Class Question extends TouchStoneObject {
   protected $_fields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'media', 'media_width', 'media_height', 'group', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status');
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
   protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
+//  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
   protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
   protected $_display_methods = array();
   protected $_option_orders = array('display order' => 'Display Order', 'alphabetic' => 'Alphabetic', 'random' => 'Random');
@@ -89,7 +90,7 @@ Class Question extends TouchStoneObject {
   protected $_fields_force = array();
   
   // 'Unified' fields are the same for all options
-  protected $_fields_unified = array('correct' => 'Correct Answer');
+  protected $_fields_unified = array('correct' => 'Correct Answer', 'marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
   protected $_unified_field_modifications = array();
   
   // These are the fields that are relevant for post-exam corrections

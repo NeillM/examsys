@@ -252,8 +252,7 @@ if($critical_error == '') {
     // If not errored then save the question
     if (count($errors) == 0) {
       try {
-//    	  if(!$question->save()) {
-    	  if(false) {
+    	  if(!$question->save()) {
     	    $errors[] = 'Error saving data. Please try again';
     	  } else {
     	    // Possibility that we might be converting a MRQ to MCQ

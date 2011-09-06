@@ -31,7 +31,7 @@ Class QuestionDICHOTOMOUS extends Question {
   protected $_answer_negative = 'f';
   protected $display_method = 'TF_Positive';
   
-  protected $_fields_unified = array();
+  protected $_fields_unified = array('marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
   protected $_display_methods = array('TF_NegativeAbstain' => 'True/False/Abstain (Negative Marking -1)', 'TF_NegativeAbstainHalf' => 'True/False/Abstain (Negative Marking -0.5)', 'TF_Positive' => 'True/False', 'YN_NegativeAbstain' => 'Yes/No/Abstain (Negative Marking -1)', 'YN_Positive' => 'Yes/No');
   
   function __construct($mysqli, $user_id, $data = null) {

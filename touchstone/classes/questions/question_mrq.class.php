@@ -30,7 +30,7 @@ Class QuestionMRQ extends Question {
   
   protected $score_method = 'Mark per Option';
   
-  protected $_fields_unified = array();
+  protected $_fields_unified = array('marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
   protected $_fields_force = array('display_method');
   
   function __construct($mysqli, $user_id, $data = null) {
