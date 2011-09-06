@@ -30,6 +30,7 @@ $(function () {
   $('#scale_type').change(checkShowLikertCustom);
   
   $('.dichotomous-display').change(updateDichotomousLabels);
+  $('.blank-display').change(updateBlankInstructions);
   
   addVariableLinks();
   $('.sct-type').trigger('change');
@@ -129,4 +130,11 @@ function updateDichotomousLabels() {
 
   $('.dichotomous-true').html(positive);
   $('.dichotomous-false').html(negative);
+}
+
+function updateBlankInstructions() {
+  var visible = $(this)[0].selectedIndex + 1;
+  var hidden = ((visible % 2) + 1);
+  $('#instructions' + hidden).fadeOut('fast', function () { $('#instructions' + visible).fadeIn('fast'); });
+  
 }

@@ -23,7 +23,6 @@
 */
 
 // TODO: check all options work for EITHER text or media
-// TODO: JS for changing message in fill-in-the-blank if score method changes
 // TODO: SCT - old SCT type
 // TODO: handle keyword based and random
 // TODO: check - was leadin/scenario change tracking looking at the plain version?

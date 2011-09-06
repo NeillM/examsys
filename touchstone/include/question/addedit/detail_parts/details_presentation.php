@@ -1,8 +1,9 @@
 <?php
+$presentation_label = (isset($presentation_label)) ? $presentation_label :  'Presentation';
 $disp_method_class = (isset($disp_method_class)) ? ' class="' . $disp_method_class . '"' : '';
 ?>
             <tr>
-              <th><label for="display_method">Presentation</label></th>
+              <th><label for="display_method"><?php echo $presentation_label ?></label></th>
               <td>
                 <select id="display_method" name="display_method"<?php echo $disp_method_class ?>>
 <?php

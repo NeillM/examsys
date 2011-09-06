@@ -41,8 +41,8 @@ if($num_options > 0) {
   $inst2_hidden = ' hide';
 }
 $scenario_message = <<< MESSAGE
-<span class="note{$inst1_hidden}" id="instructions1">To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Always put the correct answer as the <strong>first</strong> option, followed by the distractors (all options are randomised automatically).<br />e.g. Tyrannosaurus <span class="blank-tag">[blank]</span>Rex,Roger,Roderick,Ramsey<span class="blank-tag">[/blank]</span> was a large bipedal flesh-eating...</span>
-<span class="note{$inst2_hidden}" id="instructions2">To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Within the [blank] tags add the correct answer and any alternatives also deemed to be correct (separate with commas).<br />e.g. What country are we in <span class="blank-tag">[blank]</span>UK,United Kingdom,Britain,Great Britain,GB<span class="blank-tag">[/blank]</span>?</span>
+<span class="note blank-instructions{$inst1_hidden}" id="instructions1">To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Always put the correct answer as the <strong>first</strong> option, followed by the distractors (all options are randomised automatically).<br />e.g. Tyrannosaurus <span class="blank-tag">[blank]</span>Rex,Roger,Roderick,Ramsey<span class="blank-tag">[/blank]</span> was a large bipedal flesh-eating...</span>
+<span class="note blank-instructions{$inst2_hidden}" id="instructions2">To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Within the [blank] tags add the correct answer and any alternatives also deemed to be correct (separate with commas).<br />e.g. What country are we in <span class="blank-tag">[blank]</span>UK,United Kingdom,Britain,Great Britain,GB<span class="blank-tag">[/blank]</span>?</span>
 MESSAGE;
 $scenario_height = 250;
 
@@ -53,17 +53,10 @@ $scenario_height = 250;
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_media.php';
 require_once 'detail_parts/details_leadin.php';
+$presentation_label = 'Display Mode';
+$disp_method_class = 'blank-display';
+require_once 'detail_parts/details_presentation.php';
 ?>
-            <tr>
-              <th><label for="display_method">Display Mode</label></th>
-              <td>
-                <select id="display_method" name="display_method">
-<?php
-echo ViewHelper::render_options($question->get_display_methods(), $question->get_display_method(), 3);
-?>
-                </select>
-              </td>
-            </tr>
             <tr>
               <th>&nbsp;</th>
               <td><?php echo $scenario_message ?></td>
