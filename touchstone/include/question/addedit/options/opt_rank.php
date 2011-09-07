@@ -46,7 +46,7 @@ $spaced = ($index > 1) ? " class=\"spaced-top spaced-bottom\"" : " class=\"space
                 <input type="text" name="option_text<?php echo $index ?>" id="option_text<?php echo $index ?>" class="form-med-large" value="<?php echo $option->get_text() ?>" />
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
               </td>
-              <td class="small"<?php echo $spaced ?>>
+              <td class="small align-centre"<?php echo $spaced ?>>
                 <select id="option_correct<?php echo $index ?>" name="option_correct<?php echo $index ?>">
 <?php 
 echo ViewHelper::render_options($correct_vals, $option->get_correct(), 3);

@@ -65,7 +65,7 @@ Class Question extends TouchStoneObject {
   protected $_answer_negative = 'n';
   
   protected $_allow_change_marking_method = true;
-  protected $_allow_partial_marks = false;
+  protected $_allow_negative_marks = null;
   protected $_requires_media = false;
   protected $_requires_flash = false;
   protected $_allow_mapping = true;
@@ -86,9 +86,10 @@ Class Question extends TouchStoneObject {
   protected $_data = array();
   
   // These properties will be lazily loaded
-  protected $keywords = null;
-  protected $changes = null;
-  protected $comments = null;
+  protected $_keywords = null;
+  protected $_changes = null;
+  protected $_comments = null;
+  protected $_allow_partial_marks = false;
   
   // These fields will be forced to the negative answer value. Useful for checkboxes that won't have a value posted if unset
   protected $_fields_force = array();
@@ -493,6 +494,28 @@ QUERY;
    */
   public function allow_partial_marks() {
     return $this->_allow_partial_marks;
+  }
+  
+  /**
+   * Does this question type allow negative parking?  Check all the modules that the question is on
+   * @return boolean
+   */
+  public function allow_negative_marks() {
+    if ($this->_allow_negative_marks == null) {
+      // Check all the modules that the question is on
+      if ($this->group != '') {
+        $this->_allow_negative_marks = true;
+      
+        $modules = str_replace(';', "','", $this->group);
+        $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE moduleid IN ('" . $modules . "') AND neg_marking=0");
+        $result->execute();
+        $result->store_result();
+        if ($result->num_rows > 0) $this->_allow_negative_marks = false;
+        $result->close();
+      }
+    }
+    
+    return $this->_allow_negative_marks;
   }
   
   /**
@@ -997,20 +1020,20 @@ QUERY;
    * @return array Associative array containing date, section, old value, new value and user for the change
    */
   public function get_changes() {
-    if(!is_array($this->changes)) {
-      $this->changes = array();
+    if(!is_array($this->_changes)) {
+      $this->_changes = array();
       // Load the changes into an array
       $result = $this->_mysqli->prepare("SELECT type, part, old, new, DATE_FORMAT(changed, '%d/%m/%Y') AS display_changed, title, initials, surname FROM (track_changes, users) WHERE track_changes.editor=users.id AND typeID=? ORDER BY changed DESC, users.id LIMIT 200");
       $result->bind_param('i', $this->id);
       $result->execute();
       $result->bind_result($type, $part, $old, $new, $display_changed, $title, $initials, $surname);
       while ($result->fetch()) {
-        $this->changes[] = array('date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname);
+        $this->_changes[] = array('date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname);
       }
       $result->close();
     }
     
-    return $this->changes;
+    return $this->_changes;
   }
   
   /**
@@ -1018,8 +1041,8 @@ QUERY;
    * @return array Array of keyword IDs
    */
   public function get_keywords() {
-    if(!is_array($this->keywords)) {
-      $this->keywords = array();
+    if(!is_array($this->_keywords)) {
+      $this->_keywords = array();
       
       // Load the keywords into an array
       $result = $this->_mysqli->prepare("SELECT keywordID FROM keywords_question WHERE q_id=?");
@@ -1027,12 +1050,12 @@ QUERY;
       $result->execute();
       $result->bind_result($keyword_id);
       while ($result->fetch()) {
-        $this->keywords[] = $keyword_id;
+        $this->_keywords[] = $keyword_id;
       }
       $result->close();
     }
     
-    return $this->keywords;
+    return $this->_keywords;
   }
 
   /**
@@ -1041,7 +1064,7 @@ QUERY;
    */
   public function set_keywords($value) {
     // Question class is not currently handling the persisting of keywords to the database
-    $this->keywords = $value;
+    $this->_keywords = $value;
   }
     
   /**
@@ -1050,8 +1073,8 @@ QUERY;
    * @return array Array of comments indexed by comment ID and containing paper ID, category,  comment text, date, reviewer name, action, response and type
    */
   public function get_comments($paper_id = -1) {
-    if(!is_array($this->comments)) {
-      $this->comments = array();
+    if(!is_array($this->_comments)) {
+      $this->_comments = array();
       
       if ($paper_id != -1) {
         $query = <<< QUERY
@@ -1073,12 +1096,12 @@ QUERY;
       $result->execute();
       $result->bind_result($paper_title, $id, $category, $comment, $reviewed, $title, $initials, $surname, $action, $response, $review_type);
       while ($result->fetch()) {
-        $this->comments[$id] = array('paper' => $paper_title, 'category' => $category, 'comment' => $comment, 'date' => $reviewed, 'name' => $title . ' ' . $initials . ' ' . $surname, 'action' => $action, 'response' => $response, 'type' => $review_type);
+        $this->_comments[$id] = array('paper' => $paper_title, 'category' => $category, 'comment' => $comment, 'date' => $reviewed, 'name' => $title . ' ' . $initials . ' ' . $surname, 'action' => $action, 'response' => $response, 'type' => $review_type);
       }
       $result->close();
     }
     
-    return $this->comments;
+    return $this->_comments;
   }
   
   /**
@@ -1087,7 +1110,7 @@ QUERY;
    */
   public function set_comments($value) {
     // Question class is not currently handling the persisting of comments to the database
-    $this->comments = $value;
+    $this->_comments = $value;
   }
 
   

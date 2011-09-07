@@ -31,7 +31,8 @@ $(function () {
   
   $('.dichotomous-display').change(updateDichotomousLabels);
   $('.blank-display').change(updateBlankInstructions);
-  
+  $('#score_method').change(showPartialMarks);
+
   addVariableLinks();
   $('.sct-type').trigger('change');
 });
@@ -137,6 +138,13 @@ function updateDichotomousLabels() {
 function updateBlankInstructions() {
   var visible = $(this)[0].selectedIndex + 1;
   var hidden = ((visible % 2) + 1);
-  $('#instructions' + hidden).fadeOut('fast', function () { $('#instructions' + visible).fadeIn('fast'); });
-  
+  $('#instructions' + hidden).fadeOut('fast', function () { $('#instructions' + visible).fadeIn('fast'); }); 
+}
+
+function showPartialMarks () {
+  if ($(this).val() == '2') {
+    $('#marks-partial').fadeIn('fast');
+  } else {
+    $('#marks-partial').fadeOut('fast');
+  }
 }
