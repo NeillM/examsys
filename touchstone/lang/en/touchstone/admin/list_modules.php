@@ -1,6 +1,6 @@
 <?php
 $string['modules'] = '1Modules';
-$string['administrativetools'] = 'Administrative Tools';
+$string['administrativetools'] = '1Administrative Tools';
 $string['moduleid'] = '1Module ID';
 $string['name'] = '1Name';
 $string['active'] = '1Active';

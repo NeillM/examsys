@@ -133,7 +133,7 @@
   echo '    <NumberFormat ss:Format="Percent"/>';
   echo ' </Style>';
   echo ' </Styles>';
-  echo ' <Worksheet ss:Name="Marks">';
+  echo ' <Worksheet ss:Name="' . $string['marks'] . '">';
   echo '  <Table ss:ExpandedColumnCount="' . (13 + $meta_col_count) .'" ss:ExpandedRowCount="' . ($user_no + 3) . '" x:FullColumns="1" x:FullRows="1">';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="35"/>';
   echo '   <Column ss:AutoFitWidth="0" ss:Width="80"/>';
@@ -176,24 +176,24 @@
   
   echo '   </Row>';
   echo '   <Row>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Title</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Surname</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">First Names</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Student ID</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Username</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Module</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Mark</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['title'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['surname'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['firstnames'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['studentid'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['username'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['module'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['mark'] . '</Data></Cell>';
   if ($marking == '0') {
-    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">%</Data></Cell>';
+    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['%'] . '</Data></Cell>';
   } else {
-    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Adjusted %</Data></Cell>';
+    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['adjusted%'] . '</Data></Cell>';
   }
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Classification</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Start Date</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Duration</Data></Cell>';
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">IP Address</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['classification'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['starttime'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['duration'] . '</Data></Cell>';
+  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['ipaddress'] . '</Data></Cell>';
   if ($paper_type == 2) {
-    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">Room</Data></Cell>';
+    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['room'] . '</Data></Cell>';
   }
   // Output metadata headings
   foreach ($metadata_cols as $key => $col) {
@@ -297,7 +297,7 @@
   echo '   <ProtectScenarios>False</ProtectScenarios>';
   echo '  </WorksheetOptions>';
   echo ' </Worksheet>';
-  echo ' <Worksheet ss:Name="Summary">';
+  echo ' <Worksheet ss:Name="' . $string['summary'] . '">';
   $exp_row_count = 17;
   $exp_row_count += ($marking > 1) ? '2' : $marking;
   $exp_row_count += (count($warnings['deleted_qns']) > 0) ? 1 : 0;
@@ -310,103 +310,103 @@
   echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
 
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Students Submitted</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['studentssubmitted'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . ($display_no - $absent_no) . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Total Possible Marks</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['totalmarks'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $total_marks . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Pass Mark</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['passmark'] . '</Data></Cell>';
   echo '<Cell ss:StyleID="s26"><Data ss:Type="Number">' . ($pass_mark/100) . '</Data></Cell>';
   echo '</Row>';
   if ($marking == '0') {
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Average Mark</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['averagemark'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="Number">' . $mean_mark . '</Data></Cell>';
     echo '</Row>';
   } elseif ($marking == '1') {
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Random Mark</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['randommark'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="Number">' . number_format($total_random_mark, 1, '.', ',') . '</Data></Cell>';
     echo '</Row>';
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Mean Mark</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['meanmark'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="Number">' . $mean_mark . '</Data></Cell>';
     echo '</Row>';
   } else {
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">SS</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['ss'] . '</Data></Cell>';
     echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . ($ss_pass/100) . '</Data></Cell>';
     echo '</Row>';
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">SS Distinction</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['ssdistinction'] . '</Data></Cell>';
     echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . ($ss_hon/100) . '</Data></Cell>';
     echo '</Row>';
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Mean Mark</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['meanmark'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="Number">' . $mean_mark . '</Data></Cell>';
     echo '</Row>';
   }
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Median Mark</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['medianmark'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $median_mark . '</Data></Cell>';
   echo '</Row>';
   if ($completed_no == 1) {
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">StDev Mark</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['stdevmark'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">n/a</Data></Cell>';
     echo '</Row>';
   } else {
     echo '<Row>';
-    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">StDev Mark</Data></Cell>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['stdevmark'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="Number">' . number_format($stddev_mark, 2, '.', ',') . '</Data></Cell>';
     echo '</Row>';
   }
     
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Max Mark</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['maxmark'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $max_mark . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Min Mark</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['minmark'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $min_mark . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Range</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['range'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . ($max_mark - $min_mark) . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Top 10%</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['top10'] . '</Data></Cell>';
   echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . $top_10/100 . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Top 15%</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['top15'] . '</Data></Cell>';
   echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . $top_15/100 . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Top 20%</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['top20'] . '</Data></Cell>';
   echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . $top_20/100 . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Top 25%</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['top25'] . '</Data></Cell>';
   echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . $top_25/100 . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Bottom 10%</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['bottom10'] . '</Data></Cell>';
   echo '<Cell ss:StyleID="s69"><Data ss:Type="Number">' . $bottom_10/100 . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Average Time</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['averagetime'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="String">' . formatsec(round($total_time / $completed_no,0)) . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Excluded Questions</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['excludedquestions'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="String">' . $display_excluded . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Experimental Questions</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['experimantalquestions'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="String">' . $display_experimental . '</Data></Cell>';
   echo '</Row>';
   if(count($warnings['deleted_qns']) > 0) {

@@ -27,8 +27,10 @@
   require '../../include/staff_auth.inc';
   
   function getPath($path) {
+    global $string;
+    
     $parts = explode('/',$path);
-    $path = '<a style="color:#666666" href="display_page.php?id=1">TouchStone Home</a>';
+    $path = '<a style="color:#666666" href="display_page.php?id=1">' . $string['home'] . '</a>';
     if (count($parts) > 1) {
       for ($i=0; $i<count($parts)-1; $i++) {
         $path .= " > <a style=\"color:#666666\" href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
@@ -93,8 +95,8 @@ body {background-color:white; color:black; margin:0px; font-family:Arial,sans-se
 p, div, td {color:#484848}
 ul {list-style:square outside; color:#f27000}
 table {font-size:100%}
-h1 {font-size:150%; color:black; font-family:Verdana,sans-serif}
-h2 {font-size:140%; color:#f27000; font-family:Verdana,sans-serif}
+h1 {font-size:150%; color:black}
+h2 {font-size:140%; color:#f27000}
 .path {background-color:#F2F2F2; color:#666666; font-size:80%; padding-left:10px; border-bottom:1px solid #B6B6B6}
 .subheading {font-weight:bold; font-style:italic}
 .tutorial {background-color:#FCF6CF; width: 95%; cursor:pointer}
@@ -136,7 +138,7 @@ h2 {font-size:140%; color:#f27000; font-family:Verdana,sans-serif}
 <?php
   
   if ($deleted != '') {
-    echo "<body>\n<br />\n<p style=\"margin-left:15px\"><strong>Warning:</strong> This page has been deleted.</p>\n</body>\n</html>\n";
+    echo "<body>\n<br />\n<p style=\"margin-left:15px\">" . $string['msg'] . "</p>\n</body>\n</html>\n";
     exit;
   }
   
@@ -148,7 +150,7 @@ h2 {font-size:140%; color:#f27000; font-family:Verdana,sans-serif}
   } else {
     echo "<a name=\"top\"></a>";
     echo "<div class=\"path\">" . getPath($tmp_title) . "</div>";
-    echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#7598C4; font-family:Verdana,sans-serif\">" . getTitle($tmp_title) . "</div>\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n";
+    echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . getTitle($tmp_title) . "</div>\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n";
     echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
   }
   
@@ -173,7 +175,7 @@ h2 {font-size:140%; color:#f27000; font-family:Verdana,sans-serif}
   if ($_GET['id'] > 1) {
     echo "<br clear=\"all\" />\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px; margin-bottom:5px\" />\n</div>\n";
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\"><tr>";
-    echo "<td style=\"padding-left:20px\"><a style=\"color:#003366\" href=\"#top\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" border=\"0\" alt=\"Top\" /></a>&nbsp;<a style=\"color:#003366\" href=\"#top\">Top of Page</a></td><td style=\"padding-right:20px; text-align:right\">&copy; 2011, The University of Nottingham</td></tr>";
+    echo "<td style=\"padding-left:20px\"><a style=\"color:#003366\" href=\"#top\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" border=\"0\" alt=\"" . $string['top'] . "\" /></a>&nbsp;<a style=\"color:#003366\" href=\"#top\">" . $string['top'] . "</a></td><td style=\"padding-right:20px; text-align:right\">&copy; 2011, The University of Nottingham</td></tr>";
     if (strpos($userroles,'SysAdmin') !== false) {
       echo '<tr><td colspan="2" style="padding-right:20px; text-align:right; color:#316AC5">' . $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/help/staff/index.php?id=' . $_GET['id'] . '</tr>';
     }

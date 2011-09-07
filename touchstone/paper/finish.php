@@ -145,7 +145,7 @@
     $paper_properties->execute();
     $paper_properties->store_result();
     $paper_properties->bind_result($labs, $moduleID, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
-    while ($row = $paper_properties->fetch()) {
+    while ($paper_properties->fetch()) {
       // If set overwrite the default colours with the current users' special settings
       if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
       if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
@@ -213,7 +213,7 @@
               access_denied($tmp_string, $output_header = false);
             } else {
               $row = $module_info->fetch_array(MYSQLI_ASSOC);
-              if(is_array($row)) {
+              if (is_array($row)) {
                 $attempt = $row['attempt'];
               }
             }
@@ -361,7 +361,8 @@ table {font-size:100%}
     if ($paper_type == '2' and (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false)) {
       if (!isset($_GET['userid'])) {
         $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
-        echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
+        echo '<blockquote><p style="font-size:450%; font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank you</p><p>' . $tmp_string . '</p>';
+        //echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
         if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
         echo '</blockquote>';
         echo '<table cellpadding="0" cellspacing="0" width="100%" border="0">';
@@ -634,7 +635,7 @@ table {font-size:100%}
       if ($old_screen < $paper[$question]['screen']) {
         echo '</table><br /><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
         echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-        echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;" . $paper[$question]['screen'] . "</td>\n</tr>\n";
+        echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;" . $paper[$question]['screen'] . "</td>\n</tr>\n";
         echo '</table>';
         echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
         if ($paper[$question]['q_type'] != 'info') {
@@ -767,7 +768,7 @@ table {font-size:100%}
           }
           $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
           if ($tmp_answer[0] == '') {
-            echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"unanswered\" />" . $score_array[2];
+            echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[2];
           } else {
             echo '<td>';
             if ($tmp_exclude == '1')  echo '<span style="color:red; text-decoration:line-through">';
@@ -929,7 +930,7 @@ table {font-size:100%}
             }
           }
           if ($answered  == false) {
-            echo "<tr><td colspan=\"3\" style=\"color:#808080\">&lt;unanswered&gt;</td></tr>\n";
+            echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
           }
           echo "</table>\n";
           break;
@@ -1031,9 +1032,9 @@ table {font-size:100%}
             }
           }
           if (!isset($paper[$question]['user_answer'])) {
-            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">&lt;unanswered&gt;</td></tr>\n";
+            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td></tr>\n";
           } elseif ($paper[$question]['user_answer'] == 0) {
-            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">&lt;unanswered&gt;</td></tr>\n";
+            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td></tr>\n";
           }
           if ($tmp_display_feedback == '1') {
             if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
@@ -1177,7 +1178,7 @@ table {font-size:100%}
             }
           }
           echo "</table>\n";
-          if (!$answered) echo "<br />\n<div style=\"color:#808080\">&lt;unanswered&gt;</div>\n";
+          if (!$answered) echo "<br />\n<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
             echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
           }
@@ -1281,7 +1282,7 @@ table {font-size:100%}
             }
           }
 
-          if (!isset($paper[$question]['user_answer']) OR $paper[$question]['user_answer'] == 0) echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"3\">&lt;unanswered&gt;</td></tr>\n";
+          if (!isset($paper[$question]['user_answer']) OR $paper[$question]['user_answer'] == 0) echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"3\">" . $string['unanswered'] . "</td></tr>\n";
           if ($tmp_display_feedback == '1') {
             if ($paper[$question]['correct_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"5\">&nbsp;</td></tr>\n";
@@ -1494,7 +1495,7 @@ table {font-size:100%}
               } else {
                 echo "<select name=\"q" . $question. "_" . $std_part . "\" style=\"color:red; text-decoration:line-through; border:1px solid red\">\n";
               }
-              if ($user_answers[$i] == 'u' or $user_answers[$i] == '') echo "<option value=\"\" style=\"color:#808080\">&lt;unanswered&gt;</option>\n";
+              if ($user_answers[$i] == 'u' or $user_answers[$i] == '') echo "<option value=\"\" style=\"color:#808080\">" . $string['unanswered'] . "</option>\n";
               $tmp_option_no = 1;
               for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {
                 if ($option_order[$option_no]+1 == $user_answers[$i]) {
@@ -1726,7 +1727,7 @@ table {font-size:100%}
             }
             echo '<p>';
             if (strlen($tmp_answer) == 0) {
-              echo '&nbsp;<span style="color:#808080">&lt;unanswered&gt;</span>';
+              echo '&nbsp;<span style="color:#808080">' . $string['unanswered'] . '</span>';
               reset_feedback($hide_if_unanswered);
             } else {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
@@ -1790,7 +1791,7 @@ table {font-size:100%}
             $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
             $answer_list = array();
             $answer_list = explode(',',$answer_options[0]);
-            if ($paper[$question]['score_method'] == 'textboxes') {
+            if ($paper[$question]['display_method'] == 'textboxes') {
               $correct_flag = false;
               foreach ($answer_list as $individual_answer) {
                 if (trim(strtolower($individual_answer)) == trim(strtolower($user_choices[$blank_count]))) {
@@ -1803,7 +1804,7 @@ table {font-size:100%}
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
                 if ($user_choices[$blank_count] == 'u') {
-                  echo '</span><span style="color:#808080">&lt;unanswered&gt;</span>';
+                  echo '</span><span style="color:#808080">' . $string['unanswered'] . '</span>';
                   if ($tmp_display_correct_answer == '1') {
                     echo '<strong>(';
                     foreach ($answer_list as $individual_answer) {
@@ -1864,15 +1865,33 @@ table {font-size:100%}
             reset_feedback($hide_if_unanswered);
           }
           $paper[$question]['mark'] = 0;
+          $all_correct = true;
           if (isset($paper[$question]['user_answer'])) {
             $parts = explode('|',$paper[$question]['user_answer']);
             $i = 0;
             foreach ($parts as $part) {
               if (substr($tmp_exclude, $i, 1) == '0') {
-                $paper[$question]['mark'] += substr($part,0,1);
+                if (substr($part,0,1) == 1) {
+                  $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                } else {
+                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  $all_correct = false;
+                }
+              }
+              if ($paper[$question]['score_method'] == 'Mark per Option') {
+                $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
               }
               $i++;
             }            
+          }
+          
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
+            if ($all_correct) {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } else {
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+            }
+            $paper[$question]['totalpos'] = $paper[$question]['marks_correct'];
           }
           
           if ($paper[$question]['scenario'] != '') {
@@ -1909,9 +1928,9 @@ table {font-size:100%}
           }
           
           if (!isset($paper[$question]['user_answer'])){
-            echo "<div style=\"color:#808080\">&lt;unanswered&gt;</div>\n";
+            echo "<div style=\"color:#808080\">" . $string['unanswered'] . "/div>\n";
           } elseif ($paper[$question]['user_answer'] == 'u') {
-            echo "<div style=\"color:#808080\">&lt;unanswered&gt;</div>\n";         
+            echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";         
           }
           
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
@@ -2120,12 +2139,12 @@ table {font-size:100%}
     if ($total_marks > 0 and $survey == 0) {
       echo '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#E4EEFC; border:1px solid #B5C4DF">';
       echo '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
-      echo '<tr><td colspan="2" style="margin:0px; font-weight:bold; font-size:120%">Summary of Marks:</td></tr>';
+      echo '<tr><td colspan="2" style="margin:0px; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
       if ($marking == 1) {
-        echo "<tr><td style=\"width:210px\">Your mark</td><td style=\"text-align:right\">" . round($user_mark,2) . " out of $total_marks</td><td></td></tr>\n";
-        echo "<tr><td>Random mark</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(13);\" src=\"/touchstone/artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" border=\"0\" /></td></tr>\n";
-        echo "<tr><td>Pass Mark</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
-        echo "<tr><td>Your percentage</td><td style=\"text-align:right\">";
+        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " out of $total_marks</td><td></td></tr>\n";
+        echo "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(13);\" src=\"/touchstone/artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" border=\"0\" /></td></tr>\n";
+        echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
+        echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
         if (isset($_GET['percent'])) {
           echo $_GET['percent'];
         } else {
@@ -2135,11 +2154,11 @@ table {font-size:100%}
             echo '0';
           }
         }
-        echo '%</td><td>(adjusted)</td></tr>';
+        echo '%</td><td>' . $string['adjusted'] . '</td></tr>';
       } else {
-        echo "<tr><td style=\"width:210px\">Your mark</td><td style=\"text-align:right\">" . round($user_mark,2) . " out of $total_marks</td></tr>\n";
-        echo "<tr><td>Pass Mark</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
-        echo "<tr><td>Your percentage</td><td style=\"text-align:right\">";
+        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " out of $total_marks</td></tr>\n";
+        echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
+        echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
         if (isset($_GET['percent'])) {
           echo $_GET['percent'];
         } else {
@@ -2152,22 +2171,22 @@ table {font-size:100%}
     }
     if ($paper_postscript != '') echo "<br />\n<blockquote>$paper_postscript</blockquote>\n";
     echo $bottom_html;
-    echo '<tr><td align="center"><input type="button" name="close" value="&nbsp;Close Window&nbsp;" onclick="window.close();" /></td></tr>';
+    echo '<tr><td align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></td></tr>';
     echo '</table>';
   } else {
     echo '<blockquote>';
-    if ($low_bandwidth == 1) {
-      echo '<p style="font-size:400%;font-family:\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank You</p>';
-    } else {
-      echo '<p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p>';
-    }
-    echo '<p>Thank you for completing <strong>' . $paper_title . '</strong>. Your responses have been recorded.</p><br />';
+    //if ($low_bandwidth == 1) {
+      echo '<p style="font-size:450%;font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank you</p>';
+    //} else {
+    //  echo '<p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p>';
+    //}
+    echo '<p>' . sprintf($string['msg'], $paper_title) . '</p><br />';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';
     if ($paper_type == '2') {
-      echo '<br /><div style="text-align:center;border:1px #C0C0C0 solid;background-color:#E6E6DF;padding:10px;margin-left:100px;margin-right:100px" align="center">' . $leaving_rules . '<br /><br /><input type="button" name="close" value="&nbsp;Close Window&nbsp;" onclick="window.close();" /></div>';
+      echo '<br /><div style="text-align:center;border:1px #C0C0C0 solid;background-color:#E6E6DF;padding:10px;margin-left:100px;margin-right:100px" align="center">' . $leaving_rules . '<br /><br /><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
     } else {
-      echo '<br /><div align="center"><input type="button" name="close" value="&nbsp;Close Window&nbsp;" onclick="window.close();" /></div>';
+      echo '<br /><div align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
     }
   }
   echo "</body>\n</html>";

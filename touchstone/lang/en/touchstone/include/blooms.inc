@@ -1,5 +1,6 @@
 <?php
 $string['blooms'] = '1Blooms';
+$string['bloomstaxonomy'] = "1Bloom's Taxonomy";
 $string['alllevels'] = '1(All levels)';
 $string['knowledge'] = '1Knowledge';
 $string['comprehension'] = '1Comprehension';

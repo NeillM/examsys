@@ -1,4 +1,18 @@
 <?php
+// This file is part of TouchStone
+//
+// TouchStone is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// TouchStone is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 /**
 * 
 * @author Simon Wilkinson
@@ -48,26 +62,26 @@ a:visited.page {color:white}
 <?php
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"; 
   
-  echo "<tr><td colspan=\"3\" style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4; font-family:Verdana,sans-serif\">\n<form action=\"\" method=\"post\">\nFrom:\n"; 
+  echo "<tr><td colspan=\"3\" style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\">\n<form action=\"\" method=\"post\">\n" . $string['from'] . "\n"; 
     // Split the end date
     $split_year = substr($start_date,0,4);
     $split_month = substr($start_date,4,2);
     $split_day = substr($start_date,6,2);
     echo "\n<select name=\"startmonth\">\n";
     // start Month
-    $months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+    $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
     for ($i=0; $i<12; $i++) {
       if (($split_month-1) == $i) {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\" selected>" . $months[$i] . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\" selected>" . $months[$i] . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       } else {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\">" . $months[$i] . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\">" . $months[$i] . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       }
     }
@@ -109,26 +123,25 @@ a:visited.page {color:white}
       }
     }
 	echo "</select>\n";
-  echo "To:";
+  echo $string['to'];
     // Split the end date
     $split_year = substr($end_date,0,4);
     $split_month = substr($end_date,4,2);
     $split_day = substr($end_date,6,2);
     echo "<select name=\"endmonth\">\n";
     // end Month
-    $months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
     for ($i=0; $i<12; $i++) {
       if (($split_month-1) == $i) {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\" selected>" . $months[$i] . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\" selected>" . $months[$i] . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       } else {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\">" . $months[$i] . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\">" . $months[$i] . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       }
     }
@@ -170,9 +183,9 @@ a:visited.page {color:white}
        }
      }
 	 echo "</select>\n";
-  echo " <input type=\"submit\" value=\"Filter\" name=\"Filter\" /></form></td></tr>\n";
+  echo " <input type=\"submit\" value=\" " . $string['filter'] . " \" name=\"Filter\" /></form></td></tr>\n";
   
-  echo "<tr style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4; font-family:Verdana,sans-serif\"><td>Page Statistics</td><td></td><td>Search Statistics</td></tr>\n";
+  echo "<tr style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\"><td>" . $string['pagestats'] . "</td><td></td><td>" . $string['searchstats'] . "</td></tr>\n";
   echo "<tr ><td>&nbsp;</td><td></td><td>&nbsp;</td></tr>\n";
   
   echo "<tr><td style=\"vertical-align:top\">";
@@ -185,7 +198,7 @@ a:visited.page {color:white}
     echo "<p>There were no hits</p>\n";
   } else {
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" style=\"border:1px solid #E0E0E0; border-collapse:collapse\">\n";
-    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>Page</td><td>Hits</td></tr>\n";
+    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>" . $string['page'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
     while ($row = $search_results->fetch()) {
       echo "<tr><td>$title</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
     }
@@ -202,10 +215,10 @@ a:visited.page {color:white}
   $search_results->bind_result($no_searches, $searchstring, $hits);
   $total_hits = $search_results->num_rows;
   if ($search_results->num_rows == 0) {
-    echo "<p>There were no searches</p>\n";
+    echo "<p>" . $string['nosearches'] . "</p>\n";
   } else {
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" style=\"font-size:100%; border:1px solid #E0E0E0; border-collapse:collapse\">\n";
-    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>Searches</td><td>Term</td><td>Results</td></tr>\n";
+    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>" . $string['searches'] . "</td><td>" . $string['term'] . "</td><td>" . $string['results'] . "</td></tr>\n";
     while ($row = $search_results->fetch()) {
       if ($hits == 0) {
         echo "<tr style=\"color:#C00000\"><td class=\"num\">" . number_format($no_searches) . "</td><td>$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
@@ -217,17 +230,17 @@ a:visited.page {color:white}
   }
   $search_results->free_result();
   $search_results->close();
-  echo "<br/><div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4; font-family:Verdana,sans-serif\">Tutotial Stats</div>";
+  echo "<br/><div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . $string['tutorialstats'] . "</div>";
   $tutorial_results = $mysqli->prepare("SELECT COUNT(id) AS num, tutorial FROM help_tutorial_log WHERE type='student' AND accessed > '$start_date' AND accessed < '$end_date' GROUP BY tutorial ORDER BY id DESC");
   $tutorial_results->execute();
   $tutorial_results->store_result();
   $tutorial_results->bind_result($hits, $tutorial);
   $total_hits = $tutorial_results->num_rows;
   if ($tutorial_results->num_rows == 0) {
-    echo "<p>There were no tutorials viewed</p>\n";
+    echo "<p>" . $string['notutorials'] . "</p>\n";
   } else {
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" style=\"font-size:100%; border:1px solid #E0E0E0; border-collapse:collapse\">\n";
-    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>Tutorial</td><td>Hits</td></tr>\n";
+    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>" . $string['tutorial'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
     while ($row = $tutorial_results->fetch()) {
         echo "<tr><td>" . $tutorial . "</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
     }
@@ -235,7 +248,6 @@ a:visited.page {color:white}
   }
   $tutorial_results->free_result();
   $tutorial_results->close();
-  
   
   echo "</td></tr></table>\n";
 

@@ -44,6 +44,7 @@ a.user:hover {color:white; background-color:#000080}
 .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+.field {text-align:right; padding-right:10px}
 </style>
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
@@ -378,7 +379,7 @@ a.user:hover {color:white; background-color:#000080}
   }
   
   //output table heading
-  $table_order = array(''=>'',$string['name']=>'name',$string['studentid']=>'student_id',$string['course']=>'student_grade',$string['mark']=>'mark',$marking_label=>$marking_key,$string['clasification']=>'mark',$string['starttime']=>'started',$string['duration']=>'duration',$string['ipaddress']=>'ipaddress');
+  $table_order = array(''=>'',$string['name']=>'name',$string['studentid']=>'student_id',$string['course']=>'student_grade',$string['mark']=>'mark',$marking_label=>$marking_key,$string['classification']=>'mark',$string['starttime']=>'started',$string['duration']=>'duration',$string['ipaddress']=>'ipaddress');
   if ($paper_type == 2) $table_order[$string['room']] = 'room';
   $metadata_cols = array();
   if (isset($user_results[0])){
@@ -646,7 +647,6 @@ a.user:hover {color:white; background-color:#000080}
   }
   fclose($scatter_file);
   
-  
   $distribution_file = fopen("../temp/" . $_SERVER['PHP_AUTH_USER'] . "_distribution.dat", "w");         // Distribution data
   fwrite($distribution_file,serialize($distribution) . "\n");
   fclose($distribution_file);
@@ -662,7 +662,7 @@ a.user:hover {color:white; background-color:#000080}
     $result->store_result();
     $result->bind_result($note, $note_date, $note_workstation);
     echo "<tr><td colspan=\"" . (11 + $meta_col_count) . "\">";
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       $lab_name = '';
       $result2 = $mysqli->prepare("SELECT name FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab AND address=?");
       $result2->bind_param('s', $note_workstation);
@@ -694,9 +694,9 @@ a.user:hover {color:white; background-color:#000080}
     echo "<tr><td colspan=\"" . (11 + $cols) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
     echo "<tr><td>&nbsp;</td><td colspan=\"10\">\n";
-    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
-    echo "<tr><td align=\"right\">Paper:</td><td colspan=\"2\">$paper</td></tr>\n";
-    echo "<tr><td align=\"right\">Cohort Size";
+    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
+    echo "<tr><td class=\"field\">" . $string['paper'] . "</td><td colspan=\"2\">$paper</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
       if ($_GET['direction'] = 'asc') {
         echo ' (top ' . $_GET['percent'] . '%)';
@@ -704,7 +704,7 @@ a.user:hover {color:white; background-color:#000080}
         echo ' (bottom ' . $_GET['percent'] . '%)';
       }
     }
-    echo ":</td><td align=\"right\">$display_no</td>";
+    echo "</td><td align=\"right\">$display_no</td>";
     if ($completed_no < $display_no) {
       echo '<td>(' . ($display_no - $completed_no). ' ' . $string['candidatenotcomplete'] . ')</td>';
     } else {
@@ -717,71 +717,71 @@ a.user:hover {color:white; background-color:#000080}
       echo '</td>';
     }
     echo "</tr>\n";
-    echo "<tr><td align=\"right\">" . $string['failureno'] . "</td><td align=\"right\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td align=\"right\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
     if (isset($ss_hon)) {
-      echo "<tr><td align=\"right\">" . $string['distinctionno'] . "</td><td align=\"right\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td align=\"right\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
     }
-    echo "<tr><td align=\"right\">" . $string['totalmarks'] . ":</td><td align=\"right\">";
+    echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td align=\"right\">";
     if ($total_marks < $orig_total_marks) echo "<span style=\"color:red; text-decoration:line-through\">$orig_total_marks</span>&nbsp;&nbsp;";
     echo "$total_marks</td></tr>\n";
-    echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td align=\"right\">$pass_mark%</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['passmark'] . "</td><td align=\"right\">$pass_mark%</td><td>&nbsp;</td></tr>\n";
     if ($marking == '1') {
-      echo "<tr><td align=\"right\">" . $string['randommark'] . "</td><td align=\"right\">" . number_format($total_random_mark, 2, '.', ',') . "</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td align=\"right\">" . number_format($total_random_mark, 2, '.', ',') . "</td></tr>\n";
       if ($completed_no > 0) {
         if ($total_marks > 0) {
-          echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
+          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
         } else {
-          echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
         }
       } else {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
       }
     } elseif ($marking == '0') {
       if ($completed_no > 0) {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
       } else {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
       }
     } else {
-      echo "<tr><td align=\"right\">" . $string['ss'] .  "</td><td align=\"right\">" . round($ss_pass,2) . "%</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td align=\"right\">" . round($ss_pass,2) . "%</td></tr>\n";
       if ($ss_hon > 0) echo "<tr><td align=\"right\">" . $string['ssdistinction'] . "</td><td align=\"right\">" . round($ss_hon,2) . "%</td></tr>\n";
       if ($completed_no > 0) {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td align=\"right\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
       } else {
-        echo "<tr><td align=\"right\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
       }
     }
     $mid_point = round($cohort_size / 2) - 1;
-    echo "<tr><td align=\"right\">" . $string['medianmark'] . "</td><td align=\"right\">$median_mark</td><td>($median_percent%)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td align=\"right\">$median_mark</td><td>($median_percent%)</td></tr>\n";
     if ($completed_no == 0) {
-      echo "<tr><td align=\"right\">" . $string['stdevmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td align=\"right\" style=\"color:#808080\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td align=\"right\">" . $string['stdevmark'] . "</td><td align=\"right\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent,1) . "%)</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td align=\"right\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent,1) . "%)</td></tr>\n";
     }
-    echo "<tr><td align=\"right\">" . $string['maxmark'] . "</td><td align=\"right\">$max_mark</td><td>(" . number_format($max_percent) . "%)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td align=\"right\">$max_mark</td><td>(" . number_format($max_percent) . "%)</td></tr>\n";
     if ($min_mark == 9999) $min_mark = 0;
-    echo "<tr><td align=\"right\">" . $string['minmark'] . "</td><td align=\"right\">$min_mark</td><td>(" . number_format($min_percent) . "%)</td></tr>\n";
-    echo "<tr><td align=\"right\">" . $string['range'] . "</td><td align=\"right\">" . ($max_mark - $min_mark) . "</td><td>(" . ($max_percent - $min_percent) . "%)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td align=\"right\">$min_mark</td><td>(" . number_format($min_percent) . "%)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td align=\"right\">" . ($max_mark - $min_mark) . "</td><td>(" . ($max_percent - $min_percent) . "%)</td></tr>\n";
 
-    echo "<tr><td align=\"right\">" . $string['top10'] . "</td><td align=\"right\">$top_10%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td align=\"right\">" . $string['top15'] . "</td><td align=\"right\">$top_15%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td align=\"right\">" . $string['top20'] . "</td><td align=\"right\">$top_20%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td align=\"right\">" . $string['top25'] . "</td><td align=\"right\">$top_25%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td align=\"right\">" . $string['bottom10'] . "</td><td align=\"right\">$bottom_10%</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top10'] . "</td><td align=\"right\">$top_10%</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top15'] . "</td><td align=\"right\">$top_15%</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top20'] . "</td><td align=\"right\">$top_20%</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top25'] . "</td><td align=\"right\">$top_25%</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['bottom10'] . "</td><td align=\"right\">$bottom_10%</td><td>&nbsp;</td></tr>\n";
 
     if ($completed_no <= 1) {
-      echo "<tr><td align=\"right\">" . $string['averagetime'] . "</td><td style=\"color:#808080\" align=\"right\">n/a</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td style=\"color:#808080\" align=\"right\">n/a</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td align=\"right\">" . $string['averagetime'] . "</td><td align=\"right\">" . formatsec(round($total_time / $completed_no,0)) . "</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td align=\"right\">" . formatsec(round($total_time / $completed_no,0)) . "</td><td>&nbsp;</td></tr>\n";
     }
     if (count($excluded) > 0) {
-      echo "<tr><td align=\"right\">" . $string['excludedquestions'] . "</td><td colspan=\"2\">$display_excluded</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['excludedquestions'] . "</td><td colspan=\"2\">$display_excluded</td></tr>\n";
     }
     if ($display_experimental != '') {
-      echo "<tr><td align=\"right\">" . $string['experimantalquestions'] . "</td><td colspan=\"2\">$display_experimental</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['experimantalquestions'] . "</td><td colspan=\"2\">$display_experimental</td></tr>\n";
     }
     if(count($warnings['deleted_qns']) > 0) {
-      echo "<tr><td align=\"right\" valign=\"top\">" . $string['warnings'] . "</td><td colspan=\"2\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning: Answers found for questions that no longer appear on the paper\" border=\"0\" />&nbsp;" . $string['nolongerappear'];
+      echo "<tr><td class=\"field\" valign=\"top\">" . $string['warnings'] . "</td><td colspan=\"2\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning: Answers found for questions that no longer appear on the paper\" border=\"0\" />&nbsp;" . $string['nolongerappear'];
       for($i = 0; $i < count($warnings['deleted_qns']); $i++) {
       	echo $warnings['deleted_qns'][$i];
       	if($i < count($warnings['deleted_qns']) - 1) {
@@ -896,7 +896,7 @@ a.user:hover {color:white; background-color:#000080}
       }
     }
   } else {
-    echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been attempted by anyone.</td></tr></table>\n<div>\n</body>\n</html>";
+    echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['noattempts'] . "</td></tr></table>\n<div>\n</body>\n</html>";
     exit;
   }
   echo "</table>\n";
