@@ -134,7 +134,7 @@ META;
           
           if ($keyword['module_id'] != $prev_heading) {
           $html .= <<< META
-      					<h4>{$keyword['module_id']}</h4>
+      					<h4><span class="opaque">{$keyword['module_id']}</span></h4>
                 <ul class="radio-list clearfix">
 
 META;
@@ -160,7 +160,7 @@ META;
       
       if (count($keywords['personal']) > 0) {
         $html .= <<< META
-                <h4>Personal Keywords</h4>
+                <h4><span class="opaque">Keywords</span></h4>
                 <ul class="radio-list clearfix">
 
 META;
@@ -212,7 +212,7 @@ META;
 META;
         }
         $html .= <<< HEADING
-  							<h4>{$individual_team['school']}</h4>
+  							<h4><span class="opaque">{$individual_team['school']}</span></h4>
                 <ul class="radio-list clearfix">
 
 HEADING;

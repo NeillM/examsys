@@ -452,12 +452,18 @@ textarea, input[type=text], select {
 }
 
 .select-group h4 {
+	font-weight:normal;
 	color: #1e3287;
 	padding: 0;
 	margin: 8px 0;
 	font-size: 80%;
 	line-height: 100%;
-	border-bottom: 1px solid #d9d9d9;
+	background: #fff url('../artwork/separator1x1.png') repeat-x left center;
+}
+
+.opaque {
+	background-color: #fff;
+	padding-right: 4px;
 }
 
 #keyword-select {
