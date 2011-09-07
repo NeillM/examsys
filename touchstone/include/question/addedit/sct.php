@@ -74,10 +74,10 @@ require_once 'detail_parts/details_general_feedback.php';
 ?>
 
         <div class="form">
-          <h2>Options</h2>
+          <h2><?php echo $string['options'] ?></h2>
         </div>
         
-        <table id="q-options" class="form" summary="Edit question options">
+        <table id="q-options" class="form" summary="<?php echo $string['qeditsummary'] ?>">
           <tbody>
             <tr>
               <th>Type</th>

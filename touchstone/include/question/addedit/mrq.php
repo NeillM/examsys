@@ -37,7 +37,7 @@ $checked = ($question->get_display_method() == 'other') ? ' checked="checked"' :
               </td>
             </tr>
             <tr>
-              <th><label for="option_order">Option Order</label></th>
+              <th><label for="option_order"><?php echo $string['optionorder'] ?></label></th>
               <td>
                 <select id="option_order" name="option_order">
 <?php 
@@ -55,10 +55,10 @@ require_once 'detail_parts/details_general_feedback.php';
 ?>
         
         <div class="form">
-          <h2>Options</h2>
+          <h2><?php echo $string['options'] ?></h2>
         </div>
         
-        <table id="q-options" class="form" summary="Edit question options">
+        <table id="q-options" class="form" summary="<?php echo $string['qeditsummary'] ?>">
           <thead>
             <tr>
               <th colspan="2">&nbsp;</th>
@@ -83,7 +83,7 @@ if($question->get_locked() == '') {
             <tr>
               <th>&nbsp;</th>
               <td colspan="3">
-                <input id="next-option" value="Add More Options..." type="button" />
+                <input id="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
               </td>
             </tr>
           </tbody>

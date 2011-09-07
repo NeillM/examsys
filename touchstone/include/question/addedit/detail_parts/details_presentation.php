@@ -1,5 +1,5 @@
 <?php
-$presentation_label = (isset($presentation_label)) ? $presentation_label :  'Presentation';
+$presentation_label = (isset($presentation_label)) ? $presentation_label :  $string['presentation'];
 $disp_method_class = (isset($disp_method_class)) ? ' class="' . $disp_method_class . '"' : '';
 ?>
             <tr>

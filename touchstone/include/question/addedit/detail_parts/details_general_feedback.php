@@ -1,6 +1,6 @@
 <?php
-$label_correct = (isset($label_correct)) ? $label_correct : 'General Feedback';
-$label_incorrect = (isset($label_incorrect)) ? $label_incorrect : 'Feedback if Incorrect<br /><span class="note">(leave blank to use default)</span>';
+$label_correct = (isset($label_correct)) ? $label_correct : $string['generalfeedback'];
+$label_incorrect = (isset($label_incorrect)) ? $label_incorrect : $string['fbincorrect'] . '<br /><span class="note">' . $string['fbincorrectmsg'] . '</span>';
 $show_incorrect = (isset($show_incorrect)) ? $show_incorrect : false;
 $feedback_rows = (isset($feedback_rows)) ? $feedback_rows : 3;
 ?>

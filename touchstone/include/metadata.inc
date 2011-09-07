@@ -26,22 +26,22 @@
   require_once '../../classes/schoolutils.class.php';
   require_once '../../classes/logger.class.php';
   
-  function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled) {
+  function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled, &$string) {
     global $teams, $userID, $userroles, $faculty;
 
-    $current_status = ($question->get_status() == '') ? 'Normal' : $question->get_status();
+    $current_status = ($question->get_status() == '') ? $string['normal'] : $question->get_status();
     
     $html = <<< META
-          <table id="q-metadata-basic" class="form" summary="Edit basic question metadata">
+          <table id="q-metadata-basic" class="form" summary="{$string['qmetasummary']}">
             <tbody>
               <tr>
-                <th>Status</th>
+                <th>{$string['status']}</th>
                 <td>
                   <ul class="radio-list horizontal">
 
 META;
 
-    $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
+    $status_array = array($string['normal'], $string['retired'], $string['incomplete'], $string['experimental'], $string['beta']);
     foreach ($status_array as $status) {
       $checked = ($current_status == $status) ? ' checked="checked"' : '';
       if ($disabled != '' and $status != 'Normal' and $status != 'Retired') {
@@ -69,13 +69,13 @@ META;
     if ($bloom_on) {
       $html .= <<< META
               <tr>
-                <th><label for="bloom">Bloom's Taxonomy</label></th>
+                <th><label for="bloom">{$string['bloomstaxonomy']}</label></th>
                 <td>
   								<select id="bloom" name="bloom">
 
 META;
 
-      $bloom_array = array('', 'Knowledge', 'Comprehension', 'Application', 'Analysis', 'Synthesis', 'Evaluation');
+      $bloom_array = array('', $string['knowledge'], $string['comprehension'], $string['application'], $string['analysis'], $string['synthesis'], $string['evaluation']);
       $blooms = $question->get_bloom();
       foreach ($bloom_array as $individual_bloom) {
         $selected =  ($individual_bloom == $blooms) ? ' selected="selected"' : '';
@@ -112,7 +112,7 @@ META;
     $html .= <<< META
           <div class="form">
             <div id="keyword-select" class="select-area">
-            <h3>Keywords</h3>
+            <h3>{$string['keywords']}</h3>
               <div id="q-keywords" class="select-group">
 
 META;
@@ -193,7 +193,7 @@ META;
       
     $html .= <<< META
         		<div id="team-select" class="select-area">
-              <h3>Teams</h3>
+              <h3>{$string['teams']}</h3>
               <div id="q-teams" class="select-group">
 
 META;

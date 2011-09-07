@@ -44,7 +44,7 @@ require_once 'detail_parts/details_media.php';
 require_once 'detail_parts/details_leadin.php';
 ?>
             <tr>
-              <th><label for="option_order">Option Order</label></th>
+              <th><label for="option_order"><?php echo $string['optionorder'] ?></label></th>
               <td>
                 <select id="option_order" name="option_order">
 <?php 
@@ -60,10 +60,10 @@ echo ViewHelper::render_options($question->get_option_orders(), $question->get_o
 require_once 'detail_parts/details_marking.php';
 ?>
         <div class="form">
-          <h2>Options</h2>
+          <h2><?php echo $string['options'] ?></h2>
         </div>
 
-        <table id="q-options" class="form align-centre bordered" summary="Edit question options">
+        <table id="q-options" class="form align-centre bordered" summary="<?php echo $string['qeditsummary'] ?>">
           <tr>
             <th>&nbsp;</th>
 <?php

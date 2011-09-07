@@ -2,7 +2,7 @@
 $show_notes = (isset($show_notes)) ? $show_notes : true;
 ?>
             <tr>
-              <th><label for="theme">Theme/Heading</label></th>
+              <th><label for="theme"><?php echo $string['theme'] ?></label></th>
               <td>
                 <textarea id="theme" name="theme" cols="100" rows="5" class="form-large"><?php echo $question->get_theme() ?></textarea>
               </td>
@@ -11,7 +11,7 @@ $show_notes = (isset($show_notes)) ? $show_notes : true;
 if ($show_notes):
 ?>
             <tr>
-              <th><label for="notes">Notes</label><br /><span class="note">(visible to students)</span></th>
+              <th><label for="notes"><?php echo $string['notes'] ?></label><br /><span class="note"><?php echo $string['notesmsg'] ?></span></th>
               <td>
                 <textarea id="notes" name="notes" cols="100" rows="2" class="form-large"><?php echo $question->get_notes() ?></textarea>
               </td>

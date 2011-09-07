@@ -37,6 +37,7 @@ require '../../include/edit.inc';
 require '../../include/media.inc';
 require '../../include/metadata.inc';
 require '../../include/mapping.inc';
+require '../../lang/' . $language . '/touchstone/question/edit/index.php';
 
 $question = null;
 $logger = new Logger($mysqli);
@@ -55,12 +56,12 @@ $errors = array();
 
 if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   // We're adding a new question
-  $mode = 'Add';
+  $mode = $string['add'];
   
   if (!isset($_GET['type'])) {
-    $critical_error = 'No question type defined.';
+    $critical_error = $string['typeundefined'];
   } elseif (!in_array($_GET['type'], array_keys(Question::$types))) {
-    $critical_error = 'Unknown question type <em>' . htmlentities($_GET['type']) . '</em>.';
+    $critical_error = sprintf($string['typeinvalid'], htmlentities($_GET['type']));
   } else {
     try {
       $question = Question::question_factory($mysqli, $userID, $_GET['type']);
@@ -72,12 +73,12 @@ if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   }
 } else {
   // We're editing an existion question
-  $mode = 'Edit';
+  $mode = $string['edit'];
   
   if($paper_id == -1) {
-    $critical_error = 'No paper defined for question.';
+    $critical_error = $string['paperundefined'];
   } elseif(!ctype_digit($paper_id)) {
-    $critical_error = 'Invalid paper ID.';
+    $critical_error = $string['paperinvalid'];
   } else {
     try {
       $question = Question::question_factory($mysqli, $userID, $_REQUEST['q_id']);
@@ -99,7 +100,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
   if ($new_media !== false) {
     $question->set_media($new_media);
   } else {
-    $critical_error = 'Error uploading media file. Please click <a href="#" onclick="javascript: history.back();">Back</a> and try again.';
+    $critical_error = $string['media_upload_error'];
   }
 }
 
@@ -110,7 +111,7 @@ if($critical_error == '') {
   $show_media_upload = false;
   if ($question->requires_media() and $current_media['filename'] == '') {
     $show_media_upload = true;
-  } elseif (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
+  } elseif (isset($_POST['submit']) and $_POST['submit'] == $string['correct']) {
     // TODO: check how this generalises to all question types
     $unified_part_names = $question->get_unified_fields();
     $save_individual = in_array('correct', array_keys($unified_part_names));
@@ -136,7 +137,7 @@ if($critical_error == '') {
     }
   
 //    redirect();
-  } elseif ((isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['submit'] == 'Limited Save')) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
+  } elseif ((isset($_POST['submit']) and ($_POST['submit'] == $string['save'] or $_POST['submit'] == $string['limitedsave'])) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     // Save data
     if ($question->id == -1 or check_fullSave($question->id,$mysqli)) {
       
@@ -249,7 +250,7 @@ if($critical_error == '') {
     if (count($errors) == 0) {
       try {
     	  if(!$question->save()) {
-    	    $errors[] = 'Error saving data. Please try again';
+    	    $errors[] = $string['data_save_error'];
     	  } else {
     	    // Possibility that we might be converting a MRQ to MCQ
     	    if(isset($_POST['mcqconvert']) and $_POST['mcqconvert'] == '1') {
@@ -289,7 +290,7 @@ if($critical_error == '') {
     }
     
 //    redirect();
-  } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == 'Cancel') {
+  } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
     redirect();
   }
 
@@ -309,7 +310,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title><?php echo $mode . ' Question - ' . $q_type_full .  ' ' . $cfg_install_type ?></title>
+<title><?php echo $mode . ' ' . $string['question'] . ' - ' . $q_type_full .  ' ' . $cfg_install_type ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
@@ -345,23 +346,24 @@ if ($question->requires_flash()) {
 			</a>
 		</div>
 		<div id="page-header-inner">
-			<h1><?php echo $mode . ' Question' . $q_type_display ?></h1>
+			<h1><?php echo $mode . ' ' . $string['question'] . $q_type_display ?></h1>
 		</div>
 
 <?php 
 if ($critical_error == '') {
   $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
+  // TODO: format dates for locale
 ?>
     <div class="tab-bar">
       <div class="tab-holder">
         <p class="question-stats">
-          <strong>Created:</strong>&nbsp;12/04/2011&nbsp;&nbsp;&nbsp;&nbsp;<strong>Modified:</strong>&nbsp;02/08/2011
+          <strong><?php echo $string['created'] ?></strong>&nbsp;12/04/2011&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $string['modified'] ?></strong>&nbsp;02/08/2011
         </p>
         <ol class="tabs">
-          <li class="on"><a href="#">Editor</a></li>
-          <li><a href="#">Changes</a></li>
-          <li><a href="#">Comments</a></li>
-          <li<?php echo $mapping_enabled ?>><a href="#">Mapping</a></li>
+          <li class="on"><a href="#" rel="editor"><?php echo $string['editor'] ?></a></li>
+          <li><a href="#" rel="changes"><?php echo $string['changes'] ?></a></li>
+          <li><a href="#" rel="comments"><?php echo $string['comments'] ?></a></li>
+          <li<?php echo $mapping_enabled ?>><a href="#" rel="mapping"><?php echo $string['mapping'] ?></a></li>
         </ol>
       </div>
     </div>
@@ -375,13 +377,13 @@ if ($critical_error == '') {
     if ($disabled == 'mscaa') {
 ?>
     <div class="banner mscaa">
-      <p><strong>MSC-AA Question</strong> This question has been imported from the MSC-AA and cannot be modified.</p>
+      <p><?php echo $string['mscaamsg'] ?></p>
     </div>
 <?php
     } elseif ($disabled == 'locked') {
 ?>
     <div class="banner">
-      <p><strong>Question Locked</strong> This question is now locked and cannot be modified. <a href="#" class="help-link" rel="161">Click for more details.</a></p>
+      <p><?php echo $string['lockedmsg'] ?></p>
     </div>
 <?php
     }
@@ -396,7 +398,7 @@ if($critical_error != '') {
 ?>
   <div id="major-error" class="edit-spacer">
     <div id="major-error-inner">
-      <h1>Error</h1>
+      <h1><?php echo $string['error'] ?></h1>
       <p><?php echo $critical_error ?></p>
     </div>
   </div>
@@ -426,7 +428,7 @@ if($critical_error != '') {
         
 				<div class="message">
 					<p>
-						<span class="mandatory">*</span> Indicates a <strong>mandatory</strong> field that must be completed.
+						<span class="mandatory">*</span> <?php echo $string['mandatory'] ?>
 					</p>
 				</div>
         
@@ -450,7 +452,7 @@ if (count($errors) > 0) {
 ?>
         <div id="question-holder">
           <div class="form">
-            <h2>Question</h2>
+            <h2><?php echo $string['question'] ?></h2>
           </div>
         
 <?php 
@@ -459,12 +461,12 @@ require_once '../../include/question/addedit/' . $question->get_type() . '.php'
 ?>
 
           <div class="form">
-            <h2>Metadata</h2>
+            <h2><?php echo $string['metadata'] ?></h2>
           </div>
         
 <?php
 // TODO: check usage of old echoMetadata function - SAFE TO REMOVE
-echo render_metadata($mysqli, $question, $question->use_bloom(), $module, $disabled);
+echo render_metadata($mysqli, $question, $question->use_bloom(), $module, $disabled, $string);
 ?>
         </div>
       </div>
@@ -498,7 +500,7 @@ echo render_objectives_mapping_form($mysqli, $paper_id);
     <div id="button-bar">
 <?php
 // TODO: check old save_buttons function - SAFE TO REMOVE
-echo save_buttons_new($mode, $disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id);
+echo save_buttons_new($mode, $disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id, $string);
 // TODO: make cancel jQuery
 ?>
       <input type="hidden" name="q_id" value="<?php echo $question->id ?>" />

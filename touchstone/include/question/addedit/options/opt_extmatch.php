@@ -23,20 +23,20 @@ if ($all_media['filenames'][$index] != '') {
   $current_media_html =  display_media($all_media['filenames'][$index], $all_media['widths'][$index], $all_media['heights'][$index], $index); 
 ?>
               <tr<?php echo $alt_c ?>>
-                <th>Current Media:</th>
+                <th><?php echo $string['current'] . ' ' . $string['media'] ?></th>
                 <td><?php echo $current_media_html ?></td>
               </tr>
 <?php
 }
 ?>
             <tr<?php echo $alt_c ?>>
-              <th><label for="question_media<?php echo $index ?>">Change Media</label></th>
+              <th><label for="question_media<?php echo $index ?>"><?php echo $string['change'] . ' ' . $string['media'] ?></label></th>
               <td>
                 <input id="question_media<?php echo $index ?>" name="question_media<?php echo $index ?>" type="file" size="50" />
               </td>
             </tr>
             <tr<?php echo $alt_c ?>>
-              <th><label for="option_correct_fback<?php echo $index ?>">Feedback</label></th>
+              <th><label for="option_correct_fback<?php echo $index ?>"><?php echo $string['feedback'] ?></label></th>
               <td>
                 <textarea cols="85" rows="2" id="question_correct_fback<?php echo $index ?>" name="question_correct_fback<?php echo $index ?>" class="form-med-large"><?php echo $feedback ?></textarea>
               </td>

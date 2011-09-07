@@ -94,7 +94,7 @@ require_once 'detail_parts/details_media.php';
 require_once 'detail_parts/details_leadin.php';
 ?>
             <tr>
-              <th><label for="option_order">Option Order</label></th>
+              <th><label for="option_order"><?php echo $string['optionorder'] ?></label></th>
               <td>
                 <select id="option_order" name="option_order">
 <?php 
@@ -135,7 +135,7 @@ if($question->get_locked() == '') {
             <tr>
               <th>&nbsp;</th>
               <td colspan="2">
-                <input id="next-option" value="Add More Options..." type="button" />
+                <input id="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
               </td>
             </tr>
           </tbody>

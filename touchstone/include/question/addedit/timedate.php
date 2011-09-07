@@ -52,7 +52,7 @@ echo ViewHelper::render_options($question->get_formats(), $question->get_format(
               </td>
             </tr>
             <tr>
-              <th>Answer</th>
+              <th><?php echo $string['answer'] ?></th>
               <td>
                 <label for="td_day" class="heavy hide">Day</label>
                 <input type="text" id="td_day" name="td_day" value="<?php echo $question->get_td_day() ?>" class="clearinput form-tiny" title="dd" /> /

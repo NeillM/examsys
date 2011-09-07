@@ -28,7 +28,7 @@ $num_options = count($question->options);
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>
-              <th><label for="option_order">Option Order</label></th>
+              <th><label for="option_order"><?php echo $string['optionorder'] ?></label></th>
               <td>
                 <select id="option_order" name="option_order">
 <?php 
@@ -51,7 +51,7 @@ require_once 'detail_parts/details_general_feedback.php';
           <h2>Options<br /><span class="note">(Display Order)</span></h2>
         </div>
         
-        <table id="q-options" class="form" summary="Edit question options">
+        <table id="q-options" class="form" summary="<?php echo $string['qeditsummary'] ?>">
           <thead>
             <tr>
               <th colspan="2">&nbsp;</th>
@@ -76,7 +76,7 @@ if($question->get_locked() == '') {
             <tr>
               <th>&nbsp;</th>
               <td colspan="2">
-                <input id="next-option" value="Add More Options..." type="button" />
+                <input id="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
               </td>
             </tr>
           </tbody>

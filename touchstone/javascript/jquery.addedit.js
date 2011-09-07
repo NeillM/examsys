@@ -46,9 +46,8 @@ function changeTab() {
       });
       $(this).parent().addClass('on');
       
-      // Note: only works if the ID of the div matches the tab text
-      var id = $(this).text().toLowerCase();
-      $('#' +id).fadeIn();
+      var id = $(this).attr('rel');
+      $('#' + id).fadeIn();
     }
   }
 

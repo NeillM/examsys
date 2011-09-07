@@ -307,17 +307,17 @@ function hidden_edit_fields() {
   return $html;
 }
 
-function save_buttons_new($mode, $disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id) {
+function save_buttons_new($mode, $disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id, &$string) {
   $html = '';
   
-  if ($mode == 'Edit') {
+  if ($mode == $string['edit']) {
     $save_disabled = '';
-    $value = 'Save Changes';
+    $value = $string['save'];
     $name = 'submit';
     
     if ($disabled != '') {
       if ($locked != '' or $checkout_author == '') {
-        $value = 'Limited Save';
+        $value = $string['limitedsave'];
       } elseif ($checkout_author != $userID) {
         $save_disabled = ' disabled="disabled"';
         $name = 'bogus';
@@ -331,7 +331,7 @@ HTML;
 
     if ($allow_correct and $locked != '' and $paper_id != -1) {
       $html .= <<< HTML
-      <input id="submit-correct" name="submit" value="Correct" type="submit" class="submit" />
+      <input id="submit-correct" name="submit" value="{$string['correct']}" type="submit" class="submit" />
 
 HTML;
     }
@@ -350,7 +350,7 @@ HTML;
   }
   
   $html .= <<< HTML
-      <input id="submit-cancel" name="submit-cancel" value="Cancel" type="submit" class="submit cancel" />
+      <input id="submit-cancel" name="submit-cancel" value="{$string['cancel']}" type="submit" class="submit cancel" />
 
 HTML;
   

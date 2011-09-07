@@ -47,7 +47,7 @@ echo ViewHelper::render_options($experts, $option->get_correct(), 3);
               </td>
             </tr>
             <tr<?php echo $alt_c ?>>
-              <th class="spaced-bottom"><label for="option_correct_fback<?php echo $index ?>">Feedback</label></th>
+              <th class="spaced-bottom"><label for="option_correct_fback<?php echo $index ?>"><?php echo $string['feedback'] ?></label></th>
               <td class="spaced-bottom">
                 <textarea cols="85" rows="2" id="option_correct_fback<?php echo $index ?>" name="option_correct_fback<?php echo $index ?>" class="form-med-large"><?php echo $option->get_correct_fback() ?></textarea>
               </td>

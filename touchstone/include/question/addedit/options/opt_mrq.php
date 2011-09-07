@@ -35,7 +35,7 @@ $spaced = ($index > 1) ? " class=\"spaced-top{$alt}\"" : $alt_c;
 ?>
           <tbody class="option<?php echo $hidden ?>">
             <tr<?php echo $spaced ?>>
-              <th<?php echo $spaced ?>><?php echo $mandatory ?><label for="option_text<?php echo $index ?>">Option <?php echo $index ?> Text</label></th>
+              <th<?php echo $spaced ?>><?php echo $mandatory ?><label for="option_text<?php echo $index ?>"><?php printf($string['optiontext'], $index) ?></label></th>
               <td<?php echo $spaced ?>>
                 <textarea name="option_text<?php echo $index ?>" id="option_text<?php echo $index ?>" cols="90" rows="2" class="form-med-large"><?php echo $option->get_text() ?></textarea>
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
@@ -50,7 +50,7 @@ $spaced = ($index > 1) ? " class=\"spaced-top{$alt}\"" : $alt_c;
       $current_media_html =  display_media($media['filename'], $media['width'], $media['height'], $index); 
 ?>
               <tr<?php echo $alt_c ?>>
-                <th>Current Media:</th>
+                <th><?php echo $string['current'] . ' ' . $string['media'] ?></th>
                 <td><?php echo $current_media_html ?></td>
                 <td>&nbsp;</td>
               </tr>
@@ -60,7 +60,7 @@ $spaced = ($index > 1) ? " class=\"spaced-top{$alt}\"" : $alt_c;
 
 ?>
             <tr<?php echo $alt_c ?>>
-              <th><label for="option_media<?php echo $index ?>">Change Media</label></th>
+              <th><label for="option_media<?php echo $index ?>"><?php echo $string['change'] . ' ' . $string['media'] ?></label></th>
               <td>
                 <input id="option_media<?php echo $index ?>" name="option_media<?php echo $index ?>" type="file" size="50" />
               </td>

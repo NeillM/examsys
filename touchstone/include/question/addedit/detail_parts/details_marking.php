@@ -19,7 +19,7 @@ $allow_neg = $question->allow_negative_marks();
 <?php
 if ($question->allow_change_marking_method()):
 ?>
-              <th><label for="score_method" class="heavy">Marking Method</label></th>
+              <th><label for="score_method" class="heavy"><?php echo $string['markingmethod'] ?></label></th>
               <td>
                 
                 <select id="score_method" name="score_method" class="spaced-right-large">
@@ -27,11 +27,11 @@ if ($question->allow_change_marking_method()):
 echo ViewHelper::render_options($question->get_score_methods(), $question->get_score_method(), 3, true);
 ?>
                 </select>
-                <label for="option_marks_correct" class="heavy">Marks if Correct</label>
+                <label for="option_marks_correct" class="heavy"><?php echo $string['markscorrect']?></label>
 <?php
 else:
 ?>
-              <th><label for="option_marks_correct" class="heavy">Marks if Correct</label></th>
+              <th><label for="option_marks_correct" class="heavy"><?php echo $string['markscorrect']?></label></th>
               <td>
 
 <?php
@@ -45,7 +45,7 @@ echo ViewHelper::render_options($marks_positive, $mark_correct, 3);
 <?php
 if ($question->allow_negative_marks()):
 ?>
-                <label for="option_marks_incorrect" class="heavy">Marks if Incorrect</label>
+                <label for="option_marks_incorrect" class="heavy"><?php echo $string['marksincorrect']?></label>
                 <select id="option_marks_incorrect" name="option_marks_incorrect" class="spaced-right-large">
 <?php
 echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
@@ -57,7 +57,7 @@ if ($question->allow_partial_marks()):
   $show_partial = ($question->get_score_method('string') == 'Allow partial Marks') ? '' : ' class="hide"';
 ?>
                 <span id="marks-partial"<?php echo $show_partial ?>>
-                  <label for="option_marks_partial" class="heavy">Partial Marks</label>
+                  <label for="option_marks_partial" class="heavy"><?php echo $string['markspartial']?></label>
                   <select id="option_marks_partial" name="option_marks_partial">
 <?php
 echo ViewHelper::render_options($marks_positive, $mark_partial, 3);
