@@ -13,7 +13,7 @@ if (count($question->options) > 0) {
 }
 $allow_neg = $question->allow_negative_marks();
 ?>
-        <table id="q-details" class="form" summary="Edit question details">
+        <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
           <tbody>
             <tr>
 <?php

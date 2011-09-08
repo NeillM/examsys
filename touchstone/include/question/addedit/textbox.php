@@ -40,7 +40,7 @@ if(count($question->options) > 0) {
   $option_id = -1;
 }
 ?>
-				<table id="q-details" class="form" summary="Edit question details">
+				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>

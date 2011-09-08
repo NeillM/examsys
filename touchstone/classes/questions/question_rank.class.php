@@ -27,13 +27,13 @@
 Class QuestionRANK extends Question {
   
   protected $_answer_negative = 0;
-  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
   protected $_allow_partial_marks = true;
   
-  protected $_fields_unified = array('marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)', 'marks_partial' => 'Marks (Partial)');
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
     
-  function __construct($mysqli, $user_id, $data = null) {
-    parent::__construct($mysqli, $user_id, $data);
+    $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial'], $this->_lang_strings['bonusmark']);
+    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
     
     // 'correct' is not a unified field for Rank questions
     $this->_fields_editable[] = 'correct';

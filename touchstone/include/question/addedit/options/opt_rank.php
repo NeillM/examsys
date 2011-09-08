@@ -22,7 +22,7 @@
 * @package
 */
 
-$hidden = ($index > 6 and $index > $num_options) ? ' hide' : '';
+$hidden = (($num_options == 0 and $index > 6) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
 //$correct = ($option->get_correct() == $index) ? ' checked="checked"' : '';
 $correct_vals = array('' => '', '0' => 'N/A');
 for ($i = 1; $i <= 20; $i++) {
@@ -37,16 +37,16 @@ if ($index %2 == 0) {
 } else {
   $alt_c = '';
 }
-$spaced = ($index > 1) ? " class=\"spaced-top spaced-bottom\"" : " class=\"spaced-bottom\"";
+$spaced = ($index > 1) ? ' spaced-top' : '';
 ?>
           <tbody class="option<?php echo $hidden ?>">
             <tr<?php echo $alt_c ?>>
-              <th<?php echo $spaced ?>><label for="option_text<?php echo $index ?>"><?php printf($string['optiontext'], $index) ?></label></th>
-              <td<?php echo $spaced ?>>
+              <th class="spaced-bottom<?php echo $spaced ?>"><label for="option_text<?php echo $index ?>"><?php printf($string['optiontext'], $index) ?></label></th>
+              <td class="spaced-bottom<?php echo $spaced ?>">
                 <input type="text" name="option_text<?php echo $index ?>" id="option_text<?php echo $index ?>" class="form-med-large" value="<?php echo $option->get_text() ?>" />
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
               </td>
-              <td class="small align-centre"<?php echo $spaced ?>>
+              <td class="small align-centre spaced-bottom<?php echo $spaced ?>">
                 <select id="option_correct<?php echo $index ?>" name="option_correct<?php echo $index ?>">
 <?php 
 echo ViewHelper::render_options($correct_vals, $option->get_correct(), 3);

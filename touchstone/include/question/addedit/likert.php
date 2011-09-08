@@ -27,7 +27,7 @@ $scale_value = $question->get_scale_type();
 $na_checked = ($question->get_not_applicable() == 'true') ? ' checked="checked"' : '';
 
 ?>
-				<table id="q-details" class="form" summary="Edit question details">
+				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>

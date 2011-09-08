@@ -26,7 +26,7 @@
 
 $show_notes = false;
 ?>
-				<table id="q-details" class="form" summary="Edit question details">
+				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';

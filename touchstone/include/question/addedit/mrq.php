@@ -24,7 +24,7 @@
 
 $num_options = count($question->options);
 ?>
-				<table id="q-details" class="form" summary="Edit question details">
+				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>
@@ -58,7 +58,7 @@ require_once 'detail_parts/details_general_feedback.php';
           <h2><?php echo $string['options'] ?></h2>
         </div>
         
-        <table id="q-options" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+        <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">
           <thead>
             <tr>
               <th colspan="2">&nbsp;</th>

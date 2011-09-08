@@ -30,17 +30,18 @@ Class QuestionCALCULATION extends Question {
   protected $answer_decimals = 0;
   protected $tolerance = 0;
   public $max_options = 10;
-  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks');
   protected $_allow_partial_marks = true;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'units', 'answer_decimals', 'tolerance', 'bloom', 'status');
-  protected $_fields_unified = array('correct' => 'Correct Answer', 'marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)', 'marks_partial' => 'Marks (Partial)');
   protected $_fields_change = array('option_correct', 'answer_decimals', 'tolerance');
   
   private $_variables = null;
   
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
+    
+    $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']);
+    $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
 
     // Convert the max number of options into a list of variables
     $this->_variables = range('A', chr(64 + $this->max_options));

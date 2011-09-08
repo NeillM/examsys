@@ -24,7 +24,7 @@
 
 $num_options = count($question->options);
 ?>
-				<table id="q-details" class="form" summary="Edit question details">
+				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>
@@ -42,20 +42,20 @@ echo ViewHelper::render_options($question->get_option_orders(), $question->get_o
 
 <?php
 require_once 'detail_parts/details_marking.php';
-$label_correct = 'Feedback if Correct<br /><span class="note warning-severe">(default feedback)</span>';
+$label_correct = $string['fbcorrect'] . '<br /><span class="note warning-severe">' . $string['fbcorrectmsg'] . '</span>';
 $show_incorrect = true;
 require_once 'detail_parts/details_general_feedback.php';
 ?>
         
         <div class="form">
-          <h2>Options<br /><span class="note">(Display Order)</span></h2>
+          <h2><?php $string['options'] ?><br /><span class="note"><?php $string['optionsmsg'] ?></span></h2>
         </div>
         
-        <table id="q-options" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+        <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">
           <thead>
             <tr>
               <th colspan="2">&nbsp;</th>
-              <th class="small align-centre"><strong>Answer</strong></th>
+              <th class="small align-centre"><?php echo $string['answer'] ?></th>
             </tr>
           </thead>
 <?php

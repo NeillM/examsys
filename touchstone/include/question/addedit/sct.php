@@ -45,7 +45,7 @@ $sct_type_js = rtrim($sct_type_js, ',') . ']';
 var sct_types = <?php echo $sct_type_js ?>;
 </script>
 
-				<table id="q-details" class="form" summary="Edit question details">
+				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
@@ -77,7 +77,7 @@ require_once 'detail_parts/details_general_feedback.php';
           <h2><?php echo $string['options'] ?></h2>
         </div>
         
-        <table id="q-options" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+        <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">
           <tbody>
             <tr>
               <th>Type</th>
