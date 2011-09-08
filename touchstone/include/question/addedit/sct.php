@@ -51,7 +51,7 @@ var sct_types = <?php echo $sct_type_js ?>;
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_media.php';
 $mandatory_editor = true;
-$label_editor = '<label for="scenario">Clinical Vignette</label>';
+$label_editor = "<label for=\"scenario\">{$string['clinicalvignette']}</label>";
 require_once 'detail_parts/details_scenario.php';
 
 $mandatory_editor = false;
@@ -61,7 +61,7 @@ $value_editor = $question->get_hypothesis();
 require 'detail_parts/details_editor.php';
 
 $field_editor = 'new_information';
-$label_editor = '<label for="' . $field_editor . '">New Information</label>';
+$label_editor = '<label for="' . $field_editor . '">' . $string['newinformation'] . '</label>';
 $value_editor = $question->get_new_information();
 require 'detail_parts/details_editor.php';
 ?>
@@ -80,7 +80,7 @@ require_once 'detail_parts/details_general_feedback.php';
         <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">
           <tbody>
             <tr>
-              <th>Type</th>
+              <th><?php echo $string['type'] ?></th>
               <td>
                 <select id="display_method" name="display_method" class="sct-type">
 <?php
@@ -88,7 +88,7 @@ echo ViewHelper::render_options($question->get_display_methods(), $question->get
 ?>
                 </select>
               </td>
-              <th class="small">Experts</th>
+              <th class="small"><?php echo $string['experts'] ?></th>
             </tr>
 <?php
 $experts = range(0, 40);

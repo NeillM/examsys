@@ -30,24 +30,27 @@ Class QuestionSCT extends Question {
   protected $new_information = '';
   public $max_options = 5;
   
-  protected $sct_types = array(
-    array('Hypothesis', 'very unlikely', 'unlikely', 'neither likely nor unlikely', 'more likely', 'very likely'),
-    array('Investigation', 'useless', 'less useful', 'neither more or less useful', 'more useful', 'very useful'),
-    array('Prescription', 'contra-indicated totally or almost totally', 'not useful or even detrimental', 'nor less nor more useful', 'useful', 'absolutely necessary'),
-    array('Intervention', 'contraindicated', 'less indicated', 'neither more or less indicated', 'indicated', 'strongly indicated'),
-    array('Treatment', 'contraindicated', 'less indicated', 'neither more or less indicated', 'indicated', 'strongly indicated')
-  );
+  protected $sct_types;
   
   protected $_fields_editable = array('theme', 'scenario', 'hypothesis', 'new_information', 'notes', 'correct_fback', 'incorrect_fback', 'display_method', 'option_order', 'bloom', 'status');
   protected $_fields_required = array('type', 'leadin', 'display_method', 'owner_id', 'status');
   protected $_fields_unified = array();
   
-  function __construct($mysqli, $user_id, $data = null) {
-    parent::__construct($mysqli, $user_id, $data);
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
 
+    $this->sct_types = array(
+      array($this->_lang_strings['hypothesis'], $this->_lang_strings['veryunlikely'], $this->_lang_strings['unlikely'], $this->_lang_strings['neithernorlikely'], $this->_lang_strings['morelikely'], $this->_lang_strings['verylikely']),
+      array($this->_lang_strings['investigation'], $this->_lang_strings['useless'], $this->_lang_strings['lessuseful'], $this->_lang_strings['neithernoruseful'], $this->_lang_strings['moreuseful'], $this->_lang_strings['veryuseful']),
+      array($this->_lang_strings['prescription'], $this->_lang_strings['contraindicatedtotally'], $this->_lang_strings['detrimental'], $this->_lang_strings['neithernoruseful'], $this->_lang_strings['useful'], $this->_lang_strings['necessary']),
+      array($this->_lang_strings['intervention'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated']),
+      array($this->_lang_strings['treatment'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated'])
+    );
+  
+  
     $i = 1;
     foreach ($this->sct_types as $type) {
-      $this->_display_methods[$i] = 'This ' . strtolower($type[0]) . ' becomes';
+      $this->_display_methods[$i] = $this->_lang_strings['this'] . ' ' . strtolower($type[0]) . ' becomes';
       $i++;
     }
     
