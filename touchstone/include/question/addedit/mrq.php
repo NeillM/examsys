@@ -28,12 +28,12 @@ $num_options = count($question->options);
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>
-              <th>Presentation</th>
+              <th><?php echo $string['presentation'] ?></th>
               <td>
 <?php
 $checked = ($question->get_display_method() == 'other') ? ' checked="checked"' : '';
 ?>
-                <input type="checkbox" id="display_method" name="display_method" value="other"<?php echo $checked ?> /> <label for="display_method">include 'other' textbox <span class="note">(use with surveys)</span></label>
+                <input type="checkbox" id="display_method" name="display_method" value="other"<?php echo $checked ?> /> <label for="display_method"><?php echo $string['includeother'] ?></label>
               </td>
             </tr>
             <tr>
@@ -62,7 +62,7 @@ require_once 'detail_parts/details_general_feedback.php';
           <thead>
             <tr>
               <th colspan="2">&nbsp;</th>
-              <th class="small align-centre"><strong>Answer</strong></th>
+              <th class="small align-centre"><?php echo $string['answer'] ?></th>
             </tr>
           </thead>
 <?php

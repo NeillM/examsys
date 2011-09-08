@@ -30,11 +30,12 @@ Class QuestionMRQ extends Question {
   
   protected $score_method = 'Mark per Option';
   
-  protected $_fields_unified = array('marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
   protected $_fields_force = array('display_method');
   
-  function __construct($mysqli, $user_id, $data = null) {
-    parent::__construct($mysqli, $user_id, $data);
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+    
+    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     
     // 'correct' is not a unified field for MRQ
     $this->_fields_editable[] = 'correct';
