@@ -363,11 +363,14 @@ div.form {
 }
 
 .form-fixed {
-	background-color: #d6dff7;
-	overflow: hidden;
-	resize: none;
+/*   overflow: hidden; */
+  resize: none;
 }
 
+.sct-option {
+  background-color: #d6dff7;
+}
+	
 .form th {
   width: 156px;
   text-align: right;
@@ -399,6 +402,7 @@ textarea, input[type=text], select {
 	font-family:Arail,sans-serif;
 	font-size:90%;
 	border: 1px solid #7F9DB9;
+  overflow: auto;
 }
 
 /* Media */
@@ -530,7 +534,7 @@ textarea, input[type=text], select {
 
 #extmatch-options {
   margin-top: -30px;
-  margin-right: -180px;
+  margin-right: -200px;
 	float: right;
 }
 
@@ -538,12 +542,16 @@ textarea, input[type=text], select {
 	margin-top: 0px;
 }
 
+.extmatch-option {
+	height: 34px;
+}
+
 #extended-option-list {
 	font-size: 90%;
 }
 
 #question-holder.wide {
-  padding-right: 180px;
+  padding-right: 200px;
 }
 
 #question-holder.max {

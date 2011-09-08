@@ -31,6 +31,8 @@ $string['alphabetic'] = '1Alphabetic';
 $string['random'] = '1Random';
 $string['image'] = '1Image';
 $string['next'] = '1Next &gt;';
+$string['stem'] = '1Stem';
+$string['availableoptions'] = '1Available Options';
 $string['optiontext'] = '1Option %d Text';
 $string['markingmethod'] = '1Marking Method';
 $string['markperoption'] = '1Mark per Option';
@@ -81,4 +83,6 @@ $string['qeditsummary'] = '1Edit question options';
 $string['qmetasummary'] = '1Edit basic question metadata';
 $string['addoptions'] = '1Add More Options...';
 $string['correctanswer'] = '1Correct Answer';
+$string['correctanswers'] = '1Correct Answers';
+$string['correctanswersmsg'] = '1(Use &lt;ctrl&gt; plus mouse<br />to select several items)';
 ?>

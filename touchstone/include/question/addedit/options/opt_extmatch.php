@@ -12,7 +12,7 @@ $selected = (isset($correct_answers[$index - 1])) ? $correct_answers[$index - 1]
 $select_size = (count($option_texts) < 10) ? count($option_texts) : 10;
 ?>
             <tr<?php echo $alt_c ?>>
-              <th><?php echo $mandatory ?><label for="edit_extmatch<?php echo $index ?>">Stem</label></th>
+              <th><?php echo $mandatory ?><label for="edit_extmatch<?php echo $index ?>"><?php echo $string['stem'] ?></label></th>
               <td>
                 <?php echo wysiwyg_editor('edit_extmatch' . $index, 'question_stem' . strval($index), $stem); ?>
               </td>
@@ -42,7 +42,7 @@ if ($all_media['filenames'][$index] != '') {
               </td>
             </tr>
             <tr<?php echo $alt_c ?>>
-              <th><label for="option_correct<?php echo $index ?>">Correct Answers</label><br /><span class="note">(Use &lt;ctrl&gt; plus mouse<br />to select several items)</span></th>
+              <th><label for="option_correct<?php echo $index ?>"><?php echo $string['correctanswers'] ?></label><br /><span class="note"><?php echo $string['correctanswersmsg'] ?></span></th>
               <td>
                 <select id="option_correct<?php echo $index ?>" name="option_correct<?php echo $index ?>[]" multiple="multiple" size="<?php echo $select_size ?>" class="extmatch-correct">
 <?php

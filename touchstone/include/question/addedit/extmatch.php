@@ -60,7 +60,7 @@ $(function () {
 </script>
 
         <div id="extmatch-options">
-          <h2>Available Options</h2>
+          <h2><?php echo $string['availableoptions'] ?></h2>
           <dl id="extended-option-list">
 <?php
   
@@ -77,7 +77,7 @@ $(function () {
 ?>
             <dt><?php echo $mandatory . ' ' . chr($index + 65) ?>.</dt>
             <dd>
-              <textarea rows="1" id="option_text<?php echo $index + 1 ?>" name="option_text<?php echo $index + 1 ?>" rel="<?php echo $index + 1 ?>" class="extmatch-option form-small"><?php echo $option_text ?></textarea>
+              <textarea rows="2" id="option_text<?php echo $index + 1 ?>" name="option_text<?php echo $index + 1 ?>" rel="<?php echo $index + 1 ?>" class="extmatch-option form-small form-fixed"><?php echo $option_text ?></textarea>
               <input name="optionid<?php echo $index + 1 ?>" value="<?php echo $option_id ?>" type="hidden" />
             </dd>
 <?php

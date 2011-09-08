@@ -160,7 +160,7 @@ META;
       
       if (count($keywords['personal']) > 0) {
         $html .= <<< META
-                <h4><span class="opaque">Keywords</span></h4>
+                <h4><span class="opaque">{$string['keywords']}</span></h4>
                 <ul class="radio-list clearfix">
 
 META;
