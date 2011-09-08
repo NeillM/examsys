@@ -32,6 +32,7 @@ $string['random'] = '1Random';
 $string['image'] = '1Image';
 $string['next'] = '1Next &gt;';
 $string['stem'] = '1Stem';
+$string['questionstem'] = '1Question/Stem';
 $string['availableoptions'] = '1Available Options';
 $string['variables'] = '1Variables';
 $string['min'] = '1Min';
@@ -105,4 +106,8 @@ $string['correctanswer'] = '1Correct Answer';
 $string['correctanswers'] = '1Correct Answers';
 $string['correctanswersmsg'] = '1(Use &lt;ctrl&gt; plus mouse<br />to select several items)';
 $string['onlinehelp'] = '1Online help';
+$string['blankinstructionsddl'] = '1To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Always put the correct answer as the <strong>first</strong> option, followed by the distractors (all options are randomised automatically).<br />e.g. Tyrannosaurus <span class="blank-tag">[blank]</span>Rex,Roger,Roderick,Ramsey<span class="blank-tag">[/blank]</span> was a large bipedal flesh-eating&hellip;';
+$string['blankinstructionstextboxes'] = '1To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Within the [blank] tags add the correct answer and any alternatives also deemed to be correct (separate with commas).<br />e.g. What country are we in <span class="blank-tag">[blank]</span>UK,United Kingdom,Britain,Great Britain,GB<span class="blank-tag">[/blank]</span>?';
+$string['dropdownlists'] = '1Dropdown Lists (randomised)';
+$string['textboxes'] = '1Blank Textboxes';
 ?>

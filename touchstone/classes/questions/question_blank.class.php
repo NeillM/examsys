@@ -28,11 +28,18 @@ Class QuestionBLANK extends Question {
   
   public $max_options = 1;
   protected $_answer_negative = null;
-  
-  protected $_display_methods = array('dropdown' => 'Dropdown Lists (randomised)', 'textboxes' => 'Blank Textboxes');
-  
-  protected $_fields_unified = array('text' => 'Question/Stem', 'marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
+    
 
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+    
+    $this->_fields_unified = array('text' => $this->_lang_strings['questionstem'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+    $this->_display_methods = array('dropdown' => $this->_lang_strings['dropdownlists'], 'textboxes' => $this->_lang_strings['textboxes']);
+    
+    // 'correct' is not a unified field for Dichotomous questions
+    $this->_fields_editable[] = 'correct';
+  }
+  
   /**
    * Does this question type allow changes to the correct answer after it is locked
    * @return boolean
