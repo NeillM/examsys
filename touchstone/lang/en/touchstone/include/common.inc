@@ -23,4 +23,5 @@ $string['ifstuckinvigilator'] = '1If you are still stuck ask an invigilator for 
 $string['forgottenpassword'] = '1Forgotten Password';
 $string['warning'] = '1WARNING:';
 $string['secureconnection'] = '1TouchStone can only be accessed through a secure web connection. Instead use:';
+$string['errormsg'] = '1If you repeatedly get this error please contact:';
 ?>

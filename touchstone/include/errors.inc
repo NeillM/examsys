@@ -28,7 +28,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
   // $eaders - if true output HTML header code
   // $stop_execution - if true exit the script
 
-  global $mysqli, $support_email;
+  global $mysqli, $support_email, $string;
   
   if ($headers == false) {
     echo "<html>\n<head>\n<title>Error</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black\">\n";
@@ -36,7 +36,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
 ?>
 <table border="0" cellpadding="5" cellspacing="0" style="font-size:100%">
 <tr><td rowspan="2"><img src="/touchstone/artwork/bomb.png" width="64" height="64" alt="bomb" /></td><td style="font-size:160%; font-weight:bold; color:#C00000"><?php echo $error_title; ?></td></tr>
-<tr><td><div><?php echo $error_description; ?></div><br /><div style="color:#808080; font-size:90%">If you repeatedly get this error please contact: <a href="mailto:<?php echo $support_email; ?>" style="color:blue"><?php echo $support_email; ?></a></div></td></tr>
+<tr><td><div><?php echo $error_description; ?></div><br /><div style="color:#808080; font-size:90%"><?php echo $string['errormsg']; ?> <a href="mailto:<?php echo $support_email; ?>" style="color:blue"><?php echo $support_email; ?></a></div></td></tr>
 </table>
 
 <?php

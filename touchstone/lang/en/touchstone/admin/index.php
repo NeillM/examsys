@@ -7,6 +7,7 @@ $string['clearorphanmedia'] = '1Clear Orphan Media';
 $string['cleartraining'] = '1Clear Training';
 $string['computerlabs'] = '1Computer Labs';
 $string['courses'] = '1Courses';
+$string['ebelgridtemplates'] = '1Ebel Grid Templates';
 $string['faculties'] = '1Faculties';
 $string['modules'] = '1Modules';
 $string['optimizetables'] = '1Optimize Tables';

@@ -31,13 +31,9 @@ require '../include/staff_auth.inc';
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
 table {font-size:100%}
 .h {background-color:#F1F5FB; color:black}
-.breadcrumb {margin-left:10px; font-size:90%}
-.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 a {color:blue}
 </style>
-
+<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript">
   function hideMarked() {
@@ -82,16 +78,16 @@ a {color:blue}
   }
 
   if (!isset($_GET['phase'])) {
-    $phase_description = 'Finalise Marks';
+    $phase_description = $string['finalisemarks'];
     $tmp_phase = '';
   } elseif ($_GET['phase'] == 1) {
-    $phase_description = 'Primary Marking';
+    $phase_description = $string['primarymarking'];
     $tmp_phase = '&phase=1';
   } elseif ($_GET['phase'] == 2) {
-    $phase_description = 'Second Marking';
+    $phase_description = $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  if ($candidate_no > 0) $phase_description .= " - $candidate_no candidates";
+  if ($candidate_no > 0) $phase_description .= " - $candidate_no " . $string['candidates'];
 
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
@@ -105,16 +101,16 @@ a {color:blue}
   }
 
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n<tr><td class=\"h\" style=\"height:52px\">";
-  echo '<div class="breadcrumb"><a href="../index.php" target="_top">Home</a>';
+  echo '<div class="breadcrumb"><a href="../index.php" target="_top">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '" target="_top">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '" target="_top">' . $_GET['module'] . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '" target="_top">' . $paper . '</a></div><div style="margin-left:10px; font-size:180%; color:black; font-weight:bold">' . $phase_description . '</div></td>';
-  echo "<td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a><br /><input type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\" onclick=\"hideMarked();\"";
+  echo "<td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a><br /><input type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\" onclick=\"hideMarked();\"";
   if (isset($_COOKIE['hidemarked']) and $_COOKIE['hidemarked'] == 'checked') echo ' checked';
-  echo "  /> Hide already marked</td></tr>\n";
+  echo "  /> " . $string['hidemarked'] . "</td></tr>\n";
   echo "<tr><td colspan=\"2\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" /></td></tr>\n";
   echo "</table>\n";
 ?>

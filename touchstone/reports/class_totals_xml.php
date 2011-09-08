@@ -216,7 +216,7 @@
         echo '<Cell/>';
         echo '<Cell/>';
         echo '<Cell/>';
-        echo '<Cell><Data ss:Type="String">No Attendance</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . $string['noattendance'] . '</Data></Cell>';
         echo '<Cell/>';
         echo '<Cell/>';
         echo '</Row>';
@@ -231,14 +231,14 @@
         $total_time += $user_results[$i]['duration'];
         if ($user_results[$i]['adj_percent'] < $pass_mark) {
           echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
-          echo '<Cell ss:StyleID="s25"><Data ss:Type="String">Fail</Data></Cell>';
+          echo '<Cell ss:StyleID="s25"><Data ss:Type="String">' . $string['fail'] . '</Data></Cell>';
         } else {
           if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
             echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
-            echo '<Cell ss:StyleID="s31"><Data ss:Type="String">Distinction</Data></Cell>';
+            echo '<Cell ss:StyleID="s31"><Data ss:Type="String">' . $string['distinction'] . '</Data></Cell>';
           } else {
             echo '<Cell><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
-            echo '<Cell><Data ss:Type="String">Pass</Data></Cell>';
+            echo '<Cell><Data ss:Type="String">' . $string['pass'] . '</Data></Cell>';
           }
         }
         echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';

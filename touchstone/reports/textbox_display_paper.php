@@ -42,7 +42,7 @@ $stmt->bind_param('i', $_GET['paperID']);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($labs, $paper_title, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator);
-while ($row = $stmt->fetch()) {
+while ($stmt->fetch()) {
   $no_screens = $screen;
   if ($q_type != 'info') {
     if (isset($screen_data[$no_screens] )) {
@@ -112,23 +112,23 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   echo '</td><td width="160"><img src="../artwork/uni_logo.png" width="160" height="67" alt="UoN Logo" border="0" /></td></tr></table>';
 
   
-  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, marks, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($screen, $q_type, $q_id, $marks, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks, $correct_fback);
+  $question_data->bind_result($screen, $q_type, $q_id, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
   $num_rows = $question_data->num_rows;
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   $q_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
-  while ($row = $question_data->fetch()) {
+  while ($question_data->fetch()) {
     if ($old_screen != $screen) {
       echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
       echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
       echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-      echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;$screen</td>\n</tr>\n";
+      echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;$screen</td>\n</tr>\n";
       echo '</table></td></tr>';
     }
 
@@ -143,7 +143,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
       echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
       if ($theme != '') echo '<tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>';
-      if ($notes != '') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $notes . '</td></tr>';
+      if ($notes != '') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . strtoupper($string['note']) . 'NOTE:</strong>&nbsp;' . $notes . '</td></tr>';
 
       if ($scenario != '') {
         echo "<tr style=\"background-color:$tmp_color\"><td class=\"question_no\">";
@@ -167,12 +167,19 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
         echo "</td><td style=\"background-color:$tmp_color\">";
       }
       if ($q_media != '' and $q_media != NULL) {
-        echo '<p align="center">' . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
+        $media_list = explode('|', $q_media);
+        $media_list_width = explode('|', $q_media_width);
+        $media_list_height = explode('|', $q_media_height);
+        for ($i=0; $i<count($media_list); $i++) {
+          if ($media_list[$i] != '') {
+            echo '<p align="center">' . display_media($media_list[$i], $media_list_width[$i], $media_list_height[$i]) . "</p>\n";
+          }
+        }
       }
       echo "$leadin</td></tr>\n";
       
       if ($q_type != 'info') {
-        echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"no_marks\"><br />($marks marks)</td></tr>\n";
+        echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"no_marks\"><br />($marks_correct marks)</td></tr>\n";
         echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"feedback\"><br />" . nl2br($correct_fback) . "</td></tr>\n";
       }
     }    

@@ -40,13 +40,9 @@ body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; 
 a.user {color:black}
 a.user:hover {color:white; background-color:#000080}
 .h {background-color:#F1F5FB; color:black}
-.breadcrumb {margin-top:2px; margin-left:10px; font-size:90%}
-.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 .field {text-align:right; padding-right:10px}
 </style>
-
+<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
   var ie  = document.all
@@ -384,7 +380,7 @@ a.user:hover {color:white; background-color:#000080}
   $metadata_cols = array();
   if (isset($user_results[0])){
     foreach($user_results[0] as $key => $val) {
-      if(strrpos($key,'meta_') !== false) {
+      if (strrpos($key,'meta_') !== false) {
         $key_display = ucfirst(str_replace('meta_','',$key));
         $table_order[$key_display] = $key;
         $metadata_cols[$key] = $key;

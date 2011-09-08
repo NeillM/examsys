@@ -24,20 +24,17 @@
 
 require '../include/staff_auth.inc';
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Textbox Marking</title>
+<title><?php echo $string['textboxmarking'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
 table {font-size:100%}
 .h {background-color:#F1F5FB; color:black}
-.breadcrumb {margin-left:10px; font-size:90%}
-.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 a {color:blue}
 </style>
-
+<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 </head>
 
@@ -65,16 +62,16 @@ a {color:blue}
   }
 
   if (!isset($_GET['phase'])) {
-    $phase_description = 'Finalise Marks';
+    $phase_description = $string['finalisemarks'];
     $tmp_phase = '';
   } elseif ($_GET['phase'] == 1) {
-    $phase_description = 'Primary Marking';
+    $phase_description = $string['primarymarking'];
     $tmp_phase = '&phase=1';
   } elseif ($_GET['phase'] == 2) {
-    $phase_description = 'Second Marking';
+    $phase_description = $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  if ($candidate_no > 0) $phase_description .= " - $candidate_no candidates";
+  if ($candidate_no > 0) $phase_description .= " - $candidate_no " . $string['candidates'];
 
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
@@ -88,17 +85,17 @@ a {color:blue}
   }
 
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n<tr><td class=\"h\">";
-  echo '<div class="breadcrumb"><a href="../index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:180%; color:black; font-weight:bold">' . $phase_description . '</div>';
-
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:180%; color:black; font-weight:bold">' . $phase_description . '</div></td>';
+  echo "<td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(214); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
   echo "<tr style=\"height:4px\"><td colspan=\"2\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
 
-  echo "<br />\n<div style=\"margin:20px; background-color:#E4EEFC; border:1px solid #B5C4DF; padding:10px; font-size:80%\">Select the question you wish to mark from the list below.</div>\n";
+  echo "<br />\n<div style=\"margin:20px; background-color:#E4EEFC; border:1px solid #B5C4DF; padding:10px; font-size:80%\">" . $string['msg'] . "</div>\n";
 
   echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
 
@@ -108,7 +105,7 @@ a {color:blue}
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $leadin, $q_type);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($q_type == 'textbox') {
       if (($paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
         // Check how many candidates are marked for this question.

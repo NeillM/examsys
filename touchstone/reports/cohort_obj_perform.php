@@ -34,7 +34,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone: Learning Objective Analysis<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone: <?php echo $string['learningobjectiveanalysis'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
 h1 {margin-left:15px; font-size:18pt}
@@ -44,11 +44,8 @@ p {margin-left:15px; margin-right:15px}
 .grey {color:#808080}
 img {border: none;}
 li {list-style:none; padding-bottom:5px}
-.breadcrumb {margin-left:10px; font-size:90%}
-.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 </style>
+<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 </head>
 <body>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -84,7 +81,7 @@ li {list-style:none; padding-bottom:5px}
   }
   
   echo '<tr><td class="h">';
-  echo '<div class="breadcrumb"><a href="../index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -92,7 +89,7 @@ li {list-style:none; padding-bottom:5px}
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">Learning Objective Analysis</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['learningobjectiveanalysis'] . "</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
   echo "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"2\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
 
   if ($student_no == 0) {
@@ -102,14 +99,14 @@ li {list-style:none; padding-bottom:5px}
   echo '</table>';
   
   $qid_list = substr($qid_list,0,-1); 
-  $objByModule = getObjectivesByMapping($moduleID,$session,$paperID,$qid_list,$mysqli);
+  $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
   unset($objByModule['none_of_the_above']);  
-  if(count($objByModule) == 0) {
+  if (count($objByModule) == 0) {
     echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been mapped to any learning objectives.</td></tr></table>\n";
   } else {
-    foreach($objByModule as $module => $mappings) {
-      foreach($mappings as $id => $mappingData) {
-        if( $mappingData['session']['class_code'] != '') {
+    foreach ($objByModule as $module => $mappings) {
+      foreach ($mappings as $id => $mappingData) {
+        if ($mappingData['session']['class_code'] != '') {
           $sessiontitle = $mappingData['session']['class_code'];
         } else {
           $sessiontitle = $mappingData['session']['title'];
@@ -141,23 +138,23 @@ li {list-style:none; padding-bottom:5px}
     <br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" width="95%" style="background-color:#E4EEFC; border:1px solid #B5C4DF">
     <tr><td style="text-align:left"><table cellpadding="2" cellspacing="0" border="0">
     <?php
-      echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">Total Candidate #</td><td>' . number_format($user_total) . '</td></tr>';
+      echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidate'] . '</td><td>' . number_format($user_total) . '</td></tr>';
       if ($_GET['percent'] != 100 AND $_GET['percent'] != '') {
         if ($_GET['direction'] == 'desc') {
-          echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">Upper group size</td><td>' . $_GET['percent'] . '% (' . $student_no . ' candidates)</td></tr>';
+          echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['uppersize'] . '</td><td>' . $_GET['percent'] . '% (' . $student_no . ' ' . $string['candidates'] . ')</td></tr>';
         } else {
-          echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">Lower group size</td><td>' . $_GET['percent'] . '% (' . $student_no . ' candidates)</td></tr>';
+          echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['lowersize'] . '</td><td>' . $_GET['percent'] . '% (' . $student_no . ' ' . $string['candidates'] . ')</td></tr>';
         }
       }
     ?>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td>Acquisition of 80-100% of specific objective</td></tr>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td>Acquisition of 50-79% of specific objective</td></tr>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /></td><td>Acquisition of 0-49% of specific objective</td></tr>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="12" height="12" alt="Shortcut" /></td><td><a href="" onclick="return false;">hyperlink</a> - jump to section in the VLE for further details</td></tr>
+    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/ok_comment.png" width="16" height="16" alt="<?php echo $string['completely']; ?>" /></td><td><?php echo $string['key1']; ?></td></tr>
+    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/minor_comment.png" width="16" height="16" alt="<?php echo $string['partically']; ?>" /></td><td><?php echo $string['key2']; ?></td></tr>
+    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/major_comment.png" width="16" height="16" alt="<?php echo $string['mostly']; ?>" /></td><td><?php echo $string['key3']; ?></td></tr>
+    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="12" height="12" alt="<?php echo $string['shortcut']; ?>" /></td><td><?php echo $string['key4']; ?></td></tr>
     </table></td></tr>
     </table></div>
-    <h1>Learning Objectives</h1>
-    <p>Below is a list of the <?php echo count($objectives); ?> unique learning objectives assessed by this paper. Because multiple questions may test the same objective it is possible to have partial acquisition of an objective. The following list is order by percentage of cohort acquiring each objective - highest acquisition first.</p>
+    <h1><?php echo $string['learningobjectives']; ?></h1>
+    <p><?php printf($string['msg'], count($objectives)); ?></p>
     <?php
     echo "<blockquote><table cellspacing=\"0\" cellpadding=\"2\" border=\"0\">\n";
     foreach($objectives as $id => $obj_data) {

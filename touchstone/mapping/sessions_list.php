@@ -26,7 +26,6 @@
   require_once '../include/errors.inc';
   check_var('module', 'GET', true, false);
 
-
   if (in_array($_GET['module'], $teams) === false and strpos($userroles,'SysAdmin') === false) {
     exit;
   }
@@ -111,7 +110,7 @@
   echo "<td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['name'] . "&nbsp;</td>\n";
   echo "<td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['objectives'] . "&nbsp;</td><td style=\"background-color:#F1F5FB\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"4\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
-  $objectives = getObjectives($module,$session,'','',$mysqli, 'all');
+  $objectives = getObjectives($module, $session, '', '', $mysqli, 'all');
   $old_session = '';
   $id = 0;
 	$first = true;

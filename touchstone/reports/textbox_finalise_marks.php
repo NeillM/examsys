@@ -27,10 +27,10 @@ require '../include/staff_auth.inc';
 $paperID = $_GET['paperID'];
 
 function displayMarks($id) {
-  global $marks;
+  global $marks_correct;
   $html = '<select name="override' . $id . '"><option value="NULL"></option>';
   $inc = 0.5;
-  for ($i=0; $i<=$marks; $i+=$inc) {
+  for ($i=0; $i<=$marks_correct; $i+=$inc) {
     $display_i = $i;
     if ($i == 0.5) {
       $display_i = '&#189;';
@@ -95,17 +95,17 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT marks FROM options WHERE o_id=?");
+  $result = $mysqli->prepare("SELECT marks_correct FROM options WHERE o_id=?");
   $result->bind_param('i', $q_id);
   $result->execute();
-  $result->bind_result($marks);
+  $result->bind_result($marks_correct);
   $result->fetch();
   $result->close();
 ?>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Finalise Marks</title>
+<title><?php echo $string['finalisemarks'] . ' ' . $cfg_install_type; ?></title>
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
@@ -133,7 +133,7 @@ table {font-size:100%}
 
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n<tr><td class=\"h\" colspan=\"3\">";
-  echo '<div class="breadcrumb"><a href="../index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -141,7 +141,7 @@ table {font-size:100%}
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div></td><td class="h" style="text-align:right; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>';
 
-  echo '<tr><td class="h"><div style="margin-left:10px; font-size:180%; color:black; font-weight:bold">Finalise Marks</div></td><td class="h" style="text-align:center; vertical-align:bottom">1st</td><td class="h" style="text-align:center; vertical-align:bottom">2nd</td><td class="h" style="text-align:center; vertical-align:bottom">Override</td></tr>';
+  echo '<tr><td class="h"><div style="margin-left:10px; font-size:180%; color:black; font-weight:bold">' . $string['finalisemarks'] . '</div></td><td class="h" style="text-align:center; vertical-align:bottom">1st</td><td class="h" style="text-align:center; vertical-align:bottom">2nd</td><td class="h" style="text-align:center; vertical-align:bottom">Override</td></tr>';
   echo "<tr style=\"height:4px\"><td colspan=\"4\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
   
   $student_no = 1;
@@ -159,18 +159,20 @@ table {font-size:100%}
   while ($row = $result->fetch()) {
     if (trim($user_answer) != '') {
       if (isset($secondary_marks[$tmp_userID]) and abs($primary_marks[$tmp_userID] - $secondary_marks[$tmp_userID]) > 1) {
-        echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$tmp_userID] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no);
+        echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$tmp_userID] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no);
       } else {
-        echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td>";
+        echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td>";
         if (isset($secondary_marks[$tmp_userID])) {
-          echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" /></td>";
+          echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" /></td>";
         } else {
-          echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; width:50px; background-color:#EEEEEE\">&nbsp;</td>";
+          echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; width:50px; background-color:#EEEEEE\">&nbsp;</td>";
         }
-        echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8\">" . displayMarks($student_no);
+        echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0\">" . displayMarks($student_no);
       }
     } else {
-      echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #CBC7B8; color:#C00000; font-weight:bold\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;No answer provided<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$tmp_userID] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no);
+      if (!isset($primary_marks[$tmp_userID])) $primary_marks[$tmp_userID] = '';
+      if (!isset($secondary_marks[$tmp_userID])) $secondary_marks[$tmp_userID] = '';
+      echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0; color:#C00000; font-weight:bold\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$tmp_userID] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; background-color:#FFC0C0\">" . displayMarks($student_no);
     }
     echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
     $student_no++;
@@ -181,7 +183,7 @@ table {font-size:100%}
 <br />
 <input type="hidden" name="student_no" value="<?php echo $student_no; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
-<input type="submit" name="submit" value="Finalise Marks" />
+<input type="submit" name="submit" value="<?php echo $string['finalisemarks']; ?>" />
 </form>
 </body>
 </html>

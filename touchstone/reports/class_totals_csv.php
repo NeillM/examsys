@@ -37,19 +37,19 @@
       $marking_label = '%';
       $marking_key = 'percent';
     } else {
-      $marking_label = 'Adjusted %';
+      $marking_label = 'adjusted%';
       $marking_key = 'adj_percent';
     }
   
     $total_time = 0;
     
     //output table heading
-    $table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
-    $table_order['Room'] = 'room';
+    $table_order = array('title'=>'title', 'surname'=>'Surname' ,'firstnames'=>'First_Names','studentid'=>'student_id','course'=>'student_grade','mark'=>'mark',$marking_label=>$marking_key,'classification'=>'mark','starttime'=>'started','duration'=>'duration','ipaddress'=>'ipaddress');
+    $table_order['room'] = 'room';
     $metadata_cols = array();
     if (isset($user_results[0])){
-      foreach($user_results[0] as $key => $val) {
-        if(strrpos($key,'meta_') !== false) {
+      foreach ($user_results[0] as $key => $val) {
+        if (strrpos($key,'meta_') !== false) {
           $key_display = ucfirst(str_replace('meta_','',$key));
           $table_order[$key_display] = $key;
           $metadata_cols[$key] = $key;
@@ -57,8 +57,8 @@
       }
     }
     
-    foreach($table_order as $display => $key) {
-      echo $display . ',';
+    foreach ($table_order as $display => $key) {
+      echo $string[$display] . ',';
     }
     echo "\n";
     
@@ -81,12 +81,12 @@
           
           
           if ($user_results[$i]['adj_percent'] < $pass_mark) {
-            echo "Fail,";
+            echo $string['fail'] . ',';
           } else {
             if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
-              echo "Distinction,";
+              echo $string['distinction'] . ',';
             } else {
-              echo "Pass,";
+              echo $string['pass'] . ',';
             }
           }
           echo $user_results[$i]['display_started'] . "," . formatsec($user_results[$i]['duration']) . "," . $user_results[$i]['ipaddress'] . "," . $user_results[$i]['room'];
@@ -94,7 +94,7 @@
           // Display any associated metadata
           if (count($metadata_cols) > 0) {
             foreach ( $metadata_cols as $type) {
-              echo "," . $user_results[$i][$type];
+              echo ',' . $user_results[$i][$type];
             }
           }
           echo "\n";
@@ -103,34 +103,34 @@
     }
     echo ",,,,,,,,,,,\n";
   
-    echo "Cohort Size,$display_no,,,,,,,,,,\n";
-    echo "# Failures,$failures,(" . round(($failures / $display_no) * 100) . "% of cohort),,,,,,,,,\n";
+    echo $string['cohortsize'] . ",$display_no,,,,,,,,,,\n";
+    echo $string['failureno'] . ",$failures,(" . round(($failures / $display_no) * 100) . "% of cohort),,,,,,,,,\n";
     if (isset($ss_hon)) {
-      echo "# Distinction,$honours,(" . round(($honours / $display_no) * 100) . "% of cohort),,,,,,,,,\n";
+      echo $string['distinctionno'] . ",$honours,(" . round(($honours / $display_no) * 100) . "% of cohort),,,,,,,,,\n";
     }
-    echo "Total available marks,$total_marks,,,,,,,,,,\n";
-    echo "Pass Mark,$pass_mark%,,,,,,,,,,\n";
+    echo $string['totalmarks'] . ",$total_marks,,,,,,,,,,\n";
+    echo $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
     if ($marking == '1') {
-      echo "Random Mark," . number_format($total_random_mark, 2, '.', ',') . ",,,,,,,,,,\n";
+      echo $string['randommark'] . "," . number_format($total_random_mark, 2, '.', ',') . ",,,,,,,,,,\n";
     } elseif (substr($marking,0,1) == '2') {
-      echo "SS," . round($ss_pass,2) . ",,,,,,,,,,\n";
-      echo "SS Distinction," . round($ss_hon,2) . ",,,,,,,,,,\n";
+      echo $string['ss'] . "," . round($ss_pass,2) . ",,,,,,,,,,\n";
+      echo $string['ssdistinction'] . "," . round($ss_hon,2) . ",,,,,,,,,,\n";
     }
-    echo "Mean Mark,$mean_mark,$mean_percent%,,,,,,,,,\n";
-    echo "Median Mark,$median_mark,$median_percent%,,,,,,,,,\n";
-    echo "StDev Mark," . number_format($stddev_mark, 2, '.', ',') . "," . round($stddev_percent,1) . "%,,,,,,,,,\n";
-    echo "Max Mark,$max_mark," . number_format($max_percent) . "%,,,,,,,,,\n";
-    echo "Min Mark,$min_mark," . number_format($min_percent) . "%,,,,,,,,,\n";
-    echo "Range," . ($max_mark - $min_mark) . "," . ($max_percent - $min_percent) . "%,,,,,,,,,\n";
-    echo "Top 10%,$top_10%,,,,,,,,,,\n";
-    echo "Top 15%,$top_15%,,,,,,,,,,\n";
-    echo "Top 20%,$top_20%,,,,,,,,,,\n";
-    echo "Top 25%,$top_25%,,,,,,,,,,\n";
-    echo "Bottom 10%,$bottom_10%,,,,,,,,,,\n";
+    echo $string['meanmark'] . ",$mean_mark,$mean_percent%,,,,,,,,,\n";
+    echo $string['medianmark'] . ",$median_mark,$median_percent%,,,,,,,,,\n";
+    echo $string['stdevmark'] . "," . number_format($stddev_mark, 2, '.', ',') . "," . round($stddev_percent,1) . "%,,,,,,,,,\n";
+    echo $string['maxmark'] . ",$max_mark," . number_format($max_percent) . "%,,,,,,,,,\n";
+    echo $string['maxmark'] . ",$min_mark," . number_format($min_percent) . "%,,,,,,,,,\n";
+    echo $string['range'] . "," . ($max_mark - $min_mark) . "," . ($max_percent - $min_percent) . "%,,,,,,,,,\n";
+    echo $string['top10'] . ",$top_10%,,,,,,,,,,\n";
+    echo $string['top15'] . ",$top_15%,,,,,,,,,,\n";
+    echo $string['top20'] . ",$top_20%,,,,,,,,,,\n";
+    echo $string['top25'] . ",$top_25%,,,,,,,,,,\n";
+    echo $string['bottom10'] . ",$bottom_10%,,,,,,,,,,\n";
     $avg_time = ($completed_no > 0) ? formatsec(round($total_time / $completed_no,0)) : 'n/a';
-    echo "Average Time," . $avg_time . ",,,,,,,,,,\n";
-    echo "Excluded Questions,$display_excluded,,,,,,,,,,\n";
-    echo "Experimental Questions,$display_experimental,,,,,,,,,,\n";
+    echo $string['averagetime'] . "," . $avg_time . ",,,,,,,,,,\n";
+    echo $string['excludedquestions'] . ",$display_excluded,,,,,,,,,,\n";
+    echo $string['experimantalquestions'] . ",$display_experimental,,,,,,,,,,\n";
     if(count($warnings['deleted_qns']) > 0) {
     	echo "Warnings,Answers found for questions that no longer appear on the paper (IDs ";
       for($i = 0; $i < count($warnings['deleted_qns']); $i++) {
@@ -142,7 +142,7 @@
     	echo "),,,,,,,,,,\n";
     }
   } else {
-    echo "This paper has not been attempted by anyone.";
+    echo $string['noattempts'];
   }
   $mysqli->close();
 ?>

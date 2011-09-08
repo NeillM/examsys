@@ -33,11 +33,12 @@
   $phase = $_GET['phase'];
     
   function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username) {
-    global $marks;
+    global $marks_correct, $string;
+    
     $html = '<select name="mark' . $id . '"><option value="NULL"></option>';
     $inc = 1;
     if ($halfmarks == true) $inc = 0.5;
-    for ($i=0; $i<=$marks; $i+=$inc) {
+    for ($i=0; $i<=$marks_correct; $i+=$inc) {
       $display_i = $i;
       if ($i == 0.5) {
         $display_i = '&#189;';
@@ -50,7 +51,7 @@
         $html .= "<option value=\"$i\">$display_i</option>";
       }
     }
-    $html .= '</select>&nbsp;<span style="color:black">marks</span><br />&nbsp;<input type="hidden" name="logrec' . $id . '" value="' . $log_record_id . '"><input type="hidden" name="log' . $id . '" value="' . $log . '"><input type="hidden" name="username' . $id . '" value="' . $tmp_username . '">';
+    $html .= '</select>&nbsp;<span style="color:black">' . $string['marks'] . '</span><br />&nbsp;<input type="hidden" name="logrec' . $id . '" value="' . $log_record_id . '"><input type="hidden" name="log' . $id . '" value="' . $log . '"><input type="hidden" name="username' . $id . '" value="' . $tmp_username . '">';
     return $html;
   }
   
@@ -134,10 +135,10 @@ td {line-height:150%; text-align:justify}
   }
   
   // Get the marks for the question
-  if ($result = $mysqli->prepare("SELECT marks, leadin, correct_fback FROM (questions, options) WHERE questions.q_id=options.o_id AND o_id=? LIMIT 1")) {
+  if ($result = $mysqli->prepare("SELECT marks_correct, marks_incorrect, leadin, correct_fback FROM (questions, options) WHERE questions.q_id=options.o_id AND o_id=? LIMIT 1")) {
     $result->bind_param('i', $q_id);
     $result->execute();
-    $result->bind_result($marks, $leadin, $correct_fback);
+    $result->bind_result($marks_correct, $marks_incorrect, $leadin, $correct_fback);
     $result->fetch();
     $result->close();
   } else {
@@ -172,7 +173,7 @@ td {line-height:150%; text-align:justify}
   $answer_no = 0;
   $result->execute();
   $result->store_result();
-  $result->bind_result($logtype, $id, $tmp_userID, $user_answer, $mark);
+  $result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark);
   if ($result->num_rows == 0) {
     echo "<p>No students</p>";
   }
@@ -181,24 +182,24 @@ td {line-height:150%; text-align:justify}
       $style = '';
       if (trim($user_answer) != '') {
         $answer_no++;
-        if (is_numeric($mark)) {  // Marked previously so grey out.
+        if (is_numeric($student_mark)) {  // Marked previously so grey out.
           if (isset($_COOKIE['hidemarked']) and $_COOKIE['hidemarked'] == 'checked') {
             $style = ' style="display:none"';
           } else {
             $style = ' style="color:#808080"';
           }
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no,$mark,$id,$logtype,$half_marks,$tmp_userID) . "</td></tr>\n";
+        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
       } else {
         $answer_no++;
-        if (is_numeric($mark)) {  // Marked previously so grey out.
+        if (is_numeric($student_mark)) {  // Marked previously so grey out.
           if (isset($_COOKIE['hidemarked']) and $_COOKIE['hidemarked'] == 'checked') {
             $style = ' style=" display:none"';
           } else {
             $style = ' style="color:#808080"';
           }
         }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" /> No answer provided!<br />" . displayMarks($answer_no,$mark,$id,$logtype,$half_marks,$tmp_userID) . "</td></tr>\n";
+        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" /> No answer provided!<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
       }
     }
   }
@@ -214,9 +215,9 @@ td {line-height:150%; text-align:justify}
 
 <?php
   if ($answer_no == 0) {
-    echo '<tr><td><input type="submit" name="submit" value="Save &amp; Exit" accesskey="S" style="width:160px" disabled /></td><td><input type="submit" name="continue" value="Save &amp; Continue" accesskey="C" style="width:160px" disabled /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repdegree=%\'" type="button" name="cancel" value="Cancel" style="width:90px" /></td></tr>';
+    echo '<tr><td><input type="submit" name="submit" value="' . $string['saveexit'] . '" accesskey="S" style="width:160px" disabled /></td><td><input type="submit" name="continue" value="' . $string['savecontinue'] . '" accesskey="C" style="width:160px" disabled /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repdegree=%\'" type="button" name="cancel" value="' . $string['cancel'] . '" style="width:90px" /></td></tr>';
   } else {
-    echo '<tr><td><input type="submit" name="submit" value="Save &amp; Exit" accesskey="S" style="width:160px" /></td><td><input type="submit" name="continue" value="Save &amp; Continue" accesskey="C" style="width:160px" /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repdegree=%\'" type="button" name="cancel" value="Cancel" style="width:90px" /></td></tr>';
+    echo '<tr><td><input type="submit" name="submit" value="' . $string['saveexit'] . '" accesskey="S" style="width:160px" /></td><td><input type="submit" name="continue" value="' . $string['savecontinue'] . '" accesskey="C" style="width:160px" /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.top.location=\'./textbox_select_q.php?paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&ws=1&phase=' . $phase . '&action=mark&repdegree=%\'" type="button" name="cancel" value="' . $string['cancel'] . '" style="width:90px" /></td></tr>';
   }
 ?>
 </table>

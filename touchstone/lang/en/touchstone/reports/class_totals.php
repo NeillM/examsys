@@ -15,9 +15,9 @@ $string['distinctionno'] = '1# Distinction';
 $string['totalmarks'] = '1Total available Marks';
 $string['passmark'] = '1Pass Mark';
 $string['randommark'] = '1Random Mark';
-$string['meanmark'] = '1Mean Mark';
 $string['ss'] = '1SS';
 $string['ssdistinction'] = '1SS Distinction';
+$string['meanmark'] = '1Mean Mark';
 $string['medianmark'] = '1Median Mark';
 $string['stdevmark'] = '1StDev Mark';
 $string['maxmark'] = '1Max Mark';
@@ -67,4 +67,5 @@ $string['na'] = '1n/a';
 $string['noattempts'] = '1This paper has not been attempted by anyone.';
 $string['marks'] = '1Marks';
 $string['studentssubmitted'] = '1Students Submitted';
+$string['noattendance'] = '1No Attendance';
 ?>

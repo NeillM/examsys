@@ -10,45 +10,51 @@
 require_once '../config/config.inc.php';
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
+require_once '../classes/lang.class.php';
+
+$version = '4.1';
 
 set_time_limit(0);
+?>
+<html>
+  <head>
+    <title>TouchStone 4.x Update Script</title>
+    <style type="text/css">
+      html {padding:0em; margin:0em; width:100%}
+      body {padding:0em; margin:0em; width:100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black}
+      h1 {font-size:140%; color:#003163}
+      h2 {font-size:120%; color:#003163}
+      .error {color:red; font-weight:bold}
+      .warning {float:none; color:red; padding-left: .5em; vertical-align:top}
+      label {float:left; width:7.5em; padding-left:0em; text-align:left}
+      p {clear:both}
+      .submit {margin-left:42%; padding-top:2em}
+      table {border:none}
+      table.topbar {font-weight:bold; width:100%; border-collapse:collapse}
+      .topbar td {background-color:#F1F5FB}
+      .header {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
+      .header hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:97%}
+      td.line {width:98%}
+      input {width:150px}
+      form {padding:1em}
+      form div {padding-left:2em}
+    </style>
+    <script language="text/javascript" type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
+    <script language="text/javascript" type="text/javascript" src="../javascript/jquery.validate.min.js"></script>
+  </head>
+  <body>
+  <table class="topbar"> 
+    <tr> 
+      <td><div style="font-size:26pt; font-weight:bold; color:#003163">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:56px; top:-8px; font-size:10pt; color:#003163">version 4.x to 4.1</div></td> 
+      <td style="text-align:right"><img src="../artwork/touchstone_logo_330_85.png" width="330" height="85" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
+    </tr> 
+    <tr> 
+      <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td> 
+    </tr> 
+  </table>
+<?php
 if (!isset($_POST['update'])) {
-  ?>
-  <html>
-    <head>
-      <title>TouchStone Update Script</title>
-      <style type="text/css">
-        html { padding: 0em; margin: 0em; width: 100%}
-        body { padding: 0em; margin: 0em; width: 100%; font-family:Arial,sans-serif; font-size:100%; background-color:white; color:black }
-        .error { float: none; color: red; padding-left: .5em; vertical-align: top; }
-        .warning { float: none; color: red; padding-left: .5em; vertical-align: top; }
-        label { float:left; width:7.5em; padding-left:0em; text-align:left;}
-        p { clear: both; }
-        .submit { margin-left: 42%; padding-top:2em; }
-        table {border:none;}
-        table.topbar {font-weight: bold; width:100%; border-collapse:collapse;}
-        .topbar td {background-color:#F1F5FB;}
-        .header {font-weight: bold; margin-top:1.5em;  margin-bottom:0.5em;  width:97%; color:#1E3287}
-        .header hr  {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:97%;}
-        td.line {width:98%}
-        
-        input {width:200px}
-        form {padding: 1em}
-        form div {padding-left: 2em}
-      </style>
-      <script language="text/javascript" type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
-      <script language="text/javascript" type="text/javascript" src="../javascript/jquery.validate.min.js"></script>
-    </head>
-    <body>
-    <table class="topbar"> 
-      <tr> 
-        <td><div style="font-size:22pt; font-weight:bold">&nbsp;TouchStone </div><div style="position:relative; left:12px; top:-3px; font-size:8pt">Assessment Management System</div></td> 
-        <td style="text-align:right"><img src="../artwork/touchstone_logo_330_85.png" width="330" height="85" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
-      </tr> 
-      <tr> 
-        <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td> 
-      </tr> 
-    </table> 
+?>
     <script>
       $(document).ready(function(){
           $("#installForm").validate();
@@ -63,21 +69,21 @@ if (!isset($_POST['update'])) {
     <?php
     if (!InstallUtils::configFileIsWriteable()) {
       ?>
-       <h2>Update from version 4.0 to 4.1</h2>
-       <div>This update requires that /touchstone/config/config.inc.php is writeable.</div>
-       <div>Please chown the file to the webserver and chomod it 644</div>
+       <h2><?php echo $string['updatefromversion']; ?> 4.x to <?php echo $version; ?></h2>
+       <div><?php echo $string['warning1']; ?></div>
+       <div><?php echo $string['warning1']; ?></div>
       <?php
     } else {
       ?>    
-      <h2>Update from version 4.0 to 4.1</h2>
       <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-        <table class="header"><tr><td><nobr>Database Admin User</nobr></td><td class="line"><hr /></td></tr></table> 
-          <div>The update script needs the username and password of a MySQL admin user to updare the database, users and tables. This username is not saved to the server and is only used by this update script.</div>
+      <div><?php printf($string['msg1'], $version); ?></div>
+        <table class="header"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
+          <div><?php echo $string['msg2']; ?></div>
           <br />
-          <div><label for="mysql_admin_user">DB Username:</label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
-          <div><label for="mysql_admin_pass">DB Password:</label> <input type="password" value="" name="mysql_admin_pass"/></div>
+          <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
+          <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass"/></div>
      
-       <div class="submit"> <input type="submit" name="update" value="Update Touchstone" /> </div>
+       <div class="submit"> <input type="submit" name="update" value="<?php echo $string['startupdate']; ?>" /> </div>
      </form>
     <?php
    }
@@ -91,13 +97,13 @@ if (!isset($_POST['update'])) {
   $mysqli = new $dbclass($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database);
   
   if ($mysqli->connect_error) {
-    echo "<div>Filded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
+    echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
     echo "</body>";
     echo "</html>";
     exit;
   }
   
-  echo "\n<h1>Starting update from version 4.0 to 4.1</h1>\n";
+  echo "\n<blockquote>\n<h1>Starting update from version 4.x to $version</h1>\n<ol>";
   ob_start();
   
   // 15/06/2011
@@ -110,7 +116,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE ebel ADD INDEX SETTER_AND_DATE (setterID, date_set)");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE ebel ADD INDEX SETTER_AND_DATE (setterID, date_set)</div>\n";
+    echo "<li>ALTER TABLE ebel ADD INDEX SETTER_AND_DATE (setterID, date_set)</li>\n";
     ob_flush();
     flush();
   }
@@ -125,17 +131,17 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE log_late DROP COLUMN year");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE log_late DROP COLUMN year</div>\n";
+    echo "<li>ALTER TABLE log_late DROP COLUMN year</li>\n";
     
     $adjust = $mysqli->prepare("ALTER TABLE log_late DROP COLUMN student_grade");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE log_late DROP COLUMN student_grade</div>\n";
+    echo "<li>ALTER TABLE log_late DROP COLUMN student_grade</li>\n";
     
     $adjust = $mysqli->prepare("ALTER TABLE log_late DROP COLUMN ipaddress");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE log_late DROP COLUMN ipaddress</div>\n";
+    echo "<li>ALTER TABLE log_late DROP COLUMN ipaddress</li>\n";
   }
   // 16/06/2011
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='fixed'");
@@ -147,28 +153,27 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN fixed datetime");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE sys_errors ADD COLUMN fixed datetime</div>\n";
+    echo "<li>ALTER TABLE sys_errors ADD COLUMN fixed datetime</li>\n";
     
     $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN php_self text");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE sys_errors ADD COLUMN php_self text</div>\n";
+    echo "<li>ALTER TABLE sys_errors ADD COLUMN php_self text</li>\n";
     
     $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN query_string text");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE sys_errors ADD COLUMN query_string text</div>\n";
+    echo "<li>ALTER TABLE sys_errors ADD COLUMN query_string text</li>\n";
     
     $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN request_method enum('GET', 'HEAD', 'POST', 'PUT', 'DELETE')");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE sys_errors ADD COLUMN request_method enum('GET', 'HEAD', 'POST', 'PUT', 'DELETE')</div>\n";
+    echo "<li>ALTER TABLE sys_errors ADD COLUMN request_method enum('GET', 'HEAD', 'POST', 'PUT', 'DELETE')</li>\n";
     ob_flush();
     flush();
   }
   $result->close();
 
-  
   // Get a list of reviews where group = 'Yes'
   $group_reviews = $mysqli->prepare("SELECT DISTINCT paperID FROM standards_setting WHERE group_review = 'Yes' AND paperID > 0");
   $group_reviews->execute();
@@ -195,7 +200,7 @@ if (!isset($_POST['update'])) {
       $update->bind_param('si', $group_list, $paperID);
       $update->execute();
       $update->close();
-      echo "<div>UPDATE standards_setting SET group_review = '$group_list' WHERE paperID = $paperID AND method = 'Modified Angoff' AND group_review = 'Yes'</div>\n";
+      echo "<li>UPDATE standards_setting SET group_review = '$group_list' WHERE paperID = $paperID AND method = 'Modified Angoff' AND group_review = 'Yes'</li>\n";
     }
   }
   $group_reviews->close();  
@@ -210,12 +215,12 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN selfenroll tinyint");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE modules ADD COLUMN selfenroll tinyint</div>\n";
+    echo "<li>ALTER TABLE modules ADD COLUMN selfenroll tinyint</li>\n";
 
     $adjust = $mysqli->prepare("UPDATE modules SET selfenroll=0");
     $adjust->execute();
     $adjust->close();
-    echo "<div>UPDATE modules SET selfenroll=0</div>\n";
+    echo "<li>UPDATE modules SET selfenroll=0</li>\n";
   }
   
   // 30/06/2011 - Change schools from text to integers
@@ -229,7 +234,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN schoolid int");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE modules ADD COLUMN schoolid int</div>\n";
+    echo "<li>ALTER TABLE modules ADD COLUMN schoolid int</li>\n";
 
     // Look up existing school names
     $schools = array();
@@ -253,7 +258,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE modules DROP COLUMN school");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE modules DROP COLUMN school</div>\n";
+    echo "<li>ALTER TABLE modules DROP COLUMN school</li>\n";
   }
   
 
@@ -267,7 +272,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE users DROP COLUMN faculty");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE users DROP COLUMN faculty</div>\n";
+    echo "<li>ALTER TABLE users DROP COLUMN faculty</li>\n";
   }
   
   // 04/07/2011 - Create new 'admin_access' table to hold which modules 'Admin' can access.
@@ -280,7 +285,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("CREATE TABLE admin_access (adminID int not null primary key auto_increment, userID int, schools_id int)");
     $adjust->execute();
     $adjust->close();
-    echo "<div>CREATE TABLE admin_access (adminID int not null primary key auto_increment, userID int, schools_id int)</div>\n";
+    echo "<li>CREATE TABLE admin_access (adminID int not null primary key auto_increment, userID int, schools_id int)</li>\n";
   }
   
   // 04/07/2011 - New table to handle forgotten password requests.
@@ -293,7 +298,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("CREATE TABLE password_tokens (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, token CHAR(16) NOT NULL, time DATETIME NOT NULL);");
     $adjust->execute();
     $adjust->close();
-    echo "<div>CREATE TABLE password_tokens (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, token CHAR(16) NOT NULL, time DATETIME NOT NULL);</div>\n";
+    echo "<li>CREATE TABLE password_tokens (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, user_id INT NOT NULL, token CHAR(16) NOT NULL, time DATETIME NOT NULL);</li>\n";
     ob_flush();
     flush();
   }
@@ -309,7 +314,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("CREATE TABLE users_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, userID INT, moduleID int, type varchar(255), value varchar(255), calendar_year enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20'));");
     $adjust->execute();
     $adjust->close();
-    echo "<div>CREATE TABLE users_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, userID INT, moduleID int, type varchar(255), value varchar(255), calendar_year enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20'));</div>\n";
+    echo "<li>CREATE TABLE users_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, userID INT, moduleID int, type varchar(255), value varchar(255), calendar_year enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20'));</li>\n";
     ob_flush();
     flush();
   }
@@ -325,7 +330,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE properties ADD COLUMN retired datetime");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE properties ADD COLUMN retired datetime</div>\n";
+    echo "<li>ALTER TABLE properties ADD COLUMN retired datetime</li>\n";
     ob_flush();
     flush();
   }
@@ -341,7 +346,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("CREATE TABLE paper_metadata_security (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, paperID int, name varchar(255), value varchar(255))");
     $adjust->execute();
     $adjust->close();
-    echo "<div>CREATE TABLE paper_metadata_security (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, paperID int, name varchar(255), value varchar(255))</div>\n";
+    echo "<li>CREATE TABLE paper_metadata_security (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, paperID int, name varchar(255), value varchar(255))</li>\n";
     ob_flush();
     flush();
   }
@@ -357,7 +362,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("CREATE TABLE questions_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, questionID int, type varchar(255), value varchar(255))");
     $adjust->execute();
     $adjust->close();
-    echo "<div>CREATE TABLE questions_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, questionID int, type varchar(255), value varchar(255))</div>\n";
+    echo "<li>CREATE TABLE questions_metadata (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, questionID int, type varchar(255), value varchar(255))</li>\n";
     ob_flush();
     flush();
   }
@@ -373,7 +378,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN paperID int");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE sys_errors ADD COLUMN paperID int</div>\n";
+    echo "<li>ALTER TABLE sys_errors ADD COLUMN paperID int</li>\n";
     ob_flush();
     flush();
   }
@@ -389,13 +394,12 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN post_data text");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE sys_errors ADD COLUMN post_data text</div>\n";
+    echo "<li>ALTER TABLE sys_errors ADD COLUMN post_data text</li>\n";
     ob_flush();
     flush();
   }
   $result->close();
-  
-  
+    
   //ADD new role based MySQL users
   $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_stu'");
   $result->execute();
@@ -418,7 +422,7 @@ if (!isset($_POST['update'])) {
     $priv_SQL = array();
     //create touchstone 'database user authentication user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_password . "'");
-    echo "<div>NEW DB USER:: $cfg_db_username created</div>";
+    echo "<li>NEW DB USER:: $cfg_db_username created</li>";
     $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sid TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
@@ -435,7 +439,7 @@ if (!isset($_POST['update'])) {
     
     //create touchstone 'database user student user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_student_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_student_passwd . "'");
-    echo "<div>NEW DB USER:: $cfg_db_student_user created</div>";
+    echo "<li>NEW DB USER:: $cfg_db_student_user created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
@@ -473,7 +477,7 @@ if (!isset($_POST['update'])) {
  
     //create touchstone 'database user external user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_external_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_external_passwd . "'");
-    echo "<div>NEW DB USER:: $cfg_db_external_user created</div>";
+    echo "<li>NEW DB USER:: $cfg_db_external_user created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
@@ -494,7 +498,7 @@ if (!isset($_POST['update'])) {
     
     //create touchstone 'database user staff user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_staff_passwd . "'");
-    echo "<div>NEW DB USER:: $cfg_db_staff_user created</div>";
+    echo "<li>NEW DB USER:: $cfg_db_staff_user created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".* TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".users_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
@@ -539,14 +543,14 @@ if (!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".temp_users TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";  
     
     $mysqli->query("CREATE USER  '" . $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sysadmin_passwd . "'");
-    echo "<div>NEW DB USER:: $cfg_db_sysadmin_user created</div>";
+    echo "<li>NEW DB USER:: $cfg_db_sysadmin_user created</li>";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $cfg_db_database . ".* TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
     
     foreach ($priv_SQL as $sql) {
       $mysqli->query($sql);
       if ($mysqli->errno != 0) {
-        echo '<div> ERROR:: could not set permissions ' . $sql . '</div>';
+        echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
       }  
     }
     ////////////////////////////////////////////////////////////////////////////
@@ -580,7 +584,7 @@ if (!isset($_POST['update'])) {
     $remove_array = array('Local database', 'cfg_db_username', 'cfg_db_passwd', 'cfg_db_database', 'cfg_db_host');
     foreach ($cfg as $line) {
        $remove = false;
-       foreach($remove_array as $needle) {
+       foreach ($remove_array as $needle) {
          if (stripos($line,$needle) !== false) {
             $remove = true;
             break 1;
@@ -600,7 +604,7 @@ if (!isset($_POST['update'])) {
     }
     
     if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg_new) === false) {
-      echo "300 => could not write config file !";
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
     
@@ -608,18 +612,18 @@ if (!isset($_POST['update'])) {
   
   // 26/08/2011 - Add date and time formats to config file.
   $new_cfg_str[] =  "// Date formats in MySQL DATE_FORMAT format\n";
-  $new_cfg_str[] =  "\$cfg_short_date = '%m/%d/%y';\n";
-  $new_cfg_str[] =  "\$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
+  $new_cfg_str[] =  "  \$cfg_short_date = '%m/%d/%y';\n";
+  $new_cfg_str[] =  "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
   $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
   $cfg = file($touchstone_path . '/config/config.inc.php');
-  if (!in_array('// Date formats in MySQL DATE_FORMAT format', $cfg)) {
+  if (!in_array("// Date formats in MySQL DATE_FORMAT format\n", $cfg)) {
     array_splice($cfg,36,0,$new_cfg_str);
     if (file_exists($touchstone_path . '/config/config.inc.php')) {
       rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old2.php');
     }
     
     if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
-      echo "300 => could not write config file !";
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<div>Added date and time formats to config file.</div>\n";
     ob_flush();
@@ -631,16 +635,23 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] =  "\$cfg_company = 'The University of Nottingham';\n";
   $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
   $cfg = file($touchstone_path . '/config/config.inc.php');
-  if (!in_array('cfg_company', $cfg)) {
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_company') !== false) {
+      $found = true;
+    }
+  }
+  
+  if (!$found) {
     array_splice($cfg,16,0,$new_cfg_str);
     if (file_exists($touchstone_path . '/config/config.inc.php')) {
       rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old3.php');
     }
     
     if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
-      echo "300 => could not write config file !";
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
-    echo "<div>Added company name config file.</div>\n";
+    echo "<li>Added company name config file.</li>\n";
     ob_flush();
     flush();
   }
@@ -655,14 +666,14 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN score_method display_method text");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE questions CHANGE COLUMN score_method display_method text</div>\n";
+    echo "<li>ALTER TABLE questions CHANGE COLUMN score_method display_method text</li>\n";
     ob_flush();
     flush();
     
     $adjust = $mysqli->prepare("ALTER TABLE questions ADD COLUMN score_method enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark')");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE questions ADD COLUMN score_method enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark')</div>\n";
+    echo "<li>ALTER TABLE questions ADD COLUMN score_method enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark')</li>\n";
     ob_flush();
     flush();
     
@@ -800,7 +811,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE schools ADD COLUMN facultyID int");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE schools ADD COLUMN facultyID int</div>\n";
+    echo "<li>ALTER TABLE schools ADD COLUMN facultyID int</li>\n";
     ob_flush();
     flush();
     
@@ -819,7 +830,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE schools DROP COLUMN faculty");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE schools DROP COLUMN faculty</div>\n";
+    echo "<li>ALTER TABLE schools DROP COLUMN faculty</li>\n";
     ob_flush();
     flush();
   }
@@ -835,7 +846,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN neg_marking TINYINT(1)");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE modules ADD COLUMN neg_marking TINYINT(1)</div>\n";
+    echo "<li>ALTER TABLE modules ADD COLUMN neg_marking TINYINT(1)</li>\n";
     ob_flush();
     flush();
     $adjust = $mysqli->prepare("UPDATE modules SET neg_marking=1");
@@ -844,17 +855,33 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  // 15/08/2011 - Add new table to hold Ebel grid defaults.
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='ebel_grid_defaults' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  // 15/08/2011 - Add new table to hold Ebel grid templates.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='ebel_grid_templates' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $adjust = $mysqli->prepare("CREATE TABLE ebel_grid_defaults (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint)");
+    $adjust = $mysqli->prepare("CREATE TABLE ebel_grid_templates (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint, name varchar(255))");
     $adjust->execute();
     $adjust->close();
-    echo "<div>CREATE TABLE ebel_grid_defaults (id INT NOT NULL PRIMARY_KEY AUTO INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint)</div>\n";
+    echo "<li>CREATE TABLE ebel_grid_templates (id INT NOT NULL PRIMARY_KEY AUTO INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint, name varchar(255))</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 08/09/2011 - Add field to Modules table to hold which Ebel grid template to use.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='ebel_grid_template'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN ebel_grid_template varchar(255)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE modules ADD COLUMN ebel_grid_template varchar(255)</li>\n";
     ob_flush();
     flush();
   }
@@ -872,16 +899,17 @@ if (!isset($_POST['update'])) {
     $result = $mysqli->prepare("ALTER TABLE papers CHANGE COLUMN question question INT(4) UNSIGNED NOT NULL DEFAULT 0;");
     $result->execute();
     $result->close();
-    echo "<div>ALTER TABLE papers CHANGE COLUMN question question INT(4) UNSIGNED NOT NULL DEFAULT 0;</div>\n";
+    echo "<li>ALTER TABLE papers CHANGE COLUMN question question INT(4) UNSIGNED NOT NULL DEFAULT 0;</li>\n";
     ob_flush();
     flush();
   }
+  echo "</ol>\n";
   
   //Close the database
   $mysqli->close();
   ob_end_flush();
-  echo "\n<h2>Action Required</h2>\n";
-  echo "\n<div>Don't forget to make the configfile readonly! (chmod 444)</div>\n";
-  echo "\n<div>Finished!</div>\n";
+  echo "\n<h2>" . $string['actionrequired'] . "/h2>\n<ol>";
+  echo "\n<li>" . $string['readonly'] . "</li>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<blockquote>\n";
 }
 ?>
