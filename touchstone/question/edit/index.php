@@ -60,11 +60,11 @@ if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   
   if (!isset($_GET['type'])) {
     $critical_error = $string['typeundefined'];
-  } elseif (!in_array($_GET['type'], array_keys(Question::$types))) {
+  } elseif (!in_array($_GET['type'], Question::$types)) {
     $critical_error = sprintf($string['typeinvalid'], htmlentities($_GET['type']));
   } else {
     try {
-      $question = Question::question_factory($mysqli, $userID, $_GET['type']);
+      $question = Question::question_factory($mysqli, $userID, $string, $_GET['type']);
       $question->set_type($_GET['type']);
       $question->set_owner_id($userID);
     } catch (ClassNotFoundException $ex) {
@@ -81,7 +81,7 @@ if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
     $critical_error = $string['paperinvalid'];
   } else {
     try {
-      $question = Question::question_factory($mysqli, $userID, $_REQUEST['q_id']);
+      $question = Question::question_factory($mysqli, $userID, $string, $_REQUEST['q_id']);
     } catch (Exception $ex) {
       $critical_error = $ex->getMessage();
     }
@@ -297,7 +297,7 @@ if($critical_error == '') {
 
   $q_type_display = (!empty($_REQUEST['q_no'])) ? ' ' . $_REQUEST['q_no'] : '';
   if ($question->get_type() != '') {
-    $q_type_full = Question::$types[$question->get_type()];
+    $q_type_full = $string[$question->get_type()];
     $q_type_display .= " &ndash; $q_type_full";
   }
 } else {

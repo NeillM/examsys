@@ -44,7 +44,7 @@ META;
     $status_array = array($string['normal'], $string['retired'], $string['incomplete'], $string['experimental'], $string['beta']);
     foreach ($status_array as $status) {
       $checked = ($current_status == $status) ? ' checked="checked"' : '';
-      if ($disabled != '' and $status != 'Normal' and $status != 'Retired') {
+      if ($disabled != '' and $status != $string['normal'] and $status != $string['retired']) {
         $disabled_mod = ' disabled="disabled"';
         $disabled_class = ' class="disabled"';
       } else {

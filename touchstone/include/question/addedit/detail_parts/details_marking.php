@@ -24,7 +24,7 @@ if ($question->allow_change_marking_method()):
                 
                 <select id="score_method" name="score_method" class="spaced-right-large">
 <?php
-echo ViewHelper::render_options($question->get_score_methods(), $question->get_score_method(), 3, true);
+echo ViewHelper::render_options($question->get_score_methods(), $question->get_score_method('int'), 3, true);
 ?>
                 </select>
                 <label for="option_marks_correct" class="heavy"><?php echo $string['markscorrect']?></label>
@@ -54,7 +54,7 @@ echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
 <?php
 endif;
 if ($question->allow_partial_marks()):
-  $show_partial = ($question->get_score_method('string') == 'Allow partial Marks') ? '' : ' class="hide"';
+  $show_partial = ($question->get_score_method() == 'Allow partial Marks') ? '' : ' class="hide"';
 ?>
                 <span id="marks-partial"<?php echo $show_partial ?>>
                   <label for="option_marks_partial" class="heavy"><?php echo $string['markspartial']?></label>

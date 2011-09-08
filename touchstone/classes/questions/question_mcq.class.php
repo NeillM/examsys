@@ -25,6 +25,11 @@
  */
 
 Class QuestionMCQ extends Question {
-  protected $_display_methods = array('vertical' => 'Vertical Option Button', 'vertical_other' => 'Vertical Option Buttons (with \'other\' textbox)', 'horizontal' => 'Horizontal Option Button', 'dropdown' => 'Dropdown List');
+
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+
+    $this->_display_methods = array('vertical' => $lang_strings['vertical'], 'vertical_other' => $lang_strings['verticalother'], 'horizontal' => $lang_strings['horizontal'], 'dropdown' => $lang_strings['dropdownlist']);
+  }
 }
 

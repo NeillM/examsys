@@ -41,7 +41,7 @@ Class Question extends TouchStoneObject {
   protected $notes = '';
   protected $correct_fback = '';
   protected $incorrect_fback = '';
-  protected $score_method = 'Mark per Question';
+  protected $score_method;
   protected $display_method = '';
   protected $option_order = 'display order';
   protected $standards_setting = '';
@@ -78,9 +78,9 @@ Class Question extends TouchStoneObject {
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
   protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
 //  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
-  protected $_score_methods = array('Mark per Question', 'Mark per Option');
+  protected $_score_methods;
   protected $_display_methods = array();
-  protected $_option_orders = array('display order' => 'Display Order', 'alphabetic' => 'Alphabetic', 'random' => 'Random');
+  protected $_option_orders;
   protected $_mysqli = null;
   protected $_logger = null;
   protected $_data = array();
@@ -95,7 +95,7 @@ Class Question extends TouchStoneObject {
   protected $_fields_force = array();
   
   // 'Unified' fields are the same for all options
-  protected $_fields_unified = array('correct' => 'Correct Answer', 'marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
+  protected $_fields_unified;
   protected $_unified_field_modifications = array();
   
   // These are the fields that are relevant for post-exam corrections
@@ -103,19 +103,38 @@ Class Question extends TouchStoneObject {
   
   // Map our 'nice' property names to the database fields and 'parts' in track changes
   protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'group' => 'q_group', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
-  protected $_change_field_map = array('group' => 'teams', 'correct' => 'Correct Answer');
-  protected $_pretty_names = array('type' => 'Type', 'leadin' => 'Lead-in', 'score_method' => 'Scoring Method', 'display_method' => 'Display Method', 'option_order' => 'Option Order', 'owner_id' => 'Owner', 'status' => 'Status');
-  public static $types = array('blank' => 'Fill in the Blank', 'calculation' => 'calculation', 'dichotomous' => 'Dichotomous', 'extmatch' => 'Extended Matching', 'flash' => 'Flash', 'hotspot' => 'Image Hotspot', 'info' => 'Information Block', 'keyword_based' => 'Keyword Based', 'labelling' => 'Labelling', 'likert' => 'Likert Scale', 'matrix' => 'Matrix', 'mcq' => 'Multiple Choice', 'mrq' => 'Multiple Response', 'random' => 'Random', 'rank' => 'Ranking', 'sct' => 'Script Concordance', 'textbox' => 'Text Box', 'timedate' => 'Time / Date');
+  protected $_change_field_map;
+  protected $_pretty_names;
+  public static $types = array('blank', 'calculation', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'timedate');
+  
+  // Always store English values in the database so need to look up score method against English version
+  protected $_score_methods_db;
+  
+  // Refrence to array of localised language strings
+  protected $_lang_strings = null;
+  
   
   /**
    * Create a new question object by either loading an existing question from the database or populating
    * properties from an associative array
    * @param mixed $data
    */
-  function __construct($mysqli, $user_id, $data = null) {
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     // Store the database connection reference and current user
     $this->_mysqli = $mysqli;
     $this->_user_id = $user_id;
+    $this->_lang_strings = $lang_strings;
+    
+    // Initialise language specific elements
+    $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']);
+    $this->score_method = $this->_lang_strings['markperquestion'];
+    $this->_option_orders = array('display order' => $this->_lang_strings['displayorder'], 'alphabetic' => $this->_lang_strings['alphabetic'], 'random' => $this->_lang_strings['random']);
+    $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+    $this->_change_field_map = array('group' => 'teams', 'correct' => $this->_lang_strings['correctanswer']);
+    // TODO: check if some question types need 'Display Method' instead of 'Presentation'
+    $this->_pretty_names = array('type' => $this->_lang_strings['type'], 'leadin' => $this->_lang_strings['leadin'], 'score_method' => $this->_lang_strings['markingmethod'], 'display_method' => $this->_lang_strings['presentation'], 'option_order' => $this->_lang_strings['optionorder'], 'owner_id' => $this->_lang_strings['owner'], 'status' => $this->_lang_strings['status']);
+    
+    $this->_score_methods_db = array($this->_lang_strings['markperquestion'] => 'Mark per Question', $this->_lang_strings['markperoption'] => 'Mark per Option', $this->_lang_strings['allowpartial'] => 'Allow partial Marks', $this->_lang_strings['bonusmark'] => 'Bonus Mark');
     
     // Array of references to the fields.  Allows succinct use of call_user_func_array for saving
     foreach($this->_fields as $field) {
@@ -318,10 +337,11 @@ QUERY;
           foreach($this->_modified_fields as $key => $value) {
             $db_field = (in_array($key, array_keys($this->_field_map))) ? $this->_field_map[$key] : $key;
             $change_field = (in_array($key, array_keys($this->_change_field_map))) ? $this->_change_field_map[$key] : $key;
+            $get_method = 'get_' . $key;
             if ($value['message'] == '') {
-              $this->_logger->track_change('Edit Question', $this->id, $this->_user_id, $value['value'], $this->$key, $change_field);
+              $this->_logger->track_change('Edit Question', $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
             } else {
-              $this->_logger->track_change($value['message'], $this->id, $this->_user_id, $value['value'], $this->$key, $change_field);
+              $this->_logger->track_change($value['message'], $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
             }
           }
         }
@@ -706,11 +726,11 @@ QUERY;
    * Get the question score method as an integer
    * @return string
    */
-  public function get_score_method($style='int') {
+  public function get_score_method($style='string') {
     if ($style != 'string') {
-      return array_search($this->score_method, $this->_score_methods);
+      return array_search(array_search($this->score_method, $this->_score_methods_db), $this->_score_methods);
     } else {
-      return $this->score_method;
+      return array_search($this->score_method, $this->_score_methods_db);
     }
   }
   
@@ -719,10 +739,10 @@ QUERY;
    * @param string $value
    */
   public function set_score_method($value) {
-    $value = $this->_score_methods[$value];
-    if ($value != $this->score_method) {
-      $this->set_modified_field('score_method', $this->score_method);
-      $this->score_method = $value;
+    $value_en = $this->_score_methods_db[$this->_score_methods[$value]];
+    if ($value_en != $this->score_method) {
+      $this->set_modified_field('score_method', array_search($this->score_method, $this->_score_methods_db));
+      $this->score_method = $value_en;
     }
   }
   
@@ -1148,7 +1168,7 @@ QUERY;
    * @throws ClassNotFoundException
    * @return object a question object of the correct type
    */
-  public static function question_factory($mysqli, $user_id, $data) {
+  public static function question_factory($mysqli, $user_id, &$lang_strings, $data) {
     $object = null;
     
     if(ctype_digit($data)) {
@@ -1168,7 +1188,7 @@ QUERY;
         $classfile = 'questions/question_' . strtolower($type) . '.class.php';
         try {
           include $classfile;
-          $object = new $classname($mysqli, $user_id, $data);
+          $object = new $classname($mysqli, $user_id, $lang_strings, $data);
         } catch (Exception $ex) {
           throw new ClassNotFoundException("No class matching type <code>$classname</code>");
         }
@@ -1180,7 +1200,7 @@ QUERY;
       $classfile = 'questions/question_' . strtolower($data) . '.class.php';
       try {
         include $classfile;
-        $object = new $classname($mysqli, $user_id);
+        $object = new $classname($mysqli, $user_id, $lang_strings);
       } catch (Exception $ex) {
         throw new ClassNotFoundException("No class matching type <code>$classname</code>");
       }

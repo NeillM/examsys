@@ -1,9 +1,12 @@
 <?php
 require '../../lang/' . $language . '/touchstone/include/status.inc';
 require '../../lang/' . $language . '/touchstone/include/blooms.inc';
+require '../../lang/' . $language . '/touchstone/include/question_types.inc';
 
 $string['edit'] = '1Edit';
 $string['add'] = '1Add';
+$string['type'] = '1Type';
+$string['owner'] = '1Owner';
 $string['error'] = '1Error';
 $string['question'] = '1Question';
 $string['options'] = '1Options';
@@ -32,6 +35,8 @@ $string['optiontext'] = '1Option %d Text';
 $string['markingmethod'] = '1Marking Method';
 $string['markperoption'] = '1Mark per Option';
 $string['markperquestion'] = '1Mark per Question';
+$string['allowpartial'] = '1Allow partial Marks';
+$string['bonusmark'] = '1Bonus Mark';
 $string['markscorrect'] = '1Marks if Correct';
 $string['marksincorrect'] = '1Marks if Incorrect';
 $string['markspartial'] = '1Partial Marks';
@@ -75,4 +80,5 @@ $string['uploadinstructions'] = '1Please select the image file you would like to
 $string['qeditsummary'] = '1Edit question options';
 $string['qmetasummary'] = '1Edit basic question metadata';
 $string['addoptions'] = '1Add More Options...';
+$string['correctanswer'] = '1Correct Answer';
 ?>
