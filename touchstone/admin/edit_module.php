@@ -66,8 +66,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $tmp_fullname = trim($_POST['fullname']);
   $tmp_checklist = substr($checklist,1); 
   
-  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=? WHERE moduleid=?");
-  $result->bind_param('ssisssiiis', $tmp_moduleid, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['old_moduleid']);
+  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=?, ebel_grid_template=? WHERE moduleid=?");
+  $result->bind_param('ssisssiiiis', $tmp_moduleid, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $_POST['old_moduleid']);
   $result->execute();
   $result->close();
 
@@ -119,11 +119,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_modules.php");
 } else {
   $moduleid = $_GET['moduleid'];
-  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
+  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
   $stmt->bind_param('s', $moduleid);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking);
+  $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid);
   $stmt->fetch();
   
   require '../classes/smsutils.class.php';
@@ -135,7 +135,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-  <title>Edit Module<?php echo " $cfg_install_type"; ?></title>
+  <title><?php echo $string['editmodule'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
   <style>
@@ -144,16 +144,24 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   </style>
 
   <script language="JavaScript">
-  function checkForm() {
-    if (myform.moduleid.value == "") {
-      alert ("Please enter an Identifier for the module.");
-      return false;
+    function checkForm() {
+      if (myform.moduleid.value == "") {
+        alert ("Please enter an Identifier for the module.");
+        return false;
+      }
+      if (myform.fullname.value == "") {
+        alert ("Please enter a title for the module.");
+        return false;
+      }
     }
-    if (myform.fullname.value == "") {
-      alert ("Please enter a title for the module.");
-      return false;
+    
+    function showHideGrid() {
+      if (document.getElementById('stdset').checked) {
+        document.getElementById('ebelgrid').style.display = 'block';
+      } else {
+        document.getElementById('ebelgrid').style.display = 'none';
+      }
     }
-  }
   
   <?php
   if ($unique_moduleid == false) {
@@ -248,10 +256,29 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   echo '</select></td></tr>';
   ?>
     <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select name="vle_api"><option value="">&lt;No lookup&gt;</option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option></select></td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input type="checkbox" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
     <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>
     <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($neg_marking == 1) echo ' checked'; ?> /></td></tr>
+    <tr id="ebelgrid" style="display:<?php
+    if ($stdset == 1) {
+      echo 'block';
+    } else {
+      echo 'none';
+    }
+    ?>"><td class="field"><?php echo $string['ebelgrid']; ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
+    $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
+    $result->execute();
+    $result->bind_result($id, $name);
+    while ($result->fetch()) {
+      if ($id == $current_ebel_grid) {
+        echo "<option value=\"$id\" selected>$name</option>\n";
+      } else {
+        echo "<option value=\"$id\">$name</option>\n";
+      }
+    }
+    $result->close();
+    ?></select></td></tr>
   <?php
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_moduleid\" value=\"" . $_GET['moduleid'] . "\" />\n";

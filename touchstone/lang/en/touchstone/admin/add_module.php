@@ -14,10 +14,12 @@ $string['active'] = '1Active';
 $string['allowselfenrol'] = '1allow Self-enrol';
 $string['negativemarking'] = '1Negative Marking';
 $string['add'] = '1Add';
+$string['save'] = '1Save';
 $string['cancel'] = '1Cancel';
 $string['createmodule'] = '1Create new Module';
 $string['editmodule'] = '1Edit Module';
 $string['modulefolder'] = '1Module Folder';
 $string['studentcohort'] = '1Student Cohort';
 $string['nolookup'] = '1&lt;No lookup&gt;';
+$string['ebelgrid'] = '1Ebel Grid';
 ?>

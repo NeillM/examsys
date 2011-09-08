@@ -80,7 +80,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['vle_api']))   $vle_api = $_POST['vle_api'];
   if (isset($_POST['sms_api']))   $sms_api = $_POST['sms_api'];
   
-  ModuleUtils::addModules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $mysqli);
+  $ebel_grid_template = $_POST['ebel_grid_template'];
+  
+  ModuleUtils::addModules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
   
   if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     $enrolements = 0;
@@ -170,16 +172,24 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   <script src="../javascript/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
-  function checkForm() {
-    if (myform.moduleid.value == "") {
-      alert ("Please enter an Identifier for the module.");
-      return false;
+    function checkForm() {
+      if (myform.moduleid.value == "") {
+        alert ("Please enter an Identifier for the module.");
+        return false;
+      }
+      if (myform.fullname.value == "") {
+        alert ("Please enter a title for the module.");
+        return false;
+      }
     }
-    if (myform.fullname.value == "") {
-      alert ("Please enter a title for the module.");
-      return false;
+
+    function showHideGrid() {
+      if (document.getElementById('stdset').checked) {
+        document.getElementById('ebelgrid').style.display = 'block';
+      } else {
+        document.getElementById('ebelgrid').style.display = 'none';
+      }
     }
-  }
   </script>
   </head>
   
@@ -239,10 +249,19 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <option value=""><?php echo $string['nolookup']; ?></option>
     <option value="NLE"<?php if (isset($_POST['vle_api']) and $_POST['vle_api'] == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option>
     </select></td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer" checked /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external" checked /> <?php echo $string['externalexaminers']; ?>, <input type="checkbox" name="stdset" /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping" /> <?php echo $string['mapping']; ?></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer" checked /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external" checked /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset" /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping" /> <?php echo $string['mapping']; ?></td></tr>
     <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active" checked /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
     <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking" checked /></td></tr>
+    <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid']; ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
+    $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
+    $result->execute();
+    $result->bind_result($id, $name);
+    while ($result->fetch()) {
+      echo "<option value=\"$id\">$name</option>\n";
+    }
+    $result->close();
+    ?></select></td></tr>
     </table>
     <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['add']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>

@@ -878,10 +878,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN ebel_grid_template varchar(255)");
+    $adjust = $mysqli->prepare("ALTER TABLE modules ADD COLUMN ebel_grid_template int");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE modules ADD COLUMN ebel_grid_template varchar(255)</li>\n";
+    echo "<li>ALTER TABLE modules ADD COLUMN ebel_grid_template int</li>\n";
     ob_flush();
     flush();
   }
