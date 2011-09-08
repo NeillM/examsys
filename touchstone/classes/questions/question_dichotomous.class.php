@@ -31,11 +31,11 @@ Class QuestionDICHOTOMOUS extends Question {
   protected $_answer_negative = 'f';
   protected $display_method = 'TF_Positive';
   
-  protected $_fields_unified = array('marks_correct' => 'Marks (Correct)', 'marks_incorrect' => 'Marks (Incorrect)');
-  protected $_display_methods = array('TF_NegativeAbstain' => 'True/False/Abstain (Negative Marking -1)', 'TF_NegativeAbstainHalf' => 'True/False/Abstain (Negative Marking -0.5)', 'TF_Positive' => 'True/False', 'YN_NegativeAbstain' => 'Yes/No/Abstain (Negative Marking -1)', 'YN_Positive' => 'Yes/No');
-  
-  function __construct($mysqli, $user_id, $data = null) {
-    parent::__construct($mysqli, $user_id, $data);
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+    
+    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+    $this->_display_methods = array('TF_NegativeAbstain' => $this->_lang_strings['tfnegativeabstain'], 'TF_NegativeAbstainHalf' => $this->_lang_strings['tfnegativeabstainhalf'], 'TF_Positive' => $this->_lang_strings['tfpositive'], 'YN_NegativeAbstain' => $this->_lang_strings['ynnegativeabstain'], 'YN_Positive' => $this->_lang_strings['ynpositive']);
     
     // 'correct' is not a unified field for Dichotomous questions
     $this->_fields_editable[] = 'correct';
@@ -45,10 +45,10 @@ Class QuestionDICHOTOMOUS extends Question {
    * Get the labels for true/false options. These change depending on the score method
    */
   public function get_tf_labels() {
-    if (substr($this->get_score_method(), 0, 2) == 'YN') {
-      $labels = array('true' => 'Y', 'false' => 'N');
+    if (substr($this->get_display_method(), 0, 2) == 'YN') {
+      $labels = array('true' => $this->_lang_strings['abbryes'], 'false' => $this->_lang_strings['abbrno']);
     } else {
-      $labels = array('true' => 'T', 'false' => 'F');
+      $labels = array('true' => $this->_lang_strings['abbrtrue'], 'false' => $this->_lang_strings['abbrfalse']);
     }
     
     return $labels;

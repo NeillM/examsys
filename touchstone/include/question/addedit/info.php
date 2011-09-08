@@ -32,7 +32,7 @@ $show_notes = false;
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_media.php';
 $mandatory_leadin = false;
-$label_leadin = '<label for="leadin">Text</label>';
+$label_leadin = "<label for=\"leadin\">{$string['text']}</label>";
 require_once 'detail_parts/details_leadin.php';
 ?>
 					</tbody>
