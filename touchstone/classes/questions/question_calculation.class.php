@@ -39,8 +39,8 @@ Class QuestionCALCULATION extends Question {
   
   private $_variables = null;
   
-  function __construct($mysqli, $user_id, $data = null) {
-    parent::__construct($mysqli, $user_id, $data);
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
 
     // Convert the max number of options into a list of variables
     $this->_variables = range('A', chr(64 + $this->max_options));

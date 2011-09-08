@@ -47,17 +47,17 @@ require_once 'detail_parts/details_general_feedback.php';
 ?>
         
         <div class="form">
-          <h2>Variables</h2>
+          <h2><?php echo $string['variables'] ?></h2>
         </div>
         
         <table id="q-options" class="form" summary="Edit question variables">
           <thead>
             <tr>
               <th>&nbsp;</th>
-              <th class="align-left">Min</th>
-              <th class="align-left">Max</th>
-              <th class="align-left">Decimals</th>
-              <th class="align-left">Increment</th>
+              <th class="align-left"><?php echo $string['min'] ?></th>
+              <th class="align-left"><?php echo $string['max'] ?></th>
+              <th class="align-left"><?php echo $string['decimals'] ?></th>
+              <th class="align-left"><?php echo $string['increment'] ?></th>
             </tr>
           </thead>
 <?php
@@ -80,32 +80,32 @@ for ($index = $num_options + 1; $index <= count($variables); $index++) {
         </table>
 
         <div class="form">
-          <h2>Answer</h2>
+          <h2><?php echo $string['answer'] ?></h2>
         </div>
         
         <table id="q-options" class="form" summary="Edit question variables">
           <tbody>
             <tr>
               <th>
-                <label for="option_correct"><span class="mandatory">*</span>Formula</label><br />
-                <span class="note"><a href="#" class="help-link" rel="68"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="Online Help" border="0" /></a>&nbsp;<a href="#" class="help-link" rel="68">supported functions</a></span>
+                <label for="option_correct"><span class="mandatory">*</span><?php echo $string['formula'] ?></label><br />
+                <span class="note"><a href="#" class="help-link" rel="68"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['onlinehelp'] ?>" border="0" /></a>&nbsp;<a href="#" class="help-link" rel="68"><?php echo $string['suppfunctions'] ?></a></span>
               </th>
               <td colspan="3">
                 <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"><?php echo $formula ?></textarea>
               </td>
             </tr>            
             <tr>
-              <th class="spaced-top"><label for="units">Units</label></th>
+              <th class="spaced-top"><label for="units"><?php echo $string['units'] ?></label></th>
               <td class="spaced-top"><input type="text" id="units" name="units" value="<?php echo $question->get_units() ?>" /></td>
               <td class="spaced-top">
-                <label for="answer_decimals" class="spaced-right"><strong>Decimals</strong></label>
+                <label for="answer_decimals" class="spaced-right"><strong><?php echo $string['decimals'] ?></strong></label>
                 <select id="answer_decimals" name="answer_decimals">
 <?php
 echo ViewHelper::render_options($decimals, $question->get_answer_decimals(), 3);
 ?>
                 </select>
               </td>
-              <td class="spaced-top"><label for="tolerance" class="spaced-right"><strong>Tolerance</strong></label><input type="text" id="tolerance" name="tolerance" value="<?php echo $question->get_tolerance() ?>" /></td>
+              <td class="spaced-top"><label for="tolerance" class="spaced-right"><strong><?php echo $string['tolerance'] ?></strong></label><input type="text" id="tolerance" name="tolerance" value="<?php echo $question->get_tolerance() ?>" /></td>
             </tr>
           </tbody>
         </table>
