@@ -25,7 +25,7 @@
 $num_options = count($question->options);
 $columns = range(10, 120, 10);
 $rows = range(1, 15);
-$editors = array('plain' => 'Plain Text', 'WYSIWYG' => 'WYSIWYG');
+$editors = array('plain' => $string['plaintext'], 'WYSIWYG' => $string['wysiwyg']);
 
 if(count($question->options) > 0) {
   $option = reset($question->options);
@@ -44,20 +44,20 @@ if(count($question->options) > 0) {
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>
-              <th><label for="columns">Presentation</label></th>
+              <th><label for="columns"><?php echo $string['presentation'] ?></label></th>
               <td>
                 <select id="columns" name="columns" class="spaced-right">
 <?php
-echo ViewHelper::render_options($columns, $question->get_columns(), 3, false, '', '', ' cols');
+echo ViewHelper::render_options($columns, $question->get_columns(), 3, false, '', '', " {$string['cols']}");
 ?>
                 </select>
-                <label for="rows" class="spaced-right"><strong>x</strong></label>
+                <label for="rows" class="spaced-right heavy">x</label>
                 <select id="rows" name="rows" class="spaced-right-large">
 <?php 
-echo ViewHelper::render_options($rows, $question->get_rows(), 3, false, '', '', ' rows');
+echo ViewHelper::render_options($rows, $question->get_rows(), 3, false, '', '', " {$string['rows']}");
 ?>
                 </select>
-                <label for="editor"><strong>Editor</strong></label>
+                <label for="editor" class="heavy"><?php echo $string['editor'] ?></label>
                 <select id="option_text" name="option_text">
 <?php 
 echo ViewHelper::render_options($editors, $editor, 3);
@@ -72,13 +72,13 @@ require_once 'detail_parts/details_marking.php';
 				</table>
 
         <div class="form">
-          <h2>Assessment Data</h2>
+          <h2><?php echo $string['assessmentdata'] ?></h2>
         </div>
         
-        <table id="q-options" class="form" summary="Edit question assessment data">
+        <table id="q-options" class="form" summary="<?php echo $string['qassessmentsummary'] ?>">
           <tbody>
             <tr>
-              <th><label for="terms">Terms</label><br /><span class="note">(separate with semicolons)</span></th>
+              <th><label for="terms"><?php echo $string['terms'] ?></label><br /><span class="note"><?php echo $string['termsmsg'] ?></span></th>
               <td>
                 <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"><?php echo $terms ?></textarea>
                 <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
@@ -87,7 +87,7 @@ require_once 'detail_parts/details_marking.php';
           </tbody>
         </table>
 <?php
-$label_correct = 'Feedback<br /><span class="note">(model answer for assessments)</span>';
+$label_correct = $string['feedback'] . '<br /><span class="note">' . $string['feedbackmsg'] . '</span>';
 $feedback_rows = 4;
 require_once 'detail_parts/details_general_feedback.php';
 ?>
