@@ -1295,7 +1295,7 @@ table {font-size:100%}
         case 'rank':
           $paper[$question]['mark'] = 0;
           $paper[$question]['totalpos'] = $no_options * $paper[$question]['marks_correct'];
-          if ($paper[$question]['score_method'] != 'Bonus Mark') $paper[$question]['totalpos']++;
+          if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos']++;
           
           if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
