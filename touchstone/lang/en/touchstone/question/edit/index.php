@@ -104,8 +104,6 @@ $string['noneabovemsg'] = '1Check here if the current question does not match an
 $string['mandatory'] = '1Indicates a <strong>mandatory</strong> field that must be completed.';
 $string['typeundefined'] = '1No question type defined.';
 $string['typeinvalid'] = '1Unknown question type <em>%s</em>.';
-$string['paperundefined'] = '1No paper defined for question.';
-$string['paperinvalid'] = '1Invalid paper ID.';
 $string['questioninvalid'] = '1Invalid question ID.';
 $string['mediauploaderror'] = '1Error uploading media file. Please click <a href="#" onclick="javascript: history.back();">Back</a> and try again.';
 $string['datasaveerror'] = '1Error saving data. Please try again';

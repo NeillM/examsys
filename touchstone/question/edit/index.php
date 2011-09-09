@@ -46,6 +46,8 @@ $module = (!isset($_GET['module'])) ? '' : $_GET['module'];
 $folder = (!isset($_REQUEST['folder'])) ? '' : $_REQUEST['folder'];
 $scrofy = (!isset($_REQUEST['scrOfY'])) ? '' : $_REQUEST['scrOfY'];
 $calling = (!isset($_REQUEST['calling'])) ? '' : $_REQUEST['calling'];
+$keyword = (!isset($_REQUEST['keyword'])) ? '' : $_REQUEST['keyword'];
+$team = (!isset($_REQUEST['team'])) ? '' : $_REQUEST['team'];
 
 $critical_error = '';
 
@@ -75,18 +77,13 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   // We're editing an existion question
   $mode = $string['edit'];
   
-  if ($paper_id == -1) {
-    $critical_error = $string['paperundefined'];
-  } elseif (!ctype_digit($paper_id)) {
-    $critical_error = $string['paperinvalid'];
-  } else {
-    try {
-      $question = Question::question_factory($mysqli, $userID, $string, $_REQUEST['q_id']);
-    } catch (Exception $ex) {
-      $critical_error = $ex->getMessage();
-    }
+  try {
+    $question = Question::question_factory($mysqli, $userID, $string, $_REQUEST['q_id']);
+  } catch (Exception $ex) {
+    $critical_error = $ex->getMessage();
   }
 }
+
 
 // Handle upload of files for question types that require it
 if ($critical_error == '' and $question->requires_media() and (isset($_POST['submit_media']) or isset($_POST['q_media']))) {
@@ -510,6 +507,8 @@ echo save_buttons_new($mode, $disabled, $question->get_locked(), $question->allo
       <input id="folder" name="folder" value="<?php echo $folder ?>" type="hidden" />
       <input id="scrOfY" name="scrOfY" value="<?php echo $scrofy ?>" type="hidden" />
       <input id="paperID" name="paperID" value="<?php echo $paper_id ?>" type="hidden" />
+      <input id="keyword" name="keyword" value="<?php echo $keyword ?>" type="hidden" />
+      <input id="team" name="team" value="<?php echo $team ?>" type="hidden" />
       <input id="question_id" name="question_id" value="<?php echo $question->id ?>" type="hidden" />
     </div>
   </form>
