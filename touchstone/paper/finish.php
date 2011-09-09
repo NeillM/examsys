@@ -1295,7 +1295,7 @@ table {font-size:100%}
         case 'rank':
           $paper[$question]['mark'] = 0;
           $paper[$question]['totalpos'] = $no_options * $paper[$question]['marks_correct'];
-          if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos']++;
+          if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
           
           if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
@@ -1402,7 +1402,7 @@ table {font-size:100%}
             echo '</td>';
             if (isset ($paper[$question]['mark']) and $paper[$question]['mark'] == $paper[$question]['totalpos']) {
               echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
-              $paper[$question]['mark']++;
+              $paper[$question]['mark'] += $paper[$question]['marks_correct'];
             } else {
               echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
             }
