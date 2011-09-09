@@ -1,11 +1,12 @@
 <?php
 $marks_positive = range(0, 20);
 $marks_negative = array(0, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10);
+$marks_partial = array_merge(range(0, 1, 0.1), range(2, 5));
 if (count($question->options) > 0) {
   $option = reset($question->options);
   $mark_correct = $option->get_marks_correct();
   $mark_incorrect = $option->get_marks_incorrect();
-  $mark_partial = $option->get_marks_partial();
+  $mark_partial = number_format($option->get_marks_partial(), 1);
 } else {
   $mark_correct = 1;
   $mark_incorrect = 0;
@@ -43,27 +44,27 @@ echo ViewHelper::render_options($marks_positive, $mark_correct, 3);
 ?>
                 </select>
 <?php
+if ($question->allow_partial_marks()):
+  $show_partial = ($question->get_score_method() == $string['allowpartial']) ? '' : ' class="hide"';
+?>
+                <span id="marks-partial"<?php echo $show_partial ?>>
+                  <label for="option_marks_partial" class="heavy"><?php echo $string['markspartial']?></label>
+                  <select id="option_marks_partial" name="option_marks_partial" class="spaced-right-large">
+<?php
+echo ViewHelper::render_options($marks_partial, $mark_partial, 3);
+?>
+                  </select>
+                </span>
+<?php
+endif;
 if ($question->allow_negative_marks()):
 ?>
                 <label for="option_marks_incorrect" class="heavy"><?php echo $string['marksincorrect']?></label>
-                <select id="option_marks_incorrect" name="option_marks_incorrect" class="spaced-right-large">
+                <select id="option_marks_incorrect" name="option_marks_incorrect">
 <?php
 echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
 ?>
                 </select>
-<?php
-endif;
-if ($question->allow_partial_marks()):
-  $show_partial = ($question->get_score_method() == 'Allow partial Marks') ? '' : ' class="hide"';
-?>
-                <span id="marks-partial"<?php echo $show_partial ?>>
-                  <label for="option_marks_partial" class="heavy"><?php echo $string['markspartial']?></label>
-                  <select id="option_marks_partial" name="option_marks_partial">
-<?php
-echo ViewHelper::render_options($marks_positive, $mark_partial, 3);
-?>
-                  </select>
-                </span>
 <?php
 endif;
 ?>
