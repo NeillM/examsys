@@ -1336,10 +1336,10 @@ table {font-size:100%}
             }
 
             if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') {
-							if(($paper[$question]['score_method'] == 'BonusMark' or $paper[$question]['score_method'] == 'OrderNeighbours') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
+							if(($paper[$question]['score_method'] == 'BonusMark' or $paper[$question]['score_method'] == 'Allow partial Marks') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
 								echo '<td>&nbsp;</td>';
 							} else {
-	            	if ($paper[$question]['score_method'] == 'OrderNeighbours') {
+	            	if ($paper[$question]['score_method'] == 'Allow partial Marks') {
 	                if ($rank_answers[$tmp_part_id-1] > 0 and $rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1]) {
 	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
 	                } elseif ($rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0 and ($rank_answers[$tmp_part_id-1]+1 == $paper[$question]['correct'][$tmp_part_id-1] or $rank_answers[$tmp_part_id-1]-1 == $paper[$question]['correct'][$tmp_part_id-1])) {

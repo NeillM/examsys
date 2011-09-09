@@ -351,8 +351,8 @@ if (isset($_GET['change_screen'])) {
     <div id="content" class="content" style="font-size:80%"><br />
   <?php
     echo "<div style=\"position:absolute; left:230px; top:10px\"><img src=\"../artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 style=\"margin-left:60px; font-weight:normal; color:#4465A2; font-size:160%\">Paper not Found</h1>\n";
-    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px; border:none; margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<div style=\"margin-left:60px\">For further assistance contact: <a href=\"mailto:$support_email\">$support_email</a></div>\n";
+    echo "<h1 style=\"margin-left:60px; font-weight:normal; color:#4465A2; font-size:160%\">" . $string['papernotfound'] . "</h1>\n";
+    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px; border:none; margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<div style=\"margin-left:60px\">" . sprintf($string['furtherassistance'], $support_email, $support_email). "</div>\n";
     echo "</div>\n</body>\n</html>\n";
     $mysqli->close();
     exit;
@@ -364,7 +364,7 @@ if (isset($_GET['change_screen'])) {
     <div id="content" class="content" style="font-size:80%"><br />
   <?php
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 style=\"margin-left:60px;font-weight:normal;color:#4465A2;font-size:160%\">Paper Deleted</h1>\n";
+    echo "<h1 style=\"margin-left:60px;font-weight:normal;color:#4465A2;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
     $deleted_parts = explode('[deleted',$paper_title);
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Paper <strong>" . $deleted_parts[0] . "</strong> has been deleted.</p>\n\n<ul style=\"margin-left:80px\">\n";
     if ($paper_ownerID == $userID) {
