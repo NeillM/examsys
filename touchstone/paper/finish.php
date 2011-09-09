@@ -1294,6 +1294,9 @@ table {font-size:100%}
           break;
         case 'rank':
           $paper[$question]['mark'] = 0;
+          $paper[$question]['totalpos'] = $no_options * $paper[$question]['marks_correct'];
+          if ($paper[$question]['score_method'] != 'Bonus Mark') $paper[$question]['totalpos']++;
+          
           if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
           echo_content($paper[$question]['leadin']);
@@ -1325,7 +1328,7 @@ table {font-size:100%}
             $tmp_part_id = $option_order[$i-1]+1;
             echo '<tr>';
             if ($tmp_display_correct_answer == '1') {
-              if(($paper[$question]['score_method'] == 'Bonus Mark' AND $paper[$question]['correct'][$tmp_part_id-1] != 0) OR $paper[$question]['score_method'] != 'Bonus Mark') {
+              if(($paper[$question]['score_method'] == 'Bonus Mark' and $paper[$question]['correct'][$tmp_part_id-1] != 0) or $paper[$question]['score_method'] != 'Bonus Mark') {
                 echo '<td>';
                 if(isset($paper[$question]['std'][$tmp_part_id-1])) echo display_std($paper[$question]['std'][$tmp_part_id-1]);
                 echo '</td>';
