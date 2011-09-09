@@ -34,15 +34,15 @@ if($num_options > 0) {
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>
-              <th><label for="start_year">Start Year</label></th>
+              <th><label for="start_year"><?php echo $string['startyear'] ?></label></th>
               <td>
                 <input type="text" id="start_year" name="start_year" value="<?php echo $question->get_start_year() ?>" class="form-small spaced-right-large" />
-                <label for="end_year" class="heavy">End Year</label>
+                <label for="end_year" class="heavy"><?php echo $string['endyear'] ?></label>
                 <input type="text" id="end_year" name="end_year" value="<?php echo $question->get_end_year() ?>" class="form-small" />
               </td>
             </tr>
             <tr>
-              <th><label for="format">Format</label></th>
+              <th><label for="format"><?php echo $string['format'] ?></label></th>
               <td>
                 <select id="format" name="format">
 <?php 
@@ -70,7 +70,7 @@ echo ViewHelper::render_options($question->get_formats(), $question->get_format(
               </td>
             </tr>
             <tr>
-              <th><span class="note">(only for assessments)</span></th>
+              <th><span class="note"><?php echo $string['assessmentmsg'] ?></span></th>
               <td class="note align-centre">dd/MM/yyyy  hh:mm:ss</td>
             </tr>
 					</tbody>
@@ -78,6 +78,6 @@ echo ViewHelper::render_options($question->get_formats(), $question->get_format(
 
 <?php
 require_once 'detail_parts/details_marking.php';
-$label_correct = 'Feedback<br /><span class="note">(only for assessments)</span>';
+$label_correct = $string['feedback'] . '<br /><span class="note">' . $string['assessmentmsg'] . '</span>';
 require_once 'detail_parts/details_general_feedback.php';
 ?>

@@ -29,7 +29,7 @@ Class QuestionMCQ extends Question {
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
 
-    $this->_display_methods = array('vertical' => $lang_strings['vertical'], 'vertical_other' => $lang_strings['verticalother'], 'horizontal' => $lang_strings['horizontal'], 'dropdown' => $lang_strings['dropdownlist']);
+    $this->_display_methods = array('vertical' => $this->_lang_strings['vertical'], 'vertical_other' => $this->_lang_strings['verticalother'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']);
   }
 }
 

@@ -38,12 +38,14 @@ Class QuestionTIMEDATE extends Question {
   protected $td_seconds = '';
   public $max_options = 1;
   
-  protected $formats = array('1' => 'dd/MM/yyyy hh:mm:ss', '2' => 'dd/MM/yyyy hh:mm', '3' => 'dd/MM/yyyy', '4' => 'mm/dd/yyyy', '5' => 'dd/MMMM/yyyy', '6' => 'hh:mm:ss', '7' => 'hh:mm (date)', '8' => 'hh:mm (duration)');
+  protected $_formats;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'option_order', 'bloom', 'status', 'correct', 'format', 'start_year', 'end_year', 'td_year', 'td_month', 'td_day', 'td_hours', 'td_minutes', 'td_seconds');
   
-  function __construct($mysqli, $user_id, $data = null) {
-    parent::__construct($mysqli, $user_id, $data);
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+
+    $this->_formats = array('1' => 'dd/MM/yyyy hh:mm:ss', '2' => 'dd/MM/yyyy hh:mm', '3' => 'dd/MM/yyyy', '4' => 'mm/dd/yyyy', '5' => 'dd/MMMM/yyyy', '6' => 'hh:mm:ss', '7' => 'hh:mm (' . strtolower($this->_lang_strings['date']) . ')', '8' => 'hh:mm (' . $this->_lang_strings['duration'] . ')');
 
     // Populate the pseudo variables
     $this->get_display_method();
@@ -57,7 +59,7 @@ Class QuestionTIMEDATE extends Question {
    * @return integer
    */
   public function get_formats() {
-    return $this->formats;
+    return $this->_formats;
   }
   
   /**
@@ -74,7 +76,7 @@ Class QuestionTIMEDATE extends Question {
    * @return string
    */
   public function get_format_string() {
-    return $this->formats[$this->get_format()];
+    return $this->_formats[$this->get_format()];
   }
   
   /**
@@ -83,7 +85,7 @@ Class QuestionTIMEDATE extends Question {
    */
   public function set_format($value) {
     if ($value != $this->format) {
-      $this->add_unified_field_modification('format', 'format', $this->formats[$this->format], $this->formats[$value]);
+      $this->add_unified_field_modification('format', 'format', $this->_formats[$this->format], $this->_formats[$value]);
       $this->format = $value;
     }
     $this->set_display_method();

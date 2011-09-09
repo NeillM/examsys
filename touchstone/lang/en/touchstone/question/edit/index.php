@@ -91,6 +91,7 @@ $string['cancel'] = '1Cancel';
 $string['mscaamsg'] = '1<strong>MSC-AA Question</strong> This question has been imported from the MSC-AA and cannot be modified.';
 $string['lockedmsg'] = '1<strong>Question Locked</strong> This question is now locked and cannot be modified. <a href="#" class="help-link" rel="161">Click for more details.</a>';
 $string['date'] = '1Date';
+$string['duration'] = '1duration';
 $string['action'] = '1Action';
 $string['section'] = '1Section';
 $string['old'] = '1Old';
@@ -167,4 +168,8 @@ $string['custom'] = '1Custom';
 $string['scale'] = '1Scale';
 $string['nacolumn'] = '1N/A Column';
 $string['includena'] = "1include 'not applicable' option";
+$string['startyear'] = '1Start Year';
+$string['endyear'] = '1End Year';
+$string['format'] = '1Format';
+$string['assessmentmsg'] = '1(only for assessments)';
 ?>

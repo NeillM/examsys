@@ -32,6 +32,7 @@ Class QuestionTEXTBOX extends Question {
   protected $_allow_change_marking_method = false;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');
+  // TODO: language here
   protected $_fields_unified = array('correct' => 'Terms', 'text' => 'Editor', 'marks_correct' => 'Marks if Correct', 'marks_incorrect' => 'Marks (Incorrect)');
   
   /**
