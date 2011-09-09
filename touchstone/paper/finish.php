@@ -410,7 +410,7 @@ table {font-size:100%}
             $tmp_exclude = '';
           }
           $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
-          if ($paper[$q_no]['status'] != 'Experimental') $total_marks += $paper[$q_no]['totalpos'];
+          //if ($paper[$q_no]['status'] != 'Experimental') $total_marks += $paper[$q_no]['totalpos'];
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
         $correct_no = 0;
@@ -475,7 +475,7 @@ table {font-size:100%}
       $tmp_excluded = '';
     }
     $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
-    if ($paper[$q_no]['status'] != 'Experimental') $total_marks += $paper[$q_no]['totalpos'];
+    //if ($paper[$q_no]['status'] != 'Experimental') $total_marks += $paper[$q_no]['totalpos'];
     $total_random_mark += qRandomMarks($old_q_type, $tmp_excluded, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
     
     // Parse for random questions.
@@ -569,7 +569,7 @@ table {font-size:100%}
           $tmp_excluded = '';
         }
         $paper[$i]['totalpos'] = qMarks($q_type, $tmp_excluded, $marks, $paper[$i]['option_text'], $paper[$i]['correct'], $score_method);
-        if ($paper[$i]['status'] != 'Experimental') $total_marks += $paper[$i]['totalpos'];
+        //if ($paper[$i]['status'] != 'Experimental') $total_marks += $paper[$i]['totalpos'];
         $total_random_mark += qRandomMarks($q_type, $tmp_excluded, $paper[$i]['option_text'], $paper[$i]['correct'], $score_method, $q_media_width, $q_media_height);
       }
     }
@@ -2138,7 +2138,7 @@ table {font-size:100%}
           echo '<p class="mkpad"><span class="mk">0 out of ' . $paper[$question]['totalpos'] . '</span></p>';
         }
       }
-      if ($paper[$question]['status'] != 'Experimental' and isset($paper[$question]['mark'])) $user_mark += $paper[$question]['mark'];
+      if ($paper[$question]['status'] != 'Experimental') $total_marks += $paper[$question]['totalpos'];
       if ($paper[$question]['q_type'] != 'info') echo '</td></tr>';
       echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       $old_screen = $paper[$question]['screen'];

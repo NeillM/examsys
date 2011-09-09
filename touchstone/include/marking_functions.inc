@@ -80,7 +80,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   $questions->execute();
   $questions->store_result();
   $questions->bind_result($q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $score_method, $marks_correct, $marks_incorrect, $marks_partial, $display_pos);
-  while ($row = $questions->fetch()) {
+  while ($questions->fetch()) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
       if ($q_type != 'info') $tmp_question_no++;
       $selected_q_id = array();
