@@ -131,6 +131,7 @@ $string['termsmsg'] = '1(separate with semicolons)';
 $string['clinicalvignette'] = '1Clinical Vignette';
 $string['newinformation'] = '1New Information';
 $string['this'] = '1This';
+$string['becomes'] = '1becomes';
 $string['experts'] = '1Experts';
 $string['hypothesis'] = '1Hypothesis';
 $string['veryunlikely'] = '1very unlikely';
@@ -174,4 +175,6 @@ $string['startyear'] = '1Start Year';
 $string['endyear'] = '1End Year';
 $string['format'] = '1Format';
 $string['assessmentmsg'] = '1(only for assessments)';
+$string['postexamchange'] = '1Post Exam Answer change';
+$string['correctoption'] = '1Correct Option';
 ?>

@@ -49,7 +49,7 @@ Class QuestionSCT extends Question {
   
     $i = 1;
     foreach ($this->sct_types as $type) {
-      $this->_display_methods[$i] = $this->_lang_strings['this'] . ' ' . strtolower($type[0]) . ' becomes';
+      $this->_display_methods[$i] = $this->_lang_strings['this'] . ' ' . strtolower($type[0]) . ' ' . $this->_lang_strings['becomes'];
       $i++;
     }
     

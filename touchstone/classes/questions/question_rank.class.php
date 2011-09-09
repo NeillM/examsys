@@ -55,7 +55,7 @@ Class QuestionRANK extends Question {
         $changes = true;
         
         $opt_no = $i + 1;
-        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], 'Post Exam Answer change');
+        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], $this->_lang_strings['postexamchange']);
       }
       $i++;
     }
@@ -63,7 +63,7 @@ Class QuestionRANK extends Question {
     if ($changes) {
       try {
     	  if(!$this->save()) {
-    	    $errors[] = 'Error saving data. Please try again';
+    	    $errors[] = $this->_lang_strings['data_save_error'];
     	  } else {
           // Remark the student's answers in 'log2'.
           $totalpos = 0;

@@ -73,7 +73,7 @@ Class QuestionCALCULATION extends Question {
         $option->set_correct($new_correct['option_correct']);
       }
     
-      $this->add_unified_field_modification('correct', 'formula', $old_correct, $new_correct['option_correct'], 'Post Exam Answer change');
+      $this->add_unified_field_modification('correct', 'formula', $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
       $changes = true;
     }
     
@@ -81,7 +81,7 @@ Class QuestionCALCULATION extends Question {
     if ($new_correct['answer_decimals'] != $old_decimals) {
       $this->set_tolerance($new_correct['answer_decimals']);
     
-      $this->add_unified_field_modification('answer_decimals', 'answer_decs ', $old_decimals, $new_correct['answer_decimals'], 'Post Exam Answer change');
+      $this->add_unified_field_modification('answer_decimals', 'answer_decs ', $old_decimals, $new_correct['answer_decimals'], $this->_lang_strings['postexamchange']);
       $changes = true;
     }
     
@@ -89,7 +89,7 @@ Class QuestionCALCULATION extends Question {
     if ($new_correct['tolerance'] != $old_tolerance) {
       $this->set_tolerance($new_correct['tolerance']);
     
-      $this->add_unified_field_modification('tolerance', 'tolerance', $old_tolerance, $new_correct['tolerance'], 'Post Exam Answer change');
+      $this->add_unified_field_modification('tolerance', 'tolerance', $old_tolerance, $new_correct['tolerance'], $this->_lang_strings['postexamchange']);
       $changes = true;
     }
     
