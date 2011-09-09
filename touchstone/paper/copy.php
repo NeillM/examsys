@@ -41,13 +41,13 @@
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#FF0000">
     <tr>
-    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="Warning" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:150%; font-weight:bold; color:#C00000">Title Warning</span></td>
+    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
     </tr>
     <tr>
     <td style="background-color:#FFC0C0">
-    <p style="font-family:Arial,sans-serif; font-size:90%">The name '<strong><?php echo $_POST['new_paper']; ?></strong>' has already been used.<br />Please select a different paper name which is unique.</p>
+    <p style="font-family:Arial,sans-serif; font-size:90%"><?php printf($string['nameused'], $_POST['new_paper']); ?></p>
 
-    <div align="center"><input style="width:120px" type="button" value="&lt; Back" name="back" onclick="javascript: window.history.go(-1);"></div>
+    <div align="center"><input style="width:120px" type="button" value="<?php echo $string['back']; ?>" name="back" onclick="javascript: window.history.go(-1);"></div>
     </td>
     </tr>
     </table>
@@ -126,7 +126,7 @@
       $qData->bind_param('i', $question);
       $qData->execute();
       $qData->store_result();
-      $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks);
+      $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
       while ($qData->fetch()) {
         $old_qids[$question] = $question; 
         // Question data
@@ -144,7 +144,7 @@
                 	$new_media_name = unique_filename($individual_media, FALSE);
                   if (file_exists("../media/$individual_media")) {
                     if (!copy("../media/$individual_media","../media/$new_media_name")) {
-                      $error[] = "Question Number $q_no) Copy Error (Question) File <strong>'$individual_media'</strong> could not be copied.";
+                      $error[] = sprintf($string['copyerror'], $individual_media);
                       //if the image is missing dont put the file name in the new question
                       $new_media_name = '';
                     }
@@ -175,7 +175,7 @@
 							$new_media_name = unique_filename($individual_media, FALSE);
               if (file_exists("../media/$individual_media")) {
                 if (!copy("../media/$individual_media","../media/$new_media_name")) {
-                  $error[] = "Question Number $q_no) Copy Error (Options) File <strong>'$individual_media'</strong> could not be copied.";
+                  $error[] = sprintf($string['copyerror'], $individual_media);
                   //if the image is missing dont put the file name in the new question
                   $new_media_name = '';
                 }
@@ -192,29 +192,29 @@
         } else {
           $new_o_media = '';
         }
-        if ($marks == '') $marks = 1;
+        if ($marks_correct == '') $marks_correct = 1;
         if ($line == 0) {  // First record - write out the question, all the rest are options.
         	$bloom = (empty($bloom)) ? NULL : $bloom;
-          $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL,?,?,?,?,?,?,?,?," . $userID . ",?,?,?,NOW(),NOW(),?,'',?,?,NULL,NULL,NULL,NULL,?,'Normal',?)");
-          $addQuestion->bind_param('ssssssssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order);
+          $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, " . $userID . ", ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+          $addQuestion->bind_param('sssssssssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
           $addQuestion->execute();
           $new_qids[] = $question_id = $mysqli->insert_id;
           $addQuestion->close();
 
           // Add in a record to the papers table.
-          $addNewPaper = $mysqli->prepare("INSERT INTO papers VALUES (NULL,?,?,?,?)");
+          $addNewPaper = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
           $addNewPaper->bind_param('iiii', $new_paper_id, $question_id, $screen, $display_pos);
           $addNewPaper->execute();
           $addNewPaper->close();
 
           // Create a track changes record to say where question was copied from.
-          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Copied Question',?," . $userID . ",?,?,NOW(),'Copied Question')");
+          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Copied Question', ?, " . $userID . ", ?, ?, NOW(), 'Copied Question')");
           $trackChange->bind_param('iss', $question_id, $question, $question_id);
           $trackChange->execute();
           $trackChange->close();
 
           // Create a track changes record to say new question added to paper.
-          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Alter Paper',?," . $userID . ",'',?,NOW(),'Add Question')");
+          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Alter Paper', ?, " . $userID . ", '', ?, NOW(), 'Add Question')");
           $trackChange->bind_param('is', $new_paper_id, $question_id);
           $trackChange->execute();
           $trackChange->close();
@@ -234,8 +234,8 @@
           $keyword_result->close();
         }
       
-        $addOption = $mysqli->prepare("INSERT INTO options VALUES(?,?,?,?,?,?,?,?,NULL,?)");
-        $addOption->bind_param('isssssssi', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks);
+        $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+        $addOption->bind_param('isssssssiii', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
         $addOption->execute();
         $addOption->close();
         $line++;
@@ -297,7 +297,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone: Copy Paper<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone: <?php echo $string['copypaper'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../submenu.css" />
 </head>
 <?php
@@ -316,18 +316,18 @@
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#C0C0C0; text-align:left">
     <tr>
-    <td valign="middle" style="background-color:white"><img src="/touchstone/artwork/orange_alert_32.png" width="32" height="32" alt="Critical" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:150%; font-weight:bold; color:#C00000">File Copy Warning</span></td>
+    <td valign="middle" style="background-color:white"><img src="/touchstone/artwork/orange_alert_32.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['filecopywarning']; ?></span></td>
    </tr>
    <tr>
    <td style="background-color:#EAEAEA"><ul>
    <?php
-    echo "<li style=\"font-family:Arial,sans-serif; font-size:90%\">Your paper and questions have been copied but the following image have not been copied.</li>\n";
+    echo "<li style=\"font-family:Arial,sans-serif; font-size:90%\">" . $string['completemsg'] . "</li>\n";
     foreach ($error as $msg) {
       echo "<li style=\"font-family:Arial,sans-serif; font-size:90%\">$msg</li>\n";
     }
    ?>
     </ul>
-    <div style="text-align:center"><input type="button" name="OK" value="OK" onclick="javascript:window.location='<?php echo $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
+    <div style="text-align:center"><input type="button" name="OK" value=" <?php echo $string['ok']; ?> " onclick="javascript:window.location='<?php echo $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
     <br />
     </td>
     </tr>
@@ -346,7 +346,7 @@
     $result->execute();
     $result->store_result();
     $result->bind_result($property_id, $paper_title, $start_date, $end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $paper_owner, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $deleted, $created, $random_mark, $total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $moduleID, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $latex_needed, $password, $retired);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
 			$tmp_exam_duration = $exam_duration;
     	
       if ($paper_type == 2) {
@@ -369,7 +369,7 @@
 
       $new_calendar_year = checkSession($calendar_year);
       
-      $addPaper = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL,NOW(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL)");
+      $addPaper = $mysqli->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)");
       $addPaper->bind_param('ssssssssssssisiiisssisidisssssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $externals, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $moduleID, $new_calendar_year, $internal_reviewers, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
       $addPaper->execute();
       $new_paper_id = $mysqli->insert_id;
