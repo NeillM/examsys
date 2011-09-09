@@ -1352,7 +1352,7 @@ table {font-size:100%}
                     $paper[$question]['mark'] += $paper[$question]['marks_partial'];
 	                } else {
 	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
-                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                    if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
 	                }
 	              } else {
               		if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'BonusMark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
@@ -1360,7 +1360,7 @@ table {font-size:100%}
                     $paper[$question]['mark'] += $paper[$question]['marks_correct'];
 	                } else {
 	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
-                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                    if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 	}
                 }
               }
@@ -1419,6 +1419,7 @@ table {font-size:100%}
             }
           }
           if (substr($tmp_exclude,0,1) == '1') $paper[$question]['mark'] = 0;
+          if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
           
           break;
         case 'extmatch':
