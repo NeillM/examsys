@@ -1293,8 +1293,9 @@ table {font-size:100%}
           
           break;
         case 'rank':
+          $paper[$question]['mark'] = 0;
           if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
-          if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
+          if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
           echo_content($paper[$question]['leadin']);
 
           $na_count = 0;
@@ -1324,7 +1325,7 @@ table {font-size:100%}
             $tmp_part_id = $option_order[$i-1]+1;
             echo '<tr>';
             if ($tmp_display_correct_answer == '1') {
-              if(($paper[$question]['score_method'] == 'BonusMark' AND $paper[$question]['correct'][$tmp_part_id-1] != 0) OR $paper[$question]['score_method'] != 'BonusMark') {
+              if(($paper[$question]['score_method'] == 'Bonus Mark' AND $paper[$question]['correct'][$tmp_part_id-1] != 0) OR $paper[$question]['score_method'] != 'Bonus Mark') {
                 echo '<td>';
                 if(isset($paper[$question]['std'][$tmp_part_id-1])) echo display_std($paper[$question]['std'][$tmp_part_id-1]);
                 echo '</td>';
@@ -1342,16 +1343,21 @@ table {font-size:100%}
 	            	if ($paper[$question]['score_method'] == 'Allow partial Marks') {
 	                if ($rank_answers[$tmp_part_id-1] > 0 and $rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1]) {
 	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+                    $paper[$question]['mark'] += $paper[$question]['marks_correct'];
 	                } elseif ($rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0 and ($rank_answers[$tmp_part_id-1]+1 == $paper[$question]['correct'][$tmp_part_id-1] or $rank_answers[$tmp_part_id-1]-1 == $paper[$question]['correct'][$tmp_part_id-1])) {
 	                  echo '<td>&nbsp;<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" /></td>';
+                    $paper[$question]['mark'] += $paper[$question]['marks_partial'];
 	                } else {
 	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
 	                }
 	              } else {
               		if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'BonusMark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
 	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+                    $paper[$question]['mark'] += $paper[$question]['marks_correct'];
 	                } else {
 	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 	}
                 }
               }
@@ -1385,16 +1391,17 @@ table {font-size:100%}
             echo "</tr>\n";
           }
 
-          if($paper[$question]['score_method'] == 'BonusMark' AND $tmp_display_correct_answer == '1') {
+          if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_correct_answer == '1') {
             echo '<tr><td colspan="5">&nbsp;</td></tr>';
             echo '<tr>';
             echo '<td>';
-            if(isset($paper[$question]['std'][$no_options])) echo display_std($paper[$question]['std'][$no_options]);
+            if (isset($paper[$question]['std'][$no_options])) echo display_std($paper[$question]['std'][$no_options]);
             echo '</td>';
             if (isset ($paper[$question]['mark']) and $paper[$question]['mark'] == $paper[$question]['totalpos']) {
               echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+              $paper[$question]['mark']++;
             } else {
-                echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+              echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
             }
             echo "<td colspan=\"3\">Overall correct order (Bonus Mark)</td></tr>";
           }
