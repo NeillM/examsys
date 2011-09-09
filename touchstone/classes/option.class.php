@@ -156,11 +156,11 @@ Class Option extends TouchStoneObject {
           if (isset($_POST["{$prefix}{$section_name}{$i}"]) and $data["{$prefix}{$section_name}{$i}"] != '') {
             ${$section_name}[] = $data["{$prefix}{$section_name}{$i}"];
             if (!isset($old_val) or $data["{$prefix}{$section_name}{$i}"] != $old_val) {
-              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, $data["{$prefix}{$section_name}{$i}"], 'Edit Scenario');
+              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, $data["{$prefix}{$section_name}{$i}"], $this->_lang_strings['editscenario']);
             }
           } else {
             if (isset($old_val) and $old_val != '') {
-              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, '', 'Edit Scenario');
+              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, '', $this->_lang_strings['editscenario']);
             } 
             ${$section_name}[] = '';
           }

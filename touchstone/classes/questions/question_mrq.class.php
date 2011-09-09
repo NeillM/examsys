@@ -69,7 +69,7 @@ Class QuestionMRQ extends Question {
     if ($changes) {
       try {
     	  if(!$this->save()) {
-    	    $errors[] = $this->_lang_strings['data_save_error'];
+    	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log2'.
           $totalpos = 0;

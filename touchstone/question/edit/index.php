@@ -100,7 +100,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
   if ($new_media !== false) {
     $question->set_media($new_media);
   } else {
-    $critical_error = $string['media_upload_error'];
+    $critical_error = $string['mediauploaderror'];
   }
 }
 
@@ -250,7 +250,7 @@ if($critical_error == '') {
     if (count($errors) == 0) {
       try {
     	  if(!$question->save()) {
-    	    $errors[] = $string['data_save_error'];
+    	    $errors[] = $string['datasaveerror'];
     	  } else {
     	    // Possibility that we might be converting a MRQ to MCQ
     	    if(isset($_POST['mcqconvert']) and $_POST['mcqconvert'] == '1') {

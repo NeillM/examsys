@@ -94,11 +94,12 @@ Class Question extends TouchStoneObject {
   // These fields will be forced to the negative answer value. Useful for checkboxes that won't have a value posted if unset
   protected $_fields_force = array();
   
-  // 'Unified' fields are the same for all options
+  // 'Unified' fields are set to the same value for all options
   protected $_fields_unified;
   protected $_unified_field_modifications = array();
   
   // These are the fields that are relevant for post-exam corrections
+  // TODO: is this used?
   protected $_fields_change = array('option_correct');
   
   // Map our 'nice' property names to the database fields and 'parts' in track changes
@@ -152,10 +153,10 @@ Class Question extends TouchStoneObject {
       // If it is an int use it as an ID for the database lookup
       $this->id = $data;
       if (!$this->get_question()) {
-        throw new DatabaseException('Error loading question data.');
+        throw new DatabaseException($this->_lang_strings['questionloaderror']);
       }
     } elseif ($data !== null) {
-      throw new DataTypeException('Invalid question ID.');
+      throw new DataTypeException($this->_lang_strings['questioninvalid']);
     }
   }
   
@@ -226,11 +227,11 @@ Class Question extends TouchStoneObject {
           if (isset($data["{$prefix}{$section_name}{$i}"]) and $data["{$prefix}{$section_name}{$i}"] != '') {
             ${$section_name}[] = $data["{$prefix}{$section_name}{$i}"];
             if (!isset($old_val) or $data["{$prefix}{$section_name}{$i}"] != $old_val) {
-              $this->add_unified_field_modification($section_name . $i, $section_name . $i, $old_val, $data["{$prefix}{$section_name}{$i}"], 'Edit Scenario');
+              $this->add_unified_field_modification($section_name . $i, $section_name . $i, $old_val, $data["{$prefix}{$section_name}{$i}"], $this->_lang_strings['editscenario']);
             }
           } else {
             if (isset($old_val) and $old_val != '') {
-              $this->add_unified_field_modification($section_name . $i, $section_name . $i, $old_val, '', 'Edit Scenario');
+              $this->add_unified_field_modification($section_name . $i, $section_name . $i, $old_val, '', $this->_lang_strings['editscenario']);
             } 
             ${$section_name}[] = '';
           }
@@ -263,12 +264,12 @@ Class Question extends TouchStoneObject {
         $old_media['filenames'][$i] = $new_media['filename'];
         $old_media['widths'][$i] = $new_media['width'];
         $old_media['heights'][$i] = $new_media['height'];
-        $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$i], $new_media['filename'], 'Edit Scenario');
+        $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$i], $new_media['filename'], $this->_lang_strings['editscenario']);
       } else {
         // Delete existing media if asked
         if (isset($deletion_data["delete_media$i"]) AND $deletion_data["delete_media$i"] == 'on') {
           deleteMedia($old_media['filenames'][$i]);
-          $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$i], '', 'Media Deleted');
+          $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$i], '', $this->_lang_strings['mediadeleted']);
           $old_media['filenames'][$i] = '';
           $old_media['widths'][$i] = 0;
           $old_media['heights'][$i] = 0;
@@ -336,7 +337,7 @@ QUERY;
           // Log any changes
           foreach($this->_modified_fields as $key => $value) {
             $db_field = (in_array($key, array_keys($this->_field_map))) ? $this->_field_map[$key] : $key;
-            $change_field = (in_array($key, array_keys($this->_change_field_map))) ? $this->_change_field_map[$key] : $key;
+            $change_field = (in_array($key, array_keys($this->_change_field_map))) ? $this->_change_field_map[$db_field] : $db_field;
             $get_method = 'get_' . $key;
             if ($value['message'] == '') {
               $this->_logger->track_change('Edit Question', $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
@@ -408,11 +409,14 @@ QUERY;
   
   /**
    * Add a change to a unified field. This is a field that is the same across all options and so changes are logged at the question level 
-   * @param unknown_type $label
-   * @param unknown_type $old_value
-   * @param unknown_type $new_value
+   * @param string $label
+   * @param string $old_value
+   * @param string $new_value
+   * @param string $category
    */
-  public function add_unified_field_modification($field, $label, $old_value, $new_value, $category='Edit Question') {
+  public function add_unified_field_modification($field, $label, $old_value, $new_value, $category=null) {
+    $category = ($category = null) ? $this->_lang_strings['editquestion'] : $category;
+    
     if (!in_array($field, $this->_unified_field_modifications)) {
       $this->_unified_field_modifications[$field] = array($category, $label, $old_value, $new_value);
     }
@@ -451,7 +455,7 @@ QUERY;
         $option->set_correct($new_correct['option_correct']);
       }
     
-      $this->add_unified_field_modification('correct', 'Correct Answer', $old_correct, $new_correct['option_correct'], 'Post Exam Answer change');
+      $this->add_unified_field_modification('correct', 'Correct Answer', $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
       $changes = true;
     }
     
@@ -1190,7 +1194,7 @@ QUERY;
           include $classfile;
           $object = new $classname($mysqli, $user_id, $lang_strings, $data);
         } catch (Exception $ex) {
-          throw new ClassNotFoundException("No class matching type <code>$classname</code>");
+          throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
         }
       } else {
         $result->close();
@@ -1202,7 +1206,7 @@ QUERY;
         include $classfile;
         $object = new $classname($mysqli, $user_id, $lang_strings);
       } catch (Exception $ex) {
-        throw new ClassNotFoundException("No class matching type <code>$classname</code>");
+        throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
       }
     }
     
@@ -1267,7 +1271,7 @@ QUERY;
       }
       $result->close();
     } else {
-      throw new RecordNotFoundException('Question with ID ' . $this->id . ' not found.');
+      throw new RecordNotFoundException(sprintf($this->_lang_strings['norecorderror'], $this->id));
     }
     
     return ($success !== false);
@@ -1286,7 +1290,7 @@ QUERY;
       if (empty($this->$req)) $missing_fields .= $this->_pretty_names[$req] . ', ';
     }
     if ($missing_fields != '') {
-      $rval = 'The following required fields have not been supplied: ' . rtrim($missing_fields, ', ');
+      $rval = $this->_lang_strings['missingfieldserror'] . ' ' . rtrim($missing_fields, ', ');
     }
     
     return $rval;
