@@ -69,7 +69,6 @@ require 'detail_parts/details_editor.php';
         </table>
 
 <?php
-require_once 'detail_parts/details_marking.php';
 require_once 'detail_parts/details_general_feedback.php';
 ?>
 

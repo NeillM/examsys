@@ -34,7 +34,6 @@ Class QuestionSCT extends Question {
   
   protected $_fields_editable = array('theme', 'scenario', 'hypothesis', 'new_information', 'notes', 'correct_fback', 'incorrect_fback', 'display_method', 'option_order', 'bloom', 'status');
   protected $_fields_required = array('type', 'leadin', 'display_method', 'owner_id', 'status');
-  protected $_fields_unified = array();
   
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
@@ -55,6 +54,7 @@ Class QuestionSCT extends Question {
     }
     
     // 'correct' is not a unified field for SCT questions
+    $this->_fields_unified = array();
     $this->_fields_editable[] = 'correct';
     
   }

@@ -45,7 +45,6 @@ Class Option extends TouchStoneObject {
   protected static $_fields = array('question_id', 'text', 'media', 'media_width', 'media_height', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
   protected $_fields_editable = array('text', 'media', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
   protected $_fields_required = array('question_id', 'marks_correct');
-  protected $_fields_unified = array();
   
   protected $_question = null;
   protected $_number = -1;
@@ -69,7 +68,6 @@ Class Option extends TouchStoneObject {
     $this->_question = $question;
     $this->question_id = $question->id;
     $this->_number = $number;
-    $this->_fields_unified = $question->get_unified_fields();
     
     // Array of references to the fields.  Allows succinct use of call_user_func_array
     foreach(self::$_fields as $field) {
@@ -314,7 +312,7 @@ QUERY;
    * @param string $value
    */
   public function set_text($value) {
-    if($value != $this->text and !in_array('text', array_keys($this->_fields_unified))) {
+    if($value != $this->text and !in_array('text', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('text', $this->text, "Option #{$this->_number} Text");
     }
     $this->text = $value;
@@ -392,7 +390,7 @@ QUERY;
    * @param string $value
    */
   public function set_correct($value) {
-    if($value != $this->correct and !in_array('correct', array_keys($this->_fields_unified))) {
+    if($value != $this->correct and !in_array('correct', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('correct', $this->correct, "Option #{$this->_number} Answer");
     }
     $this->correct = $value;
@@ -411,7 +409,7 @@ QUERY;
    * @param string $value
    */
   public function set_marks_correct($value) {
-    if($value != $this->marks_correct and !in_array('marks_correct', array_keys($this->_fields_unified))) {
+    if($value != $this->marks_correct and !in_array('marks_correct', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('marks_correct', $this->marks_correct);
     }
     $this->marks_correct = $value;
@@ -430,7 +428,7 @@ QUERY;
    * @param string $value
    */
   public function set_marks_incorrect($value) {
-    if($value != $this->marks_incorrect and !in_array('marks_incorrect', array_keys($this->_fields_unified))) {
+    if($value != $this->marks_incorrect and !in_array('marks_incorrect', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('marks_incorrect', $this->marks_incorrect);
     }
     $this->marks_incorrect = $value;
@@ -449,7 +447,7 @@ QUERY;
    * @param string $value
    */
   public function set_marks_partial($value) {
-    if($value != $this->marks_partial and !in_array('marks_partial', array_keys($this->_fields_unified))) {
+    if($value != $this->marks_partial and !in_array('marks_partial', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('marks_partial', $this->marks_partial);
     }
     $this->marks_partial = $value;

@@ -31,5 +31,23 @@ Class OptionSCT extends Option {
     
     return parent::save($option_number);
   }
+
+  /**
+   * Set the option correct answer
+   * @param string $value
+   */
+  public function set_correct($value) {
+    if($value != $this->correct and !in_array('correct', array_keys($this->_question->get_unified_fields()))) {
+      $this->set_modified_field('correct', $this->correct, "Option #{$this->_number} Experts");
+    }
+    $this->correct = $value;
+  }
+  /**
+   * Set the option marks for correct answers
+   * @param string $value
+   */
+  public function set_marks_correct($value) {
+    $this->marks_correct = $value;
+  }
 }
 
