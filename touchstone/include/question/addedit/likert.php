@@ -31,7 +31,7 @@ $na_checked = ($question->get_not_applicable() == 'true') ? ' checked="checked"'
 					<tbody>
 <?php require_once 'details_common.php' ?>
             <tr>
-              <th><label for="scale_type">Scale</label></th>
+              <th><label for="scale_type"><?php echo $string['scale'] ?></label></th>
               <td>
                 <select id="scale_type" name="scale_type">
 <?php 
@@ -64,16 +64,16 @@ if (!$scale_found) {
   $show_custom = ' class="hide"';
 }
 ?>
-                  <optgroup label="Custom">
-                    <option value="custom"<?php echo $sel ?>>Custom&hellip;</option>
+                  <optgroup label="<?php echo $string['custom'] ?>">
+                    <option value="custom"<?php echo $sel ?>><?php echo $string['custom'] ?>&hellip;</option>
                   </optgroup>
                 </select>
               </td>
             </tr>
             <tr>
-              <th>N/A Column</th>
+              <th><?php echo $string['nacolumn'] ?></th>
               <td>
-                <input type="checkbox" id="not_applicable" name="not_applicable"<?php echo $na_checked ?> /> <label for="not_applicable">include 'not applicable' option</label>
+                <input type="checkbox" id="not_applicable" name="not_applicable"<?php echo $na_checked ?> /> <label for="not_applicable"><?php echo $string['includena'] ?></label>
               </td>
             </tr>
             <tr>
