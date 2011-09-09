@@ -53,10 +53,10 @@ $(function () {
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_leadin.php';
 $current_media = $question->get_media();
-$media_label = 'Question SWF';
+$media_label = $string['questionswf'];
 require 'detail_parts/details_media.php';
 $current_media = $option_media;
-$media_label = 'Answer SWF';
+$media_label = $string['answerswf'];
 $media_for = 'option';
 $media_index = '1';
 require 'detail_parts/details_media.php';
