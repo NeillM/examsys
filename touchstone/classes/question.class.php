@@ -1266,7 +1266,7 @@ QUERY;
       // TODO: handle 'correctness' more nicely
       $i = 1;
       while($success == true and $success = $result->fetch()) {
-        $this->options[$opt_data['id']] = Option::option_factory($this->_mysqli, $this->_user_id, $this, $i, $opt_data);
+        $this->options[$opt_data['id']] = Option::option_factory($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, $opt_data);
         $i++;
       }
       $result->close();

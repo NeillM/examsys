@@ -88,7 +88,7 @@ Class QuestionLABELLING extends Question {
       $option = reset($this->options);
       $option->set_correct($this->points1);
     } else {
-      $this->options[] = new OptionHOTSPOT($this->_mysqli, $this->_user_id, $this, 1, array('correct' => $this->points1));
+      $this->options[] = new OptionLABELLING($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $this->points1));
     }
   }
 }

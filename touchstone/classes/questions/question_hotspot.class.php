@@ -81,7 +81,7 @@ Class QuestionHOTSPOT extends Question {
       $option->set_correct($value);
       $option->set_marks_correct($marks);
     } else {
-      $this->options[] = new OptionHOTSPOT($this->_mysqli, $this->_user_id, $this, 1, array('correct' => $value, 'marks' => $marks));
+      $this->options[] = new OptionHOTSPOT($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $value, 'marks' => $marks));
     }
   }
   

@@ -244,7 +244,7 @@ Class QuestionTIMEDATE extends Question {
    */
   public function get_correct() {
     if (count($this->options) == 0) {
-      $option = new Option($this->_mysqli, $this->_user_id, $this, 1);
+      $option = new Option($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings);
     } else {
       $option = reset($this->options);
     }
@@ -261,7 +261,7 @@ Class QuestionTIMEDATE extends Question {
    */
   public function set_correct($value=-1) {
     if (count($this->options) == 0) {
-      $option = Option::option_factory($this->_mysqli, $this->_user_id, $this, 1);
+      $option = Option::option_factory($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings);
       $this->options[] = $option;
     } else {
       $option = reset($this->options);

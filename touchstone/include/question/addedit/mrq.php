@@ -73,7 +73,7 @@ foreach ($question->options as $o_id => $option) {
 }
 
 for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
-  $option = Option::option_factory($mysqli, $userID, $question, $index);
+  $option = Option::option_factory($mysqli, $userID, $question, $index, $string);
   include 'options/opt_mrq.php';
 }
 
