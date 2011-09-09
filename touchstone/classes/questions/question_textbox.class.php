@@ -32,8 +32,12 @@ Class QuestionTEXTBOX extends Question {
   protected $_allow_change_marking_method = false;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');
-  // TODO: language here
-  protected $_fields_unified = array('correct' => 'Terms', 'text' => 'Editor', 'marks_correct' => 'Marks if Correct', 'marks_incorrect' => 'Marks (Incorrect)');
+  
+  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+    parent::__construct($mysqli, $user_id, $lang_strings, $data);
+    
+    $this->_fields_unified = array('correct' => $this->_lang_strings['terms'], 'text' => $this->_lang_strings['editor'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+  }
   
   /**
    * Does this question type allow changes to the correct answer after it is locked
