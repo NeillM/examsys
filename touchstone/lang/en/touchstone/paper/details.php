@@ -29,4 +29,7 @@ $string['insertscreenbreak'] = '1Insert screen break';
 $string['papernotfound'] = '1Paper not Found';
 $string['paperdeleted'] = '1Paper Deleted';
 $string['furtherassistance'] = '1For further assistance contact: <a href="mailto:%s">%s</a>';
+$string['deleted_msg1'] = '1Paper <strong>%s</strong> has been deleted.';
+$string['deleted_msg2'] = '1It can still be recovered from the <a href="/touchstone/delete/recycle_list.php" style="color:blue">recycle bin</a>.';
+$string['deleted_msg3'] = '1You do not own this paper, you will need to get <a href="mailto:%s" style="color:blue">%s %s</a> to recover it.';
 ?>

@@ -294,7 +294,7 @@ if (isset($_GET['change_screen'])) {
   }
 
   function edQ(questionNo, questionID, qType) {
-    document.location = "../question/edit/index.php?q_id=" + questionID + "&q_no=" + questionNo + "&paper_id=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + document.getElementById('scrOfY').value;
+    document.location = "../question/edit/index.php?q_id=" + questionID + "&q_no=" + questionNo + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + document.getElementById('scrOfY').value;
   }
 
   function qOff() {
@@ -366,9 +366,9 @@ if (isset($_GET['change_screen'])) {
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"margin-left:60px;font-weight:normal;color:#4465A2;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
     $deleted_parts = explode('[deleted',$paper_title);
-    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Paper <strong>" . $deleted_parts[0] . "</strong> has been deleted.</p>\n\n<ul style=\"margin-left:80px\">\n";
+    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<ul style=\"margin-left:80px\">\n";
     if ($paper_ownerID == $userID) {
-      echo "<li>It can still be recovered from the <a href=\"/touchstone/delete/recycle_list.php\" style=\"color:blue\">recycle bin</a>.</li>\n";
+      echo "<li>" . $string['deleted_msg2'] . "</li>\n";
     } else {
       $result = $mysqli->prepare("SELECT title, surname, email FROM users WHERE id=?");
       $result->bind_param('i', $paper_ownerID);
@@ -376,7 +376,7 @@ if (isset($_GET['change_screen'])) {
       $result->bind_result($tmp_title, $tmp_surname, $tmp_email);
       $result->fetch();
       $result->close();
-      echo "<li>You do not own this paper, you will need to get <a href=\"mailto:$tmp_email\" style=\"color:blue\">$tmp_title $tmp_surname</a> to recover it.</li>\n";
+      echo "<li>" . sprintf($string['deleted_msg3'], $tmp_email, $tmp_title, $tmp_surname). "</li>\n";
     }
     echo "</ul>";
     echo "</div>\n</body>\n</html>\n";

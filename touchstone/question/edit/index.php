@@ -41,7 +41,7 @@ require '../../lang/' . $language . '/touchstone/question/edit/index.php';
 
 $question = null;
 $logger = new Logger($mysqli);
-$paper_id = (!isset($_GET['paper_id'])) ? -1 : $_GET['paper_id'];
+$paper_id = (!isset($_GET['paperID'])) ? -1 : $_GET['paperID'];
 $module = (!isset($_GET['module'])) ? '' : $_GET['module'];
 $folder = (!isset($_REQUEST['folder'])) ? '' : $_REQUEST['folder'];
 $scrofy = (!isset($_REQUEST['scrOfY'])) ? '' : $_REQUEST['scrOfY'];
@@ -54,7 +54,7 @@ $q_type_full = '';
 
 $errors = array();
 
-if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
+if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   // We're adding a new question
   $mode = $string['add'];
   
@@ -75,9 +75,9 @@ if(!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   // We're editing an existion question
   $mode = $string['edit'];
   
-  if($paper_id == -1) {
+  if ($paper_id == -1) {
     $critical_error = $string['paperundefined'];
-  } elseif(!ctype_digit($paper_id)) {
+  } elseif (!ctype_digit($paper_id)) {
     $critical_error = $string['paperinvalid'];
   } else {
     try {
@@ -104,7 +104,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
   }
 }
 
-if($critical_error == '') {  
+if ($critical_error == '') {  
   // Get any existing media
   $current_media = $question->get_media();
   
@@ -412,7 +412,7 @@ if($critical_error != '') {
     $query_string .= '?type=' . $question->get_type();;
   }
   $query_string .= ($q_no != '') ? '&q_no=' . $q_no : '';
-  $query_string .= ($paper_id != -1) ? '&paper_id=' . $paper_id : '';
+  $query_string .= ($paper_id != -1) ? '&paperID=' . $paper_id : '';
   $query_string .= ($module != '') ? '&module=' . $module : '';
 
   // TODO: client side validation
@@ -422,7 +422,7 @@ if($critical_error != '') {
   }
 ?>
 
-	<form id="edit_form" name="edit_form" method="post" action="./<?php echo $query_string ?>" enctype="multipart/form-data" class="clearinput">
+	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput">
     <div id="tabbed-content"<?php echo $banner_spacer ?>>
 			<div id="editor" class="tab-area">
         
@@ -509,7 +509,7 @@ echo save_buttons_new($mode, $disabled, $question->get_locked(), $question->allo
       <input id="module" name="module" value="<?php echo $module ?>" type="hidden" />
       <input id="folder" name="folder" value="<?php echo $folder ?>" type="hidden" />
       <input id="scrOfY" name="scrOfY" value="<?php echo $scrofy ?>" type="hidden" />
-      <input id="paper_id" name="paper_id" value="<?php echo $paper_id ?>" type="hidden" />
+      <input id="paperID" name="paperID" value="<?php echo $paper_id ?>" type="hidden" />
       <input id="question_id" name="question_id" value="<?php echo $question->id ?>" type="hidden" />
     </div>
   </form>

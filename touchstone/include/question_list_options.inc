@@ -62,7 +62,7 @@
   }
   
   function editQ() {
-    top.location.href='/touchstone/question/edit/' + document.PapersMenu.qType.value + '.php?q_id=' + document.PapersMenu.questionID.value + '&paper=list:' + document.PapersMenu.qType.value + '&calling=list';
+    window.location.href='/touchstone/question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&paperID=list:' + document.PapersMenu.qType.value + '&calling=list';
   }
 
   function deleteQuestion() {
@@ -154,7 +154,7 @@
 </table>
 
 <table style="font-size:100%; line-height:160%; display:none" cellpadding="4" cellspacing="0" border="0" id="menu2b">
-<tr><td><a id="edit" onclick="editQuestion(); return false;" href="#"><img src="/touchstone/artwork/new_question_menu_icon.gif" width="16" height="16" alt="Edit" border="0" /></a></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
+<tr><td><a id="edit" onclick="editQ(); return false;" href="#"><img src="/touchstone/artwork/new_question_menu_icon.gif" width="16" height="16" alt="Edit" border="0" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td><a id="information" href="#" onclick="questionInfo(); return false;"><img src="/touchstone/artwork/information_icon.gif" width="16" height="16" alt="Information" border="0" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="/touchstone/artwork/copy_icon.gif" width="16" height="16" alt="Copy" border="0" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
 <tr><td><a id="link" href="#" onclick="linkToPaper(); return false;"><img src="/touchstone/artwork/link.png" width="16" height="16" alt="Link 2 Paper" border="0" /></a></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaperx']; ?></a></td></tr>
@@ -162,7 +162,7 @@
 </table>
 
 <table style="font-size:100%; line-height:160%; display:none" cellpadding="4" cellspacing="0" border="0" id="menu2c">
-<tr><td><a id="edit" onclick="editQuestion(); return false;" href="#"><img src="/touchstone/artwork/new_question_menu_icon.gif" width="16" height="16" alt="Edit" border="0" /></a></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
+<tr><td><a id="edit" onclick="editQ(); return false;" href="#"><img src="/touchstone/artwork/new_question_menu_icon.gif" width="16" height="16" alt="Edit" border="0" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td><a id="information" href="#" onclick="questionInfo(); return false;"><img src="/touchstone/artwork/information_icon.gif" width="16" height="16" alt="Information" border="0" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="/touchstone/artwork/copy_icon.gif" width="16" height="16" alt="Copy" border="0" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
 <tr><td><a id="link" href="#" onclick="linkToPaper(); return false;"><img src="/touchstone/artwork/link.png" width="16" height="16" alt="Link 2 Paper" border="0" /></a></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaperx']; ?></a></td></tr>
