@@ -699,7 +699,7 @@ if ($paper_type == '2') {
   if ($summative_lock == 1) {
     $params = "scrOfY=' + document.getElementById('scrOfY').value + '";
   } else {
-    $params = "scrOfY=' + document.getElementById('scrOfY').value + '&paper_id=$paperID&folder=$folder&module=$tmp_module&calling=paper";
+    $params = "scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=$tmp_module&calling=paper";
   }
 
   makeMenu(array($string['info']=>"/touchstone/question/add/?type=info&$params",$string['keyword_based']=>"/touchstone/question/add/keyword_based.php$params",$string['random']=>"/touchstone/question/add/random.php$params","-"=>"-",$string['calculation']=>"/touchstone/question/edit/?type=calculation&$params",$string['dichotomous']=>"/touchstone/question/edit/?type=dichotomous&$params",$string['extmatch']=>"/touchstone/question/edit/?type=extmatch&$params",$string['blank']=>"/touchstone/question/edit/?type=blank&$params",$string['flash']=>"/touchstone/question/edit/?type=flash&$params",$string['hotspot']=>"/touchstone/question/edit/?type=hotspot&$params",$string['labelling']=>"/touchstone/question/edit/?type=labelling&$params",$string['likert']=>"/touchstone/question/edit/?type=likert&$params",$string['matrix']=>"/touchstone/question/edit/?type=matrix&$params",$string['mcq']=>"/touchstone/question/edit/?type=mcq&$params",$string['mrq']=>"/touchstone/question/edit/?type=mrq&$params",$string['rank']=>"/touchstone/question/edit/?type=rank&$params",$string['sct']=>"/touchstone/question/edit/?type=sct&$params",$string['textbox']=>"/touchstone/question/edit/?type=textbox&$params",$string['timedate']=>"/touchstone/question/edit/?type=timedate&$params"));

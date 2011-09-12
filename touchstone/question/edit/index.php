@@ -350,11 +350,13 @@ if ($question->requires_flash()) {
 if ($critical_error == '') {
   $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
   // TODO: format dates for locale
+  $creation_date = strftime($cfg_short_date, $question->get_created('timestamp'));
+  $modified_date = ($question->get_last_edited('timestamp')) ? strftime($cfg_short_date, $question->get_last_edited('timestamp')) : $string['never'];
 ?>
     <div class="tab-bar">
       <div class="tab-holder">
         <p class="question-stats">
-          <strong><?php echo $string['created'] ?></strong>&nbsp;12/04/2011&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $string['modified'] ?></strong>&nbsp;02/08/2011
+          <strong><?php echo $string['created'] ?></strong>&nbsp;<?php echo $creation_date ?>&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $string['modified'] ?></strong>&nbsp;<?php echo $modified_date ?>
         </p>
         <ol class="tabs">
           <li class="on"><a href="#" rel="editor"><?php echo $string['editor'] ?></a></li>

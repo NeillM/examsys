@@ -192,4 +192,5 @@ $string['optionfbcorrect'] = $string['optionno'] . ' Correct Feedback';
 $string['optionfbincorrect'] = $string['optionno'] . ' Inorrect Feedback';
 $string['newoption'] = '1New Option';
 $string['deletedoption'] = '1Deleted Option';
+$string['never'] = '1never';
 ?>
