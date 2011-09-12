@@ -41,7 +41,7 @@ Class Question extends TouchStoneObject {
   protected $notes = '';
   protected $correct_fback = '';
   protected $incorrect_fback = '';
-  protected $score_method;
+  protected $score_method = 'Mark per Question';
   protected $display_method = '';
   protected $option_order = 'display order';
   protected $standards_setting = '';
@@ -128,7 +128,6 @@ Class Question extends TouchStoneObject {
     
     // Initialise language specific elements
     $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']);
-    $this->score_method = $this->_lang_strings['markperquestion'];
     $this->_option_orders = array('display order' => $this->_lang_strings['displayorder'], 'alphabetic' => $this->_lang_strings['alphabetic'], 'random' => $this->_lang_strings['random']);
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     $this->_change_field_map = array('group' => 'teams', 'correct' => $this->_lang_strings['correctanswer']);
