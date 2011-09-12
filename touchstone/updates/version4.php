@@ -749,21 +749,21 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE options CHANGE COLUMN marks marks_correct float");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE options CHANGE COLUMN marks marks_correct float</div>\n";
+    echo "<li>ALTER TABLE options CHANGE COLUMN marks marks_correct float</li>\n";
     ob_flush();
     flush();
     
     $adjust = $mysqli->prepare("ALTER TABLE options ADD COLUMN marks_incorrect float");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE options ADD COLUMN marks_incorrect float</div>\n";
+    echo "<li>ALTER TABLE options ADD COLUMN marks_incorrect float</li>\n";
     ob_flush();
     flush();
     
     $adjust = $mysqli->prepare("ALTER TABLE options ADD COLUMN marks_partial float");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE options ADD COLUMN marks_partial float</div>\n";
+    echo "<li>ALTER TABLE options ADD COLUMN marks_partial float</li>\n";
     ob_flush();
     flush();
 
@@ -908,7 +908,7 @@ if (!isset($_POST['update'])) {
   //Close the database
   $mysqli->close();
   ob_end_flush();
-  echo "\n<h2>" . $string['actionrequired'] . "/h2>\n<ol>";
+  echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
   echo "</ol>\n<div>" . $string['finished'] . "</div>\n<blockquote>\n";
 }
