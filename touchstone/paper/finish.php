@@ -509,11 +509,11 @@ table {font-size:100%}
         
         // Look up selected question and overwrite data.
         $stems = 0;
-        $question_data = $mysqli->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions, options) WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+        $question_data = $mysqli->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions, options) WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
         $question_data->bind_param('i', $selected_q_id);
         $question_data->execute();
         $question_data->store_result();
-        $question_data->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $status);
+        $question_data->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $status);
         while ($row = $question_data->fetch()) {
           if ($stems == 0) {
             $correct_no = 0;
@@ -549,7 +549,7 @@ table {font-size:100%}
           $paper[$i]['o_media_width'][] = $o_media_width;
           $paper[$i]['o_media_height'][] = $o_media_height;
           $paper[$i]['correct'][] = $correct;
-          if(isset($standards_setting[$q_id])) {
+          if (isset($standards_setting[$q_id])) {
             $paper[$i]['std'] = explode(',',$standards_setting[$q_id]);
           } else {
             $paper[$i]['std'] = '';
@@ -568,9 +568,9 @@ table {font-size:100%}
         } else {
           $tmp_excluded = '';
         }
-        $paper[$i]['totalpos'] = qMarks($q_type, $tmp_excluded, $marks, $paper[$i]['option_text'], $paper[$i]['correct'], $score_method);
+        $paper[$i]['totalpos'] = qMarks($q_type, $tmp_excluded, $marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method);
         //if ($paper[$i]['status'] != 'Experimental') $total_marks += $paper[$i]['totalpos'];
-        $total_random_mark += qRandomMarks($q_type, $tmp_excluded, $paper[$i]['option_text'], $paper[$i]['correct'], $score_method, $q_media_width, $q_media_height);
+        $total_random_mark += qRandomMarks($q_type, $tmp_excluded, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method, $q_media_width, $q_media_height);
       }
     }
 
@@ -1294,7 +1294,16 @@ table {font-size:100%}
           break;
         case 'rank':
           $paper[$question]['mark'] = 0;
-          $paper[$question]['totalpos'] = $no_options * $paper[$question]['marks_correct'];
+          $paper[$question]['totalpos'] = 0;
+          foreach ($paper[$question]['correct'] as $tmp_correct) {
+            if ($tmp_correct != 0) {
+              $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
+            }
+          }
+          if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
+          
+          $rank_answers[$tmp_part_id-1] == '0';
+          //$paper[$question]['totalpos'] = $no_options * $paper[$question]['marks_correct'];
           
           if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
@@ -1339,7 +1348,7 @@ table {font-size:100%}
             }
 
             if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') {
-							if(($paper[$question]['score_method'] == 'BonusMark' or $paper[$question]['score_method'] == 'Allow partial Marks') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
+							if(($paper[$question]['score_method'] == 'Bonus Mark' or $paper[$question]['score_method'] == 'Allow partial Marks') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
 								echo '<td>&nbsp;</td>';
 							} else {
 	            	if ($paper[$question]['score_method'] == 'Allow partial Marks') {
@@ -1354,7 +1363,7 @@ table {font-size:100%}
                     if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
 	                }
 	              } else {
-              		if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'BonusMark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
+              		if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'Bonus Mark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
 	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
                     $paper[$question]['mark'] += $paper[$question]['marks_correct'];
 	                } else {
@@ -1418,7 +1427,6 @@ table {font-size:100%}
             }
           }
           if (substr($tmp_exclude,0,1) == '1') $paper[$question]['mark'] = 0;
-          if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
           
           break;
         case 'extmatch':
@@ -2106,9 +2114,9 @@ table {font-size:100%}
         if (count($objByModule) > 0) {
           echo "<br />\n<div class=\"objH\">Learning Objectives</div>\n<ul>\n";
           $module_list = explode(',',$moduleID);
-          foreach($module_list as $thisModuleid) {
-            if(isset($objByModule[$thisModuleid])) {
-              foreach($objByModule[$thisModuleid] as $id => $mappingData) {
+          foreach ($module_list as $thisModuleid) {
+            if (isset($objByModule[$thisModuleid])) {
+              foreach ($objByModule[$thisModuleid] as $id => $mappingData) {
                 echo "<li>" . $mappingData['content'];
                 if ($mappingData['session']['source_url'] != '') echo "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" border=\"0\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
                 echo "</li>\n";
@@ -2123,10 +2131,10 @@ table {font-size:100%}
       if ($display_question_mark == '1' and $paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
         if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
           if ($paper[$question]['status'] == 'Experimental') {
-            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; font-weight:bold">&nbsp;0 out of 0 - Experimental Question&nbsp;</span></p>';
+            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 out of 0 - Experimental Question&nbsp;</span></p>';
           } elseif ($paper[$question]['totalpos'] == 0) {
             $paper[$question]['mark'] = 0; 
-            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; font-weight:bold">&nbsp;0 out of 0&nbsp;</span></p>';
+            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 out of 0&nbsp;</span></p>';
           } else {
             echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['mark'],2) . ' out of ' . $paper[$question]['totalpos'] . '</span></p>';
           }
@@ -2138,7 +2146,10 @@ table {font-size:100%}
           echo '<p class="mkpad"><span class="mk">0 out of ' . $paper[$question]['totalpos'] . '</span></p>';
         }
       }
-      if ($paper[$question]['status'] != 'Experimental') $total_marks += $paper[$question]['totalpos'];
+      if ($paper[$question]['status'] != 'Experimental') {
+        $total_marks += $paper[$question]['totalpos'];
+        $user_mark += $paper[$question]['mark'];
+      }
       if ($paper[$question]['q_type'] != 'info') echo '</td></tr>';
       echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       $old_screen = $paper[$question]['screen'];

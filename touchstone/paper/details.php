@@ -77,7 +77,7 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
 }
 
 function randomDetails($questionID) {
-  global $mysqli;
+  global $cfg_short_date, $mysqli;
 
   $question_no = 0;
   $random_questions = array();

@@ -563,29 +563,29 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $saved_response .= ',' . $_POST[$qid];
         }
         if ($score_method == 'Mark per Option') {
-          if ($_POST[$qid] == $correct) $mark++;
+          if ($_POST[$qid] == $correct) $mark += $marks_correct;
         } elseif ($score_method == 'Mark per Question') {
           if ($question_part == 1) $totalpos++;
           if ($_POST[$qid] != 'u' and $_POST[$qid] <> $correct) $correct_rank = false;
         } elseif ($score_method == 'Allow partial Marks') {
           if ($_POST[$qid] != 0 and $correct != 0) {
             if ($_POST[$qid] == $correct) {
-              $mark++;
+              $mark += $marks_correct;
             } elseif ($_POST[$qid] == ($correct + 1)) {
-              $mark = $mark + 0.5;
+              $mark += $marks_partial;
             } elseif ($_POST[$qid] == ($correct - 1)) {
-              $mark = $mark + 0.5;
+              $mark += $marks_partial;
             }
           }
         } elseif ($score_method == 'Bonus Mark') {
           if ($_POST[$qid] != 0) {
-            if ($correct != 0) $mark++;
+            if ($correct != 0) $mark += $marks_correct;
             if ($_POST[$qid] <> $correct) $correct_rank = false;
           }
           if ($_POST[$qid] == 0 and $correct != 0) $correct_rank = false;
         }
         if ($correct != 0 and $score_method != 'Mark per Question') {
-          $totalpos++;
+          $totalpos = $marks_correct;
         } elseif ($score_method == 'Mark per Option') {
           $totalpos++;
         }
