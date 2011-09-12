@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone: Manage Objectives<?php echo " $cfg_install_type"; ?></title>
+<title>TouchStone: <?php echo $string['importfromfile'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style style="text/css">
     img {border:none;}
@@ -112,7 +112,7 @@ if (isset($_POST['submit'])) {
   $module = $_GET['module'];
 
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$module\">Manage Objectives</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>Import from File</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$module\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
   echo "<tr><td colspan=\"2\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
   echo "</table>\n";
 ?>
@@ -124,26 +124,26 @@ if (isset($_POST['submit'])) {
 
 <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #C0C0C0; width:600px">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-size:160%; font-weight:bold; color:#5582D2">Import Objectives (.TXT)</span></td>
+<td valign="middle" align="left" style="background-color:white"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-size:160%; font-weight:bold; color:#5582D2"><?php echo $string['importobjectives']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#EEEEEE">
 
-<p>Use # to specify session headings.</p>
+<p><?php echo $string['msg']; ?></p>
 
 <div align="center">
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 
 <table cellpadding="3" cellspacing="0" border="0" style="text-align:left">
 <tr>
-<td style="text-align:right">Objectives File</td><td><input type="file" size="50" name="txtfile" />
+<td style="text-align:right"><?php echo $string['objectivesfile']; ?></td><td><input type="file" size="50" name="txtfile" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></td>
 </tr>
 
 <tr>
 <?php
 
-  echo "<td style=\"text-align:right\">Session</td><td><select name=\"session\">\n";
+  echo "<td style=\"text-align:right\">" . $string['session'] . "</td><td><select name=\"session\">\n";
   $startyear = ( date('Y') - 1 );
   for ($i = 0; $i < 2; $i++) {
     $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
@@ -154,7 +154,7 @@ if (isset($_POST['submit'])) {
 </tr>
 
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" style="width:100px" value="Import" name="submit" />&nbsp;<input style="width:100px" type="button" value="Cancel" name="cancel" onclick="history.go(-1)" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
 </form>
 </div>
 </td>

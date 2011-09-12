@@ -45,10 +45,10 @@ a.user:hover {color:white; background-color:#000080}
 <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
-  var ie  = document.all
-  var ns6 = document.getElementById&&!document.all
-  var isMenu  = false ;
-  var menuSelObj = null ;
+  var ie  = document.all;
+  var ns6 = document.getElementById&&!document.all;
+  var isMenu  = false;
+  var menuSelObj = null;
   var overpopupmenu = false;
   function mouseSelect(e) {
     var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
@@ -463,7 +463,7 @@ a.user:hover {color:white; background-color:#000080}
   }
 
   $xmean_total = 0;
-  $scatter_file = fopen("../temp/" . $_SERVER['PHP_AUTH_USER'] . "_scatter.dat", "w");              // Scatter plot data
+  $scatter_file = fopen('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_scatter.dat', 'w');              // Scatter plot data
   $absent_no = 0;
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['visible'] == 1) {
@@ -478,11 +478,11 @@ a.user:hover {color:white; background-color:#000080}
         echo "<tr style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\"><td>&nbsp;</td>";
         echo "<td style=\"padding:1px\">&nbsp;<a class=\"user\" href=\"../users/details.php?username=" . $user_results[$i]['username'] . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></a>";
         if ($user_results[$i]['student_id'] == '') {
-          echo "<td style=\"padding:1px; color:#808080\">&nbsp;&lt;Unknown&gt;</td>";
+          echo "<td style=\"padding:1px; color:#808080\">" . $string['unknown'] . "</td>";
         } else {
           echo "<td style=\"padding:1px\">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
         }
-        echo "<td style=\"padding:1px\">&nbsp;" . $user_results[$i]['student_grade'] . "</td><td colspan=\"3\">&nbsp;</td><td style=\"padding:1px\">&nbsp;<strong>No Attendance</strong></td><td colspan=\"3\">&nbsp;</td></tr>\n";
+        echo "<td style=\"padding:1px\">&nbsp;" . $user_results[$i]['student_grade'] . "</td><td colspan=\"3\">&nbsp;</td><td style=\"padding:1px\">&nbsp;<strong>" . $string['noattendance'] . "</strong></td><td colspan=\"3\">&nbsp;</td></tr>\n";
         $absent_no++;
       } else {
         if (isset($log_late[$user_results[$i]['tmp_userID']])) {
@@ -510,19 +510,19 @@ a.user:hover {color:white; background-color:#000080}
           fwrite($scatter_file,$user_results[$i]['duration'] . "\n");
         }
         if ($user_results[$i]['questions'] < $question_no) {
-          echo "><td style=\"border-bottom:solid $line_color 1px\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning: not all screens completed\" border=\"0\" onclick=\"ItemSelMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . ", " . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\" /></td>";
+          echo "><td style=\"border-bottom:solid $line_color 1px\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['notcompleted'] . "\" border=\"0\" onclick=\"ItemSelMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . ", " . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\" /></td>";
         } else {
           echo "><td style=\"border-bottom:solid $line_color 1px\">";
           if ($user_results[$i]['paper_type'] == 0) {
-            echo '<img src="../artwork/formative_16.gif" width="16" height="16" alt="Display exam script for ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
+            echo '<img src="../artwork/formative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . ' ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
           } elseif ($user_results[$i]['paper_type'] == '1') {
-            echo '<img src="../artwork/progress_16.gif" width="16" height="16" alt="Display exam script for ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
+            echo '<img src="../artwork/progress_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . ' ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
           } elseif ($user_results[$i]['paper_type'] == '2') {
-            echo '<img src="../artwork/summative_16.gif" width="16" height="16" alt="Display exam script for ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
+            echo '<img src="../artwork/summative_16.gif" width="16" height="16" alt="' . $string['displayexamscript'] . ' ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
           } elseif ($user_results[$i]['paper_type'] == '3') {
-            echo '<img src="../artwork/survey_16.gif" width="16" height="16" alt="Display survey for ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
+            echo '<img src="../artwork/survey_16.gif" width="16" height="16" alt="' . $string['displaysurvey'] . ' ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
           } elseif ($user_results[$i]['paper_type'] == '5') {
-            echo '<img src="../artwork/offline_16.gif" width="16" height="16" alt="Display survey for ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
+            echo '<img src="../artwork/offline_16.gif" width="16" height="16" alt="' . $string['displaypaper'] . ' ' . $user_results[$i]['title'] . ' ' . $user_results[$i]['surname'] . '" border="0"';
           }
           echo " onclick=\"ItemSelMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . "," . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\" /></td>";
         }
@@ -538,7 +538,7 @@ a.user:hover {color:white; background-color:#000080}
           echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">&nbsp;<span style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['started'] . "'," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . ", " . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></span>";
         }
         if (isset($special_needs[$user_results[$i]['tmp_userID']]) and $special_needs[$user_results[$i]['tmp_userID']] == 'y') {
-          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="Special Needs" border="0" />';
+          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" border="0" />';
         }
         $student_id = $user_results[$i]['username'];
         if ($user_results[$i]['attempt'] > 1) {
@@ -554,7 +554,7 @@ a.user:hover {color:white; background-color:#000080}
           $bg_color = 'white';
         }
         if ($user_results[$i]['student_id'] == '') {
-          echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color; color:#808080\">&nbsp;&lt;Unknown&gt;</td>";
+          echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color; color:#808080\">" . $string['unknown'] . "</td>";
         } else {
           echo "<td style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
         }
@@ -571,18 +571,18 @@ a.user:hover {color:white; background-color:#000080}
         }
         if ($user_results[$i]['adj_percent'] < $pass_mark) {
           echo "<td align=\"right\" style=\"border-bottom:solid $line_color 1px; background-color:$bg_color; color:red\">";
-          if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Marking not complete" />&nbsp;';
+          if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
           echo "<td align=\"right\" style=\"border-bottom:solid $line_color 1px; background-color:$bg_color; color:red\">" . $user_results[$i]['adj_percent'] . "%</td><td style=\"border-bottom: solid $line_color 1px; color:red\">&nbsp;" . $string['fail'] . "</td>";
         } else {
           if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
             echo "<td align=\"right\" style=\"border-bottom:solid $line_color 1px; background-color:$bg_color; color:#008000\">";
-            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Marking not complete" />&nbsp;';
+            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
             echo "<td align=\"right\" style=\"border-bottom:solid $line_color 1px; background-color:$bg_color; color:#008000\">" . $user_results[$i]['adj_percent'] . "%</td><td style=\"border-bottom: solid $line_color 1px; color:#008000\">&nbsp;" . $string['distinction'] . "</td>";
           } else {
             echo "<td align=\"right\" style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">";
-            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Marking not complete" />&nbsp;';
+            if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
             echo "<td align=\"right\" style=\"border-bottom:solid $line_color 1px; background-color:$bg_color\">" . $user_results[$i]['adj_percent'] . "%</td><td style=\"border-bottom: solid $line_color 1px\">&nbsp;" . $string['pass'] . "</td>";
           }
@@ -643,7 +643,7 @@ a.user:hover {color:white; background-color:#000080}
   }
   fclose($scatter_file);
   
-  $distribution_file = fopen("../temp/" . $_SERVER['PHP_AUTH_USER'] . "_distribution.dat", "w");         // Distribution data
+  $distribution_file = fopen('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_distribution.dat', 'w');         // Distribution data
   fwrite($distribution_file,serialize($distribution) . "\n");
   fclose($distribution_file);
 
@@ -691,7 +691,7 @@ a.user:hover {color:white; background-color:#000080}
 
     echo "<tr><td>&nbsp;</td><td colspan=\"10\">\n";
     echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
-    echo "<tr><td class=\"field\">" . $string['paper'] . "</td><td colspan=\"2\">$paper</td></tr>\n";
+    echo "<tr><td class=\"field\" style=\"width:150px\">" . $string['paper'] . "</td><td colspan=\"2\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
       if ($_GET['direction'] = 'asc') {

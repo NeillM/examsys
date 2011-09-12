@@ -26,7 +26,7 @@
 
   require '../include/staff_auth.inc';
 
-  $mydata = file("../temp/" . $_SERVER['PHP_AUTH_USER'] . "_distribution.dat");
+  $mydata = file('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_distribution.dat');
   $mydata = unserialize($mydata[0]);
   
   $max_frequency = 0;
@@ -89,13 +89,13 @@
 
   $Image = ImageCreate(830, 300);
 
-  $color = ImageColorAllocate($Image, 255, 255, 255);
-  $red = ImageColorAllocate($Image, 255, 0, 0);
-  $ltgrey = ImageColorAllocate($Image, 234, 234, 234);
-  $dkgrey = ImageColorAllocate($Image, 128, 128, 128);
-  $black = ImageColorAllocate($Image, 0, 0, 0);
+  $color   = ImageColorAllocate($Image, 255, 255, 255);
+  $red     = ImageColorAllocate($Image, 255, 0, 0);
+  $ltgrey  = ImageColorAllocate($Image, 234, 234, 234);
+  $dkgrey  = ImageColorAllocate($Image, 128, 128, 128);
+  $black   = ImageColorAllocate($Image, 0, 0, 0);
   $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
-  $blue =  ImageColorAllocate($Image, 0, 192, 192);
+  $blue    = ImageColorAllocate($Image, 0, 192, 192);
 
   // Label x axis
   if (!isset($_GET['plotuser'])) {

@@ -68,4 +68,9 @@ $string['noattempts'] = '1This paper has not been attempted by anyone.';
 $string['marks'] = '1Marks';
 $string['studentssubmitted'] = '1Students Submitted';
 $string['noattendance'] = '1No Attendance';
+$string['alternativearrangements'] = '1Alternative Arrangements';
+$string['displayexamscript'] = '1Display exam script for';
+$string['displaysurvey'] = '1Display survey for';
+$string['displaypaper'] = '1Display paper for';
+$string['notcompleted'] = '1Warning: not all screens completed';
 ?>
