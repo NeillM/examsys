@@ -31,7 +31,6 @@ Class QuestionEXTMATCH extends Question {
   protected $all_media_heights = array();
   protected $all_media_widths = array();
   protected $all_feedback = array();
-  protected $score_method = 'Mark per Option';
   
   public $max_options = 26;
   public $max_stems = 10;

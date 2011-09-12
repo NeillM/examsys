@@ -126,7 +126,7 @@ if ($critical_error == '') {
       $correct_answers = array();
       $i = 1;
       foreach ($question->options as $option_id => $option) {
-        $correct_answers[] = (isset($_POST['option_correct' . $i])) ? $_POST['option_correct' . $i] : $option->get_answer_negative();
+        $correct_answers[] = (isset($_POST['option_correct' . $i])) ? $_POST['option_correct' . $i] : $question->get_answer_negative();
         $i++;
       }
       

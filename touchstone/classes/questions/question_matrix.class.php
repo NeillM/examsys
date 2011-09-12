@@ -29,7 +29,6 @@ Class QuestionMATRIX extends Question {
   protected $stems = array();  
   public $max_options = 10;
   public $max_stems = 10;
-  protected $score_method = 'Mark per Option';
   
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
   protected $_fields_editable = array('theme', 'leadin', 'notes', 'option_order', 'bloom', 'status');

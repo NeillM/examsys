@@ -28,8 +28,6 @@ require_once 'question_mcq.class.php';
 
 Class QuestionMRQ extends Question {
   
-  protected $score_method = 'Mark per Option';
-  
   protected $_fields_force = array('display_method');
   
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
@@ -51,8 +49,11 @@ Class QuestionMRQ extends Question {
     $changes = false;
     
     $i = 0;
+    $correct_count = 0;
     foreach ($this->options as $option) {
-      if ($new_correct[$i] != $option->get_correct()) {
+      $old_correct = $option->get_correct();
+      if ($new_correct[$i] == $this->_answer_positive) $correct_count++;
+      if ($new_correct[$i] != $old_correct) {
         $option->set_correct($new_correct[$i]);
         $changes = true;
         
@@ -111,10 +112,10 @@ Class QuestionMRQ extends Question {
               $totalpos = count($new_correct);
             }
         
-            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('disii', $mark, $totalpos, $user_answer, $this->id, $paper_id);
-            $updateLog->execute();
-            $updateLog->close();
+//            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
+//            $updateLog->bind_param('disii', $mark, $totalpos, $user_answer, $this->id, $paper_id);
+//            $updateLog->execute();
+//            $updateLog->close();
           }
           $result->free_result();
           $result->close();

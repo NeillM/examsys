@@ -41,7 +41,7 @@ Class Question extends TouchStoneObject {
   protected $notes = '';
   protected $correct_fback = '';
   protected $incorrect_fback = '';
-  protected $score_method = 'Mark per Question';
+  protected $score_method = 'Mark per Option';
   protected $display_method = '';
   protected $option_order = 'display order';
   protected $standards_setting = '';
