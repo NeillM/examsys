@@ -73,4 +73,6 @@ $string['displayexamscript'] = '1Display exam script for';
 $string['displaysurvey'] = '1Display survey for';
 $string['displaypaper'] = '1Display paper for';
 $string['notcompleted'] = '1Warning: not all screens completed';
+$string['unknown'] = '1&nbsp;&lt;Unknown&gt;';
+$string['markingnotcomplete'] = '1Marking not complete';
 ?>
