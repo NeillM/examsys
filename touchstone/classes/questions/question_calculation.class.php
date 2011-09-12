@@ -32,7 +32,7 @@ Class QuestionCALCULATION extends Question {
   public $max_options = 10;
   protected $_allow_partial_marks = true;
   
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'units', 'answer_decimals', 'tolerance', 'bloom', 'status');
+  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_decimals', 'tolerance', 'bloom', 'status');
   protected $_fields_change = array('option_correct', 'answer_decimals', 'tolerance');
   
   private $_variables = null;
