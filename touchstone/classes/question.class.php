@@ -456,14 +456,14 @@ QUERY;
         $option->set_correct($new_correct['option_correct']);
       }
     
-      $this->add_unified_field_modification('correct', 'Correct Answer', $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
+      $this->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
       $changes = true;
     }
     
     if ($changes) {
       try {
     	  if(!$this->save()) {
-    	    $errors[] = 'Error saving data. Please try again';
+    	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log2'.
           $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
