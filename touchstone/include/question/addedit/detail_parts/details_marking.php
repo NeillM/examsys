@@ -13,31 +13,20 @@ if (count($question->options) > 0) {
   $mark_partial = 0;
 }
 $allow_neg = $question->allow_negative_marks();
+$allow_change_method = ($question->allow_change_marking_method()) ? '' : ' disabled="disabled"';
 ?>
         <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
           <tbody>
             <tr>
-<?php
-if ($question->allow_change_marking_method()):
-?>
               <th><label for="score_method" class="heavy"><?php echo $string['markingmethod'] ?></label></th>
               <td>
                 
-                <select id="score_method" name="score_method" class="spaced-right-large">
+                <select id="score_method" name="score_method" class="spaced-right-large"<?php echo $allow_change_method ?>>
 <?php
 echo ViewHelper::render_options($question->get_score_methods(), $question->get_score_method('int'), 3, true);
 ?>
                 </select>
                 <label for="option_marks_correct" class="heavy"><?php echo $string['markscorrect']?></label>
-<?php
-else:
-?>
-              <th><label for="option_marks_correct" class="heavy"><?php echo $string['markscorrect']?></label></th>
-              <td>
-
-<?php
-endif;
-?>
                 <select id="option_marks_correct" name="option_marks_correct" class="spaced-right-large">
 <?php
 echo ViewHelper::render_options($marks_positive, $mark_correct, 3);

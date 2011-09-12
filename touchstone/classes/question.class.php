@@ -472,7 +472,7 @@ QUERY;
           $result->store_result();
           $result->bind_result($user_answer);
           while ($row = $result->fetch()) {
-            $new_mark = ($user_answer == $new_correct['option_correct']) ? 1 : 0;
+            $new_mark = ($user_answer == $new_correct['option_correct']) ? $first->get_marks_correct() : $first->get_marks_incorrect();
             $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
             $updateLog->bind_param('isii', $new_mark, $user_answer, $this->id, $paper_id);
             $updateLog->execute();  

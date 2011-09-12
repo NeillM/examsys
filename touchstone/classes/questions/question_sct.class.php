@@ -29,6 +29,7 @@ Class QuestionSCT extends Question {
   protected $hypothesis = '';
   protected $new_information = '';
   public $max_options = 5;
+  protected $_allow_change_marking_method = false;
   
   protected $sct_types;
   

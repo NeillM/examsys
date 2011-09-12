@@ -26,6 +26,8 @@
 
 Class QuestionMCQ extends Question {
 
+  protected $_allow_change_marking_method = false;
+  
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
 
