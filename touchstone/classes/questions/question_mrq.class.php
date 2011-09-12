@@ -48,37 +48,42 @@ Class QuestionMRQ extends Question {
     $errors = array();
     $changes = false;
     
+    $old_correct_list = '';
     $i = 0;
     $correct_count = 0;
     foreach ($this->options as $option) {
+      if ($i == 0) {
+        $mark_correct = $option->get_marks_correct();
+        $mark_incorrect = $option->get_marks_incorrect();
+      }
       $old_correct = $option->get_correct();
-      if ($new_correct[$i] == $this->_answer_positive) $correct_count++;
+      $old_correct_list .= $old_correct . ',';
+      if ($new_correct[$i] == $this->get_answer_positive()) $correct_count++;
       if ($new_correct[$i] != $old_correct) {
         $option->set_correct($new_correct[$i]);
         $changes = true;
         
         $opt_no = $i + 1;
-        $this->add_unified_field_modification('correct', "{$this->_lang_strings['correctoption']} $opt_no", $old_correct, $new_correct, $this->_lang_strings['postexamchange']);
       }
       $i++;
     }
     
-    if ($this->get_score_method() == 'other') {
+    if ($this->get_display_method() == 'other') {
       $new_correct[] = $this->get_answer_negative();
     }
         
     if ($changes) {
+      $this->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], rtrim($old_correct_list, ','),  implode(',', $new_correct), $this->_lang_strings['postexamchange']);
+    
       try {
     	  if(!$this->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log2'.
           $totalpos = 0;
-          $score_method = $this->get_score_method();
+          $score_method = $this->score_method;
         
-          for ($i=0; $i < count($new_correct); $i++) {
-            if ($new_correct[$i] == $this->get_answer_positive()) $totalpos++;
-          }
+          $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;
           
     	    $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
           $result->bind_param('ii', $this->id, $paper_id);
@@ -92,30 +97,27 @@ Class QuestionMRQ extends Question {
             $all_correct = true;
             
             for ($i=0; $i < count($new_correct); $i++) {
-              if ($score_method == 'AllNegative') {
-                $mark += ($new_correct[$i] == $user_answers[$i]) ? 1 : -1;
-              } elseif ($new_correct[$i] == $user_answers[$i]) {
+              if ($score_method == 'Mark per Option') {
                 if ($new_correct[$i] == $this->get_answer_positive()) {
-                  $mark++;
+                  $mark += ($new_correct[$i] == $user_answers[$i]) ? $mark_correct : $mark_incorrect;
                 }
-              } else {
+              } elseif ($new_correct[$i] != $user_answers[$i]) {
                 $all_correct = false;
               }
             }
             
-            if ($score_method == 'AllItemsCorrect' and $all_correct == false) $mark = 0;
-        
-            // Recalculate total possible marks if 'all correct' or 'negative'.
-            if ($score_method == 'AllItemsCorrect') {
-              $totalpos = 1;
-            } elseif ($score_method == 'AllNegative') {
-              $totalpos = count($new_correct);
+            if ($score_method == 'Mark per Question') {
+              if ($all_correct) {
+                $mark = $mark_correct;
+              } else {
+                $mark = $mark_incorrect;
+              }
             }
-        
-//            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-//            $updateLog->bind_param('disii', $mark, $totalpos, $user_answer, $this->id, $paper_id);
-//            $updateLog->execute();
-//            $updateLog->close();
+
+            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
+            $updateLog->bind_param('disii', $mark, $totalpos, $user_answer, $this->id, $paper_id);
+            $updateLog->execute();
+            $updateLog->close();
           }
           $result->free_result();
           $result->close();

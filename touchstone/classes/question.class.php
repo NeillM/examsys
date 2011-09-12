@@ -415,7 +415,7 @@ QUERY;
    * @param string $category
    */
   public function add_unified_field_modification($field, $label, $old_value, $new_value, $category=null) {
-    $category = ($category = null) ? $this->_lang_strings['editquestion'] : $category;
+    $category = ($category == null) ? $this->_lang_strings['editquestion'] : $category;
     
     if (!in_array($field, $this->_unified_field_modifications)) {
       $this->_unified_field_modifications[$field] = array($category, $label, $old_value, $new_value);
@@ -1200,6 +1200,7 @@ QUERY;
         }
       } else {
         $result->close();
+        throw new RecordNotFoundException(sprintf($lang_strings['norecorderror'], $data));
       }
     } else {
       $classname = 'Question' . strtoupper($data);

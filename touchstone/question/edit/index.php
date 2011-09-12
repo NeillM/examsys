@@ -323,13 +323,13 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <script type="text/javascript" src="../../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../../javascript/jquery.formhelpers.js"></script>
 <?php
-if (file_exists($cfg_web_root . 'touchstone/javascript/validation/jquery.' . $question->get_type() . '.js')) {
+if ($question != null and file_exists($cfg_web_root . 'touchstone/javascript/validation/jquery.' . $question->get_type() . '.js')) {
 ?>
 <script type="text/javascript" src="../../javascript/jquery.validate.min.js"></script>
 <script type="text/javascript" src="../../javascript/validation/jquery.<?php echo $question->get_type() ?>.js"></script>
 <?php
 }
-if ($question->requires_flash()) {
+if ($question != null and $question->requires_flash()) {
 ?>
 <script language="JavaScript" src="../../javascript/ie_fix.js"></script>
 <script type="text/javascript" src="../../javascript/flash_include.js"></script>
@@ -455,8 +455,7 @@ if (count($errors) > 0) {
           </div>
         
 <?php 
-$x = $question->get_type();
-require_once '../../include/question/addedit/' . $question->get_type() . '.php'
+if ($question->get_type() != '') require_once '../../include/question/addedit/' . $question->get_type() . '.php'
 ?>
 
           <div class="form">
