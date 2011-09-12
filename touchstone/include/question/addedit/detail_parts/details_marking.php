@@ -12,7 +12,7 @@ if (count($question->options) > 0) {
   $mark_incorrect = 0;
   $mark_partial = 0;
 }
-$allow_neg = $question->allow_negative_marks();
+$allow_neg = $question->allow_negative_marks($module);
 $allow_change_method = ($question->allow_change_marking_method()) ? '' : ' disabled="disabled"';
 ?>
         <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
@@ -46,7 +46,7 @@ echo ViewHelper::render_options($marks_partial, $mark_partial, 3);
                 </span>
 <?php
 endif;
-if ($question->allow_negative_marks()):
+if ($allow_neg):
 ?>
                 <label for="option_marks_incorrect" class="heavy"><?php echo $string['marksincorrect']?></label>
                 <select id="option_marks_incorrect" name="option_marks_incorrect">

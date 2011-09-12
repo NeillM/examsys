@@ -525,11 +525,13 @@ QUERY;
    * Does this question type allow negative parking?  Check all the modules that the question is on
    * @return boolean
    */
-  public function allow_negative_marks() {
+  public function allow_negative_marks($module = '') {
     if ($this->_allow_negative_marks == null) {
+      $this->_allow_negative_marks = true;
+      
       // Check all the modules that the question is on
-      if ($this->group != '') {
-        $this->_allow_negative_marks = true;
+      $modules = ($this->group != '') ? str_replace(';', "','", $this->group) : $module;
+      if ($modules != '') {
       
         $modules = str_replace(';', "','", $this->group);
         $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE moduleid IN ('" . $modules . "') AND neg_marking=0");
