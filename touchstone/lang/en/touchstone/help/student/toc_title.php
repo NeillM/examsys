@@ -1,3 +1,3 @@
 <?php
-$string['toc'] = '1Table of Contents';
+require '../../lang/' . $language . '/touchstone/help/staff/toc_title.php';
 ?>

@@ -21,16 +21,8 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-
-  if (strpos($_SERVER['PHP_SELF'],'student_help') !== false) {
-    $help_type = 'student';
-    $require_file = '../include/staff_student_auth.inc';
-  } else {
-    $help_type = 'staff';
-    $require_file = '../include/staff_auth.inc';
-  }
-
-  require $require_file;
+ 
+require '../../include/staff_student_auth.inc';
 ?>
 <html>
 <head>
@@ -50,8 +42,8 @@ a:visited {color:#0560A6}
 </head>
 
 <?php
-  if ($_GET['id'] != '1' and strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
-    $query = "INSERT INTO help_log VALUES (NULL, '$help_type', $userID, NOW(), " . $_GET['id'] . ")";
+  if ((isset($_GET['id']) and $_GET['id'] != '1') or strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
+    $query = "INSERT INTO help_log VALUES (NULL, 'student', $userID, NOW(), " . $_GET['id'] . ")";
     if (!$mysqli->query($query)) {
       echo "<p>" . $mysqli->errno . " Error writing to log: $query.</p>";
     }
@@ -59,28 +51,33 @@ a:visited {color:#0560A6}
   
   echo "<body onload=\"updateToolbar(0)\">\n";
   
-  $search_results = $mysqli->query("SELECT id, title, type FROM " . $help_type . "_help WHERE title LIKE '" . $_GET['title'] . "/%' ORDER BY title");
-  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#7598C4; font-family:Verdana,sans-serif\">" . $_GET['title'] . "</div>\n";
+  $search_results = $mysqli->prepare("SELECT id, title, type FROM student_help WHERE title LIKE '" . $_GET['title'] . "/%' ORDER BY title");
+  $search_results->execute();
+  $search_results->store_result();
+  $search_results->bind_result($id, $title, $type);
+
+  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . $_GET['title'] . "</div>\n";
   
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n<tr><td style=\"width:20px\">&nbsp;</td><td>";
   
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-  echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;Topics</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-image:url(search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">" . mysql_num_rows($search_results) . "&nbsp;items&nbsp;</td></tr>";
+  echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;" . $string['topics'] . "Topics</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">" . $search_results->num_rows . "&nbsp;" . $string['items'] . "&nbsp;</td></tr>";
   echo "</table>\n";
 
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
   $row_no = 0;
-  while ($row = $search_results->fetch_assoc()) {
+  while ($search_results->fetch()) {
     $row_no++;
     if ($row_no % 2) {
-      echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"./images/single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td class=\"row\"><a href=\"index.php?id=" . $row['id'] . "\" target=\"_top\">" . str_replace($_GET['title'] . '/','',$row['title']) . "</a></td></tr>\n";
+      echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/','',$title) . "</a></td></tr>\n";
     } else {
-      echo "<tr><td style=\"width:24px; background-color:#F2F2F2\" class=\"row\"><img src=\"./images/single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td style=\"background-color:#F2F2F2\" class=\"row\"><a href=\"index.php?id=" . $row['id'] . "\" target=\"_top\">" . str_replace($_GET['title'] . '/','',$row['title']) . "</a></td></tr>\n";
+      echo "<tr><td style=\"width:24px; background-color:#F2F2F2\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td style=\"background-color:#F2F2F2\" class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/','',$title) . "</a></td></tr>\n";
     }
 
   }
-  echo "</table>\n</td><td style=\"width:20px\">&nbsp;</td></tr>\n</table>\n";
+  $search_results->close();
   $mysqli->close();
+  echo "</table>\n</td><td style=\"width:20px\">&nbsp;</td></tr>\n</table>\n";
 ?>
 </div>
 </body>

@@ -10,4 +10,5 @@ $string['edit'] = '1Edit Page';
 $string['recyclebin'] = '1Recycle Bin';
 $string['info'] = '1Info';
 $string['search'] = '1Search';
+$string['confirmdelete'] = '1Are you sure you wish to delete the current page?';
 ?>

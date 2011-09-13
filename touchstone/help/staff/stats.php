@@ -36,7 +36,7 @@
 <head>
 <title>Help and Support Center<?php echo " $cfg_install_type"; ?></title>
 <style>
-body {margin:6px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
+body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
 table {font-size:100%}
 ul {list-style-type:square; color:#FF9900}
 a:link.title {color:#0560A6; font-weight:bold}
@@ -44,7 +44,8 @@ a:visited.title {color:#0560A6; font-weight:bold}
 a:link.page {color:white}
 a:visited.page {color:white}
 .path {color:#808080}
-.num {text-align:right}
+.num {text-align:right; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2}
+.txt {border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2}
 </style>
 <script language="JavaScript">
   function displayPage(targetID, page_no) {
@@ -121,8 +122,8 @@ a:visited.page {color:white}
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-	echo "</select>\n";
-  echo $string['to'];
+    echo "</select>\n";
+    echo $string['to'];
     // Split the end date
     $split_year = substr($end_date,0,4);
     $split_month = substr($end_date,4,2);
@@ -184,7 +185,7 @@ a:visited.page {color:white}
 	 echo "</select>\n";
   echo " <input type=\"submit\" value=\" " . $string['filter'] . " \" name=\"Filter\" /></form></td></tr>\n";
   
-  echo "<tr style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\"><td>" . $string['pagestats'] . "</td><td></td><td>" . $string['searchstats'] . "</td></tr>\n";
+  echo "<tr style=\"width:49%; font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\"><td>" . $string['pagehits'] . "</td><td style=\"width:2%\"></td><td width=\"49%\">" . $string['searches'] . "</td></tr>\n";
   echo "<tr ><td>&nbsp;</td><td></td><td>&nbsp;</td></tr>\n";
   
   echo "<tr><td style=\"vertical-align:top\">";
@@ -196,10 +197,10 @@ a:visited.page {color:white}
   if ($search_results->num_rows == 0) {
     echo "<p>" . $string['nohits'] . "</p>\n";
   } else {
-    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" style=\"border:1px solid #E0E0E0; border-collapse:collapse\">\n";
-    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>" . $string['page'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
+    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; border:1px solid #6B82B2; border-collapse:collapse\">\n";
+    echo "<tr style=\"text-align:center; border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\"><td style=\"border-right: 1px solid #6B82B2\">" . $string['page'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
     while ($search_results->fetch()) {
-      echo "<tr><td>$title</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
+      echo "<tr><td class=\"txt\">$title</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
     }
     echo "</table>\n";
   }
@@ -216,13 +217,13 @@ a:visited.page {color:white}
   if ($search_results->num_rows == 0) {
     echo "<p>" . $string['nosearches'] . "</p>\n";
   } else {
-    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" style=\"font-size:100%; border:1px solid #E0E0E0; border-collapse:collapse\">\n";
-    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>" . $string['searches'] . "</td><td>" . $string['term'] . "</td><td>" . $string['results'] . "</td></tr>\n";
+    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:100%; border:1px solid #6B82B2; border-collapse:collapse\">\n";
+    echo "<tr style=\"text-align:center; border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\"><td style=\"border-right: 1px solid #6B82B2\">" . $string['searches'] . "</td><td style=\"border-right: 1px solid #6B82B2\">" . $string['term'] . "</td><td>" . $string['results'] . "</td></tr>\n";
     while ($row = $search_results->fetch()) {
       if ($hits == 0) {
-        echo "<tr style=\"color:#C00000\"><td class=\"num\">" . number_format($no_searches) . "</td><td>$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
+        echo "<tr style=\"color:#C00000\"><td class=\"num\">" . number_format($no_searches) . "</td><td class=\"txt\">$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
       } else {
-        echo "<tr><td class=\"num\">" . number_format($no_searches) . "</td><td>$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
+        echo "<tr><td class=\"num\">" . number_format($no_searches) . "</td><td class=\"txt\">$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
       }
     }
     echo "</table>\n";
@@ -238,10 +239,10 @@ a:visited.page {color:white}
   if ($tutorial_results->num_rows == 0) {
     echo "<p>" . $string['msg'] . "</p>\n";
   } else {
-    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" style=\"font-size:100%; border:1px solid #E0E0E0; border-collapse:collapse\">\n";
-    echo "<tr style=\"font-weight:bold; background:#808080; color:white\"><td>" . $string['tutorial'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
+    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:100%; border:1px solid #6B82B2; border-collapse:collapse\">\n";
+    echo "<tr style=\"text-align:center; border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\"><td style=\"border-right: 1px solid #6B82B2\">" . $string['tutorial'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
     while ($row = $tutorial_results->fetch()) {
-        echo "<tr><td>" . $tutorial . "</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
+        echo "<tr><td class=\"txt\">" . $tutorial . "</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
     }
     echo "</table>\n";
   }

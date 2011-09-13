@@ -30,14 +30,14 @@
   }
   
   function drawHeader($tmp_page_no) {
-    global $page_size, $total_hits, $hit_stop, $page_total;
+    global $page_size, $total_hits, $hit_stop, $page_total, $string;
     
     $hit_start = (($page_size * $tmp_page_no) - $page_size) + 1;
     $hit_stop = $page_size * $tmp_page_no;
     if ($hit_stop > $total_hits) $hit_stop = $total_hits;
 
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-    echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;Results $hit_start-$hit_stop of $total_hits</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">Pages:&nbsp;";
+    echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;" . sprintf($string['results'], $hit_start, $hit_stop, $total_hits) . "</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">Pages:&nbsp;";
     for ($i=1; $i<=$page_total; $i++) {
       if ($i == $tmp_page_no) {
         echo "&nbsp;[<strong>$i</strong>]&nbsp;";
@@ -46,14 +46,14 @@
       }
     }
     if ($tmp_page_no > 1) {
-      echo '&nbsp;<img onclick="displayPage(' . ($tmp_page_no-1) . ',' . $page_total . ')" src="../previous_active.png" width="11" height="11" alt="Previous" border="0" />&nbsp;';
+      echo '&nbsp;<img onclick="displayPage(' . ($tmp_page_no-1) . ',' . $page_total . ')" src="../previous_active.png" width="11" height="11" alt="' . $string['previous'] . '" border="0" />&nbsp;';
     } else {
       echo '&nbsp;<img src="../previous_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
     }
     if ($tmp_page_no < $page_total) {
-      echo '&nbsp;&nbsp;<a class="page" href="" onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . '); return false;">Next</a>&nbsp;<img onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . ')" src="../next_active.png" width="11" height="11" alt="Next" border="0" />&nbsp;';
+      echo '&nbsp;&nbsp;<a class="page" href="" onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . '); return false;">' . $string['next'] . '</a>&nbsp;<img onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . ')" src="../next_active.png" width="11" height="11" alt="' . $string['next'] . '" border="0" />&nbsp;';
     } else {
-      echo '&nbsp;&nbsp;Next&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
+      echo '&nbsp;&nbsp;' . $string['next'] . '&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
     }
     echo "</td></tr></table>\n";
   }
@@ -85,7 +85,7 @@ a:visited.page {color:white}
 <body>
 
 <?php
-  echo "<div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4; font-family:Verdana,sans-serif\">Searched for: \"" . $_GET['searchstring'] . "\"</div>\n<br />\n";
+  echo "<div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . sprintf($string['searchedfor'], $_GET['searchstring']) . "</div>\n<br />\n";
   
   if (isset($_GET['searchstring'])) {
     if (strpos($userroles,'SysAdmin') !== false) {
@@ -110,16 +110,16 @@ a:visited.page {color:white}
       $result->close();
     }
     if ($search_results->num_rows == 0) {
-      echo "<p>No results were found matching \"" . $_GET['searchstring'] . "\".</p>\n";
-      echo "<div><strong>Tips for better search results:</strong></div>\n";
-      echo "<ul style=\"\">\n<li><span style=\"color:black\">Try a different phrase</span></li>\n<li><span style=\"color:black\">Check your spelling</span></li>\n</ul>\n";
+      echo "<p>" . sprintf($string['noresults'], $_GET['searchstring']) . "</p>\n";
+      echo "<div><strong>" . $string['tips'] . "</strong></div>\n";
+      echo "<ul style=\"\">\n<li>" . $string['tipsli'] . "</li>\n</ul>\n";
     } else {
       $page_no = 0;
       $link_no = 0;
       $page_total = ceil($total_hits / $page_size);
       $hit_start = (($page_size * $page_no) - $page_size) + 1;
       $hit_stop = $page_size * $page_no;
-      while ($row = $search_results->fetch()) {
+      while ($search_results->fetch()) {
         if ($link_no > 0) {
           echo "<tr><td class=\"row1\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td class=\"row2\">";
         } else {
