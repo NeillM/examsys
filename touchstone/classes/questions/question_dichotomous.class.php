@@ -35,7 +35,7 @@ Class QuestionDICHOTOMOUS extends Question {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
     
     $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-    $this->_display_methods = array('TF_NegativeAbstain' => $this->_lang_strings['tfnegativeabstain'], 'TF_NegativeAbstainHalf' => $this->_lang_strings['tfnegativeabstainhalf'], 'TF_Positive' => $this->_lang_strings['tfpositive'], 'YN_NegativeAbstain' => $this->_lang_strings['ynnegativeabstain'], 'YN_Positive' => $this->_lang_strings['ynpositive']);
+    $this->_display_methods = array('TF_NegativeAbstain' => $this->_lang_strings['tfnegativeabstain'], 'TF_Positive' => $this->_lang_strings['tfpositive'], 'YN_NegativeAbstain' => $this->_lang_strings['ynnegativeabstain'], 'YN_Positive' => $this->_lang_strings['ynpositive']);
     
     // 'correct' is not a unified field for Dichotomous questions
     $this->_fields_editable[] = 'correct';
