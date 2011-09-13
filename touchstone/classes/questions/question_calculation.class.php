@@ -40,7 +40,7 @@ Class QuestionCALCULATION extends Question {
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
     
-    $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']);
+    $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['allowpartial']);
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
 
     // Convert the max number of options into a list of variables
@@ -67,7 +67,10 @@ Class QuestionCALCULATION extends Question {
     
     $first = reset($this->options);
     $old_correct = $first->get_correct();
-        
+    $mark_correct = $first->get_marks_correct();
+    $mark_incorrect = $first->get_marks_incorrect();
+    $mark_partial = $first->get_marks_partial();
+    
     if ($new_correct['option_correct'] != $old_correct) {
       foreach ($this->options as $option) {
         $option->set_correct($new_correct['option_correct']);
@@ -98,6 +101,8 @@ Class QuestionCALCULATION extends Question {
     	  if(!$this->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
+          $score_method = $this->score_method;
+    	    
           // Remark the student's answers in 'log2'.
           $result = $this->_mysqli->prepare("SELECT user_answer, id FROM log2 WHERE q_id=? AND q_paper=?");
           $result->bind_param('ii', $this->id, $paper_id);
@@ -120,9 +125,13 @@ Class QuestionCALCULATION extends Question {
             eval ("\$answer = $answer_equation;");
             $answer = round($answer, $this->get_answer_decimals());
             if ($saved_response == $answer) {
-              $mark = 1;
+              $mark = $mark_correct;
+            } elseif ($score_method == 'Allow partial Marks' and abs($saved_response - $answer) <= $this->get_tolerance()) {
+              $mark = $mark_partial;
             } elseif (abs($saved_response - $answer) <= $this->get_tolerance()) {
-              $mark = 1;
+              $mark = $mark_correct;
+            } else {
+              $mark = $mark_incorrect;
             }
             $saved_response .= '|' . $answer . '|' . $answer_parts[2];
           

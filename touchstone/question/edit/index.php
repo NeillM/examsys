@@ -323,18 +323,24 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <script type="text/javascript" src="../../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../../javascript/jquery.formhelpers.js"></script>
 <?php
-if ($question != null and file_exists($cfg_web_root . 'touchstone/javascript/validation/jquery.' . $question->get_type() . '.js')) {
+if ($question != null and file_exists($cfg_web_root . 'touchstone/javascript/validation/jquery.' . $question->get_type() . '.js')):
 ?>
 <script type="text/javascript" src="../../javascript/jquery.validate.min.js"></script>
 <script type="text/javascript" src="../../javascript/validation/jquery.<?php echo $question->get_type() ?>.js"></script>
 <?php
-}
-if ($question != null and $question->requires_flash()) {
+endif;
+if ($question != null and $question->requires_flash()):
 ?>
-<script language="JavaScript" src="../../javascript/ie_fix.js"></script>
+<script type="text/javascript" src="../../javascript/ie_fix.js"></script>
 <script type="text/javascript" src="../../javascript/flash_include.js"></script>
 <?php
-}?>
+endif;
+?>
+<script type="text/javascript">
+var lang = {
+'allowpartial' : '<?php echo $string['allowpartial'] ?>'
+};
+</script>
 </head>
 <body>
 	<div id="page-header">
