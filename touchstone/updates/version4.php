@@ -903,6 +903,106 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
+  
+  // 13/09/2011 - Convert MRQs of type '1 Mark per option with negative marking' to Dichotomous
+  // They are functionally equivalent but this MRQ type doesn't fit well into the new marking scheme
+  // Also needs to update the logs, although in practice there are _very_ few of these questions on live papers
+  $result = $mysqli->prepare("SELECT q_id FROM questions WHERE q_type='mrq' AND display_method='AllNegative'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($questionID);
+  while ($result->fetch()) {
+    // Update Logs
+    $check = $mysqli->prepare("SELECT * FROM log0 WHERE q_id=? AND user_answer LIKE '%y%'");
+    $check->bind_param('i', $questionID);
+    $check->execute();
+    $check->store_result();
+    $check->fetch();
+    if ($check->num_rows() > 0) {
+      $update_log0_t = $mysqli->prepare("UPDATE log0 SET user_answer=REPLACE(user_answer, 'y', 't') WHERE q_id=? AND user_answer LIKE '%y%'");
+      $update_log0_t->bind_param('i', $questionID);
+      $update_log0_t->execute();
+      $update_log0_t->close();
+      echo "<li>UPDATE log0 SET user_answer=REPLACE(user_answer, 'y', 't') WHERE q_id={$questionID} AND user_answer LIKE '%y%'</li>\n";
+      ob_flush();
+      flush();
+    }
+    $check->close();
+    
+    $check = $mysqli->prepare("SELECT * FROM log0 WHERE q_id=? AND user_answer LIKE '%n%'");
+    $check->bind_param('i', $questionID);
+    $check->execute();
+    $check->store_result();
+    $check->fetch();
+    if ($check->num_rows() > 0) {
+      $update_log0_f = $mysqli->prepare("UPDATE log0 SET user_answer=REPLACE(user_answer, 'n', 'f') WHERE q_id=? AND user_answer LIKE '%n%'");
+      $update_log0_f->bind_param('i', $questionID);
+      $update_log0_f->execute();
+      $update_log0_f->close();
+      echo "<li>UPDATE log0 SET user_answer=REPLACE(user_answer, 'n', 'f') WHERE q_id={$questionID} AND user_answer LIKE '%n%'</li>\n";
+      ob_flush();
+      flush();
+    }
+    $check->close();
+    
+    $check = $mysqli->prepare("SELECT * FROM log2 WHERE q_id=? AND user_answer LIKE '%y%'");
+    $check->bind_param('i', $questionID);
+    $check->execute();
+    $check->store_result();
+    $check->fetch();
+    if ($check->num_rows() > 0) {
+      $update_log2_t = $mysqli->prepare("UPDATE log2 SET user_answer=REPLACE(user_answer, 'y', 't') WHERE q_id=? AND user_answer LIKE '%y%'");
+      $update_log2_t->bind_param('i', $questionID);
+      $update_log2_t->execute();
+      $update_log2_t->close();
+      echo "<li>UPDATE log2 SET user_answer=REPLACE(user_answer, 'y', 't') WHERE q_id={$questionID} AND user_answer LIKE '%y%'</li>\n";
+      ob_flush();
+      flush();
+    }
+    $check->close();
+  
+    $check = $mysqli->prepare("SELECT * FROM log2 WHERE q_id=? AND user_answer LIKE '%n%'");
+    $check->bind_param('i', $questionID);
+    $check->execute();
+    $check->store_result();
+    $check->fetch();
+    if ($check->num_rows() > 0) {
+      $update_log2_f = $mysqli->prepare("UPDATE log2 SET user_answer=REPLACE(user_answer, 'n', 'f') WHERE q_id=? AND user_answer LIKE '%n%'");
+      $update_log2_f->bind_param('i', $questionID);
+      $update_log2_f->execute();
+      $update_log2_f->close();
+      echo "<li>UPDATE log2 SET user_answer=REPLACE(user_answer, 'n', 'f') WHERE q_id={$questionID} AND user_answer LIKE '%n%'</li>\n";
+      ob_flush();
+      flush();
+    }
+    $check->close();
+    
+    $update_o_t = $mysqli->prepare("UPDATE options SET correct='t', marks_correct=1, marks_incorrect=-1 WHERE o_id=? AND correct='y'");
+    $update_o_t->bind_param('i', $questionID);
+    $update_o_t->execute();
+    $update_o_t->close();
+    echo "<li>UPDATE options SET correct='t', marks_correct=1, marks_incorrect=-1 WHERE o_id={$questionID} AND correct='y'</li>\n";
+    ob_flush();
+    flush();
+    
+    $update_o_f = $mysqli->prepare("UPDATE options SET correct='f', marks_correct=1, marks_incorrect=-1 WHERE o_id=? AND correct='n'");
+    $update_o_f->bind_param('i', $questionID);
+    $update_o_f->execute();
+    $update_o_f->close();
+    echo "<li>UPDATE options SET correct='f', marks_correct=1, marks_incorrect=-1 WHERE o_id={$questionID} AND correct='n'</li>\n";
+    ob_flush();
+    flush();
+    
+    $update_q = $mysqli->prepare("UPDATE questions SET q_type='dichotomous', display_method='TF_Positive', score_method='Mark per Option' WHERE q_id=?");
+    $update_q->bind_param('i', $questionID);
+    $update_q->execute();
+    $update_q->close();
+    echo "<li>UPDATE questions SET q_type='dichotomous', display_method='TF_Positive', score_method='Mark per Option' WHERE q_id={$questionID}</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
   echo "</ol>\n";
   
   //Close the database
