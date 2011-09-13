@@ -796,6 +796,10 @@ if (!isset($_POST['update'])) {
       $adjust = $mysqli->prepare("UPDATE options SET marks_incorrect=-0.5 WHERE o_id=$q_id");
       $adjust->execute();
       $adjust->close();
+
+      $adjust = $mysqli->prepare("UPDATE questions SET display_method='TF_NegativeAbstain' WHERE q_id=$q_id");
+      $adjust->execute();
+      $adjust->close();
     }
     $q_data->close();
   }
