@@ -96,7 +96,7 @@ Class QuestionCALCULATION extends Question {
     if ($changes) {
       try {
     	  if(!$this->save()) {
-    	    $errors[] = 'Error saving data. Please try again';
+    	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log2'.
           $result = $this->_mysqli->prepare("SELECT user_answer, id FROM log2 WHERE q_id=? AND q_paper=?");

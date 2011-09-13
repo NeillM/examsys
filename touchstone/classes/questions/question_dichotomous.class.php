@@ -63,38 +63,33 @@ Class QuestionDICHOTOMOUS extends Question {
     $errors = array();
     $changes = false;
     
+    $old_correct_list = '';
     $i = 0;
     foreach ($this->options as $option) {
-      if ($new_correct[$i] != $option->get_correct()) {
+      if ($i == 0) {
+        $mark_correct = $option->get_marks_correct();
+        $mark_incorrect = $option->get_marks_incorrect();
+      }
+      $old_correct = $option->get_correct();
+      $old_correct_list .= $old_correct . ',';
+      if ($new_correct[$i] != $old_correct) {
         $option->set_correct($new_correct[$i]);
         $changes = true;
         
         $opt_no = $i + 1;
-        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $old_correct, $new_correct, $this->_lang_strings['postexamchange']);
       }
       $i++;
     }
     
     if ($changes) {
+      $this->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], rtrim($old_correct_list, ','),  implode(',', $new_correct), $this->_lang_strings['postexamchange']);
       try {
     	  if(!$this->save()) {
-    	    $errors[] = 'Error saving data. Please try again';
+    	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log2'.
-          $score_method = $this->get_score_method();
-          switch ($score_method) {
-            case 'TF_NegativeAbstain':
-            case 'YN_NegativeAbstain':
-              $negative = 1;
-              break;
-            case 'TF_NegativeAbstainHalf':
-              $negative = 0.5;
-              break;
-            default:
-              $negative = 0;
-              break;
-          }
-        
+          $score_method = $this->score_method;
+          
     	    $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
           $result->bind_param('ii', $this->id, $paper_id);
           $result->execute();  
@@ -105,12 +100,20 @@ Class QuestionDICHOTOMOUS extends Question {
             $mark = 0;
             
             for ($i=0; $i < count($new_correct); $i++) {
-              if ($new_correct[$i] == $user_answers[$i]) {
-                $mark++;
-              } elseif ($user_answers[$i] == $this->get_answer_positive() or $user_answers[$i] == $this->get_answer_negative()) {
-                // Don't subtract for unanswered/abstain
-                $mark -= $negative;
+              // Don't do anything if option is unanswered
+              if ($user_answers[$i] == $this->get_answer_positive() or $user_answers[$i] == $this->get_answer_negative()) {
+                if ($score_method == 'Mark per Question' and $new_correct[$i] == $user_answers[$i]) {
+                  // 'Mark' here is just a count of correct answers
+                  $mark++;
+                } else {
+                  $mark += ($new_correct[$i] == $user_answers[$i]) ? $mark_correct : $mark_incorrect;
+                }
               }
+            }
+            
+            // Set mark for per-question settings
+            if ($score_method == 'Mark per Question') {
+              $mark = ($mark == count($new_correct)) ? $mark_correct : $mark_incorrect;
             }
             
             $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
