@@ -56,7 +56,7 @@ function getRandomDetails($questionID) {
   $result->execute();
   $result->store_result();
   if ($result->num_rows > 0) {
-    $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
+    $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
     while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
@@ -70,7 +70,7 @@ function getRandomDetails($questionID) {
         $paper_buffer[$old_q_id]['display_method'] = $old_display_method;
         $paper_buffer[$old_q_id]['status'] = $old_status;
         $paper_buffer[$old_q_id]['display_last_edited'] = $display_last_edited;
-        $paper_buffer[$old_q_id]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+        $paper_buffer[$old_q_id]['marks'] = qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
         $paper_buffer[$old_q_id]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         $paper_buffer[$old_q_id]['option_text'] = $old_option_text;
         $old_correct = array();
@@ -83,7 +83,7 @@ function getRandomDetails($questionID) {
       $old_leadin = $leadin;
       $old_scenario = $scenario;
       $old_status = $status;
-      $old_marks = $marks;
+      $old_marks_correct = $marks_correct;
       $old_correct[] = $correct;
       $old_option_text[] = $option_text;
       $old_display_method = $display_method;
@@ -104,7 +104,7 @@ function getRandomDetails($questionID) {
     $paper_buffer[$old_q_id]['display_method'] = $old_display_method;
     $paper_buffer[$old_q_id]['status'] = $old_status;
     $paper_buffer[$old_q_id]['display_last_edited'] = $display_last_edited;
-    $paper_buffer[$old_q_id]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+    $paper_buffer[$old_q_id]['marks'] = qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
     $paper_buffer[$old_q_id]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
     $paper_buffer[$old_q_id]['option_text'] = $old_option_text;
   }
@@ -466,21 +466,15 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       }
       if (substr($tmp_exclude,$a,1) == '0') {
         if ($paper_buffer[$q_id]['correct'][$a] == substr($tmp_user_answer,$a,1)) {
-          $tmp_mark += 1;
-          $tmp_user_mark_array[] = 1;
+          $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+          $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
         } else {
           if (substr($tmp_user_answer,$a,1) == 'a' or substr($tmp_user_answer,$a,1) == 'u') {
             $tmp_mark += 0;
             $tmp_user_mark_array[] = 0;
-          } elseif ($paper_buffer[$q_id]['score_method'] == 'TF_NegativeAbstain' or $paper_buffer[$q_id]['score_method'] == 'YN_NegativeAbstain') {
-            $tmp_mark += -1;
-            $tmp_user_mark_array[] = -1;
-          } elseif ($paper_buffer[$q_id]['score_method'] == 'TF_NegativeAbstainHalf') {
-            $tmp_mark += -0.5;
-            $tmp_user_mark_array[] = -0.5;
           } else {
-            $tmp_mark += 0;
-            $tmp_user_mark_array[] = 0;
+            $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+            $tmp_user_mark_array[] =$paper_buffer[$q_id]['marks_incorrect'];
           }
         }
       }
@@ -619,11 +613,11 @@ while ($result->fetch()) {
 $result->close();
 
 // Load the correct answers into 'paper_buffer' array.
-$result = $mysqli->prepare("SELECT q_id, marks_correct, display_method, score_method, q_media_height, q_media_width, paper_title, marking, pass_mark, distinction_mark, paper_ownerID, q_type, paper_type, correct, score_method, option_text, moduleID, calendar_year, status, display_pos FROM (papers, questions, options, properties) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND questions.q_id=options.o_id AND q_type!='info' ORDER BY screen, display_pos, id_num");
+$result = $mysqli->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, paper_title, marking, pass_mark, distinction_mark, paper_ownerID, q_type, paper_type, correct, score_method, option_text, moduleID, calendar_year, status, display_pos FROM (papers, questions, options, properties) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND questions.q_id=options.o_id AND q_type!='info' ORDER BY screen, display_pos, id_num");
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
 $result->store_result();
-$result->bind_result($q_id, $marks, $display_method, $score_method, $q_media_height, $q_media_width, $paper_title, $marking, $pass_mark, $distinction_mark, $tmp_ownerID, $q_type, $paper_type, $correct, $score_method, $option_text, $moduleID, $calendar_year, $status, $display_pos);
+$result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $paper_title, $marking, $pass_mark, $distinction_mark, $tmp_ownerID, $q_type, $paper_type, $correct, $score_method, $option_text, $moduleID, $calendar_year, $status, $display_pos);
 $old_q_id = '';
 $question_no = 0;
 $total_marks = 0;
@@ -652,8 +646,8 @@ while ($result->fetch()) {
             //exit;
           //}
         } else {
-          $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-          $orig_total_marks += qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+          $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+          $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
           checkDisplayExcluded($display_excluded, $old_q_id, $excluded, $question_no);
         }
@@ -661,7 +655,7 @@ while ($result->fetch()) {
       	displayExperimental($display_experimental, $question_no);
       }
       $stems = 0;
-      $old_marks = 0;
+      $old_marks_correct = 0;
     }
     $question_no++;
     $option_no = 0;
@@ -670,6 +664,8 @@ while ($result->fetch()) {
     $question_id = $q_id;
     $paper_buffer[$question_id]['q_type'] = $q_type;
     $paper_buffer[$question_id]['score_method'] = $score_method;
+    $paper_buffer[$question_id]['marks_correct'] = $marks_correct;
+    $paper_buffer[$question_id]['marks_incorrect'] = $marks_incorrect;
     if ($q_type == 'blank') {
       $not_used = preg_match('/mark="([0-9]{1,3})"/',$option_text,$results);
       $blank_details = explode("[blank",$option_text);
@@ -706,7 +702,8 @@ while ($result->fetch()) {
   $old_q_media_width = $q_media_width;
   $old_q_media_height = $q_media_height;
   $old_option_text[] = $option_text;
-  $old_marks = $marks;
+  $old_marks_correct = $marks_correct;
+  $old_marks_incorrect = $marks_incorrect;
   $old_status = $status;
   $stems++;
 }
@@ -720,8 +717,8 @@ if ($old_status != 'Experimental') {
   if ($old_q_type == 'random') {
     getRandomDetails($q_id);
     $total_marks += $paper_buffer[$tmp_id]['marks'];
-  } else {  $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-    $orig_total_marks += qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+  } else {  $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+    $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
     $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
     checkDisplayExcluded($display_excluded, $old_q_id, $excluded, $question_no);
   }

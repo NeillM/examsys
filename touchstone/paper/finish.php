@@ -840,16 +840,6 @@ table {font-size:100%}
           }
           echo "</tr>\n";
           
-          if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'YN_NegativeAbstain') {
-            $right_add = 1;
-            $wrong_add = -1;
-          } elseif ($paper[$question]['score_method'] == 'TF_NegativeAbstainHalf') {
-            $right_add = 1;
-            $wrong_add = -0.5;
-          } else {
-            $right_add = 1;
-            $wrong_add = 0;
-          }
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             $tmp_part_id = $option_order[$part_id];
             if ($tmp_display_correct_answer == '1') {
@@ -864,10 +854,10 @@ table {font-size:100%}
             if (isset($paper[$question]['user_answer']) and substr($paper[$question]['user_answer'], $tmp_part_id, 1) != 'u' and substr($paper[$question]['user_answer'], $tmp_part_id, 1) != 'a') {
               if ($paper[$question]['correct'][$tmp_part_id] == substr($paper[$question]['user_answer'], $tmp_part_id, 1)) {
                 if ($tmp_display_students_response == '1') $correct_icon = '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-                if (substr($tmp_exclude,$tmp_part_id,1) == '0') $paper[$question]['mark'] += $right_add;
+                if (substr($tmp_exclude,$tmp_part_id,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               } else {
                 if ($tmp_display_students_response == '1') $correct_icon = '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-                if (substr($tmp_exclude,$tmp_part_id,1) == '0') $paper[$question]['mark'] += $wrong_add;
+                if (substr($tmp_exclude,$tmp_part_id,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
               }
             }
             
