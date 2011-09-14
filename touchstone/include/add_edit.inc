@@ -87,7 +87,7 @@ function insert_into_options($o_id, $option_text, $o_media, $o_media_width, $o_m
   return $mysqli->insert_id;
 }
 
-function wysiwyg_editor($name, $replace, $content='', $width=695, $height=70) {
+function wysiwyg_editor($name, $replace, $content='', $width=756, $height=70) {
   global $cfg_editor_name;
 
   $html = '';

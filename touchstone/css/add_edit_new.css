@@ -312,13 +312,13 @@ td.separated:last-child {
 }
 
 #question-holder {
-	width: 888px;
+	width: 949px;
 	margin: 0 auto;
 }
 
 /* Form */
 .form {
-	width: 888px;
+	width: 949px;
 	margin: 0 auto 24px auto;
 }
 
@@ -336,10 +336,11 @@ div.form {
 
 .form-large {
   width: 693px;
+  width: 754px;
 }
 
 .form-med-large {
-  width: 614px;
+  width: 665px;
 }
 
 .form-med {
@@ -386,7 +387,7 @@ div.form {
 }
 
 .form .small {
-  width: 82px;
+  width: 92px;
 }
 
 input.error, textarea.error, select.error {
