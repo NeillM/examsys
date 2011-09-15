@@ -34,9 +34,9 @@ echo ViewHelper::render_options($marks_positive, $mark_correct, 3);
                 </select>
 <?php
 if ($question->allow_partial_marks()):
-  $show_partial = ($question->get_score_method() == $string['allowpartial']) ? '' : ' class="hide"';
+  $show_partial = ($question->get_score_method() == $string['allowpartial']) ? '' : ' hide';
 ?>
-                <span id="marks-partial"<?php echo $show_partial ?>>
+                <span class="marks-partial<?php echo $show_partial ?>">
                   <label for="option_marks_partial" class="heavy"><?php echo $string['markspartial']?></label>
                   <select id="option_marks_partial" name="option_marks_partial" class="spaced-right-large">
 <?php

@@ -28,12 +28,13 @@ Class QuestionCALCULATION extends Question {
   
   protected $units = '';
   protected $answer_decimals = 0;
-  protected $tolerance = 0;
+  protected $tolerance_full = 0;
+  protected $tolerance_partial = 0;
   public $max_options = 10;
   protected $_allow_partial_marks = true;
   
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_decimals', 'tolerance', 'bloom', 'status');
-  protected $_fields_change = array('option_correct', 'answer_decimals', 'tolerance');
+  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_decimals', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
+  protected $_fields_change = array('option_correct', 'answer_decimals', 'tolerance_full', 'tolerance_partial');
   
   private $_variables = null;
   
@@ -82,17 +83,25 @@ Class QuestionCALCULATION extends Question {
     
     $old_decimals = $this->get_answer_decimals();
     if ($new_correct['answer_decimals'] != $old_decimals) {
-      $this->set_tolerance($new_correct['answer_decimals']);
+      $this->set_answer_decimals($new_correct['answer_decimals']);
     
       $this->add_unified_field_modification('answer_decimals', 'answer_decs ', $old_decimals, $new_correct['answer_decimals'], $this->_lang_strings['postexamchange']);
       $changes = true;
     }
     
-    $old_tolerance = $this->get_tolerance();
-    if ($new_correct['tolerance'] != $old_tolerance) {
-      $this->set_tolerance($new_correct['tolerance']);
+    $old_tolerance_full = $this->get_tolerance_full();
+    if ($new_correct['tolerance_full'] != $old_tolerance_full) {
+      $this->set_tolerance_full($new_correct['tolerance_full']);
     
-      $this->add_unified_field_modification('tolerance', 'tolerance', $old_tolerance, $new_correct['tolerance'], $this->_lang_strings['postexamchange']);
+      $this->add_unified_field_modification('tolerance_full', 'tolerance_full', $old_tolerance_full, $new_correct['tolerance_full'], $this->_lang_strings['postexamchange']);
+      $changes = true;
+    }
+    
+    $old_tolerance_partial = $this->get_tolerance_partial();
+    if ($new_correct['tolerance_partial'] != $old_tolerance_partial) {
+      $this->set_tolerance_partial($new_correct['tolerance_partial']);
+    
+      $this->add_unified_field_modification('tolerance_partial', 'tolerance_partial', $old_tolerance_partial, $new_correct['tolerance_partial'], $this->_lang_strings['postexamchange']);
       $changes = true;
     }
     
@@ -126,10 +135,10 @@ Class QuestionCALCULATION extends Question {
             $answer = round($answer, $this->get_answer_decimals());
             if ($saved_response == $answer) {
               $mark = $mark_correct;
-            } elseif ($score_method == 'Allow partial Marks' and abs($saved_response - $answer) <= $this->get_tolerance()) {
-              $mark = $mark_partial;
-            } elseif (abs($saved_response - $answer) <= $this->get_tolerance()) {
+            } elseif (abs($saved_response - $answer) <= $this->get_tolerance_full()) {
               $mark = $mark_correct;
+            } elseif ($score_method == 'Allow partial Marks' and abs($saved_response - $answer) <= $this->get_tolerance_partial()) {
+              $mark = $mark_partial;
             } else {
               $mark = $mark_incorrect;
             }
@@ -203,22 +212,43 @@ Class QuestionCALCULATION extends Question {
   }
 
   /**
-   * Get the tolerance for the question
+   * Get the full marks tolerance for the question
    * @return integer
    */
-  public function get_tolerance() {
+  public function get_tolerance_full() {
     $this->get_display_method();
-    return $this->tolerance;
+    return $this->tolerance_full;
   }
   
   /**
-   * Set the tolerance for the question
+   * Set the full marks tolerance for the question
    * @param unknown_type $value
    */
-  public function set_tolerance($value) {
-    if ($value != $this->get_tolerance()) {
-      $this->set_modified_field('tolerance', $this->tolerance);
-      $this->tolerance = $value;
+  public function set_tolerance_full($value) {
+    if ($value != $this->get_tolerance_full()) {
+      $this->set_modified_field('tolerance_full', $this->tolerance_full);
+      $this->tolerance_full = $value;
+      $this->set_display_method();
+    }
+  }
+
+  /**
+   * Get the partial marks tolerance for the question
+   * @return integer
+   */
+  public function get_tolerance_partial() {
+    $this->get_display_method();
+    return $this->tolerance_partial;
+  }
+  
+  /**
+   * Set the partial marks tolerance for the question
+   * @param unknown_type $value
+   */
+  public function set_tolerance_partial($value) {
+    if ($value != $this->get_tolerance_partial()) {
+      $this->set_modified_field('tolerance_partial', $this->tolerance_partial);
+      $this->tolerance_partial = $value;
       $this->set_display_method();
     }
   }
@@ -231,18 +261,19 @@ Class QuestionCALCULATION extends Question {
     if ($this->display_method != '') {
       $parts = explode(',', $this->display_method);
       $this->answer_decimals = $parts[0];
-      $this->tolerance = $parts[1];
-      $this->units = $parts[2];
+      $this->tolerance_full = $parts[1];
+      $this->tolerance_partial = $parts[2];
+      $this->units = $parts[3];
     }
     return $this->display_method;
   }
   
   /**
-   * Set the display method for the question - this is a composite of decimals, tolerance and units
+   * Set the display method for the question - this is a composite of decimals, tolerances and units
    * @param unknown_type $value
    */
   public function set_display_method($value=-1) {
-    $this->display_method = $this->answer_decimals . ',' . $this->tolerance . ',' . $this->units;
+    $this->display_method = $this->answer_decimals . ',' . $this->tolerance_full . ',' . $this->tolerance_partial . ',' . $this->units;
   }
 }
 

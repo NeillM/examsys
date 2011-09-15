@@ -1007,6 +1007,26 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
   
+  // 15/09/2011 Update calculation questions so that they have two tolerances, one for full marks the other for partial
+  $result = $mysqli->prepare("SELECT q_id, display_method FROM questions WHERE q_type='calculation'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($questionID, $display_method);
+  while ($result->fetch()) {
+    $old_method_parts = explode(',', $display_method);
+    $new_method_parts = array($old_method_parts[0], $old_method_parts[1], 0, $old_method_parts[2]);
+    $new_method = implode(',', $new_method_parts);
+    
+    $update_q = $mysqli->prepare("UPDATE questions SET display_method=? WHERE q_id=?");
+    $update_q->bind_param('si', $new_method, $questionID);
+    $update_q->execute();
+    $update_q->close();
+    echo "<li>UPDATE questions SET display_method='{$new_method}' WHERE q_id={$questionID}</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
   echo "</ol>\n";
   
   //Close the database

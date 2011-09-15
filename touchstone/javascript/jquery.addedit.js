@@ -142,8 +142,8 @@ function updateBlankInstructions() {
 
 function showPartialMarks () {
   if ($('#score_method :selected').text() == lang['allowpartial']) {
-    $('#marks-partial').fadeIn('fast');
+    $('.marks-partial').fadeIn('fast');
   } else {
-    $('#marks-partial').fadeOut('fast');
+    $('.marks-partial').fadeOut('fast');
   }
 }

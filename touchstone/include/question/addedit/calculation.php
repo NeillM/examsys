@@ -90,7 +90,7 @@ for ($index = $num_options + 1; $index <= count($variables); $index++) {
                 <label for="option_correct"><span class="mandatory">*</span><?php echo $string['formula'] ?></label><br />
                 <span class="note"><a href="#" class="help-link" rel="68"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['onlinehelp'] ?>" border="0" /></a>&nbsp;<a href="#" class="help-link" rel="68"><?php echo $string['suppfunctions'] ?></a></span>
               </th>
-              <td colspan="3">
+              <td colspan="2">
                 <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"><?php echo $formula ?></textarea>
               </td>
             </tr>            
@@ -105,7 +105,11 @@ echo ViewHelper::render_options($decimals, $question->get_answer_decimals(), 3);
 ?>
                 </select>
               </td>
-              <td class="spaced-top"><label for="tolerance" class="spaced-right"><strong><?php echo $string['tolerance'] ?></strong></label><input type="text" id="tolerance" name="tolerance" value="<?php echo $question->get_tolerance() ?>" /></td>
+            </tr>
+            <tr>
+              <th class="spaced-top">Tolerance</th>
+              <td class="spaced-top"><label for="tolerance_full" class="spaced-right"><strong><?php echo $string['tolerance_full'] ?></strong></label><input type="text" id="tolerance_full" name="tolerance_full" value="<?php echo $question->get_tolerance_full() ?>" /></td>
+              <td class="spaced-top"><span class="marks-partial<?php echo $show_partial ?>"><label for="tolerance_partial" class="spaced-right"><strong><?php echo $string['tolerance_partial'] ?></strong></label><input type="text" id="tolerance_partial" name="tolerance_partial" value="<?php echo $question->get_tolerance_partial() ?>" /></span></td>
             </tr>
           </tbody>
         </table>

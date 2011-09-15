@@ -47,6 +47,8 @@ $string['formula'] = '1Formula';
 $string['suppfunctions'] = '1supported functions';
 $string['units'] = '1Units';
 $string['tolerance'] = '1Tolerance';
+$string['tolerance_full'] = '1For Full Marks';
+$string['tolerance_partial'] = '1For Partial Marks';
 $string['text'] = '1Text';
 $string['markingmethod'] = '1Marking Method';
 $string['markperoption'] = '1Mark per Option';
@@ -192,4 +194,6 @@ $string['optionfbincorrect'] = $string['optionno'] . ' Inorrect Feedback';
 $string['newoption'] = '1New Option';
 $string['deletedoption'] = '1Deleted Option';
 $string['never'] = '1never';
+$string['validationerror'] = '1There were problems with your submission. Please review the form and re-try';
+$string['enterleadin'] = '1Please enter a leadin for the question';
 ?>
