@@ -1014,16 +1014,18 @@ if (!isset($_POST['update'])) {
   $result->bind_result($questionID, $display_method);
   while ($result->fetch()) {
     $old_method_parts = explode(',', $display_method);
-    $new_method_parts = array($old_method_parts[0], $old_method_parts[1], 0, $old_method_parts[2]);
-    $new_method = implode(',', $new_method_parts);
-    
-    $update_q = $mysqli->prepare("UPDATE questions SET display_method=? WHERE q_id=?");
-    $update_q->bind_param('si', $new_method, $questionID);
-    $update_q->execute();
-    $update_q->close();
-    echo "<li>UPDATE questions SET display_method='{$new_method}' WHERE q_id={$questionID}</li>\n";
-    ob_flush();
-    flush();
+    if (count($old_method_parts) == 3) {
+      $new_method_parts = array($old_method_parts[0], $old_method_parts[1], 0, $old_method_parts[2]);
+      $new_method = implode(',', $new_method_parts);
+      
+      $update_q = $mysqli->prepare("UPDATE questions SET display_method=? WHERE q_id=?");
+      $update_q->bind_param('si', $new_method, $questionID);
+      $update_q->execute();
+      $update_q->close();
+      echo "<li>UPDATE questions SET display_method='{$new_method}' WHERE q_id={$questionID}</li>\n";
+      ob_flush();
+      flush();
+    }
   }
   $result->close();
   
