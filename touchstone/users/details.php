@@ -248,10 +248,10 @@ a.access:hover {color:white}
 </style>
 
 <script language="javascript">
-  function reviewPaper(started,userid,surname,papername,log_type) {
-    var winwidth = 750;
+  function reviewPaper(started, userid, surname, papername, log_type) {
+    var winwidth = screen.width-80;
     var winheight = screen.height-80;
-    window.open("../finish.php?paperID="+papername+"&previous="+started+"&userid="+userid+"&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    window.open("../paper/finish.php?paperID="+papername+"&previous="+started+"&userid="+userid+"&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
   }
 
   function showTab(tabID) {

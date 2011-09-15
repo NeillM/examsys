@@ -2138,7 +2138,7 @@ table {font-size:100%}
       }
       if ($paper[$question]['status'] != 'Experimental') {
         $total_marks += $paper[$question]['totalpos'];
-        $user_mark += $paper[$question]['mark'];
+        $user_mark += $paper[$question]['marks_correct'];
       }
       if ($paper[$question]['q_type'] != 'info') echo '</td></tr>';
       echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
