@@ -121,7 +121,7 @@ function db_auth($u, $p, $db) {
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
   global $cfg_db_student_user, $cfg_db_student_passwd;
-  global $cfg_db_external, $cfg_db_external_passwd;
+  global $cfg_db_external_user, $cfg_db_external_passwd;
 
   if ($u == '') {
     return false;
@@ -166,21 +166,17 @@ function db_auth($u, $p, $db) {
       //select the aproprate database user
       if (strpos($userroles,'SysAdmin') !== false) {
         $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-        //echo "using sysadmin db conection";
       } else if (strpos($userroles,'Student') !== false) {
-        //echo "using Student db conection";
         $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
       } else if (strpos($userroles,'Staff') !== false or strpos($userroles,'Admin') !== false) {
         $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
-        //echo "using staff db conection";
       } else if (strpos($userroles,'External Examiner') !== false) {
-        $result = $db->change_user($cfg_db_external, $cfg_db_external_passwd, $cfg_db_database);
-        //echo "using External Examiner db conection";
+        $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
       } else {
         $result = false;
       }
             
-      if($result === false) {
+      if ($result === false) {
         $db_errors = '<strong>' . $string['nodatabaseconnection'] . '</strong>';
         return false;
       }

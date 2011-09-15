@@ -122,9 +122,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
   $stmt->bind_param('s', $moduleid);
   $stmt->execute();
-  $stmt->store_result();
   $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid);
   $stmt->fetch();
+  $stmt->close();
   
   require '../classes/smsutils.class.php';
 

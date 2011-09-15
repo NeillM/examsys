@@ -26,11 +26,11 @@ require '../include/staff_auth.inc';
 require '../include/media.inc';
 require '../include/std_set_functions.inc';
 
-function ebelDropdown($dropdownID,$selected) {
+function ebelDropdown($dropdownID, $selected) {
   $html = "<select name=\"$dropdownID\" onchange=\"recountCategories();\">\n";
   $html .= "<option value=\"0\"></option>\n";
   for ($individual_category=0; $individual_category<=100; $individual_category++) {
-    if ($individual_category == ($selected * 100)) {
+    if ($individual_category == intval($selected * 100)) {
       $html .= "<option value=\"" . ($individual_category / 100) . "\" selected>$individual_category%</option>\n";
     } else {
       $html .= "<option value=\"" . ($individual_category / 100) . "\">$individual_category%</option>\n";
@@ -58,7 +58,7 @@ $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_pap
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
 $result->bind_result($q_id, $parts);
-while ($row = $result->fetch()) {
+while ($result->fetch()) {
   $excluded[$q_id] = $parts;
 }
 $result->close();
@@ -69,7 +69,7 @@ $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, paper_prolo
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
 $result->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $leadin, $start_date, $end_date, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
-while ($row = $result->fetch()) {
+while ($result->fetch()) {
   $no_screens = strval($screen);
   if (isset($screen_data[$no_screens])) {
     $screen_data[$no_screens] += 1;
@@ -92,7 +92,7 @@ $current_screen = 1;
   .question_no {width:40px; text-align:right; vertical-align:top}
   .theme {font-size:150%; font-weight:bold; color:<?php echo $themecolor; ?>; padding-left:20px}
   .notes {font-size:80%; color: <?php echo $labelcolor; ?>}
-  .no_marks {color:#808080; font-size:80%}
+  .mk {color:#808080; font-size:80%}
   .active {color:<?php echo $fgcolor; ?>}
   .inactive {color:#C0C0C0}
   .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
@@ -106,34 +106,6 @@ $current_screen = 1;
 <?php
   if ($_GET['method'] == 'ebel') {
 ?>
-  function load_grid(type) {
-    // Add one to all values to get the correct selectedIndex value.
-    if (type == 'BMedSci') {
-      document.questions.EE.selectedIndex = 66;
-      document.questions.EI.selectedIndex = 61;
-      document.questions.EN.selectedIndex = 56;
-      document.questions.ME.selectedIndex = 61;
-      document.questions.MI.selectedIndex = 56;
-      document.questions.MN.selectedIndex = 51;
-      document.questions.HE.selectedIndex = 56;
-      document.questions.HI.selectedIndex = 51;
-      document.questions.HN.selectedIndex = 46;
-    } else if (type == 'BMBS') {
-      document.questions.EE.selectedIndex = 81;
-      document.questions.EI.selectedIndex = 61;
-      document.questions.EN.selectedIndex = 56;
-      document.questions.ME.selectedIndex = 56;
-      document.questions.MI.selectedIndex = 51;
-      document.questions.MN.selectedIndex = 36;
-      document.questions.HE.selectedIndex = 46;
-      document.questions.HI.selectedIndex = 36;
-      document.questions.HN.selectedIndex = 31;
-    }
-    recountCategories();
-    
-    return false;
-  }
-
   function roundNumber(num, dec) {
     var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
     return result;
@@ -232,7 +204,7 @@ $current_screen = 1;
           break;
       }
     }
-    document.questions.ee.value = EE + ' marks';
+    document.questions.ee.value = EE + ' <?php echo $string['marks']; ?>';
     if (origEE != EE) {
       document.questions.origee.value = origEE;
       document.questions.origee2.value = origEE;
@@ -241,7 +213,7 @@ $current_screen = 1;
       document.questions.origee2.value = '';
     }
 
-    document.questions.ei.value = EI + ' marks';
+    document.questions.ei.value = EI + ' <?php echo $string['marks']; ?>';
     if (origEI != EI) {
       document.questions.origei.value = origEI;
       document.questions.origei2.value = origEI;
@@ -250,7 +222,7 @@ $current_screen = 1;
       document.questions.origei2.value = '';
     }
 
-    document.questions.en.value = EN + ' marks';
+    document.questions.en.value = EN + ' <?php echo $string['marks']; ?>';
     if (origEN != EN) {
       document.questions.origen.value = origEN;
       document.questions.origen2.value = origEN;
@@ -259,7 +231,7 @@ $current_screen = 1;
       document.questions.origen2.value = '';
     }
 
-    document.questions.me.value = ME + ' marks';
+    document.questions.me.value = ME + ' <?php echo $string['marks']; ?>';
     if (origME != ME) {
       document.questions.origme.value = origME;
       document.questions.origme2.value = origME;
@@ -268,7 +240,7 @@ $current_screen = 1;
       document.questions.origme2.value = '';
     }
 
-    document.questions.mi.value = MI + ' marks';
+    document.questions.mi.value = MI + ' <?php echo $string['marks']; ?>';
     if (origMI != MI) {
       document.questions.origmi.value = origMI;
       document.questions.origmi2.value = origMI;
@@ -277,7 +249,7 @@ $current_screen = 1;
       document.questions.origmi2.value = '';
     }
 
-    document.questions.mn.value = MN + ' marks';
+    document.questions.mn.value = MN + ' <?php echo $string['marks']; ?>';
     if (origMN != MN) {
       document.questions.origmn.value = origMN;
       document.questions.origmn2.value = origMN;
@@ -286,7 +258,7 @@ $current_screen = 1;
       document.questions.origmn2.value = '';
     }
 
-    document.questions.he.value = HE + ' marks';
+    document.questions.he.value = HE + ' <?php echo $string['marks']; ?>';
     if (origHE != HE) {
       document.questions.orighe.value = origHE;
       document.questions.orighe2.value = origHE;
@@ -295,7 +267,7 @@ $current_screen = 1;
       document.questions.orighe2.value = '';
     }
 
-    document.questions.hi.value = HI + ' marks';
+    document.questions.hi.value = HI + ' <?php echo $string['marks']; ?>';
     if (origHI != HI) {
       document.questions.orighi.value = origHI;
       document.questions.orighi2.value = origHI;
@@ -304,7 +276,7 @@ $current_screen = 1;
       document.questions.orighi2.value = '';
     }
 
-    document.questions.hn.value = HN + ' marks';
+    document.questions.hn.value = HN + ' <?php echo $string['marks']; ?>';
     if (origHN != HN) {
       document.questions.orighn.value = origHN;
       document.questions.orighn2.value = origHN;
@@ -313,29 +285,29 @@ $current_screen = 1;
       document.questions.orighn2.value = '';
     }
 
-    document.questions.easy_total.value = (EE + EI + EN) + ' marks';
-    document.questions.medium_total.value = (ME + MI + MN) + ' marks';
-    document.questions.hard_total.value = (HE + HI + HN) + ' marks';
-    document.questions.essential_total.value = (EE + ME + HE) + ' marks';
-    document.questions.important_total.value = (EI + MI + HI) + ' marks';
-    document.questions.nice_total.value = (EN + MN + HN) + ' marks';
+    document.questions.easy_total.value = (EE + EI + EN) + ' <?php echo $string['marks']; ?>';
+    document.questions.medium_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
+    document.questions.hard_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
+    document.questions.essential_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
+    document.questions.important_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
+    document.questions.nice_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
 
-    document.questions.easy2_total.value = (EE + EI + EN) + ' marks';
-    document.questions.medium2_total.value = (ME + MI + MN) + ' marks';
-    document.questions.hard2_total.value = (HE + HI + HN) + ' marks';
-    document.questions.essential2_total.value = (EE + ME + HE) + ' marks';
-    document.questions.important2_total.value = (EI + MI + HI) + ' marks';
-    document.questions.nice2_total.value = (EN + MN + HN) + ' marks';
+    document.questions.easy2_total.value = (EE + EI + EN) + '<?php echo $string['marks']; ?>';
+    document.questions.medium2_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
+    document.questions.hard2_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
+    document.questions.essential2_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
+    document.questions.important2_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
+    document.questions.nice2_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
 
-    document.questions.ee2.value = EE + ' marks';
-    document.questions.ei2.value = EI + ' marks';
-    document.questions.en2.value = EN + ' marks';
-    document.questions.me2.value = ME + ' marks';
-    document.questions.mi2.value = MI + ' marks';
-    document.questions.mn2.value = MN + ' marks';
-    document.questions.he2.value = HE + ' marks';
-    document.questions.hi2.value = HI + ' marks';
-    document.questions.hn2.value = HN + ' marks';
+    document.questions.ee2.value = EE + ' <?php echo $string['marks']; ?>';
+    document.questions.ei2.value = EI + ' <?php echo $string['marks']; ?>';
+    document.questions.en2.value = EN + ' <?php echo $string['marks']; ?>';
+    document.questions.me2.value = ME + ' <?php echo $string['marks']; ?>';
+    document.questions.mi2.value = MI + ' <?php echo $string['marks']; ?>';
+    document.questions.mn2.value = MN + ' <?php echo $string['marks']; ?>';
+    document.questions.he2.value = HE + ' <?php echo $string['marks']; ?>';
+    document.questions.hi2.value = HI + ' <?php echo $string['marks']; ?>';
+    document.questions.hn2.value = HN + ' <?php echo $string['marks']; ?>';
 
     var cut_marks = 0;
     cut_marks += EE * document.questions.EE.value * 100;
@@ -349,9 +321,7 @@ $current_screen = 1;
     cut_marks += HN * document.questions.HN.value * 100;
     var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
     var cut_score = (cut_marks / total_marks) * 100;
-    //if (cut_score > 0 && total_marks > 0) {
-      document.questions.cut_score.value = 'paper marks=' + document.getElementById('total_marks').value + ',  review marks=' + total_marks + ',  cut score=' + roundNumber(cut_score/100,1) + '%';
-    //}
+    document.questions.cut_score.value = '<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
 
     cut_marks = 0;
     cut_marks += EE * document.questions.EE2.value * 100;
@@ -365,9 +335,7 @@ $current_screen = 1;
     cut_marks += HN * document.questions.HN2.value * 100;
     var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
     var cut_score = (cut_marks / total_marks) * 100;
-    //if (cut_score > 0 && total_marks > 0) {
-       document.questions.cut_score2.value = 'paper marks=' + document.getElementById('total_marks').value + ',  reviewed marks=' + total_marks + ',  cut score=' + roundNumber(cut_score/100,1) + '%';
-    //}
+    document.questions.cut_score2.value = '<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
   }
 <?php
   }
@@ -432,32 +400,29 @@ $current_screen = 1;
 <?php
 
   echo "\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">Home</a>";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
   }
-  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">Standards Setting</a></div>";
+  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">" . $string['standardssetting'] . "</a></div>";
   if ($_GET['method'] == 'modified_angoff') {
     $helpID = 98;
-    echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">Modified Angoff method</div>';
+    echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['modifiedangoffmethod'] . '</div>';
   } elseif ($_GET['method'] == 'ebel') {
     $helpID = 99;
-    echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">Ebel method</div>';
+    echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['ebelmethod'] . '</div>';
   }
   echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
   echo "<tr style=\"height:4px\"><td colspan=\"2\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
 
   switch ($_GET['method']) {
-    case 'angoff_yes_no':
-      $std_instruction = 'For each question use the light blue dropdown lists to indicate the whether a <strong>borderline</strong> (minimally competent) candidate is expected to get the question correct (yes) or incorrect (no).';
-      break;
     case 'modified_angoff':
-      $std_instruction = 'For each question use the light blue dropdown lists to indicate the percentage of <strong>borderline</strong> (minimally competent) candidates expected to get each question correct.';
+      $std_instruction = $string['modangoffstep1'];
       break;
     case 'ebel':
-      $std_instruction = '<strong>Step 1:</strong><br />For each question use the light blue dropdown lists firstly to indicate the <strong>difficulty</strong> of the question (easy, medium, or hard) and then secondly to indicate the question\'s <strong>importance</strong> (essential, important, or nice to know).';
+      $std_instruction = $string['step1'];
       break;
   }
 ?>
@@ -471,13 +436,6 @@ $current_screen = 1;
   </div>
   <br />
 <?php
-  $result = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $correct_fback);
-
-  $num_rows = $result->num_rows;
   $old_leadin = '';
   $old_q_type = '';
   $old_q_id = 0;
@@ -485,11 +443,17 @@ $current_screen = 1;
   $old_theme = '';
   $old_screen = 1;
   $old_correct_fback = '';
-  $question_offset = 1;
   $total_marks = 0;
   $std_excluded = 0;
   $prologue_show = 1;
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+
+  $result = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $correct_fback);
+  //$num_rows = $result->num_rows;
   while ($result->fetch()) {
     if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
       echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
@@ -498,6 +462,7 @@ $current_screen = 1;
 
     if ($question_no == 0) echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     if ($old_q_id != $q_id) {          // New Question
+      $question_no++;
       // Print the options of the previous question
       $li_set = 0;
       if ($old_leadin != '') {
@@ -507,7 +472,7 @@ $current_screen = 1;
         if ($old_screen != $screen) {
           echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
           echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-          echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;$screen</td>\n</tr>\n";
+          echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;$screen</td>\n</tr>\n";
           echo '</table></td></tr>';
         }
       }
@@ -518,28 +483,28 @@ $current_screen = 1;
         echo '<tr><td colspan="2" class="theme">' . $theme . '</td></tr>';
       }
 
-      if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $notes . '</td></tr>';
+      if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
 
       if ($scenario != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'calculation') {
-        echo '<tr><a name="' . ($question_no + $question_offset) . '"></a><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td valign="top"><p>' . $scenario . '</p>';
+        echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td valign="top"><p>' . $scenario . '</p>';
         $li_set = 1;
       }
       if ($q_media != '' and $q_media != NULL and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
         if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
-          if ($li_set == 0) echo '<tr><a name="' . ($question_no + $question_offset) . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
+          if ($li_set == 0) echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
           $li_set = 1;
-          echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
+          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height) . "</p>\n";
         } else {
           if ($li_set == 0) {
-            echo '<tr><a name="' . ($question_no + $question_offset) . '"></a><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
+            echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
           }
           $li_set = 1;
-          echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
+          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height) . "</p>\n";
         }
       }
       if ($q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info' and $q_type != 'hotspot') {
         if ($li_set == 0) {
-          echo '<tr><a name="' . ($question_no + $question_offset) . '"></a><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
+          echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
         }
         $li_set = 1;
         echo '<p>' . $leadin . '</p>';
@@ -559,14 +524,15 @@ $current_screen = 1;
       $old_screen = $screen;
       $old_correct_fback = $correct_fback;
       $options_array = array();          // Clear options array
-      $question_no++;
+      
     }
 
-    $options_array[] = array('q_type'=>$q_type, 'score_method'=>$score_method, 'display_method'=>$display_method, 'correct'=>$correct, 'scenario'=>$scenario, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+    $options_array[] = array('q_type'=>$q_type, 'score_method'=>$score_method, 'display_method'=>$display_method, 'correct'=>$correct, 'scenario'=>$scenario, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect);
   }         // End of While loop
   $result->close();
 
   // Print the options for the last question on the screen.
+  $question_no++;
   display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
 
   echo '</td></tr></table></td></tr>';
@@ -582,38 +548,62 @@ $current_screen = 1;
       }
       $query_string->close(); 
     }
-    if (empty($ebel)) $ebel = array('','','','','','','','','','','','','','','','','','');
-
+    
+    if (empty($ebel)) {
+      $templateID = '';
+      // If empty look to see if there is a default grid to load
+      $result = $mysqli->prepare("SELECT ebel_grid_template FROM modules WHERE moduleid=?");
+      $result->bind_param('s', $_GET['module']);
+      $result->execute();
+      $result->bind_result($templateID);
+      $result->fetch();
+      $result->close();
+      if ($templateID == '') {
+        $ebel = array('','','','','','','','','','','','','','','','','','');
+      } else {
+        $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id=?");
+        $result->bind_param('i', $templateID);
+        $result->execute();
+        $result->bind_result($ebel[0], $ebel[1], $ebel[2], $ebel[3], $ebel[4], $ebel[5], $ebel[6], $ebel[7], $ebel[8], $ebel[9], $ebel[10], $ebel[11], $ebel[12], $ebel[13], $ebel[14], $ebel[15], $ebel[16], $ebel[17], $name);
+        $result->fetch();
+        $result->close();
+        
+        for ($i=0; $i<18; $i++) {
+          $ebel[$i] = $ebel[$i] / 100;
+        }
+      }
+    }
+    
     echo "<br />\n<div align=\"center\">\n";
     echo "<table cellpadding=\"4\" cellspacing=\"0\" width=\"90%\" style=\"background-color:#E4EEFC; border: 1px solid #B5C4DF; text-align:left\">\n";
-    echo "<tr>\n<td style=\"margin:0px\"><strong>Step 2: Pass Grid</strong><br />For each category (e.g. easy/essential, easy/important, etc) specify the percentage of <strong>borderline candidates</strong> expected to get questions in this category correct.<br />\n<blockquote style=\"margin-top:8px; margin-bottom:8px\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;<a href=\"\" onclick=\"return load_grid('BMedSci')\" style=\"color:blue\">Load default BMedSci grid</a><br /><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;<a href=\"\" onclick=\"return load_grid('BMBS')\" style=\"color:blue\">Load default BMBS grid</a></blockquote></td>\n</tr>\n</table>\n</div>\n<br />\n";
+    echo "<tr>\n<td style=\"margin:0px\">" . $string['step2'] . "<br />&nbsp;</td>\n</tr>\n</table>\n</div>\n<br />\n";
 
     echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
-    echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>Essential</strong></td><td style=\"width:200px; text-align:center\"><strong>Important</strong></td><td style=\"width:200px; text-align:center\"><strong>Nice to Know</strong></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>Easy</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px; color:red; text-decoration:line-through\" name=\"origee\" size=\"3\" value=\"0\" /><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px\" name=\"ee\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE',$ebel[0]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI',$ebel[1]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN',$ebel[2]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>Medium</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px solid red; color:red; text-decoration:line-through\" name=\"origme\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME',$ebel[3]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI',$ebel[4]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN',$ebel[5]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>Hard</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE',$ebel[6]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI',$ebel[7]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN',$ebel[8]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>" . $string['essential'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['important'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['nicetoknow'] . "</strong></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px; color:red; text-decoration:line-through\" name=\"origee\" size=\"3\" value=\"0\" /><input type=\"text\" style=\"text-align:right; background-color:#F8F8F2; border:0px\" name=\"ee\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE',$ebel[0]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI',$ebel[1]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN',$ebel[2]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['medium'] . "</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px solid red; color:red; text-decoration:line-through\" name=\"origme\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME',$ebel[3]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI',$ebel[4]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN',$ebel[5]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['hard'] . "</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE',$ebel[6]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI',$ebel[7]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN',$ebel[8]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
     echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td></tr>\n";
     echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0px; text-align:center\" name=\"cut_score\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
     echo "</table>\n</div>\n<br />\n";
 
     echo "<br />\n<div align=\"center\">\n";
     echo "<table cellpadding=\"4\" cellspacing=\"0\" width=\"90%\" style=\"background-color:#E4EEFC; border: 1px solid #B5C4DF; text-align:left\">\n";
-    echo "<tr>\n<td style=\"margin:0px\"><strong>Step 3: Distinction Grid</strong><br />For each category (e.g. easy/essential, easy/important, etc) specify the percentage of <strong>distinction candidates</strong> expected to get questions in this category correct.<br />";
+    echo "<tr>\n<td style=\"margin:0px\">" . $string['step3'] . "<br />";
     ?>
     <blockquote style="margin-top:8px; margin-bottom:8px">
-    <input type="radio" name="distinction_type" value="1"<?php if ($ebel[9] > 0) echo ' checked'; ?> /> Use grid below<br />
-    <input type="radio" name="distinction_type" value="2"<?php if ($ebel[9] === '0') echo ' checked'; ?> /> Use top 20%<br />
-    <input type="radio" name="distinction_type" value="3"<?php if ($ebel[9] === NULL) echo ' checked'; ?> /> Do not apply<br />
+    <input type="radio" name="distinction_type" value="1"<?php if ($ebel[9] > 0) echo ' checked'; ?> /> <?php echo $string['gridbelow']; ?><br />
+    <input type="radio" name="distinction_type" value="2"<?php if ($ebel[9] === '0') echo ' checked'; ?> /> <?php echo $string['top20']; ?><br />
+    <input type="radio" name="distinction_type" value="3"<?php if ($ebel[9] === NULL) echo ' checked'; ?> /> <?php echo $string['donotapply']; ?><br />
     </blockquote>
     <?php
     echo "</td>\n</tr>\n</table>\n</div>\n<br />\n";
 
     echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
-    echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>Essential</strong></td><td style=\"width:200px; text-align:center\"><strong>Important</strong></td><td style=\"width:200px; text-align:center\"><strong>Nice to Know</strong></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>Easy</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; border:0px; color:red; text-decoration:line-through; background-color:#F8F8F2\" name=\"origee2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; border:0px; background-color:#F8F8F2\" name=\"ee2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE2',$ebel[9]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI2',$ebel[10]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN2',$ebel[11]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>Medium</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origme2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME2',$ebel[12]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI2',$ebel[13]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN2',$ebel[14]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td style=\"text-align:right\"><strong>Hard</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE2',$ebel[15]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI2',$ebel[16]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN2',$ebel[17]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>" . $string['essential'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['important'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['nicetoknow'] . "</strong></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; border:0px; color:red; text-decoration:line-through; background-color:#F8F8F2\" name=\"origee2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; border:0px; background-color:#F8F8F2\" name=\"ee2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE2',$ebel[9]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI2',$ebel[10]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN2',$ebel[11]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['medium'] . "</strong></td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origme2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"me2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('ME2',$ebel[12]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origmi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"mi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MI2',$ebel[13]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"origmn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"mn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('MN2',$ebel[14]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"medium2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+    echo "<tr><td style=\"text-align:right\"><strong>" . $string['hard'] . "</strong></td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"orighe2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"he2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HE2',$ebel[15]) . "</td><td style=\"text-align:center; background-color:#D5D5BB\"><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px; color:red; text-decoration:line-through\" name=\"orighi2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#D5D5BB; border:0px\" name=\"hi2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HI2',$ebel[16]) . "</td><td style=\"text-align:center; background-color:#C8C8A6\"><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px; color:red; text-decoration:line-through\" name=\"orighn2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#C8C8A6; border:0px\" name=\"hn2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('HN2',$ebel[17]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"hard2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
     echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice2_total\" size=\"8\" style=\"text-align:center; border:0px\" /></td></tr>\n";
     echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0px; text-align:center\" name=\"cut_score2\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
     echo "</table>\n</div>\n<br />\n";
@@ -633,14 +623,14 @@ $current_screen = 1;
 <div align="center">
 <table cellpadding="2" cellspacing="0" border="0">
 <tr><td style="text-align:center; color:#808080">ALT + S</td><td style="text-align:center; color:#808080">ALT + C</td><td></td><td></td></tr>
-<tr><td><input type="submit" name="submit" value="Save &amp; Exit" accesskey="S" style="width:160px" /></td><td><input type="submit" name="continue" value="Save &amp; Continue" accesskey="C" style="width:160px" /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.location='../paper/details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>'" type="button" name="cancel" value="Cancel" style="width:90px" /></td></tr>
+<tr><td><input type="submit" name="submit" value="<?php echo $string['saveexit']; ?>" accesskey="S" style="width:160px" /></td><td><input type="submit" name="continue" value="<?php echo $string['savecontinue']; ?>" accesskey="C" style="width:160px" /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.location='../paper/details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>'" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:90px" /></td></tr>
 
 <tr><td colspan="2" style="text-align:center">
 <?php
   if (isset($_COOKIE['caabanksave']) and $_COOKIE['caabanksave'] == '1') {
-    echo '<input type="checkbox" name="banksave" value="1" checked />&nbsp;Save ratings into question bank';
+    echo '<input type="checkbox" name="banksave" value="1" checked />&nbsp;' . $string['savebank'];
   } else {
-    echo '<input type="checkbox" name="banksave" value="1" />&nbsp;Save ratings into question bank';
+    echo '<input type="checkbox" name="banksave" value="1" />&nbsp;' . $string['savebank'];
   }
   $mysqli->close();
   

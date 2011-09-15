@@ -100,7 +100,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       }
 
       if ($random_on == false and count($selected_q_id) > 0) {
-        foreach($selected_q_id as &$used_qid) {
+        foreach ($selected_q_id as &$used_qid) {
 	        // Look up database.
           $random_data = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
           $random_data->bind_param('i', $used_qid); 
@@ -143,6 +143,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   // Use the new structure to look for posted responses.
   $old_type = '';
   $old_score_method = '';
+  $old_display_method = '';
   $correct_rank = true;
   $question_no = 0;
   $q_type = '';
@@ -167,6 +168,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
     $q_media = $row['q_media'];
     $correct = $row['correct'];
     $score_method = $row['score_method'];
+    $display_method = $row['display_method'];
     $marks_correct = $row['marks_correct'];
     $marks_incorrect = $row['marks_incorrect'];
     $marks_partial = $row['marks_partial'];
@@ -231,6 +233,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       $old_q_id = $q_id;
       $old_type = $q_type;
       $old_score_method = $score_method;
+      $old_display_method = $display_method;
       $old_display_pos = $display_pos;
       
       $old_marks_correct = $marks_correct;
@@ -256,7 +259,9 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
     switch ($q_type) {
       case 'calculation':
         // Log format is 'users answer', 'correct answer', 'variable values used'.
-        $score_array = explode(',', $display_method);
+        $score_array = explode(',', $old_display_method);
+        
+        
       
         $qid = 'q' . $question_no;
         if (isset($_POST[$qid])) {
@@ -313,7 +318,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             $var_no++;
           }
           $answer_equation = $correct;
-          if ($score_array[2] == 'Formula') {
+          if ($score_array[3] == 'Formula') {
             // formula answer just do a string comp on the useranswer and the correct one (replace with CAS system later)
             if ($answer_equation != '') {
               eval ("\$answer = \"" . $answer_equation . "\";");
