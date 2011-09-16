@@ -35,7 +35,7 @@
     $path = $_SERVER['DOCUMENT_ROOT'];
   }
 
-  require_once $path . 'touchstone/config/config.inc';
+  require_once $path . 'touchstone/config/config.inc.php';
   require $path . 'touchstone/classes/dateutils.class.php';
   
 	require '../classes/dateutils.class.php';
