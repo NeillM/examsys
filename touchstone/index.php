@@ -101,14 +101,17 @@ require './include/staff_auth.inc';
   $duplicate_name = 0;
   if (isset($_POST['submit'])) {
     $new_folder_name = $_POST['folder_name'];
-    $folder_details = $mysqli->query("SELECT name FROM folders WHERE ownerID=$userID");
-    while ($folder_row = $folder_details->fetch_assoc()) {
-      if ($folder_row['name'] == $new_folder_name) $duplicate_name = 1;
+    $folder_details = $mysqli->prepare("SELECT name FROM folders WHERE ownerID=$userID");
+    $folder_details->execute();
+    $folder_details->bind_result($existing_folder_name);
+    $folder_details->fetch();
+    while ($folder_details->fetch()) {
+      if ($existing_folder_name == $new_folder_name) $duplicate_name = 1;
     }
     $folder_details->close();
 
     if ($duplicate_name == 0) {
-      if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL,$userID, ?,'',NOW(),'yellow',NULL)")) {
+      if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, $userID, ?, '', NOW(), 'yellow', NULL)")) {
         $folder_query->bind_param('s', $new_folder_name);
         $folder_query->execute();
         $folder_query->close();
@@ -281,6 +284,7 @@ require './include/staff_auth.inc';
 
   if (isset($_GET['newfolder']) AND $_GET['newfolder'] == 'y' or $duplicate_name == 1) {
     if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_name == 1) {
+      echo "<script language=\"JavaScript\">alert(\"" . $string['duplicatefoldername'] . "\")</script>";
       echo "<div class=\"f\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input style=\"background-color:#FFC0C0\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
     } elseif (!isset($_POST['submit'])) {
       echo "<div class=\"f\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" />&nbsp;<input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";

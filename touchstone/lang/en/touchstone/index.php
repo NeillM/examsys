@@ -40,4 +40,5 @@ $string['screens'] = '1Screens';
 $string['mins'] = '1mins';
 $string['type'] = '1Type';
 $string['author'] = '1Author';
+$string['duplicatefoldername'] = '1Duplicate folder name, please use an alternative.';
 ?>
