@@ -39,7 +39,7 @@
   require $path . '/touchstone/classes/dateutils.class.php';
   
 	//require '../classes/dateutils.class.php';
-  $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
+  $mysqli = new $dbclass($cfg_db_host , $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
 
   // Calculate what the current academic session is.
   $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : DateUtils::get_current_academic_year();
