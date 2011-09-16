@@ -35,8 +35,8 @@
     $path = $_SERVER['DOCUMENT_ROOT'];
   }
 
-  require_once $path . 'touchstone/config/config.inc.php';
-  require $path . 'touchstone/classes/dateutils.class.php';
+  require_once $path . '/touchstone/config/config.inc.php';
+  require $path . '/touchstone/classes/dateutils.class.php';
   
 	require '../classes/dateutils.class.php';
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
