@@ -25,9 +25,9 @@
 */
 
   // Only run from the command line!
-  if (PHP_SAPI != 'cli') {
-    die("Please run this test from CLI!\n");
-  }
+  //if (PHP_SAPI != 'cli') {
+  //  die("Please run this test from CLI!\n");
+  //}
 
   set_time_limit(0);
   $path = str_replace('/touchstone/admin/users_from_SMS.php','',$_SERVER['SCRIPT_NAME']);
@@ -84,6 +84,8 @@
   
     // Look up SMS
     $returned_data = file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
+    echo $returned_data;
+    exit;
     $xml = new SimpleXMLElement($returned_data);
     
     if (is_object($xml) and !isset($xml->ErrorMessage)){

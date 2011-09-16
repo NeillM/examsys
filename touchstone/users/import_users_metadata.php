@@ -36,7 +36,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-  <title>TouchStone: Import Metadata<?php echo " $cfg_install_type"; ?></title>
+  <title>TouchStone: <?php echo $string['importmetadata'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <script src="../javascript/sidebar.js" type="text/javascript"></script>
   <script language="JavaScript">
@@ -67,7 +67,7 @@
 <?php
 
   if (isset($_POST['submit'])) {
-    echo '<div id="msg">Loading data...</div>';
+    echo '<div id="msg">' . $string['loadingdata'] . '</div>';
     ob_flush();
     flush();
   
@@ -108,7 +108,7 @@
         }
         $stmt->close();
         
-        $lines = file("/tmp/" . $userID . "_import_metadata.csv");
+        $lines = file('/tmp/' . $userID . '_import_metadata.csv');
         $type = '';
         $value = '';
         
@@ -118,7 +118,7 @@
         $headings = array();
         $stmt = $mysqli->prepare("INSERT INTO users_metadata VALUES (NULL, ?, ?, ?, ?, ?)");
         $stmt->bind_param('iisss', $student_id, $moduleID, $type, $value, $_POST['session']);
-        foreach($lines as $separate_line) {
+        foreach ($lines as $separate_line) {
           $cols = explode(',', $separate_line);
           if ($line_no == 0) {  // Read the header row
             $heading = $cols;
@@ -151,12 +151,15 @@
       }
     }
 
-    echo "<br />\n<div>" . (count($lines) - count($unknown_users) - 1) . " uploaded correctly.<br />\n";
-    echo count($unknown_users) . " usernames not recognised:\n<ul>\n";
-    foreach ($unknown_users as $unknown) {
-      echo "<li>$unknown</li>\n";
-    }    
-    echo "</ul>\n<br />\n<input type=\"button\" name=\"ok\" value=\"OK\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>";
+    echo "<br />\n<div>" . (count($lines) - count($unknown_users) - 1) . " " . $string['uploadedcorrectly'] . "<br />\n";
+    if (count($unknown_users) > 0) {
+      echo count($unknown_users) . " " . $string['notrecognised'] . "\n<ul>\n";
+      foreach ($unknown_users as $unknown) {
+        echo "<li>$unknown</li>\n";
+      }    
+      echo "</ul>\n";
+    }
+    echo "<br />\n<input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>";
     
     unlink("/tmp/" . $userID . "_import_metadata.csv");
 
@@ -170,19 +173,19 @@
 <div align="center">
 <table border="0" cellpadding="4" cellspacing="0" style="width:100%; border:1px solid #95AEC8">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%">Import Metadata</span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['importmetadata']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">
 
-<p style="text-align:justify">CSV file should have a header file with the field names in. Next the first column should be username followed by the data. The example below shows two metadata pieces of information ('Site' and 'Project Group').</p>
+<p style="text-align:justify"><?php echo $string['msg']; ?></p>
 <br />
 <div align="center">
-<img src="../artwork/user_metadata_sheet.png" width="350" height="165" style="border:1px solid black" alt="Excel sheet" />
+<img src="../artwork/user_metadata_sheet.png" width="350" height="165" style="border:1px solid black" alt="" />
 <br />
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?module=' . $_GET['module']; ?>" enctype="multipart/form-data">
 <table style="text-align:left">
-<tr><td>Year</td><td><select name="session">
+<tr><td><?php echo $string['year']; ?></td><td><select name="session">
 <?php
   $current_year = DateUtils::get_current_academic_year();
 
@@ -193,10 +196,10 @@
   
 ?>
 </select></td></tr>
-<tr><td>File</td><td><input type="file" size="50" name="csvfile" /></td></tr>
+<tr><td><?php echo $string['file']; ?></td><td><input type="file" size="50" name="csvfile" /></td></tr>
 </table>
 <br />
-<p><input type="submit" style="width:100px" value="Import" name="submit" />&nbsp;<input style="width:100px" type="button" value="Cancel" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>
