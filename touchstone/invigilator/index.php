@@ -26,7 +26,7 @@
   require_once '../classes/networkutils.class.php';
   
   function get_students($modules, $session, $paperID, $exam_length) {
-    global $mysqli;
+    global $string, $mysqli;
     
     // Get any student notes;
     $notes_array = array();
@@ -35,7 +35,7 @@
     $notes_results->execute();
     $notes_results->store_result();
     $notes_results->bind_result($note_id, $tmp_userID);
-    while ($row=$notes_results->fetch()) {
+    while ($notes_results->fetch()) {
       $notes_array[$tmp_userID] = true;
     }
     $notes_results->close();
@@ -46,11 +46,11 @@
     $results->execute();
     $results->store_result();
     $results->bind_result($extra_time, $tmp_userID, $surname, $first_names, $title);
-    while ($row=$results->fetch()) {
+    while ($results->fetch()) {
       if ($extra_time == '') {
         echo "<tr><td></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span>";
       } else {
-        echo "<tr><td><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" alt=\"Extra Time\" border=\"0\" /></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span> <span style=\"color:#C00000\">+ " . round(($exam_length/100) * $extra_time) . "mins</span>";
+        echo "<tr><td><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['extratime'] . "\" border=\"0\" /></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span> <span style=\"color:#C00000\">+ " . round(($exam_length/100) * $extra_time) . $string['mins'] . "</span>";
       }
       if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) echo ' <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0" />';
       echo "</td></tr>\n";
@@ -60,8 +60,10 @@
   }
   
   function emergencyNumbers($support_numbers) {
+    global $string;
+  
     echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px\">\n";
-    echo "<tr><td colspan=\"3\" style=\"border-bottom: 1px solid #C0C0C0; font-weight:bold\">Emergency Numbers</td></tr>\n";
+    echo "<tr><td colspan=\"3\" style=\"border-bottom: 1px solid #C0C0C0; font-weight:bold\">" . $string['emergencynumbers'] . "</td></tr>\n";
     foreach ($support_numbers as $number => $contact) {
       echo "<tr><td><img src=\"../artwork/call_icon.png\" width=\"53\" height=\"25\" alt=\"call\" border=\"0\" /></td><td>$number</td><td>$contact</td></tr>\n";
     }
@@ -71,7 +73,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<title>TouchStone: Invigilator Screen</title>
+<title>TouchStone: <?php echo $string['invigilatoraccess']; ?></title>
 
 <script language="JavaScript">
   // please keep these lines on when you copy the source
@@ -162,13 +164,13 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
 <td><div style="padding-left:10px; font-size:24pt; font-weight:bold">
 <?php
   if ($room_name == '') {
-    echo NetworkUtils::get_ipaddress() . ' - unknown lab'; 
+    echo NetworkUtils::get_ipaddress() . $string['unknownlab']; 
   } else {
-    echo 'Lab: ' . $room_name; 
+    echo $string['lab'] . ' ' . $room_name; 
   }
 ?>
-</div><div style="padding-left:10px; font-size:10pt; font-weight:bold">Invigilator Access</div></td>
-<td align="right"><input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" /></td></tr>
+</div><div style="padding-left:10px; font-size:10pt; font-weight:bold"><?php echo $string['invigilatoraccess']; ?></div></td>
+<td align="right"><input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" />&nbsp;</td></tr>
 <tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>
 <br />
@@ -186,38 +188,14 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
     $col_width = round(100 / ($paper_results->num_rows + 1));
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%\">\n<tr>\n";
     while ($row = $paper_results->fetch()) {
-      echo "<td style=\"vertical-align:top; width:$col_width%\"><div><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /><strong>$paper_title</strong><br />Start: $start_date<br />Duration: $exam_duration mins &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">Paper Note</a></div><hr noshade=\"noshade\" size=\"1\" />";
+      echo "<td style=\"vertical-align:top; width:$col_width%\"><div><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a></div><hr noshade=\"noshade\" size=\"1\" />";
       get_students($moduleID, $calendar_year, $property_id, $exam_duration);
       echo "</td>";
     }
     $paper_results->close();
     echo "<td style=\"vertical-align:top; width:$col_width%\">";
+    echo $string['checklist'];
     ?>
-    <div><strong>Tasklist</strong></div>
-    <div><em>Pre-Exam</em></div>
-    <ol>
-    <li>Place log in instructions at each workstation</li>
-    <li>Place blank paper each workstation</li>
-    <li>Check all students have logged in correctly</li>
-    <li>Use 'guest' accounts for anyone not able to log in</li>
-    <li><strong>NOTE:</strong> Do not start before scheduled start time</li>
-    </ol>
-    
-    <div><em>Mid-Exam</em></div>
-    <ol>
-    <li>Record minor problems in the students' file (<a href="help.html" target="_blank">example problems</a>)</li>
-    <li>Record problems with paper/question content</li>
-    <li>Call number below for major problems</li>
-    </ol>
-    
-    <div><em>Post-Exam</em></div>
-    <ol start="4">
-    <li>"That is the end of the exam. Please navigate to the last screen and click 'Finish'."</li>
-    <li>"Click 'Close Window' and then CTRL, ALT and DELETE and log out of your workstation."</li>
-    <li>Collect up log in instructions for reuse</li>
-    <li>Collect and dispose of blank paper</li>
-    <li>Ensure <strong>all</strong> workstations are logged out</li>
-    </ol>
     
     <br />
     
@@ -225,7 +203,7 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
     emergencyNumbers($emergency_support_numbers);
     echo "</td></tr>\n</table>\n";
   } else {
-    echo "<p style=\"font-weight:bold; color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;No papers found!</p>";
+    echo "<p style=\"font-weight:bold; color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['nopapersfound'] . "</p>";
     emergencyNumbers($emergency_support_numbers);
   }
 
