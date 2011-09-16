@@ -29,9 +29,6 @@
   //  die("Please run this test from CLI!\n");
   //}
   
-  echo "hI";
-  exit;
-
   set_time_limit(0);
   $path = str_replace('/touchstone/admin/users_from_SMS.php','',$_SERVER['SCRIPT_NAME']);
   if ($path == '') {
@@ -43,6 +40,9 @@
   
 	require '../classes/dateutils.class.php';
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
+  
+  echo "Hi";
+  exit;
 
   // Calculate what the current academic session is.
   $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : DateUtils::get_current_academic_year();
