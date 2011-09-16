@@ -31,12 +31,12 @@
 
   set_time_limit(0);
   $path = str_replace('/touchstone/admin/users_from_SMS.php','',$_SERVER['SCRIPT_NAME']);
-  if($path == '') {
+  if ($path == '') {
     $path = $_SERVER['DOCUMENT_ROOT'];
   }
 
-  require_once $path . '/touchstone/config/config.inc';
-  require $path . '/touchstone/classes/dateutils.class.php';
+  require_once $path . 'touchstone/config/config.inc';
+  require $path . 'touchstone/classes/dateutils.class.php';
   
 	require '../classes/dateutils.class.php';
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
