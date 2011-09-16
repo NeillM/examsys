@@ -28,6 +28,9 @@
   //if (PHP_SAPI != 'cli') {
   //  die("Please run this test from CLI!\n");
   //}
+  
+  echo "hI";
+  exit;
 
   set_time_limit(0);
   $path = str_replace('/touchstone/admin/users_from_SMS.php','',$_SERVER['SCRIPT_NAME']);
