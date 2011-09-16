@@ -85,7 +85,7 @@
     // Look up SMS
     $replaced_module = 'A11CRH';
     $returned_data = file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
-    var_dump($replaced_module, $returned_data);
+    echo $returned_data;
     exit;
     $xml = new SimpleXMLElement($returned_data);
     
