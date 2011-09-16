@@ -84,6 +84,7 @@
   
     // Look up SMS
     $returned_data = file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
+    echo "hi";
     echo $returned_data;
     exit;
     $xml = new SimpleXMLElement($returned_data);
