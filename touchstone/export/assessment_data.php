@@ -188,7 +188,7 @@
     $tmp_user_ID = $individual['userID'];
     // Write out the headings.
     if ($row_written == 0) {
-      echo 'Gender,Title,Surname,First Names,Student ID,Course,Year,Started';
+      echo $string['gender'] . ',' . $string['title'] . ',' . $string['surname'] . ',' . $string['firstnames'] . ',' . $string['studentid'] . ',' . $string['course'] . ',' . $string['year'] . ',' . $string['started'];
       for ($i=0; $i<$question_no; $i++) {
         $tmp_question_ID = $paper_buffer[$i]['ID'];
         $tmp_screen = $paper_buffer[$i]['screen'];
@@ -246,7 +246,7 @@
       }
       echo "\n";
       // Write out correct answers line.
-      echo 'Correct answers ->,,,,,,,';
+      echo $string['correctanswers'] . ',,,,,,,';
       for ($i=0; $i<$question_no; $i++) {
         $tmp_question_ID = $paper_buffer[$i]['ID'];
         $tmp_screen = $paper_buffer[$i]['screen'];

@@ -122,7 +122,7 @@ require './include/staff_auth.inc';
     global $string;
     switch ($paper_type) {
       case 0:
-        $html = "<img src=\"./artwork/formative" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"./artwork/formative" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative self-assessment'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
         break;
       case 1:
         $html = "<img src=\"./artwork/progress" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progresstest'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
