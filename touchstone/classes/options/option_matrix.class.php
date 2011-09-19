@@ -47,7 +47,7 @@ Class OptionMATRIX extends Option {
   }
 
   public function get_correct() {
-    $this->all_corrects = explode('|', $this->correct);
+    $this->all_corrects = ($this->correct != '') ? explode('|', $this->correct) : array();
     return $this->correct;
   }
   

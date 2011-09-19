@@ -61,11 +61,13 @@ Class QuestionEXTMATCH extends Question {
     $old_correct = $first->get_all_corrects();
     $mark_correct = $first->get_marks_correct();
     $mark_incorrect = $first->get_marks_incorrect();
+    $stems = 0;
     $correct_count = 0;
     $data = array();
 
     for ($i = 0; $i < $this->max_stems; $i++) {
       $data['option_correct' . strval($i + 1)] = $new_correct[$i];
+      if (count($new_correct[$i]) > 0) $stems++;
       $correct_count += count($new_correct[$i]);
       if ($new_correct[$i] != $old_correct[$i]) {
         $changes = true;
@@ -103,7 +105,7 @@ Class QuestionEXTMATCH extends Question {
             $mark = 0;
             $all_correct = true;
             
-            for ($i=0; $i < count($new_correct); $i++) {
+            for ($i=0; $i < $stems; $i++) {
               if (isset($big_user_parts[$i]) and $big_user_parts[$i] != '') {
                 $little_user_parts = explode('$', $big_user_parts[$i]);
                 for ($j = 0; $j < count($new_correct[$i]); $j++) {
@@ -113,6 +115,8 @@ Class QuestionEXTMATCH extends Question {
                     $all_correct = false;
                   }
                 }
+              } else {
+                $all_correct = false;
               }
             }
             
