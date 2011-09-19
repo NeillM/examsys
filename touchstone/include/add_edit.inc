@@ -92,6 +92,8 @@ function wysiwyg_editor($name, $replace, $content='', $width=756, $height=70) {
 
   $html = '';
   
+  $content = htmlspecialchars($content);
+  
   if ($cfg_editor_name == 'tinymce') {
     $html .= "<textarea class=\"mceEditor\" id=\"$replace\" name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px; margin: 0\">$content</textarea>\n";
   } else {

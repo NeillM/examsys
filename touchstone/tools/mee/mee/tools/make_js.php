@@ -10,6 +10,7 @@ $files[] = "jquery/jquery.scale9.js";
 $files[] = "jquery/jquery.textarea.js";
 $files[] = "jquery/jquery.cookie.js";
 $files[] = "jquery/json2.js";
+$files[] = "jquery/jquery.xml2json.js";
 
 $files[] = "js/mee_comp.js";
 
@@ -51,7 +52,7 @@ foreach ($files as $file)
 	echo "Compressing $file<br>";
 	$js .= JSMin::minify(file_get_contents("../".$file)) . "\n";
 	//$js .= file_get_contents("../".$file) . "\n";
-}	
+}
 file_put_contents("../js/mee.js",$js);
 echo "Saved as js/mee.js<br>";
 ?>

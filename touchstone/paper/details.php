@@ -203,19 +203,22 @@ if (isset($_GET['change_screen'])) {
 <title>TouchStone<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style style="text/css">
-  .qline {padding-bottom:3px;cursor:pointer;line-height:150%}
-  .q_no {text-align:right;vertical-align:top;cursor:pointer;width:40px;padding-right:6px}
-  .d {text-align:right;padding-left:6px;padding-right:4px;vertical-align:top}
+  .qline {cursor:pointer;}
+  .q_no {text-align:right;vertical-align:top;cursor:pointer;width:40px;padding-right:6px; padding-top:3px; padding-bottom:3px}
+  .d {text-align:right;padding-left:6px;padding-right:4px; padding-top:3px; padding-bottom:3px; vertical-align:top}
   .theme {font-weight:bold;color:#316AC5}
   .rnd {padding-bottom:3px;background-color:#DCE7F5;cursor:pointer}
   .s {padding-left:10px}
-  .t {white-space:nowrap; vertical-align:top; padding-left:6px; padding-right:6px}
-  .m {text-align:right; vertical-align:top; padding-right:4px}
+  .t {white-space:nowrap; vertical-align:top; padding-left:6px; padding-right:6px; padding-top:3px; padding-bottom:3px}
+  .m {text-align:right; vertical-align:top; padding-right:4px;padding-top:3px;padding-bottom:3px}
+  .l {padding-top:3px; padding-bottom:3px}
   .errmk {color:red;text-align:right;vertical-align:top}
+  .mee {font-size:100%;}
 </style>
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
-<script src="/touchstone/javascript/MathJaxConfig.js"></script>
+<script type="text/javascript" src="/touchstone/javascript/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/touchstone/tools/mee/mee/js/mee_src.js"></script>
 <script language="JavaScript">
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, prev_screen, next_screen, current_screen, menuID, subparts, evt) {
     tmp_ID = document.PapersMenu.oldQuestionID.value;
@@ -495,6 +498,12 @@ if (isset($_GET['change_screen'])) {
         $latex = 1;
       }
     }
+    // latex check class="mee"
+    if ($latex == 0) {
+      if (strpos($leadin,'class="mee"') !== false or strpos($scenario,'class="mee"') !== false or strpos($option_text,'class="mee"') !== false or strpos($score_method,'class="mee"') !== false or strpos($correct_fback,'class="mee"') !== false or strpos($feedback_right,'class="mee"') !== false) {
+        $latex = 1;
+      }
+    }
     // Check for negative marking
     if ($marks_incorrect < 0) {
       $neg_marking = true;
@@ -536,7 +545,7 @@ if (isset($_GET['change_screen'])) {
       $temp_array[$row_no]['theme'] = $theme;
       $temp_array[$row_no]['screen'] = $screen;
       $temp_array[$row_no]['q_type'] = $q_type;
-      $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin))));
+      $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin,"<div>"))));
       if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
       $temp_array[$row_no]['scenario'] = $scenario;
       $temp_array[$row_no]['p_id'] = $p_id;
@@ -687,7 +696,7 @@ if (isset($_GET['change_screen'])) {
     $module = implode(',',$OKmodules);
   }
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  echo "<table cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
     echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
@@ -868,24 +877,24 @@ if (isset($_GET['change_screen'])) {
     }
     
     if ($temp_array[$x]['q_type'] == 'random') {
-      echo "<td>" . $temp_array[$x]['leadin'] . "</td>";
+      echo "<td class=\"l\">" . $temp_array[$x]['leadin'] . "</td>";
     } elseif ($temp_array[$x]['q_type'] == 'branching') {
       if ($temp_array[$x]['leadin'] == '') {
-        echo "<td>Branching question set based on Q" . findDecisionQ($temp_array,$temp_array[$x]['scenario']) . "</td>";
+        echo "<td class=\"l\">Branching question set based on Q" . findDecisionQ($temp_array,$temp_array[$x]['scenario']) . "</td>";
       } else {
-        echo "<td>" . $temp_array[$x]['leadin'] . " (Q" . findDecisionQ($temp_array,$temp_array[$x]['scenario']) . ")</td>";
+        echo "<td class=\"l\">" . $temp_array[$x]['leadin'] . " (Q" . findDecisionQ($temp_array,$temp_array[$x]['scenario']) . ")</td>";
       }
     } elseif ($temp_array[$x]['leadin'] != '') {
-      echo "<td>" . $temp_array[$x]['leadin'];
+      echo "<td class=\"l\">" . $temp_array[$x]['leadin'];
       if ($excluded[$temp_array[$x]['q_id']] != NULL) echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
       if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
       echo "</td>";
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
-      echo "<td><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
+      echo "<td class=\"l\"><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
     } elseif (strpos($temp_array[$x]['q_media'],'.flv') !== false) {
-      echo "<td><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
+      echo "<td class=\"l\"><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
     } else {
-      echo "<td><img src=\"../media/" . $temp_array[$x]['q_media'] . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" /></td>";
+      echo "<td class=\"l\"><img src=\"../media/" . $temp_array[$x]['q_media'] . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" /></td>";
     }
 
     echo '<td class="t">';
@@ -914,7 +923,7 @@ if (isset($_GET['change_screen'])) {
       } elseif ($temp_array[$x]['status'] === 'Experimental') {
         echo '<td style="text-align:right; vertical-align:top">N/A</td>';
       } else {
-        echo '<td style="text-align:right; vertical-align:top">' . $temp_array[$x]['marks'] . '</td>';
+        echo '<td class="m">' . $temp_array[$x]['marks'] . '</td>';
       }
     }
     if ($temp_array[$x]['status'] !== 'Experimental') {
@@ -922,7 +931,6 @@ if (isset($_GET['change_screen'])) {
     }
     echo '<td class="d">' . $temp_array[$x]['display_last_edited'] . '</td>';
     echo "</tr>\n";
-
     if ($temp_array[$x]['q_type'] == 'random') {
       $sub_question = 1;
       foreach ($temp_array[$x]['random'] as $random_question) {

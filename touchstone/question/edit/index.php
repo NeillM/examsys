@@ -322,9 +322,8 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit_new.css" type="text/css" />
 
 <?php echo $cfg_editor_javascript; ?>
-
-<script type="text/javascript" src="../../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../../javascript/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../../javascript/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../javascript/jquery.addedit.js"></script>
 <script type="text/javascript" src="../../javascript/staff_help.js"></script>
@@ -358,8 +357,10 @@ foreach ($langstrings as $langstring) {
 ?>
 };
 </script>
+<script type="text/javascript" src="/touchstone/tools/mee/mee/js/mee_src.js"></script>
 </head>
 <body>
+  <div id="debug" class="debug"></div>
 	<div id="page-header">
 		<div id="page-help">
 			<a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" alt="Help" border="0" height="16" width="16" />

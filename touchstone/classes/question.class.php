@@ -599,6 +599,7 @@ QUERY;
    * @return string
    */
   public function get_theme() {
+    $this->theme = $this->replace_mee_div($this->theme);
     return $this->theme;
   }
   
@@ -607,6 +608,7 @@ QUERY;
    * @param string $value
    */
   public function set_theme($value) {
+    $value = $this->replace_tex($value);
     if ($value != $this->theme) {
       $this->set_modified_field('theme', $this->theme);
       $this->theme = $value;
@@ -676,6 +678,7 @@ QUERY;
    * @return string
    */
   public function get_notes() {
+    $this->notes = $this->replace_mee_div($this->notes);
     return $this->notes;
   }
   
@@ -684,6 +687,7 @@ QUERY;
    * @param string $value
    */
   public function set_notes($value) {
+    $value = $this->replace_tex($value);
     if ($value != $this->notes) {
       $this->set_modified_field('notes', $this->notes);
       $this->notes = $value;
@@ -695,6 +699,7 @@ QUERY;
    * @return string
    */
   public function get_correct_fback() {
+    $this->correct_fback = $this->replace_mee_div($this->correct_fback);
     return $this->correct_fback;
   }
   
@@ -703,6 +708,7 @@ QUERY;
    * @param string $value
    */
   public function set_correct_fback($value) {
+    $value = $this->replace_tex($value);
     if ($value != $this->correct_fback) {
       $this->set_modified_field('correct_fback', $this->correct_fback);
       $this->correct_fback = $value;
@@ -714,6 +720,7 @@ QUERY;
    * @return string
    */
   public function get_incorrect_fback() {
+    $this->incorrect_fback = $this->replace_mee_div($this->incorrect_fback);
     return $this->incorrect_fback;
   }
   
@@ -722,6 +729,7 @@ QUERY;
    * @param string $value
    */
   public function set_incorrect_fback($value) {
+    $value = $this->replace_tex($value);
     if ($value != $this->incorrect_fback) {
       $this->set_modified_field('incorrect_fback', $this->incorrect_fback);
       $this->incorrect_fback = $value;

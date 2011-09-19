@@ -12,10 +12,11 @@ body
 {
     position: fixed;
     left: 10px;
-    top: 10px;
+    bottom: 10px;
     border: 1px solid #767676;
     background-color: #f4f4f9;
-    padding: 5px;
+    padding: 1px;
+    font-size: 9pt;
     z-index:1000;
 }
 .mee_blankspace
@@ -32,12 +33,12 @@ body
 /* Main container */
 .mee
 {
-    /*padding: 1em;*/ /* debug */
+    /*padding: 1em;*/
     font-family: MathJax_Main;
 }
 div.mee
 {
-    text-align: center;
+
 }
 /* set of elements */
 .mee_elemset

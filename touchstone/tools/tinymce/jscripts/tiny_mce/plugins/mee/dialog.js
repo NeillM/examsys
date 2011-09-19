@@ -27,6 +27,7 @@ $().ready(function () {
     newinput.attr('name', 'eleminput');
     newinput.addClass('mee');
     newinput.addClass('activate');
+    newinput.addClass('tabopen:symbols');
     $('#editor_cont').append(newinput);
     $(newinput)[0].value = latex;
 

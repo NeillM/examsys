@@ -6,7 +6,6 @@
 *
 * License: http://tinymce.moxiecode.com/license
 * Contributing: http://tinymce.moxiecode.com/contributing
-TESTING POO
 */
 
 function getFrameForDocument(document) {
@@ -30,13 +29,16 @@ function updateMEE(frame, align, inline) {
     if (inline) {
         $(iframe).css('width', align.width + 'px');
     } else {
-        $(iframe).css('width', '100%');
+        $(iframe).css('width', align.width + 'px');
     }
     $(iframe).css('height', align.height + 'px');
     $(iframe).css('vertical-align', 'middle');
 }
 
 function clickMEEiFrame(frame) {
+
+    edit = false;
+    
     if (frame.document)
         frame = getFrameForDocument(frame.document);
     else
@@ -45,11 +47,21 @@ function clickMEEiFrame(frame) {
     // we have the iframe element that we have clicked on 
     // need to set the selection to it
     var e = tinymce.activeEditor;
+    
     e.selection.select(frame);
-
+    
     if ($.browser.mozilla || $.browser.msie) {
         var plugin = e.plugins["mee"];
+        if( plugin.getCurrentElement() == frame) {
+          edit = true;
+        }
         plugin.nodeChange(e, e.controlManager, frame);
+    }
+    
+    if(edit) {
+      e.execCommand('mceMEE');
+    } else if(!$.browser.mozilla) {
+      e.execCommand('mceMEE');
     }
 }
 
@@ -69,7 +81,7 @@ function clickMEEiFrame(frame) {
                 ed.windowManager.open({
                     file: url + '/dialog.html',
                     width: 870,
-                    height: 550,
+                    height: 460,
                     inline: 1
                 }, {
                     plugin_url: url // Plugin absolute URL
@@ -100,8 +112,8 @@ function clickMEEiFrame(frame) {
 
             // when content is loaded, add the render js
             ed.onSetContent.add(function (ed, o) {
-                var addhtml = '<link rel="stylesheet" type="text/css" href="mee/css/main.css"><\/link>';
-                addhtml += '<link rel="stylesheet" type="text/css" href="mee/css/fonts.css"><\/link>';
+                var addhtml = '<link rel="stylesheet" type="text/css" href="/touchstone/tools/mee/mee/css/main.css"><\/link>';
+                addhtml += '<link rel="stylesheet" type="text/css" href="/touchstone/tools/mee/mee/css/fonts.css"><\/link>';
                 $(ed.getBody()).prepend(addhtml);
 
                 var body = ed.getBody();
@@ -120,7 +132,7 @@ function clickMEEiFrame(frame) {
 
                     var datatxt = JSON.stringify(data);
 
-                    var html = "<iframe src='tiny_mce/plugins/mee/frame.html?" + datatxt + "' width='1000' height='5' frameborder='0'></iframe>";
+                    var html = "<iframe src='/touchstone/tools/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt + "' width='1000' height='5' frameborder='0'></iframe>";
                     var newelem = $(html);
 
                     $(newelem).addClass('mee_iframe');

@@ -37,8 +37,9 @@ $.Class.extend("MEE.Base",
             if (!$(edit.inputelement).hasClass('activate')) {
                 edit.deactivate();
             }
+            return false;
         }
-        return false;
+        return true;
     },
 
     //#region Process elements

@@ -150,7 +150,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo "</table>\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"1\">\n";
   }
 
-  if ($question['theme'] != '') echo '<tr><td colspan="2"><p class="theme">' . $question['theme'] . '</p></td></tr>';
+  if ($question['theme'] != '') echo '<tr><td colspan="2" class="theme">' . $question['theme'] . '</td></tr>';
 
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {

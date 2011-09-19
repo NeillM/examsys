@@ -69,5 +69,41 @@ Class TouchStoneObject {
   public function has_changes() {
     return (count($this->_modified_fields) > 0);
   }
+  
+  /**
+   * replace [tex][/tex] tags with <div class="mee"></div> in none wysiwyg editors 
+   * befor it is saved to the database
+   *
+   * @param string $text the text to be processed
+   */
+  protected function replace_tex($text) {
+    //swap [tex] befor saving to db <div class="mee">
+    preg_match_all("#\[tex\](.*?)\[/tex\]#si",$text,$tex_matches);
+    if(count($tex_matches[0]) > 0) {
+      foreach($tex_matches[0] as $m) {
+        $new = str_replace(array('[tex]','[/tex]'),array('<div class="mee">','</div>'),$m);
+        $text = str_replace($m, $new, $text);
+      }
+    } 
+    return $text;
+  }
+  
+  /**
+   * replace <div class="mee"></div> tags with [tex][/tex] in none wysiwyg editors 
+   * befor it is displayed in the editor
+   *
+   * @param string $text the text to be processed
+   */
+  protected function replace_mee_div($text) {
+    preg_match_all("#<div class=\"mee\">(.*?)\</div>#si",$text,$tex_matches);
+    if(count($tex_matches[0]) > 0) {
+      foreach($tex_matches[0] as $m) {
+        //echo "<pre>$m</pre>";
+        $new = str_replace(array('<div class="mee">','</div>'),array('[tex]','[/tex]'),$m);
+        $text = str_replace($m, $new, $text);
+      }
+    }
+    return $text;
+  }
 }
 

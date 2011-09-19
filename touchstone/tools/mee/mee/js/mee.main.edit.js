@@ -31,7 +31,7 @@ MEE.Main.extend("MEE.Edit",
             return;
 
         // debug configuration
-        this.debug = 1; // 0 = no debug, 1 = latex and maxima debug, 2 = full debug including element tree
+        this.debug = 0; // 0 = no debug, 1 = latex and maxima debug, 2 = full debug including element tree
 
         // turns maxima on or off
         this.maxima = 1;
