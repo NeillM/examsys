@@ -42,7 +42,15 @@ Class QuestionLABELLING extends Question {
     $this->_fields_editable[] = 'points1';
     $this->_change_field_map['points1'] = 'points';
   }
-
+  
+  /**
+   * Does this question type allow changes to the correct answer after it is locked?
+   * @return boolean
+   */
+  public function allow_correction() {
+    return false;
+  }
+  
   // ACCESSORS
   
   public function get_points1() {
