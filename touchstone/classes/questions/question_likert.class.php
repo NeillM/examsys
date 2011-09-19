@@ -57,7 +57,7 @@ Class QuestionLIKERT extends Question {
    * @return boolean
    */
   public function allow_correction() {
-    return true;
+    return false;
   }
   
   // ACCESSORS
