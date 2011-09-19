@@ -152,6 +152,9 @@ h2 {font-size:140%; color:#f27000}
   }
   
   $offset = 0;
+  
+  $tmp_body = str_replace('$support_email', '<a href="mailto:' . $support_email . '">' . $support_email . '</a>', $tmp_body);
+  
   if (isset($_GET['highlight'])) {
     do {
       $found = stripos($tmp_body, $_GET['highlight'], $offset);
