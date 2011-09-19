@@ -152,7 +152,9 @@ Class Option extends TouchStoneObject {
    * @param array $existing_values an array of values that will be calculated and populated for the first option and then re-used
    * @param string $prefix a prefix to apply to field names when used as keys into data array
    */
-  public function populate_compound($fields, $data, &$existing_values, $prefix='') {
+  public function populate_compound($fields, $data, &$existing_values, $prefix='', $message = '') {
+    $message = ($message == '') ? $this->_lang_strings['editscenario'] : $message;
+    
     foreach ($fields as $section_name) {
       if (!isset($existing_values[$section_name])) {
         $get_method = "get_all_{$section_name}s";
@@ -162,11 +164,11 @@ Class Option extends TouchStoneObject {
           if (isset($_POST["{$prefix}{$section_name}{$i}"]) and $data["{$prefix}{$section_name}{$i}"] != '') {
             ${$section_name}[] = $data["{$prefix}{$section_name}{$i}"];
             if (!isset($old_val) or $data["{$prefix}{$section_name}{$i}"] != $old_val) {
-              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, $data["{$prefix}{$section_name}{$i}"], $this->_lang_strings['editscenario']);
+              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, $data["{$prefix}{$section_name}{$i}"], $message);
             }
           } else {
             if (isset($old_val) and $old_val != '') {
-              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, '', $this->_lang_strings['editscenario']);
+              $this->log_compound_field_change($section_name, $section_name, $i, $old_val, '', $message);
             } 
             ${$section_name}[] = '';
           }

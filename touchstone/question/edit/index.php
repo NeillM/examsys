@@ -122,12 +122,19 @@ if ($critical_error == '') {
       }
       $errors = $question->update_correct($fields, $paper_id);
     } else {
-      // dichotomous, mrq, rank
+      $first = reset($question->options);
+      $compound_part_names = $first->get_compound_fields();
+      
+      if (is_array($compound_part_names) and in_array('correct', array_keys($compound_part_names))) {
+        $loop_limit = $question->max_stems;
+      } else {
+        $loop_limit = count($question->options);
+      }
+      // dichotomous, mrq, rank, extmatch
       $correct_answers = array();
       $i = 1;
-      foreach ($question->options as $option_id => $option) {
+      for ($i = 1; $i <= $loop_limit; $i++) {
         $correct_answers[] = (isset($_POST['option_correct' . $i])) ? $_POST['option_correct' . $i] : $question->get_answer_negative();
-        $i++;
       }
       
       $errors = $question->update_correct($correct_answers, $paper_id);
@@ -338,7 +345,17 @@ endif;
 ?>
 <script type="text/javascript">
 var lang = {
-'allowpartial' : '<?php echo $string['allowpartial'] ?>'
+<?php
+$langstrings = array('allowpartial', 'validationerror', 'enterleadin');
+$first = true;
+foreach ($langstrings as $langstring) {
+  if (!$first) {
+    echo ',';
+  }
+  echo "'{$langstring}':'{$string[$langstring]}'";
+  $first = false;
+}
+?>
 };
 </script>
 </head>

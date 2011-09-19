@@ -49,7 +49,7 @@ Class OptionEXTMATCH extends Option {
   public function get_correct() {
     $stems = explode('|', $this->correct);
     foreach ($stems as $stem) {
-      $this->all_corrects[] = explode('$', $stem);
+      $this->all_corrects[] = ($stem != '') ? explode('$', $stem) : array();
     }
     return $this->correct;
   }
