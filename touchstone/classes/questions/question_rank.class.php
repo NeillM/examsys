@@ -50,12 +50,17 @@ Class QuestionRANK extends Question {
     
     $i = 0;
     foreach ($this->options as $option) {
+      if ($i == 0) {
+        $mark_correct = $option->get_marks_correct();
+        $mark_incorrect = $option->get_marks_incorrect();
+        $mark_partial = $option->get_marks_partial();
+      }
       if ($new_correct[$i] != $option->get_correct()) {
         $option->set_correct($new_correct[$i]);
         $changes = true;
         
         $opt_no = $i + 1;
-        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], $this->_lang_strings['postexamchange']);
+//        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], $this->_lang_strings['postexamchange']);
       }
       $i++;
     }
@@ -66,8 +71,7 @@ Class QuestionRANK extends Question {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log2'.
-          $totalpos = 0;
-          $score_method = $this->get_score_method();
+          $score_method = $this->score_method;
           $correct_rank = true;
         
           
@@ -78,32 +82,37 @@ Class QuestionRANK extends Question {
           $result->bind_result($user_answer);
           while ($row = $result->fetch()) {
             $user_answers = explode(',', $user_answer);
+            $totalpos = 0;
             $mark = 0;
+            $order_correct = true;
             
             for ($i=0; $i < count($new_correct); $i++) {
-              if ($new_correct[$i] != 0 and $new_correct[$i] != '') $totalpos++;
+              if ($new_correct[$i] != 0 and $new_correct[$i] != '') $totalpos += $mark_correct;
               
-              switch ($score_method) {
-                case 'OrderNeighbours':
-                case 'BonusMark':
-                  if($user_answers[$i] != 0 and $user_answers[$i] != 'u') {
-                    if ($new_correct[$i] == $user_answers[$i]) $mark++;
-                    if ($score_method == 'OrderNeighbours' and abs($new_correct[$i] - $user_answers[$i]) == 1) $mark += 0.5;
-                  }
-                  break;
-                default:
-                  if ($new_correct[$i] == $user_answers[$i]) $mark++;
-                  break;
+              if (!$this->is_answer_blank($user_answers[$i]) and !$this->is_answer_blank($new_correct[$i])) {
+                if ($new_correct[$i] == $user_answers[$i]) {
+                  $mark += $mark_correct;
+                } elseif ($score_method == 'Bonus Mark') {
+                  $mark += $mark_correct;
+                  $order_correct = false;
+                } elseif ($score_method == 'Allow partial Marks' and abs($new_correct[$i] - $user_answers[$i]) == 1) {
+                  $mark += $mark_partial;
+                } else {
+                  $mark += $mark_incorrect;
+                }
+              } elseif (!$this->is_answer_blank($new_correct[$i])) {
+                $mark += $mark_incorrect;
+                $order_correct = false;
               }
             }
             
             // Recalculate total possible marks if 'all correct' or 'bonus mark'.
-            if ($score_method == 'AllItemsCorrect') {
-              $mark = ($mark == $totalpos) ? 1 : 0;
-              $totalpos = 1;
-            } elseif ($score_method == 'BonusMark') {
-              $totalpos++;
-              $mark = ($mark == $totalpos - 1) ? $totalpos : $mark;
+            if ($score_method == 'Mark per Question') {
+              $mark = ($mark == $totalpos) ? $mark_correct : $mark_incorrect;
+              $totalpos = $mark_correct;
+            } elseif ($score_method == 'Bonus Mark') {
+              $totalpos += $mark_correct;
+              $mark = ($order_correct) ? $totalpos : $mark;
             }
                     
             $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
@@ -120,6 +129,10 @@ Class QuestionRANK extends Question {
     }
     
     return $errors;
+  }
+  
+  private function is_answer_blank($value) {
+    return ($value == 0 or $value == '' or $value == 'u');
   }
   
   public function convert_to_mcq($correct_answer) {
