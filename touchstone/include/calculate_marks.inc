@@ -35,23 +35,29 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
 
   switch ($question_type) {
     case 'blank':
-      $blank_details = explode('[blank',$option_text[0]);
-      $array_size = count($blank_details);
-      $blank_count = 1;
-      while ($blank_count < $array_size) {
-        $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
-        $closing_blank_pos = strpos($blank_details[$blank_count],'[/blank]');
-        $tmp_first_part = substr($blank_details[$blank_count],0,$closing_blank_pos);
-        $choice_no = substr_count($tmp_first_part,',') + 1;
-        if (substr($tmp_exclude,$blank_count-1,1) == '0') {
-          $results = array();
-          if (preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results)) {
-            $marks += $results[1];
-          } else {
-            $marks++;
+      if ($score_method == 'Mark per Option') {
+        $blank_details = explode('[blank',$option_text[0]);
+        $array_size = count($blank_details);
+        $blank_count = 1;
+        while ($blank_count < $array_size) {
+          $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
+          $closing_blank_pos = strpos($blank_details[$blank_count],'[/blank]');
+          $tmp_first_part = substr($blank_details[$blank_count],0,$closing_blank_pos);
+          $choice_no = substr_count($tmp_first_part,',') + 1;
+          if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+            $results = array();
+            if (preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results)) {
+              $marks += $results[1];
+            } else {
+              $marks += $question_marks;
+            }
           }
+          $blank_count++;
         }
-        $blank_count++;
+      } else {
+        if (substr($tmp_exclude,0,1) == '0') {
+          $marks = $question_marks;
+        }
       }
       break;
     case 'calculation':
@@ -65,27 +71,38 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
     case 'dichotomous':
       $correct_no = 0;
       for ($i=0; $i<count($option_text); $i++) {
-        if (substr($tmp_exclude,$i,1) == '0' and $correct[$i] != '') $marks++;
+        if (substr($tmp_exclude,$i,1) == '0' and $correct[$i] != '') $marks += $question_marks;
         if ($correct[$i] == 't' or $correct[$i] == 'f') $correct_no++;
+      }
+      if ($score_method == 'Mark per Question') {
+        if (substr($tmp_exclude,0,1) == '0') {
+          $marks = $question_marks;    // Overwrite the marks if by question
+        }
       }
       break;
     case 'labelling':
-      $tmp_first_split = explode(';', $correct[0]);
-      $tmp_second_split = explode('$', $tmp_first_split[8]);
-      $label_count = 0;
-      $placeholders = 0;
-      $i = 0;
-      $excluded_no = 0;
-      for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-        if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
-        if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-          if (substr($tmp_exclude,$i,1) == '0') {
-            $placeholders++;
-            $marks++;
-          } else {
-            $excluded_no++;
+      if ($score_method == 'Mark per Question') {
+        if (substr($tmp_exclude,0,1) == '0') {
+          $marks += $question_marks;
+        }
+      } else {
+        $tmp_first_split = explode(';', $correct[0]);
+        $tmp_second_split = explode('$', $tmp_first_split[8]);
+        $label_count = 0;
+        $placeholders = 0;
+        $i = 0;
+        $excluded_no = 0;
+        for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
+          if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
+          if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+            if (substr($tmp_exclude,$i,1) == '0') {
+              $placeholders++;
+              $marks += $question_marks;
+            } else {
+              $excluded_no++;
+            }
+            $i++;
           }
-          $i++;
         }
       }
       break;

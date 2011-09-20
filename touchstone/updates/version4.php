@@ -1006,6 +1006,14 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
+
+  // 20/09/2011 - set marks for fill-in-the-blank question tyoe
+  $adjust = $mysqli->prepare("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND marks_correct IS NULL OR marks_correct=0");
+  $adjust->execute();
+  $adjust->close();
+  //echo "<li>ALTER TABLE modules ADD COLUMN ebel_grid_template int</li>\n";
+  ob_flush();
+  flush();
   
   // 15/09/2011 Update calculation questions so that they have two tolerances, one for full marks the other for partial
   $result = $mysqli->prepare("SELECT q_id, display_method FROM questions WHERE q_type='calculation'");

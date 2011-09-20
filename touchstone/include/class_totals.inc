@@ -628,7 +628,7 @@ $display_experimental = '';
 $old_correct = array();
 $old_option_text = array();
 $stems = 0;
-//$display_pos = 0;
+
 while ($result->fetch()) {
   if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
     if ($old_q_id != 0) {
@@ -640,11 +640,7 @@ while ($result->fetch()) {
         }
         if ($old_q_type == 'random') {
           $tmp_id = getRandomDetails($old_q_id);
-          //if (isset($paper_buffer[$old_q_id]['marks'])) {
-            //var_dump($paper_buffer);
-            $total_marks += $paper_buffer[$tmp_id]['marks'];
-            //exit;
-          //}
+          $total_marks += $paper_buffer[$tmp_id]['marks'];
         } else {
           $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
           $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
