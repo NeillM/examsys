@@ -28,7 +28,8 @@ Class QuestionBLANK extends Question {
   
   public $max_options = 1;
   protected $_answer_negative = null;
-    
+  protected $_allow_correction = false;
+  
 
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
@@ -38,14 +39,6 @@ Class QuestionBLANK extends Question {
     
     // 'correct' is not a unified field for Dichotomous questions
     $this->_fields_editable[] = 'correct';
-  }
-  
-  /**
-   * Does this question type allow changes to the correct answer after it is locked
-   * @return boolean
-   */
-  public function allow_correction() {
-    return false;
   }
 }
 

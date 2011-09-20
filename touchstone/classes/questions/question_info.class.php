@@ -27,23 +27,9 @@
 Class QuestionINFO extends Question {
   
   protected $_allow_mapping = true;
+  protected $_allow_correction = false;
+  protected $_use_bloom = false;
   
   protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
-
-  /**
-   * Does this question type use Bloom's Taxonomy?
-   * @return boolean
-   */
-  public function use_bloom() {
-    return false;
-  }
-
-  /**
-   * Does this question type allow changes to the correct answer after it is locked?
-   * @return boolean
-   */
-  public function allow_correction() {
-    return false;
-  }
 }
 

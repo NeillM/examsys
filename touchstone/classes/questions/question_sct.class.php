@@ -30,6 +30,7 @@ Class QuestionSCT extends Question {
   protected $new_information = '';
   public $max_options = 5;
   protected $_allow_change_marking_method = false;
+  protected $_allow_correction = false;
   
   protected $sct_types;
   
@@ -60,14 +61,6 @@ Class QuestionSCT extends Question {
     
   }
   
-  
-  /**
-   * Does this question type allow changes to the correct answer after it is locked?
-   * @return boolean
-   */
-  public function allow_correction() {
-    return false;
-  }
   
   // ACCESSORS
   

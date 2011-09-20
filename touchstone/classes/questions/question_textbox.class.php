@@ -30,6 +30,7 @@ Class QuestionTEXTBOX extends Question {
   protected $rows = 4;
   public $max_options = 1;
   protected $_allow_change_marking_method = false;
+  protected $_allow_correction = false;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');
   
@@ -38,15 +39,8 @@ Class QuestionTEXTBOX extends Question {
     
     $this->_fields_unified = array('correct' => $this->_lang_strings['terms'], 'text' => $this->_lang_strings['editor'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
   }
-  
-  /**
-   * Does this question type allow changes to the correct answer after it is locked
-   * @return boolean
-   */
-  public function allow_correction() {
-    return false;
-  }
-  
+
+    
   // ACCESSORS
   
   /**

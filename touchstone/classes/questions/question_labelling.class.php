@@ -33,6 +33,7 @@ Class QuestionLABELLING extends Question {
   protected $points1 = '';
   protected $_requires_media = true;
   protected $_requires_flash = true;
+  protected $_allow_correction = false;
   
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
@@ -43,13 +44,6 @@ Class QuestionLABELLING extends Question {
     $this->_change_field_map['points1'] = 'points';
   }
   
-  /**
-   * Does this question type allow changes to the correct answer after it is locked?
-   * @return boolean
-   */
-  public function allow_correction() {
-    return false;
-  }
   
   // ACCESSORS
   

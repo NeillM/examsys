@@ -27,15 +27,8 @@
 Class QuestionFLASH extends Question {
 
   public $max_options = 1;
-
+  protected $_allow_correction = false;
+  
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
-
-  /**
-   * Does this question type allow changes to the correct answer after it is locked?
-   * @return boolean
-   */
-  public function allow_correction() {
-    return true;
-  }
 }
 

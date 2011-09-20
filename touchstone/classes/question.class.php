@@ -69,6 +69,8 @@ Class Question extends TouchStoneObject {
   protected $_requires_media = false;
   protected $_requires_flash = false;
   protected $_allow_mapping = true;
+  protected $_allow_correction = true;
+  protected $_use_bloom = true;
   
   // Imploded DB version of teams
   protected $group = '';
@@ -427,7 +429,7 @@ QUERY;
    * @return boolean
    */
   public function use_bloom() {
-    return true;
+    return $this->_use_bloom;
   }
   
   /**
@@ -435,7 +437,7 @@ QUERY;
    * @return boolean
    */
   public function allow_correction() {
-    return true;
+    return $this->_allow_correction;
   }
   
   /**
