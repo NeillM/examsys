@@ -506,7 +506,7 @@ echo render_metadata($mysqli, $question, $question->use_bloom(), $module, $disab
 <?php
 $changes = $question->get_changes();
 // TODO: remove 'changes_tab.inc'?
-echo render_changes($changes);
+echo render_changes($changes, $string);
 ?>
       </div>
 
@@ -514,7 +514,7 @@ echo render_changes($changes);
 <?php
 $comments = $question->get_comments($paper_id);
 // TODO: remove 'comments_tab.inc'?
-echo render_comments($comments);
+echo render_comments($comments, $string);
 ?>
       </div>
 

@@ -125,7 +125,7 @@ function option_order($selected = '') {
   return $html;
 }
 
-function render_changes($changes) {
+function render_changes($changes, &$string) {
   $cutoff = 70;
   $i = 0;
   if (count($changes) > 0) {
@@ -133,12 +133,12 @@ function render_changes($changes) {
         <table class="data">
           <thead>
             <tr>
-              <th class="data-small">Date</th>
-              <th class="data-small">Action</th>
-              <th>Section</th>
-              <th class="data-small">Old</th>
-              <th class="data-small">New</th>
-              <th class="data-small">Editor</th>
+              <th class="data-small">{$string['date']}</th>
+              <th class="data-small">{$string['action']}</th>
+              <th>{$string['section']}</th>
+              <th class="data-small">{$string['old']}</th>
+              <th class="data-small">{$string['new']}</th>
+              <th class="data-small">{$string['editor']}</th>
             </tr>
           </thead>
           <tbody>
@@ -156,13 +156,13 @@ HTML;
         $split_pos = strrpos(substr($change['old'], 0, $cutoff), ' ');
         $change_old = substr($change['old'], 0, $split_pos);
         $change_old_more = substr($change['old'], $split_pos);
-        $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">Show more</a>";
+        $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
       }
       if (strlen($change['new']) > $cutoff) {
         $split_pos = strrpos(substr($change['new'], 0, $cutoff), ' ');
         $change_new = substr($change['new'], 0, $split_pos);
         $change_new_more = substr($change['new'], $split_pos);
-        $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">Show more</a>";
+        $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}Show more</a>";
       }
       $html .= <<< HTML
             <tr{$alt}>
@@ -195,17 +195,17 @@ HTML;
   return $html;
 }
 
-function render_comments($comments) {
+function render_comments($comments, &$string) {
   if(count($comments) > 0) {
     $html = <<< HTML
-        <table class="data" summary="Reviewer's comments">
+        <table class="data" summary="{$string['reviewerscomments']}">
           <thead>
             <tr>
               <th class="data-tiny"></th>
-              <th class="data-medium">Reviewer</th>
-              <th>Comments</th>
-              <th class="data-small">Action&nbsp;Taken</th>
-              <th>Internal Response</th>
+              <th class="data-medium">{$string['reviewer']}</th>
+              <th>{$string['comments']}</th>
+              <th class="data-small">{$string['actiontaken']}</th>
+              <th>{$string['internalresponse']}</th>
             </tr>
         </thead>
         <tbody>
@@ -240,12 +240,12 @@ HTML;
 
 HTML;
     
-      $actions = array('Not actioned', 'Read - disagree', 'Read - actioned');
+      $actions = array('Not actioned' => $string['notactioned'], 'Read - disagree' => $string['readdisagree'], 'Read - actioned' => $string['readactioned']);
       
-      foreach ($actions as $action) {
+      foreach ($actions as $action => $act_text) {
         $sel = ($comment['action'] == $action) ? ' selected="selected"' : '';
         $html .= <<< HTML
-      						<option value="{$action}"{$sel}>{$action}</option>
+      						<option value="{$action}"{$sel}>{$act_text}</option>
 
 HTML;
       }
