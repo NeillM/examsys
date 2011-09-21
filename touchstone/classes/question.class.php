@@ -132,7 +132,7 @@ Class Question extends TouchStoneObject {
     $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']);
     $this->_option_orders = array('display order' => $this->_lang_strings['displayorder'], 'alphabetic' => $this->_lang_strings['alphabetic'], 'random' => $this->_lang_strings['random']);
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-    $this->_change_field_map = array('q_group' => 'teams', 'correct' => $this->_lang_strings['correctanswer']);
+    $this->_change_field_map = array('scenario_plain' => 'scenario', 'leadin_plain' => 'leadin', 'q_group' => 'teams', 'correct' => $this->_lang_strings['correctanswer']);
     // TODO: check if some question types need 'Display Method' instead of 'Presentation'
     $this->_pretty_names = array('type' => $this->_lang_strings['type'], 'leadin' => $this->_lang_strings['leadin'], 'score_method' => $this->_lang_strings['markingmethod'], 'display_method' => $this->_lang_strings['presentation'], 'option_order' => $this->_lang_strings['optionorder'], 'owner_id' => $this->_lang_strings['owner'], 'status' => $this->_lang_strings['status']);
     
@@ -642,7 +642,7 @@ QUERY;
     $scenario = (trim(strip_tags($value)) == '') ? '' : $value;
     $tmp_scenario = trim($this->scenario);
     if ($scenario != $tmp_scenario) {
-      $this->set_modified_field('scenario', $tmp_scenario);
+      $this->set_modified_field('scenario_plain', $this->get_scenario_plain());
       $this->scenario = $scenario;
     }
   }
@@ -670,7 +670,7 @@ QUERY;
    */
   public function set_leadin($value) {
     if ($value != $this->leadin) {
-      $this->set_modified_field('leadin', $this->leadin);
+      $this->set_modified_field('leadin_plain', $this->get_leadin_plain());
       $this->leadin = $value;
     }
   }
