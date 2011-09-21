@@ -65,6 +65,7 @@ Class QuestionCALCULATION extends Question {
    */
   public function update_correct($new_correct, $paper_id) {
     $errors = array();
+    $changes = false;
     
     $first = reset($this->options);
     $old_correct = $first->get_correct();

@@ -22,78 +22,9 @@
 * @package
 */
 
-$media = $question->get_media();
-$plugin_height = max($media['height'] + 25, 380);
-if (count($question->options) > 0) {
-  $option = reset($question->options);
-  $correct = $option->get_correct();
-  $option_id = $option->id;
+if ($show_correction_intermediate) {
+  include 'correction_intermediates/inter_hotspot.php';
 } else {
-  $correct = '';
-  $option_id = -1;
+  include 'hotspot_standard.php';
 }
 ?>
-<script type="text/javascript">
-//<![CDATA[
-<?php // Bit of a hack to get the flash to stay centred ?>
-$(function () {
-  $('#question-holder').addClass('max');
-});
-flashTarget = 'points';
-//]]>
-</script>
-
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
-<?php
-require_once 'detail_parts/details_theme_notes.php';
-require_once 'detail_parts/details_scenario.php';
-?>
-					</tbody>
-				</table>
-        
-        <table class="form" summary="Hotspot flash movie">
-          <thead>
-            <tr>
-              <th class="align-left"><span class="mandatory">*</span> Image</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-<?php
-if ($media['filename'] != ''):
-?>
-                <script type="text/javascript">
-                  function swfLoaded1(message) {
-                    var num = message.substring(5,message.length);
-                    setUpFlash(num, message, '<?php echo $media['filename']; ?>', '<?php echo str_replace("'", "\'", trim($correct)); ?>');
-                  }
-                  write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" align="middle">');
-                  write_string('<param name="allowScriptAccess" value="always" />');
-                  write_string('<param name="movie" value="../add/hotspot_add.swf" />');
-                  write_string('<param name="quality" value="high" />');
-                  write_string('<param name="bgcolor" value="#F1F5FB" />');
-                  write_string('<param name="wmode" value="opaque" />');
-                  write_string('<embed src="../add/hotspot_add.swf" quality="high" bgcolor="#F1F5FB" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-                  write_string('</object>');
-                </script>
-<?php
-endif;
-?>                
-                <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
-                <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
-                <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
-                <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
-                <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-<?php
-require_once 'detail_parts/details_marking.php';
-require_once 'detail_parts/details_general_feedback.php';
-?>
-        
-

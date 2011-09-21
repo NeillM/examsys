@@ -106,41 +106,49 @@ if ($critical_error == '') {
   $current_media = $question->get_media();
   
   $show_media_upload = false;
+  $show_correction_intermediate = false;
   if ($question->requires_media() and $current_media['filename'] == '') {
     $show_media_upload = true;
   } elseif (isset($_POST['submit']) and $_POST['submit'] == $string['correct']) {
-    // TODO: check how this generalises to all question types
-    $unified_part_names = $question->get_unified_fields();
-    $save_individual = in_array('correct', array_keys($unified_part_names));
-    
-    if ($save_individual) {
-      // calculation, mcq
-      $part_names = $question->get_change_fields();
-      $fields = array();
-      foreach ($part_names as $field) {
-        if (isset($_POST[$field])) $fields[$field] = $_POST[$field];
-      }
-      $errors = $question->update_correct($fields, $paper_id);
+    if ($question->requires_correction_intermediate() and (!isset($_POST['corrected']) or $_POST['corrected'] != 'OK')) {
+      $show_correction_intermediate = true;
     } else {
-      $first = reset($question->options);
-      $compound_part_names = $first->get_compound_fields();
+      // TODO: check how this generalises to all question types
+      $unified_part_names = $question->get_unified_fields();
+      $save_individual = in_array('correct', array_keys($unified_part_names));
       
-      if (is_array($compound_part_names) and in_array('correct', array_keys($compound_part_names))) {
-        $loop_limit = $question->max_stems;
+      if ($save_individual) {
+        // calculation, mcq
+        $part_names = $question->get_change_fields();
+        $fields = array();
+        foreach ($part_names as $field) {
+          if (isset($_POST[$field])) $fields[$field] = $_POST[$field];
+        }
+        $errors = $question->update_correct($fields, $paper_id);
       } else {
-        $loop_limit = count($question->options);
+        // dichotomous, mrq, rank, extmatch, matrix
+        $first = reset($question->options);
+        $compound_part_names = $first->get_compound_fields();
+        
+        if (is_array($compound_part_names) and in_array('correct', array_keys($compound_part_names))) {
+          $loop_limit = $question->max_stems;
+        } else {
+          $loop_limit = count($question->options);
+        }
+        $part_names = $question->get_change_fields();
+        $correct_answers = array();
+        foreach ($part_names as $field) {
+          $i = 1;
+          for ($i = 1; $i <= $loop_limit; $i++) {
+            $correct_answers[$field][] = (isset($_POST[$field . $i])) ? $_POST[$field . $i] : $question->get_answer_negative();
+          }
+        }
+        
+        $errors = $question->update_correct($correct_answers, $paper_id);
       }
-      // dichotomous, mrq, rank, extmatch
-      $correct_answers = array();
-      $i = 1;
-      for ($i = 1; $i <= $loop_limit; $i++) {
-        $correct_answers[] = (isset($_POST['option_correct' . $i])) ? $_POST['option_correct' . $i] : $question->get_answer_negative();
-      }
-      
-      $errors = $question->update_correct($correct_answers, $paper_id);
-    }
   
 //    redirect();
+    }
   } elseif ((isset($_POST['submit']) and ($_POST['submit'] == $string['save'] or $_POST['submit'] == $string['limitedsave'])) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     // Save data
     if ($question->id == -1 or check_fullSave($question->id,$mysqli)) {

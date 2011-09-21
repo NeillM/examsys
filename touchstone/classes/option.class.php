@@ -222,7 +222,6 @@ QUERY;
             $db_field = (in_array($key, array_keys($this->_field_map))) ? $this->_field_map[$key] : $key;
             if ($value['message'] == '') {
               $this->track_change($logger, $option_number, $value['value'], $this->$key, $db_field);
-//              $logger->track_change('Edit Question', $this->question_id, $this->_user_id, $value['value'], $this->$key, $db_field);
             } else {
               $logger->track_change('Edit Question', $this->question_id, $this->_user_id, $value['value'], $this->$key, $value['message']);
             }

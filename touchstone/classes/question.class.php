@@ -67,6 +67,7 @@ Class Question extends TouchStoneObject {
   protected $_allow_change_marking_method = true;
   protected $_allow_negative_marks = null;
   protected $_requires_media = false;
+  protected $_requires_correction_intermediate = false;
   protected $_requires_flash = false;
   protected $_allow_mapping = true;
   protected $_allow_correction = true;
@@ -101,7 +102,6 @@ Class Question extends TouchStoneObject {
   protected $_unified_field_modifications = array();
   
   // These are the fields that are relevant for post-exam corrections
-  // TODO: is this used?
   protected $_fields_change = array('option_correct');
   
   // Map our 'nice' property names to the database fields and 'parts' in track changes
@@ -340,7 +340,8 @@ QUERY;
           foreach($this->_modified_fields as $key => $value) {
             $db_field = (in_array($key, array_keys($this->_field_map))) ? $this->_field_map[$key] : $key;
             $change_field = (in_array($key, array_keys($this->_change_field_map))) ? $this->_change_field_map[$db_field] : $db_field;
-            $get_method = 'get_' . $key;
+            // Exception for media as it returns an array. Need better solution if other properties do the same in the future
+            $get_method = 'get_' . $key . (($key == 'media') ? '_filename' : '');
             if ($value['message'] == '') {
               $this->_logger->track_change('Edit Question', $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
             } else {
@@ -496,6 +497,14 @@ QUERY;
    */
   public function requires_media() {
     return $this->_requires_media;
+  }
+  
+  /**
+   * Does this question type require an intermediate screen when making corrections?
+   * @return boolean
+   */
+  public function requires_correction_intermediate() {
+    return $this->_requires_correction_intermediate;
   }
   
   /**
@@ -890,11 +899,19 @@ QUERY;
   }
   
   /**
+   * Get the question media filename only
+   * @return array
+   */
+  public function get_media_filename() {
+    return $this->media;
+  }
+  
+  /**
    * Set the question media as an array containing filename, width and height
    * @param mixed $value Array containing filename, width and height
    */
   public function set_media($value) {
-    if ($value != $this->media) {
+    if ($value['filename'] != $this->media) {
       $this->set_modified_field('media', $this->media);
       $this->media = $value['filename'];
       $this->media_width = (empty($value['width'])) ? 0 : $value['width'];
@@ -1291,7 +1308,7 @@ QUERY;
   }
   
   /**
-   * Validate the question object before saveing
+   * Validate the question object before saving
    * @return Ambigous <boolean, string>
    */
   private function validate() {

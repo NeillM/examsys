@@ -41,10 +41,11 @@ Class QuestionMRQ extends Question {
 
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct array of new correct answers
+   * @param integer $new_fields array of corrected fields
    * @param integer $paper_id
    */
-  public function update_correct($new_correct, $paper_id) {
+  public function update_correct($new_fields, $paper_id) {
+    $new_correct = $new_fields['option_correct'];
     $errors = array();
     $changes = false;
     
