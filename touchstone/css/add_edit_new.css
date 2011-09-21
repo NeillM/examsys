@@ -390,6 +390,10 @@ div.form {
   width: 92px;
 }
 
+.auto-sized th, .auto-sized td {
+	width: auto;
+}
+
 input.error, textarea.error, select.error {
 	border: 1px solid red;
 	background-color: #ffd6d6;

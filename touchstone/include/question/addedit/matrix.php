@@ -63,7 +63,7 @@ require_once 'detail_parts/details_marking.php';
           <h2><?php echo $string['options'] ?></h2>
         </div>
 
-        <table id="q-options" class="form align-centre bordered" summary="<?php echo $string['qeditsummary'] ?>">
+        <table id="q-options" class="form align-centre bordered auto-sized" summary="<?php echo $string['qeditsummary'] ?>">
           <tr>
             <th>&nbsp;</th>
 <?php
