@@ -132,7 +132,7 @@ Class Question extends TouchStoneObject {
     $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']);
     $this->_option_orders = array('display order' => $this->_lang_strings['displayorder'], 'alphabetic' => $this->_lang_strings['alphabetic'], 'random' => $this->_lang_strings['random']);
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-    $this->_change_field_map = array('group' => 'teams', 'correct' => $this->_lang_strings['correctanswer']);
+    $this->_change_field_map = array('q_group' => 'teams', 'correct' => $this->_lang_strings['correctanswer']);
     // TODO: check if some question types need 'Display Method' instead of 'Presentation'
     $this->_pretty_names = array('type' => $this->_lang_strings['type'], 'leadin' => $this->_lang_strings['leadin'], 'score_method' => $this->_lang_strings['markingmethod'], 'display_method' => $this->_lang_strings['presentation'], 'option_order' => $this->_lang_strings['optionorder'], 'owner_id' => $this->_lang_strings['owner'], 'status' => $this->_lang_strings['status']);
     
@@ -339,7 +339,7 @@ QUERY;
           // Log any changes
           foreach($this->_modified_fields as $key => $value) {
             $db_field = (in_array($key, array_keys($this->_field_map))) ? $this->_field_map[$key] : $key;
-            $change_field = (in_array($key, array_keys($this->_change_field_map))) ? $this->_change_field_map[$db_field] : $db_field;
+            $change_field = (in_array($db_field, array_keys($this->_change_field_map))) ? $this->_change_field_map[$db_field] : $db_field;
             // Exception for media as it returns an array. Need better solution if other properties do the same in the future
             $get_method = 'get_' . $key . (($key == 'media') ? '_filename' : '');
             if ($value['message'] == '') {
@@ -917,6 +917,14 @@ QUERY;
       $this->media_width = (empty($value['width'])) ? 0 : $value['width'];
       $this->media_height = (empty($value['height'])) ? 0 : $value['height'];
     }
+  }
+  
+  /**
+   * Get the groups (imploded version of teams) to which the question belongs
+   * @return array
+   */
+  protected function get_group() {
+    return $this->group;
   }
   
   /**
