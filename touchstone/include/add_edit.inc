@@ -126,6 +126,7 @@ function option_order($selected = '') {
 }
 
 function render_changes($changes) {
+  $cutoff = 70;
   $i = 0;
   if (count($changes) > 0) {
     $html = <<< HTML
@@ -146,13 +147,30 @@ HTML;
 
     foreach($changes as $change) {
       $alt = ($i++ % 2 == 1) ? ' class="alt"' : '';
+      $change_old = $change['old'];
+      $change_old_more = '';
+      $change_new = $change['new'];
+      $change_new_more = '';
+      $split_pos = 0;
+      if (strlen($change['old']) > $cutoff) {
+        $split_pos = strrpos(substr($change['old'], 0, $cutoff), ' ');
+        $change_old = substr($change['old'], 0, $split_pos);
+        $change_old_more = substr($change['old'], $split_pos);
+        $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">Show more</a>";
+      }
+      if (strlen($change['new']) > $cutoff) {
+        $split_pos = strrpos(substr($change['new'], 0, $cutoff), ' ');
+        $change_new = substr($change['new'], 0, $split_pos);
+        $change_new_more = substr($change['new'], $split_pos);
+        $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">Show more</a>";
+      }
       $html .= <<< HTML
             <tr{$alt}>
               <td>{$change['date']}</td>
               <td>{$change['action']}</td>
               <td>{$change['section']}</td>
-              <td>{$change['old']}</td>
-              <td>{$change['new']}</td>
+              <td>{$change_old}{$change_old_more}</td>
+              <td>{$change_new}{$change_new_more}</td>
               <td>{$change['user']}</td>
             </tr>
 

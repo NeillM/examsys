@@ -170,6 +170,10 @@ dd {
 	width: 110px;
 }
 
+.more-text {
+	display: none;
+}
+
 td.separated:last-child {
   border-right: none;
 	border-top: 1px solid #cfcfcf;
