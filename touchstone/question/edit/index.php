@@ -147,7 +147,7 @@ if ($critical_error == '') {
         $errors = $question->update_correct($correct_answers, $paper_id);
       }
   
-//    redirect();
+      redirect();
     }
   } elseif ((isset($_POST['submit']) and ($_POST['submit'] == $string['save'] or $_POST['submit'] == $string['limitedsave'])) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     // Save data
@@ -301,7 +301,7 @@ if ($critical_error == '') {
     	}
     }
     
-//    redirect();
+    redirect();
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
     redirect();
   }
@@ -447,13 +447,14 @@ if($critical_error != '') {
   $query_string .= ($module != '') ? '&module=' . $module : '';
 
   // TODO: client side validation
-  
+?>
+	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput">
+<?php
   if ($show_media_upload) {
     include '../../include/question/addedit/media_upload.php';
   }
 ?>
 
-	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput">
     <div id="tabbed-content"<?php echo $banner_spacer ?>>
 			<div id="editor" class="tab-area">
         
