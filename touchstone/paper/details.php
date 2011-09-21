@@ -51,7 +51,7 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
-      if ($question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
+      if ($score_method == 'Mark per Option' and $question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
     } elseif ($q_type == 'mcq' and $correct_array[0] == '') {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
     } elseif ($q_type == 'calculation' and $correct_array[0] == '') {
@@ -68,7 +68,7 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
         if ($matching_media[$part_id] != '') $media_scenarios++;
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
-      if ($question_marks < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
+      if ($score_method == 'Mark per Option' and $question_marks < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
     }
     if ($q_type == 'mcq' and $score_method == 'vertical_other' and $p_type != '3') {
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
