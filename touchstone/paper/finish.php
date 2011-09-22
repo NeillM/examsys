@@ -1286,15 +1286,14 @@ table {font-size:100%}
         case 'rank':
           $paper[$question]['mark'] = 0;
           $paper[$question]['totalpos'] = 0;
+          
           foreach ($paper[$question]['correct'] as $tmp_correct) {
-            if ($tmp_correct != 0) {
+            if ($paper[$question]['score_method'] != 'Bonus Mark' or $tmp_correct != 0) {
               $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
             }
           }
+
           if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
-          
-          $rank_answers[$tmp_part_id-1] == '0';
-          //$paper[$question]['totalpos'] = $no_options * $paper[$question]['marks_correct'];
           
           if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
@@ -1393,20 +1392,30 @@ table {font-size:100%}
             echo "</tr>\n";
           }
 
-          if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_correct_answer == '1') {
-            echo '<tr><td colspan="5">&nbsp;</td></tr>';
-            echo '<tr>';
-            echo '<td>';
-            if (isset($paper[$question]['std'][$no_options])) echo display_std($paper[$question]['std'][$no_options]);
-            echo '</td>';
-            if (isset ($paper[$question]['mark']) and $paper[$question]['mark'] == $paper[$question]['totalpos']) {
-              echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+          
+         
+          if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_students_response == '1') {
+            $img_name = 'cross';
+            if (isset ($paper[$question]['mark']) and $paper[$question]['mark'] == ($paper[$question]['totalpos'] - $paper[$question]['marks_correct'])) {
               $paper[$question]['mark'] += $paper[$question]['marks_correct'];
-            } else {
-              echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+              $img_name = 'tick';
             }
-            echo "<td colspan=\"3\">Overall correct order (Bonus Mark)</td></tr>";
+              
+            echo '<tr><td colspan="5">&nbsp;</td></tr>';
+            
+            $html = '<tr><td>';
+            
+            if (isset($paper[$question]['std'][$no_options])) {
+              $html .= display_std($paper[$question]['std'][$no_options]);
+            }
+            $html .= '</td>';
+            $html .= '<td>&nbsp;<img src="../artwork/' . $img_name . '.gif" width="17" height="16" alt="' . ucwords($img_name) . '" /></td>';
+            $html .= "<td colspan=\"3\">Overall correct order (Bonus Mark)</td>";
+            $html .= '</tr>';
+            
+            echo $html;
           }
+          
           echo "</table>\n";
           if ($tmp_display_feedback == '1') {
             if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
@@ -1417,6 +1426,16 @@ table {font-size:100%}
               }
             }
           }
+          
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
+            if ($paper[$question]['mark'] == $paper[$question]['totalpos']) {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } else {
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+            }
+            $paper[$question]['totalpos'] = $paper[$question]['marks_correct'];
+          }
+          
           if (substr($tmp_exclude,0,1) == '1') $paper[$question]['mark'] = 0;
           
           break;
@@ -2139,7 +2158,7 @@ table {font-size:100%}
       }
       if ($paper[$question]['status'] != 'Experimental') {
         $total_marks += $paper[$question]['totalpos'];
-        $user_mark += $paper[$question]['marks_correct'];
+        $user_mark += $paper[$question]['mark'];
       }
       if ($paper[$question]['q_type'] != 'info') echo '</td></tr>';
       echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
