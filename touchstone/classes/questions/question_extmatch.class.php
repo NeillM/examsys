@@ -107,7 +107,7 @@ Class QuestionEXTMATCH extends Question {
             $all_correct = true;
             
             for ($i=0; $i < $stems; $i++) {
-              if (isset($big_user_parts[$i]) and $big_user_parts[$i] != '') {
+              if (isset($big_user_parts[$i]) and $big_user_parts[$i] != '' and $big_user_parts[$i] != 'u') {
                 $little_user_parts = explode('$', $big_user_parts[$i]);
                 for ($j = 0; $j < count($new_correct[$i]); $j++) {
                   if ($score_method == 'Mark per Option') {
