@@ -182,7 +182,11 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'hotspot':
-      $marks += ((substr_count($correct[0],'|') + 1) - substr_count($tmp_exclude, '1')) * $question_marks;
+      if ($score_method == 'Mark per Question') {
+        $marks = $question_marks;
+      } else {
+        $marks += ((substr_count($correct[0],'|') + 1) - substr_count($tmp_exclude, '1')) * $question_marks;
+      }
       break;
   }
   return $marks;

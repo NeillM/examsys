@@ -526,7 +526,7 @@
               echo $std_html;
               
               echo '<span id="q_' . ($ex_no) . '_1" style="border:1px solid #6593CF; background-color:#EBF3FF';
-              if (isset($excluded[$q_id]) and substr($excluded[$q_id],$blank_count-1,1) == '1') echo '; color:red; text-decoration:line-through';
+              if (isset($excluded[$q_id]) and substr($excluded[$q_id],$blank_count-1,1) == '1' and $score_method == 'Mark per Option') echo '; color:red; text-decoration:line-through';
               echo '">';
               
               if ($display_method == 'dropdown') {
