@@ -1337,34 +1337,35 @@ table {font-size:100%}
               echo '<td></td>';
             }
 
-            if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') {
+            echo '<td>';
+            if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0' and $rank_answers[$tmp_part_id-1] != 'u') {
 							if(($paper[$question]['score_method'] == 'Bonus Mark' or $paper[$question]['score_method'] == 'Allow partial Marks') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
-								echo '<td>&nbsp;</td>';
+								echo '&nbsp;';
 							} else {
 	            	if ($paper[$question]['score_method'] == 'Allow partial Marks') {
 	                if ($rank_answers[$tmp_part_id-1] > 0 and $rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1]) {
-	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+	                  echo '&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                     $paper[$question]['mark'] += $paper[$question]['marks_correct'];
 	                } elseif ($rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0 and ($rank_answers[$tmp_part_id-1]+1 == $paper[$question]['correct'][$tmp_part_id-1] or $rank_answers[$tmp_part_id-1]-1 == $paper[$question]['correct'][$tmp_part_id-1])) {
-	                  echo '<td>&nbsp;<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" /></td>';
+	                  echo '&nbsp;<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" />';
                     $paper[$question]['mark'] += $paper[$question]['marks_partial'];
 	                } else {
-	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+	                  echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                     if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
 	                }
 	              } else {
               		if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'Bonus Mark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
-	                  echo '<td>&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /></td>';
+	                  echo '&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                     $paper[$question]['mark'] += $paper[$question]['marks_correct'];
 	                } else {
-	                  echo '<td>&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" /></td>';
+	                  echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                     if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 	}
                 }
               }
-            } else {
-              echo "<td></td>";
             }
+            echo "</td>";
+
             if (substr($tmp_exclude,0,1) == '1') {
               echo "<td><select name=\"q" . $question . "_" . $tmp_part_id . "\" style=\"color:red; text-decoration:line-through; border:1px solid red\">\n";
             } else {

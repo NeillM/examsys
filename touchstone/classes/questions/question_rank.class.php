@@ -88,21 +88,29 @@ Class QuestionRANK extends Question {
             $order_correct = true;
             
             for ($i=0; $i < count($new_correct); $i++) {
-              if ($new_correct[$i] != 0 and $new_correct[$i] != '') $totalpos += $mark_correct;
+              if (!$this->is_answer_blank($new_correct[$i]) or ($score_method != 'Bonus Mark' and $score_method != 'Allow partial Marks')) $totalpos += $mark_correct;
               
-              if (!$this->is_answer_blank($user_answers[$i]) and !$this->is_answer_blank($new_correct[$i])) {
-                if ($new_correct[$i] == $user_answers[$i]) {
-                  $mark += $mark_correct;
-                } elseif ($score_method == 'Bonus Mark') {
-                  $mark += $mark_correct;
-                  $order_correct = false;
-                } elseif ($score_method == 'Allow partial Marks' and abs($new_correct[$i] - $user_answers[$i]) == 1) {
-                  $mark += $mark_partial;
+              if ($user_answers[$i] != 'u') {
+                if (!$this->is_answer_blank($user_answers[$i]) and !$this->is_answer_blank($new_correct[$i])) {
+                  if ($new_correct[$i] == $user_answers[$i]) {
+                    $mark += $mark_correct;
+                  } elseif ($score_method == 'Bonus Mark') {
+                    $mark += $mark_correct;
+                    $order_correct = false;
+                  } elseif ($score_method == 'Allow partial Marks' and abs($new_correct[$i] - $user_answers[$i]) == 1) {
+                    $mark += $mark_partial;
+                  } else {
+                    $mark += $mark_incorrect;
+                  }
+                } elseif ($this->is_answer_blank($user_answers[$i]) and $this->is_answer_blank($new_correct[$i])) {
+                  if ($score_method != 'Bonus Mark' and $score_method != 'Allow partial Marks') {
+                    $mark += $mark_correct;
+                  }
                 } else {
                   $mark += $mark_incorrect;
+                  $order_correct = false;
                 }
-              } elseif (!$this->is_answer_blank($new_correct[$i])) {
-                $mark += $mark_incorrect;
+              } else {
                 $order_correct = false;
               }
             }
@@ -133,7 +141,7 @@ Class QuestionRANK extends Question {
   }
   
   private function is_answer_blank($value) {
-    return ($value == 0 or $value == '' or $value == 'u');
+    return ($value == 0 or $value == '');
   }
   
   public function convert_to_mcq($correct_answer) {
