@@ -467,7 +467,7 @@
         echo "<td colspan=\"2\" style=\"padding-left:15px\">$leadin\n";
       } else {
         echo "<td class=\"q_no\"><p>$q_no.&nbsp;</p></td><td><p";
-        if (($q_type == 'dichotomous' or $q_type == 'labelling' or $q_type == 'blank' or $q_type == 'matrix') and $score_method == 'Mark per Question') {
+        if (($q_type == 'dichotomous' or $q_type == 'labelling' or $q_type == 'blank' or $q_type == 'matrix' or $q_type == 'extmatch') and $score_method == 'Mark per Question') {
           if (isset($excluded[$q_id])) {
             echo ' id="q_' . ($ex_no+1) . '_1" style="color:red; text-decoration:line-through">';
           } else {
@@ -1102,7 +1102,20 @@
       }
       $total_scenarios = max($tmp_text_no, $tmp_media_no);
 
-      echo "<tr><td class=\"q_no\"><p>$q_no.&nbsp;</p></td><td><p>$leadin</p>\n<ol type=\"i\">";
+      echo "<tr><td class=\"q_no\"><p>$q_no.&nbsp;</p></td><td><p";
+      if ($score_method == 'Mark per Question') {
+        echo " id=\"q_" . ($ex_no + 1) . "_1\"";
+        if (substr($excluded[$q_id],0,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+      }
+      echo ">$leadin</p>\n";
+      if ($score_method == 'Mark per Question') {
+        if (isset($excluded[$q_id])) {
+          echo excludeButton($ex_no, $q_id, str_repeat('1', $total_scenarios), 1, $total_scenarios);
+        } else {
+          echo excludeButton($ex_no, $q_id, str_repeat('0', $total_scenarios), 1, $total_scenarios);
+        }
+      }
+      echo "<ol type=\"i\">";
       if ($tmp_media_array[0] != '') {
         echo "<p align=\"center\">" . display_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0]) . "</p>\n";
       }
@@ -1132,9 +1145,10 @@
         if (isset($excluded[$q_id])) {
           $tmp_exclude = substr($excluded[$q_id],$section,1);
         } else {
-              $tmp_exclude = '';
+          $tmp_exclude = '';
         }
-        echo "<div>\n" . excludeButton($ex_no,$q_id,$tmp_exclude, count($options), $correct_stems) . "</div><div><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        if ($score_method == 'Mark per Option') echo "<div>" . excludeButton($ex_no,$q_id,$tmp_exclude, count($options), $correct_stems) . "</div>";
+        echo "<div><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         $sub_d = 0;
         $sub_d_no = 0;
         $option_no = 1;
@@ -1180,8 +1194,10 @@
               $tmp_std = '';
             }
             echo "<tr style=\"font-weight:bold\"><td>t=" . $t . "%</td><td>u=" . $u . "%</td><td>l=" . $l . "%</td><td>" . $tmp_std . "</td><td style=\"font-weight:bold";
-            if (isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo '; color:red; text-decoration:line-through';
-            echo "\" id=\"q_" . $ex_no . "_" . $option_no . "\">$individual_option</td></tr>\n";
+            if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo '; color:red; text-decoration:line-through';
+            echo "\"";
+            if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
+            echo ">$individual_option</td></tr>\n";
             $correct_stems++;
             if (isset($freq_log[$q_id][$i][$option_no])) $tmp_correct_no += $freq_log[$q_id][$i][$option_no];
             $std_part++;
@@ -1203,8 +1219,9 @@
             }
 		  
             echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td";
-            if (isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' style="color:red; text-decoration:line-through"';
-            echo " id=\"q_" . $ex_no . "_" . $option_no . "\">$individual_option</td></tr>\n";
+            if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+            if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
+            echo ">$individual_option</td></tr>\n";
           }
           $option_no++;
         }
