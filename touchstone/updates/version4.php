@@ -1038,10 +1038,10 @@ if (!isset($_POST['update'])) {
   $result->close();
   
   // 22/09/2011 - set marks for fill-in-the-blank question tyoe
-  $adjust = $mysqli->prepare("UPDATE questions SET q_type='textbox' WHERE q_type='timedate'");
+  $adjust = $mysqli->prepare("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'");
   $adjust->execute();
   $adjust->close();
-  echo "<li>UPDATE questions SET q_type='textbox' WHERE q_type='timedate'</li>\n";
+  echo "<li>UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'</li>\n";
   ob_flush();
   flush();
 
