@@ -107,7 +107,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'mcq':
-      if (substr($tmp_exclude,0,1) == '0') $marks++;
+      if (substr($tmp_exclude,0,1) == '0') $marks += $question_marks;
       break;
     case 'mrq':
       $correct_no = 0;
@@ -183,7 +183,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       break;
     case 'hotspot':
       if ($score_method == 'Mark per Question') {
-        $marks = $question_marks;
+        if (substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
       } else {
         $marks += ((substr_count($correct[0],'|') + 1) - substr_count($tmp_exclude, '1')) * $question_marks;
       }
