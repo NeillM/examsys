@@ -162,7 +162,7 @@ HTML;
         $split_pos = strrpos(substr($change['new'], 0, $cutoff), ' ');
         $change_new = substr($change['new'], 0, $split_pos);
         $change_new_more = substr($change['new'], $split_pos);
-        $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}Show more</a>";
+        $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
       }
       $html .= <<< HTML
             <tr{$alt}>

@@ -35,6 +35,8 @@ $(function () {
 
   addVariableLinks();
   $('.sct-type').trigger('change');
+  
+  trimLongChanges();
 });
 
 function changeTab() {
@@ -146,4 +148,16 @@ function showPartialMarks () {
   } else {
     $('.marks-partial').fadeOut('fast');
   }
+}
+
+function trimLongChanges() {
+  $('a.more').click(function (e, i) {
+    $(this).prev().prev().prev().toggle();
+    $(this).prev().prev().slideToggle();
+    if ($(this).text() == lang['showmore']) {
+      $(this).text(lang['hidemore'])
+    } else {
+      $(this).text(lang['showmore'])
+    }
+  });
 }
