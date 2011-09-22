@@ -57,7 +57,7 @@ Class Question extends TouchStoneObject {
   protected $last_edited = null;
   protected $locked = null;
   protected $deleted = null;
-  protected $status = null;
+  protected $status = 'Normal';
   public $options = array();
   public $max_options = 20;
   public $max_stems = 0;
