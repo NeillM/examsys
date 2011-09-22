@@ -448,7 +448,7 @@ META;
     return $tmp_list;
   }
   
-  function save_keywords($question, $userID, $edit, $mysqlidb) {
+  function save_keywords($question, $userID, $edit, $mysqlidb, &$string) {
     $keyword_changes = false;
     $updated_list = (isset($_POST['keywords'])) ? $_POST['keywords'] : array();
     
@@ -485,7 +485,7 @@ META;
       
       if ($keyword_changes == true) {
         $logger = new Logger($mysqlidb);
-        $logger->track_change('Edit Question', $question->id, $userID, keyword_id_to_text($existing_list, $mysqlidb), keyword_id_to_text($updated_list, $mysqlidb), 'keywords');
+        $logger->track_change($string['editquestion'], $question->id, $userID, keyword_id_to_text($existing_list, $mysqlidb), keyword_id_to_text($updated_list, $mysqlidb), 'keywords');
 
         $question->set_keywords($updated_list);
       }

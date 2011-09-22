@@ -343,7 +343,7 @@ QUERY;
             // Exception for media as it returns an array. Need better solution if other properties do the same in the future
             $get_method = 'get_' . $key . (($key == 'media') ? '_filename' : '');
             if ($value['message'] == '') {
-              $this->_logger->track_change('Edit Question', $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
+              $this->_logger->track_change($this->_lang_strings['editquestion'], $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
             } else {
               $this->_logger->track_change($value['message'], $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
             }

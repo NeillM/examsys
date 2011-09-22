@@ -105,7 +105,9 @@ $string['internalresponse'] = '1Internal Response';
 $string['notactioned'] = '1Not actioned';
 $string['readdisagree'] = '1Read - disagree';
 $string['readactioned'] = '1Read - actioned';
+$string['nocomments'] = '1No comments';
 $string['commentsmsg'] = '1No comments recorded for this question.';
+$string['objectives'] = '1Objectives';
 $string['noneabove'] = '1None of the Above';
 $string['noneabovemsg'] = '1Check here if the current question does not match any of the above objectives from %s.';
 $string['mandatory'] = '1Indicates a <strong>mandatory</strong> field that must be completed.';
@@ -205,4 +207,7 @@ $string['validationerror'] = '1There were problems with your submission. Please 
 $string['enterleadin'] = '1Please enter a leadin for the question';
 $string['showmore'] = '1Show more';
 $string['hidemore'] = '1Hide more';
+$string['ok'] = '1OK';
+$string['minor'] = '1Minor';
+$string['major'] = '1Major';
 ?>

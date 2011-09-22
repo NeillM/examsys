@@ -223,7 +223,7 @@ QUERY;
             if ($value['message'] == '') {
               $this->track_change($logger, $option_number, $value['value'], $this->$key, $db_field);
             } else {
-              $logger->track_change('Edit Question', $this->question_id, $this->_user_id, $value['value'], $this->$key, $value['message']);
+              $logger->track_change($this->_lang_strings['editquestion'], $this->question_id, $this->_user_id, $value['value'], $this->$key, $value['message']);
             }
           }
         }
@@ -607,7 +607,9 @@ QUERY;
    * @param mixed $new_value the new value to log
    * @param string $category category label to use in the log
    */
-  protected function log_compound_field_change($field, $label, $index, $old_value, $new_value, $category='Edit Question') {
+  protected function log_compound_field_change($field, $label, $index, $old_value, $new_value, $category='') {
+    if ($category == '') $category = $this->_lang_strings['editquestion'];
+    
     $log_value_old = $log_value_new = '';
     
     if (is_array($old_value)) {

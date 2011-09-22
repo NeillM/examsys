@@ -35,7 +35,7 @@
 require $cfg_web_root . 'touchstone/webServices/RestRequest.class';
 require $cfg_web_root . 'touchstone/classes/dateutils.class.php';
 
-function render_objectives_mapping_form($db, $paper_id) {
+function render_objectives_mapping_form($db, $paper_id, &$string) {
   //get module and session form paper id
   $result = $db->prepare("SELECT moduleID, calendar_year, paper_type FROM properties WHERE property_id=?");
   $result->bind_param('i', $paper_id);
@@ -65,7 +65,7 @@ function render_objectives_mapping_form($db, $paper_id) {
   
   foreach ($objsByModuleSession as $moduleid => $objsBySession) {
     $html .= <<< HTML
-        <h2>{$moduleid} Objectives</h2>
+        <h2>{$moduleid} {$string['objectives']}</h2>
         
         <ul class="objectives">
 
@@ -123,8 +123,9 @@ HTML;
   }
   
   $checked = (isset($none_of_the_above['mapped'])) ? ' checked="checked"' : '';
+  $nota_message = sprintf($string['noneabovemsg'], $modules);
   $html .= <<< HTML
-        <p class="warning"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>None of the Above</strong></label><br />Check here if the current question does not match any of the above objectives from {$modules}.</p>
+        <p class="warning"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>{$string['noneabove']}</strong></label><br />{$nota_message}</p>
     		<input name="objective_session" type="hidden" value="{$session}"/>
         <input id="objective_modules" name="objective_modules" type="hidden" value="{$modules}" />
         

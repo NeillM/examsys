@@ -284,7 +284,7 @@ if ($critical_error == '') {
           }
             	    
           // TODO: check usage of old saveKeywords function - USED IN LIMITED SAVE FUNCTION
-          save_keywords($question, $userID, true, $mysqli);
+          save_keywords($question, $userID, true, $mysqli, $string);
       
     	    // TODO: check usage of old save_external_responses function - USED IN LIMITED SAVE FUNCTION
     	    if(isset($_POST['comment_ids']) and isset($_POST['actions']) and isset($_POST['responses'])) {
@@ -522,7 +522,7 @@ echo render_comments($comments, $string);
 <?php
 // TODO: remove 'mapping_tab.inc'?
 // TODO: how does it work in add? What if the question isn't on a paper?
-echo render_objectives_mapping_form($mysqli, $paper_id);
+echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 ?>
         
       </div>

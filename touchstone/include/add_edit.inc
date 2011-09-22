@@ -216,23 +216,23 @@ HTML;
     foreach ($comments as $id => $comment) {
       switch ($comment['category']) {
         case 1:
-          $status = 'OK';
+          $status = array('ok', $string['ok']);
           break;
         case 2:
-          $status = 'Minor';
+          $status = array('minor', $string['minor']);
           break;
         case 3:
-          $status = 'Major';
+          $status = array('major', $string['major']);
           break;
       }
-      $img_status = strtolower($status);
+      $img_status = $status[0];
       
       $alt = ($i % 2 == 0) ? ' class="alt"' : '';
-      $comment_str = ($comment['comment'] == '') ? 'No comments' : nl2br($comment['comment']);
+      $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br($comment['comment']);
       
       $html .= <<< HTML
   					<tr{$alt}>
-              <td><img src="../../artwork/{$img_status}_comment.png" width="16" height="16" alt="{$status}" /></td>
+              <td><img src="../../artwork/{$img_status}_comment.png" width="16" height="16" alt="{$status[1]}" /></td>
               <td>{$comment['name']}<br /><span class="note">{$comment['type']}</span></td>
               <td><span class="note">{$comment_str}</span></td>
               <td>
@@ -270,7 +270,7 @@ HTML;
 HTML;
   } else {
     $html = <<< HTML
-        <p>No comments recorded for this question.</p>
+        <p>{$string['commentsmsg']}</p>
 
 HTML;
   }
