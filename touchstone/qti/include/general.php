@@ -309,8 +309,6 @@ function ConvertType($type)
 		return "Ranking";
 	if ($type == "textbox")
 		return "Text Box";
-	if ($type == "timedate")
-		return "Time/Date";
 	
 	return $type;
 }

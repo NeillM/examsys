@@ -30,8 +30,7 @@ class IE_qti12_Save extends IE_Main
 	var $data;
 	var $params;
 	// main save function
-	function Save($params,&$data)
-	{
+	function Save($params,&$data) {
 		echo "<h4>Params</h4>";
 		print_p($params);
 		echo "<h4>General Debug</h4>";
@@ -44,18 +43,15 @@ class IE_qti12_Save extends IE_Main
 
 
 		$this->ll = array();
-		for ($i = 1 ; $i < 27 ; $i++)
-		{
+		for ($i = 1 ; $i < 27 ; $i++)	{
 			$varletter = chr(ord('A') + $i - 1);	
 			$this->ll[$i] = $varletter;
 		}
 		
 
 		// paper mode
-		if (count($data->papers) > 0)
-		{
-			foreach($data->papers as &$paper)
-			{
+		if (count($data->papers) > 0)	{
+			foreach($data->papers as &$paper)	{
 				//print_p($paper);
 				
 				$this->output = $this->DoHeader();
@@ -64,8 +60,7 @@ class IE_qti12_Save extends IE_Main
 				{
 					$this->output .= "\t\t<rubric><![CDATA[".$paper->rubric."]]></rubric>\n";	
 				}
-				foreach($paper->screens as $id => &$screen)
-				{
+				foreach($paper->screens as $id => &$screen)	{
 					$this->output .= "\t\t<section title='Screen $id' ident='$id'>\n";
 					foreach($screen->question_ids as $q_id)
 					{
@@ -100,8 +95,7 @@ class IE_qti12_Save extends IE_Main
 			$this->output = $this->DoHeader();
 			
 			// this needs a lot more work on this function
-			foreach($data->questions as $question)
-			{
+			foreach($data->questions as $question) {
 				$this->OutputQuestion($question);
 			}
 			
@@ -117,16 +111,10 @@ class IE_qti12_Save extends IE_Main
 		echo "<pre>";
 		echo htmlentities($this->output);
 		echo "</pre>";
-
-		/*$highlighter =& Text_Highlighter::factory('xml');
-		echo $highlighter->highlight($this->output);*/
-
 	}	
 	
-	function OutputQuestion(&$question)
-	{
-		if ($question->media)
-		{
+	function OutputQuestion(&$question)	{
+		if ($question->media)	{
 			$this->data->files[] = new ST_File($question->media,$question->media,$this->params->dir,'image');	
 		}
 		
@@ -158,14 +146,11 @@ class IE_qti12_Save extends IE_Main
 			$this->SaveRank($question);
 		elseif ($question->type == "textbox")
 			$this->SaveTextbox($question);
-		elseif ($question->type == "timedate")
-			$this->SaveTimeDate($question);
-		else	
+    else	
 			$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
 	}
 	
-	function MakeQuestionHeader(&$question,$scenario = true,$image = true)
-	{
+	function MakeQuestionHeader(&$question,$scenario = true,$image = true) {
 		global $cfg_web_root;
 		
 		$output = "";
@@ -176,8 +161,7 @@ class IE_qti12_Save extends IE_Main
 				<mattext texttype='text/html'><![CDATA[<font size='+2' color='#316ac5'>" . $question->theme . "</font>]]></mattext>
 			</material>";
 		
-		if (trim($question->notes))
-		{
+		if (trim($question->notes))	{
 			$output .= "
 			<material label='notes'>
 				<matimage imagtype='image/gif' uri='notes_icon.gif'/>
@@ -216,16 +200,14 @@ class IE_qti12_Save extends IE_Main
 		return array($output,$title);
 	}
 	
-	function SaveBlank(&$question)
-	{
+	function SaveBlank(&$question) {
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question,false);	
 		
 		//echo "Doing SaveBlank - " . $question->displaymode . "<br>";
 		$ob = new OB();
 		$ob->ClearAndSave();
-		if (strtolower($question->displaymode) == "dropdown")
-		{
+		if (strtolower($question->displaymode) == "dropdown")	{
 			// export as a Select a Blank so QMP imports correctly
 			$type = "Select a Blank";
 			include "qti12/tmpl/blank-dropdown.php";
@@ -250,25 +232,12 @@ class IE_qti12_Save extends IE_Main
 		if (substr($question->formula,0,1) == "=")
 			$question->formula = substr($question->formula,1);
 			
-		/*echo "\$A = $A, ";
-		echo "\$B = $B, ";
-		echo "\$C = $C, ";
-		echo "\$D = $D, ";
-		echo "\$E = $E, ";
-		echo "\$F = $F, ";
-		echo "\$G = $G, ";
-		echo "\$H = $H<BR>";
-
-		echo "Formula : " . $question->formula ."<br>";
-		echo "Answer : $answer<br>";*/
-		
 		$question->origleadin = $question->leadin;
 		$q_text = $question->leadin;
 		
 		// format the text for the question
 		// replace all variables in leadin with randomly generated values
-		foreach($question->variables as $var => $vairable)
-		{	
+		foreach($question->variables as $var => $vairable) {	
 			$$var = MathsUtils::gen_random_no(checkVariables($vairable->min), checkVariables($vairable->max), $vairable->inc, $vairable->dec);
 			$q_text = str_ireplace("\$$var",$$var,$q_text);
 		}	
@@ -289,8 +258,7 @@ class IE_qti12_Save extends IE_Main
 		$ob->Restore();		
 	}
 	
-	function SaveDichotomous(&$question)
-	{
+	function SaveDichotomous(&$question) {
 		// list of score methods:
 		/*
 		TF_NegativeAbstain - True/False/Abstain (Negative Marking -1)
@@ -305,26 +273,21 @@ class IE_qti12_Save extends IE_Main
 		$true = "True";
 		$false = "False";
 		
-		if ($question->score_method == "TF_NegativeAbstain")
-		{
+		if ($question->score_method == "TF_NegativeAbstain") {
 			$hasab = 1;
 			$negmark = -1;
-		} else if ($question->score_method == "TF_NegativeAbstainHalf")
-		{
+		} else if ($question->score_method == "TF_NegativeAbstainHalf")	{
 			$hasab = 1;
 			$negmark = -1;
 			$this->AddWarning("Negative half marks not supported with QTI, using negative 1 instead",$question->load_id);
-		} else if ($question->score_method == "TF_Positive")
-		{
+		} else if ($question->score_method == "TF_Positive") {
 			// default
-		} else if ($question->score_method == "YN_NegativeAbstain")
-		{
+		} else if ($question->score_method == "YN_NegativeAbstain")	{
 			$true = "Yes";
 			$false = "No";
 			$hasab = 1;
 			$negmark = -1;
-		} else if ($question->score_method == "YN_Positive")
-		{
+		} else if ($question->score_method == "YN_Positive") {
 			$true = "Yes";
 			$false = "No";
 		}
@@ -339,17 +302,14 @@ class IE_qti12_Save extends IE_Main
 		$this->output .= $ob->GetContent();
 		$ob->Restore();		
 
-		foreach($question->options as $option)
-		{
-			if ($option->media)
-			{
+		foreach($question->options as $option) {
+			if ($option->media)	{
 				$this->data->files[] = new ST_File($option->media,$option->media,$option->params->dir,'image');	
 			}
 		}
 	}	
 	
-	function SaveExtMatch(&$question)
-	{
+	function SaveExtMatch(&$question)	{
 		// format the text for the question
 		$this->AddWarning("QMP Cannot import extended matching questions correctly, it cannot handle the multiple select options",$question->load_id);
 
@@ -362,15 +322,12 @@ class IE_qti12_Save extends IE_Main
 		$this->output .= $ob->GetContent();
 		$ob->Restore();		
 			
-		if ($question->media)
-		{
+		if ($question->media) {
 			$this->data->files[] = new ST_File($question->media,$question->media,$this->params->dir,'image');	
 		}
 
-		foreach($question->scenarios as $scenarios)
-		{
-			if ($scenarios->media)
-			{
+		foreach($question->scenarios as $scenarios)	{
+			if ($scenarios->media) {
 				$this->data->files[] = new ST_File($scenarios->media,$scenarios->media,$scenarios->params->dir,'image');	
 			}
 		}
@@ -378,14 +335,12 @@ class IE_qti12_Save extends IE_Main
 	}
 
 	// TODO
-	function SaveFlash(&$question)
-	{
+	function SaveFlash(&$question) {
 		$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
 	}
 	
 	// TODO
-	function SaveHotspot(&$question)
-	{
+	function SaveHotspot(&$question) {
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question,true,false);	
 		
@@ -397,8 +352,7 @@ class IE_qti12_Save extends IE_Main
 		$ob->Restore();
 	}
 
-	function SaveInfo(&$question)
-	{
+	function SaveInfo(&$question) {
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
 		
@@ -411,8 +365,7 @@ class IE_qti12_Save extends IE_Main
 	}
 
 	// TODO
-	function SaveLabelling(&$question)
-	{
+	function SaveLabelling(&$question){
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question,true,false);	
 		
@@ -424,8 +377,7 @@ class IE_qti12_Save extends IE_Main
 		$ob->Restore();
 	}
 	
-	function SaveLikert(&$question)
-	{
+	function SaveLikert(&$question)	{
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
 		
@@ -437,8 +389,7 @@ class IE_qti12_Save extends IE_Main
 		$ob->Restore();
 	}
 
-	function SaveMatrix(&$question)
-	{
+	function SaveMatrix(&$question)	{
 		// NO FEEDBACK ON MATRIX!!!
 		
 		// format the text for the question
@@ -453,8 +404,7 @@ class IE_qti12_Save extends IE_Main
 		$ob->Restore();
 	}
 
-	function SaveMcq(&$question)
-	{
+	function SaveMcq(&$question) {
 		// fairly sure this is exporting correctly, feedback for pos + neg ok,
 		// all options listed ok
 		
@@ -468,17 +418,14 @@ class IE_qti12_Save extends IE_Main
 		$this->output .= $ob->GetContent();
 		$ob->Restore();	
 		
-		foreach($question->options as $option)
-		{
-			if ($option->media)
-			{
+		foreach($question->options as $option) {
+			if ($option->media)	{
 				$this->data->files[] = new ST_File($option->media,$option->media,$option->params->dir,'image');	
 			}
 		}	
 	}
 	
-	function SaveMrq(&$question)
-	{
+	function SaveMrq(&$question) {
 		// QMP doesnt pay attention 
 		// to the maxnumber field in render_choice so allows all options to be checked
 		// spits out valid QTI format, but QMP doesnt read it correctly (or export it
@@ -491,8 +438,7 @@ class IE_qti12_Save extends IE_Main
 		
 		// work out how many correct answers we have
 		$maxanswers = 0;
-		foreach($question->options as $option)
-		{
+		foreach($question->options as $option) {
 			if ($option->is_correct)
 				$maxanswers++;
 		}
@@ -509,61 +455,51 @@ class IE_qti12_Save extends IE_Main
 		// with 2 correct answers will result in following
 		// 2 correct answers - 4 marks
 		// 2 incorrect answers - -4 marks
-		if (strtolower($question->score_method) == "allnegative")
-		{
+		if (strtolower($question->score_method) == "allnegative")	{
 			$type = "Multiple Response - 1 Mark per Option (with Negative Marking)";
 			include "qti12/tmpl/mrq-allnegative.php";
 		}
 			
 		// multiple marks for question - 1 mark per positive, should only be able to
 		// select same no of options as correct answers but not in QMP as its broken
-		if (strtolower($question->score_method) == "selectedpositive")
-		{
+		if (strtolower($question->score_method) == "selectedpositive") {
 			$type = "Multiple Response - 1 mark per True Option";
 			include "qti12/tmpl/mrq-selectedpositive.php";
 		}
 		
 		// results and feedback for 1 mark for all items correcte, should only be able to
 		// select same no of options as correct answers but not in QMP as its broken
-		if (strtolower($question->score_method) == "allitemscorrect")
-		{
+		if (strtolower($question->score_method) == "allitemscorrect")	{
 			$type = "Multiple Response - All options must be correct (1 mark in total)";
 			include "qti12/tmpl/mrq-allitemscorrect.php";
 		}
 			
 		// other - 1 mark per correct, no maximum number of items, and other box.
 		// NOT WORKING
-		if (strtolower($question->score_method) == "other")
-		{
-			//$this->AddWarning("Other text entry not supported for this question type",$question->load_id);
+		if (strtolower($question->score_method) == "other")	{
 			$type = "Multiple Response - 1 mark per True Option with Other";
-			//include "qti12/tmpl/mrq-selectedpositive.php";
 			include "qti12/tmpl/mrq-other.php";
 		}
 		$this->output .= $ob->GetContent();
 		$ob->Restore();
 		
-		foreach($question->options as $option)
-		{
-			if ($option->media)
-			{
+		foreach($question->options as $option) {
+			if ($option->media)	{
 				$this->data->files[] = new ST_File($option->media,$option->media,$option->params->dir,'image');	
 			}
 		}	
 	}
 	
 	// DONE
-	function SaveRank(&$question)
-	{
+	function SaveRank(&$question)	{
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
 
 		//build list of options
 		$optlist = array();
 		$optlist[0] = "-";
-		foreach ($question->options as $option)
-		{
-			if ($option->order == "")
+		foreach ($question->options as $option)	{
+			if ($option->order == '')
 				$option->order = 0;
 			$optlist[$option->order] = OrderToStr($option->order);	
 		}
@@ -575,29 +511,23 @@ class IE_qti12_Save extends IE_Main
 		$ob = new OB();
 		$ob->ClearAndSave();
 		
-		if (strtolower($question->score_method) == "strictorder")
-		{
+		if (strtolower($question->score_method) == "strictorder") {
 			$type = "Ranking - Strict Order";	
 			include "qti12/tmpl/rank-strictorder.php";
 		}
-		if (strtolower($question->score_method) == "allitemscorrect")
-		{	
+		if (strtolower($question->score_method) == "allitemscorrect") {	
 			$type = "Ranking - All items correct";	
 			include "qti12/tmpl/rank-allitemscorrect.php";
 		}
-		if (strtolower($question->score_method) == "orderneighbours")
-		{
+		if (strtolower($question->score_method) == "orderneighbours") {
 			$type = "Ranking - Strict Order";	
 			$this->AddWarning("'Strict order plus half marks for neighbours' is not a supported marking type, using 'Strict order (mark per option)' instead",$question->load_id);
 			include "qti12/tmpl/rank-strictorder.php";
-			//include "qti12/tmpl/rank-orderneighbours.php";
 		}
-		if (strtolower($question->score_method) == "bonusmark")
-		{
+		if (strtolower($question->score_method) == "bonusmark")	{
 			$this->AddWarning("'Correct items with bonus for overall order' is not a supported marking type, using 'Strict order (mark per option)' instead",$question->load_id);
 			$type = "Ranking - Strict Order";	
 			include "qti12/tmpl/rank-strictorder.php";
-			//include "qti12/tmpl/rank-bonusmark.php";
 		}
 		$this->output .= $ob->GetContent();
 		
@@ -620,128 +550,10 @@ class IE_qti12_Save extends IE_Main
 		$ob->Restore();
 	}
 	
-	// DONE
-	function SaveTimeDate(&$question)
-	{
-		// TODO : NO template
-		// format the text for the question
-		list($headertext,$title) = $this->MakeQuestionHeader($question);	
-
-		// work out parts of correct answer
-		$date = strtotime($question->correct);
-		
-		$day = 0;
-		$month = 0;
-		$year = 0;
-		$hours = 0;
-		$mins = 0;
-		$secs = 0;
-		
-		// has a date part
-		if (strpos($question->correct,"/") > 0)
-		{
-			$datebit = $question->correct;
-			if (strpos($datebit," ") > 0)
-				$datebit = trim(substr($datebit,0,strpos($datebit," ")));
-			
-			list($day,$month,$year) = explode("/",$datebit);
-		}		
-		
-		if (strpos($question->correct,":") > 0)
-		{
-			$timebit = $question->correct;
-			if (strpos($timebit," ") > 0)
-				$timebit = trim(substr($timebit,strpos($timebit," ")));
-			
-			$bits = explode(":",$timebit);
-			$hours = $bits[0];
-			$mins = $bits[1];
-			if (count($bits) > 2)
-				$secs = $bits[2];
-		}
-		
-		//echo "Correct : $day/$month/$year $hours:$mins:$secs<br>";
-		$sets = array();
-		// cheat to make array count from 1
-		$sets[0] = "Temp";
-		
-		/*
-				<option value="1">dd/MM/yyyy hh:mm:ss</option>
-				<option value="2">dd/MM/yyyy hh:mm</option>
-				<option value="3" selected="">dd/MM/yyyy</option>
-				<option value="4">mm/dd/yyyy</option>
-				<option value="5">dd/MMMM/yyyy</option>
-				<option value="6">hh:mm:ss</option>
-				<option value="7">hh:mm (date)</option>
-				<option value="8">hh:mm (duration)</option>
-		*/	
-		
-		switch ($question->format)
-		{
-			case 1:	// dd/MM/yyyy hh:mm:ss
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				$sets[] = $this->GetTDSet('ss',$secs);	
-				break;
-			case 2:	// dd/MM/yyyy hh:mm
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				break;
-			case 3:	// dd/MM/yyyy
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				break;
-			case 4:	// mm/dd/yyyy
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				break;
-			case 5:	// dd/MMMM/yyyy
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MMMM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				break;
-			case 6:	// hh:mm:ss
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				$sets[] = $this->GetTDSet('ss',$secs);	
-				break;
-			case 7:	// hh:mm (date)
-			case 8:	// hh:mm (duration)
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				break;
-		}
-		
-		// cheat to make array count from 1
-		unset($sets[0]);
-		
-		//print_p($sets);
-		
-		// export as Select a Blank so QMP imports correctly
-		$type = "Select a Blank";
-		$ob = new OB();
-		$ob->ClearAndSave();
-		include "qti12/tmpl/timedate.php";
-		$this->output .= $ob->GetContent();
-		$ob->Restore();			
-	}
-	
-	
-		
-	function GetTDSet($type,$correct,&$question = '')
-	{
+	function GetTDSet($type,$correct,&$question = '')	{
 		$res = new ST_Question_Timedate_set();
 		$res->correct = $correct;
-		if ($type == "dd")
-		{
+		if ($type == "dd")		{
 			for ($i = 1 ; $i <= 31 ; $i++)
 				$res->values[] = sprintf("%02d",$i);
 		} else if ($type == "MM")

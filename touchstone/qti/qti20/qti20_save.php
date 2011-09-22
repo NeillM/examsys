@@ -17,8 +17,7 @@ class IE_qti20_Save extends IE_Main
 	var $params;
 
 	// main save function
-	function Save($params,&$data)
-	{
+	function Save($params,&$data)	{
 		echo "<h4>Params</h4>";
 		print_p($params);
 		echo "<h4>General Debug</h4>";
@@ -32,15 +31,13 @@ class IE_qti20_Save extends IE_Main
 		$this->outputfiles = array();
 		
 		$this->ll = array();
-		for ($i = 1 ; $i < 27 ; $i++)
-		{
+		for ($i = 1 ; $i < 27 ; $i++)	{
 			$varletter = chr(ord('A') + $i - 1);	
 			$this->ll[$i] = $varletter;
 		}
 		
 		// output all questions as xml files ready for packaging
-		foreach($data->questions as $question)
-		{
+		foreach($data->questions as $question) {
 			$this->output = "";
 			$this->OutputQuestion($question);
 			$file = "question-" . $question->load_id . ".xml";
@@ -49,18 +46,13 @@ class IE_qti20_Save extends IE_Main
 			$data->files[] = new ST_File($file,trim(strip_tags($question->leadin)),$params->dir,'question',$question->load_id);
 			
 			$this->outputfiles[$file] = $this->output;
-			/*echo "<pre>";
-			echo htmlentities($this->output);
-			echo "</pre>";	*/
 		}	
 		
 		
 		// should we export a test file?
-		if (count($data->papers) == 1)
-		{
+		if (count($data->papers) == 1) {
 
-			foreach ($data->papers as $paper)
-			{
+			foreach ($data->papers as $paper)	{
 				// create manifest for questions with no associated paper
 				$ob = new OB();
 				$ob->ClearAndSave();
@@ -117,8 +109,7 @@ class IE_qti20_Save extends IE_Main
 			$this->outputfiles[$file] = $manifest;
 		}
 		
-		foreach($this->outputfiles as $file => $text)
-		{
+		foreach($this->outputfiles as $file => $text)	{
 			echo "<h4>QTI File : $file</h4>";
 			echo "<pre>";
 			echo htmlentities($text);
@@ -126,10 +117,8 @@ class IE_qti20_Save extends IE_Main
 		}
 	}	
 	
-	function OutputQuestion(&$question)
-	{
-		if ($question->media)
-		{
+	function OutputQuestion(&$question)	{
+		if ($question->media) {
 			$this->data->files[] = new ST_File($question->media,$question->media,$this->params->dir,'image',$question->load_id);	
 		}
 
@@ -161,20 +150,16 @@ class IE_qti20_Save extends IE_Main
 			$this->SaveRank($question);
 		elseif ($question->type == "textbox")
 			$this->SaveTextbox($question);
-		elseif ($question->type == "timedate")
-			$this->SaveTimeDate($question);
 		else	
 			$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
 		
 	}
 	
-	function MakeQuestionHeader(&$question)
-	{
-		$output = "";
+	function MakeQuestionHeader(&$question)	{
+		$output = '';
 				
 		// do we have a theme? if so use it as title
-		if ($question->theme)
-		{
+		if ($question->theme)	{
 			$title = $question->theme;				
 		} else {	
 			// no title, use leadin for title
@@ -198,8 +183,7 @@ class IE_qti20_Save extends IE_Main
 		return array($output,$title);
 	}
 	
-	function MakeQuestionHeaderBlank(&$question)
-	{
+	function MakeQuestionHeaderBlank(&$question) {
 		$output = "";
 		
 		// do we have a theme? if so use it as title
@@ -226,8 +210,7 @@ class IE_qti20_Save extends IE_Main
 	}
 	
 	// DONE
-	function SaveBlank(&$question)
-	{
+	function SaveBlank(&$question) {
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeaderBlank($question);	
 		
@@ -243,31 +226,17 @@ class IE_qti20_Save extends IE_Main
 	}
 	
 	// TODO
-	function SaveCalculation(&$question)
-	{
+	function SaveCalculation(&$question) {
 		// TODO : NO template
 		// format the text for the question
 		
-		foreach($question->variables as $var => $vairable)
-		{	
+		foreach($question->variables as $var => $vairable) {	
 			$$var = MathsUtils::gen_random_no(checkVariables($vairable->min), checkVariables($vairable->max), $vairable->inc, $vairable->dec);
 		}	
 		
 		
 		eval ("\$answer = " . $question->formula . ";");
-		
-		/*echo "\$A = $A, ";
-		echo "\$B = $B, ";
-		echo "\$C = $C, ";
-		echo "\$D = $D, ";
-		echo "\$E = $E, ";
-		echo "\$F = $F, ";
-		echo "\$G = $G, ";
-		echo "\$H = $H<BR>";*/
-
-		//echo "Formula : " . $question->formula ."<br>";
-		//echo "Answer : $answer<br>";
-		
+				
 		$q_text = $question->leadin;
 		$q_text = str_ireplace("\$A",$A,$q_text);
 		$q_text = str_ireplace("\$B",$B,$q_text);
@@ -293,8 +262,7 @@ class IE_qti20_Save extends IE_Main
 	}
 	
 	// DONE
-	function SaveDichotomous(&$question)
-	{
+	function SaveDichotomous(&$question) {
 		// list of score methods:
 		/*
 		TF_NegativeAbstain - True/False/Abstain (Negative Marking -1)
@@ -310,26 +278,21 @@ class IE_qti20_Save extends IE_Main
 		$true = "True";
 		$false = "False";
 
-		if ($question->score_method == "TF_NegativeAbstain")
-		{
+		if ($question->score_method == "TF_NegativeAbstain") {
 			$hasab = 1;
 			$negmark = -1;
-		} else if ($question->score_method == "TF_NegativeAbstainHalf")
-		{
+		} else if ($question->score_method == "TF_NegativeAbstainHalf") {
 			$hasab = 1;
 			$negmark = -1;
 			$this->AddWarning("Negative half marks not supported with QTI, using negative 1 instead",$question->load_id);
-		} else if ($question->score_method == "TF_Positive")
-		{
+		} else if ($question->score_method == "TF_Positive") {
 			// default
-		} else if ($question->score_method == "YN_NegativeAbstain")
-		{
+		} else if ($question->score_method == "YN_NegativeAbstain") {
 			$true = "Yes";
 			$false = "No";
 			$hasab = 1;
 			$negmark = -1;
-		} else if ($question->score_method == "YN_Positive")
-		{
+		} else if ($question->score_method == "YN_Positive") {
 			$true = "Yes";
 			$false = "No";
 		}
@@ -343,18 +306,15 @@ class IE_qti20_Save extends IE_Main
 		$this->output .= $ob->GetContent();
 		$ob->Restore();		
 
-		foreach($question->options as $option)
-		{
-			if ($option->media)
-			{
+		foreach($question->options as $option) {
+			if ($option->media) {
 				$this->data->files[] = new ST_File($option->media,$option->media,$option->params->dir,'image',$question->load_id);	
 			}
 		}
 	}	
 	
 	// DONE
-	function SaveExtMatch(&$question)
-	{
+	function SaveExtMatch(&$question) {
 		// format the text for the question
 		$this->AddWarning("QMP Cannot import extended matching questions correctly, it cannot handle the multiple select stuff",$question->load_id);
 
@@ -366,30 +326,25 @@ class IE_qti20_Save extends IE_Main
 		$this->output .= $ob->GetContent();
 		$ob->Restore();	
 			
-		foreach($question->scenarios as $scenarios)
-		{
-			if ($scenarios->media)
-			{
+		foreach($question->scenarios as $scenarios) {
+			if ($scenarios->media) {
 				$this->data->files[] = new ST_File($scenarios->media,$scenarios->media,$scenarios->params->dir,'image');	
 			}
 		}
 	}
 
 	// TODO
-	function SaveFlash(&$question)
-	{
+	function SaveFlash(&$question) {
 		//$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
 	}
 	
 	// TODO
-	function SaveHotspot(&$question)
-	{
+	function SaveHotspot(&$question) {
 		//$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
 	}
 
 	// DONE
-	function SaveInfo(&$question)
-	{
+	function SaveInfo(&$question) {
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
 		
@@ -401,14 +356,12 @@ class IE_qti20_Save extends IE_Main
 	}
 
 	// TODO
-	function SaveLabelling(&$question)
-	{
+	function SaveLabelling(&$question) {
 		
 	}
 	
 	// DONE
-	function SaveLikert(&$question)
-	{
+	function SaveLikert(&$question) {
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
 		
@@ -420,8 +373,7 @@ class IE_qti20_Save extends IE_Main
 	}
 
 	// DONE
-	function SaveMatrix(&$question)
-	{
+	function SaveMatrix(&$question) {
 		// NO FEEDBACK ON MATRIX!!!
 		
 		// format the text for the question
@@ -436,16 +388,14 @@ class IE_qti20_Save extends IE_Main
 	}
 
 	// DONE
-	function SaveMcq(&$question)
-	{
+	function SaveMcq(&$question) {
 		// fairly sure this is exporting correctly, feedback for pos + neg ok,
 		// all options listed ok
 		
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
 		
-		foreach ($question->options as $oid => $option)
-		{
+		foreach ($question->options as $oid => $option)	{
 			if ($question->correct != $oid) continue;
 			$correctid = $this->ll[$oid];
 		}
@@ -456,18 +406,15 @@ class IE_qti20_Save extends IE_Main
 		$this->output .= $ob->GetContent();
 		$ob->Restore();	
 		
-		foreach($question->options as $option)
-		{
-			if ($option->media)
-			{
+		foreach($question->options as $option) {
+			if ($option->media)	{
 				$this->data->files[] = new ST_File($option->media,$option->media,$option->params->dir,'image');	
 			}
 		}	
 	}
 	
 	// DONE
-	function SaveMrq(&$question)
-	{
+	function SaveMrq(&$question) {
 		// QMP doesnt pay attention 
 		// to the maxnumber field in render_choice so allows all options to be checked
 		// spits out valid QTI format, but QMP doesnt read it correctly (or export it
@@ -477,8 +424,7 @@ class IE_qti20_Save extends IE_Main
 		
 		// work out how many correct answers we have
 		$maxanswers = 0;
-		foreach($question->options as $option)
-		{
+		foreach($question->options as $option) {
 			if ($option->is_correct)
 				$maxanswers++;
 		}
@@ -496,16 +442,14 @@ class IE_qti20_Save extends IE_Main
 		// with 2 correct answers will result in following
 		// 2 correct answers - 4 marks
 		// 2 incorrect answers - -4 marks
-		if (strtolower($question->score_method) == "allnegative")
-		{
+		if (strtolower($question->score_method) == "allnegative")	{
 			$wrongmark = -1;
 			include "qti20/tmpl/mrq-selectedpositive.php";
 		}
 		
 		// multiple marks for question - 1 mark per positive, should only be able to
 		// select same no of options as correct answers but not in QMP as its broken
-		if (strtolower($question->score_method) == "selectedpositive")
-		{
+		if (strtolower($question->score_method) == "selectedpositive") {
 			$wrongmark = 0;
 			include "qti20/tmpl/mrq-selectedpositive.php";
 		}
@@ -517,8 +461,7 @@ class IE_qti20_Save extends IE_Main
 		
 		// other - 1 mark per correct, no maximum number of items, and other box.
 		// NOT WORKING
-		if (strtolower($question->score_method) == "other")
-		{
+		if (strtolower($question->score_method) == "other")	{
 			$this->AddError("Other text entry not supported for this question type",$question->load_id);
 			$wrongmark = 0;
 			$hasother = 1;
@@ -527,18 +470,15 @@ class IE_qti20_Save extends IE_Main
 		$this->output .= $ob->GetContent();
 		$ob->Restore();
 		
-		foreach($question->options as $option)
-		{
-			if ($option->media)
-			{
+		foreach($question->options as $option) {
+			if ($option->media)	{
 				$this->data->files[] = new ST_File($option->media,$option->media,$option->params->dir,'image');	
 			}
 		}	
 	}
 	
 	// TODO
-	function SaveRank(&$question)
-	{
+	function SaveRank(&$question)	{
 		// format the text for the question
 		
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
@@ -583,8 +523,7 @@ class IE_qti20_Save extends IE_Main
 	}
 	
 	// DONE
-	function SaveTextBox(&$question)
-	{
+	function SaveTextBox(&$question) {
 		// format the text for the question
 		list($headertext,$title) = $this->MakeQuestionHeader($question);	
 		
@@ -597,120 +536,8 @@ class IE_qti20_Save extends IE_Main
 		$ob->Restore();
 	}
 	
-	// DONE
-	function SaveTimeDate(&$question)
-	{
-		// TODO : NO template
-		// format the text for the question
-		list($headertext,$title) = $this->MakeQuestionHeader($question);	
-
-		// work out parts of correct answer
-		$date = strtotime($question->correct);
-		
-		$day = 0;
-		$month = 0;
-		$year = 0;
-		$hours = 0;
-		$mins = 0;
-		$secs = 0;
-		
-		// has a date part
-		if (strpos($question->correct,"/") > 0)
-		{
-			$datebit = $question->correct;
-			if (strpos($datebit," ") > 0)
-				$datebit = trim(substr($datebit,0,strpos($datebit," ")));
-			
-			list($day,$month,$year) = explode("/",$datebit);
-		}		
-		
-		if (strpos($question->correct,":") > 0)
-		{
-			$timebit = $question->correct;
-			if (strpos($timebit," ") > 0)
-				$timebit = trim(substr($timebit,strpos($timebit," ")));
-			
-			$bits = explode(":",$timebit);
-			$hours = $bits[0];
-			$mins = $bits[1];
-			if (count($bits) > 2)
-				$secs = $bits[2];
-		}
-		
-		//echo "Correct : $day/$month/$year $hours:$mins:$secs<br>";
-		$sets = array();
-		// cheat to make array count from 1
-		$sets[0] = "Temp";
-		
-		/*
-				<option value="1">dd/MM/yyyy hh:mm:ss</option>
-				<option value="2">dd/MM/yyyy hh:mm</option>
-				<option value="3" selected="">dd/MM/yyyy</option>
-				<option value="4">mm/dd/yyyy</option>
-				<option value="5">dd/MMMM/yyyy</option>
-				<option value="6">hh:mm:ss</option>
-				<option value="7">hh:mm (date)</option>
-				<option value="8">hh:mm (duration)</option>
-		*/	
-		
-		switch ($question->format)
-		{
-			case 1:	// dd/MM/yyyy hh:mm:ss
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				$sets[] = $this->GetTDSet('ss',$secs);	
-				break;
-			case 2:	// dd/MM/yyyy hh:mm
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				break;
-			case 3:	// dd/MM/yyyy
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				break;
-			case 4:	// mm/dd/yyyy
-				$sets[] = $this->GetTDSet('MM',$month);	
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				break;
-			case 5:	// dd/MMMM/yyyy
-				$sets[] = $this->GetTDSet('dd',$day);	
-				$sets[] = $this->GetTDSet('MMMM',$month);	
-				$sets[] = $this->GetTDSet('yyyy',$year,$question);	
-				break;
-			case 6:	// hh:mm:ss
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				$sets[] = $this->GetTDSet('ss',$secs);	
-				break;
-			case 7:	// hh:mm (date)
-			case 8:	// hh:mm (duration)
-				$sets[] = $this->GetTDSet('hh',$hours);	
-				$sets[] = $this->GetTDSet('mm',$mins);	
-				break;
-		}
-		
-		// cheat to make array count from 1
-		unset($sets[0]);
-		
-		$ob = new OB();
-		$ob->ClearAndSave();
-		include "qti20/tmpl/timedate.php";
-		$this->output .= $ob->GetContent();
-		$ob->Restore();		
-	}
 	
-	
-	
-	function GetTDSet($type,$correct,&$question = '')
-	{
+	function GetTDSet($type,$correct,&$question = '')	{
 		$res = new ST_Question_Timedate_set();
 		$res->correct = $correct;
 		$res->values[0] = "";
@@ -757,10 +584,8 @@ class IE_qti20_Save extends IE_Main
 		}
 		
 		unset($res->values[0]);
-		foreach($res->values as $id => $value)
-		{
-			if ($res->correct == $value)
-			{
+		foreach($res->values as $id => $value) {
+			if ($res->correct == $value) {
 				$res->correct = $id;
 				break;	
 			}	
@@ -768,8 +593,7 @@ class IE_qti20_Save extends IE_Main
 		return $res;
 	}
 	
-	function DoHeader()
-	{
+	function DoHeader()	{
 		/*$output = "<?xml version='1.0' standalone='no'?>\n";
 		$output .= "<!DOCTYPE questestinterop SYSTEM 'ims_qtiasiv1p2.dtd'>\n\n";
 		$output .= "<questestinterop>\n";

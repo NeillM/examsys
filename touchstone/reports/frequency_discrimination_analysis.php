@@ -344,14 +344,6 @@
         $log_array[$qID]['mark'] += $mark;
         $log_array[$qID]['totalpos'] += $totalpos;
         break;
-      case 'timedate':
-        $log_array[$qID][$answer] = (isset($log_array[$qID][$answer])) ? $log_array[$qID][$answer] + 1 : 1;
-        if (!isset($log_array[$qID]['answers']) or !array_key_exists($answer,$log_array[$qID]['answers'])) {
-          $log_array[$qID]['answers'][$answer] = $answer;
-        }
-        $log_array[$qID]['mark'] += $mark;
-        $log_array[$qID]['totalpos'] += $totalpos;
-        break;
       case 'textbox':
         if ($analysis_type == 'top' or $analysis_type == 'bottom') {
           $user_words = str_word_count($answer,1);

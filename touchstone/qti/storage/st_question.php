@@ -311,20 +311,6 @@ class ST_Question_Textbox extends ST_Question {
 	var $terms = array(); // array of strings
 }
 
-class ST_Question_Timedate_set {
-	var $values = array();
-	var $correct;	
-}
-
-class ST_Question_Timedate extends ST_Question {
-	var $scenario = '';
-	var $format = 0;
-	var $startyear = 1970;
-	var $endyear = 2012;
-	var $correct;
-	var $feedback = '';
-}
-
 class ST_Question_Sct extends ST_Question {
 	// NO EXTENSIONS
 }

@@ -302,8 +302,6 @@
               $i++;
             }
             break;
-          case 'timedate':
-            break;
         }
         if ($q_type != 'likert') echo "</table>\n";
       } elseif ($q_type == 'matrix') {

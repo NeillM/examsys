@@ -17,6 +17,4 @@ $string['mrq'] = '1Multiple Response';
 $string['rank'] = '1Ranking';
 $string['sct'] = '1Script Concordance Test';
 $string['textbox'] = '1Text Box';
-$string['timedate'] = '1Time/Date';
-
 ?>

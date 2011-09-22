@@ -1726,47 +1726,6 @@ table {font-size:100%}
             echo '<p class="fback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
           }
           break;
-        case 'timedate':
-          if ($paper[$question]['scenario'] != '') {
-            echo_content($paper[$question]['scenario']);
-            if ($paper[$question]['q_media'] != '') {
-              echo '<p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
-            }
-            echo echo_content($paper[$question]['leadin']);
-          } else {
-            if ($paper[$question]['q_media'] != '') {
-              echo '<br /><p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
-            }
-            echo_content($paper[$question]['leadin']);
-          }
-          if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
-            echo '<p>';
-            if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-            echo '&nbsp;' . $paper[$question]['user_answer'];
-            if ($tmp_display_correct_answer == '1') ' <strong>(' . $paper[$question]['correct'][0] . ')</strong>';
-            echo "</p>\n";
-          } else {
-            if (isset($paper[$question]['user_answer'])) {
-              $tmp_answer = str_replace("/","",$paper[$question]['user_answer']);
-              $tmp_answer = str_replace(":","",$tmp_answer);
-              $tmp_answer = str_replace(" ","",$tmp_answer);
-            } else {
-              $tmp_answer = '';
-            }
-            echo '<p>';
-            if (strlen($tmp_answer) == 0) {
-              echo '&nbsp;<span style="color:#808080">' . $string['unanswered'] . '</span>';
-              reset_feedback($hide_if_unanswered);
-            } else {
-              if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-              echo '&nbsp;' . $paper[$question]['user_answer'];
-            }
-            if ($tmp_display_correct_answer == '1') echo " <strong>(" . $paper[$question]['correct'][0] . ")</strong></p>\n";
-          }
-          if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-            echo '<div class="fback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
-          }
-          break;
         case 'likert':
           if ($paper[$question]['scenario'] != '') {
             echo_content($paper[$question]['scenario']);

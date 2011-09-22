@@ -1037,6 +1037,30 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
   
+  // 22/09/2011 - set marks for fill-in-the-blank question tyoe
+  $adjust = $mysqli->prepare("UPDATE questions SET q_type='textbox' WHERE q_type='timedate'");
+  $adjust->execute();
+  $adjust->close();
+  echo "<li>UPDATE questions SET q_type='textbox' WHERE q_type='timedate'</li>\n";
+  ob_flush();
+  flush();
+
+  // 01/09/2011 - Remove the 'time
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  $result->close();
+  if ($column_type == "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','timedate','info','extmatch','random','sct','keyword_based')") {
+    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')</div>\n";
+    ob_flush();
+    flush();
+  }
+
   echo "</ol>\n";
   
   //Close the database

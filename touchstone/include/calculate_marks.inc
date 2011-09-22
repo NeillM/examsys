@@ -61,7 +61,6 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'calculation':
-    case 'timedate':
     case 'flash':
     case 'textbox':
       if (substr($tmp_exclude,0,1) == '0') {
@@ -203,7 +202,6 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       
   switch ($question_type) {
     case 'calculation':
-    case 'timedate':
     case 'flash':
     case 'textbox':
       $random_mark = 0;

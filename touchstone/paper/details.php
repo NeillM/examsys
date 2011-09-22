@@ -622,7 +622,7 @@ if (isset($_GET['change_screen'])) {
     $old_q_media_height = $q_media_height;
     $old_option_text[] = $option_text;
     $old_marks = $marks_correct;
-    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'timedate')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
+    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
   
@@ -696,7 +696,7 @@ if (isset($_GET['change_screen'])) {
     $module = implode(',',$OKmodules);
   }
 
-  echo "<table cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
     echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';

@@ -78,9 +78,6 @@
       case 'textbox':
         $fullname = 'Text Box';
         break;
-      case 'timedate':
-        $fullname = 'Time/Date';
-        break;
       case '%':
         $fullname = 'All Types';
         break;

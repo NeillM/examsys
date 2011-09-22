@@ -502,9 +502,6 @@
       case 'textbox':
         $log_array[$screen][$question_ID][1]['other'][] = $tmp_answer;
         break;
-      case 'timedate':
-        $log_array[$screen][$question_ID][1]['other'][] = $tmp_answer;
-        break;
     }
   }
 

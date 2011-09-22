@@ -82,7 +82,6 @@ require '../../include/media.inc';
     <option value="rank" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'rank') echo 'selected '; ?>><?php echo $string['rank']; ?></option>
     <option value="sct" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'sct') echo 'selected '; ?>><?php echo $string['sct']; ?></option>
     <option value="textbox" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'textbox') echo 'selected '; ?>><?php echo $string['textbox']; ?></option>
-    <option value="timedate" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'timedate') echo 'selected '; ?>><?php echo $string['timedate']; ?></option>
   </select>
   <select name="owner" style="font-size:90%">
   <option value="%"><?php echo $string['anyowner']; ?></option>

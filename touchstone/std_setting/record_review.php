@@ -283,10 +283,6 @@
             $total_parts++;
           }
           break;
-        case 'timedate':
-          $rating = $_POST["$qid"];
-          $total_parts++;
-          break;
         case 'blank':
           $blank_details = explode('[blank',$row['option_text']);
           $no_answers = count($blank_details) - 1;

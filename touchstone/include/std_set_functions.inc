@@ -35,7 +35,7 @@ function checkVariables($number) {
 function display_options($options, $q_id, $current_theme, $current_scenario, $current_leadin, $current_notes, $q_type, $std_method, $tmp_reviews, $exclude, $is_group) {
   global $marking, $question_no, $part_id, $labelcolor, $old_likert_label, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $total_marks, $old_correct_fback, $stdID, $std_excluded, $string;
   
-  $display_inline = array('dichotomous', 'mrq', 'rank', 'timedate', 'flash');
+  $display_inline = array('dichotomous', 'mrq', 'rank', 'flash');
   
   if (array_key_exists($q_id,$exclude)) {
     $tmp_exclude = $exclude[$q_id];
