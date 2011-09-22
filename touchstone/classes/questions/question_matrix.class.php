@@ -100,7 +100,7 @@ Class QuestionMATRIX extends Question {
             $all_correct = true;
             
             for ($i=0; $i < $correct_count; $i++) {
-              if (isset($big_user_parts[$i]) and $big_user_parts[$i] != '') {
+              if (isset($big_user_parts[$i]) and $big_user_parts[$i] != '' and $big_user_parts[$i] != 'u') {
                 if ($score_method == 'Mark per Option') {
                   $mark += ($new_correct[$i] == $big_user_parts[$i]) ? $mark_correct : $mark_incorrect;
                 } elseif ($new_correct[$i] != $big_user_parts[$i]) {
