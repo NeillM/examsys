@@ -229,11 +229,12 @@ HTML;
       
       $alt = ($i % 2 == 0) ? ' class="alt"' : '';
       $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br($comment['comment']);
+      $type_translated = $string[strtolower($comment['type'])];
       
       $html .= <<< HTML
   					<tr{$alt}>
               <td><img src="../../artwork/{$img_status}_comment.png" width="16" height="16" alt="{$status[1]}" /></td>
-              <td>{$comment['name']}<br /><span class="note">{$comment['type']}</span></td>
+              <td>{$comment['name']}<br /><span class="note">{$type_translated}</span></td>
               <td><span class="note">{$comment_str}</span></td>
               <td>
                 <select name="actions[]">
