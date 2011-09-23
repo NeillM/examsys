@@ -208,6 +208,7 @@ $string['never'] = '1never';
 $string['validationerror'] = '1There were problems with your submission. Please review the form and re-try';
 $string['enterleadin'] = '1Please enter a leadin for the question';
 $string['enteroption'] = '1Please enter either option text or a media file for this option';
+$string['enteroptionshort'] = '1Required';
 $string['enterquestion'] = '1Please enter the question';
 $string['enterformula'] = '1Please enter a formula';
 $string['mrqconvert'] = '1There is only one correct answer, this would be better as a MCQ question type.\r\nDo you wish to convert this question to MCQ?';
