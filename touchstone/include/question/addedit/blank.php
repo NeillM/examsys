@@ -61,7 +61,7 @@ require_once 'detail_parts/details_presentation.php';
               <td><?php echo $scenario_message ?></td>
             </tr>
             <tr>
-              <th class="align-top"><label for="option_text"><?php echo $string['question'] ?></label></th>
+              <th class="align-top"><span class="mandatory">*</span> <label for="option_text"><?php echo $string['question'] ?></label></th>
               <td>
                 <?php echo wysiwyg_editor('edit_common1', 'option_text', $scanario_text, 695, 250); ?>
               </td>
