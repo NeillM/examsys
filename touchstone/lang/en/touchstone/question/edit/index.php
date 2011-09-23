@@ -211,6 +211,7 @@ $string['enteroption'] = '1Please enter either option text or a media file for t
 $string['enteroptionshort'] = '1Required';
 $string['enterquestion'] = '1Please enter the question';
 $string['enterformula'] = '1Please enter a formula';
+$string['entervignette'] = '1Please enter a clinical vignette for the question';
 $string['mrqconvert'] = '1There is only one correct answer, this would be better as a MCQ question type.\r\nDo you wish to convert this question to MCQ?';
 $string['showmore'] = '1Show more';
 $string['hidemore'] = '1Hide more';
