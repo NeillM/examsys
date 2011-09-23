@@ -126,7 +126,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       break;
     case 'matrix':
       if ($score_method == 'Mark per Question') {
-        $marks = $question_marks;
+        if (substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
       } else {
         $correct_no = 0;
         $matching_correct = explode('|', $correct[0]);
