@@ -65,7 +65,7 @@ Class QuestionRANK extends Question {
         $changes = true;
         
         $opt_no = $i + 1;
-//        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], $this->_lang_strings['postexamchange']);
+        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], $this->_lang_strings['postexamchange']);
       }
       $i++;
     }
