@@ -14,4 +14,27 @@
     // Example content CSS (should be your site CSS) 
     content_css : "/touchstone/css/editor.css",
     entity_encoding : "named",
+
+      setup : function(ed) {
+        ed.onInit.add(function(ed, evt) {
+
+        var dom = ed.dom;
+        var doc = ed.getDoc();
+
+        tinymce.dom.Event.add(doc, 'blur', function(e) {
+            // Do something when the editor window is blured.
+          tinyMCE.triggerSave();
+          
+          if (typeof jQuery != 'undefined') {  
+            if (typeof $("#" + ed.id).valid() == 'number') {
+              if ($("#" + ed.id).valid() == 1) {
+                ed.getBody().style.backgroundColor = "#ffffff";
+              } else {
+                ed.getBody().style.backgroundColor = "#ffd6d6";
+              }
+            }
+          }
+        });
+      });
+    }
 }); 
