@@ -7,7 +7,7 @@ $(function() {
       leadin: 'required'
     },
     messages: {
-      leadin: 'Please enter a leadin for the question'
+      leadin: lang['enterleadin']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
@@ -18,7 +18,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert('There were problems with your submission. Please review the form and re-try');
+      alert(lang['validationerror']);
     }
   });
 })
