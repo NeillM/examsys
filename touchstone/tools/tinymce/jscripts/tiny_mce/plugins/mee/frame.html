@@ -40,6 +40,7 @@
             if (window.parent && window.parent.parent && window.parent.parent.clickMEEiFrame)
                 window.parent.parent.clickMEEiFrame(window);
         });
+        
         function setupFrame() {
             if (typeof MEE == "undefined") {
                 setTimeout("setupFrame()", 500);
@@ -47,15 +48,16 @@
             }
             if ($('#eqn_inner').attr('title'))
                 return;
-
-            //console.log("Iframe Render");
+            
             var meeeqn = new MEE.Display($('#eqn_inner')[0], data.inline);
             meeeqn.Align();
-            if (data.inline)
-                $('#equation').css('padding-top', $('#eqn_inner').css('padding-top'));
+            
+            if(data.inline)            
+              $('#equation').css('padding-top', $('#eqn_inner').css('padding-top'));
 
-            if (window.parent && window.parent.parent && window.parent.parent.updateMEE)
+            if (window.parent && window.parent.parent && window.parent.parent.updateMEE && meeeqn.elementset)
                 window.parent.parent.updateMEE(window, meeeqn.elementset.align, data.inline);
+            
         }
 
      });
