@@ -58,6 +58,30 @@ $.Class.extend("MEE.Toolbar",
 
         return div;
     },
+    
+    Check: function (parelem) {
+      if($(parelem).hasClass('Checked')) {
+        return;
+      } else {
+        $(parelem).toggleClass("Checked");
+      }
+      return;
+    },
+    
+    UnCheck: function (parelem) {
+      if($(parelem).hasClass('Checked')) {
+        $(parelem).toggleClass("Checked");
+      }
+      return;
+    },
+    
+    ToggleCheck: function (parelem) {
+      $(parelem).toggleClass("Checked");
+    },
+    
+    isCheked: function (parelem) {
+      return $(parelem).hasClass('Checked');
+    },
 
     ApplyImage: function (element, image, size, repeat) {
         if (image in MEE.Data.images) {
@@ -81,20 +105,6 @@ $.Class.extend("MEE.Toolbar",
         }
     }
 
-    /*getToolbarFromClass: function (item) {
-    var itemClass = $(item).attr('class');
-    if
-    var classList = itemClass.split(/\s+/);
-    var result = "";
-    $.each(classList, function (index, item) {
-    var parts = item.split(/:/);
-    if (parts.length == 2 && parts[0] == "toolbar") {
-    result = parts[1];
-    }
-    });
-    return result;
-    }*/
-    //#endregion
 },
 {
     // main class for dealing with a equation editor element
@@ -104,7 +114,6 @@ $.Class.extend("MEE.Toolbar",
 
     init: function (element) {
         this.inputelem = element;
-        //this.tbbase = MEE.Toolbar.getToolbarFromClass(element);
         this.currentEdit = null;
     },
 
@@ -119,8 +128,7 @@ $.Class.extend("MEE.Toolbar",
 
     //#region Build Toolbar html
     buildToolBar: function (temp, xml) {
-        var toolbar = $.xml2json(xml); // this.xmlToToolbar(xml); // MEE.Toolbar.defs[this.tbbase];
-        //MEE.Toolbar.defs["xml"] = toolbar;
+        var toolbar = $.xml2json(xml);
         var main = $('<div>');
         this.html_elem = main;
         main.addClass('mee_toolbar');
@@ -142,32 +150,9 @@ $.Class.extend("MEE.Toolbar",
             } else {
                 var homeitem = MEE.Toolbar.appendElement(homeinner, "div", data._class);
                 var image = MEE.Toolbar.AddImage(homeitem, 'toolbar/' + data.image);
-                //var image = MEE.Toolbar.appendElement(homeitem, "img");
-                //image.attr("src", mee_baseurl + 'images/toolbar/' + data.image);
+   
                 var text = MEE.Toolbar.appendElement(homeitem, "span", "mt_home_popup_item_label");
-                if (data.checked == 1 || data.checked == -1) {
-
-                    /*var check = MEE.Toolbar.appendElement(homeitem, "img", "mt_home_popup_check");
-
-                    if (data.checked == 1) {
-                    check.attr("src", mee_baseurl + 'images/toolbar/home_tick.png');
-                    } else {
-                    check.attr("src", mee_baseurl + 'images/toolbar/home_tick_blank.png');
-                    }*/
-                    var check = null; // MEE.Toolbar.appendElement(homeitem, "img", "mt_home_popup_check");
-
-                    if (data.checked == 1) {
-                        check = MEE.Toolbar.AddImage(homeitem, 'toolbar/home_tick.png');
-                        //check.attr("src", mee_baseurl + 'images/toolbar/home_tick.png');
-                    } else {
-                        check = MEE.Toolbar.AddImage(homeitem, 'toolbar/home_tick_blank.png');
-                        //check.attr("src", mee_baseurl + 'images/toolbar/home_tick_blank.png');
-                    }
-                    check.addClass('mt_home_popup_check');
-                    if (data.id) {
-                        check.attr('id', data.id + '_check');
-                    }
-                }
+                
                 text.html(data.name);
                 if (data.command) {
                     homeitem.data('command', data.command);
@@ -518,7 +503,6 @@ $.Class.extend("MEE.Toolbar",
         this.setMouseImages('.tbpm_gridxbig');
 
 
-
         // set up click handlers
         $(document).click(this.callback('docClick'));
         $('.mt_home').click(this.callback('homeClick'));
@@ -773,6 +757,7 @@ $.Class.extend("MEE.Toolbar",
 
     showHome: function (element) {
         this.home_showing = 1;
+        this.hidePopups();
         var pos = $(element).position();
         $('.mt_home_popup').css('left', pos.left + 4 + 'px');
         $('.mt_home_popup').css('top', pos.top + 21 + 'px');
@@ -780,12 +765,6 @@ $.Class.extend("MEE.Toolbar",
     },
 
     hideHome: function () {
-        /*if (this.home_showing == 2) {
-        this.home_showing = 1;
-        return;
-        }*/
-        //if (!this.home_showing)
-        //    return;
         this.home_showing = 0;
         $('.mt_home_popup').hide();
     },
@@ -799,7 +778,7 @@ $.Class.extend("MEE.Toolbar",
             return true;
 
         this.hidePopups();
-
+        
         var command = $(item).data('command');
         if (command) {
             if (command.indexOf("|") != -1) {
@@ -866,7 +845,12 @@ $.Class.extend("MEE.Toolbar",
                 $(this).mouseout(function () {
                     if ($(this).data('showingmenu') == 1)
                         return;
-                    $(this).css('background-image', '');
+                        
+                    if(MEE.Toolbar.isCheked(this)) {
+                      $(this).css('toolbar/sizes/" + size + "-click.png');
+                    } else {
+                      $(this).css('background-image', '');
+                    }
                 });
                 $(this).mousedown(function () {
                     if ($(this).data('showingmenu') == 1)

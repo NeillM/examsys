@@ -687,20 +687,28 @@ MEE.Main.extend("MEE.Edit",
     sortToolbarchecks: function () {
         // inline mode checks
         if (this.inline) {
-            MEE.Toolbar.ApplyImage('#mode_inline_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_display_check', 'toolbar/home_tick_blank.png');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_display', '');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_inline', 'toolbar/sizes/220x32-click.png')
+            MEE.Toolbar.Check('#tb_home_mode_inline');
+            MEE.Toolbar.UnCheck('#tb_home_mode_display');
         } else {
-            MEE.Toolbar.ApplyImage('#mode_display_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_inline_check', 'toolbar/home_tick_blank.png');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_display', 'toolbar/sizes/220x32-click.png');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_inline', '');
+            MEE.Toolbar.Check('#tb_home_mode_display');
+            MEE.Toolbar.UnCheck('#tb_home_mode_inline');
         }
 
         // editor mode checks
         if (this.mode == 0) {
-            MEE.Toolbar.ApplyImage('#mode_raw_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_wysiwyg_check', 'toolbar/home_tick_blank.png');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_wysiwyg', '');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_raw', 'toolbar/sizes/220x58-click.png')
+            MEE.Toolbar.Check('#tb_home_mode_raw');
+            MEE.Toolbar.UnCheck('#tb_home_mode_wysiwyg');
         } else {
-            MEE.Toolbar.ApplyImage('#mode_wysiwyg_check', 'toolbar/home_tick.png');
-            MEE.Toolbar.ApplyImage('#mode_raw_check', 'toolbar/home_tick_blank.png');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_raw', '');
+            MEE.Toolbar.ApplyImage('#tb_home_mode_wysiwyg', 'toolbar/sizes/220x58-click.png')
+            MEE.Toolbar.Check('#tb_home_mode_wysiwyg');
+            MEE.Toolbar.UnCheck('#tb_home_mode_raw');
         }
     },
     //#endregion
@@ -814,20 +822,16 @@ MEE.Main.extend("MEE.Edit",
 
     // resize the raw input box to fit the width
     resizeRawInput: function () {
-        //console.log('resizeRawInput');
-        //if ($.browser.msie) {
-        //this.rawinput.css('width', $(this.editdiv).outerWidth() - 6 + 'px');
-        //} else {
         this.rawinput.css('width', $(this.editdiv).outerWidth() + 'px');
-        //}
     },
 
     // handle changes to the raw input
     rawKeyUp: function (elem, ev) {
+
         if (ev.ctrlKey && !ev.shiftKey && ev.keyCode == 90)
             return this.doUndo();
 
-        if (ev.ctrlKey && ev.shiftKey && ev.keyCode == 90)
+        if (ev.ctrlKey && !ev.shiftKey && ev.keyCode == 89)
             return this.doRedo();
 
         var latex = this.rawinput.val();
@@ -840,13 +844,11 @@ MEE.Main.extend("MEE.Edit",
 
     //#region WYSIWYG Stuff
 
-
     inputKeyPress: function (elem, event) {
-        //console.log("inputKeyPress");
+
         // text entered, so parse it and add the input to the current element set
         var key = event.which;
         var newchar = String.fromCharCode(event.which);
-
 
         var res = this.inputAdd(newchar);
 
@@ -1435,7 +1437,7 @@ MEE.Main.extend("MEE.Edit",
         if (event.ctrlKey && !event.shiftKey && event.keyCode == 90)
             return this.doUndo();
 
-        if (event.ctrlKey && event.shiftKey && event.keyCode == 90)
+        if (event.ctrlKey && !event.shiftKey && event.keyCode == 89)
             return this.doRedo();
 
         if (event.ctrlKey && !event.shiftKey && event.keyCode == 86) {
@@ -2441,20 +2443,20 @@ MEE.Main.extend("MEE.Edit",
 
     sortUndoMeun: function () {
         if (this.undo.canUndo()) {
-            MEE.Toolbar.ApplyImage('#tb_undo_img', 'toolbar/home_undo.png');
+            MEE.Toolbar.ApplyImage('#tb_home_tb_undo_img', 'toolbar/home_undo.png');
             $('#tb_undo').css('color', '#000000');
             $('#tb_undo').children().css('color', '#000000');
         } else {
-            MEE.Toolbar.ApplyImage('#tb_undo_img', 'toolbar/home_undo_g.png');
+            MEE.Toolbar.ApplyImage('#tb_home_tb_undo_img', 'toolbar/home_undo_g.png');
             $('#tb_undo').css('color', '#CCCCCC');
             $('#tb_undo').children().css('color', '#CCCCCC');
         }
         if (this.undo.canRedo()) {
-            MEE.Toolbar.ApplyImage('#tb_redo_img', 'toolbar/home_redo.png');
+            MEE.Toolbar.ApplyImage('#tb_home_tb_redo_img', 'toolbar/home_redo.png');
             $('#tb_redo').css('color', '#000000');
             $('#tb_redo').children().css('color', '#000000');
         } else {
-            MEE.Toolbar.ApplyImage('#tb_redo_img', 'toolbar/home_redo_g.png');
+            MEE.Toolbar.ApplyImage('#tb_home_tb_redo_img', 'toolbar/home_redo_g.png');
             $('#tb_redo').css('color', '#CCCCCC');
             $('#tb_redo').children().css('color', '#CCCCCC');
         }
