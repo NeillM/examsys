@@ -18,6 +18,7 @@ $.Class.extend("MEE.ElemSet",
         this.hasinput = false;
         if (this.elements) {
             for (var i = 0; i < this.elements.length; i++) {
+                
                 if (this.elements[i]._name != "MEE.ElemInput") {
                     this.haselements = true;
                 } else {
@@ -26,8 +27,11 @@ $.Class.extend("MEE.ElemSet",
 
                 this.elements[i].sortAlign();
                 this.align.Merge(this.elements[i].align);
-
-                this.elements[i].html_elem.attr('al', this.elements[i].align.toString());
+                
+                if (this.elements[i].html_elem) {
+                  this.elements[i].html_elem.attr('al', this.elements[i].align.toString());
+                }
+                
             }
         }
 
@@ -42,9 +46,10 @@ $.Class.extend("MEE.ElemSet",
             }
             // empty!
         }
-
-        this.html_elem.attr('al', this.align.toString());
-        //this.html_elem.data('align', this.align);
+        
+        if(this.html_elem) {
+          this.html_elem.attr('al', this.align.toString());
+        }
         return this.align;
     },
 
