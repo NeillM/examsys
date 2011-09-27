@@ -9,7 +9,7 @@
 
 $cfg_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 
-require_once '../config/config.inc.php';
+// require_once '../config/config.inc.php';
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
@@ -1044,13 +1044,19 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
   
-  // 22/09/2011 - set marks for fill-in-the-blank question tyoe
-  $adjust = $mysqli->prepare("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'");
-  $adjust->execute();
-  $adjust->close();
-  echo "<li>UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'</li>\n";
-  ob_flush();
-  flush();
+  // 22/09/2011 - remove timedate question type
+  $check = $mysqli->prepare("SELECT * FROM questions WHERE q_type='timedate'");
+  $check->execute();
+  $check->store_result();
+  $check->fetch();
+  if ($check->num_rows() > 0) {
+    $adjust = $mysqli->prepare("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'</li>\n";
+    ob_flush();
+    flush();
+  }
 
   // 01/09/2011 - Remove the 'time
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
