@@ -24,9 +24,9 @@
 * @package
 */
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/touchstone/classes/userutils.class.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/touchstone/classes/moduleutils.class.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/touchstone/classes/schoolutils.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/userutils.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/moduleutils.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/schoolutils.class.php';
 
 Class InstallUtils {
 	
