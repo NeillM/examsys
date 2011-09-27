@@ -598,19 +598,19 @@ Class InstallUtils {
     }
     //media
     if (!is_writable(self::$touchstone_path . '/media')) {
-      $errors['102'] = "TouchStone requires $touchstone_path/media to exist and be writeable to the webserver";
+      $errors['102'] = "TouchStone requires " . self::$touchstone_path . "/media to exist and be writeable to the webserver";
     }    
     //qti imports
     if (!is_writable(self::$touchstone_path . '/qti/imports')) {
-      $errors['103'] = "TouchStone requires $touchstone_path/qti/imports to exist and be writeable to the webserver";
+      $errors['103'] = "TouchStone requires " . self::$touchstone_path . "/qti/imports to exist and be writeable to the webserver";
     }
     //qti exports
     if (!is_writable(self::$touchstone_path . '/qti/exports')) {
-      $errors['104'] = "TouchStone requires $touchstone_path/qti/exports to exist and be writeable to the webserver";
+      $errors['104'] = "TouchStone requires " . self::$touchstone_path . "/qti/exports to exist and be writeable to the webserver";
     }
     //temp
     if (!is_writable(self::$touchstone_path . '/temp')) {
-      $errors['105'] = "TouchStone requires $touchstone_path/temp to exist and be writeable to the webserver";
+      $errors['105'] = "TouchStone requires " . self::$touchstone_path . "/temp to exist and be writeable to the webserver";
     }
     if (count($errors) > 0) {
       self::displayError($errors);  
