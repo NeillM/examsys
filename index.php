@@ -26,29 +26,29 @@
 * @package
 */
 
-require './touchstone/include/staff_student_auth.inc';
-require_once './touchstone/classes/networkutils.class.php';
+require './include/staff_student_auth.inc';
+require_once './classes/networkutils.class.php';
 
   // Redirect External Exminers and Invigilators to their own areas.
   if ($userroles == 'External Examiner') {
-    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/reviews/");
+    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/reviews/");
   } elseif ($userroles == 'Invigilator') {
-    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/invigilator/");
+    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/invigilator/");
   }
 
   function displayIcon($paper_type) {
     switch ($paper_type) {
       case 0:
-        $html = "<img src=\"./touchstone/artwork/formative.png\" width=\"48\" height=\"48\" alt=\"Type: Formative\" border=\"0\" />";
+        $html = "<img src=\"./artwork/formative.png\" width=\"48\" height=\"48\" alt=\"Type: Formative\" border=\"0\" />";
         break;
       case 1:
-        $html = "<img src=\"./touchstone/artwork/progress.png\" width=\"48\" height=\"48\" alt=\"Type: Progress\" border=\"0\" />";
+        $html = "<img src=\"./artwork/progress.png\" width=\"48\" height=\"48\" alt=\"Type: Progress\" border=\"0\" />";
         break;
       case 2:
-        $html = "<img src=\"./touchstone/artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Type: Summative\" border=\"0\" />";
+        $html = "<img src=\"./artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Type: Summative\" border=\"0\" />";
         break;
       case 3:
-        $html = "<img src=\"./touchstone/artwork/survey.png\" width=\"48\" height=\"48\" alt=\"Type: Survey\" border=\"0\" />";
+        $html = "<img src=\"./artwork/survey.png\" width=\"48\" height=\"48\" alt=\"Type: Survey\" border=\"0\" />";
         break;
     }
     return $html;
@@ -96,14 +96,14 @@ require_once './touchstone/classes/networkutils.class.php';
   $paper_query->close();
 
   if ($paper_no == 1 and $paper_display[0]['password'] == '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/user_index.php?paper=" . $paper_display[0]['paper_title']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[0]['paper_title']);
   } elseif ($paper_no == 0) {
     echo "<html>\n<head>\n<title>Exams</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
-    echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
+    echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"margin-left:60px\">TouchStone cannot find any Exams</h1>\n";
 
     if (strpos($userroles,'Staff') !== false) {
-      echo "<p style=\"margin-left:60px; color:#C00000\"><strong>Note:</strong> This is the summative exams screen for students, did you want the <img src=\"/touchstone/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/\" style=\"color:blue\"><strong>Staff management screens</strong></a>?</p>\n";
+      echo "<p style=\"margin-left:60px; color:#C00000\"><strong>Note:</strong> This is the summative exams screen for students, did you want the <img src=\"/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/index_staff.php\" style=\"color:blue\"><strong>Staff management screens</strong></a>?</p>\n";
     }
 
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Most likely cause is one or more security conflicts with:</p>\n<ul style=\"margin-left:80px\">\n";
@@ -177,12 +177,12 @@ require_once './touchstone/classes/networkutils.class.php';
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
     for ($i=0; $i<$paper_no; $i++) {
       if ($paper_display[$i]['password'] == '') {
-        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
-        echo "<td><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
+        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
+        echo "<td><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
       } else {
-        echo "<tr><td width=\"66\" style=\"text-align:right\"><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
-        echo "<td><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
-        echo ' <img src="./touchstone/artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">password required</span>';
+        echo "<tr><td width=\"66\" style=\"text-align:right\"><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
+        echo "<td><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
+        echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">password required</span>';
       }
       echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];
       if ($paper_display[$i]['max_screen'] == 1) {
