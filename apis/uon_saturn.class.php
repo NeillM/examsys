@@ -24,7 +24,7 @@
 * @package
 */
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/touchstone/classes/dateutils.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/classes/dateutils.class.php';
 
 Class UON_SATURN extends SmsUtils {
 
