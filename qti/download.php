@@ -30,7 +30,7 @@ $path= GetVar('path');
 $path = str_replace("..","",$path);
 $title = GetVar('title');
 
-$base_dir = $cfg_web_root . 'touchstone/qti/exports/';
+$base_dir = $cfg_web_root . 'qti/exports/';
 
 $accessfile = $base_dir . $path . "/access.xml";
 if (!file_exists($accessfile))

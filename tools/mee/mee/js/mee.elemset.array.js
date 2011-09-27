@@ -94,9 +94,8 @@ $.Class.extend("MEE.Row",
         $(this.html_elem).css('margin-top', this.align.top + 'px');
         if (this.align.bottom)
         $(this.html_elem).css('margin-bottom', this.align.bottom + 'px');*/
-        if(this.html_elem)
-          this.html_elem.attr('al', this.align.toString());
-          
+
+        this.html_elem.attr('al', this.align.toString());
         return this.align;
     },
 

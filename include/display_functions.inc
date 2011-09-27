@@ -155,16 +155,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-      if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+      if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
       echo "</td><td>";
-      if ($question['notes'] != '') echo '<p class="note"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
     if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
       echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
@@ -173,11 +173,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($question['q_type'] != 'likert' and $question['q_type'] != 'calculation') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+        if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
       $li_set = 1;
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       if ($question['q_type'] != 'hotspot') echo $question['leadin'];
     }
   }
@@ -185,7 +185,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     // Special processing of Information Blocks.
     if ($li_set == 0) echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
     if ($question['q_media'] != '') {
-      echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
+      echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height']) . "</p>\n";
     }
     echo $question['leadin'];
     $li_set = 1;
@@ -263,7 +263,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $na = true;
         }
         if ($question['notes'] != '') {
-          echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"note\"><img src=\"/touchstone/artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
+          echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"note\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
         }
         if ($question['scenario'] != '') {
           echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
@@ -302,16 +302,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($question['scenario'] != '') {
         echo "<tr><td class=\"question_no\">" . ($question_no + $question_offset) . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">Clinical Vignette</td></tr>\n";
         echo '<tr><td style="vertical-align:top; text-align:right">';
-        if ($calculator == 1) echo '<a href="#" onclick="openCalc(); return false;"><img src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
+        if ($calculator == 1) echo '<a href="#" onclick="openCalc(); return false;"><img src="../artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" border="0" /></a>';
         echo "</td><td>";
-        if ($question['notes'] != '') echo '<p class="note"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+        if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
         echo $question['scenario'] . "<br />\n<br />";
         $li_set = 1;
       }
       if ($question['q_media'] != '') {
         if ($li_set == 0) {
           echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-          if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" />';
+          if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" />';
           echo '</td><td>';
         }
         echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
@@ -752,10 +752,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="always" />');
-          write_string('<param name="movie" value="/touchstone/paper/hotspot_question.swf" />');
+          write_string('<param name="movie" value="../paper/hotspot_question.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />');
-          write_string('<embed src="/touchstone/paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+          write_string('<embed src="../paper/hotspot_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 335); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
           write_string('</object>');
         </script>
         </div>
@@ -816,10 +816,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
-      write_string('<param name="movie" value="/touchstone/paper/label_question.swf" />');
+      write_string('<param name="movie" value="../paper/label_question.swf" />');
       write_string('<param name="quality" value="high" />');
       write_string('<param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />');
-      write_string('<embed src="/touchstone/paper/label_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('<embed src="../paper/label_question.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
  		</script>
           
@@ -852,14 +852,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   <script language="JavaScript">
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="/touchstone/media/<?php echo $question['q_media']; ?>" />');
+    write_string('<param name="movie" value="../media/<?php echo $question['q_media']; ?>" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
     <?php
       if ($question['scenario'] != '') {
         echo 'write_string(\'<param name="FlashVars" value="' . $question['scenario'] . '">\')';
       }
-      echo 'write_string(\'<embed src="/touchstone/media/' . $question['q_media'] . '"';
+      echo 'write_string(\'<embed src="../media/' . $question['q_media'] . '"';
       if ($question['scenario'] != '') {
         echo ' FlashVars="' . $question['scenario'] . '"';
       }
@@ -894,7 +894,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<tr><td></td><td>';
     } else {
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-      if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" />';
+      if ($calculator == 1) echo '<br /><img onclick="openCalc();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="24" alt="Calculator" />';
       echo '</td><td>';
     }
     $new_leadin = '';

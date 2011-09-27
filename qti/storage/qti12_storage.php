@@ -1,7 +1,7 @@
 <?php
 
 require_once("../include/media.inc");
-require_once("../config/config.inc");
+require_once("../config/config.inc.php");
 
 // main question object
 class ST_QTI12_Question // <item

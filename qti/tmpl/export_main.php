@@ -28,8 +28,7 @@
 	<title>TouchStone Export to QTI</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+	<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
 	<style>
 		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}
@@ -140,14 +139,14 @@ if (count($result['save']['data']->files) > 1)
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
-    echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
+    echo '<a href="../index_staff.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
   } elseif ($folder != '') {
-    echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '<a href="../index_staff.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } else {
-    echo '<a href="../index.php">Home</a>';
+    echo '<a href="../index_staff.php">' . $string['home'] . '</a>';
   }
   echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
   echo "<tr><td colspan=\"6\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>";
   echo "</table>";
 ?>
@@ -167,23 +166,23 @@ if (count($result['save']['data']->files) > 1)
 					Download : <a href="download.php?file=<?php echo(urlencode($file->filename)) ?>&path=<?php echo(urlencode($file->path)) ?>&title=<?php echo(urlencode($file->title)) ?>"><?php echo $file->title ?></a>
 				</div>
 			<?php endforeach; ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold">More Information</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation']; ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/result.html');">View Details</a>
+				<a href="Javascript:newPopup('exports/<?php echo $path ?>/result.html');"><?php echo $string['viewdetails']; ?></a>
 			</div>
 <?php if ($show_debug): ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold">Debug Information</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['debuginformation']; ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_load.html');">Loading Debug</a>
+				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_load.html');"><?php echo $string['loadingdebug']; ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_int.html');">Intermediate Format Debug</a>
+				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_int.html');"><?php echo $string['intermediateformatdebug']; ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_save.html');">Saving Debug</a>
+				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_save.html');"><?php echo $string['savingdebug']; ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_res.html');">General Debug Info</a>
+				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_res.html');"><?php echo $string['generaldebuginfo']; ?></a>
 			</div>
 <?php endif; ?>
 			<br />

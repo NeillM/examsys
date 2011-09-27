@@ -38,10 +38,10 @@
           line++;
         }
         downID = submenuID.substr(5,1) + '_down';
-        document.getElementById(downID).innerHTML = '<img src="/touchstone/artwork/submenu_down_on.png" width="9" height="5" alt="down" border="0" />&nbsp;';
+        document.getElementById(downID).innerHTML = '<img src="/artwork/submenu_down_on.png" width="9" height="5" alt="down" border="0" />&nbsp;';
       } else {
         upID = submenuID.substr(5,1) + '_up';
-        document.getElementById(upID).innerHTML = '<img src="/touchstone/artwork/submenu_up_off.png" width="9" height="5" alt="down" border="0" />&nbsp;';
+        document.getElementById(upID).innerHTML = '<img src="/artwork/submenu_up_off.png" width="9" height="5" alt="down" border="0" />&nbsp;';
         clearInterval(myDownInterval);
       }
     },50);
@@ -56,7 +56,7 @@
       if (scrollLine < (arrayID.length-20)) {
         if (scrollLine == 0) {
           upID = submenuID.substr(5,1) + '_up';
-          document.getElementById(upID).innerHTML = '<img src="/touchstone/artwork/submenu_up_on.png" width="9" height="5" alt="down" border="0" />&nbsp;';
+          document.getElementById(upID).innerHTML = '<img src="/artwork/submenu_up_on.png" width="9" height="5" alt="down" border="0" />&nbsp;';
         }
         scrollLine++;
         var limit = (scrollLine + 19);
@@ -91,7 +91,7 @@
         }
       } else {
         downID = submenuID.substr(5,1) + '_down';
-        document.getElementById(downID).innerHTML = '<img src="/touchstone/artwork/submenu_down_off.png" width="9" height="5" alt="down" border="0" />&nbsp;';
+        document.getElementById(downID).innerHTML = '<img src="/artwork/submenu_down_off.png" width="9" height="5" alt="down" border="0" />&nbsp;';
         clearInterval(myDownInterval);
       }
     },50);
@@ -120,9 +120,9 @@
     }
     if (arrayID.length > 20) {
       upID = submenuID.substr(5,1) + '_up';
-      document.getElementById(upID).innerHTML = '<img src="/touchstone/artwork/submenu_up_off.png" width="9" height="5" alt="down" border="0" />&nbsp;';
+      document.getElementById(upID).innerHTML = '<img src="/artwork/submenu_up_off.png" width="9" height="5" alt="down" border="0" />&nbsp;';
       downID = submenuID.substr(5,1) + '_down';
-      document.getElementById(downID).innerHTML = '<img src="/touchstone/artwork/submenu_down_on.png" width="9" height="5" alt="down" border="0" />&nbsp;';
+      document.getElementById(downID).innerHTML = '<img src="/artwork/submenu_down_on.png" width="9" height="5" alt="down" border="0" />&nbsp;';
     }
     var line = 0;
     for (i=scrollLine;i<=limit;i++) {

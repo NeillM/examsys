@@ -373,7 +373,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
 
   // Display possible marks for question (if not Survey)
   if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'mrq' and $options[0]['q_type'] != 'calculation') echo '</blockquote>';
-  if ($q_type < 3) {
+  if ($q_type < 3 and $options[0]['q_type'] != 'info') {
     //if ($marks == 0) {
     //  echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     //} else {

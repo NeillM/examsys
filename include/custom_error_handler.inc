@@ -15,7 +15,7 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-require_once $root . 'touchstone/config/config.inc.php';
+require_once $root . 'config/config.inc.php';
 
 set_error_handler("customErrorHandler");
 

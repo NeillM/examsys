@@ -32,8 +32,8 @@
  * 
  */
  
-require $cfg_web_root . 'touchstone/webServices/RestRequest.class';
-require $cfg_web_root . 'touchstone/classes/dateutils.class.php';
+require $cfg_web_root . 'webServices/RestRequest.class';
+require $cfg_web_root . 'classes/dateutils.class.php';
 
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   //get module and session form paper id
@@ -134,7 +134,7 @@ HTML;
   return $html;
 }
 
-function displayObjectivesMappingForm($paper_id,$touchstonedb) {
+function displayObjectivesMappingForm($paper_id, $touchstonedb) {
   //get module and session form paper id
   $result = $touchstonedb->prepare("SELECT moduleID, calendar_year, paper_type FROM properties WHERE property_id=?");
   $result->bind_param('i', $paper_id);
@@ -153,7 +153,7 @@ function displayObjectivesMappingForm($paper_id,$touchstonedb) {
     $q_id = '';
   }
   
-  $objsByModuleSession = getObjectives($modules,$session,$paper_id,$q_id,$touchstonedb);
+  $objsByModuleSession = getObjectives($modules, $session, $paper_id, $q_id, $touchstonedb);
 
   if (isset($objsByModuleSession['none_of_the_above'])) {
     $none_of_the_above = $objsByModuleSession['none_of_the_above'];
@@ -169,10 +169,10 @@ function displayObjectivesMappingForm($paper_id,$touchstonedb) {
       if (isset($class['objectives']) and count($class['objectives']) > 0) {
         $html .= "<div style=\"cursor:pointer; color:#316AC5; font-weight:bold; margin-top:6px\" onclick=\"showHide('$moduleid$id')\">";
         if($class['mapped'] == 0) {
-          $html .= "<img id=\"img_$moduleid$id\" src='/touchstone/artwork/plus.png' />&nbsp;";
+          $html .= "<img id=\"img_$moduleid$id\" src='/artwork/plus.png' />&nbsp;";
           $display = 'none';
         } else {
-          $html .= "<img id=\"img_$moduleid$id\" src='/touchstone/artwork/minus.png' />&nbsp;";
+          $html .= "<img id=\"img_$moduleid$id\" src='/artwork/minus.png' />&nbsp;";
           $display = 'block';
         }
 
@@ -197,7 +197,7 @@ function displayObjectivesMappingForm($paper_id,$touchstonedb) {
         }
         $html .= "</div>\n";
       } else {
-        $html .= "<div style=\"color:#808080; font-weight:bold; margin-top:6px\"><img src='/touchstone/artwork/grey_plus.gif' />&nbsp;";
+        $html .= "<div style=\"color:#808080; font-weight:bold; margin-top:6px\"><img src='/artwork/grey_plus.gif' />&nbsp;";
         if($class['class_code'] != '') {
           $html .= $class['class_code'] . ' - ';
         }

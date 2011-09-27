@@ -242,7 +242,7 @@ $stmt->bind_result($labs, $paper_title, $paper_type, $paper_prologue, $marking, 
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
   access_denied($string['error_paper'], $output_header = false);
 }
-while ($row = $stmt->fetch()) {
+while ($stmt->fetch()) {
   $row_no++;
   $no_screens = $screen;
   if (!isset($screen_data[$no_screens])) { 
@@ -607,7 +607,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     if (isset($low_bandwidth) and $low_bandwidth == 1) {
       echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;Fire Exit&nbsp;</span></td><td style="text-align:right"><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;Fire Exit&nbsp;</span></td></tr></table></td></tr>';
     } else {
-      echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="Fire Exit" style="cursor:hand" onclick="fire()" /></td><td style="text-align:right"><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="Fire Exit" style="cursor:hand" onclick="fire()" /></td></tr></table></td></tr>';
+      echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td><img src="../artwork/fire_exit.png" width="32" height="32" alt="Fire Exit" style="cursor:hand" onclick="fire()" /></td><td style="text-align:right"><img src="../artwork/fire_exit.png" width="32" height="32" alt="Fire Exit" style="cursor:hand" onclick="fire()" /></td></tr></table></td></tr>';
     }
   }
   $q_no = 0;
@@ -677,13 +677,13 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
 
   if ($current_screen > $no_screens) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
     echo $string['finishnote'];
     if ($bidirectional == 1) echo "<br />" . $string['gobackpink'];
     echo "</div>\n<br >\n";
   } elseif ($bidirectional == 0) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+    if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
     printf($string['pleasecomplete'], $current_screen);
     echo "</div>\n<br >\n";
   }
@@ -691,7 +691,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     if (isset($low_bandwidth) and $low_bandwidth == 1) {
       echo '<table cellpadding="4" cellspacing="0" border="0" width="100%"><tr><td><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;' . $string['fireexit'] . '&nbsp;</span></td><td style="text-align:right"><span style="text-align:center;font-weight:bold;background-color:#028F43;color:white;cursor:pointer" onclick="fire()" />&nbsp;' . $string['fireexit'] . '&nbsp;</span></td></tr></table>';
     } else {
-      echo '<table cellpadding="4" cellspacing="0" border="0" width="100%"><tr><td><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="' . $string['fireexit'] . '" style="cursor:hand" onclick="fire()" /></td><td style="text-align:right"><img src="/touchstone/artwork/fire_exit.png" width="32" height="32" alt="' . $string['fireexit'] . '" style="cursor:hand" onclick="fire()" /></td></tr></table>';
+      echo '<table cellpadding="4" cellspacing="0" border="0" width="100%"><tr><td><img src="../artwork/fire_exit.png" width="32" height="32" alt="' . $string['fireexit'] . '" style="cursor:hand" onclick="fire()" /></td><td style="text-align:right"><img src="../artwork/fire_exit.png" width="32" height="32" alt="' . $string['fireexit'] . '" style="cursor:hand" onclick="fire()" /></td></tr></table>';
     }
   }
   echo $bottom_html;

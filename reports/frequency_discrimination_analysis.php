@@ -1290,24 +1290,7 @@ p {margin-left:0px; margin-right:0px}
 .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 </style>
 
-<script src="/touchstone/tools/MathJax/MathJax.js"> 
-  MathJax.Hub.Config({
-    showProcessingMessages: false,
-	menuSettings: {zoom:"none"},
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-	preRemoveClass: "MathJax_Preview",
-    tex2jax: {
-	    showProcessingMessages: false,
-	    inlineMath: [["[tex]","[/tex]"],["[tex]","[/tex]"]],
-		preview: "none"
-	},
-	"HTML-CSS": { scale: 130,
-	              showMathMenu: false,
-	              availableFonts: ["TeX"] 
-				}
-  });
-</script>
+<script type="text/javascript" src="/touchstone/tools/mee/mee/js/mee_src.js"></script>
 <script src="../javascript/ie_fix.js" type="text/javascript"></script>
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="JavaScript">
@@ -1455,7 +1438,7 @@ p {margin-left:0px; margin-right:0px}
     // No one has taken the paper yet.
     echo '<tr><td class="h">';
     
-    echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+    echo '<div class="breadcrumb"><a href="../index_staff.php">' . $string['home'] . '</a>';
     if ($folder != '') {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -1469,7 +1452,7 @@ p {margin-left:0px; margin-right:0px}
     // Not enough data for relevant cohort at selected percentage
     echo '<tr><td class="h">';
     
-    echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+    echo '<div class="breadcrumb"><a href="../index_staff.php">' . $string['home'] . '</a>';
     if ($folder != '') {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -1499,7 +1482,7 @@ p {margin-left:0px; margin-right:0px}
     while ($row = $result->fetch()) {
       if ($display_header == true) {
         echo '<tr><td class="h">';
-        echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+        echo '<div class="breadcrumb"><a href="../index_staff.php">' . $string['home'] . '</a>';
         if ($folder != '') {
           echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
         } elseif (isset($_GET['module']) and $_GET['module'] != '') {

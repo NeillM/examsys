@@ -37,7 +37,6 @@ require '../../include/edit.inc';
 require '../../include/media.inc';
 require '../../include/metadata.inc';
 require '../../include/mapping.inc';
-require '../../lang/' . $language . '/touchstone/question/edit/index.php';
 
 $question = null;
 $logger = new Logger($mysqli);
@@ -353,7 +352,7 @@ endif;
 <script type="text/javascript">
 var lang = {
 <?php
-$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enteroption', 'enteroptionshort', 'enterquestion', 'enterformula', 'entervignette', 'showmore', 'hidemore', 'mrqconvert');
+$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'showmore', 'hidemore');
 $first = true;
 foreach ($langstrings as $langstring) {
   if (!$first) {
@@ -392,14 +391,8 @@ if ($critical_error == '') {
         </p>
         <ol class="tabs">
           <li class="on"><a href="#" rel="editor"><?php echo $string['editor'] ?></a></li>
-<?php
-  if ($mode == $string['edit']):
-?>
           <li><a href="#" rel="changes"><?php echo $string['changes'] ?></a></li>
           <li><a href="#" rel="comments"><?php echo $string['comments'] ?></a></li>
-<?php
-  endif;
-?>
           <li<?php echo $mapping_enabled ?>><a href="#" rel="mapping"><?php echo $string['mapping'] ?></a></li>
         </ol>
       </div>

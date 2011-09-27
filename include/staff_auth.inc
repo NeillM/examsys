@@ -32,14 +32,14 @@
   
   // Redirect External Examiners if they are straying
   if (strpos($userroles,'External Examiner') !== false) {
-    if ($_SERVER['PHP_SELF'] != '/touchstone/index.php' and $_SERVER['PHP_SELF'] != '/touchstone/reviews/index.php' and $_SERVER['PHP_SELF'] != '/touchstone/reviews/start.php' and $_SERVER['PHP_SELF'] != '/touchstone/reviews/finish.php') {
-      header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/reviews/");
+    if ($_SERVER['PHP_SELF'] != '/index_staff.php' and $_SERVER['PHP_SELF'] != '/reviews/index.php' and $_SERVER['PHP_SELF'] != '/reviews/start.php' and $_SERVER['PHP_SELF'] != '/reviews/finish.php') {
+      header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/reviews/");
     }
   }
 
   // Get teams.
   $teams = getUserTeams($userID, $mysqli);
-  $types_array = array('Formative Self-Assessments','Progress Tests','Summative Exams','Surveys','OSCE Stations','Offline Papers');
+  $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers');
 
   //
   //default security checkes

@@ -33,7 +33,7 @@
 // TODO : if neg feedback is empty use positive one for both question and options
 // TODO : Status is a field in the database, stick it in the struct
 
-require_once '../config/config.inc';
+require_once '../config/config.inc.php';
 
 class IE_touchstone_Load extends IE_Main
 {

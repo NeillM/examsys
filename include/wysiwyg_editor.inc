@@ -16,13 +16,13 @@
 
   if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
 ?>
-<script language="JavaScript" src="/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script language="JavaScript" src="/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_config_unanswered.js"></script>
+<script language="JavaScript" src="/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="JavaScript" src="/tools/tinymce/jscripts/tiny_mce/tiny_config_unanswered.js"></script>
 <?php
   } else {
   ?>
-<script language="JavaScript" src="/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script language="JavaScript" src="/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js"></script>
+<script language="JavaScript" src="/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="JavaScript" src="/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js"></script>
 <?php
 }
 ?>

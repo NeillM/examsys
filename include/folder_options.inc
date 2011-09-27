@@ -31,7 +31,7 @@ if ($team_sql != '') $team_sql = "'$team_sql'";
 $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname, checklist FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
 while ($module_row = $module_details->fetch_assoc()) {
   $title = $module_row['moduleid'] . ' - ' . str_replace("'","\'",$module_row['fullname']);
-  $url = '/touchstone/folder/details.php?module=' . $module_row['moduleid'];
+  $url = '/folder/details.php?module=' . $module_row['moduleid'];
   $modules_array[$title] = $url;
 }
 $module_details->close();
@@ -69,7 +69,7 @@ $module_details->close();
 
   if ($folder_ownerID == $userID or (in_array($team_name,$teams)) == true or strpos($userroles,'SysAdmin') !== false) {
     echo '<tr><td width="16"><a href="#" onclick="folderProperties(); return false;"><img src="../artwork/properties_icon.gif" width="16" height="16" alt="Properties" border="0" /></a></td><td class="menuitem"><a href="#" onclick="folderProperties(); return false;">' . $string['folderproperties'] . '</a></td></tr>';
-    echo '<tr><td width="16"><a href="/touchstone/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="../artwork/folder_16.png" width="16" height="16" alt="New Folder" border="0" /></a></td><td class="menuitem"><a href="/touchstone/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y&newteam=' . $team_name . '">' . $string['makesubfolder'] . '</a></td></tr>';
+    echo '<tr><td width="16"><a href="/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="../artwork/folder_16.png" width="16" height="16" alt="New Folder" border="0" /></a></td><td class="menuitem"><a href="/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y&newteam=' . $team_name . '">' . $string['makesubfolder'] . '</a></td></tr>';
     echo '<tr><td width="16"><a href="#" onclick="deleteFolder(); return false;"><img src="../artwork/red_cross.png" width="16" height="16" alt="Delete Folder" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deleteFolder(); return false;">' . $string['deletefolder'] . '</a></td></tr>';
   } else {
     echo '<tr><td width="16"><img src="../artwork/properties_icon_grey.gif" width="16" height="16" alt="Properties" border="0" /></td><td class="greymenuitem">' . $string['folderproperties'] . '</td></tr>';
@@ -179,7 +179,7 @@ if ($folder != '') {
     $folder_array = explode(';',$folder_row['name']);
     $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
     $display_name = str_replace("'","\'",$display_name);
-    $url = '/touchstone/folder/details.php?folder=' . $folder_row['id'];
+    $url = '/folder/details.php?folder=' . $folder_row['id'];
     $my_folders_array[$display_name] = $url;
   }
   $folder_details->close();
@@ -230,11 +230,11 @@ if ($folder != '') {
   }
   
   makeMenu($full_modules_array);
-  makeMenu(array($string['info']=>'/touchstone/question/list.php?type=info',$string['keyword_based']=>'/touchstone/question/list.php?type=keyword',$string['random']=>'/touchstone/question/list.php?type=random','-'=>'-',$string['calculation']=>'/touchstone/question/list.php?type=calculation',$string['dichotomous']=>'/touchstone/question/list.php?type=dichotomous',$string['extmatch']=>'/touchstone/question/list.php?type=extmatch',$string['blank']=>'/touchstone/question/list.php?type=blank',$string['flash']=>'/touchstone/question/list.php?type=flash',$string['hotspot']=>'/touchstone/question/list.php?type=hotspot',$string['labelling']=>'/touchstone/question/list.php?type=labelling',$string['likert']=>'/touchstone/question/list.php?type=likert',$string['matrix']=>'/touchstone/question/list.php?type=matrix',$string['mcq']=>'/touchstone/question/list.php?type=mcq',$string['mrq']=>'/touchstone/question/list.php?type=mrq',$string['rank']=>'/touchstone/question/list.php?type=rank',$string['sct']=>'/touchstone/question/list.php?type=sct',$string['textbox']=>'/touchstone/question/list.php?type=textbox'));
+  makeMenu(array($string['info']=>'/question/list.php?type=info',$string['keyword_based']=>'/question/list.php?type=keyword',$string['random']=>'/question/list.php?type=random','-'=>'-',$string['calculation']=>'/question/list.php?type=calculation',$string['dichotomous']=>'/question/list.php?type=dichotomous',$string['extmatch']=>'/question/list.php?type=extmatch',$string['blank']=>'/question/list.php?type=blank',$string['flash']=>'/question/list.php?type=flash',$string['hotspot']=>'/question/list.php?type=hotspot',$string['labelling']=>'/question/list.php?type=labelling',$string['likert']=>'/question/list.php?type=likert',$string['matrix']=>'/question/list.php?type=matrix',$string['mcq']=>'/question/list.php?type=mcq',$string['mrq']=>'/question/list.php?type=mrq',$string['rank']=>'/question/list.php?type=rank',$string['sct']=>'/question/list.php?type=sct',$string['textbox']=>'/question/list.php?type=textbox'));
   makeMenu($teams_array);
   makeMenu($keywords_array);
-  makeMenu(array($string['questions']=>'/touchstone/question/search.php',$string['papers']=>'/touchstone/paper/search.php',$string['people']=>'/touchstone/users/search.php'));
-  makeMenu(array($string['info']=>"/touchstone/question/add/info.php",$string['keyword_based']=>"/touchstone/question/add/keyword_based.php",$string['random']=>"/touchstone/question/add/random.php","-"=>"-",$string['calculation']=>"/touchstone/question/add/calculation.php",$string['dichotomous']=>"/touchstone/question/add/dichotomous.php",$string['extmatch']=>"/touchstone/question/add/extmatch.php",$string['blank']=>"/touchstone/question/add/blank.php",$string['flash']=>"/touchstone/question/add/flash.php",$string['hotspot']=>"/touchstone/question/add/hotspot1.php",$string['labelling']=>"/touchstone/question/add/labelling1.php",$string['likert']=>"/touchstone/question/add/likert.php",$string['matrix']=>"/touchstone/question/add/matrix.php",$string['mcq']=>"/touchstone/question/add/mcq.php",$string['mrq']=>"/touchstone/question/add/mrq.php",$string['rank']=>"/touchstone/question/add/rank.php",$string['sct']=>"/touchstone/question/add/sct.php",$string['textbox']=>"/touchstone/question/add/textbox.php"));
+  makeMenu(array($string['questions']=>'/question/search.php',$string['papers']=>'/paper/search.php',$string['people']=>'/users/search.php'));
+  makeMenu(array($string['info']=>"/question/edit/index.php?type=info",$string['keyword_based']=>"/question/edit/index.php?type=keyword_based",$string['random']=>"/question/edit/index.php?type=random","-"=>"-",$string['calculation']=>"/question/edit/index.php?type=calculation",$string['dichotomous']=>"/question/edit/index.php?type=dichotomous",$string['extmatch']=>"/question/edit/index.php?type=extmatch",$string['blank']=>"/question/edit/index.php?type=blank",$string['flash']=>"/question/edit/index.php?type=flash",$string['hotspot']=>"/question/edit/index.php?type=hotspot",$string['labelling']=>"/question/edit/index.php?type=labelling",$string['likert']=>"/question/edit/index.php?type=likert",$string['matrix']=>"/question/edit/index.php?type=matrix",$string['mcq']=>"/question/edit/index.php?type=mcq",$string['mrq']=>"/question/edit/index.php?type=mrq",$string['rank']=>"/question/edit/index.php?type=rank",$string['sct']=>"/question/edit/index.php?type=sct",$string['textbox']=>"/question/edit/index.php?type=textbox"));
 
   hideMenuScript($menuNo);
 ?>

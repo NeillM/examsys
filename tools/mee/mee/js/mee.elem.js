@@ -426,15 +426,12 @@ $.Class.extend("MEE.Elem",
 
 
         // check the main element for any margins and add these to the width
-        if(this.html_elem) {
-          var marginl = parseInt($(this.html_elem).css('margin-left').replace('px', 'em'));
-          if (marginl > 0) this.align.width += marginl;
-        }
-        
-        if(this.html_elem) {
-          var marginr = parseInt($(this.html_elem).css('margin-right').replace('px', 'em'));
-          if (marginr > 0) this.align.width += marginr;
-        }
+        var marginl = parseInt($(this.html_elem).css('margin-left').replace('px', 'em'));
+        if (marginl > 0) this.align.width += marginl;
+
+        var marginr = parseInt($(this.html_elem).css('margin-right').replace('px', 'em'));
+        if (marginr > 0) this.align.width += marginr;
+
         /*if (this.depth == 1)
         this.html_elem.css('color', 'red');
         if (this.depth == 2)

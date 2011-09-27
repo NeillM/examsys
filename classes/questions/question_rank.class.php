@@ -35,10 +35,6 @@ Class QuestionRANK extends Question {
     $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial'], $this->_lang_strings['bonusmark']);
     $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
     
-    if ($this->get_leadin() == '') {
-      $this->set_leadin($this->_lang_strings['pleaserank']);
-    }
-    
     // 'correct' is not a unified field for Rank questions
     $this->_fields_editable[] = 'correct';
   }
@@ -65,7 +61,7 @@ Class QuestionRANK extends Question {
         $changes = true;
         
         $opt_no = $i + 1;
-        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], $this->_lang_strings['postexamchange']);
+//        $this->add_unified_field_modification('correct', "Correct Option $opt_no", $option->get_correct(), $new_correct[$i], $this->_lang_strings['postexamchange']);
       }
       $i++;
     }

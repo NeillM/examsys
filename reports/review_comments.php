@@ -38,7 +38,7 @@
     } elseif ($rank_position == 3) {
       $html = '3rd';
     } elseif ($rank_position == 9990) {
-      $html = '<span style="color:#808080; font-weight:normal">n/a</span>';
+      $html = '<span style="color:#808080; font-weight:normal">' . $string['na'] . '</span>';
     } else {
       $html = $rank_position . 'th';
     }
@@ -46,10 +46,11 @@
   }
 
   function displayComments($questionID, $comments_data, $qtype, $qno) {
-    global $incomplete_names, $type;
+    global $incomplete_names, $type, $string;
+
     $html = "<tr><td></td><td><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-    $html .= "<tr><td colspan=\"5\"><strong>" . ucfirst($type) ." comments Q$qno</strong>&nbsp;<img onclick=\"editQuestion('$qtype',$questionID,$qno)\" style=\"cursor:pointer\" src=\"../artwork/edit_icon_16.gif\" width=\"16\" height=\"16\" alt=\"Edit Question\" border=\"0\" /></td></tr>\n";
-    $html .= "<tr style=\"background-image:url('../artwork/gradient_heading.png'); background-repeat:repeat-x; background-color:#E3EFFF\"><td style=\"width:20px; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">&nbsp;</td><td style=\"width:20%; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">Reviewer</td><td style=\"width:35%; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">Comment</td><td style=\"width:10%; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">Action</td><td style=\"width:35%; border-top: 1px solid #6593CF; border-bottom:1px solid #6593CF\">Response</td></tr>\n";
+    $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQuestion('$qtype',$questionID,$qno)\" style=\"cursor:pointer\" src=\"../artwork/edit_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" border=\"0\" /></td></tr>\n";
+    $html .= "<tr style=\"background-image:url('../artwork/gradient_heading.png'); background-repeat:repeat-x; background-color:#E3EFFF\"><td style=\"width:20px; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">&nbsp;</td><td style=\"width:20%; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">" . $string['reviewer'] . "</td><td style=\"width:35%; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">" . $string['comment'] . "</td><td style=\"width:10%; border-top:1px solid #6593CF; border-bottom:1px solid #6593CF\">" . $string['action'] . "</td><td style=\"width:35%; border-top: 1px solid #6593CF; border-bottom:1px solid #6593CF\">" . $string['response'] . "</td></tr>\n";
     if (isset($comments_data[$questionID])) {
       foreach ($comments_data[$questionID] as $reviewer => $index) {
         $image = 'ok_comment.png';
@@ -63,21 +64,21 @@
         }
         $tmp_comment = nl2br($comments_data[$questionID][$reviewer]['comment']);
         if (trim($tmp_comment) == '') {
-          $tmp_comment = '<span style="color:#808080">No comment</span>';
-          $tmp_action = '<span style="color:#808080">N/A</span>';
-          $tmp_response = '<span style="color:#808080">N/A</span>';
+          $tmp_comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+          $tmp_action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+          $tmp_response = '<span style="color:#808080">' . $string['na'] . '</span>';
         } else {
-          $tmp_action = str_replace(' ','&nbsp;',$comments_data[$questionID][$reviewer]['action']);
+          $tmp_action = $string[$comments_data[$questionID][$reviewer]['action']];
           $tmp_response = nl2br($comments_data[$questionID][$reviewer]['response']);
         }
         
-        if (trim($tmp_response) == '') $tmp_response = '<span style="color:#808080">No response made</span>';
+        if (trim($tmp_response) == '') $tmp_response = '<span style="color:#808080">' . $string['noresponse'] . '</span>';
         $html .= "<tr class=\"$status\" style=\"border-bottom:solid 1px #E3EFFF\"><td style=\"border-bottom:solid 1px #E3EFFF\"><img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td style=\"border-bottom:solid 1px #E3EFFF\">" . $comments_data[$questionID][$reviewer]['name'] . "</td><td style=\"border-bottom:solid 1px #E3EFFF\">$tmp_comment</td><td style=\"border-bottom:solid 1px #E3EFFF\">$tmp_action</td><td style=\"border-bottom:solid 1px #E3EFFF\">$tmp_response</td></tr>\n";
       }
     }
     if (isset($incomplete_names)) {
       foreach ($incomplete_names as $single_incomplete) {
-        $html .= "<tr class=\"OK\" style=\"border-bottom:solid 1px #E3EFFF\"><td style=\"border-bottom:solid 1px #E3EFFF\">&nbsp;</td><td style=\"border-bottom:solid 1px #E3EFFF; color:red\">$single_incomplete</td><td style=\"border-bottom:solid 1px #E3EFFF; color:red; text-align:center\" colspan=\"3\">not reviewed</td></tr>\n";
+        $html .= "<tr class=\"OK\" style=\"border-bottom:solid 1px #E3EFFF\"><td style=\"border-bottom:solid 1px #E3EFFF\">&nbsp;</td><td style=\"border-bottom:solid 1px #E3EFFF; color:red\">$single_incomplete</td><td style=\"border-bottom:solid 1px #E3EFFF; color:red; text-align:center\" colspan=\"3\">" . $string['notreviewed'] . "</td></tr>\n";
       }
     }
     $html .= "</table></td></tr>\n";
@@ -269,7 +270,7 @@
       echo "<tr>\n";
 
       $row_no = 0;
-      $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x');
+      $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
       foreach ($matching_scenarios as $single_scenario) {
         if (trim($single_scenario) != '') {
           echo "<tr>\n";
@@ -278,15 +279,14 @@
           $col_no = 1;
           foreach ($options as $single_option) {
             if ($correct_answers[$row_no] == $col_no) {
-              echo '<td style="background-color:#C0FFC0"><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $answer_no . '" checked /></div></td>';
+              echo '<td style="background-color:#C0FFC0"><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" checked /></div></td>';
             } else {
-              echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $answer_no . '" /></div></td>';
+              echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" /></div></td>';
             }
             $answer_no++;
             $col_no++;
           }
           echo "</tr>\n";
-          $part_id++;
           $row_no++;
         }
       }    
@@ -401,7 +401,7 @@ p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
   }
   
   function editQuestion(qtype,qid,qno) {
-    location.href='../question/edit/' + qtype + '.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value;
+    location.href='../question/edit/index.php?type=' + qtype + '&q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value;
   }
   
   function showHideSerious() {
@@ -496,7 +496,7 @@ if (isset($_GET['scrOfY'])) {
   $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
   while ($row = $result->fetch()) {
     if ($display_header == true) {
-      echo '<tr><td class="h"><div class="breadcrumb"><a href="../index.php">Home</a>';
+      echo '<tr><td class="h"><div class="breadcrumb"><a href="../index_staff.php">' . $string['home'] . '</a>';
       if ($folder != '') {
         echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
       } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -504,11 +504,10 @@ if (isset($_GET['scrOfY'])) {
       }
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-      echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . ucfirst($type) . " Examiner Comments Report</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-      //echo "<tr><td class=\"h\"><span style=\"font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold\"><a onmouseover=\"move_in('image1')\" onmouseout=\"move_out('image1')\" href=\"../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" target=\"_top\"><img name=\"image1\" src=\"../artwork/up_folder_icon_off.gif\" style=\"vertical-align:middle\" width=\"32\" height=\"38\" alt=\"Up\" border=\"0\" /></a>&nbsp;$paper_title</span><br /></span><span style=\"margin-left:40px; font-weight:bold\">" . ucfirst($type) . " Examiner Comments Report</span></td><td style=\"text-align:right\" class=\"h\"><input type=\"checkbox\" onclick=\"showHideSerious();\" name=\"serious\" value=\"serious\" /> Hide 'OK' comments&nbsp;</td></tr>\n";
+      echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
       echo "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"2\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
       if ($reviewers == '') {
-        echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:46px; height:32px; padding-left:6px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/warning_user_icon.gif\" style=\"padding-top:1px\" width=\"32\" height=\"30\" alt=\"!\" />&nbsp;&nbsp;</td><td style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>Warning</strong>&nbsp;&nbsp;&nbsp;No reviewers have been set for this paper.</td></tr></table>\n</body>\n</html>\n";
+        echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:46px; height:32px; padding-left:6px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/warning_user_icon.gif\" style=\"padding-top:1px\" width=\"32\" height=\"30\" alt=\"!\" />&nbsp;&nbsp;</td><td style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">" . $string['noreviewers'] . "</td></tr></table>\n</body>\n</html>\n";
         exit;
       }
       echo '<br /><table cellpadding="0" cellspacing="0" border="0" width="100%">';

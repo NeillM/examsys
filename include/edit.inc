@@ -29,15 +29,15 @@ function displayEditTab($created, $modified, $locked) {
   $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"editortab\" style=\"font-size:90%; background-color:#DFECFF\">\n";
   $html .= "<tr><td>\n";
   $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:504px; font-size:90%\">\n<tr>\n";
-  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_on.gif)\">Editor</td>\n";
-  $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)\" onclick=\"showTab('changestab');\">Changes</td>\n";
-  $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)\" onclick=\"showTab('commentstab');\">Comments</td>\n";
+  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)\">Editor</td>\n";
+  $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('changestab');\">Changes</td>\n";
+  $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('commentstab');\">Comments</td>\n";
   if (!isset($_GET['paperID']) or strpos($_SERVER['PHP_SELF'],'info.php') !== false or strpos($_SERVER['PHP_SELF'],'likert.php') !== false) {  // Disabled the mapping tab.
-    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_disabled.gif)\">Mapping</td>\n";
+    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
   } elseif (substr($_GET['paperID'],0,5) == 'find:') {
-    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_disabled.gif)\">Mapping</td>\n";
+    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
   } else {
-    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
+    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
   }
   $html .= "</tr></table>\n";
   $html .= "<td style=\"width:100%; background-color:#DFECFF; text-align:right\"><strong>Created:</strong>&nbsp;$created&nbsp;&nbsp;&nbsp;&nbsp;<strong>Modified:</strong>&nbsp;$modified&nbsp;";
@@ -104,17 +104,17 @@ function redirect() {
 
   if (substr($_POST['paperID'],0,5) == 'list:') {
     $type = substr($_POST['paperID'],5);
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/question/list.php?keyword=" . $_POST['keyword'] . "&team=" . $_POST['team']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/list.php?keyword=" . $_POST['keyword'] . "&team=" . $_POST['team']);
   } elseif ($_POST['calling'] == 'find') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/question/search.php");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/search.php");
   } elseif ($_POST['calling'] == 'paper') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/paper/details.php?paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
   } elseif ($_POST['calling'] == 'external_comments') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/reports/review_comments.php?type=external&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/reports/review_comments.php?type=external&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
   } elseif ($_POST['calling'] == 'internal_comments') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
   } else {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/index_staff.php");
   }
   $mysqli->close();
   exit;   // Stop script execution after the redirect.

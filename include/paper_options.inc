@@ -24,7 +24,7 @@
 * @package
 */
 
-require $cfg_web_root . 'touchstone/include/sidebar_menu.inc';
+require $cfg_web_root . 'include/sidebar_menu.inc';
 $paperID = $_GET['paperID'];
 
 $paper_details = $mysqli->query("SELECT paper_title, moduleID, folder, paper_ownerID, title, initials, surname, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%d/%m/%Y% %H:%i') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, externals, internal_reviewers, labs, calendar_year, exam_duration FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND property_id=$paperID GROUP BY paper_title");
@@ -97,7 +97,7 @@ while ($row = $stmt->fetch()) {
 $stmt->close();
 ?>
 
-<script language="JavaScript" src="/touchstone/javascript/sidebar.js"></script>
+<script language="JavaScript" src="/javascript/sidebar.js"></script>
 <script language="JavaScript">
   function startPaper(fullsc) {
     <?php
@@ -108,9 +108,9 @@ $stmt->close();
     } else {
     ?>
     if (fullsc == 0) {
-      window.open("/touchstone/paper/start.php?paperID=<?php echo $paperID; ?>&mode=preview","paper","width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      window.open("/paper/start.php?paperID=<?php echo $paperID; ?>&mode=preview","paper","width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
     } else {
-      window.open("/touchstone/paper/start.php?paperID=<?php echo $paperID; ?>&mode=preview","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      window.open("/paper/start.php?paperID=<?php echo $paperID; ?>&mode=preview","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
     }
     <?php
     }
@@ -119,32 +119,32 @@ $stmt->close();
 
   function addQuestion(qType, paperID) {
     if (paperID == 0) {
-      document.location.href='/touchstone/question/add/' + qType + '.php?scrOfY=' + document.getElementById('scrOfY').value;
+      document.location.href='/question/add/' + qType + '.php?scrOfY=' + document.getElementById('scrOfY').value;
     } else {
-      document.location.href='/touchstone/question/add/' + qType + '.php?scrOfY=' + document.getElementById('scrOfY').value + '&paperID=' + paperID + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>';
+      document.location.href='/question/add/' + qType + '.php?scrOfY=' + document.getElementById('scrOfY').value + '&paperID=' + paperID + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>';
     }
   }
 
   function paperProperties() {
-    notice=window.open("/touchstone/paper/properties.php?paperID=<?php echo $paperID; ?>","properties","width=832,height=650,left="+(screen.width/2-412)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/paper/properties.php?paperID=<?php echo $paperID; ?>","properties","width=832,height=650,left="+(screen.width/2-412)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
 
   function lockedPaperProperties() {
-    notice=window.open("/touchstone/paper/properties_locked.php?paperID=<?php echo $paperID; ?>","properties","width=827,height=515,left="+(screen.width/2-412)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/paper/properties_locked.php?paperID=<?php echo $paperID; ?>","properties","width=827,height=515,left="+(screen.width/2-412)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
 
   function editQuestion() {
-    document.location.href='/touchstone/question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&qNo=' + document.PapersMenu.questionNo.value + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&calling=paper&scrOfY=' + document.PapersMenu.scrOfY.value;
+    document.location.href='/question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&qNo=' + document.PapersMenu.questionNo.value + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&calling=paper&scrOfY=' + document.PapersMenu.scrOfY.value;
   }
 
   function deleteQuestion() {
-    notice=window.open("/touchstone/delete/check_delete_q_pointer.php?questionID=" + document.PapersMenu.pID.value + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&q_id=" + document.PapersMenu.questionID.value + "&scrOfY=" + document.PapersMenu.scrOfY.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/delete/check_delete_q_pointer.php?questionID=" + document.PapersMenu.pID.value + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&q_id=" + document.PapersMenu.questionID.value + "&scrOfY=" + document.PapersMenu.scrOfY.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -152,7 +152,7 @@ $stmt->close();
   }
 
   function deletePaper() {
-    notice=window.open("/touchstone/delete/check_delete_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/delete/check_delete_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -168,7 +168,7 @@ $stmt->close();
   }
 
   function editScreenNo() {
-    notice=window.open("/touchstone/paper/edit_screen_no.php?questionID=" + document.PapersMenu.pID.value + "&paperID=<?php echo $paperID; ?>&screen=" + document.PapersMenu.screenNo.value + "&display_pos=" + document.PapersMenu.oldQuestionID.value + "&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=" + document.getElementById('scrOfY').value + "","properties","width=300,height=200,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/paper/edit_screen_no.php?questionID=" + document.PapersMenu.pID.value + "&paperID=<?php echo $paperID; ?>&screen=" + document.PapersMenu.screenNo.value + "&display_pos=" + document.PapersMenu.oldQuestionID.value + "&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=" + document.getElementById('scrOfY').value + "","properties","width=300,height=200,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-150,screen.height/2-100);
     if (window.focus) {
       notice.focus();
@@ -176,19 +176,19 @@ $stmt->close();
   }
   
   function changeScreen(screenNo) {
-    window.location='/touchstone/paper/change_screen_no.php?questionID=' + document.PapersMenu.pID.value + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.oldQuestionID.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value; 
+    window.location='/paper/change_screen_no.php?questionID=' + document.PapersMenu.pID.value + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.oldQuestionID.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value; 
   }
   
   function incScreen() {
     screenNo = document.PapersMenu.screenNo.value;
     screenNo++;
-    window.location='/touchstone/paper/change_screen_no.php?questionID=' + document.PapersMenu.pID.value + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.oldQuestionID.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
+    window.location='/paper/change_screen_no.php?questionID=' + document.PapersMenu.pID.value + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.oldQuestionID.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
   }
   
   function addQuestions(display, screen_no) {
     winH = screen.height - 80
     winW = screen.width - 80
-    notice=window.open("/touchstone/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + document.getElementById('scrOfY').value + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + document.getElementById('scrOfY').value + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
@@ -196,14 +196,14 @@ $stmt->close();
 
   function noAdd(start, end) {
     winH = screen.height - 40
-    notice=window.open("/touchstone/question/add/noadd.php?paperID=<?php echo $paperID; ?>&start_date=" + start + "&end_date=" + end + "","notice","width=770,height=550,left="+(screen.width/2-385)+",top="+(screen.height/2-275)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/question/add/noadd.php?paperID=<?php echo $paperID; ?>&start_date=" + start + "&end_date=" + end + "","notice","width=770,height=550,left="+(screen.width/2-385)+",top="+(screen.height/2-275)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
 
   function copyToPaper() {
-    notice=window.open("/touchstone/question/copy_onto_paper.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/question/copy_onto_paper.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300,10);
     if (window.focus) {
       notice.focus();
@@ -211,7 +211,7 @@ $stmt->close();
   }
 
   function questionInfo() {
-    notice=window.open("/touchstone/question/info.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=500,height=500,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/question/info.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=500,height=500,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-250,screen.height/2-250);
     if (window.focus) {
       notice.focus();
@@ -221,9 +221,9 @@ $stmt->close();
   function promote() {
     if (document.getElementById('prev_screen').value != '') {
       if (document.getElementById('prev_screen').value < document.getElementById('current_screen').value) {
-        document.location.href = "/touchstone/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + document.getElementById('current_pos').value + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('prev_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
+        document.location.href = "/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + document.getElementById('current_pos').value + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('prev_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
       } else {
-        document.location.href = "/touchstone/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + (parseInt(document.getElementById('current_pos').value) - 1) + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('prev_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
+        document.location.href = "/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + (parseInt(document.getElementById('current_pos').value) - 1) + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('prev_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
       }
     }
   }
@@ -231,9 +231,9 @@ $stmt->close();
   function demote() {
     if (document.getElementById('next_screen').value != '') {
       if (document.getElementById('next_screen').value > document.getElementById('current_screen').value) {
-        document.location.href = "/touchstone/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + document.getElementById('current_pos').value + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('next_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
+        document.location.href = "/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + document.getElementById('current_pos').value + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('next_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
       } else {
-        document.location.href = "/touchstone/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + (parseInt(document.getElementById('current_pos').value) + 1) + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('next_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
+        document.location.href = "/paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&old_pos=" + document.getElementById('current_pos').value + "&new_pos=" + (parseInt(document.getElementById('current_pos').value) + 1) + "&old_screen=" + document.getElementById('current_screen').value + "&new_screen=" + document.getElementById('next_screen').value + "&scrOfY=" + document.getElementById('scrOfY').value;
       }
     }
   }
@@ -309,87 +309,87 @@ $stmt->close();
 <?php
   echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" id=\"menu1\" style=\"margin-left:7px; font-size:90%; display:block\">\n";
   if ($paper_type == '5') {      // Offline
-    echo "<tr><td style=\"width:20px>3<img src=\"/touchstone/artwork/small_play_grey.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" border=\"0\" /></td><td class=\"greymenuitem\" style=\"width:166px\">" . $string['testpreview'] . "</td></tr>\n";
+    echo "<tr><td style=\"width:20px>3<img src=\"/artwork/small_play_grey.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" border=\"0\" /></td><td class=\"greymenuitem\" style=\"width:166px\">" . $string['testpreview'] . "</td></tr>\n";
   } else {
     if ($p_id_count > 0) {
-      echo "<tr><td style=\"width:20px\"><a href=\"#\" onclick=\"startPaper($fullscreen); return false;\"><img src=\"/touchstone/artwork/small_play.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" border=\"0\" /></a></td><td class=\"menuitem\" style=\"width:166px\"><a href=\"#\" onclick=\"startPaper($fullscreen); return false;\">" . $string['testpreview'] . "</a></td></tr>\n";
+      echo "<tr><td style=\"width:20px\"><a href=\"#\" onclick=\"startPaper($fullscreen); return false;\"><img src=\"/artwork/small_play.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" border=\"0\" /></a></td><td class=\"menuitem\" style=\"width:166px\"><a href=\"#\" onclick=\"startPaper($fullscreen); return false;\">" . $string['testpreview'] . "</a></td></tr>\n";
     } else {
-      echo "<tr><td style=\"width:20px\"><img src=\"/touchstone/artwork/small_play_grey.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" border=\"0\" /></td><td class=\"greymenuitem\" style=\"width:166px\">" . $string['testpreview'] . "</td></tr>\n";
+      echo "<tr><td style=\"width:20px\"><img src=\"/artwork/small_play_grey.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" border=\"0\" /></td><td class=\"greymenuitem\" style=\"width:166px\">" . $string['testpreview'] . "</td></tr>\n";
     }
   }
 
   if ($team_member == true) {
     if ($summative_lock == 1) {
       if (strpos($userroles,'SysAdmin') !== false) {
-        echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"/touchstone/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-        echo "<tr><td><a href=\"\" onclick=\"paperProperties(); return false;\"><img src=\"/touchstone/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"paperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"\" onclick=\"paperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"paperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
       } else {
-        echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"/touchstone/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-        echo "<tr><td><a href=\"\" onclick=\"lockedPaperProperties(); return false;\"><img src=\"/touchstone/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"lockedPaperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"\" onclick=\"lockedPaperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"lockedPaperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
       }
     } else {
-      echo "<tr><td><a href=\"\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\"><img src=\"/touchstone/artwork/add_questions_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-      echo "<tr><td><a href=\"\" onclick=\"paperProperties(); return false;\"><img src=\"/touchstone/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"paperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\"><img src=\"/artwork/add_questions_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"\" onclick=\"paperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"paperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
     }
     if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
       if ($p_id_count == 0) {
-        echo "<tr><td><img src=\"/touchstone/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"greymenuitem\"><span id=\"reports\">" . $string['reports'] . "</span></td></tr>\n";
+        echo "<tr><td><img src=\"/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"greymenuitem\"><span id=\"reports\">" . $string['reports'] . "</span></td></tr>\n";
       } else {
-        echo "<tr><td><img src=\"/touchstone/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"menuitem\"><a onclick=\"showAssStatsMenu(event); return false;\" href=\"#\"><span id=\"reports\">" . $string['reports'] . "</span></a><img src=\"/touchstone/artwork/submenu_arrow.png\" width=\"16\" height=\"16\" alt=\">\" border=\"0\" /></td></tr>\n";
+        echo "<tr><td><img src=\"/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"menuitem\"><a onclick=\"showAssStatsMenu(event); return false;\" href=\"#\"><span id=\"reports\">" . $string['reports'] . "</span></a><img src=\"/artwork/submenu_arrow.png\" width=\"16\" height=\"16\" alt=\">\" border=\"0\" /></td></tr>\n";
       }
       if (strpos($checklist,'mapping') !== false) {
-        echo "<tr><td><a href=\"/touchstone/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"/touchstone/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/touchstone/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
       }
       if ($paper_type == '5') {
-        echo "<tr><td><a href=\"/touchstone/import/spotter_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/touchstone/artwork/import_csv_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importmarks'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/touchstone/import/spotter_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importmarks'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"/import/spotter_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/artwork/import_csv_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importmarks'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/import/spotter_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importmarks'] . "</a></td></tr>\n";
       } else {
         if (strpos($checklist,'stdset') !== false) {
-          echo "<tr><td><a href=\"/touchstone/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/touchstone/artwork/std_set_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['standardssetting'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/touchstone/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['standardssetting'] . "</a></td></tr>\n";
+          echo "<tr><td><a href=\"/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/artwork/std_set_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['standardssetting'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['standardssetting'] . "</a></td></tr>\n";
         }
       }
     } elseif ($paper_type == '3') {
-      echo "<tr><td><img src=\"/touchstone/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"menuitem\"><a onclick=\"showAssStatsMenu(event); return false;\" href=\"#\"><span id=\"reports\">" . $string['reports'] . "</span></a><img src=\"/touchstone/artwork/submenu_arrow.png\" width=\"16\" height=\"16\" alt=\">\" border=\"0\" /></td></tr>\n";
+      echo "<tr><td><img src=\"/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"menuitem\"><a onclick=\"showAssStatsMenu(event); return false;\" href=\"#\"><span id=\"reports\">" . $string['reports'] . "</span></a><img src=\"/artwork/submenu_arrow.png\" width=\"16\" height=\"16\" alt=\">\" border=\"0\" /></td></tr>\n";
     } elseif ($paper_type == '4') {
-        echo "<tr><td><img src=\"/touchstone/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"menuitem\"><a onclick=\"showAssStatsMenu(event); return false;\" href=\"#\"><span id=\"reports\">" . $string['reports'] . "</span></a><img src=\"/touchstone/artwork/submenu_arrow.png\" width=\"16\" height=\"16\" alt=\">\" border=\"0\" /></td></tr>\n"; 
-        echo "<tr><td><a href=\"/touchstone/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/touchstone/artwork/import_csv_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importoscemarks'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/touchstone/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importoscemarks'] . "</a></td></tr>\n";
+        echo "<tr><td><img src=\"/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"menuitem\"><a onclick=\"showAssStatsMenu(event); return false;\" href=\"#\"><span id=\"reports\">" . $string['reports'] . "</span></a><img src=\"/artwork/submenu_arrow.png\" width=\"16\" height=\"16\" alt=\">\" border=\"0\" /></td></tr>\n"; 
+        echo "<tr><td><a href=\"/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/artwork/import_csv_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importoscemarks'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importoscemarks'] . "</a></td></tr>\n";
       if (strpos($checklist,'mapping') !== false) {
-        echo "<tr><td><a href=\"/touchstone/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"/touchstone/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/touchstone/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
       }
     }
   } else {
-    echo "<tr><td><img src=\"/touchstone/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></td><td class=\"greymenuitem\">" . $string['addquestionspaper'] . "</td></tr>\n";
-    echo "<tr><td><img src=\"/touchstone/artwork/properties_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></td><td class=\"greymenuitem\">" . $string['editproperties'] . "</td></tr>\n";
+    echo "<tr><td><img src=\"/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></td><td class=\"greymenuitem\">" . $string['addquestionspaper'] . "</td></tr>\n";
+    echo "<tr><td><img src=\"/artwork/properties_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></td><td class=\"greymenuitem\">" . $string['editproperties'] . "</td></tr>\n";
     if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
-      echo "<tr><td><img src=\"/touchstone/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"greymenuitem\">" . $string['reports'] . "</td></tr>\n";
+      echo "<tr><td><img src=\"/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"greymenuitem\">" . $string['reports'] . "</td></tr>\n";
       if (strpos($checklist,'stdset') !== false) {
-        echo "<tr><td><a href=\"/touchstone/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/touchstone/artwork/std_set_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['standardssetting'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/touchstone/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['standardssetting'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"/artwork/std_set_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['standardssetting'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['standardssetting'] . "</a></td></tr>\n";
       }
     } else {
-      echo "<tr><td><img src=\"/touchstone/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"greymenuitem\">" . $string['reports'] . "</td></tr>\n";
+      echo "<tr><td><img src=\"/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"greymenuitem\">" . $string['reports'] . "</td></tr>\n";
     }
   }
 ?>
-<tr><td><a onclick="showCopyMenu(event); return false;" href="#"><img src="/touchstone/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copypaper']; ?>" border="0" /></a></td><td class="menuitem"><a onclick="showCopyMenu(event); return false;" href="#"><span id="copy"><?php echo $string['copypaper']; ?></span></a><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>
+<tr><td><a onclick="showCopyMenu(event); return false;" href="#"><img src="/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copypaper']; ?>" border="0" /></a></td><td class="menuitem"><a onclick="showCopyMenu(event); return false;" href="#"><span id="copy"><?php echo $string['copypaper']; ?></span></a><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>
 <?php
   if ($team_member == true and $summative_lock != 1) {
-    echo '<tr><td><a href="#" onclick="deletePaper(); return false;"><img src="/touchstone/artwork/delete_paper_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deletePaper(); return false;">' . $string['deletepaper'] . '</a></td></tr>';
+    echo '<tr><td><a href="#" onclick="deletePaper(); return false;"><img src="/artwork/delete_paper_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deletePaper(); return false;">' . $string['deletepaper'] . '</a></td></tr>';
   } else {
-    echo '<tr><td><img src="/touchstone/artwork/delete_paper_grey_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" /></td><td class="greymenuitem">' . $string['deletepaper'] . '</td></tr>';
+    echo '<tr><td><img src="/artwork/delete_paper_grey_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" /></td><td class="greymenuitem">' . $string['deletepaper'] . '</td></tr>';
   }
   
-  echo '<tr><td><a href="#" onclick="retirePaper(); return false;"><img src="/touchstone/artwork/retire_16.png" width="16" height="16" border="0" alt="' . $string['retirepaper'] . '" /></a></td><td class="menuitem"><a href="#" onclick="retirePaper(); return false;">' . $string['retirepaper'] . '</a></td></tr>';
+  echo '<tr><td><a href="#" onclick="retirePaper(); return false;"><img src="/artwork/retire_16.png" width="16" height="16" border="0" alt="' . $string['retirepaper'] . '" /></a></td><td class="menuitem"><a href="#" onclick="retirePaper(); return false;">' . $string['retirepaper'] . '</a></td></tr>';
 
   if ($p_id_count == 0) {
-    echo "<tr><td><img src=\"/touchstone/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></td><td class=\"greymenuitem\">" . $string['printhardcopy'] . "</td></tr>\n";
+    echo "<tr><td><img src=\"/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></td><td class=\"greymenuitem\">" . $string['printhardcopy'] . "</td></tr>\n";
   } else {
     if ($paper_type == '4') {
-      echo "<tr><td><a href=\"/osce/print.php?paperID=$paperID\"><img src=\"/touchstone/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/osce/print.php?paperID=$paperID\">" . $string['printhardcopy'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"/osce/print.php?paperID=$paperID\"><img src=\"/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/osce/print.php?paperID=$paperID\">" . $string['printhardcopy'] . "</a></td></tr>\n";
     } else {
-      echo "<tr><td><a href=\"/touchstone/paper/print.php?paperID=$paperID\"><img src=\"/touchstone/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/touchstone/paper/print.php?paperID=$paperID\">" . $string['printhardcopy'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"/paper/print.php?paperID=$paperID\"><img src=\"/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/paper/print.php?paperID=$paperID\">" . $string['printhardcopy'] . "</a></td></tr>\n";
     }
   }
 ?>
-<tr><td width="16"><img src="/touchstone/artwork/ims_16.png" width="16" height="16" alt="<?php echo $string['qtiimportexport']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup6','papertasks','qti',myOptions6,myURLs6,event); return false;"><span id="qti"><?php echo $string['qtiimportexport']; ?></span><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
+<tr><td width="16"><img src="/artwork/ims_16.png" width="16" height="16" alt="<?php echo $string['qtiimportexport']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup6','papertasks','qti',myOptions6,myURLs6,event); return false;"><span id="qti"><?php echo $string['qtiimportexport']; ?></span><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
 </table>
 </td></tr>
 </table>
@@ -402,39 +402,39 @@ $stmt->close();
 <tr><td style="margin:4px">
 
 <table style="margin-left:7px; display:block; font-size:90%" cellpadding="3" cellspacing="0" border="0" id="menu2a">
-<tr><td><img src="/touchstone/artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/information_icon_grey.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/copy_icon_grey.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="greymenuitem"><?php echo $string['copyontopaperx']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/promote_disabled.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="greymenuitem"><?php echo $string['moveup']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/demote_disabled.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="greymenuitem"><?php echo $string['movedown']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/screen_icon_grey.png" width="16" height="16" alt="<?php echo $string['changescreenno']; ?>" /></td><td class="greymenuitem"><?php echo $string['changescreenno']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="greymenuitem"><?php echo $string['removefrompaper']; ?></td></tr>
+<tr><td><img src="/artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
+<tr><td><img src="/artwork/information_icon_grey.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
+<tr><td><img src="/artwork/copy_icon_grey.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="greymenuitem"><?php echo $string['copyontopaperx']; ?></td></tr>
+<tr><td><img src="/artwork/promote_disabled.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="greymenuitem"><?php echo $string['moveup']; ?></td></tr>
+<tr><td><img src="/artwork/demote_disabled.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="greymenuitem"><?php echo $string['movedown']; ?></td></tr>
+<tr><td><img src="/artwork/screen_icon_grey.png" width="16" height="16" alt="<?php echo $string['changescreenno']; ?>" /></td><td class="greymenuitem"><?php echo $string['changescreenno']; ?></td></tr>
+<tr><td><img src="/artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="greymenuitem"><?php echo $string['removefrompaper']; ?></td></tr>
 </table>
 
 <table style="margin-left:7px; display:none; font-size:90%" cellpadding="3" cellspacing="0" border="0" id="menu2b">
-<tr><td><img style="cursor:hand" onclick="editQuestion(); return false;" src="/touchstone/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
-<tr><td><img style="cursor:hand" onclick="questionInfo(); return false;" src="/touchstone/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
-<tr><td><img style="cursor:hand" onclick="copyToPaper(); return false;" src="/touchstone/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
-<tr><td><img style="cursor:hand" onclick="promote(); return false;" id="promoteicon" src="/touchstone/artwork/promote.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="menuitem"><a id="promotetext" onclick="promote(); return false;"><?php echo $string['moveup']; ?></a></td></tr>
-<tr><td><img style="cursor:hand" onclick="demote(); return false;" id="demoteicon" src="/touchstone/artwork/demote.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="menuitem"><a id="demotetext" onclick="demote(); return false;"><?php echo $string['movedown']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="editQuestion(); return false;" src="/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="questionInfo(); return false;" src="/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="copyToPaper(); return false;" src="/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="promote(); return false;" id="promoteicon" src="/artwork/promote.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="menuitem"><a id="promotetext" onclick="promote(); return false;"><?php echo $string['moveup']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="demote(); return false;" id="demoteicon" src="/artwork/demote.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="menuitem"><a id="demotetext" onclick="demote(); return false;"><?php echo $string['movedown']; ?></a></td></tr>
 <?php
 if ($paper_type == '4') {
-  echo '<tr><td><img src="/touchstone/artwork/screen_icon_grey.png" width="16" height="16" alt="' . $string['changescreenno'] . '" /></td><td class="greymenuitem">' . $string['changescreenno'] . '</td></tr>';
+  echo '<tr><td><img src="/artwork/screen_icon_grey.png" width="16" height="16" alt="' . $string['changescreenno'] . '" /></td><td class="greymenuitem">' . $string['changescreenno'] . '</td></tr>';
 } else {
-  echo '<tr><td><img style="cursor:hand" src="/touchstone/artwork/screen_icon.png" width="16" height="16" alt="' . $string['changescreenno'] . '" /></td><td class="menuitem"><a href="#" onclick="showChangeScreen(event); return false;"><span id="changescreen">' . $string['changescreenno'] . '</span><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>';
+  echo '<tr><td><img style="cursor:hand" src="/artwork/screen_icon.png" width="16" height="16" alt="' . $string['changescreenno'] . '" /></td><td class="menuitem"><a href="#" onclick="showChangeScreen(event); return false;"><span id="changescreen">' . $string['changescreenno'] . '</span><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>';
 }
 ?>
-<tr><td><img style="cursor:hand" onclick="deleteQuestion(); return false;" src="/touchstone/artwork/red_cross.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><?php echo $string['removefrompaper']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="deleteQuestion(); return false;" src="/artwork/red_cross.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><?php echo $string['removefrompaper']; ?></a></td></tr>
 </table>
 
 <table style="margin-left:7px; display:none; font-size:90%" cellpadding="3" cellspacing="0" border="0" id="menu2c">
-<tr><td><img style="cursor:hand" onclick="editQuestion(); return false;" src="/touchstone/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
-<tr><td><img style="cursor:hand" onclick="questionInfo(); return false;" src="/touchstone/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
-<tr><td><img style="cursor:hand" onclick="copyToPaper(); return false;" src="/touchstone/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
-<tr><td><img src="/touchstone/artwork/promote_disabled.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="greymenuitem"><?php echo $string['moveup']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/demote_disabled.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="greymenuitem"><?php echo $string['movedown']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/screen_icon_grey.png" width="16" height="16" alt="<?php echo $string['changescreenno']; ?>" /></td><td class="greymenuitem"><?php echo $string['changescreenno']; ?></td></tr>
-<tr><td><img src="/touchstone/artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="greymenuitem"><?php echo $string['removefrompaper']; ?></td></tr>
+<tr><td><img style="cursor:hand" onclick="editQuestion(); return false;" src="/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="questionInfo(); return false;" src="/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="copyToPaper(); return false;" src="/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
+<tr><td><img src="/artwork/promote_disabled.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="greymenuitem"><?php echo $string['moveup']; ?></td></tr>
+<tr><td><img src="/artwork/demote_disabled.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="greymenuitem"><?php echo $string['movedown']; ?></td></tr>
+<tr><td><img src="/artwork/screen_icon_grey.png" width="16" height="16" alt="<?php echo $string['changescreenno']; ?>" /></td><td class="greymenuitem"><?php echo $string['changescreenno']; ?></td></tr>
+<tr><td><img src="/artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="greymenuitem"><?php echo $string['removefrompaper']; ?></td></tr>
 </table>
 
 </td></tr>
@@ -447,11 +447,11 @@ if ($paper_type == '4') {
 <tr><td style="font-weight:bold"><?php echo $string['questionbanktasks']; ?></td></tr>
 <tr><td>
 <table cellpadding="3" cellspacing="0" border="0" style="margin-left:7px; font-size:90%">
-<tr><td width="16"><img src="/touchstone/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbytype']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><span id="type"><?php echo $string['questionsbytype']; ?></span><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
-<tr><td><img src="/touchstone/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbyteam']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><span id="team"><?php echo $string['questionsbyteam']; ?></span><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
-<tr><td><img src="/touchstone/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbykeyword']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event); return false;"><span id="keyword"><?php echo $string['questionsbykeyword']; ?></span><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
-<tr><td><img src="/touchstone/artwork/xmag.png" width="16" height="16" alt="<?php echo $string['search']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup4','banktasks','search',myOptions4,myURLs4,event); return false;"><span id="search"><?php echo $string['search']; ?></span><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
-<tr><td><img src="/touchstone/artwork/new_question_menu_icon.gif" width="16" height="16" alt="<?php echo $string['createnewquestion']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup5','banktasks','newquestion',myOptions5,myURLs5,event); return false;"><span id="newquestion"><?php echo $string['createnewquestion']; ?></span><img src="/touchstone/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
+<tr><td width="16"><img src="/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbytype']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><span id="type"><?php echo $string['questionsbytype']; ?></span><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
+<tr><td><img src="/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbyteam']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><span id="team"><?php echo $string['questionsbyteam']; ?></span><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
+<tr><td><img src="/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbykeyword']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event); return false;"><span id="keyword"><?php echo $string['questionsbykeyword']; ?></span><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
+<tr><td><img src="/artwork/xmag.png" width="16" height="16" alt="<?php echo $string['search']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup4','banktasks','search',myOptions4,myURLs4,event); return false;"><span id="search"><?php echo $string['search']; ?></span><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
+<tr><td><img src="/artwork/new_question_menu_icon.gif" width="16" height="16" alt="<?php echo $string['createnewquestion']; ?>" border="0" /></td><td class="menuitem"><a href="#" onclick="hideAssStatsMenu(event); showMenu('popup5','banktasks','newquestion',myOptions5,myURLs5,event); return false;"><span id="newquestion"><?php echo $string['createnewquestion']; ?></span><img src="/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
 </table>
 
 </td></tr>
@@ -483,27 +483,27 @@ if ($paper_type == '2') {
     $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
   }
   if ($year_in_title == true and $tmp_match != $session) {
-    echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['session'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['mismatch'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['session'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['mismatch'] . "</strong></td></tr>\n";
   }
   // Times
   if (substr($start_date,-6) == substr($end_date,-6) or substr($start_date,-6) == '000000' or substr($start_date,-6) == '000000') {
-    echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['examtime'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['incorrect'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['examtime'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['incorrect'] . "</strong></td></tr>\n";
   }
   
   // Duration
   if ($exam_duration == '') {
-    echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['duration'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['duration'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
   }
   
   // Computer labs
   if ($labs == '') {
-    echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['computerlabs'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+    echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['computerlabs'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
   }
 
   // Internal Peer review
   if (strpos($checklist,'peer') !== false) {
     if ($internal_reviewers == '') {
-      echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewed'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+      echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewed'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
       $tmp_array = explode(',',$internal_reviewers);
       $internal_array = array();
@@ -529,9 +529,9 @@ if ($paper_type == '2') {
         } else {
           $tmp_color = '#F27000';
         }
-        echo "<tr><td style=\"width:18px\"><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($internal_array) . "</strong></td></tr>\n";
+        echo "<tr><td style=\"width:18px\"><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($internal_array) . "</strong></td></tr>\n";
       } else {
-        echo "<tr><td style=\"width:18px\"><img src=\"/touchstone/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
+        echo "<tr><td style=\"width:18px\"><img src=\"/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
       }
     }
   }
@@ -539,7 +539,7 @@ if ($paper_type == '2') {
   // External examiners
   if (strpos($checklist,'external') !== false) {
     if ($externals == '') {
-      echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td>" . $string['externalreviews'] . "</td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+      echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td>" . $string['externalreviews'] . "</td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
       $tmp_array = explode(',',$externals);
       $external_array = array();
@@ -565,9 +565,9 @@ if ($paper_type == '2') {
 		} else {
 		  $tmp_color = '#F27000';
 		}
-        echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
+        echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
       } else {
-        echo "<tr><td><img src=\"/touchstone/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
+        echo "<tr><td><img src=\"/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repdegree=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
       }
     }
   }
@@ -589,9 +589,9 @@ if ($paper_type == '2') {
     }
     $stmt->close();
     if ($standards_set == 1) {
-      echo "<tr><td><img src=\"/touchstone/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
+      echo "<tr><td><img src=\"/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
     } else {
-      echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
+      echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
     }
 	
     if ($standards_set == 1) {
@@ -622,9 +622,9 @@ if ($paper_type == '2') {
 	  } else {
       $tmp_color = '#F27000';
 	  }
-      echo "<tr><td><img src=\"/touchstone/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:$tmp_color\"><strong>$mappings_complete/" . count($question_list) . "</strong></td></tr>\n";
+      echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:$tmp_color\"><strong>$mappings_complete/" . count($question_list) . "</strong></td></tr>\n";
     } else {
-      echo "<tr><td><img src=\"/touchstone/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/touchstone/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
+      echo "<tr><td><img src=\"/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
     }
   }
 }
@@ -647,7 +647,7 @@ if ($paper_type == '2') {
     $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
     while ($module_row = $module_details->fetch_assoc()) {
       $title = $module_row['moduleid'] . ' - ' . str_replace("'","\'",$module_row['fullname']);
-      $url = '/touchstone/folder/details.php?module=' . $module_row['moduleid'];
+      $url = '/folder/details.php?module=' . $module_row['moduleid'];
       $modules_array[$title] = $url;
     }
     $module_details->close();
@@ -656,7 +656,7 @@ if ($paper_type == '2') {
   // Teams
   $teams_array = array();
   foreach($teams as $individual_team) {
-    $teams_array[$individual_team] = '/touchstone/question/list.php?type=%&team=' . $individual_team;
+    $teams_array[$individual_team] = '/question/list.php?type=%&team=' . $individual_team;
   }
 
   // Keywords
@@ -691,27 +691,27 @@ if ($paper_type == '2') {
   }
   
   makeMenu($screens);
-  makeMenu(array($string['info']=>'/touchstone/question/list.php?type=info',$string['keyword_based']=>'/touchstone/question/list.php?type=keyword',$string['random']=>'/touchstone/question/list.php?type=random','-'=>'-',$string['calculation']=>'/touchstone/question/list.php?type=calculation',$string['dichotomous']=>'/touchstone/question/list.php?type=dichotomous',$string['extmatch']=>'/touchstone/question/list.php?type=extmatch',$string['blank']=>'/touchstone/question/list.php?type=blank',$string['flash']=>'/touchstone/question/list.php?type=flash',$string['hotspot']=>'/touchstone/question/list.php?type=hotspot',$string['labelling']=>'/touchstone/question/list.php?type=labelling',$string['likert']=>'/touchstone/question/list.php?type=likert',$string['matrix']=>'/touchstone/question/list.php?type=matrix',$string['mcq']=>'/touchstone/question/list.php?type=mcq',$string['mrq']=>'/touchstone/question/list.php?type=mrq',$string['rank']=>'/touchstone/question/list.php?type=rank',$string['sct']=>'/touchstone/question/list.php?type=sct',$string['textbox']=>'/touchstone/question/list.php?type=textbox'));
+  makeMenu(array($string['info']=>'/question/list.php?type=info',$string['keyword_based']=>'/question/list.php?type=keyword',$string['random']=>'/question/list.php?type=random','-'=>'-',$string['calculation']=>'/question/list.php?type=calculation',$string['dichotomous']=>'/question/list.php?type=dichotomous',$string['extmatch']=>'/question/list.php?type=extmatch',$string['blank']=>'/question/list.php?type=blank',$string['flash']=>'/question/list.php?type=flash',$string['hotspot']=>'/question/list.php?type=hotspot',$string['labelling']=>'/question/list.php?type=labelling',$string['likert']=>'/question/list.php?type=likert',$string['matrix']=>'/question/list.php?type=matrix',$string['mcq']=>'/question/list.php?type=mcq',$string['mrq']=>'/question/list.php?type=mrq',$string['rank']=>'/question/list.php?type=rank',$string['sct']=>'/question/list.php?type=sct',$string['textbox']=>'/question/list.php?type=textbox'));
   makeMenu($teams_array);
   makeMenu($keywords_array);
-  makeMenu(array($string['questions']=>'/touchstone/question/search.php',$string['papers']=>'/touchstone/paper/search.php',$string['people']=>'/touchstone/users/search.php'));
+  makeMenu(array($string['questions']=>'/question/search.php',$string['papers']=>'/paper/search.php',$string['people']=>'/users/search.php'));
   
   if ($summative_lock == 1) {
-    $params = "scrOfY=' + document.getElementById('scrOfY').value + '";
+    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '";
   } else {
-    $params = "scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=$tmp_module&calling=paper";
+    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=$tmp_module&calling=paper";
   }
 
-  makeMenu(array($string['info']=>"/touchstone/question/add/?type=info&$params",$string['keyword_based']=>"/touchstone/question/add/keyword_based.php$params",$string['random']=>"/touchstone/question/add/random.php$params","-"=>"-",$string['calculation']=>"/touchstone/question/edit/?type=calculation&$params",$string['dichotomous']=>"/touchstone/question/edit/?type=dichotomous&$params",$string['extmatch']=>"/touchstone/question/edit/?type=extmatch&$params",$string['blank']=>"/touchstone/question/edit/?type=blank&$params",$string['flash']=>"/touchstone/question/edit/?type=flash&$params",$string['hotspot']=>"/touchstone/question/edit/?type=hotspot&$params",$string['labelling']=>"/touchstone/question/edit/?type=labelling&$params",$string['likert']=>"/touchstone/question/edit/?type=likert&$params",$string['matrix']=>"/touchstone/question/edit/?type=matrix&$params",$string['mcq']=>"/touchstone/question/edit/?type=mcq&$params",$string['mrq']=>"/touchstone/question/edit/?type=mrq&$params",$string['rank']=>"/touchstone/question/edit/?type=rank&$params",$string['sct']=>"/touchstone/question/edit/?type=sct&$params",$string['textbox']=>"/touchstone/question/edit/?type=textbox&$params"));
+  makeMenu(array($string['info']=>"/question/edit/index.php?type=info$params",$string['keyword_based']=>"/question/edit/index.php?type=keyword_based$params",$string['random']=>"/question/edit/index.php?type=random$params","-"=>"-",$string['calculation']=>"/question/edit/index.php?type=calculation$params",$string['dichotomous']=>"/question/edit/index.php?type=dichotomous$params",$string['extmatch']=>"/question/edit/index.php?type=extmatch$params",$string['blank']=>"/question/edit/index.php?type=blank$params",$string['flash']=>"/question/edit/index.php?type=flash$params",$string['hotspot']=>"/question/edit/index.php?type=hotspot$params",$string['labelling']=>"/question/edit/index.php?type=labelling$params",$string['likert']=>"/question/edit/index.php?type=likert$params",$string['matrix']=>"/question/edit/index.php?type=matrix$params",$string['mcq']=>"/question/edit/index.php?type=mcq$params",$string['mrq']=>"/question/edit/index.php?type=mrq$params",$string['rank']=>"/question/edit/index.php?type=rank$params",$string['sct']=>"/question/edit/index.php?type=sct$params",$string['textbox']=>"/question/edit/index.php?type=textbox$params"));
   if($summative_lock == 1) {
-    makeMenu(array($string['export12']=>"/touchstone/qti/export.php?dest=qti12&paperID=$paperID"));
+    makeMenu(array($string['export12']=>"/qti/export.php?dest=qti12&paperID=$paperID"));
   } else {
-    makeMenu(array($string['import']=>"/touchstone/qti/import.php?paperID=$paperID",$string['export12']=>"/touchstone/qti/export.php?dest=qti12&paperID=$paperID"));
+    makeMenu(array($string['import']=>"/qti/import.php?paperID=$paperID",$string['export12']=>"/qti/export.php?dest=qti12&paperID=$paperID"));
   }
   
   hideMenuScript($menuNo);
 
-  require $cfg_web_root . 'touchstone/include/reports_submenu.inc';
-  require $cfg_web_root . 'touchstone/include/paper_copy_submenu.inc';
-  require $cfg_web_root . 'touchstone/include/change_screen_submenu.inc';
+  require $cfg_web_root . 'include/reports_submenu.inc';
+  require $cfg_web_root . 'include/paper_copy_submenu.inc';
+  require $cfg_web_root . 'include/change_screen_submenu.inc';
 ?>

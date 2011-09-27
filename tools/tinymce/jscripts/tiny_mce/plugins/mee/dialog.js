@@ -74,6 +74,7 @@ function insertMME() {
     if (selelem) {
         selelem.src = src;
         $(selelem).attr('src', src);
+        //$selelem).refresh();
     } else {
 
         if (edit.inline) {
@@ -88,4 +89,9 @@ function insertMME() {
     tinyMCEPopup.editor.execCommand('mceRepaint');
     tinyMCEPopup.close();
     
+
+    /*tinyMCEPopup.editor.execCommand('mceInsertContent', false, html);
+    //tinyMCEPopup.editor.selection.setContent(html);
+    //tinyMCEPopup.editor.plugins["mee"].update();
+    tinyMCEPopup.close();*/
 }

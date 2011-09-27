@@ -25,10 +25,11 @@ function getFrameForDocument(document) {
 function updateMEE(frame, align, inline) {
     var iframe = getFrameForDocument(frame.document);
     var eqn = $(frame.document).find('#eqn_inner');
+
     if (inline) {
         $(iframe).css('width', align.width + 'px');
     } else {
-        $(iframe).css('width', (align.width + 20) + 'px');
+        $(iframe).css('width', align.width + 'px');
     }
     $(iframe).css('height', align.height + 'px');
     $(iframe).css('vertical-align', 'middle');

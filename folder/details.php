@@ -258,9 +258,9 @@ function displayPaperIcon($row) {
 <?php
 echo '<tr><td style="background-color:#F1F5FB">';
 if (isset($parent_id)) {
-  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . $parent_name . '</a></div>';
+  echo '<div class="breadcrumb"><a href="../index_staff.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . $parent_name . '</a></div>';
 } else {
-  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div>';
+  echo '<div class="breadcrumb"><a href="../index_staff.php">' . $string['home'] . '</a></div>';
 }
 echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
 

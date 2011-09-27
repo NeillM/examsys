@@ -168,7 +168,7 @@ class IE_qti12_Save extends IE_Main
 				<mattext texttype='text/html'><![CDATA[<font color='#c00000'> <b>NOTE:</b> " . $question->notes . "</font>]]></mattext>
 			</material>";
 			if (!file_exists($this->params->base_dir.'/'.$this->params->dir."/".'notes_icon.gif'))
-				copy($cfg_web_root . 'touchstone/artwork/notes_icon.gif',$this->params->base_dir.'/'.$this->params->dir."/".'notes_icon.gif');
+				copy($cfg_web_root . 'artwork/notes_icon.gif',$this->params->base_dir.'/'.$this->params->dir."/".'notes_icon.gif');
 			$this->data->files[] = new ST_File('notes_icon.gif','notes_icon.gif',$this->params->dir,'image');
 		}
 		

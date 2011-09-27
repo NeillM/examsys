@@ -24,8 +24,7 @@
 
 ini_set( "short_open_tag", 1 );
 
-function GetVar($name,$default = "")
-{
+function GetVar($name,$default = "") {
 	if (array_key_exists($name,$_GET) && $_GET[$name] != "")
 		return $_GET[$name];	
 	if (array_key_exists($name,$_POST) && $_POST[$name] != "")
@@ -34,8 +33,7 @@ function GetVar($name,$default = "")
 	return $default;	
 }
 
-function explode_no_empty($delimiter, $string)
-{
+function explode_no_empty($delimiter, $string) {
 	$result = array();
 	
 	$items = explode($delimiter,$string);
@@ -50,8 +48,7 @@ function explode_no_empty($delimiter, $string)
 	return $result;
 }	
 
-function StripForTitle($in)
-{
+function StripForTitle($in) {
 	$in = trim($in);
 	$in = strip_tags($in);
 	$in = str_ireplace("\"","",$in);
@@ -66,14 +63,12 @@ function StripForTitle($in)
 	return $in;	
 }
 
-function RemoveEmptyHTMLTags($in)
-{
+function RemoveEmptyHTMLTags($in) {
 	return preg_replace('#<(\w+)[^>]*>\s*</\1>#im','', $in);
 }
 
 // will compare $array1 and $array2, and remove any items with a common key and put it in $common. Value that goes in $common will come from $array1
-function RemoveCommonInArray(&$array1,&$array2,&$common)
-{
+function RemoveCommonInArray(&$array1,&$array2,&$common) {
 	// build a list of common keys
 	$commonkeys = array();
 	foreach ($array1 as $key => $value)

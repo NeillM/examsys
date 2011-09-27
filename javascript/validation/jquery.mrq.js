@@ -8,13 +8,8 @@ $(function () {
         checked++;
       }
     });
-    if (checked == 1) {
-      if (confirm(lang['mrqconvert'])) {
-        $('#mcqconvert').val('1');
-      } else {
-        return false;
-      }
+    if (checked == 1 && confirm("There is only one correct answer, this would be better as a MCQ question type.\r\nDo you wish to convert this question to MCQ?")) {
+      $('#mcqconvert').val('1');
     }
-    tinyMCE.triggerSave();
   });
 });

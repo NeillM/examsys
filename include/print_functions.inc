@@ -25,7 +25,7 @@
 require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
 
 function checkVariables($number) {
-  global $A, $B, $C, $D, $E, $F, $G, $H;
+  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
   eval("\$new_number = \"$number\";");
   return $new_number;
 }
@@ -79,7 +79,7 @@ function display_options($options,$q_id, $current_theme) {
     }
     echo "<td class=\"option\">&nbsp;</td></tr>";
   } elseif ($options[0]['q_type'] == 'calculation') {
-    $A = $B = $C = $D = $E = $F = $G = $H = '';    // Reset all variables initially
+    $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
   } elseif ($options[0]['q_type'] == 'likert') {
     $str = $options[0]['score_method'];
     $likert_display = explode('|',$str);
@@ -149,7 +149,7 @@ function display_options($options,$q_id, $current_theme) {
     //echo $options[0]['q_type'];
     switch ($options[0]['q_type']) {
       case 'calculation':
-        $vars = array(1=>'A',2=>'B',3=>'C',4=>'D',5=>'E',6=>'F',7=>'H');
+        $vars = array(1=>'A',2=>'B',3=>'C',4=>'D',5=>'E',6=>'F',7=>'H',8=>'I',9=>'J');
         $var = $vars[$part_id];
         $tmp_user_answers = array();
         $figures = explode(',',$display_option['option_text']);
@@ -342,94 +342,6 @@ function display_options($options,$q_id, $current_theme) {
           foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
         }
         break;
-        
-        
-        
-        
-        
-//        if ($display_option['score_method'] == 'textboxes') {
-//          $blank_details = explode('<blank',$display_option['option_text']);
-//          $array_size = count($blank_details);
-//          $blank_count = 1;
-//          while ($blank_count < $array_size) {
-//            $blank_details[$blank_count] = '<blank' . $blank_details[$blank_count];
-//            $results = array();
-//            $not_used = ereg("size=\"([0-9]{1,3})\"",$blank_details[$blank_count],$results);
-//	 
-//            if ($results[1]) {
-//              $blank_size[$blank_count] = $results[1];
-//            } else {
-//              $blank_size[$blank_count] = 15;
-//            }
-//            $results=array();
-//            $not_used = preg_match("/mark=\"([0-9]{1,3})\"/",$blank_details[$blank_count],$results);
-//            if ($results[1]) {
-//              $blank_mark[$blank_count] = $results[1];
-//            } else {
-//              $blank_mark[$blank_count] = 1;
-//            }
-//            $screen_output[$blank_count] = preg_replace("/<blank.*>.*</blank>/","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
-//            $blank_count++;
-//          }
-//          $screen_output_all = '';
-//          foreach ($screen_output as $value) {
-//            $screen_output_all .= $value;
-//          }
-//          echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n";
-//          foreach ($blank_mark as $individual_mark) {
-//            $marks += $individual_mark;
-//          }	   
-//        } else {
-//            $blank_details = array();
-//            $blank_details = explode('<blank',$display_option['option_text']);
-//            $no_blanks = count($blank_details);
-//            echo '<p>' . $blank_details[0];
-//            $blank_count = 1;
-//            while ($blank_count < $no_blanks) {
-//            $not_used = preg_match("/mark=\"([0-9]{1,3})\"/",$blank_details[$blank_count],$results);
-//            if ($results[1]) {
-//              $blank_mark[$blank_count] = $results[1];
-//            } else {
-//              $blank_mark[$blank_count] = 1;
-//            }
-//            $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],'>') + 1));
-//            $answer_options = array();
-//            $answer_options = explode("</blank>",$blank_details[$blank_count]);
-//            $answer_list = array();
-//            $answer_list = explode(",",$answer_options[0]);
-//            if ($display_option['score_method'] == 'dropdown') {
-//              echo "<select name=\"q" . $question_no . "_" . $part_id . "\">\n";
-//              echo "<option value=\"u\"></option>\n";
-//              $no_answers = count($answer_list);
-//          
-//              // Shuffle the answers up.
-//              for ($i=1; $i<26; $i++) {
-//                $pos1 = rand(0,$no_answers-1);
-//                $pos2 = rand(0,$no_answers-1);
-//                if ($pos1 != $pos2) {
-//                  $postemp = $answer_list[$pos2];
-//                  $answer_list[$pos2] = $answer_list[$pos1];
-//                  $answer_list[$pos1] = $postemp;
-//                }
-//              }
-//          
-//              for ($i=1; $i<=$no_answers; $i++) {
-//                echo "<option value=\"" . $answer_list[$i-1] . "\">" . $answer_list[$i-1]. "</option>\n";
-//              }
-//              echo '</select>';
-//            } else {
-//              echo "<input type=\"text\" name=\"q" . $question_no . "_" . $part_id . "\" size=\"" . strlen($answer_list[0]) . "\" />";
-//            }
-//            echo $answer_options[1]; // Bit after the closing </blank> tag.
-//            $blank_count++;
-//            $part_id++;
-//          }
-//          echo '</p>';
-//          foreach ($blank_mark as $individual_mark) {
-//            $marks += $individual_mark;
-//          }	   
-//        }
-//        break;
       case 'textbox':
         $textbox_size = explode('x',$display_option['score_method']);
         if ($textbox_size[1] == 1) {
@@ -555,14 +467,14 @@ function display_options($options,$q_id, $current_theme) {
       echo '</table>';
     }
   } elseif ($options[0]['q_type'] == 'calculation') {
-    $score_array = explode(',',$options[0]['score_method']);
+    $score_array = explode(',',$options[0]['display_method']);
     
     echo '<tr><td class="question_no">&nbsp;';
     echo '</td><td>';
     
-    $new_leadin = "";
-    $search = array('$A','$B','$C','$D','$E','$F','$G','$H');
-    $replace = array($A,$B,$C,$D,$E,$F,$G,$H);
+    $new_leadin = '';
+    $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
+    $replace = array($A,$B,$C,$D,$E,$F,$G,$H,$I,$J);
     $display_option['leadin'] = str_ireplace($search,$replace,$display_option['leadin']);
     echo "<p>" . $display_option['leadin'] . "</p>\n<blockquote>\n";
     if (in_array('ERROR',$replace,true)) {
@@ -585,7 +497,7 @@ function display_options($options,$q_id, $current_theme) {
           }
         }
       } else {
-        echo "<p><input type=\"text\" style=\"text-align:right\" class=\"unanswered\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" />" . $score_array[2] .  "</p>\n";	  
+        echo "<p><input type=\"text\" style=\"text-align:right\" class=\"unanswered\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" />" . $score_array[3] .  "</p>\n";	  
       }
     }
     $answer = "echo \"" . $options[0]['correct'] . "\"";

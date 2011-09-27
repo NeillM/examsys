@@ -58,7 +58,7 @@ if (isset($_GET['calendar_year'])) {
     document.getElementById('menu' + ID).style.display = current;
 
     <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '$protocol" . $_SERVER['HTTP_HOST'] . "/touchstone/artwork/down_arrow_icon.gif') ? '$protocol" . $_SERVER['HTTP_HOST'] . "/touchstone/artwork/up_arrow_icon.gif' : '$protocol" . $_SERVER['HTTP_HOST'] . "/touchstone/artwork/down_arrow_icon.gif';\n";
+      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '$protocol" . $_SERVER['HTTP_HOST'] . "/artwork/down_arrow_icon.gif') ? '$protocol" . $_SERVER['HTTP_HOST'] . "/artwork/up_arrow_icon.gif' : '$protocol" . $_SERVER['HTTP_HOST'] . "/artwork/down_arrow_icon.gif';\n";
     ?>
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
@@ -202,11 +202,11 @@ if (isset($_GET['calendar_year'])) {
   }
 
   if (isset($_GET['paperID'])) {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/touchstone/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $module . '&folder=' . $folder . '\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $module . '&folder=' . $folder . '\'"/>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/touchstone/folder/details.php?module=' . $module . '&folder=' . $folder . '\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/folder/details.php?module=' . $module . '&folder=' . $folder . '\'"/>';
   } else {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/touchstone/index.php\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/index_staff.php\'"/>';
   }
 ?>
 &nbsp;<input style="width:90px" type="submit" name="submit" onclick="document.PapersMenu.oldUserID.value='';" value="<?php echo $string['search']; ?>" /></div>

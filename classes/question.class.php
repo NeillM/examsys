@@ -867,8 +867,8 @@ QUERY;
    * @param string $value
    */
   public function set_bloom($value) {
-    $value_en = ($value != '') ? $this->_blooms_db[$value] : '';
-    if ($value_en != $this->bloom) {
+    $value_en = $this->_blooms_db[$value];
+    if ($value != $this->status) {
       $this->set_modified_field('bloom', array_search($this->bloom, $this->_blooms_db));
       $this->bloom = $value_en;
     }
@@ -1057,8 +1057,8 @@ QUERY;
    * @param string $value
    */
   public function set_status($value) {
-    $value_en = ($value != '') ? $this->_statuses_db[$value] : '';
-    if ($value_en != $this->status) {
+    $value_en = $this->_statuses_db[$value];
+    if ($value != $this->status) {
       $this->set_modified_field('status', array_search($this->status, $this->_statuses_db));
       $this->status = $value_en;
     }

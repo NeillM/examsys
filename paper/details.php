@@ -368,7 +368,7 @@ if (isset($_GET['change_screen'])) {
   <?php
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"margin-left:60px;font-weight:normal;color:#4465A2;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
-    $deleted_parts = explode('[deleted',$paper_title);
+    $deleted_parts = explode('[deleted', $paper_title);
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<ul style=\"margin-left:80px\">\n";
     if ($paper_ownerID == $userID) {
       echo "<li>" . $string['deleted_msg2'] . "</li>\n";
@@ -545,7 +545,7 @@ if (isset($_GET['change_screen'])) {
       $temp_array[$row_no]['theme'] = $theme;
       $temp_array[$row_no]['screen'] = $screen;
       $temp_array[$row_no]['q_type'] = $q_type;
-      $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin,"<span>,<div>"))));
+      $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin,"<div>"))));
       if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
       $temp_array[$row_no]['scenario'] = $scenario;
       $temp_array[$row_no]['p_id'] = $p_id;
@@ -699,11 +699,11 @@ if (isset($_GET['change_screen'])) {
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
-    echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
+    echo '<a href="../index_staff.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
   } elseif ($folder != '') {
-    echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '<a href="../index_staff.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } else {
-    echo '<a href="../index.php">' . $string['home'] . '</a>';
+    echo '<a href="../index_staff.php">' . $string['home'] . '</a>';
   }
   echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
   echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";

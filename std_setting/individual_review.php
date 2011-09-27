@@ -400,7 +400,7 @@ $current_screen = 1;
 <?php
 
   echo "\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index_staff.php\">" . $string['home'] . "</a>";
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -453,7 +453,6 @@ $current_screen = 1;
   $result->execute();
   $result->store_result();
   $result->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $correct_fback);
-  //$num_rows = $result->num_rows;
   while ($result->fetch()) {
     if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
       echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
@@ -483,9 +482,9 @@ $current_screen = 1;
         echo '<tr><td colspan="2" class="theme">' . $theme . '</td></tr>';
       }
 
-      if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
+      if (trim($notes) != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
 
-      if ($scenario != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'calculation') {
+      if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'calculation') {
         echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td valign="top"><p>' . $scenario . '</p>';
         $li_set = 1;
       }

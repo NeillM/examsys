@@ -132,11 +132,11 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   $marks = 0;
   $old_theme = '';
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  $result = $mysqli->prepare("SELECT paper_type, q_type, q_id, score_method, marks, paper_prologue, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM properties, papers, questions, options WHERE properties.property_id=papers.paper AND paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare("SELECT paper_type, q_type, q_id, score_method, display_method, marks_correct, paper_prologue, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM properties, papers, questions, options WHERE properties.property_id=papers.paper AND paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paper_type, $q_type, $q_id, $score_method, $marks, $paper_prologue, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
+  $result->bind_result($paper_type, $q_type, $q_id, $score_method, $display_method, $marks_correct, $paper_prologue, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
   $li_set = 0;
   while ($row = $result->fetch()) {
     if ($question_no == 0 and $current_screen == 1 and $paper_prologue != '') {
@@ -205,7 +205,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
       $question_no++;
     }
 
-    $options_array[] = array('q_type'=>$q_type, 'score_method'=>$score_method, 'correct'=>$correct, 'scenario'=>$scenario, 'leadin'=>$leadin, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks, 'paper_type'=>$paper_type);
+    $options_array[] = array('q_type'=>$q_type, 'score_method'=>$score_method, 'display_method'=>$display_method, 'correct'=>$correct, 'scenario'=>$scenario, 'leadin'=>$leadin, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks_correct, 'paper_type'=>$paper_type);
   }         // End of While loop
   $result->free_result();
   $result->close();
