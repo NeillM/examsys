@@ -7,9 +7,7 @@
 * @package
 */
 
-$cfg_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-
-// require_once '../config/config.inc.php';
+require_once '../config/config.inc.php';
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
@@ -28,7 +26,7 @@ set_time_limit(0);
       h2 {font-size:120%; color:#003163}
       .error {color:red; font-weight:bold}
       .warning {float:none; color:red; padding-left: .5em; vertical-align:top}
-      label {float:left; width:10.5em; padding-left:0em; text-align:left}
+      label {float:left; width:7.5em; padding-left:0em; text-align:left}
       p {clear:both}
       .submit {margin-left:42%; padding-top:2em}
       table {border:none}
@@ -82,10 +80,8 @@ if (!isset($_POST['update'])) {
         <table class="header"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
           <div><?php echo $string['msg2']; ?></div>
           <br />
-          <div><label for="mysql_admin_host"><?php echo $string['dbhost']; ?></label> <input type="text" value="" name="mysql_admin_host" class="required" minlength="2" /> </div>
-          <div><label for="mysql_admin_db"><?php echo $string['dbdatabase']; ?></label> <input type="text" value="" name="mysql_admin_db" class="required" /></div>
           <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
-          <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass" /></div>
+          <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass"/></div>
      
        <div class="submit"> <input type="submit" name="update" value="<?php echo $string['startupdate']; ?>" /> </div>
      </form>
@@ -97,11 +93,8 @@ if (!isset($_POST['update'])) {
   <?php
 
  } else {
-   
-  $cfg_db_host = $_POST['mysql_admin_host'];
-  $cfg_db_database = $_POST['mysql_admin_db'];
   
-  $mysqli = new mysqli($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database);
+  $mysqli = new $dbclass($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database);
   
   if ($mysqli->connect_error) {
     echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
@@ -1057,7 +1050,7 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
-
+  
   // 01/09/2011 - Remove the 'time
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
   $result->execute();
