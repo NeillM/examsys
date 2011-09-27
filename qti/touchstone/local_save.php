@@ -22,7 +22,7 @@
  * @package
  */
 
-class IE_touchstone_Save extends IE_Main {
+class IE_Local_Save extends IE_Main {
   var $q_row = array();
   var $o_rows = array();
   var $o_row = array();
@@ -163,7 +163,7 @@ class IE_touchstone_Save extends IE_Main {
 
       // if no o_row, create a blank one
       if (count($this->o_rows) == 0) {
-        $this->o_row['marks'] = 1;
+        $this->o_row['marks_correct'] = 1;
         $this->o_rows[] = $this->o_row;
       }
 
@@ -276,7 +276,7 @@ class IE_touchstone_Save extends IE_Main {
     $o_row = $this->db->GetBlankTableRow("options");
 
     $o_row['option_text'] = $q_text;
-    $o_row['marks'] = 0;
+    $o_row['marks_correct'] = 0;
     $this->o_rows[] = $o_row;
 
   }
@@ -291,7 +291,7 @@ class IE_touchstone_Save extends IE_Main {
 
       $o_row['option_text'] = $variable->min.",".$variable->max.",".$variable->inc.",".$variable->dec;
       $o_row['correct'] = $question->formula;
-      $o_row['marks'] = 1;
+      $o_row['marks_correct'] = 1;
 
       // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
       $o_row['o_media'] = $question->media;
@@ -307,7 +307,7 @@ class IE_touchstone_Save extends IE_Main {
 
       $o_row['option_text'] = "0,100,1,0";
       $o_row['correct'] = $question->formula;
-      $o_row['marks'] = 1;
+      $o_row['marks_correct'] = 1;
 
       // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
       $o_row['o_media'] = $question->media;
@@ -332,7 +332,7 @@ class IE_touchstone_Save extends IE_Main {
 
       $o_row['feedback_right'] = $option->fb_correct;
       $o_row['feedback_wrong'] = $option->fb_incorrect;
-      $o_row['marks'] = 1;
+      $o_row['marks_correct'] = 1;
       $o_row['o_media'] = $option->media ;
       $o_row['o_media_width'] = $option->media_width ;
       $o_row['o_media_height'] = $option->media_height ;
@@ -385,7 +385,7 @@ class IE_touchstone_Save extends IE_Main {
 
       $o_row['option_text'] = $option->option;
       $o_row['correct'] = $answer_text;
-      $o_row['marks'] = 1;
+      $o_row['marks_correct'] = 1;
 
       $this->o_rows[] = $o_row;
     }
@@ -401,7 +401,7 @@ class IE_touchstone_Save extends IE_Main {
     $o_row['o_media'] = $question->feedback_swf;
     $o_row['o_media_width'] = $question->feedback_swf_width;
     $o_row['o_media_height'] = $question->feedback_swf_height;
-    $o_row['marks'] = $question->marks;
+    $o_row['marks_correct'] = $question->marks;
 
     $this->o_rows[] = $o_row;
   }
@@ -427,7 +427,7 @@ class IE_touchstone_Save extends IE_Main {
 
     // if touchstone->qti->touchstone, then use the raw text from the options table to make 1:1
     if ($question->raw_option) $o_row['correct'] = $question->raw_option;
-    $o_row['marks'] = 1;
+    $o_row['marks_correct'] = 1;
 
     $this->o_rows[] = $o_row;
 
@@ -506,7 +506,7 @@ class IE_touchstone_Save extends IE_Main {
     $o_row = $this->db->GetBlankTableRow("options");
     $o_row['correct'] = $data;
     if ($question->raw_option) $o_row['correct'] = $question->raw_option;
-    $o_row['marks'] = 1;
+    $o_row['marks_correct'] = 1;
     $this->o_rows[] = $o_row;
 
   }
@@ -539,7 +539,7 @@ class IE_touchstone_Save extends IE_Main {
 
       $o_row['option_text'] = $option;
       $o_row['correct'] = $answer_text;
-      $o_row['marks'] = 1;
+      $o_row['marks_correct'] = 1;
 
       $this->o_rows[] = $o_row;
     }
@@ -557,7 +557,7 @@ class IE_touchstone_Save extends IE_Main {
       $o_row['option_text'] = $option->stem;
       $o_row['correct'] = $question->correct;
 
-      $o_row['marks'] = 1;
+      $o_row['marks_correct'] = 1;
       $o_row['o_media'] = $option->media;
       $o_row['o_media_width'] = $option->media_width;
       $o_row['o_media_height'] = $option->media_height;
@@ -580,10 +580,10 @@ class IE_touchstone_Save extends IE_Main {
 
       $o_row['option_text'] = $option->stem;
       $o_row['correct'] = 'n';
-      $o_row['marks'] = 0;
+      $o_row['marks_correct'] = 0;
       if ($option->is_correct) {
         $o_row['correct'] = 'y';
-        $o_row['marks'] = 1;
+        $o_row['marks_correct'] = 1;
       }
       $o_row['feedback_right'] = $option->fb_correct;
       $o_row['feedback_wrong'] = $option->fb_incorrect;
@@ -606,7 +606,7 @@ class IE_touchstone_Save extends IE_Main {
 
       $o_row['option_text'] = $option->stem;
       $o_row['correct'] = $option->order;
-      $o_row['marks'] = 1;
+      $o_row['marks_correct'] = 1;
 
       $this->o_rows[] = $o_row;
     }
@@ -622,7 +622,7 @@ class IE_touchstone_Save extends IE_Main {
 
     $o_row['option_text'] = $question->editor;
     $o_row['correct'] = implode(";", $question->terms);
-    $o_row['marks'] = $question->marks;
+    $o_row['marks_correct'] = $question->marks;
     $this->o_rows[] = $o_row;
   }
 
@@ -634,7 +634,7 @@ class IE_touchstone_Save extends IE_Main {
     $o_row = $this->db->GetBlankTableRow("options");
 
     $o_row['correct'] = $question->correct;
-    $o_row['marks'] = 1;
+    $o_row['marks_correct'] = 1;
     $this->o_rows[] = $o_row;
   }
 

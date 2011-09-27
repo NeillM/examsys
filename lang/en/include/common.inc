@@ -1,6 +1,7 @@
 <?php
 $string['home'] = '1Home';
 $string['help'] = '1Help';
+$string['cancel'] = '1Cancel';
 $string['accessdenied'] = '1Access Denied';
 $string['denied_paper'] = '1You are attempting to access a <strong>paper you do not have rights to</strong>!';
 $string['denied_folder'] = '1You are attempting to access a <strong>folder you do not have rights to</strong>!';

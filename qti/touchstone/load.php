@@ -26,16 +26,16 @@ require '../../include/staff_auth.inc';
 
 ?>
 <script>
-function touchstone_LoadPanel(type)
+function local_LoadPanel(type)
 {
     var url = load_source + '/load_' + type + '.php';
-	$('touchstone_load_panel').load(url);
+	$('local_load_panel').load(url);
 }
 </script>
 
-<button onclick="touchstone_LoadPanel('question');">Question</button>
-<button onclick="touchstone_LoadPanel('batch_q');">Batch Question</button>
-<button onclick="touchstone_LoadPanel('paper');">Paper</button>
-<button onclick="touchstone_LoadPanel('batch_p');">Batch Paper</button>
+<button onclick="local_LoadPanel('question');">Question</button>
+<button onclick="local_LoadPanel('batch_q');">Batch Question</button>
+<button onclick="local_LoadPanel('paper');">Paper</button>
+<button onclick="local_LoadPanel('batch_p');">Batch Paper</button>
 
-<div id="touchstone_load_panel"></div>
+<div id="local_load_panel"></div>

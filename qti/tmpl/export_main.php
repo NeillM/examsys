@@ -151,19 +151,16 @@ echo "</table>";
 
 <table border="0" cellpadding="4" cellspacing="0" width="500" style="border:1px solid #5582D2"> 
 	<tr> 
-		<td valign="middle" align="left" style="background-color:white"><img src="../artwork/statistics_menu_icon.gif" width="36" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2">QTI <?php $dest == "qti12" ? "v1.2.1" : "v2.1";
-echo $dest;
-?> Export</span></td> 
+    <?php $qti_ver = ($dest == "qti12") ? "v1.2.1" : "v2.1"; ?>
+		<td valign="middle" align="left" style="background-color:white"><img src="../artwork/statistics_menu_icon.gif" width="36" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php printf($string['qtiexport'], $qti_ver) ?></span></td> 
 	</tr> 
 	<tr> 
-		<td align="left" style="background-color:#DFE8FF"> 
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold">Your QTI <?php $dest == "qti12" ? "v1.2.1" : "v2.1";
-echo $dest;
-?> Exports are ready</div>
+		<td align="left" style="background-color:#DFE8FF">
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php printf($string['exportsready'], $qti_ver) ?></div>
 			<?php foreach ($files as $file) : ?>
 				<?php $path = $file->path; ?>
 				<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-					Download : <a href="download.php?file=<?php echo(urlencode($file->filename)) ?>&path=<?php echo(urlencode($file->path)) ?>&title=<?php echo(urlencode($file->title)) ?>"><?php echo $file->title ?></a>
+					<?php echo $string['download'] ?> : <a href="download.php?file=<?php echo(urlencode($file->filename)) ?>&path=<?php echo(urlencode($file->path)) ?>&title=<?php echo(urlencode($file->title)) ?>"><?php echo $file->title ?></a>
 				</div>
 			<?php endforeach; ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation']; ?></div>

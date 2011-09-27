@@ -676,8 +676,8 @@ class ST_QTI12_Material // <material>
       $basename = basename($imagefile);
       $uniqueFilename = unique_filename($basename);
 
-      copy($imagefile, $cfg_web_root.'touchstone/media/'.$uniqueFilename);
-      echo "Copied $imagefile to ".$cfg_web_root."touchstone/media/$uniqueFilename<br />";
+      copy($imagefile, $cfg_web_root.'media/'.$uniqueFilename);
+      echo "Copied $imagefile to ".$cfg_web_root."media/$uniqueFilename<br />";
       $this->media = $uniqueFilename;
     } else {
       $this->media = basename($imagefile);
@@ -718,11 +718,11 @@ class ST_QTI12_Material // <material>
               $basename = basename($filename);
               $uniqueFilename = unique_filename($basename);
 
-              copy($import_directory."/".$filename, $cfg_web_root.'touchstone/media/'.$uniqueFilename);
-              //echo "Copied $import_directory/$filename to /var/www/touchstone/touchstone/media/$uniqueFilename<br />";
+              copy($import_directory."/".$filename, $cfg_web_root.'media/'.$uniqueFilename);
+              //echo "Copied $import_directory/$filename to /var/www/media/$uniqueFilename<br />";
               //$this->media = $basename;	
 
-              $data['IMG'][0]['src'] = "/touchstone/media/".$basename;
+              $data['IMG'][0]['src'] = "/media/".$basename;
               // recreate img tag
               $imgtag = "<img ";
               foreach ($src = $data['IMG'][0] as $tag => $value) {

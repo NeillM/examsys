@@ -4,7 +4,7 @@ require_once 'include/inc.php';
 require_once 'qti/qti_load.php';
 require_once 'qti12/qti12_load.php';
 require_once 'qti20/qti20_load.php';
-require_once 'touchstone/touchstone_save.php';
+require_once 'touchstone/local_save.php';
 
 // get some paper details
 $paper = GetVar("paperID");
@@ -33,7 +33,7 @@ if (!array_key_exists('file', $_FILES)) {
 $show_debug = IsAdminUser($userID);
 
 // create dir for qti to save into
-$base_dir = $cfg_web_root.'touchstone/qti/imports/';
+$base_dir = $cfg_web_root.'qti/imports/';
 $dir = GetAuthorName($userID)."/".date("Y-m-d")."/".date("H.i.s");
 
 if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);
@@ -56,7 +56,7 @@ $load_params->sourcefile = $file;
 $load_params->original_filename = $_FILES["file"]["name"];
 
 // setup touchstone save classes
-$export = new IE_Touchstone_Save();
+$export = new IE_Local_Save();
 $save_params->paper = $paper;
 $save_params->sourcefile = $file;
 $save_params->original_filename = $_FILES["file"]["name"];

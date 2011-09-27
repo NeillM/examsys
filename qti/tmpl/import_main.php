@@ -25,13 +25,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html onscroll="scrollXY();" onclick="hideMenus();">
 <head>
-	<title>TouchStone Import from QTI</title>
+	<title><?php echo $string['importfromqti'] ?></title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
-	<script type="text/javascript" src="/touchstone/qti/js/mootools-1.2.4.js"></script> 
+	<script type="text/javascript" src="/qti/js/mootools-1.2.4.js"></script> 
 
 	<style>
 		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px}
@@ -88,11 +88,11 @@ $result = $import_result;
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
 if ($module != '') {
-  echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
 } elseif ($folder != '') {
-  echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
 } else {
-  echo '<a href="../index.php">Home</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a>';
 }
 echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
 echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
@@ -118,45 +118,45 @@ $num_save_errors = (isset($result['save']['errors'][0])) ? count($result['save']
 if (isset($result['load']['errors'][0])) $bad--;
 ?>
 <?php if ($num_load_errors > 0) : ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold; color: red">There has been an error importing your QTI file:</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold; color: red"><?php echo $string['qtiimporterror'] ?>:</div>
 <?php foreach ($result['load']['errors'][0] as $error) : ?>
 			<div style="margin-left:25px; line-height:150%; color: red"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
 				<?php echo $error ?>
 			</div>
 <?php endforeach; ?>
 <?php elseif ($num_save_errors > 0) : ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold; color: red">There has been an error importing your QTI file:</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold; color: red"><?php echo $string['qtiimporterror'] ?>:</div>
 <?php foreach ($result['save']['errors'][0] as $error) : ?>
-			<div style="margin-left:25px; line-height:150%; color:red"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
+			<div style="margin-left:25px; line-height:150%; color:red"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
 				<?php echo $error ?>
 			</div>
 <?php endforeach; ?>
 <?php else : ?>
-<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold">Your QTI file has been imported</div>
+<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['qtiimported'] ?></div>
 <?php if ($num_save_errors > 0 || $num_load_errors > 0) : ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold; color:red">Some of your questions did not import correctly.</div>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $bad ?> out of <?php echo $total ?> questions had problems importing.</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold; color:red"><?php echo $string['questionproblems'] ?></div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo sprintf($string['hadproblemsimporting'], $bad, $total) ?></div>
 <?php else : ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold">Imported <?php echo $total ?> question(s).</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo sprintf($string['importedquestions'], $total) ?></div>
 <?php endif; ?>
 <?php endif; ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold">More Information</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation'] ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
-				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/result.html');">View Details</a>
+				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/result.html');"><?php echo $string['viewdetails'] ?></a>
 			</div>
 <?php if ($show_debug) : ?>
-			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold">Debug Information</div>
+			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['debuginformation'] ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
-				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_load.html');">Loading Debug</a>
+				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_load.html');"><?php echo $string['loadingdebug'] ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
-				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_int.html');">Intermediate Format Debug</a>
+				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_int.html');"><?php echo $string['intermediateformatdebug'] ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
-				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_save.html');">Saving Debug</a>
+				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_save.html');"><?php echo $string['savingdebug'] ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
-				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_res.html');">General Debug Info</a>
+				<a href="Javascript:newPopup('imports/<?php echo $dir ?>/debug_res.html');"><?php echo $string['generaldebuginfo']?></a>
 			</div>
 <?php endif; ?>
 			<br />

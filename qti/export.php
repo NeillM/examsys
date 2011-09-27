@@ -29,7 +29,7 @@
 // ids - comma separated list of question or paper ids (supports multiple papers as multiple qti files)
 
 require_once 'include/inc.php';
-require_once 'touchstone/touchstone_load.php';
+require_once 'touchstone/local_load.php';
 require_once 'qti12/qti12_save.php';
 require_once 'qti20/qti20_save.php';
 
@@ -67,7 +67,7 @@ $load_params->source = "touchstone";
 $load_params->type = $type;
 $load_params->ids = explode(",", $ids);
 $paperID = $load_params->ids[0];
-$import = new IE_Touchstone_Load();
+$import = new IE_Local_Load();
 
 if ($dest == "qti12") {
   $export = new IE_QTI12_Save();
@@ -78,7 +78,7 @@ if ($dest == "qti12") {
 }
 
 // create dir for qti to save into, and put in params
-$base_dir = $cfg_web_root.'touchstone/qti/exports/';
+$base_dir = $cfg_web_root.'qti/exports/';
 $dir = GetAuthorName($userID)."/".date("Y-m-d")."/".date("H.i.s");
 if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);
 $save_params = new stdClass();

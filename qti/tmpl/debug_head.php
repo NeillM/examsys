@@ -28,7 +28,7 @@
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
-	<script type="text/javascript" src="/touchstone/qti/js/mootools-1.2.4.js"></script> 
+	<script type="text/javascript" src="/qti/js/mootools-1.2.4.js"></script> 
 
 	<style>
 		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px}

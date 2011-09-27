@@ -25,7 +25,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html onscroll="scrollXY();" onclick="hideMenus();">
 <head>
-	<title>TouchStone Import from QTI</title>
+	<title><?php echo $string['importfromqti'] ?></title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
@@ -85,11 +85,11 @@ require '../include/paper_options.inc';
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
 if ($module != '') {
-  echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
 } elseif ($folder != '') {
-  echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
 } else {
-  echo '<a href="../index.php">Home</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a>';
 }
 echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
 echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
@@ -104,7 +104,7 @@ echo "</table>";
 
 <table border="0" cellpadding="0" cellspacing="0" style="width:500px; border:1px solid #5582D2; text-align:left"> 
 	<tr> 
-		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2">QTI Import</span></td> 
+		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2">QTI <?php echo $string['import'] ?></span></td> 
 	</tr> 
 	<tr> 
 		<td align="left" style="background-color:#DFE8FF" colspan="2"> 
@@ -114,14 +114,14 @@ echo "</table>";
 				<table width="100%" cellspacing="0" cellpadding="10">
 					<tr>
 						<td>
-							<strong>File</strong>&nbsp;<input type="file" size="40" name="file" id="file" />
+							<strong><?php echo $string['file'] ?></strong>&nbsp;<input type="file" size="40" name="file" id="file" />
 							<input type="hidden" name="paperID" id="paperID" value="<?=$paper?>" />
 						</td>
 					</tr>
 					<tr>
 						<td style="text-align:center">
-							<input type="submit" name="submit" value="Import File" style="width:100px" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:100px" onclick="javascript:history.back()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="button" name="help" value="Help" style="width:100px" onclick="javascript:launchHelp(224)" />
+							<input type="submit" name="submit" value="<?php echo $string['import'] . ' ' . $string['file'] ?>" style="width:100px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" style="width:100px" onclick="javascript:history.back()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" name="help" value="<?php echo $string['help'] ?>" style="width:100px" onclick="javascript:launchHelp(224)" />
 						</td>
 					</tr>
 				</table>

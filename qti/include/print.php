@@ -117,13 +117,13 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
     $title = '';
     $isarray = false;
     if (is_array($elem)) {
-      $title = "<img src='/touchstone/qti/artwork/array.png' width='16' height='16'> Array (".count($elem).")";
+      $title = "<img src='/qti/artwork/array.png' width='16' height='16'> Array (".count($elem).")";
       $isarray = true;
       //echo '<tr><td colspan=2 style="background-color:#333333;"><strong><font color=white>ARRAY</font></strong></td></tr>';
       } else {
       //echo '<tr><td colspan=2 style="background-color:#333333;"><strong>';
       //echo '<font color=white>+ * - OBJECT Type: '.get_class($elem).'</font></strong></td></tr>';
-      $title = "<img src='/touchstone/qti/artwork/class.png' width='16' height='16'> Object Type: ".get_class($elem);
+      $title = "<img src='/qti/artwork/class.png' width='16' height='16'> Object Type: ".get_class($elem);
 
       //			if (is_callable(array(get_class($elem),"__toString")))
       if (is_callable(array($elem, "__toString"))) {
@@ -135,10 +135,10 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
     }
     echo "<div class='print_cont'>";
     echo "<div class='print_head'>";
-    echo "<img src='/touchstone/qti/artwork/plus.png' width='16' height='16' onclick='print_nice_expand(".$nice_id.")'>";
-    echo "<img src='/touchstone/qti/artwork/star.png' width='16' height='16' onclick='print_nice_expand_all(".$nice_id.")'>";
-    echo "<img src='/touchstone/qti/artwork/minus.png' width='16' height='16' onclick='print_nice_contract(".$nice_id.")'>";
-    echo "<img src='/touchstone/qti/artwork/raw.png' width='16' height='16' onclick='print_nice_toggle_raw(".$nice_id.")'>";
+    echo "<img src='/qti/artwork/plus.png' width='16' height='16' onclick='print_nice_expand(".$nice_id.")'>";
+    echo "<img src='/qti/artwork/star.png' width='16' height='16' onclick='print_nice_expand_all(".$nice_id.")'>";
+    echo "<img src='/qti/artwork/minus.png' width='16' height='16' onclick='print_nice_contract(".$nice_id.")'>";
+    echo "<img src='/qti/artwork/raw.png' width='16' height='16' onclick='print_nice_toggle_raw(".$nice_id.")'>";
     echo "&nbsp;&nbsp;";
     echo $title."</div>";
     echo "<div class='print_raw' id='print_nice_raw_".$nice_id."' style='display:none;'><pre>";

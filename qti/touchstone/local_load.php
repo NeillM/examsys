@@ -34,7 +34,7 @@
 
 require_once '../config/config.inc.php';
 
-class IE_touchstone_Load extends IE_Main {
+class IE_Local_Load extends IE_Main {
   var $type = "";
   var $q_ids = array();
   var $p_ids = array();
@@ -180,7 +180,7 @@ class IE_touchstone_Load extends IE_Main {
     // populate class specific storage fields
     $funcname = 'LoadQuestion'.$q_type;
     call_user_func(array($this, $funcname), $store, $q_row, $o_rows);
-    //call_user_func(array('IE_touchstone_Load',$funcname),$store,$q_row,$o_rows);
+    //call_user_func(array('IE_local_Load',$funcname),$store,$q_row,$o_rows);
 
     // display some debug data
     //print_p($q_row);
@@ -718,9 +718,9 @@ class IE_touchstone_Load extends IE_Main {
 
   function GetMedia($filename) {
     global $cfg_web_root;
-    if (file_exists($cfg_web_root.'touchstone/media/'.$filename)) {
-      //echo "Copied /var/www/touchstone/touchstone/media/" . $filename . " to " . $this->params->base_dir . $this->params->dir."/".$filename . "<br>";
-      copy($cfg_web_root.'touchstone/media/'.$filename, $this->params->base_dir.$this->params->dir."/".$filename);
+    if (file_exists($cfg_web_root.'media/'.$filename)) {
+      //echo "Copied /var/www/media/" . $filename . " to " . $this->params->base_dir . $this->params->dir."/".$filename . "<br>";
+      copy($cfg_web_root.'media/'.$filename, $this->params->base_dir.$this->params->dir."/".$filename);
     } else {
       //echo "File $filename doesnt exist in media directory<br>";	
       }
