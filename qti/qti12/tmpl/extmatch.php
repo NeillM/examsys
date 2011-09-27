@@ -2,18 +2,22 @@
 
 			<?php echo $headertext ?>
 			
-<?php foreach ($question->scenarios as $respid => $scn) :?>
-<?php $c = ''; if (count($scn->correctans) > 1) { $c = "rcardinality='Multiple'";} ?>
+<?php foreach ($question->scenarios as $respid => $scn) : ?>
+<?php $c = '';
+  if (count($scn->correctans) > 1) {
+    $c = "rcardinality='Multiple'";
+  }
+?>
 			<response_lid ident="<?php echo $respid ?>" <?php echo $c ?>>
 				<material>
 					<mattext texttype="text/html"><![CDATA[<?php echo $scn->stem ?>]]></mattext>
-<?php if ($scn->media): ?>
+<?php if ($scn->media) : ?>
 					<matimage imagtype="<?php echo $scn->media_type ?>" uri="<?php echo $scn->media ?>"/>
 <?php endif; ?>
 				</material>
 				
 				<render_choice shuffle="No">
-<?php foreach ($question->optionlist as $oid => $option) :?>
+<?php foreach ($question->optionlist as $oid => $option) : ?>
 					<response_label ident="<?php echo $this->ll[$oid] ?>">
 						<material>
 							<mattext texttype="text/plain"><?php echo $option ?></mattext>
@@ -30,8 +34,8 @@
 				<decvar/>
 			</outcomes>
 
-<?php foreach ($question->scenarios as $respid => $scn) :?>
-<?php foreach ($scn->correctans as $aid => $answer) :?>
+<?php foreach ($question->scenarios as $respid => $scn) : ?>
+<?php foreach ($scn->correctans as $aid => $answer) : ?>
 			<respcondition title="Stem <?php echo $respid ?> <?php echo $aid ?>" continue="Yes">
 				<conditionvar>
 					<varequal respident="<?php echo $respid ?>"><?php echo $this->ll[$answer] ?></varequal>
@@ -41,7 +45,7 @@
 <?php endforeach; ?>
 <?php endforeach; ?>
 
-<?php foreach ($question->scenarios as $respid => $scn) :?>
+<?php foreach ($question->scenarios as $respid => $scn) : ?>
 			<respcondition title="Feedback <?php echo $respid ?>" continue="Yes">
 				<conditionvar>
 					<or>
@@ -57,7 +61,7 @@
 <?php endforeach; ?>
 		</resprocessing>
     
-<?php foreach ($question->scenarios as $respid => $scn) :?>
+<?php foreach ($question->scenarios as $respid => $scn) : ?>
 		<itemfeedback ident="Feedback <?php echo $respid ?>" view="Candidate">
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $scn->feedback ?>]]></mattext>

@@ -3,16 +3,16 @@
 			<?php echo $headertext ?>
 			
 <?php $respid = 1; ?>
-<?php foreach ($question->question as &$q) : ?>
+<?php foreach ($question->question as & $q) : ?>
 <?php // do we have a blank to output? ?>
-<?php if (substr($q,0,1) == "%") :?>
+<?php if (substr($q, 0, 1) == "%") : ?>
 			<response_lid ident="<?php echo $respid++ ?>">
 				<render_choice shuffle="Yes">
 <?php // get the options set for this blank ?>
 <?php $optset = $question->options[$q]; ?>
 <?php // output each option in the set ?>
 <?php $oid = 1; ?>
-<?php foreach ($optset as $option): ?>
+<?php foreach ($optset as $option) : ?>
 					<response_label ident="<?php echo(for_id($option->display)) ?>">
 						<material>
 							<mattext texttype="text/plain"><?php echo $option->display ?></mattext>
@@ -23,7 +23,7 @@
 				</render_choice>
 			</response_lid>
 <?php // otherwise output the material ?>
-<?php else: ?>
+<?php else : ?>
 			<material>
 				<mattext texttype="text/html"><![CDATA[<?php echo $q ?>]]></mattext>
 			</material>
@@ -50,12 +50,12 @@
 			</respcondition>
 
 <?php $respid = 1; ?>
-<?php foreach ($question->options as &$optset) : ?>
+<?php foreach ($question->options as & $optset) : ?>
 			<respcondition title="right - <?php echo $respid ?>" continue="Yes">
 				<conditionvar>
 <?php $oid = 1; ?>
-<?php foreach ($optset as $option): ?>
-<?php if ($option->correct): ?>
+<?php foreach ($optset as $option) : ?>
+<?php if ($option->correct) : ?>
 					<varequal respident="<?php echo $respid ?>" case="No"><?php echo $option->display ?></varequal>
 <?php endif; ?>
 <?php $oid++; ?>

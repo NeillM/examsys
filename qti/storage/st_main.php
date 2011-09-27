@@ -15,12 +15,12 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Adam Clarke
-* @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
-* @package
-*/
+ *
+ * @author Adam Clarke
+ * @version 1.0
+ * @copyright Copyright (c) 2011 The University of Nottingham
+ * @package
+ */
 
 require_once('st_question.php');
 require_once('st_paper.php');
@@ -29,24 +29,24 @@ require_once('st_paper.php');
 // a bunch of papers which link to questions, and possibly some other stuff
 
 class ST_Main {
-	var $papers;
-	var $questions;
+  var $papers;
+  var $questions;
 }
 
 // class to store exported files
 class ST_File {
-	var $filename;
-	var $title;
-	var $path;	
-	var $type;
-	var $id;
-	
-	function __construct($filename, $title, $path, $type = 'xml',$id = 0)	{
-		$this->filename = $filename;
-		$this->title = $title;
-		$this->path = $path;	
-		$this->type = $type;
-		$this->id = $id;
-	}
-	
+  var $filename;
+  var $title;
+  var $path;
+  var $type;
+  var $id;
+
+  function __construct($filename, $title, $path, $type = 'xml', $id = 0) {
+    $this->filename = $filename;
+    $this->title = $title;
+    $this->path = $path;
+    $this->type = $type;
+    $this->id = $id;
+  }
+
 }

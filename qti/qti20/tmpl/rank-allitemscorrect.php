@@ -1,25 +1,25 @@
-<?='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'?>
+<?= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' ?>
 <assessmentItem timeDependent="false" adaptive="false" label="mylabel" title="<?=$title?>" identifier="myidentifier" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1 imsqti_v2p1.xsd" xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:lip="http://www.imsglobal.org/xsd/imslip_v1p0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 
-<? foreach ($question->options as $oid => &$o) : ?>
-<? if ($o->order == 0): ?>
+<? foreach ($question->options as $oid => & $o) : ?>
+<? if ($o->order == 0) : ?>
 <? $label = ""; ?>
-<? elseif ($o->order == 9990): ?>
+<? elseif ($o->order == 9990) : ?>
 <? $label = ""; ?>
-<? else: ?>
+<? else : ?>
 <? $label = $this->ll[$o->order]; ?>
 <? endif; ?>
-<? if ($label != ""): ?>
+<? if ($label != "") : ?>
 	<responseDeclaration identifier="RESPONSE<?=$oid?>" cardinality="single" baseType="identifier">
 	<correctResponse>
-			<value><?=$label?></value>
+			<value><?= $label ?></value>
 		</correctResponse>
 		<mapping defaultValue="0">
 			<mapEntry mapKey="<?=$label?>" mappedValue="1"/>
 		</mapping>
 	</responseDeclaration>
-<? else:?>
+<? else : ?>
 	<responseDeclaration identifier="RESPONSE<?=$oid?>" cardinality="single" baseType="identifier" />
 <? endif; ?>
 <? endforeach; ?>
@@ -37,24 +37,24 @@
 	</outcomeDeclaration>
 
 	<itemBody>
-		<?=$headertext?>	
-<? if ($question->media): ?>
+		<?= $headertext ?>	
+<? if ($question->media) : ?>
 		<p><object type="<?=$question->media_type?>" data="<?=$question->media?>"/></p>
 <? endif; ?>
 <? $respid = 1; ?>
-<? foreach ($question->options as $oid => &$o) : ?>
-		<p><?=$o->stem?></p>
+<? foreach ($question->options as $oid => & $o) : ?>
+		<p><?= $o->stem ?></p>
 		<p>
 			<inlineChoiceInteraction responseIdentifier="RESPONSE<?=$oid?>" shuffle="false">
-<? foreach ($question->optlist as $oid => $option): ?>
-<? if ($oid == 0): ?>
+<? foreach ($question->optlist as $oid => $option) : ?>
+<? if ($oid == 0) : ?>
 <? $label = "BLANK"; ?>
-<? elseif ($oid == 9990): ?>
+<? elseif ($oid == 9990) : ?>
 <? $label = "NA"; ?>
-<? else: ?>
+<? else : ?>
 <? $label = $this->ll[$oid]; ?>
 <? endif; ?>
-				<inlineChoice identifier="<?=$label?>"><?=$option?></inlineChoice>
+				<inlineChoice identifier="<?=$label?>"><?= $option ?></inlineChoice>
 <? endforeach; ?>
 			</inlineChoiceInteraction>
 		</p>
@@ -67,15 +67,15 @@
 	    <responseCondition>
 			<responseIf>
 				<and>
-<? foreach ($question->options as $oid => &$o) : ?>
-<? if ($o->order == 0): ?>
+<? foreach ($question->options as $oid => & $o) : ?>
+<? if ($o->order == 0) : ?>
 <? $label = ""; ?>
-<? elseif ($o->order == 9990): ?>
+<? elseif ($o->order == 9990) : ?>
 <? $label = ""; ?>
-<? else: ?>
+<? else : ?>
 <? $label = $this->ll[$o->order]; ?>
 <? endif; ?>
-<? if ($label != ""): ?>
+<? if ($label != "") : ?>
 					<match>
 						<variable identifier="RESPONSE<?=$oid?>"/>
 						<correct identifier="RESPONSE<?=$oid?>"/>
@@ -96,7 +96,7 @@
 
 
 	
-  <modalFeedback outcomeIdentifier="FEEDBACK" identifier="YES" showHide="hide"><?=$question->fb_correct?></modalFeedback>
-  <modalFeedback outcomeIdentifier="FEEDBACK" identifier="YES" showHide="show"><?=$question->fb_incorrect?></modalFeedback>
+  <modalFeedback outcomeIdentifier="FEEDBACK" identifier="YES" showHide="hide"><?= $question->fb_correct ?></modalFeedback>
+  <modalFeedback outcomeIdentifier="FEEDBACK" identifier="YES" showHide="show"><?= $question->fb_incorrect ?></modalFeedback>
 
 </assessmentItem>

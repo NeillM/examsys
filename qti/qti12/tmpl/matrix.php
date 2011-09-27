@@ -2,13 +2,13 @@
 		
 			<?php echo $headertext ?>
 
-<?php foreach($question->scenarios as $scid => $scenario): ?>
+<?php foreach ($question->scenarios as $scid => $scenario) : ?>
 			<response_lid ident="<?php echo $scid ?>">
 				<material>
 					<mattext texttype="text/html"><![CDATA[<?php echo $scenario->scenario ?>]]></mattext>
 				</material>	
 				<render_choice shuffle="No">
-<?php foreach ($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 					<response_label ident="<?php echo $this->ll[$oid] ?>">
 						<material>
 							<mattext texttype="text/html"><![CDATA[<?php echo $option ?>]]></mattext>
@@ -26,7 +26,7 @@
 				<decvar/>
 			</outcomes>
 			
-<?php foreach($question->scenarios as $scid => $scenario): ?>
+<?php foreach ($question->scenarios as $scid => $scenario) : ?>
 			<respcondition title="<?php echo $scid ?>" continue="Yes">
 				<conditionvar>
 					<varequal respident="<?php echo $scid ?>"><?php echo $this->ll[$scenario->answer] ?></varequal>

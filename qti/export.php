@@ -15,12 +15,12 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Adam Clarke
-* @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
-* @package
-*/
+ *
+ * @author Adam Clarke
+ * @version 1.0
+ * @copyright Copyright (c) 2011 The University of Nottingham
+ * @package
+ */
 
 // parameters
 
@@ -36,64 +36,57 @@ require_once 'qti20/qti20_save.php';
 $ob = new OB();
 
 $dest = GetVar("dest");
-if ($dest == "")
-	die ("You must specify dest");
+if ($dest == "") die("You must specify dest");
 if ($dest == "qti21") $dest = "qti20";
 
 $ids = GetVar("paperID");
-	
+
 $show_debug = IsAdminUser($userID);
 
 // load in some paper information to display
-if ($ids != "")
-{
-	$type = "paper";
+if ($ids != "") {
+  $type = "paper";
 
-	// get paper properties
-	$db = new Database();
-	$db->SetTable('properties');
-	$db->AddField('*');
-	$db->AddWhere('property_id',$ids,'i');
-	$paper_row = $db->GetSingleRow();
+  // get paper properties
+  $db = new Database();
+  $db->SetTable('properties');
+  $db->AddField('*');
+  $db->AddWhere('property_id', $ids, 'i');
+  $paper_row = $db->GetSingleRow();
 
 } else {
-	$ids = GetVar("q_id");
-	$type = "question";
-	
-	$paper_row['paper_title'] = "Questions";	
+  $ids = GetVar("q_id");
+  $type = "question";
+
+  $paper_row['paper_title'] = "Questions";
 }
 
 // set up classes
 $load_params = new stdClass();
 $load_params->source = "touchstone";
 $load_params->type = $type;
-$load_params->ids = explode(",",$ids);
+$load_params->ids = explode(",", $ids);
 $paperID = $load_params->ids[0];
 $import = new IE_Touchstone_Load();
 
-
-if ($dest == "qti12")
-{
-	$export = new IE_QTI12_Save();
+if ($dest == "qti12") {
+  $export = new IE_QTI12_Save();
 } else if ($dest == "qti20") {
-	$export = new IE_QTI20_Save();
+  $export = new IE_QTI20_Save();
 } else {
-	die ("Invalid destination - $dest");
+  die("Invalid destination - $dest");
 }
 
-
 // create dir for qti to save into, and put in params
-$base_dir = $cfg_web_root . 'touchstone/qti/exports/';
-$dir = GetAuthorName($userID) . "/" . date("Y-m-d") . "/" . date("H.i.s");
-if (!file_exists($base_dir.$dir))
-	mkdir($base_dir.$dir,0755,true);
+$base_dir = $cfg_web_root.'touchstone/qti/exports/';
+$dir = GetAuthorName($userID)."/".date("Y-m-d")."/".date("H.i.s");
+if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);
 $save_params = new stdClass();
 $save_params->dir = $dir;
 $save_params->base_dir = $base_dir;
 
 $load_params->dir = $dir;
 $load_params->base_dir = $base_dir;
-
 
 ///////////////////////
 // perform operation //
@@ -114,10 +107,9 @@ $result['load']['errors'] = $import->errors;
 $result['load']['data'] = $data;
 $ob->Restore();
 
-
 // create object with save source
 $ob->ClearAndSave();
-$export->Save($save_params,$data);
+$export->Save($save_params, $data);
 $result['save']['type'] = $dest;
 $result['save']['params'] = $save_params;
 $result['save']['debug'] = $ob->GetContent();
@@ -139,16 +131,14 @@ $ob->Clear();
 require "tmpl/export_details.php";
 $result_debug_file = $base_dir.$dir."/result.html";
 $output = $ob->GetContent();
-file_put_contents($result_debug_file,$output);
-
+file_put_contents($result_debug_file, $output);
 
 // save access information and other stuff into the destination folder
 $access_file = $base_dir.$dir."/access.xml";
 $ob->Clear();
 require "tmpl/access.php";
 $access = $ob->GetContent();
-file_put_contents($access_file,$access);
-
+file_put_contents($access_file, $access);
 
 // store intermediate format debug information
 $load_debug_file = $base_dir.$dir."/debug_int.html";
@@ -156,8 +146,7 @@ $ob->Clear();
 require "tmpl/debug_head.php";
 print_p($data);
 $data_p = $ob->GetContent();
-file_put_contents($load_debug_file,$data_p);
-
+file_put_contents($load_debug_file, $data_p);
 
 // store intermediate format debug information -  plain version
 $load_debug_file = $base_dir.$dir."/debug_int.txt";
@@ -165,8 +154,7 @@ $ob->Clear();
 require "tmpl/debug_head.php";
 print_r($data);
 $data_p = $ob->GetContent();
-file_put_contents($load_debug_file,$data_p);
-
+file_put_contents($load_debug_file, $data_p);
 
 // save load debug info
 $load_debug_file = $base_dir.$dir."/debug_load.html";
@@ -174,8 +162,7 @@ $ob->Clear();
 include "tmpl/debug_head.php";
 echo $result['load']['debug'];
 $data_p = $ob->GetContent();
-file_put_contents($load_debug_file,$data_p);
-
+file_put_contents($load_debug_file, $data_p);
 
 // save save debug info
 $save_debug_file = $base_dir.$dir."/debug_save.html";
@@ -183,8 +170,7 @@ $ob->Clear();
 include "tmpl/debug_head.php";
 echo $result['save']['debug'];
 $data_p = $ob->GetContent();
-file_put_contents($save_debug_file,$data_p);
-
+file_put_contents($save_debug_file, $data_p);
 
 // save other debug info
 $result_debug_file = $base_dir.$dir."/debug_res.html";
@@ -196,16 +182,14 @@ unset($result['load']['data']);
 require "tmpl/debug_head.php";
 print_p($result);
 $result_p = $ob->GetContent();
-file_put_contents($result_debug_file,$result_p);
-
+file_put_contents($result_debug_file, $result_p);
 
 // save other debug info -  plain version
 $result_debug_file = $base_dir.$dir."/debug_res.txt";
 $ob->Clear();
 print_r($result);
 $result_p = $ob->GetContent();
-file_put_contents($result_debug_file,$result_p);
-
+file_put_contents($result_debug_file, $result_p);
 
 $ob->Clear();
 echo $mainoutput;

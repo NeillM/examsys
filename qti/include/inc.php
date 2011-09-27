@@ -15,36 +15,35 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Adam Clarke
-* @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
-* @package
-*/
+ *
+ * @author Adam Clarke
+ * @version 1.0
+ * @copyright Copyright (c) 2011 The University of Nottingham
+ * @package
+ */
 
-if (file_exists("../storage/st_main.php"))
-{
-	require_once '../../include/staff_auth.inc';
-	require_once "../../include/display_functions.inc";
-	require_once "../storage/st_main.php";
-	require_once "../storage/qti12_storage.php";
-	require_once '../include/db.php';
-	require_once '../include/ob.php';
-	require_once '../include/general.php';
-	require_once '../include/ie_main.php';
-	require_once '../include/print.php';
-	require_once '../include/nicexhtml.php';
-	require_once '../include/simpleimage.php';
+if (file_exists("../storage/st_main.php")) {
+  require_once '../../include/staff_auth.inc';
+  require_once "../../include/display_functions.inc";
+  require_once "../storage/st_main.php";
+  require_once "../storage/qti12_storage.php";
+  require_once '../include/db.php';
+  require_once '../include/ob.php';
+  require_once '../include/general.php';
+  require_once '../include/ie_main.php';
+  require_once '../include/print.php';
+  require_once '../include/nicexhtml.php';
+  require_once '../include/simpleimage.php';
 } else {
-	require_once '../include/staff_auth.inc';
-	require_once "../include/display_functions.inc";
-	require_once "storage/st_main.php";
-	require_once "storage/qti12_storage.php";
-	require_once 'include/db.php';
-	require_once 'include/ob.php';
-	require_once 'include/general.php';
-	require_once 'include/ie_main.php';
-	require_once 'include/print.php';
-	require_once 'include/nicexhtml.php';
-	require_once 'include/simpleimage.php';
+  require_once '../include/staff_auth.inc';
+  require_once "../include/display_functions.inc";
+  require_once "storage/st_main.php";
+  require_once "storage/qti12_storage.php";
+  require_once 'include/db.php';
+  require_once 'include/ob.php';
+  require_once 'include/general.php';
+  require_once 'include/ie_main.php';
+  require_once 'include/print.php';
+  require_once 'include/nicexhtml.php';
+  require_once 'include/simpleimage.php';
 }

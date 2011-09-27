@@ -7,14 +7,14 @@
 					<material>
 						<matimage imagtype="image/gif" uri="<?php echo $question->media ?>" x0="0" width="<?php echo $question->media_width ?>" y0="0" height="<?php echo $question->media_height ?>"/>
 					</material>
-<?php $hid = 1;?>
-<?php foreach ($question->hotspots as $hotspot):?>
-<?php if ($hotspot->type == "rectangle"): ?>
-					<response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Rectangle"><?php echo implode(",",$hotspot->coords) ?></response_label>
-<?php elseif ($hotspot->type == "ellipse"): ?>
-<response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Ellipse"><?php echo(implode(",",$hotspot->coords)) ?></response_label>
-<?php else: ?>
-					<qticomment>Hotspot:<?php echo $hotspot->type ?>|<?php echo(implode(",",$hotspot->coords)) ?></qticomment>
+<?php $hid = 1; ?>
+<?php foreach ($question->hotspots as $hotspot) : ?>
+<?php if ($hotspot->type == "rectangle") : ?>
+					<response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Rectangle"><?php echo implode(",", $hotspot->coords) ?></response_label>
+<?php elseif ($hotspot->type == "ellipse") : ?>
+<response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Ellipse"><?php echo(implode(",", $hotspot->coords)) ?></response_label>
+<?php else : ?>
+					<qticomment>Hotspot:<?php echo $hotspot->type ?>|<?php echo(implode(",", $hotspot->coords)) ?></qticomment>
 <?php endif; ?>
 <?php $hid++; ?>
 <?php endforeach; ?>
@@ -40,15 +40,15 @@
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 
-<?php $hid = 1;?>
-<?php foreach ($question->hotspots as $hotspot):?>
+<?php $hid = 1; ?>
+<?php foreach ($question->hotspots as $hotspot) : ?>
 <?php if ($hotspot->type != "rectangle" && $hotspot->type != "ellipse") continue; ?>
 			<respcondition>
 				<conditionvar>
-<?php if ($hotspot->type == "rectangle"): ?>
-					<varinside respident="IMAGE" areatype="Rectangle"><?php echo(implode(",",$hotspot->coords)) ?></varinside>
-<?php elseif ($hotspot->type == "ellipse"): ?>
-					<varinside respident="IMAGE" areatype="Ellipse"><?php echo(implode(",",$hotspot->coords)) ?></varinside>
+<?php if ($hotspot->type == "rectangle") : ?>
+					<varinside respident="IMAGE" areatype="Rectangle"><?php echo(implode(",", $hotspot->coords)) ?></varinside>
+<?php elseif ($hotspot->type == "ellipse") : ?>
+					<varinside respident="IMAGE" areatype="Ellipse"><?php echo(implode(",", $hotspot->coords)) ?></varinside>
 <?php endif; ?>
 				</conditionvar>
 				<setvar action="Set">1</setvar>

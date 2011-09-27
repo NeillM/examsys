@@ -1,4 +1,4 @@
-<?='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'?>
+<?= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' ?>
 <manifest xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
 	xmlns:imsmd="http://www.imsglobal.org/xsd/imsmd_v1p2"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,11 +12,11 @@ http://www.imsglobal.org/xsd/imsmd_v1p2 http://www.imsglobal.org/xsd/imsmd_v1p2p
 		<imsmd:lom>
 			<imsmd:general>
 				<imsmd:title>
-					<imsmd:langstring xml:lang="en"><?=StripForTitle($data->questions[0]->leadin)?></imsmd:langstring>
+					<imsmd:langstring xml:lang="en"><?= StripForTitle($data->questions[0]->leadin) ?></imsmd:langstring>
 				</imsmd:title>
 				<imsmd:language>en</imsmd:language>
 				<imsmd:description>
-					<imsmd:langstring xml:lang="en"><?=StripForTitle($data->questions[0]->scenario)?></imsmd:langstring>
+					<imsmd:langstring xml:lang="en"><?= StripForTitle($data->questions[0]->scenario) ?></imsmd:langstring>
 				</imsmd:description>
 			</imsmd:general>
 			<imsmd:lifecycle>
@@ -61,11 +61,11 @@ http://www.imsglobal.org/xsd/imsmd_v1p2 http://www.imsglobal.org/xsd/imsmd_v1p2p
 				<imsmd:lom>
 					<imsmd:general>
 						<imsmd:title>
-							<imsmd:langstring xml:lang="en"><?=StripForTitle($data->questions[0]->leadin)?></imsmd:langstring>
+							<imsmd:langstring xml:lang="en"><?= StripForTitle($data->questions[0]->leadin) ?></imsmd:langstring>
 						</imsmd:title>
 						<imsmd:language>en</imsmd:language>
 						<imsmd:description>
-							<imsmd:langstring xml:lang="en"><?=StripForTitle($data->questions[0]->scenario)?></imsmd:langstring>
+							<imsmd:langstring xml:lang="en"><?= StripForTitle($data->questions[0]->scenario) ?></imsmd:langstring>
 						</imsmd:description>
 					</imsmd:general>
 					<imsmd:lifecycle>
@@ -98,24 +98,24 @@ http://www.imsglobal.org/xsd/imsmd_v1p2 http://www.imsglobal.org/xsd/imsmd_v1p2p
 				</imsmd:lom>
 			</metadata>
 			<file href="test.xml"/>
-<? foreach ($data->questions as $question) :?>
+<? foreach ($data->questions as $question) : ?>
 			<dependency identifierref="RES-<?=$question->load_id?>"/>
 <? endforeach; ?>
 		</resource>
 		
 		<!-- QUESTION RESOURCE -->
-<? foreach ($data->questions as $question) :?>
+<? foreach ($data->questions as $question) : ?>
 		<resource identifier="RES-<?=$question->load_id?>" type="imsqti_item_xmlv2p1"
 			href="question-<?=$question->load_id?>.xml">
 			<metadata>
 				<imsmd:lom>
 					<imsmd:general>
-						<imsmd:identifier><?=$question->load_id?></imsmd:identifier>
+						<imsmd:identifier><?= $question->load_id ?></imsmd:identifier>
 						<imsmd:title>
-							<imsmd:langstring xml:lang="en"><?=StripForTitle($question->leadin)?></imsmd:langstring>
+							<imsmd:langstring xml:lang="en"><?= StripForTitle($question->leadin) ?></imsmd:langstring>
 						</imsmd:title>
 						<imsmd:description>
-							<imsmd:langstring xml:lang="en"><?=StripForTitle($question->scenario)?></imsmd:langstring>
+							<imsmd:langstring xml:lang="en"><?= StripForTitle($question->scenario) ?></imsmd:langstring>
 						</imsmd:description>
 					</imsmd:general>
 					<imsmd:lifecycle>
@@ -146,11 +146,11 @@ http://www.imsglobal.org/xsd/imsmd_v1p2 http://www.imsglobal.org/xsd/imsmd_v1p2p
 					<imsqti:solutionAvailable>true</imsqti:solutionAvailable>-->
 				</imsqti:qtiMetadata>
 			</metadata>
-<? foreach ($data->files as $file): ?>
+<? foreach ($data->files as $file) : ?>
 <? if ($file->id != $question->load_id) continue; ?>
 <? //if (strtolower(substr($file->filename,strlen($file->filename)-3,3)) == "xml") continue; ?>
 			<file href="<?=$file->filename?>"/>
-<? endforeach;?>
+<? endforeach; ?>
 		</resource>
 <? endforeach; ?>
 	</resources>

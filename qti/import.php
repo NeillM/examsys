@@ -14,30 +14,29 @@ $db->SetTable('properties');
 $db->AddField('UNIX_TIMESTAMP(start_date) AS start_date');
 $db->AddField('paper_title');
 $db->AddField('paper_type');
-$db->AddWhere('property_id',$paper,'i');
+$db->AddWhere('property_id', $paper, 'i');
 $paper_row = $db->GetSingleRow();
-
 
 if ($paper_row['paper_type'] == '2' and time() > $paper_row['start_date']) {
   $summative_lock = 1;
   include "tmpl/import_locked.php";
-  exit;	
+  exit;
 } else {
   $summative_lock = 0;
 }
 
-if (!array_key_exists('file',$_FILES)) {
+if (!array_key_exists('file', $_FILES)) {
   include "tmpl/import_file.php";
-  exit;	
+  exit;
 }
 
 $show_debug = IsAdminUser($userID);
 
 // create dir for qti to save into
-$base_dir = $cfg_web_root . 'touchstone/qti/imports/';
-$dir = GetAuthorName($userID) . "/" . date("Y-m-d") . "/" . date("H.i.s");
+$base_dir = $cfg_web_root.'touchstone/qti/imports/';
+$dir = GetAuthorName($userID)."/".date("Y-m-d")."/".date("H.i.s");
 
-if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir,0755,true);
+if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);
 $save_params = new stdClass();
 $save_params->dir = $dir;
 $save_params->base_dir = $base_dir;
@@ -48,8 +47,8 @@ $load_params->base_dir = $base_dir;
 
 // upload file
 $ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
-$file = $base_dir . $dir . "/import." . $ext;
-move_uploaded_file($_FILES["file"]["tmp_name"],$file);
+$file = $base_dir.$dir."/import.".$ext;
+move_uploaded_file($_FILES["file"]["tmp_name"], $file);
 
 // set up qti load classes
 $import = new IE_QTI_Load();
@@ -61,7 +60,6 @@ $export = new IE_Touchstone_Save();
 $save_params->paper = $paper;
 $save_params->sourcefile = $file;
 $save_params->original_filename = $_FILES["file"]["name"];
-
 
 // perform operation
 $result = array();
@@ -83,7 +81,7 @@ $ob->Restore();
 // create object with save source
 $ob = new OB();
 $ob->ClearAndSave();
-$export->Save($save_params,$data);
+$export->Save($save_params, $data);
 $result['save']['type'] = 'touchstone';
 $result['save']['params'] = $save_params;
 $result['save']['debug'] = $ob->GetContent();
@@ -106,7 +104,7 @@ include "tmpl/import_details.php";
 $result_debug_file = $base_dir.$dir."/result.html";
 $output = $ob->GetContent();
 //$ob->Restore();
-file_put_contents($result_debug_file,$output);
+file_put_contents($result_debug_file, $output);
 
 ///////////////////////
 // DEBUG INFORMATION //
@@ -119,7 +117,7 @@ include "tmpl/debug_head.php";
 print_p($data);
 $data_p = $ob->GetContent();
 //$ob->Restore();
-file_put_contents($load_debug_file,$data_p);
+file_put_contents($load_debug_file, $data_p);
 
 // save load debug info
 $load_debug_file = $base_dir.$dir."/debug_load.html";
@@ -128,7 +126,7 @@ include "tmpl/debug_head.php";
 echo $result['load']['debug'];
 $data_p = $ob->GetContent();
 //$ob->Restore();
-file_put_contents($load_debug_file,$data_p);
+file_put_contents($load_debug_file, $data_p);
 
 // save save debug info
 $save_debug_file = $base_dir.$dir."/debug_save.html";
@@ -137,7 +135,7 @@ include "tmpl/debug_head.php";
 echo $result['save']['debug'];
 $data_p = $ob->GetContent();
 //$ob->Restore();
-file_put_contents($save_debug_file,$data_p);
+file_put_contents($save_debug_file, $data_p);
 
 // save other debug info
 $result_debug_file = $base_dir.$dir."/debug_res.html";
@@ -150,8 +148,7 @@ include "tmpl/debug_head.php";
 print_p($result);
 $result_p = $ob->GetContent();
 //$ob->Restore();
-file_put_contents($result_debug_file,$result_p);
-
+file_put_contents($result_debug_file, $result_p);
 
 $ob->Clear();
 echo $mainoutput;

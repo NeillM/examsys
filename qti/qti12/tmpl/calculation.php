@@ -4,7 +4,7 @@
 			<qticomment><![CDATA[Units:<?php echo $question->units ?>]]></qticomment>
 			<qticomment><![CDATA[Decimals:<?php echo $question->decimals ?>]]></qticomment>
 			<qticomment><![CDATA[Tolerance:<?php echo $question->tolerance ?>]]></qticomment>
-<?php foreach ($question->variables as $id => $var): ?>
+<?php foreach ($question->variables as $id => $var) : ?>
 			<qticomment><![CDATA[Variable:<?php echo $id ?>|<?php echo $var->min ?>|<?php echo $var->max ?>|<?php echo $var->dec ?>|<?php echo $var->inc ?>]]></qticomment>
 <?php endforeach; ?>
 
@@ -30,8 +30,8 @@
 <?php if ($question->tolerance > 0) : ?>
 			<respcondition title="Within range" >
 				<conditionvar>
-					<vargte respident="1"><?php echo $answer-$question->tolerance ?></vargte>
-					<varlte respident="1"><?php echo $answer+$question->tolerance ?></varlte>
+					<vargte respident="1"><?php echo $answer - $question->tolerance ?></vargte>
+					<varlte respident="1"><?php echo $answer + $question->tolerance ?></varlte>
 				</conditionvar>
 				<setvar action="Set">1</setvar>
 				<displayfeedback linkrefid="general"/>

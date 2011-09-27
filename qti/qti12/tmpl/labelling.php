@@ -8,7 +8,7 @@
 					<material>
 						<matimage imagtype="image/gif" uri="<?php echo $question->media ?>" width="<?php echo $question->media_width ?>" height="<?php echo $question->media_height ?>"/>
 					</material>
-<?php foreach ($question->labels as $id => $label): ?>					
+<?php foreach ($question->labels as $id => $label) : ?>					
 					<response_label ident="<?php echo $this->ll[$id+1] ?>">
 						<material>
 							<mattext><?php echo $label->tag; ?></mattext>
@@ -38,11 +38,11 @@
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 
-<?php foreach ($question->labels as $id => $label): ?>	
-<?php if ($label->left == -1 && $label->top == -1) continue; ?>				
+<?php foreach ($question->labels as $id => $label) : ?>	
+<?php if ($label->left == - 1 && $label->top == - 1) continue; ?>				
 			<respcondition title="<?php echo $this->ll[$id+1] ?>" continue="Yes">
 				<conditionvar>
-					<varinside respident="<?php echo $this->ll[$id+1] ?>" areatype="Rectangle"><?php echo $label->left ?>,<?php echo $label->top ?> <?php echo $label->left+$question->width ?>,<?php echo($label->top+$question->height) ?></varinside>
+					<varinside respident="<?php echo $this->ll[$id+1] ?>" areatype="Rectangle"><?php echo $label->left ?>,<?php echo $label->top ?> <?php echo $label->left + $question->width ?>,<?php echo($label->top + $question->height) ?></varinside>
 				</conditionvar>
 				<setvar action="Add">1</setvar>
 			</respcondition>

@@ -5,13 +5,13 @@
 			<response_str ident="1" rcardinality="Single">
 				<render_fib>
 <?php $respid = 1; ?>
-<?php foreach ($question->question as &$q) : ?>
+<?php foreach ($question->question as & $q) : ?>
 <?php // do we have a blank to output? ?>
-<?php if (substr($q,0,1) == "%") :?>
+<?php if (substr($q, 0, 1) == "%") : ?>
 					<response_label ident="rl<?php echo $respid ?>"/>
 <?php $respid++; ?>
 <?php // otherwise output the material ?>
-<?php else: ?>
+<?php else : ?>
 					<material>
 						<mattext texttype="text/html"><![CDATA[<?php echo $q ?>]]></mattext>
 					</material>
@@ -41,11 +41,11 @@
 			</respcondition>
 
 <?php $respid = 1; ?>
-<?php foreach ($question->options as &$optset) : ?>
+<?php foreach ($question->options as & $optset) : ?>
 			<respcondition title="right - <?php echo $respid ?>" continue="Yes">
 				<conditionvar>
 					<or>
-<?php foreach ($optset as $option): ?>
+<?php foreach ($optset as $option) : ?>
 						<varequal respident="1" case="No" index="<?php echo $respid ?>"><?php echo $option->display ?></varequal>
 <?php endforeach; ?>
 					</or>

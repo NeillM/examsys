@@ -4,11 +4,11 @@
 
 			<response_lid ident='1' rcardinality='Multiple'>
 				<render_choice shuffle='No' minnumber='<?php echo $maxanswers ?>' maxnumber='<?php echo $maxanswers ?>'>
-<?php foreach ($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 					<response_label ident='<?php echo $this->ll[$oid] ?>'>
 						<material>
 							<mattext texttype='text/html'><![CDATA[<?php echo $option->stem ?>]]></mattext>
-<?php if ($option->media): ?>
+<?php if ($option->media) : ?>
 							<matimage imagtype="<?php echo $option->media_type ?>" uri="<?php echo $option->media ?>"/>
 <?php endif; ?>
 						</material>
@@ -43,8 +43,13 @@
 			</respcondition>
 			
 			<!-- response conditions. 2 per option with checked and unchecked -->
-<?php foreach ($question->options as $oid => $option): ?>
-<?php if ($option->is_correct) { $score = 1; } else { $score = 0; } ?>
+<?php foreach ($question->options as $oid => $option) : ?>
+<?php if ($option->is_correct) {
+    $score = 1;
+  } else {
+    $score = 0;
+  }
+?>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> checked" continue="Yes">
 				<conditionvar>
 					<varequal respident="1"><?php echo $this->ll[$oid] ?></varequal>
@@ -67,14 +72,24 @@
 		
 		
 		<!-- feedback items for each item, pick right feedback based on correct or incorrect -->
-<?php foreach ($question->options as $oid => $option): ?>
-<?php if ($option->is_correct) { $fb = $option->fb_correct; } else { $fb = $option->fb_incorrect; } ?>
+<?php foreach ($question->options as $oid => $option) : ?>
+<?php if ($option->is_correct) {
+    $fb = $option->fb_correct;
+  } else {
+    $fb = $option->fb_incorrect;
+  }
+?>
 		<itemfeedback ident='<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> checked' view='Candidate'>
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
 			</material>
 		</itemfeedback>			
-<?php if (!$option->is_correct) { $fb = $option->fb_correct; } else { $fb = $option->fb_incorrect; } ?>
+<?php if (!$option->is_correct) {
+    $fb = $option->fb_correct;
+  } else {
+    $fb = $option->fb_incorrect;
+  }
+?>
 		<itemfeedback ident='<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> unchecked' view='Candidate'>
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>

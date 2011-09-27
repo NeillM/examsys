@@ -15,12 +15,12 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Adam Clarke
-* @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
-* @package
-*/
+ *
+ * @author Adam Clarke
+ * @version 1.0
+ * @copyright Copyright (c) 2011 The University of Nottingham
+ * @package
+ */
 ?>
 <html>
 <head>
@@ -60,16 +60,16 @@
 </tr>
 <?php if (isset($result['load']['data']->papers) && count($result['load']['data']->papers) > 0) : ?>
 <?php $qno = 1; ?>
-	<?php foreach ($result['load']['data']->papers as &$paper) :?>
-		<?php if ( count($result['load']['data']->papers) > 1 ): ?>
+	<?php foreach ($result['load']['data']->papers as & $paper) : ?>
+		<?php if (count($result['load']['data']->papers) > 1) : ?>
 			<tr><td colspan="6" class="divider" style="font-size:120%;">Paper <?php echo($paper->paper_title) ?></td></tr>
 			<tr><td colspan="6" style="height:5px"><img src="../../../artwork/divider_bar.gif" width="290" height="1"></td></tr>
-		<?php endif;?>
+		<?php endif; ?>
 		<?php foreach ($paper->screens as $s_id => $screen) : ?>
 			<tr><td colspan="6" class="divider">Screen <?php echo($s_id) ?></td></tr>
 			<tr><td colspan="6" style="height:5px"><img src="../../../artwork/divider_bar.gif" width="290" height="1"></td></tr>
-			<?php foreach ($screen->question_ids as $q_id): ?>
-				<?php $question = FindQuestion($result['load']['data']->questions,$q_id); ?>
+			<?php foreach ($screen->question_ids as $q_id) : ?>
+				<?php $question = FindQuestion($result['load']['data']->questions, $q_id); ?>
 				<tr>
 						<td></td>
 						<td valign="top" align="right" style="padding-right:6px;"><?php echo($qno) ?>.</td>
@@ -78,28 +78,28 @@
 						<td valign="top"><nobr>&nbsp;<?php echo(ConvertType($question->type)) ?>&nbsp;</nobr></td>
 						<td valign="top"><?php LogForQuestion($question->load_id) ?></td>
 				</tr>			
-				<?php $qno ++ ?>		
+				<?php $qno++ ?>		
 			<?php endforeach; ?>
 		<?php endforeach; ?>
 	<?php endforeach; ?>
 
 
-<?php elseif (count($result['load']['data']->questions) > 0): ?>
+<?php elseif (count($result['load']['data']->questions) > 0) : ?>
 
 <?php $qno = 1; ?>
-	<?php foreach ($result['load']['data']->questions as $question): ?>
+	<?php foreach ($result['load']['data']->questions as $question) : ?>
 	<tr>
 			<td></td>
 			<td valign="top" align="right" style="padding-right:6px;"><?php echo($qno) ?>.</td>
-			<td valign="top" width="50%"><?php echo(StripForTitle($question->leadin) )?></td>
+			<td valign="top" width="50%"><?php echo(StripForTitle($question->leadin)) ?></td>
 			<td valign="top" align="center"><?php echo($question->save_id) ?></td>
 			<td valign="top"><nobr>&nbsp;<?php echo(ConvertType($question->type)) ?>&nbsp;</nobr></td>
 			<td valign="top"><?php LogForQuestion($question->load_id) ?></td>
 	</tr>
-		<?php $qno ++ ?>		
+		<?php $qno++ ?>		
 	<?php endforeach; ?>
 
-<?php endif;?>
+<?php endif; ?>
 </table>
 </body>
 </html>

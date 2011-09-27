@@ -15,36 +15,31 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Adam Clarke
-* @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
-* @package
-*/
+ *
+ * @author Adam Clarke
+ * @version 1.0
+ * @copyright Copyright (c) 2011 The University of Nottingham
+ * @package
+ */
 
-class IE_Main
-{
-	var $output;
-	var $errors = array();
-	var $warnings = array();
-	
-	function AddError($message,$id = '0')
-	{
-		$this->errors[$id][] = $message;	
-	}
-	
-	function AddWarning($message,$id = '0')
-	{
-		$this->warnings[$id][] = $message;
-	}
-	
-	function Save($params,&$data)
-	{
-		$this->AddError("This export type is not supported");
-	}
-	
-	function Load($params)
-	{
-		$this->AddError("This import type is not supported");
-	}
+class IE_Main {
+  var $output;
+  var $errors = array();
+  var $warnings = array();
+
+  function AddError($message, $id = '0') {
+    $this->errors[$id][] = $message;
+  }
+
+  function AddWarning($message, $id = '0') {
+    $this->warnings[$id][] = $message;
+  }
+
+  function Save($params, &$data) {
+    $this->AddError("This export type is not supported");
+  }
+
+  function Load($params) {
+    $this->AddError("This import type is not supported");
+  }
 }

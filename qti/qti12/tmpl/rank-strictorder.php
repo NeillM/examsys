@@ -2,18 +2,18 @@
 
 			<?php echo $headertext ?>
 
-<?php foreach($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 			<response_lid ident="<?php echo $oid ?>">
 				<material>
 					<mattext texttype="text/html"><![CDATA[<?php echo $option->stem ?>]]></mattext>
 				</material>
 				<render_choice shuffle="No">
-<?php foreach($question->optlist as $oid => $option): ?>
-<?php if ($oid == 0): ?>
+<?php foreach ($question->optlist as $oid => $option) : ?>
+<?php if ($oid == 0) : ?>
 					<response_label ident="BLANK">
-<?php elseif ($oid == 9990): ?>
+<?php elseif ($oid == 9990) : ?>
 					<response_label ident="NA">
-<?php else: ?>
+<?php else : ?>
 					<response_label ident="<?php echo $this->ll[$oid] ?>">
 <?php endif; ?>
 						<material>
@@ -30,7 +30,7 @@
 			<outcomes>
 				<decvar/>
 			</outcomes>
-<?php foreach($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 <?php if ($option->order < 1 || $option->order > 26) continue; ?>
 			<respcondition title="<?php echo $oid ?> <?php echo for_id($option->stem) ?>" continue="Yes">
 				<conditionvar>
@@ -42,7 +42,7 @@
 
 			<respcondition title="right" continue="Yes" >
 				<conditionvar>
-<?php foreach($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 <?php if ($option->order < 1 || $option->order > 26) continue; ?>
 					<varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>
 <?php endforeach; ?>	
@@ -54,7 +54,7 @@
 			<respcondition title="wrong" >
 				<conditionvar>
 					<or>
-<?php foreach($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 <?php if ($option->order < 1 || $option->order > 26) continue; ?>
 						<not>
 							<varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>

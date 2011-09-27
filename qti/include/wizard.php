@@ -15,45 +15,40 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Adam Clarke
-* @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
-* @package
-*/
+ *
+ * @author Adam Clarke
+ * @version 1.0
+ * @copyright Copyright (c) 2011 The University of Nottingham
+ * @package
+ */
 
-class WizardPage
-{
-	var $id = '';
-	var $title = '';
-	var $pageno = 0;
-	var $grouping = '';
-	var $phpfile = '';
+class WizardPage {
+  var $id = '';
+  var $title = '';
+  var $pageno = 0;
+  var $grouping = '';
+  var $phpfile = '';
 }
 
-class Wizard
-{
-	var $pages = array();
-	var $pagecount = 0;
-	
-	function AddPage($pageid, $pagetitle, $grouping, $phpfile = '')
-	{
-		$page = new WizardPage();
-		$page->id = $pageid;
-		$page->title = $pagetitle;
-		$page->pageno = $this->pagecount;
-		$page->grouping = $grouping;
-		$page->phpfile = $phpfile;
-		
-		$this->pages[] = $page;
-		
-		$this->pagecount++;
-	}
-	
-	function Display($startpage = "")
-	{
-		if ($startpage == "")
-			$startpage = $this->pages[0]->id;
+class Wizard {
+  var $pages = array();
+  var $pagecount = 0;
+
+  function AddPage($pageid, $pagetitle, $grouping, $phpfile = '') {
+    $page = new WizardPage();
+    $page->id = $pageid;
+    $page->title = $pagetitle;
+    $page->pageno = $this->pagecount;
+    $page->grouping = $grouping;
+    $page->phpfile = $phpfile;
+
+    $this->pages[] = $page;
+
+    $this->pagecount++;
+  }
+
+  function Display($startpage = "") {
+    if ($startpage == "") $startpage = $this->pages[0]->id;
 ?>
 
 <table cellspacing="0" cellpadding="0" height="100%" width="100%">
@@ -61,9 +56,11 @@ class Wizard
 		<td width="195" style="background-color:#D6DFF7" valign="top">
 			<div class="wizard_left_head">Import Export Wizard</div>
 			<?php $curgrouping = ""; ?>
-			<?php foreach($this->pages as $page): ?>
+			<?php foreach ($this->pages as $page) : ?>
 			
-				<?php if ($page->grouping != $curgrouping) : $curgrouping = $page->grouping; ?>
+				<?php if ($page->grouping != $curgrouping) :
+        $curgrouping = $page->grouping;
+?>
 					<div class="wizard_left_grouping"><?php echo $curgrouping; ?></div>
 				<?php endif; ?>
 				
@@ -89,7 +86,7 @@ class Wizard
 			</div>
 			<div id="panel" class="wizard_panels">	
 				
-				<?php foreach($this->pages as $page): ?>
+				<?php foreach ($this->pages as $page) : ?>
 							
 					<div id="page_<?php echo $page->id; ?>" style="display:none;">
 						<div class="wizard_page_title" id="title_<?php echo $page->id; ?>">
@@ -98,7 +95,7 @@ class Wizard
 						<img src="../artwork/divider_bar.gif" width="290" height="1" alt="Divider Bar" />
 
 						<div id="content_<?php echo $page->id; ?>" class="wizard_panel_content">
-							<? if ($page->phpfile): ?>
+							<? if ($page->phpfile) : ?>
 								<? include($page->phpfile); ?>
 							<? endif; ?>
 						</div>
@@ -134,6 +131,6 @@ Pages[<?php echo $page->pageno; ?>] = {id: '<?php echo $page->id; ?>', title: '<
 W_ShowPanelByName('<?=$startpage?>');
 </script>
 <?php
-		
-	}
+
+  }
 }

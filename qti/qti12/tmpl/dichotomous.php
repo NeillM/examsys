@@ -3,11 +3,11 @@
 		
 			<?php echo $headertext ?>
 
-<?php foreach ($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 			<response_lid ident="<?php echo $oid ?>">
 				<material>
 					<mattext texttype="text/html"><![CDATA[<?php echo $option->text ?>]]></mattext>
-<?php if ($option->media): ?>
+<?php if ($option->media) : ?>
 					<matimage imagtype="<?php echo $option->media_type ?>" uri="<?php echo $option->media ?>"/>
 <?php endif; ?>
 				</material>	
@@ -22,7 +22,7 @@
 							<mattext><?php echo $false ?></mattext>
 						</material>
 					</response_label>	
-<?php if ($hasab): ?>					
+<?php if ($hasab) : ?>					
 					<response_label ident="C">
 						<material>
 							<mattext>Abstain</mattext>
@@ -61,8 +61,13 @@
 			</respcondition>
 			
 			<!-- response conditions. 2 per option with checked and unchecked -->
-<?php foreach ($question->options as $oid => $option): ?>
-<?php if ($option->iscorrect) { $score = 1; } else { $score = $negmark; } ?>
+<?php foreach ($question->options as $oid => $option) : ?>
+<?php if ($option->iscorrect) {
+    $score = 1;
+  } else {
+    $score = $negmark;
+  }
+?>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True" continue="Yes">
 				<conditionvar>
 					<varequal respident="<?php echo $oid ?>">A</varequal>
@@ -70,7 +75,12 @@
 				<setvar action='Add'><?php echo $score; ?></setvar>
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True"/>
 			</respcondition>
-<?php if (!$option->iscorrect) { $score = 1; } else { $score = $negmark; } ?>
+<?php if (!$option->iscorrect) {
+    $score = 1;
+  } else {
+    $score = $negmark;
+  }
+?>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False" continue="Yes">
 				<conditionvar>
 					<varequal respident="<?php echo $oid ?>">B</varequal>
@@ -91,14 +101,24 @@
 	
 		<!-- feedback items for each item, pick right feedback based on correct or incorrect -->
 
-<?php foreach ($question->options as $oid => $option): ?>
-<?php if ($option->iscorrect) { $fb = $option->fb_correct; } else { $fb = $option->fb_incorrect; } ?>
+<?php foreach ($question->options as $oid => $option) : ?>
+<?php if ($option->iscorrect) {
+    $fb = $option->fb_correct;
+  } else {
+    $fb = $option->fb_incorrect;
+  }
+?>
 		<itemfeedback ident='<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True' view='Candidate'>
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
 			</material>
 		</itemfeedback>			
-<?php if (!$option->iscorrect) { $fb = $option->fb_correct; } else { $fb = $option->fb_incorrect; } ?>
+<?php if (!$option->iscorrect) {
+    $fb = $option->fb_correct;
+  } else {
+    $fb = $option->fb_incorrect;
+  }
+?>
 		<itemfeedback ident='<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False' view='Candidate'>
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>

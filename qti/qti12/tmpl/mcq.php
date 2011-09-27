@@ -5,11 +5,11 @@
 
             <response_lid ident='1'>
                 <render_choice shuffle='No'>
-<?php foreach ($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
                     <response_label ident='<?php echo $this->ll[$oid] ?>'>
                         <material>
                             <mattext texttype='text/html'><![CDATA[<?php echo $option->stem ?>]]></mattext>
-<?php if ($option->media): ?>
+<?php if ($option->media) : ?>
 							<matimage imagtype="<?php echo $option->media_type ?>" uri="<?php echo $option->media ?>"/>
 <?php endif; ?>
                       </material>
@@ -23,7 +23,7 @@
             <outcomes>
                 <decvar/>
             </outcomes>
-<?php foreach ($question->options as $oid => $option): ?>
+<?php foreach ($question->options as $oid => $option) : ?>
 <?php if ($question->correct != $oid) continue; ?>
             <respcondition title='<?php echo $oid ?> <?php echo(for_id($option->stem)) ?>' >
                 <conditionvar>

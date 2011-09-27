@@ -7,18 +7,18 @@
 		
 		<presentation>
 
-<?php if ($question->author):?>
+<?php if ($question->author) : ?>
 			<qticomment>Author:<?php echo $question->author ?></qticomment>
 <?php endif; ?>	
-<?php if ($question->q_group):?>
+<?php if ($question->q_group) : ?>
 			<qticomment>Module:<?php echo $question->q_group ?></qticomment>
 <?php endif; ?>	
 <?php if ($question->bloom) : ?>
 			<qticomment>Blooms:<?php echo $question->bloom ?></qticomment>
 <?php endif; ?>
 <?php if (count($question->keywords) > 0) : ?>
-<?php foreach ($question->keywords as $keyword): ?>
-<?php if (trim($keyword) != ""):?>
+<?php foreach ($question->keywords as $keyword) : ?>
+<?php if (trim($keyword) != "") : ?>
 			<qticomment>Keyword:<?php echo $keyword ?></qticomment>
 <?php endif; ?>
 <?php endforeach; ?>

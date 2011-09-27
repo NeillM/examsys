@@ -15,47 +15,41 @@
 // along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Adam Clarke
-* @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
-* @package
-*/
+ *
+ * @author Adam Clarke
+ * @version 1.0
+ * @copyright Copyright (c) 2011 The University of Nottingham
+ * @package
+ */
 ob_start();
 
-class OB
-{
-	var $content;
-	
-	function ClearAndSave()
-	{
-		$this->content = ob_get_contents();
-		ob_clean();	
-	}
-		
-	function Clear()
-	{
-		$this->content = '';
-		ob_clean();	
-	}	
-	
-	function GetContent()
-	{
-		return ob_get_contents();	
-	}
-	
-	function Restore()
-	{
-		ob_clean();
-		echo $this->content;
-	}
-	
-	function DoInclude($filename)
-	{
-		$this->ClearAndSave();
-		include $filename;
-		$res = $this->GetContent();
-		$this->Restore();
-		return $res;
-	}
+class OB {
+  var $content;
+
+  function ClearAndSave() {
+    $this->content = ob_get_contents();
+    ob_clean();
+  }
+
+  function Clear() {
+    $this->content = '';
+    ob_clean();
+  }
+
+  function GetContent() {
+    return ob_get_contents();
+  }
+
+  function Restore() {
+    ob_clean();
+    echo $this->content;
+  }
+
+  function DoInclude($filename) {
+    $this->ClearAndSave();
+    include $filename;
+    $res = $this->GetContent();
+    $this->Restore();
+    return $res;
+  }
 }
