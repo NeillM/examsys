@@ -1,5 +1,5 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/user_search_options.inc';
+require '../lang/' . $language . '/include/user_search_options.inc';
 
 $string['sendwelcomeemail'] = '1Send welcome email to user';
 $string['importstudents'] = '1Import Students';

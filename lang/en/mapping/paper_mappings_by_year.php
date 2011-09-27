@@ -1,5 +1,5 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/paper_options.inc';
+require '../lang/' . $language . '/include/paper_options.inc';
 
 $string['start'] = '1Start';
 $string['owner'] = '1Owner';

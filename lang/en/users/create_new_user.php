@@ -1,5 +1,5 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/user_search_options.inc';
+require '../lang/' . $language . '/include/user_search_options.inc';
 
 $string['createnewuser'] = '1Create new User';
 $string['getldapdetails'] = '1Get LDAP details';

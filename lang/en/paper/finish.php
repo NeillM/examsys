@@ -27,14 +27,4 @@ $string['yourpercentage'] = '1Your percentage';
 $string['adjusted'] = '1(adjusted)';
 $string['msg'] = '1Thank you for completing <strong>%s</strong>. Your responses have been recorded.';
 $string['closewindow'] = '1Close Window';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
 ?>

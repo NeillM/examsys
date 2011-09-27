@@ -1,7 +1,7 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/blooms.inc';
-require '../lang/' . $language . '/touchstone/include/status.inc';
-require '../lang/' . $language . '/touchstone/include/question_types.inc';
+require '../lang/' . $language . '/include/blooms.inc';
+require '../lang/' . $language . '/include/status.inc';
+require '../lang/' . $language . '/include/question_types.inc';
 
 $string['question'] = '1Question';
 $string['questions'] = '1Questions';

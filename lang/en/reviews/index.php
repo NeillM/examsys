@@ -13,10 +13,4 @@ $string['copyrightmsg'] = '1Questions held within TouchStone are protected by UK
 $string['helpandsupport'] = '1Help and Support';
 $string['onlinesupportsystem'] = '1Online support system for students';
 $string['email'] = '1Email';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
 ?>

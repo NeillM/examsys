@@ -1,6 +1,6 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/question_types.inc';
-require '../lang/' . $language . '/touchstone/include/paper_types.inc';
+require '../lang/' . $language . '/include/question_types.inc';
+require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['recyclebin'] = '1Recycle Bin';
 $string['recyclebintasks'] = '1Recycle Bin Tasks';

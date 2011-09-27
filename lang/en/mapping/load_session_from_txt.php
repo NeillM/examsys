@@ -1,5 +1,5 @@
 <?php
-require '../lang/' . $language . '/touchstone/mapping/sessions_list.php';
+require '../lang/' . $language . '/mapping/sessions_list.php';
 
 $string['manageobjectives'] = '1Manage Objectives';
 $string['importfromfile'] = '1Import Sessions from File';

@@ -1,3 +1,3 @@
 <?php
-require '../lang/' . $language . '/touchstone/export/assessment_marks.php';
+require '../lang/' . $language . '/export/assessment_marks.php';
 ?>

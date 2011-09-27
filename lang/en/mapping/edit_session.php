@@ -1,6 +1,6 @@
 <?php
-require '../lang/' . $language . '/touchstone/mapping/sessions_list.php';
-require '../lang/' . $language . '/touchstone/include/months.inc';
+require '../lang/' . $language . '/mapping/sessions_list.php';
+require '../lang/' . $language . '/include/months.inc';
 
 $string['editsession'] = '1Edit Session';
 $string['title'] = '1Title';

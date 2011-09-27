@@ -1,4 +1,4 @@
 <?php
-require $cfg_web_root . 'touchstone/lang/' . $language . '/touchstone/paper/start.php';
+require $cfg_web_root . 'lang/' . $language . '/paper/start.php';
 
 ?>

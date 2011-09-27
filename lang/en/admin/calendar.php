@@ -1,5 +1,5 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/months.inc';
+require '../lang/' . $language . '/include/months.inc';
 
 $string['administrativetools'] = '1Administrative Tools';
 $string['allschools'] = '&lt;1All Schools&gt;';

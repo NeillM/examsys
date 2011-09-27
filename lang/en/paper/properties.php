@@ -1,5 +1,5 @@
 <?php
-require '../lang/' . $language . '/touchstone/include/months.inc';
+require '../lang/' . $language . '/include/months.inc';
 
 // General tab
 $string['generaltab'] = '1General';

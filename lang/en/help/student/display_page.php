@@ -1,3 +1,3 @@
 <?php
-require '../../lang/' . $language . '/touchstone/help/staff/display_page.php';
+require '../../lang/' . $language . '/help/staff/display_page.php';
 ?>
