@@ -7,7 +7,7 @@
 * @package
 */
 
-require_once '../config/config.inc.php';
+// require_once '../config/config.inc.php';
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
