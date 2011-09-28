@@ -114,7 +114,7 @@ function redirect() {
   } elseif ($_POST['calling'] == 'internal_comments') {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY']);
   } else {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/index_staff.php");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/staff/index.php");
   }
   $mysqli->close();
   exit;   // Stop script execution after the redirect.

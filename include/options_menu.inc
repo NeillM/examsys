@@ -36,7 +36,7 @@
   }
 ?>
 <tr><td width="16"><a href="/users/search.php"><img src="/artwork/small_user_icon.gif" width="16" height="16" alt="Users" border="0" /></a></td><td class="menuitem"><a href="/users/search.php"><?php echo $string['usermanagement']; ?></a></td></tr>
-<tr><td width="16"><a href="/index_staff.php?newfolder=y"><img src="/artwork/folder_16.png" width="16" height="16" alt="New Folder" border="0" /></a></td><td class="menuitem"><a href="/index_staff.php?newfolder=y"><?php echo $string['makeafolder']; ?></a></td></tr>
+<tr><td width="16"><a href="/staff/index.php?newfolder=y"><img src="/artwork/folder_16.png" width="16" height="16" alt="New Folder" border="0" /></a></td><td class="menuitem"><a href="/staff/index.php?newfolder=y"><?php echo $string['makeafolder']; ?></a></td></tr>
 <tr><td width="16"><a href="/folder/list_keywords.php"><img src="/artwork/key.png" width="16" height="16" alt="key" border=\"0\" /></a></td><td class="menuitem"><a href="/folder/list_keywords.php"><?php echo $string['mypersonalkeywords']; ?></a></td></tr>
 </table>
 <br />

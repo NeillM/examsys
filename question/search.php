@@ -90,7 +90,7 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
     require '../include/question_search_options.inc';
     echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../index_staff.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></td></tr>";
+    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></td></tr>";
 ?>
   <tr>
   <td style="background-color:#F1F5FB" align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></td>

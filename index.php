@@ -103,7 +103,7 @@ require_once './classes/networkutils.class.php';
     echo "<h1 style=\"margin-left:60px\">TouchStone cannot find any Exams</h1>\n";
 
     if (strpos($userroles,'Staff') !== false) {
-      echo "<p style=\"margin-left:60px; color:#C00000\"><strong>Note:</strong> This is the summative exams screen for students, did you want the <img src=\"/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/index_staff.php\" style=\"color:blue\"><strong>Staff management screens</strong></a>?</p>\n";
+      echo "<p style=\"margin-left:60px; color:#C00000\"><strong>Note:</strong> This is the summative exams screen for students, did you want the <img src=\"/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/staff/index.php\" style=\"color:blue\"><strong>Staff management screens</strong></a>?</p>\n";
     }
 
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Most likely cause is one or more security conflicts with:</p>\n<ul style=\"margin-left:80px\">\n";

@@ -496,7 +496,7 @@ if (isset($_GET['scrOfY'])) {
   $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
   while ($row = $result->fetch()) {
     if ($display_header == true) {
-      echo '<tr><td class="h"><div class="breadcrumb"><a href="../index_staff.php">' . $string['home'] . '</a>';
+      echo '<tr><td class="h"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
       if ($folder != '') {
         echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
       } elseif (isset($_GET['module']) and $_GET['module'] != '') {

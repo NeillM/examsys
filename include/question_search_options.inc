@@ -366,7 +366,7 @@ require_once '../classes/searchutils.class.php';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<input style="width:80px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'/folder/details.php?module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
   } else {
-    echo '<input style="width:80px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'/index_staff.php\'"/>';
+    echo '<input style="width:80px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'/staff/index.php\'"/>';
   }
 ?>
 &nbsp;<input style="width:80px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>

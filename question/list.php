@@ -132,7 +132,7 @@
   $query_string .= " WHERE $team_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
   $search_results = $mysqli->query($query_string);
 
-  echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index_staff.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format($search_results->num_rows) . ")</strong>$bank_type</div></td>";
+  echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format($search_results->num_rows) . ")</strong>$bank_type</div></td>";
   echo "<td colspan=\"2\" style=\"text-align:right; background-color:#F1F5FB\" nowrap><input type=\"checkbox\" onclick=\"updateCookies();\" name=\"myquestions\" id=\"myquestions\" value=\"on\"";
   if (isset($_COOKIE['myquestions'])) echo $_COOKIE['myquestions'];
   echo " />&nbsp;<nobr>" . $string['myquestionsonly'] . "</nobr>&nbsp;</td></tr>\n";

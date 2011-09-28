@@ -206,7 +206,7 @@ if (isset($_GET['calendar_year'])) {
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/folder/details.php?module=' . $module . '&folder=' . $folder . '\'"/>';
   } else {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/index_staff.php\'"/>';
+    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="parent.window.location=\'/staff/index.php\'"/>';
   }
 ?>
 &nbsp;<input style="width:90px" type="submit" name="submit" onclick="document.PapersMenu.oldUserID.value='';" value="<?php echo $string['search']; ?>" /></div>
