@@ -1,6 +1,6 @@
 <?php
-require './lang/' . $language . '/include/question_types.inc';
-require './lang/' . $language . '/include/paper_types.inc';
+require '../lang/' . $language . '/include/question_types.inc';
+require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['helpsupport'] = '1Help and Support';
 $string['admintools'] = '1Administrative Tools';
