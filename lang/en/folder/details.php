@@ -1,5 +1,6 @@
 <?php
 require '../lang/' . $language . '/include/paper_options.inc';
+require_once '../lang/' . $language . '/include/paper_types.inc';
 
 $string['showretired'] = '1Show retired';
 $string['teammembers'] = '1Team Members';

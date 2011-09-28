@@ -92,6 +92,7 @@ require '../include/staff_auth.inc';
 
 <?php
   require '../include/options_menu.inc';
+  require '../include/icon_display.inc';
 ?>
 
 <div id="content" class="content" style="font-size:80%">
@@ -119,73 +120,6 @@ require '../include/staff_auth.inc';
         display_error("New Folder Error",$mysqli->error);
       }
     }
-  }
-
-  function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked) {
-    global $string;
-    switch ($paper_type) {
-      case 0:
-        $html = "<img src=\"../artwork/formative" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative self-assessment'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 1:
-        $html = "<img src=\"../artwork/progress" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progresstest'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 2:
-        $html = "<img src=\"../artwork/summative" . $shared . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 3:
-        $html = "<img src=\"../artwork/survey" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 4:
-        $html = "<img src=\"../artwork/osce" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['oscestation'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 5:
-        $html = "<img src=\"../artwork/offline" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offlinepaper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-    }
-    return $html;
-  }
-
-  function displayPaperIcon($row) {
-    global $folder, $string;
-
-    if (!isset($row['title'])) {
-      $row['title'] = '';
-    }
-    if (!isset($row['initials'])) {
-      $row['initials'] = '';
-    }
-    if (!isset($row['surname'])) {
-      $row['surname'] = '';
-    }
-
-    echo '<div class="file">';
-    echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
-    $icon_type = $row['paper_type'];
-    if (date("YmdHis", time()) >= $row['start_date']) {
-      $locked = '_locked';
-    } else {
-      $locked = '';
-    }
-    echo "<a href=\"../paper/details.php?paperID=" . $row['property_id'] . "&folder=$folder&module=\">" . displayIcon($icon_type,$row['title'],$row['initials'],$row['surname'],'',$locked) . "</a></td>\n";
-    echo "</td><td><a href=\"../paper/details.php?paperID=" . $row['property_id'] . "&folder=$folder&module=\" class=\"blacklink\">" . $row['paper_title'] . '</a><br />';
-    echo '  <span style="color:#808080">';
-    if ($row['screens'] == NULL) {
-      echo '0 ' . $string['screens'] . ', ';
-    } elseif ($row['screens'] == 1) {
-      echo $row['screens'] . ' ' . $string['screen'];
-    } else {
-      echo $row['screens'] . ' ' . $string['screens'];
-    }
-    echo ', <span style="color:red">' . $string['nomodulesset'] . '</span>';
-    echo '<br />';
-    echo '  ' . $row['display_start_date'];
-    if ($icon_type == 2) {
-      echo ', ' . $row['exam_duration'] . $string['mins'];
-    } else {
-      echo ' to ' . $row['display_end_date'];
-    }
-    echo "</td></tr></table></div>\n";
   }
 
   //Update the last log in date in users.
@@ -291,9 +225,13 @@ require '../include/staff_auth.inc';
     }
   }
 
-  $deleted_details = $mysqli->query("SELECT COUNT(property_id) AS no_deleted FROM properties WHERE deleted IS NOT NULL AND paper_ownerID=$userID");
-  $deleted = $deleted_details->fetch_assoc();
-  if ($deleted['no_deleted'] > 0) {
+  // Work out if there is anything in the recycle bin.
+  $deleted_details = $mysqli->prepare("SELECT COUNT(property_id) AS no_deleted FROM properties WHERE deleted IS NOT NULL AND paper_ownerID=$userID");
+  $deleted_details->execute();
+  $deleted_details->bind_result($no_deleted);
+  $deleted_details->store_result();
+  $deleted_details->fetch();
+  if ($no_deleted > 0) {
     echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../delete/recycle_list.php\"><img src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../delete/recycle_list.php\" class=\"blacklink\">" . $string['recyclebin'] . "</a></td></tr></table></div>\n";
   } else {
     echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"../delete/recycle_list.php\"><img src=\"../artwork/empty_bin.png\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"../delete/recycle_list.php\" class=\"blacklink\">" . $string['recyclebin'] . "</a></td></tr></table></div>\n";
@@ -322,11 +260,15 @@ require '../include/staff_auth.inc';
     echo '<br clear="left" /><br />';
 
     // -- Display papers not assigned to a module -------------------
-    $paper_data = $mysqli->query("SELECT DISTINCT property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'%d/%m/%y %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE paper_ownerID=$userID AND moduleID='' AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
+    $paper_data = $mysqli->prepare("SELECT DISTINCT property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'%d/%m/%y %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper WHERE paper_ownerID=$userID AND moduleID='' AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
+    $paper_data->execute();
+    $paper_data->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
+    $paper_data->store_result();
+    $paper_data->fetch();
     if ($paper_data->num_rows > 0) {
       echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $paper_data->num_rows . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-      while ($row = $paper_data->fetch_assoc()) {
-        displayPaperIcon($row);
+      while ($row = $paper_data->fetch()) {
+        displayPaperIcon($userID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
       }
     }
   }

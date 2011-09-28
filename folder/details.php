@@ -25,6 +25,7 @@
 */
 
 require '../include/staff_auth.inc';
+require '../include/icon_display.inc';
 require '../include/sidebar_menu.inc';
 
 $folder_name = '';
@@ -35,95 +36,6 @@ if (isset($_GET['module'])) {
   $module = $_GET['module'];
 }
 
-function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked, $retired) {
-  global $string, $type;
-  switch ($paper_type) {
-    case 0:
-      $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative self-assessment'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-      break;
-    case 1:
-      $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progress test'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-      break;
-    case 2:
-      $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative exam'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-      break;
-    case 3:
-      $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-      break;
-    case 4:
-      $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['osce station'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-      break;
-    case 5:
-      $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offline paper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-      break;
-  }
-  return $html;
-}
-
-
-function displayPaperIcon($row) {
-  global $userroles, $type, $folder, $module, $mysqli, $userID, $teams, $string;
-  echo '<div class="file">';
-  echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
-  $icon_type = $row['paper_type'];
-  if (date("YmdHis", time()) >= $row['start_date']) {
-    $locked = '_locked';
-  } else {
-    $locked = '';
-  }
-  if ($row['retired'] == '') {
-    $title_class = 'blacklink';
-  } else {
-    $title_class = 'greylink';
-  }
-  if ($row['paper_ownerID'] == $userID or strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false or ($icon_type != '2' and $icon_type != '4')) {
-    echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $row['property_id'] . "&folder=$folder&module=$module\">" . displayIcon($icon_type, $row['title'], $row['initials'], $row['surname'], '', $locked, $row['retired']) . "</a></td>\n";
-    echo "</td><td><a href=\"../paper/details.php?paperID=" . $row['property_id'] . "&folder=$folder&module=$module\" class=\"$title_class\">" . $row['paper_title'] . '</a><br />';
-  } else {
-    $access = false;
-    $paper_modules = explode(',',$row['moduleID']);
-    foreach ($paper_modules as $individual_module) {
-      if (in_array($individual_module, $teams)) $access = true;
-    }
-  
-    if ($access == true) {
-      echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $row['property_id'] . "&folder=$folder&module=$module\">" . displayIcon(2, $row['title'], $row['initials'], $row['surname'], '', $locked, $row['retired']) . "</a></td>\n";
-      echo "</td><td><a href=\"../paper/details.php?paperID=" . $row['property_id'] . "&folder=$folder&module=$module\" class=\"blacklink\">" . $row['paper_title'] . '</a><br />';
-    } else {
-      if ($icon_type == '2') {
-        echo "<img src=\"../artwork/noentry_question_icon_48.png\" width=\"48\" height=\"48\" alt=\"Type: Summative Exam (Restricted Access)&#013;Author: " . $row['title'] . ' ' . $row['initials'] . ' ' . $row['surname'] . "\" border=\"0\" /></td>\n";
-      } else {
-        echo "<img src=\"../artwork/noentry_osce.png\" width=\"48\" height=\"48\" alt=\"Type: OSCE Station (Restricted Access)&#013;Author: " . $row['title'] . ' ' . $row['initials'] . ' ' . $row['surname'] . "\" border=\"0\" /></td>\n";
-      }
-      echo '</td><td>' . $row['paper_title'] . '<br />';
-    }
-  }
-  if ($row['retired'] == '') {
-    echo '  <span style="color:#808080">';
-  } else {
-    echo '  <span style="color:#C0C0C0">';
-  }
-  if ($row['screens'] == NULL) {
-    echo '0 ' . $string['screens'] . ', ';
-  } elseif ($row['screens'] == 1) {
-    echo $row['screens'] . ' ' . $string['screen'];
-  } else {
-    echo $row['screens'] . ' ' . $string['screens'];
-  }
-  if ($row['moduleID'] == '') {
-    echo ', <span style="color:red">No modules set</span>';
-  } else {
-    if (isset($_GET['module']) AND $_GET['module'] == '') echo ', ' . str_replace(',',', ',$row['moduleID']);
-  }
-  echo '<br />';
-  echo '  ' . $row['display_start_date'];
-  if ($icon_type == 2) {
-    if ($row['exam_duration'] != '') echo ', ' . $row['exam_duration'] . $string['mins'];
-  } else {
-    echo ' to ' . $row['display_end_date'];
-  }
-  echo "</td></tr></table></div>\n";
-}
 
   // Folder security checks
   if (isset($_GET['folder'])) {
@@ -352,7 +264,7 @@ if (isset($_COOKIE['showretired']) and $_COOKIE['showretired'] == 'checked') {
 
 // Get current owner papers.
 if ($folder != '') {
-  $query_string = "SELECT DISTINCT property_id, title, initials, surname, moduleID, paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, moduleID, retired FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL $showretiredSQL GROUP BY paper_title ORDER BY paper_type, paper_title";
+  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL $showretiredSQL GROUP BY paper_title ORDER BY paper_type, paper_title";
 } elseif ($_GET['module'] != '') {
   $paper_types = array();
   $results = $mysqli->query("SELECT DISTINCT paper_type, COUNT(paper_type) AS no_papers FROM properties WHERE moduleID LIKE '%" . $_GET['module'] . "%' AND deleted IS NULL $showretiredSQL GROUP BY paper_type");
@@ -361,28 +273,39 @@ if ($folder != '') {
   }
   $results->close();
   
-  $query_string = "SELECT DISTINCT property_id, title, initials, surname, moduleID, paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, moduleID, retired FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND moduleID LIKE '%" . $_GET['module'] . "%' AND deleted IS NULL $showretiredSQL GROUP BY paper_title ORDER BY paper_type, paper_title";
+  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND moduleID LIKE '%" . $_GET['module'] . "%' AND deleted IS NULL $showretiredSQL GROUP BY paper_title ORDER BY paper_type, paper_title";
 }
-$results = $mysqli->query($query_string);
+//$results = $mysqli->query($query_string);
+
+
+$results = $mysqli->prepare($query_string);
+$results->execute();
+$results->bind_result($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
+$results->store_result();
+//$results->fetch();
+
+
+
 $old_p_type = '';
 $sent_clear_all = false;
 if ($display_papers) {
   if ($results->num_rows > 0) {
-    while ($row = $results->fetch_assoc()) {
-      if ($old_p_type != $row['paper_type'] and (isset($_GET['module']) AND $_GET['module'] != '') ) {
+    while ($row = $results->fetch()) {
+      if ($old_p_type != $paper_type and (isset($_GET['module']) AND $_GET['module'] != '') ) {
         if ($sent_clear_all == true) {
           echo "<br clear=\"all\" />";
         }
         $sent_clear_all = true;
-        echo "<table border=\"0\" style=\"margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287\"><tr><td><nobr>" . $types_array[$row['paper_type']] . " (" . $paper_types[$row['paper_type']] . ")";
-        if ($row['paper_type'] == 2) {
+        echo "<table border=\"0\" style=\"margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287\"><tr><td><nobr>" . $types_array[$paper_type] . " (" . $paper_types[$paper_type] . ")";
+        if ($paper_type == 2) {
           echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" border=\"0\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
         }
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
         echo "<br />\n";
       }
-      displayPaperIcon($row);
-      $old_p_type = $row['paper_type'];
+      displayPaperIcon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
+      //displayPaperIcon($row);
+      $old_p_type = $paper_type;
       $file_no++;
     }
     $results->close();
