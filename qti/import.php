@@ -4,7 +4,7 @@ require_once 'include/inc.php';
 require_once 'qti/qti_load.php';
 require_once 'qti12/qti12_load.php';
 require_once 'qti20/qti20_load.php';
-require_once 'touchstone/local_save.php';
+require_once 'local/local_save.php';
 
 // get some paper details
 $paper = GetVar("paperID");
