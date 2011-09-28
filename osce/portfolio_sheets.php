@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   require './osce.inc';
   
   header('Content-disposition: attachment; filename=report.xml');

@@ -33,11 +33,11 @@ $session = DateUtils::get_current_academic_year();
   }
 
   function jumpToModule() {
-    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST']; ?>/touchstone/folder/details.php?module=' + document.myform.moduleID.value;
+    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST']; ?>/folder/details.php?module=' + document.myform.moduleID.value;
   }
   
   function studentCohort() {
-    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST']; ?>/touchstone/users/search.php?search_surname=&search_username=&student_id=&team=' + document.myform.moduleID.value + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_degreeID=&tmp_yearID=';
+    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST']; ?>/users/search.php?search_surname=&search_username=&student_id=&team=' + document.myform.moduleID.value + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_degreeID=&tmp_yearID=';
   }
   
 </script>

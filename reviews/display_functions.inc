@@ -220,16 +220,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($question['scenario'] != '') {
         echo "<tr><td class=\"q_no\">" . ($question_no + $question_offset) . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">Clinical Vignette</td></tr>\n";
         echo '<tr><td style="vertical-align:top; text-align:right">';
-        if ($calculator == 1) echo '<a href="#" onclick="openCalculator(); return false;"><img src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
+        if ($calculator == 1) echo '<a href="#" onclick="openCalculator(); return false;"><img src="/artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
         echo "</td><td>";
-        if ($question['notes'] != '') echo '<p class="notes"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
+        if ($question['notes'] != '') echo '<p class="notes"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
         echo $question['scenario'] . "<br />\n<br />";
         $li_set = 1;
       }
       if ($question['q_media'] != '') {
         if ($li_set == 0) {
           echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-          if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="/touchstone/artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
+          if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="/artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
           echo '</td><td>';
         }
         echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
@@ -594,10 +594,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="always" />');
-          write_string('<param name="movie" value="/touchstone/paper/hotspot_answer.swf" />');
+          write_string('<param name="movie" value="/paper/hotspot_answer.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />');
-          write_string('<embed src="/touchstone/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+          write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
           write_string('</object>');
         </script>
         <br /><span class="mk">(Select a tab firstly then single click with the mouse to record your answer. Single click again if you need to change that answer.)</span>
@@ -648,10 +648,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="/touchstone/paper/label_answer.swf" />');
+    write_string('<param name="movie" value="/paper/label_answer.swf" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-    write_string('<embed src="/touchstone/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
   </script>
 

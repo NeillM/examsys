@@ -30,13 +30,13 @@
 
   // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
   if(strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === false and strpos($userroles,'Admin') === false and strpos($userroles,'SysAdmin') === false) {
-    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/paper/available.php");
+    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/paper/available.php");
     exit;
   } elseif ($userroles == 'External Examiner') {
-    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/reviews/");
+    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/reviews/");
     exit;
   } elseif ($userroles == 'Invigilator') {
-    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/touchstone/invigilator/");
+    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "/invigilator/");
     exit;
   }
 

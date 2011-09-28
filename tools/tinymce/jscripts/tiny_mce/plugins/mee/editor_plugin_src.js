@@ -112,8 +112,8 @@ function clickMEEiFrame(frame) {
 
             // when content is loaded, add the render js
             ed.onSetContent.add(function (ed, o) {
-                var addhtml = '<link rel="stylesheet" type="text/css" href="/touchstone/tools/mee/mee/css/main.css"><\/link>';
-                addhtml += '<link rel="stylesheet" type="text/css" href="/touchstone/tools/mee/mee/css/fonts.css"><\/link>';
+                var addhtml = '<link rel="stylesheet" type="text/css" href="/tools/mee/mee/css/main.css"><\/link>';
+                addhtml += '<link rel="stylesheet" type="text/css" href="/tools/mee/mee/css/fonts.css"><\/link>';
                 $(ed.getBody()).prepend(addhtml);
 
                 var body = ed.getBody();
@@ -132,7 +132,7 @@ function clickMEEiFrame(frame) {
 
                     var datatxt = JSON.stringify(data);
 
-                    var html = "<iframe src='/touchstone/tools/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt + "' width='1000' height='5' frameborder='0'></iframe>";
+                    var html = "<iframe src='/tools/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt + "' width='1000' height='5' frameborder='0'></iframe>";
                     var newelem = $(html);
 
                     $(newelem).addClass('mee_iframe');

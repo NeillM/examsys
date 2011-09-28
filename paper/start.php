@@ -422,8 +422,8 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 ?>
 </style>
 <?php if ($latex_needed == 1) {?>
-  <script type="text/javascript" src="/touchstone/javascript/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="/touchstone/tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="/javascript/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script language="JavaScript" src="../javascript/start.js"></script>
 <script language="JavaScript" src="../javascript/flash_include.js"></script>

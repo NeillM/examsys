@@ -27,11 +27,11 @@ require_once 'add_edit.inc';
 function displayEditTab() {
   $html = "<div id=\"editortab\" style=\"font-size:100%\">\n";
   $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; width:100%; background-color:#D6DFF7\">\n<tr><td>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:90%; width:252px\">\n<tr>";
-  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/touchstone/artwork/tab_on.gif)\">Editor</td>\n";
+  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_on.gif)\">Editor</td>\n";
   if (isset($_GET['paperID']) and $_GET['paperID'] != '') {
-    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/touchstone/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
+    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
   } else {
-    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/touchstone/artwork/tab_disabled.gif)\">Mapping</td>\n";
+    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
   }
   $html .= "</tr></table>\n</td><td style=\"width:100%; background-color:#DFECFF; text-align:right; font-size:90%\"><strong>Created:</strong>&nbsp;" . date('d/m/Y') . "&nbsp;</td></tr>\n";
   $html .= "<tr><td colspan=\"2\" style=\"background-color:#1E3C7B\">&nbsp;</td></tr>\n</table>\n";
@@ -44,13 +44,13 @@ function redirect($p_id) {
   
   if (substr($p_id,0,5) == 'list:') {
     $type = substr($p_id,5);
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/question/list.php");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/list.php");
   } elseif ($p_id != '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/folder/details.php?module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/folder/details.php?module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
   } else {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/");
   }
   $mysqli->close();
   exit;   // Stop script execution after the redirect.

@@ -116,7 +116,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
 
   $mysqli->close();
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_modules.php");
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_modules.php");
 } else {
   $moduleid = $_GET['moduleid'];
   $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");

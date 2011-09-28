@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   require 'class_totals.inc';
 
   header("Content-type: application/vnd.ms-excel");

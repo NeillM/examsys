@@ -1,5 +1,5 @@
 <?php
-require '../../lang/' . $language . '/touchstone/include/months.inc';
+require '../../lang/' . $language . '/include/months.inc';
 
 $string['from'] = '1From:';
 $string['to'] = '1To:';

@@ -23,8 +23,8 @@
 */
 
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-require_once $root . 'touchstone/config/config.inc.php';
-require_once $cfg_web_root . 'touchstone/classes/formutils.class.php';
+require_once $root . 'config/config.inc.php';
+require_once $cfg_web_root . 'classes/formutils.class.php';
 
 $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
 
@@ -91,7 +91,7 @@ h2 {font-size:120%}
 <body>
 <p>Dear $title $surname,</p>
 <p>We have received a request to reset your password on Touchstone. To complete the request click on the link below:</p>
-<p><a href="https://{$_SERVER['HTTP_HOST']}/touchstone/users/reset_password.php?token=$token">Reset password</a></p>
+<p><a href="https://{$_SERVER['HTTP_HOST']}/users/reset_password.php?token=$token">Reset password</a></p>
 <p>If you did not ask for your password to be reset please <a href="mailto:$support_email">email us</a>. Your existing 
 username and password will still allow you to log in to Touchstone.</p>
 </body>

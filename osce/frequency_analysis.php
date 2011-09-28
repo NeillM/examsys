@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   $startdate = $_GET['startdate'];
   $enddate = $_GET['enddate'];
   $paperID = $_GET['paperID'];
@@ -75,9 +75,9 @@
     }
 
     onImg = new Image;
-    onImg.src = '../touchstone/artwork/up_folder_icon_on.gif';
+    onImg.src = '../artwork/up_folder_icon_on.gif';
     offImg = new Image;
-    offImg.src = '../touchstone/artwork/up_folder_icon_off.gif';
+    offImg.src = '../artwork/up_folder_icon_off.gif';
   </script>
   </head>
   
@@ -101,17 +101,17 @@
     $result->fetch();
     $result->close();
   }
-  echo '<div class="breadcrumb"><a href="../touchstone/index.php">' . $string['home'] . '</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../touchstone/artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../touchstone/folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../touchstone/artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../touchstone/folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../touchstone/artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../touchstone/paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../touchstone/artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
 
-  echo '<tr><td colspan="2" style="height:3px"><img src="../touchstone/artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr></table>';
+  echo '<tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr></table>';
   
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse; font-size:100%\"><tr>\n";
 
@@ -159,7 +159,7 @@
     }
     echo "<tr id=\"row_" . $question_no . "\"><td class=\"question\">";
     if (trim($notes) != '') {
-      echo "<span style=\"color:$labelcolor\"><img src=\"../touchstone/artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+      echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
     echo "$leadin</td>";
     

@@ -64,7 +64,7 @@ body {background-color:#FFFFCC; color:black; margin:0px; font-size:90%; font-fam
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%">
 <tr>
 <?php
-  if (file_exists($cfg_web_root . 'touchstone/users/photos/' . $student_username . '.jpg')) {
+  if (file_exists($cfg_web_root . 'users/photos/' . $student_username . '.jpg')) {
     echo "<td style=\"border-left:1px solid #5582D2; background-color:white; width:180px; text-align:left; vertical-align:bottom\">&nbsp;<strong>$student_title $student_surname</strong><br />&nbsp;$student_firstnames<br />&nbsp;$student_id<br /><img src=\"../users/photos/$student_username.jpg\" width=\"180\" height=\"270\" border=\"0\" alt=\"Photo\" /></td><td>";
   } else {
     echo "<td><strong>Student Name:</strong> $student_title $student_surname, $student_firstnames";

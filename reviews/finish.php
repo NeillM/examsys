@@ -29,7 +29,7 @@ require '../include/errors.inc';
 if (strpos($userroles,'Staff') === false and strpos($userroles,'External Examiner') === false) {
   Header("WWW-authenticate: basic realm=\"TouchStone\"");
   Header("HTTP/1.0 401 Unauthorised");
-  echo "<html>\n<head>\n<title>Access Denied</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:100%; color:#BF0000\">\n<table cellpadding=\"10\" cellspacing=\"0\" border=\"0\" style=\"width:400px\">\n<tr><td style=\"width:36px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"61\" height=\"64\" alt=\"!\" /></td><td><strong>Login Failure</strong><br />sorry access denied</td></tr>\n</table>\n</body></html>";
+  echo "<html>\n<head>\n<title>Access Denied</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:100%; color:#BF0000\">\n<table cellpadding=\"10\" cellspacing=\"0\" border=\"0\" style=\"width:400px\">\n<tr><td style=\"width:36px\"><img src=\"/artwork/access_denied.png\" width=\"61\" height=\"64\" alt=\"!\" /></td><td><strong>Login Failure</strong><br />sorry access denied</td></tr>\n</table>\n</body></html>";
   $mysqli->close();
   exit;
 }

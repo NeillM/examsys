@@ -1,5 +1,5 @@
 var script  = document.createElement('script');
-script.src  = "/touchstone/tools/MathJax/MathJax.js";
+script.src  = "/tools/MathJax/MathJax.js";
 script.type = 'text/javascript';
 
 var config = 'MathJax.Hub.Config({' +

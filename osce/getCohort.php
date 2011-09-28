@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   header ("Content-Type:text/xml");
 
   $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year FROM properties WHERE property_id=? LIMIT 1");
@@ -46,7 +46,7 @@
     echo "<title>$title</title>\n";
     echo "<forenames><![CDATA[" . htmlentities($first_names, ENT_QUOTES | ENT_IGNORE, "UTF-8") . "]]></forenames>\n";
     echo "<surname><![CDATA[" . htmlentities($surname, ENT_QUOTES | ENT_IGNORE, "UTF-8") . "]]></surname>\n";
-    echo "<photo>https://touchstone.nottingham.ac.uk/touchstone/users/photos/" . $username . ".jpg</photo>\n";
+    echo "<photo>https://touchstone.nottingham.ac.uk/users/photos/" . $username . ".jpg</photo>\n";
     echo "</student>\n";
   }
   $result->close();

@@ -50,7 +50,7 @@ if (isset($_POST['submit']) and $unique_degree == true) {
   $result->execute();  
   $result->close();
   $mysqli->close();
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_degrees.php");
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_degrees.php");
 } else {
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

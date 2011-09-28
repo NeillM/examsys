@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   header ("Content-Type:text/xml");
 
   $result = $mysqli->prepare("SELECT paper_title, marking FROM properties WHERE property_id=? LIMIT 1");

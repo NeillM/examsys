@@ -25,7 +25,7 @@
 ?>
 <script language="JavaScript">
   function editTemplate() {
-    document.location.href='/touchstone/admin/edit_ebel_grid.php?id=' + document.getElementById('divID').value;
+    document.location.href='/admin/edit_ebel_grid.php?id=' + document.getElementById('divID').value;
   }
 </script>
 

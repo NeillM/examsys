@@ -327,7 +327,7 @@ if ($sortby == 'title') {
     $tmp_username = $row['username'];
     if (strpos($userroles,'SysAdmin') !== false) {
       echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $row['id'] . "',$x,'2c'); return false;\" ondblclick=\"profile('" . $row['id'] . "'); return false;\">";
-      if (file_exists($cfg_web_root . 'touchstone/users/photos/' . $row['username'] . '.jpg')) {
+      if (file_exists($cfg_web_root . 'users/photos/' . $row['username'] . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';
@@ -356,7 +356,7 @@ if ($sortby == 'title') {
       }
     } else {
       echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $row['id'] . "',$x,'2b'); return false;\" ondblclick=\"profile('" . $row['id'] . "'); return false;\">";
-      if (file_exists($cfg_web_root . '/touchstone/users/photos/' . $row['username'] . '.jpg')) {
+      if (file_exists($cfg_web_root . '/users/photos/' . $row['username'] . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';

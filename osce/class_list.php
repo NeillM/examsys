@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
 
   // Get the module ID and calendar year of the OSCE station.
   $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year FROM properties WHERE property_id=?");

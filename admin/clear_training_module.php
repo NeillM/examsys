@@ -100,5 +100,5 @@
   $result->close();
   
   $mysqli->close();
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/index.php");
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/index.php");
 ?>

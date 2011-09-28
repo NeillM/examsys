@@ -27,7 +27,7 @@
   } else {
     $demo = false;
   }
-  require_once '../touchstone/include/demo_replace.inc';
+  require_once '../include/demo_replace.inc';
 
   function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
     $sortarr = array();

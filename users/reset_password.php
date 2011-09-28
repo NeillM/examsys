@@ -23,9 +23,9 @@
 */
 
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-require_once $root . 'touchstone/config/config.inc';
-require_once $cfg_web_root . 'touchstone/classes/formutils.class.php';
-require_once $cfg_web_root . 'touchstone/classes/passwordutils.class.php';
+require_once $root . 'config/config.inc';
+require_once $cfg_web_root . 'classes/formutils.class.php';
+require_once $cfg_web_root . 'classes/passwordutils.class.php';
 
 $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
 
@@ -93,7 +93,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
           $delete->execute();
           $delete->close();
           
-          $message = 'Password updated. <a href="' . $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/">Log in</a>.';
+          $message = 'Password updated. <a href="' . $protocol . $_SERVER['HTTP_HOST'] . '/">Log in</a>.';
         }
         $update->close();
       }

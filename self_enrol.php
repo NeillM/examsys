@@ -22,11 +22,11 @@
 * @package
 */
 
-require './touchstone/include/staff_student_auth.inc';
-require './touchstone/include/errors.inc';
-require './touchstone/classes/dateutils.class.php';
-require './touchstone/classes/userutils.class.php';
-require './touchstone/classes/smsutils.class.php';
+require './include/staff_student_auth.inc';
+require './include/errors.inc';
+require './classes/dateutils.class.php';
+require './classes/userutils.class.php';
+require './classes/smsutils.class.php';
 
 check_var('moduleid', 'GET', true, false);
 $session = DateUtils::get_current_academic_year();
@@ -100,7 +100,7 @@ body {background-color:white; color:black; font-family:Arial,sans-serif; font-si
   $years = array($session, $next_session);
   
   echo '<br /><div align="center"><table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">';
-  echo '<tr style="height:70px; width:100%; background-image:url(./touchstone/artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:115px"><img src="./touchstone/artwork/modules_icon.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;Module Self-Enrolment</td></tr>';
+  echo '<tr style="height:70px; width:100%; background-image:url(./artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:115px"><img src="./artwork/modules_icon.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;Module Self-Enrolment</td></tr>';
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2"><table border="0" style="width:100%; text-align:left"><tr><td class="field" style="width:120px">Module ID</td><td>' . $_GET['moduleid'] . '</td></tr>';
   echo '<tr><td class="field">Name</td><td>' . $fullname . '</td></tr>';
@@ -118,7 +118,7 @@ body {background-color:white; color:black; font-family:Arial,sans-serif; font-si
   if (isset($_POST['submit'])) {
     echo '<tr><td colspan="2"><strong>Enrolment completed</strong></td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';
-    echo '<tr><td colspan="2"><a href="/touchstone/"><img src="https://touchstone.local/touchstone/artwork/link.png" width="16" height="16" alt=">" border="0" /></a>&nbsp;<strong><a href="/touchstone/" style="color:blue">Show papers I can Access</a></strong></td></tr>';
+    echo '<tr><td colspan="2"><a href="/"><img src="https://touchstone.local/artwork/link.png" width="16" height="16" alt=">" border="0" /></a>&nbsp;<strong><a href="/" style="color:blue">Show papers I can Access</a></strong></td></tr>';
   } else {
     echo '<tr><td colspan="2">I (' . $title . ' ' . $surname . ') would like to self-enroll on the above module.</td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';

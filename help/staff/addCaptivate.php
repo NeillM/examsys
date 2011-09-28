@@ -16,9 +16,9 @@ if (strpos($_SERVER['PHP_SELF'],'student_help') !== false) {
 require $require_file;
 
 if (strpos($_SERVER['PHP_SELF'],'student_help') !== false) {
-  $path = $cfg_web_root . 'touchstone/student_help/images/';
+  $path = $cfg_web_root . 'student_help/images/';
 } else {
-  $path = $cfg_web_root . 'touchstone/staff_help/images/';
+  $path = $cfg_web_root . 'staff_help/images/';
 }
 
 function unique_filename($filename, $path) {

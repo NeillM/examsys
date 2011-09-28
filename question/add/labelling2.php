@@ -47,7 +47,7 @@ if (isset($_POST['submit1'])) {
       default:
         //Not an image!
         echo "<html>\n<head>\n<title>New Labelling Question</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-        echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
+        echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
         echo "<h1 style=\"margin-left:60px\">File Type Error</h1>\n";
         echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">You are attempting to upload a file (" . $_FILES['qmedia']['type'] . ") that is not a supported file type.</p>\n<p style=\"margin-left:60px\"><input type=\"button\" onclick=\"history.back();\" name=\"back\" value=\"&lt; Back\" style=\"width:100px\" /></p>\n</body>\n</html>";
 

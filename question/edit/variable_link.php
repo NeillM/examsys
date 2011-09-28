@@ -68,7 +68,7 @@ body {color:black; background-color:white; font-family:Arial,sans-serif; margin:
     }
 
     window.opener.document.getElementById('<?php echo $_GET['elementID']; ?>').value = selectedRef;
-    window.opener.document.getElementById('<?php echo $_GET['iconID']; ?>').src = '/touchstone/artwork/variable_link_on.png';
+    window.opener.document.getElementById('<?php echo $_GET['iconID']; ?>').src = '/artwork/variable_link_on.png';
     window.close();
   }
 </script>

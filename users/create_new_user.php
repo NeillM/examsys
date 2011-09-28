@@ -138,10 +138,10 @@ h2 {font-size:120%}
 " . $string['password'] . ": " . $_POST['new_password'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">" . $string['casesensitive'] . "</span></p>";
 
       if (strpos($tmp_roles,'Staff') !== false) {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/touchstone/\">https://{$_SERVER['HTTP_HOST']}/touchstone/</a></p>";
+        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
       } elseif (strpos($tmp_roles,'Student') !== false) {
       } else {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/touchstone/\">https://{$_SERVER['HTTP_HOST']}/touchstone/</a></p>";
+        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
         $message .= "<p>" . $string['email3'] . "</p>";
       }
       $message .= "</body>\n</html>";

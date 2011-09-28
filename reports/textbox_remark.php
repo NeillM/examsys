@@ -39,9 +39,9 @@ require '../include/staff_auth.inc';
         $result->close();
       }
     }
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
   } elseif (isset($_POST['submit']) and $_POST['submit'] == 'Cancel') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
   } else {
 ?>
 

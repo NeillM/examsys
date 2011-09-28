@@ -32,7 +32,7 @@
     }
   }
 
-  $path = $cfg_web_root . 'touchstone/student_help';
+  $path = $cfg_web_root . 'student_help';
   
   require '../../include/sysadmin_auth.inc';    // Only let staff delete pages.
   require '../../include/errors.inc';
@@ -82,7 +82,7 @@
 <title>Delete Page</title>
 <script language="JavaScript">
   function reloadHelp() {
-    window.top.location='/touchstone/help/student/index.php';
+    window.top.location='/help/student/index.php';
   }
 </script>
 </head>

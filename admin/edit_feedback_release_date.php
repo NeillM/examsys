@@ -31,7 +31,7 @@ if (isset($_POST['submit'])) {
   $result->execute();
   $result->close();
   $mysqli->close();
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_releases.php");
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_releases.php");
 } else {
   $stmt = $mysqli->prepare("SELECT DATE_FORMAT(date,\"%Y%m%d%H%i\"), paper_title FROM (feedback_release, properties) WHERE feedback_release.paper_id=properties.property_id AND feedback_release.paper_id=?");
   $stmt->bind_param('i', $_GET['paperID']);

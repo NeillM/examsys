@@ -22,9 +22,9 @@
 * @package
 */
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-require $root . 'touchstone/include/staff_student_auth.inc';
-require_once $root . 'touchstone/config/config.inc';
-require_once $root . 'touchstone/classes/userutils.class.php';
+require $root . 'include/staff_student_auth.inc';
+require_once $root . 'config/config.inc';
+require_once $root . 'classes/userutils.class.php';
 require './restAPI.class';
 
 Class TouchStoneRestAPI extends restAPI {
@@ -185,7 +185,7 @@ Class TouchStoneRestAPI extends restAPI {
           $log->close();
           continue;
         } else {
-          $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/touchstone/mapping/user_feedback.php?paperID=' .  $paperID . '&userID=' . $tmp_userID;
+          $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/mapping/user_feedback.php?paperID=' .  $paperID . '&userID=' . $tmp_userID;
           $log->close();
         }
       } else {
@@ -265,8 +265,8 @@ Class TouchStoneRestAPI extends restAPI {
       while($res->fetch()) {
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
-        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/user_index.php?paperID=' . $property_id;
+        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/user_index.php?paperID=' . $property_id;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;

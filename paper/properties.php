@@ -664,7 +664,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      } elseif ($paper_type == '4') {
        echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/osce/\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "/osce/</a> " . $string['onlyonexamday'] . "</td></tr>\n";
      } else {
-       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/user_index.php?paper=" . urlencode($paper_title) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/user_index.php?paper=" . urlencode($paper_title) ."</a></td></tr>\n";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . urlencode($paper_title) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . urlencode($paper_title) ."</a></td></tr>\n";
      }
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper_title\" /><input type=\"hidden\" name=\"original_paper_title\" value=\"$paper_title\"><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
    ?>
@@ -739,7 +739,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        } else {
          echo ' style="display:block"';
        }
-       echo "><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/touchstone/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/touchstone/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "</a></span>&nbsp;</div>\n";
+       echo "><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "</a></span>&nbsp;</div>\n";
      }
      if ($paper_type == '0') {
        echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
@@ -1206,7 +1206,7 @@ if ($paper_type != '4' and $paper_type != '5') {
   $result->fetch();
   $result->close();
   if ($sct_no > 0) {
-    echo '<a href="' . $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '" target="_blank" style="color:blue">' . $protocol . $_SERVER['HTTP_HOST'] . '/touchstone/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '</a>';
+    echo '<a href="' . $protocol . $_SERVER['HTTP_HOST'] . '/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '" target="_blank" style="color:blue">' . $protocol . $_SERVER['HTTP_HOST'] . '/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '</a>';
   }
 
 ?></td></tr>

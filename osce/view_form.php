@@ -22,8 +22,8 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
-  require '../touchstone/include/demo_replace.inc';
+  require '../include/staff_auth.inc';
+  require '../include/demo_replace.inc';
   require './osce.inc';
   if (strpos($userroles,'Demo') !== false) $demo = true;
 
@@ -71,11 +71,11 @@
   <body>
   <table cellpadding="2" cellspacing="0" border="0"><tr>
 <?php
-  if (file_exists('../touchstone/users/photos/' . $original_username . '.jpg')) {
+  if (file_exists('../users/photos/' . $original_username . '.jpg')) {
     if ($demo == true) {
-      echo '<td><img style="filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)" src="../touchstone/users/photos/' . $original_username . '.jpg" width="180" height="270" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
+      echo '<td><img style="filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)" src="../users/photos/' . $original_username . '.jpg" width="180" height="270" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
     } else {
-      echo '<td><img src="../touchstone/users/photos/' . $original_username . '.jpg" width="180" height="270" style="border-top:1px solid #C0C0C0; border-right:1px solid #C0C0C0; border-bottom:1px solid #808080; border-top:1px solid #808080" alt="Photo" /></td>';
+      echo '<td><img src="../users/photos/' . $original_username . '.jpg" width="180" height="270" style="border-top:1px solid #C0C0C0; border-right:1px solid #C0C0C0; border-bottom:1px solid #808080; border-top:1px solid #808080" alt="Photo" /></td>';
     }
   } else {
     echo '<td><img src="./test_photo.png" width="180" height="270" style="border-top:1px solid #EEEEEE; border-left:1px solid #EEEEEE; border-right:1px solid #C0C0C0; border-bottom:1px solid #C0C0C0" alt="Photo" /></td>';
@@ -125,7 +125,7 @@
     }
     echo "<tr id=\"row_" . $question_no . "\"><td class=\"question\">";
     if (trim($notes) != '') {
-      echo "<span style=\"color:$labelcolor\"><img src=\"../touchstone/artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+      echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
  
     echo parse_leadin($leadin,$stored_q_parts[$q_id]) . "</td>";

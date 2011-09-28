@@ -41,8 +41,8 @@
       if ($results->num_rows == 1) {
         $row = $results->fetch_assoc();
         echo $filename . " = " . $row['username'] . "<br />\n";
-        if (!rename($cfg_web_root . "touchstone/users/new_photos/$filename", $cfg_web_root . "touchstone/users/new_photos/" . $row['username'] . '.jpg')) {
-          echo "Fail - \"" . $cfg_web_root . "touchstone/users/new_photos/$filename\", \"/touchstone/users/new_photos/" . $row['username'] . '.jpg<br />';
+        if (!rename($cfg_web_root . "users/new_photos/$filename", $cfg_web_root . "users/new_photos/" . $row['username'] . '.jpg')) {
+          echo "Fail - \"" . $cfg_web_root . "users/new_photos/$filename\", \"/users/new_photos/" . $row['username'] . '.jpg<br />';
         }
       } else {
         echo "<span style=\"color:red\">" . $query_string ."</span><br />\n";

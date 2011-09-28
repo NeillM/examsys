@@ -57,7 +57,7 @@ function display_media($filename,$width,$height,$imageid) {
     $html .= "<embed src=\"../media/$filename\" width=\"240\" height=\"30\" controls=\"ControlPanel autostart=false\" console=\"TheConsole\"><br />\n";
     $html .= "<embed src=\"../media/$filename\" width=\"240\" height=\"20\" controls=\"StatusBar autostart=false\" console=\"TheConsole\">";
   } elseif (strtolower(substr($filename, -4)) == '.avi') {
-    $html = "<embed src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" autoplay=true loop=false></embed>";
+    $html = "<embed src=\"/media/$filename\" width=\"$width\" height=\"$height\" autoplay=true loop=false></embed>";
   } else {
     $html = "<embed src=\"../media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\"></embed>";
   }

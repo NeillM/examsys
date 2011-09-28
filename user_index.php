@@ -217,7 +217,7 @@ if ($textsize > 120) {
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #5582D2;background-color:#DFE8FF\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
-    if (file_exists($cfg_web_root . 'touchstone/users/photos/' . $_SERVER['PHP_AUTH_USER'] . '.jpg')) {
+    if (file_exists($cfg_web_root . 'users/photos/' . $_SERVER['PHP_AUTH_USER'] . '.jpg')) {
       echo '<td rowspan="';
       if ($sound_demo == '1') {
         echo '8';
@@ -258,7 +258,7 @@ if ($textsize > 120) {
     echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span style=\"color:#D27800;font-size:90%;font-weight:bold\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"./paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
     echo "<param name=\"movie\" value=\"./paper/player_mp3_maxi.swf\" />\n";
-    echo "<param name=\"FlashVars\" value=\"mp3=/touchstone/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
+    echo "<param name=\"FlashVars\" value=\"mp3=/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
     echo "</object></td></tr>\n";  
   }
   

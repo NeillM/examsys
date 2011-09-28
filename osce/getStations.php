@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   header ("Content-Type:text/xml");
 
   echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<stationlist>\n";

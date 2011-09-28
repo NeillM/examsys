@@ -70,7 +70,7 @@ require '../include/staff_auth.inc';
     }
 
     function closeWindow() {
-      window.opener.location.href = '/touchstone/folder/details.php?folder=<?php echo $folderID; ?>';
+      window.opener.location.href = '/folder/details.php?folder=<?php echo $folderID; ?>';
       window.close();
     }
      

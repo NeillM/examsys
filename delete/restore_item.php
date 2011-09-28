@@ -82,5 +82,5 @@
   }
   $mysqli->close();
   
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/delete/recycle_list.php");
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/delete/recycle_list.php");
 ?>

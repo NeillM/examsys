@@ -46,7 +46,7 @@ $mysqli->close();
 <title>Keyword Deleted</title>
 <script language="javascript">
   function closeWindow() {
-    window.opener.location.href = '/touchstone/folder/list_keywords.php?module=<?php echo $_POST['module']; ?>';
+    window.opener.location.href = '/folder/list_keywords.php?module=<?php echo $_POST['module']; ?>';
     self.close();
   }
 </script>
@@ -62,7 +62,7 @@ $mysqli->close();
 
 <div style="text-align:center">
 <form action="" method="get">
-<input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="javascript:self.opener.location.href='/touchstone/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
+<input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="javascript:self.opener.location.href='/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
 </form>
 </div>
 </td></tr>

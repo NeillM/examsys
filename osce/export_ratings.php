@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   $paperID = $_GET['paperID'];
   
   // Capture the paper makeup.

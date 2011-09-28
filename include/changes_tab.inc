@@ -27,14 +27,14 @@
   <tr><td>
   <table cellpadding="0" cellspacing="0" border="0" style="width:504px; font-size:90%">
   <tr style="background-color:#F0F0E8">
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)" onclick="showTab('editortab');">Editor</td>
-    <td style="width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_on.gif)">Changes</td>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)" onclick="showTab('commentstab');">Comments</td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('editortab');">Editor</td>
+    <td style="width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)">Changes</td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('commentstab');">Comments</td>
     <?php
     if (strpos($_SERVER['PHP_SELF'],'edit_info.php') !== false or strpos($_SERVER['PHP_SELF'],'edit_likert.php') !== false) {  // Disabled the mapping tab.
-      echo "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_disabled.gif)\">Mapping</td>\n";
+      echo "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
     } else {
-      echo "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
+      echo "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
     }
     ?>
   </tr></table>

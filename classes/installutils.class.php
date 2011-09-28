@@ -825,7 +825,7 @@ define('DIR_SEPARATOR', '/');
   
 //Editor
   \$cfg_editor_name = 'tinymce';
-  \$cfg_editor_javascript = "<script language=\"JavaScript\" src=\"/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n<script language=\"JavaScript\" src=\"/touchstone/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
+  \$cfg_editor_javascript = "<script language=\"JavaScript\" src=\"/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n<script language=\"JavaScript\" src=\"/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
 
 //Server specific configuration basaed on hostname.
 switch (strtolower(\$_SERVER['HTTP_HOST'])) {
@@ -843,7 +843,7 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
 
 //Global DEBUG OUTPUT
   if (isset(\$_SERVER['PHP_AUTH_USER']) AND \$_SERVER['PHP_AUTH_USER'] == '{SysAdmin_username}') {
-    require_once \$_SERVER['DOCUMENT_ROOT'] . 'touchstone/include/debug.inc';
+    require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';
   } else {
     \$dbclass = 'mysqli';
   }

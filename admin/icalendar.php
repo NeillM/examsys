@@ -27,7 +27,7 @@
   //require '../include/staff_auth.inc';
   //require '../include/sidebar_menu.inc';
   $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-  require_once $root . 'touchstone/config/config.inc';
+  require_once $root . 'config/config.inc';
   $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
   require '../tools/iCalcreator/iCalcreator.class.php';
   

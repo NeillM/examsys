@@ -41,7 +41,7 @@ function getImages($html) {
       $third_split = explode('"',$second_split[1]);
       $image_src = $third_split[0];
       $image_src = str_replace('./media/','',$image_src);
-      $image_src = str_replace('/touchstone/media/','',$image_src);
+      $image_src = str_replace('/media/','',$image_src);
       
       $image_array[] = $image_src;
     }

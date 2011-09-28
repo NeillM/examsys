@@ -425,7 +425,7 @@
       }
     }
         
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
   }
 
   function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
@@ -666,10 +666,10 @@
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
-      write_string('<param name="movie" value="/touchstone/reports/label_analysis.swf" />');
+      write_string('<param name="movie" value="/reports/label_analysis.swf" />');
       write_string('<param name="quality" value="high" />');
       write_string('<param name="bgcolor" value="#ffffff" />');
-      write_string('<embed src="/touchstone/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('<embed src="/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
     </script>
     </div>
@@ -741,10 +741,10 @@
       			}
       			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 301); ?>" height="<?php echo ($q_media_height + 25); ?>" align="middle">');
       			write_string('<param name="allowScriptAccess" value="always" />');
-      			write_string('<param name="movie" value="/touchstone/reports/hotspot_analysis.swf" />');
+      			write_string('<param name="movie" value="/reports/hotspot_analysis.swf" />');
       			write_string('<param name="quality" value="high" />');
       			write_string('<param name="bgcolor" value="#ffffff" />');
-      			write_string('<embed src="/touchstone/reports/hotspot_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 301); ?>" height="<?php echo ($q_media_height + 25); ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      			write_string('<embed src="/reports/hotspot_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 301); ?>" height="<?php echo ($q_media_height + 25); ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       			write_string('</object>');
           </script>
           </div>
@@ -1290,7 +1290,7 @@ p {margin-left:0px; margin-right:0px}
 .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 </style>
 
-<script type="text/javascript" src="/touchstone/tools/mee/mee/js/mee_src.js"></script>
+<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <script src="../javascript/ie_fix.js" type="text/javascript"></script>
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="JavaScript">

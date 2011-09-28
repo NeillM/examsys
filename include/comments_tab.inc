@@ -26,14 +26,14 @@
   <tr><td>
   <table cellpadding="0" cellspacing="0" border="0" style="width:504px; font-size:90%">
   <tr>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)" onclick="showTab('editortab');">Editor</td>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)" onclick="showTab('changestab');">Changes</td>
-    <td style="width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_on.gif)">Comments</td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('editortab');">Editor</td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('changestab');">Changes</td>
+    <td style="width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)">Comments</td>
     <?php
     if (strpos($_SERVER['PHP_SELF'],'info.php') !== false or strpos($_SERVER['PHP_SELF'],'likert.php') !== false) {  // Disabled the mapping tab.
-      echo "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_disabled.gif)\">Mapping</td>\n";
+      echo "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
     } else {
-      echo "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/touchstone/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
+      echo "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
     }
     ?>
   </tr></table>
@@ -74,7 +74,7 @@
       $status = 'Major';
       $image = 'major_comment.png';
     }
-    echo "<tr><td style=\"border-bottom: solid 1px #ECE9D8\"><img src=\"/touchstone/artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td style=\"border-bottom: solid 1px #ECE9D8\">$title $initials $surname<br /><span style=\"color:#808080\">$review_type</span></td>";
+    echo "<tr><td style=\"border-bottom: solid 1px #ECE9D8\"><img src=\"/artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td style=\"border-bottom: solid 1px #ECE9D8\">$title $initials $surname<br /><span style=\"color:#808080\">$review_type</span></td>";
     if (trim($comment) == '') $comment = '<span style="color:#808080">No Comments</span>';
     echo "<td style=\"border-bottom: solid 1px #ECE9D8\">" . nl2br($comment) . "</td><td style=\"border-bottom: solid 1px #ECE9D8\"><input type=\"hidden\" name=\"commentid$comment_no\" value=\"$id\" />\n<select name=\"action$comment_no\">";
     $action_array = array('Not actioned','Read - disagree','Read - actioned');

@@ -1,5 +1,5 @@
 <?php
-require '../../lang/' . $language . '/touchstone/include/question_types.inc';
+require '../../lang/' . $language . '/include/question_types.inc';
 
 $string['byteam'] = '1by Team';
 $string['question'] = '1Question';

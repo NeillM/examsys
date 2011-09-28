@@ -52,7 +52,7 @@ while ($row = $stmt->fetch()) {
     // Check for additional password on the paper
     if (!empty($password)) {
       if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
-        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
+        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
         echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
         echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">There is a specific password assigned to this paper.</p>\n<p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"OK\" style=\"width:100px\" name=\"ok\" onclick=\"window.close();\"></form></p>\n</body>\n</html>";
         $mysqli->close();
@@ -62,7 +62,7 @@ while ($row = $stmt->fetch()) {
     
     // Check time security
     if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-      echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:$font,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/clock_48.png\" width=\"48\" height=\"48\" /></div>\n";
+      echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:$font,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/clock_48.png\" width=\"48\" height=\"48\" /></div>\n";
       echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
       echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">The paper you are attempting to access is only available between the following times:</p>\n<ul style=\"margin-left:80px\">\n<li>From - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>To - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"OK\" style=\"width:100px\" name=\"ok\" onclick=\"window.close();\"></form></p>\n</body>\n</html>";
       $mysqli->close();
@@ -77,7 +77,7 @@ while ($row = $stmt->fetch()) {
       $lab_info->store_result();
       $lab_info->fetch();
       if ($lab_info->num_rows == 0) {
-        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
+        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
         echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
         echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Access to this paper is not permitted from your current location.</p>\n</body>\n</html>";
         exit;
@@ -96,7 +96,7 @@ while ($row = $stmt->fetch()) {
         $module_info = $mysqli->query("SELECT moduleid,MAX(attempt) as attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql GROUP BY moduleid");
         if ($module_info->num_rows == 0) {
           echo "<html>\n<head>\n<title>Access Denied - Title</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-          echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
+          echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
           echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
           echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">$title $surname ($username) is not registered on <strong>$moduleID</strong> in <strong>$calendar_year</strong>.</p>\n</body>\n</html>";
           exit;
@@ -109,7 +109,7 @@ while ($row = $stmt->fetch()) {
         $module_info->close();
       } else {
         echo "<html>\n<head>\n<title>Access Denied - Year</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-        echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/touchstone/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
+        echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
         echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
         echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This paper is not on any module.</p>\n</body>\n</html>";
         exit;

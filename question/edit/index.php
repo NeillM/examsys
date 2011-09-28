@@ -336,7 +336,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <script type="text/javascript" src="../../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../../javascript/jquery.formhelpers.js"></script>
 <?php
-if ($question != null and file_exists($cfg_web_root . 'touchstone/javascript/validation/jquery.' . $question->get_type() . '.js')):
+if ($question != null and file_exists($cfg_web_root . 'javascript/validation/jquery.' . $question->get_type() . '.js')):
 ?>
 <script type="text/javascript" src="../../javascript/jquery.validate.min.js"></script>
 <script type="text/javascript" src="../../javascript/validation/jquery.<?php echo $question->get_type() ?>.js"></script>
@@ -364,7 +364,7 @@ foreach ($langstrings as $langstring) {
 ?>
 };
 </script>
-<script type="text/javascript" src="/touchstone/tools/mee/mee/js/mee_src.js"></script>
+<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 </head>
 <body>
   <div id="debug" class="debug"></div>

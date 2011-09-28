@@ -8,7 +8,7 @@
 */
 
 require  '../../../../../../include/staff_auth.inc';
-$path = $cfg_web_root . 'touchstone/help/staff/images/';
+$path = $cfg_web_root . 'help/staff/images/';
 
 function unique_filename($filename, $path) {
   if ($filename != '' and $filename != 'none') {

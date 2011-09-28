@@ -59,7 +59,7 @@
 </style>
 
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
-<script src="/touchstone/tools/MathJax/MathJax.js"> 
+<script src="/tools/MathJax/MathJax.js"> 
   MathJax.Hub.Config({
     showProcessingMessages: false,
 	menuSettings: {zoom:"none"},

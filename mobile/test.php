@@ -1,5 +1,5 @@
 <?php
-  require '../touchstone/include/staff_student_auth.inc';
+  require '../include/staff_student_auth.inc';
   $compressed = ob_start("ob_gzhandler");
 ?>
 <!DOCTYPE html>
@@ -19,15 +19,15 @@ td.l {width:20px; border:1px solid #C0C0C0; padding-top:2px; padding-bottom:2px;
 </style>
 <script language="JavaScript">
   tick = new Image(17,16); 
-  tick.src = "../touchstone/artwork/tick.gif";
+  tick.src = "../artwork/tick.gif";
   cross = new Image(17,16); 
-  cross.src = "../touchstone/artwork/cross.gif";
+  cross.src = "../artwork/cross.gif";
   
   function chk(mk, qID) {
     if (mk == 0) {
-      document.getElementById(qID).innerHTML = '<img src="../touchstone/artwork/cross.gif" width="17" height="16" alt="Cross" />';
+      document.getElementById(qID).innerHTML = '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
     } else {
-      document.getElementById(qID).innerHTML = '<img src="../touchstone/artwork/tick.gif" width="17" height="16" alt="Tick" />';
+      document.getElementById(qID).innerHTML = '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
     }
   }
 </script>

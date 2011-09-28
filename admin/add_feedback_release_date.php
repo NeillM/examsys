@@ -49,7 +49,7 @@
       }
     }
 
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/touchstone/admin/list_releases.php");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_releases.php");
   } else {
     $calendar_years = array();
     $result = $mysqli->query("SELECT DISTINCT calendar_year FROM properties WHERE (paper_type='2' OR paper_type='4' OR paper_type='5') AND deleted IS NULL AND moduleID != '' AND start_date < NOW() ORDER BY calendar_year");

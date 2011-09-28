@@ -1,6 +1,6 @@
 <?php
-require $cfg_web_root . 'touchstone/lang/' . $language . '/touchstone/include/status.inc';
-require $cfg_web_root . 'touchstone/lang/' . $language . '/touchstone/include/question_types.inc';
+require $cfg_web_root . 'lang/' . $language . '/include/status.inc';
+require $cfg_web_root . 'lang/' . $language . '/include/question_types.inc';
 
 $string['question'] = '1Question';
 $string['type'] = '1Type';

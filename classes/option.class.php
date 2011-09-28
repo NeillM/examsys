@@ -492,7 +492,7 @@ QUERY;
   public static function option_factory($mysqli, $user_id, $question, $number, &$lang_strings, $data=-1) {
     $object = null;
     $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
-    $root .= 'touchstone/classes/';
+    $root .= 'classes/';
     
     $question_type = $question->get_type();
     $classname = 'Option' . strtoupper($question_type);

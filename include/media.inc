@@ -39,20 +39,20 @@ function display_media($filename, $width, $height, $imageid=-1) {
   if ($imageid > -1) $html .= "<div id=\"media$imageid\" class=\"media\">";
   // Is the file an image or something else (e.g. RasMol)?
   if (in_array($fn_parts['extension'], array('gif', 'jpg', 'jpeg', 'png'))) {
-    $html .= "<img src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top\" />";
+    $html .= "<img src=\"/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top\" />";
   } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-    $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"/touchstone/media/$filename\">Audio Clip</a>";
+    $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"/media/$filename\">Audio Clip</a>";
   } elseif (in_array($fn_parts['extension'], array('doc', 'ppt', 'xls', 'pdf'))) {
-    $html .= "<iframe src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
+    $html .= "<iframe src=\"/media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
   } elseif ($fn_parts['extension'] == 'flv') {
     if ($width == 0 or $height == 0) {
       $width = 320;
       $height = 260;
     }
     $html .= <<< OBJEMBED
-<object type="application/x-shockwave-flash" data="/touchstone/paper/player_flv_maxi.swf" width="{$width}" height="{$height}">
-<param name="movie" value="/touchstone/paper/player_flv_maxi.swf" />
-<param name="FlashVars" value="flv=/touchstone/media/{$filename}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
+<object type="application/x-shockwave-flash" data="/paper/player_flv_maxi.swf" width="{$width}" height="{$height}">
+<param name="movie" value="/paper/player_flv_maxi.swf" />
+<param name="FlashVars" value="flv=/media/{$filename}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
 </object>  
 OBJEMBED;
     
@@ -63,20 +63,20 @@ OBJEMBED;
     }
     
     $html .= <<< OBJEMBED
-<object type="application/x-shockwave-flash" data="/touchstone/paper/player_mp3_maxi.swf" width="200" height="20">
+<object type="application/x-shockwave-flash" data="/paper/player_mp3_maxi.swf" width="200" height="20">
 <param name="wmode" value="transparent" />
-<param name="movie" value="/touchstone/paper/player_mp3_maxi.swf" />
-<param name="FlashVars" value="mp3=/touchstone/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
+<param name="movie" value="/paper/player_mp3_maxi.swf" />
+<param name="FlashVars" value="mp3=/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
 </object>  
 OBJEMBED;
   } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-    $html .= "<embed src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+    $html .= "<embed src=\"/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   } else {
-    $html .= "<embed src=\"/touchstone/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+    $html .= "<embed src=\"/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   }
   if ($imageid > -1) {
     $html .= <<< DELETE
-<a href="#" class="media-delete" rel="{$imageid}"><img class="align-bottom" src="/touchstone/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
+<a href="#" class="media-delete" rel="{$imageid}"><img class="align-bottom" src="/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
 <label class="hide"><input type="checkbox" id="delete_media{$imageid}" name="delete_media{$imageid}" /> Delete image {$imageid}</label>
 DELETE;
   }
@@ -100,7 +100,7 @@ function unique_filename($filename, $strip = TRUE) {
     $filename = preg_replace("/[^a-z0-9_\-\(\)\.]/","",$filename);
   }
 
-  while(file_exists($cfg_web_root . "touchstone/media/$filename")) {
+  while(file_exists($cfg_web_root . "media/$filename")) {
     if(!isset($ext)) {
       $tmp = explode('.',$filename);
       $n = count($tmp);
@@ -133,11 +133,11 @@ function uploadFile($fileID) {
   
   $unique_name = unique_filename($_FILES[$fileID]['name']);
   if ($unique_name != 'none' and $unique_name != '') {
-    if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "touchstone/media/$unique_name"))  {
+    if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "media/$unique_name"))  {
       echo uploadError($_FILES[$fileID]['error']);
       return false;
     } else {
-      chmod($cfg_web_root . "touchstone/media/$unique_name", 0664);
+      chmod($cfg_web_root . "media/$unique_name", 0664);
       switch ($_FILES[$fileID]['type']) {
         case 'application/msword':
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
@@ -158,13 +158,13 @@ function uploadFile($fileID) {
         case 'image/x-png':
         case 'image/png':
           // Image formats
-          $identifier_size = GetImageSize($cfg_web_root . "touchstone/media/$unique_name");
+          $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
           $file_width = $identifier_size[0];
           $file_height = $identifier_size[1];
           break;
         case 'application/x-shockwave-flash':
           //ShockWave
-          $identifier_size = GetImageSize($cfg_web_root . "touchstone/media/$unique_name");
+          $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
           $file_width = $identifier_size[0];
           $file_height = $identifier_size[1];
           break;
@@ -174,13 +174,13 @@ function uploadFile($fileID) {
         case 'video/quicktime':
         case 'video/x-flv':
           $getID3 = new getID3;
-          $file_info = $getID3->analyze($cfg_web_root . "touchstone/media/$unique_name");
+          $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
           $file_width = $file_info['video']['resolution_x'];
           $file_height = $file_info['video']['resolution_y'];
           break;
         default:
           // Can't get mimetype, trying extension types
-          $path_parts = pathinfo($cfg_web_root . "touchstone/media/$unique_name");
+          $path_parts = pathinfo($cfg_web_root . "media/$unique_name");
           switch (strtolower($path_parts['extension'])) {
             case 'mpg':
             case 'mpeg':
@@ -188,7 +188,7 @@ function uploadFile($fileID) {
             case 'mov':
             case 'flv':
               $getID3 = new getID3;
-              $file_info = $getID3->analyze($cfg_web_root . "touchstone/media/$unique_name");
+              $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
               $file_width = $file_info['video']['resolution_x'];
               $file_height = $file_info['video']['resolution_y'];
               break;
@@ -208,7 +208,7 @@ function deleteMedia($filename) {
   global $cfg_web_root;
   
   if ($filename != '') {
-    if (@!unlink($cfg_web_root . 'touchstone/media/' . $filename)) {
+    if (@!unlink($cfg_web_root . 'media/' . $filename)) {
       //display_error("Failed to delete " . $filename, '', false, true);
     }
   }

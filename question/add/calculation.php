@@ -142,7 +142,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   }
 
   function variableLink(elementID, iconID) {
-    window.open("/touchstone/question/edit/variable_link.php?paperID=<?php echo $_GET['paperID'] . '&elementID='; ?>" + elementID + "&iconID=" + iconID + "","paper","width=600,height=400,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    window.open("/question/edit/variable_link.php?paperID=<?php echo $_GET['paperID'] . '&elementID='; ?>" + elementID + "&iconID=" + iconID + "","paper","width=600,height=400,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
   }
 </script>
 <script language="JavaScript" src="../../javascript/mapping_tab.js"></script>

@@ -233,7 +233,7 @@ if (isset($_POST['Submit'])) {
        }
        $feedback_details->close();
      
-       echo "Objectives Report<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/touchstone/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/touchstone/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "</a></div>\n";
+       echo "Objectives Report<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "</a></div>\n";
      }
      if ($paper_type == '0') {
        echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on">';

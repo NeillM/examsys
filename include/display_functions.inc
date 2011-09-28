@@ -73,7 +73,7 @@ function output_Math_Editor($id) {
     ?>
     <script language="Javascript">
     DragMath.push('<?php echo $id; ?>');	
-    document.write('<applet id="DragMath_<?php echo $id; ?>" codebase="/touchstone/editor/DragMath/applet" code="Display.MainApplet.class" archive="DragMath.jar" width=540 height=310>',
+    document.write('<applet id="DragMath_<?php echo $id; ?>" codebase="/editor/DragMath/applet" code="Display.MainApplet.class" archive="DragMath.jar" width=540 height=310>',
                   '<param name= hideMenu value= "true" >',
                   '<param name= customToolbar value= "0 3 4 | 5 6 7" >',
                   '<param name=language value="en">',

@@ -217,8 +217,8 @@ if (isset($_GET['change_screen'])) {
 </style>
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
-<script type="text/javascript" src="/touchstone/javascript/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="/touchstone/tools/mee/mee/js/mee_src.js"></script>
+<script type="text/javascript" src="/javascript/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <script language="JavaScript">
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, prev_screen, next_screen, current_screen, menuID, subparts, evt) {
     tmp_ID = document.PapersMenu.oldQuestionID.value;

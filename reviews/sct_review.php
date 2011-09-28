@@ -23,7 +23,7 @@
 */
 
   $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-  require_once $root . 'touchstone/config/config.inc';
+  require_once $root . 'config/config.inc';
   require '../include/media.inc';
   require '../include/errors.inc';
   require '../include/sct_review.inc';
@@ -39,7 +39,7 @@
     if ($question['scenario'] != '') {
       echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">Clinical Vignette</td></tr>\n";
       echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
-      if ($question['notes'] != '') echo '<p class="note"><img src="/touchstone/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
+      if ($question['notes'] != '') echo '<p class="note"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }

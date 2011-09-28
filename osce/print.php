@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
 
   // Get properties of the paper.
   $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
@@ -84,7 +84,7 @@
     }
     echo "<tr><td class=\"question\">";
     if (trim($notes) != '') {
-      echo "<span style=\"color:$labelcolor\"><img src=\"../touchstone/artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+      echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
     echo "$leadin</td>";
     for ($i=0; $i<$cols; $i++) {

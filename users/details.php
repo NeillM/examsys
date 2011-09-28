@@ -355,13 +355,13 @@ a.access:hover {color:white}
   
   if (strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
     if (strpos($tmp_roles,'Student') !== false or strpos($tmp_roles,'graduate') !== false or strpos($tmp_roles,'left') !== false or strpos($tmp_roles,'suspended') !== false) {
-      $student_photo =  $cfg_web_root . 'touchstone/users/photos/' . $original_username . '.jpg';
+      $student_photo =  $cfg_web_root . 'users/photos/' . $original_username . '.jpg';
       $row_no = 7;
       if (file_exists($student_photo)) {
         if ($demo == true) {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"/touchstone/users/photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;Name</td><td colspan=\"3\">";
+          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"/users/photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;Name</td><td colspan=\"3\">";
         } else {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"/touchstone/users/photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;Name</td><td colspan=\"3\">";
+          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"/users/photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;Name</td><td colspan=\"3\">";
         }
       } else {
         echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
@@ -511,10 +511,10 @@ a.access:hover {color:white}
     echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   } else {
     if (strpos($tmp_roles,'Student') !== false) {
-      $student_photo =  $cfg_web_root ."touchstone/users/photos/$username.jpg";
+      $student_photo =  $cfg_web_root ."users/photos/$username.jpg";
       $row_no = 10;
       if (file_exists($student_photo)) {
-        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"/touchstone/users/photos/$username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td width=\"110\">&nbsp;Name</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
+        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"/users/photos/$username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td width=\"110\">&nbsp;Name</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
       } else {
         echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td width=\"110\">&nbsp;Name:</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
       }

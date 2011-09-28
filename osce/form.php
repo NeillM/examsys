@@ -22,7 +22,7 @@
 * @package
 */
 
-  require '../touchstone/include/staff_auth.inc';
+  require '../include/staff_auth.inc';
   require './osce.inc';
   
   if (isset($_POST['submit'])) {
@@ -100,7 +100,7 @@
     // Check time security
     if ($test == false) {
       if (time() < $start_date or time() > $end_date) {
-        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:120%;font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:Arial,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/touchstone/artwork/clock_48.png\" width=\"48\" height=\"48\" /></div>\n";
+        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:120%;font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:Arial,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/artwork/clock_48.png\" width=\"48\" height=\"48\" /></div>\n";
         echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
         echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">The paper you are attempting to access is only available between the following times:</p>\n<ul style=\"margin-left:80px\">\n<li>From - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>To - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"&lt; Back\" style=\"width:100px\" name=\"back\" onclick=\"history.back();\"></form></p>\n</body>\n</html>";
         $mysqli->close();
@@ -222,8 +222,8 @@
   <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" name="osceform">
   <table cellpadding="2" cellspacing="0" border="0"><tr>
 <?php
-  if (file_exists($cfg_web_root . 'touchstone/users/photos/' . $username . '.jpg')) {
-    echo '<td><img src="/touchstone/users/photos/' . $username . '.jpg" width="90" height="135" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
+  if (file_exists($cfg_web_root . 'users/photos/' . $username . '.jpg')) {
+    echo '<td><img src="/users/photos/' . $username . '.jpg" width="90" height="135" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
   } else {
     echo '<td><img src="./test_photo.png" width="90" height="135" border="1" alt="Photo" /></td>';
   }
@@ -274,7 +274,7 @@
 
     echo "<tr><td class=\"q\">";
     if (trim($notes) != '') {
-      echo "<span style=\"color:$labelcolor\"><img src=\"../touchstone/artwork/small_note_icon.png\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+      echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
     echo $leadin;
     if (isset($stored_results[$q_id])) {
