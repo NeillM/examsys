@@ -138,7 +138,7 @@ Class Question extends TouchStoneObject {
     
     $this->_score_methods_db = array($this->_lang_strings['markperquestion'] => 'Mark per Question', $this->_lang_strings['markperoption'] => 'Mark per Option', $this->_lang_strings['allowpartial'] => 'Allow partial Marks', $this->_lang_strings['bonusmark'] => 'Bonus Mark');
     $this->_statuses_db = array($this->_lang_strings['normal'] => 'Normal', $this->_lang_strings['retired'] => 'Retired', $this->_lang_strings['incomplete'] => 'Incomplete', $this->_lang_strings['experimental'] => 'Experimental', $this->_lang_strings['beta'] => 'Beta');
-    $this->_blooms_db = array($this->_lang_strings['knowledge'] => 'Knowledge', $this->_lang_strings['comprehension'] => 'Comprehension', $this->_lang_strings['application'] => 'Application', $this->_lang_strings['analysis'] => 'Analysis', $this->_lang_strings['synthesis'] => 'Synthesis', $this->_lang_strings['evaluation'] => 'Evaluation');
+    $this->_blooms_db = array('' => '', $this->_lang_strings['knowledge'] => 'Knowledge', $this->_lang_strings['comprehension'] => 'Comprehension', $this->_lang_strings['application'] => 'Application', $this->_lang_strings['analysis'] => 'Analysis', $this->_lang_strings['synthesis'] => 'Synthesis', $this->_lang_strings['evaluation'] => 'Evaluation');
     
     // Array of references to the fields.  Allows succinct use of call_user_func_array for saving
     foreach($this->_fields as $field) {
