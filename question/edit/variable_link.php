@@ -100,7 +100,7 @@ body {color:black; background-color:white; font-family:Arial,sans-serif; margin:
   $result->close();
   
   $current_screen = 0;
-  if (isset($_GET['q_id'])) {
+  if (isset($_GET['q_id']) and $_GET['q_id'] != -1) {
     for ($i=0; $i<$q_no; $i++) {
       if ($paper_details[$i]['q_id'] == $_GET['q_id']) $current_screen = $paper_details[$i]['screen'];
     }
