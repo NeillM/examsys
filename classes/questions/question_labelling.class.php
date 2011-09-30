@@ -24,7 +24,7 @@
  * @package
  */
 
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../options/option_hotspot.class.php');
+//require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../options/option_hotspot.class.php');
 
 Class QuestionLABELLING extends Question {
   
@@ -90,7 +90,8 @@ Class QuestionLABELLING extends Question {
       $option = reset($this->options);
       $option->set_correct($this->points1);
     } else {
-      $this->options[] = new OptionLABELLING($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $this->points1));
+      $this->options[] = Option::option_factory($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $this->points1));
+//      $this->options[] = new OptionLABELLING($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $this->points1));
     }
   }
 }
