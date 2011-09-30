@@ -56,7 +56,7 @@ require_once 'detail_parts/details_leadin.php';
         <table class="form hotspot" summary="Hotspot flash movie">
           <thead>
             <tr>
-              <th class="align-left"><span class="mandatory">*</span> Image</th>
+              <th class="align-left"><span class="mandatory">*</span> <?php echo $string['image'] ?></th>
             </tr>
           </thead>
           <tbody>
