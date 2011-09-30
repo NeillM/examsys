@@ -37,6 +37,8 @@ $(function () {
   $('.sct-type').trigger('change');
   
   trimLongChanges();
+  
+  $('#addbank').click(checkMapping);
 });
 
 function changeTab() {
@@ -160,4 +162,13 @@ function trimLongChanges() {
       $(this).text(lang['showmore'])
     }
   });
+}
+
+function checkMapping() {
+  var checked = $('.objectives input:checked');
+  if (checked.length > 0) {
+    return confirm('WARNING: All mappings will be lost if this question is not added to the paper!');
+  }
+  
+  return true;
 }
