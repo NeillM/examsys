@@ -407,7 +407,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $figures = explode(',',$display_option['option_text']);
        
         $min = calcPreParse($figures[0],$user_answers,$vars);
-        $max = calcPreParse($figures[1],$user_answers,$vars);
+        $max = (isset($figures[1]) and $figures[1] != '') ? calcPreParse($figures[1],$user_answers,$vars) : $min;
         
         if (!isset($user_answers[$current_screen][$q_id])) {
           //its a normal range and user has not seen the question genarate value

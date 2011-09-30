@@ -51,7 +51,7 @@ Class MathsUtils {
       $max = $max * (10 * $decimals);
       $increment = $increment * (10 * $decimals);
     }
-    if ($increment == 1) {
+    if ($increment == 1 or $increment == 0) {
       $gen_no = rand($min, $max);
     } else {
       $new_max = ($max - $min) / $increment;
