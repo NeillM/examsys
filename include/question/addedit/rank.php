@@ -48,7 +48,7 @@ require_once 'detail_parts/details_general_feedback.php';
 ?>
         
         <div class="form">
-          <h2><?php $string['options'] ?><br /><span class="note"><?php $string['optionsmsg'] ?></span></h2>
+          <h2><?php echo $string['options'] ?><br /><span class="note"><?php echo $string['optionsmsg'] ?></span></h2>
         </div>
         
         <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">

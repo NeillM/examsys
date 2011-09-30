@@ -41,7 +41,7 @@ $spaced = ($index > 1) ? ' spaced-top' : '';
 ?>
           <tbody class="option<?php echo $hidden ?>">
             <tr<?php echo $alt_c ?>>
-              <th class="spaced-bottom<?php echo $spaced ?>"><label for="option_text<?php echo $index ?>"><?php printf($string['optiontext'], $index) ?></label></th>
+              <th class="spaced-bottom<?php echo $spaced ?>"><label for="option_text<?php echo $index ?>"><?php echo $index ?>.</label></th>
               <td class="spaced-bottom<?php echo $spaced ?>">
                 <input type="text" name="option_text<?php echo $index ?>" id="option_text<?php echo $index ?>" class="form-med-large" value="<?php echo $option->get_text() ?>" />
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
