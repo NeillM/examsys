@@ -22,7 +22,7 @@
 * @package
 */
 
-  $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
+  $mysqli = new $dbclass($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
   
   if (isset($_GET['paperID'])) {
     $paperID = $_GET['paperID'];

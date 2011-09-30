@@ -23,7 +23,7 @@
 */
 
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-require_once $root . 'config/config.inc';
+require_once $root . 'config/config.inc.php';
 require '../include/media.inc';
 require '../include/errors.inc';
 require '../include/sct_review.inc';
