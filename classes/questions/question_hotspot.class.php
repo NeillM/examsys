@@ -26,8 +26,6 @@
 
 // TODO: deletion of layers - requires Flash change?
 
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../options/option_hotspot.class.php');
-
 Class QuestionHOTSPOT extends Question {
   
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
@@ -170,7 +168,7 @@ Class QuestionHOTSPOT extends Question {
       $option->set_correct($value);
       $option->set_marks_correct($marks);
     } else {
-      $this->options[] = new OptionHOTSPOT($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $value, 'marks' => $marks));
+      $this->options[] = Option::option_factory($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $value, 'marks' => $marks));
     }
   }
   
