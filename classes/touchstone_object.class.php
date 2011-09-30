@@ -85,6 +85,17 @@ Class TouchStoneObject {
         $text = str_replace($m, $new, $text);
       }
     } 
+    
+    //swap [texi] befor saving to db <div class="mee">
+    preg_match_all("#\[texi\](.*?)\[/texi\]#si",$text,$tex_matches);
+    if(count($tex_matches[0]) > 0) {
+      foreach($tex_matches[0] as $m) {
+        $new = str_replace(array('[texi]','[/texi]'),array('<span class="mee">','</span>'),$m);
+        $text = str_replace($m, $new, $text);
+      }
+    } 
+    return $text;
+    
     return $text;
   }
   
@@ -98,8 +109,14 @@ Class TouchStoneObject {
     preg_match_all("#<div class=\"mee\">(.*?)\</div>#si",$text,$tex_matches);
     if(count($tex_matches[0]) > 0) {
       foreach($tex_matches[0] as $m) {
-        //echo "<pre>$m</pre>";
         $new = str_replace(array('<div class="mee">','</div>'),array('[tex]','[/tex]'),$m);
+        $text = str_replace($m, $new, $text);
+      }
+    }
+    preg_match_all("#<span class=\"mee\">(.*?)\</span>#si",$text,$tex_matches);
+    if(count($tex_matches[0]) > 0) {
+      foreach($tex_matches[0] as $m) {
+        $new = str_replace(array('<span class="mee">','</span>'),array('[texi]','[/texi]'),$m);
         $text = str_replace($m, $new, $text);
       }
     }

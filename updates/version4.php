@@ -1067,6 +1067,34 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
+  //26/09/2011
+  $check = $mysqli->prepare("SELECT leadin FROM questions WHERE leadin LIKE '%[tex]%[/tex]%'");
+  $check->execute();
+  $check->store_result();
+  $check->fetch();
+  if ($check->num_rows() > 0) {
+    $sql = array();
+    $sql[] = "UPDATE questions set leadin = REPLACE(REPLACE(leadin,'[tex]','<div class=\"mee\">'),'[/tex]','</div>') WHERE leadin LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE questions set theme = REPLACE(REPLACE(theme,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE theme LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE questions set scenario = REPLACE(REPLACE(scenario,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE scenario LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE questions set correct_fback = REPLACE(REPLACE(correct_fback,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE correct_fback LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE questions set incorrect_fback = REPLACE(REPLACE(incorrect_fback,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE incorrect_fback LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE questions set notes = REPLACE(REPLACE(notes,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE notes LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE questions set scenario_plain = REPLACE(REPLACE(scenario_plain,'[tex]',''),'[/tex]','') WHERE scenario_plain LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE questions set leadin_plain = REPLACE(REPLACE(leadin_plain,'[tex]',''),'[/tex]','') WHERE leadin_plain LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE options set option_text = REPLACE(REPLACE(option_text,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE option_text LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE options set feedback_right = REPLACE(REPLACE(feedback_right,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE feedback_right LIKE '%[tex]%[/tex]%'";
+    $sql[] = "UPDATE options set feedback_wrong = REPLACE(REPLACE(feedback_wrong,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE feedback_wrong LIKE '%[tex]%[/tex]%'";
+    foreach($sql as $q) {
+      $adjust = $mysqli->prepare($q);
+      $adjust->execute();
+      $adjust->close();
+      echo "<div>Replacing [tex] " . htmlspecialchars($q) . "</div>";
+      ob_flush();
+      flush();
+    }
+  }
+
   echo "</ol>\n";
   
   //Close the database
