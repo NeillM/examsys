@@ -1051,7 +1051,7 @@ if (!isset($_POST['update'])) {
     flush();
   }
   
-  // 01/09/2011 - Remove the 'time
+  // 01/09/2011 - Remove the time/date question type
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
   $result->execute();
   $result->store_result();
@@ -1062,7 +1062,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')</div>\n";
+    echo "<li>ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based')</li>\n";
     ob_flush();
     flush();
   }
@@ -1093,6 +1093,43 @@ if (!isset($_POST['update'])) {
       ob_flush();
       flush();
     }
+  }
+
+  // 30/09/2011 - Update to the format of Labelling questions
+  $update_needed = true;
+  $result = $mysqli->prepare("SELECT o_id FROM options WHERE correct LIKE '%;label;%'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($o_id);
+  if ($result->num_rows > 0) $update_needed = false;
+  $result->close();
+  
+  if ($update_needed == true) {
+    $result = $mysqli->prepare("SELECT o_id, correct FROM options, questions WHERE questions.q_id=options.o_id AND q_type='labelling'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($o_id, $correct);
+    while ($result->fetch()) {
+      $parts = explode(';', $correct);
+      $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
+      if ($parts[7] == 'single') {
+        $new_correct .= 'single;label';
+      } elseif ($parts[7] == 'multiple') {
+        $new_correct .= 'multiple;label';
+      } else {
+        $new_correct .= 'single;menu';
+      }
+      for ($i=8; $i<count($parts); $i++) {
+        $new_correct .= ';' . $parts[$i];
+      }
+      
+      $adjust = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
+      $adjust->bind_param('si', $new_correct, $o_id);
+      $adjust->execute();
+      $adjust->close();
+    }
+    $result->close();
+    echo "<li>Updated the format of Labelling questions</li>";
   }
 
   echo "</ol>\n";
