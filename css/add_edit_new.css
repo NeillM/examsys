@@ -368,7 +368,6 @@ div.form {
 }
 
 .form-fixed {
-/*   overflow: hidden; */
   resize: none;
 }
 
@@ -396,6 +395,10 @@ div.form {
 
 .auto-sized th, .auto-sized td {
 	width: auto;
+}
+
+.form.hotspot {
+	margin-left: 0;
 }
 
 input.error, textarea.error, select.error {
@@ -567,10 +570,13 @@ input[type=text] {
   padding-right: 200px;
 }
 
-#question-holder.max {
-  width: 100%;
+#question-holder.hotspot {
+  width: 1220px;
 }
 
+#question-holder.labelling {
+  width: 1046px;
+}
 
 /* media upload */
 #media-upload-holder {

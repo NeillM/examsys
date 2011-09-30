@@ -37,7 +37,7 @@ if (count($question->options) > 0) {
 //<![CDATA[
 <?php // Bit of a hack to get the flash to stay centred ?>
 $(function () {
-  $('#question-holder').addClass('max');
+  $('#question-holder').addClass('hotspot');
 });
 flashTarget = 'points';
 //]]>
@@ -52,7 +52,7 @@ require_once 'detail_parts/details_scenario.php';
 					</tbody>
 				</table>
         
-        <table class="form" summary="Hotspot flash movie">
+        <table class="form hotspot" summary="Hotspot flash movie">
           <thead>
             <tr>
               <th class="align-left"><span class="mandatory">*</span> Image</th>
