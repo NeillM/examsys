@@ -201,7 +201,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 
   $tmp_html = '';
   if ($member_details->num_rows > 0) $tmp_html = '<ul type="square" style="line-height:155%; font-size:90%; color:#8492A6; margin-top:4px; margin-bottom:4px; margin-left:20px; padding-left:0px">';
-  while ($row = $member_details->fetch()) {
+  while ($member_details->fetch()) {
     if (strpos($userroles,'Admin') !== false) {
       $tmp_html .= "<li><a style=\"color:#254280\" href=\"../users/details.php?userID=$tmp_userID&module=" . $_GET['module'] . "\" target=\"_top\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</a></li>\n";
     } else {
@@ -210,7 +210,6 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
     if ($tmp_userID == $userID) $add_member = true;
   }
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
-  //echo '<div style="float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC; filter:progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=2)">';
   echo '<div style="box-shadow: 2px 2px 2px #C0C0C0; float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';
   if ($add_member == true or strpos($userroles,'Admin') !== false) {
     echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;">' . $string['edit'] . '</a></div></div>';
@@ -275,28 +274,25 @@ if ($folder != '') {
   
   $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND moduleID LIKE '%" . $_GET['module'] . "%' AND deleted IS NULL $showretiredSQL GROUP BY paper_title ORDER BY paper_type, paper_title";
 }
-//$results = $mysqli->query($query_string);
-
 
 $results = $mysqli->prepare($query_string);
 $results->execute();
 $results->bind_result($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
 $results->store_result();
-//$results->fetch();
-
-
 
 $old_p_type = '';
 $sent_clear_all = false;
 if ($display_papers) {
   if ($results->num_rows > 0) {
-    while ($row = $results->fetch()) {
+    while ($results->fetch()) {
       if ($old_p_type != $paper_type and (isset($_GET['module']) AND $_GET['module'] != '') ) {
         if ($sent_clear_all == true) {
           echo "<br clear=\"all\" />";
         }
         $sent_clear_all = true;
-        echo "<table border=\"0\" style=\"margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287\"><tr><td><nobr>" . $types_array[$paper_type] . " (" . $paper_types[$paper_type] . ")";
+        //var_dump($types_array);
+        //exit;
+        echo "<table border=\"0\" style=\"margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287\"><tr><td><nobr>" . $string[strtolower($types_array[$paper_type])] . " (" . $paper_types[$paper_type] . ")";
         if ($paper_type == 2) {
           echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" border=\"0\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
         }
