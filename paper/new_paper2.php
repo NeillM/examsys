@@ -31,7 +31,7 @@ require_once '../classes/dateutils.class.php';
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Create New Paper<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['createnewpaper'] . $cfg_install_type; ?></title>
 <?php
   // Delete any half completed papers owned by current user.
   $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID=?");
@@ -54,31 +54,31 @@ require_once '../classes/dateutils.class.php';
   body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:6px; font-size:90%}
   table {font-size:100%}
   textarea, input[type=text], select {font-family: Arail,sans-serif; border: 1px solid #7F9DB9}
+  .icon {padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
 </style>
 <script language="JavaScript">
   function over(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).src='../artwork/' + id + '_over.png';
+      document.getElementById(id).style.backgroundImage = "url('../artwork/over.png');";
     }
   }
   
   function out(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).src='../artwork/' + id + '_off.png';
+      document.getElementById(id).style.backgroundImage = "url('../artwork/off.png');";
     }
   }
   
   function activate(id) {
-    document.getElementById('formative').src='../artwork/formative_off.png';
-    document.getElementById('progress').src='../artwork/progress_off.png';
-    document.getElementById('summative').src='../artwork/summative_off.png';
-    document.getElementById('survey').src='../artwork/survey_off.png';
-    document.getElementById('osce').src='../artwork/osce_off.png';
-    document.getElementById('offline').src='../artwork/offline_off.png';
+    document.getElementById('formative').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('progress').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('summative').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('survey').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('osce').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('offline').style.backgroundImage = "url('../artwork/off.png');";
   
-    document.getElementById(id).src='../artwork/' + id + '_on.png';
+    document.getElementById(id).style.backgroundImage = "url('../artwork/on.png');";
     document.getElementById('paper_type').value = id;
-  
   }
   
   function warning() {
@@ -90,43 +90,44 @@ require_once '../classes/dateutils.class.php';
 <body onload="warning();">
 <form name="theform" action="new_paper2.php" method="post">
 <div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
-<table cellpadding="0" cellspacing="1" style="background-color:white; width:100%">
+<table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
-<td colspan="6" style="font-size:120%; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5">&nbsp;Paper Type</td>
+<td colspan="7" style="font-size:120%; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5">&nbsp;Paper Type</td>
 </tr>
 <tr>
 <?php
-  if ($_POST['paper_type'] == '0') {
-    echo "<td onclick=\"activate('0')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\"><img id=\"formative\" src=\"../artwork/formative_on.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Formative Self-Assessment\" /></td>\n";
+  if ($_POST['paper_type'] == 'formative') {
+    echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>\n";
   } else {
-    echo "<td onclick=\"activate('0')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\"><img id=\"formative\" src=\"../artwork/formative_off.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Formative Self-Assessment\" /></td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>\n";
   }
-  if ($_POST['paper_type'] == '1') {
-    echo "<td onclick=\"activate('1')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\"><img id=\"progress\" src=\"../artwork/progress_on.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Progress Test\" /></td>\n";
+  if ($_POST['paper_type'] == 'progress') {
+    echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>\n";
   } else {
-    echo "<td onclick=\"activate('1')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\"><img id=\"progress\" src=\"../artwork/progress_off.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Progress Test\" /></td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>\n";
   }
-  if ($_POST['paper_type'] == '2') {
-    echo "<td onclick=\"activate('2')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\"><img id=\"summative\" src=\"../artwork/summative_on.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Summative Exam\" /></td>\n";
+  if ($_POST['paper_type'] == 'summative') {
+    echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>\n";
   } else {
-    echo "<td onclick=\"activate('2')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\"><img id=\"summative\" src=\"../artwork/summative_off.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Summative Exam\" /></td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>\n";
   }
-  if ($_POST['paper_type'] == '3') {
-    echo "<td onclick=\"activate('3')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\"><img id=\"survey\" src=\"../artwork/survey_on.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Survey\" /></td>\n";
+  if ($_POST['paper_type'] == 'survey') {
+    echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>\n";
   } else {
-    echo "<td onclick=\"activate('3')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\"><img id=\"survey\" src=\"../artwork/survey_off.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Survey\" /></td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>\n";
   }
-  if ($_POST['paper_type'] == '4') {
-    echo "<td onclick=\"activate('4')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\"><img id=\"osce\" src=\"../artwork/osce_on.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"OSCE\" /></td>\n";
+  if ($_POST['paper_type'] == 'osce') {
+    echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>\n";
   } else {
-    echo "<td onclick=\"activate('4')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\"><img id=\"osce\" src=\"../artwork/osce_off.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"OSCE\" /></td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>\n";
   }
-  if ($_POST['paper_type'] == '5') {
-    echo "<td onclick=\"activate('5')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\"><img id=\"offline\" src=\"../artwork/offline_on.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Offline\" /></td>\n";
+  if ($_POST['paper_type'] == 'offline') {
+    echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\" style=\"background-image:url('../artwork/on.png')\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>\n";
   } else {
-    echo "<td onclick=\"activate('5')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\"><img id=\"offline\" src=\"../artwork/offline_off.png\" width=\"98\" height=\"104\" border=\"0\" alt=\"Offline\" /></td>\n";
+    echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>\n";
   }
 ?>
+<td>&nbsp;</td.
 </tr>
 </table>
 </div>

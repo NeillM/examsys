@@ -28,46 +28,47 @@ require '../include/staff_auth.inc';
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Create New Paper<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['createnewpaper'] . $cfg_install_type; ?></title>
 
 <style>
   body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:6px; font-size:90%}
   table {font-size:100%}
   textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
+  .icon {padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
 </style>
 
 <script language="JavaScript">
   function over(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).src='../artwork/' + id + '_over.png';
+      document.getElementById(id).style.backgroundImage = "url('../artwork/over.png');";
     }
   }
   
   function out(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).src='../artwork/' + id + '_off.png';
+      document.getElementById(id).style.backgroundImage = "url('../artwork/off.png');";
     }
   }
   
   function activate(id) {
-    document.getElementById('formative').src='../artwork/formative_off.png';
-    document.getElementById('progress').src='../artwork/progress_off.png';
-    document.getElementById('summative').src='../artwork/summative_off.png';
-    document.getElementById('survey').src='../artwork/survey_off.png';
-    document.getElementById('osce').src='../artwork/osce_off.png';
-    document.getElementById('offline').src='../artwork/offline_off.png';
+    document.getElementById('formative').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('progress').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('summative').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('survey').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('osce').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('offline').style.backgroundImage = "url('../artwork/off.png');";
   
-    document.getElementById(id).src='../artwork/' + id + '_on.png';
+    document.getElementById(id).style.backgroundImage = "url('../artwork/on.png');";
     document.getElementById('paper_type').value = id;
   }
   
   function checkForm() {
     if (document.theform.paper_type.value == '') {
-      alert("Please select the type of paper you wish to create.");
+      alert("<?php echo $string['msg1']; ?>");
       return false;
     }
     if (document.theform.paper_name.value == '') {
-      alert("Please enter a unique name for the paper.");
+      alert("<?php echo $string['msg2']; ?>");
       return false;
     }
     
@@ -75,7 +76,7 @@ require '../include/staff_auth.inc';
     for (a=0; a<paperTitle.length; a++) {
       char = paperTitle.substr(a,1);
       if (char == '&' || char == '#' || char == '@' || char == '?' || char == '^' || char == '~') {
-        alert('A paper name cannot contain any of the following characters:\r      &  #  @  ?  ^  ~');
+        alert('<?php echo $string['msg3']; ?>');
         return false;
       }
     }
@@ -86,28 +87,29 @@ require '../include/staff_auth.inc';
 <body>
 <form name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();">
 <div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
-<table cellpadding="0" cellspacing="1" style="background-color:white; width:100%">
+<table cellpadding="0" cellspacing="0" border="0" style="background-color:white; color:#001687; width:100%">
 <tr>
-<td colspan="6" style="font-size:120%; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5">&nbsp;Paper Type</td>
+<td colspan="7" style="font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5">&nbsp;<?php echo $string['papertype']; ?></td>
 </tr>
 <tr>
-<td onclick="activate('formative')" onmouseover="over('formative')" onmouseout="out('formative')"><img id="formative" src="../artwork/formative_off.png" width="98" height="104" border="0" alt="Formative Self-Assessment" /></td>
-<td onclick="activate('progress')" onmouseover="over('progress')" onmouseout="out('progress')"><img id="progress" src="../artwork/progress_off.png" width="98" height="104" border="0" alt="Progress Test" /></td>
-<td onclick="activate('summative')" onmouseover="over('summative')" onmouseout="out('summative')"><img id="summative" src="../artwork/summative_off.png" width="98" height="104" border="0" alt="Summative Exam" /></td>
-<td onclick="activate('survey')" onmouseover="over('survey')" onmouseout="out('survey')"><img id="survey" src="../artwork/survey_off.png" width="98" height="104" border="0" alt="Survey" /></td>
-<td onclick="activate('osce')" onmouseover="over('osce')" onmouseout="out('osce')"><img id="osce" src="../artwork/osce_off.png" width="98" height="104" border="0" alt="OSCE" /></td>
-<td onclick="activate('offline')" onmouseover="over('offline')" onmouseout="out('offline')"><img id="offline" src="../artwork/offline_off.png" width="98" height="104" border="0" alt="Offline" /></td>
+<td class="icon" onclick="activate('formative')" onmouseover="over('formative')" onmouseout="out('formative')" id="formative"><img src="../artwork/formative.png" width="48" height="48" border="0" alt="Formative Self-Assessment" /><br /><?php echo $string['formative self-assessment']; ?></td>
+<td class="icon" onclick="activate('progress')" onmouseover="over('progress')" onmouseout="out('progress')" id="progress"><img src="../artwork/progress.png" width="48" height="48" border="0" alt="Progress Test" /><br /><?php echo $string['progress test']; ?></td>
+<td class="icon" onclick="activate('summative')" onmouseover="over('summative')" onmouseout="out('summative')" id="summative"><img src="../artwork/summative.png" width="48" height="48" border="0" alt="Summative Exam" /><br /><?php echo $string['summative exam']; ?></td>
+<td class="icon" onclick="activate('survey')" onmouseover="over('survey')" onmouseout="out('survey')" id="survey"><img src="../artwork/survey.png" width="48" height="48" border="0" alt="Survey" /><br /><?php echo $string['survey']; ?></td>
+<td class="icon" onclick="activate('osce')" onmouseover="over('osce')" onmouseout="out('osce')" id="osce"><img src="../artwork/osce.png" width="48" height="48" border="0" alt="OSCE" /><br /><?php echo $string['osce station']; ?></td>
+<td class="icon" onclick="activate('offline')" onmouseover="over('offline')" onmouseout="out('offline')" id="offline"><img src="../artwork/offline.png" width="48" height="48" border="0" alt="Offline" /><br /><?php echo $string['offline paper']; ?></td>
+<td>&nbsp;</td>
 </tr>
 </table>
 </div>
 <br />
-<span style="font-weight:bold; color:#001687; font-size:120%">Name<span> <input type="text" id="paper_name" name="paper_name" value="" style="width:650px" />
+<span style="color:#001687"><?php echo $string['name']; ?><span> <input type="text" id="paper_name" name="paper_name" value="" style="width:650px" />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
-<input type="hidden" id="paper_type" name="paper_type" value="" />
+<input type="text" id="paper_type" name="paper_type" value="" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <br />
 <br />
-<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="Cancel" style="width:100px" />&nbsp;<input type="submit" name="submit" value="Next &gt;" style="width:100px" /></div>
+<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" />&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:100px" /></div>
 </form>
 </body>
 </html>
