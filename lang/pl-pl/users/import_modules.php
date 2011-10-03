@@ -1,14 +1,14 @@
-<?php
+﻿<?php
 require '../lang/' . $language . '/include/user_search_options.inc';
 
-$string['sendwelcomeemail'] = '1Send welcome email to user';
-$string['importmodules'] = '1Import Modules';
-$string['csvfile'] = '1CSV File:';
-$string['import'] = '1Import';
-$string['cancel'] = '1Cancel';
-$string['msg1'] = "1CSV file should be in the SATURN export format. Each csv file should contain all the students registered to the school. (Data can be obtained from SATURN using 'Student Exports / Modules II / Faculty of Medicine')";
-$string['msg2'] = "1Please select the CVS file you wish to load:";
-$string['addingmodules'] = 'Adding Modules From';
-$string['missingusers'] = '1Missing users';
-$string['modulesadded'] = '1Modules added';
+$string['sendwelcomeemail'] = 'Wyślij do użytkownika list powitalny';
+$string['importmodules'] = 'Importuj moduły';
+$string['csvfile'] = 'Plik CSV:';
+$string['import'] = 'Importuj';
+$string['cancel'] = 'Anuluj';
+$string['msg1'] = "Plik CSV powinien być w formacie eksportowym SATURN. Każdy plik CSV powinien zawierać dane wszystkich studentów zarejestrowanych w szkole. (Dane można uzyskać z systemu SATURN przez polecenie: 'Student Exports / Modules II / Faculty of Medicine')";
+$string['msg2'] = "Wskaż proszę plik CSV, który chcesz załadować";
+$string['addingmodules'] = 'Dodawanie modułów z...';
+$string['missingusers'] = 'Brakujący użytkownicy';
+$string['modulesadded'] = 'Dodane moduły';
 ?>

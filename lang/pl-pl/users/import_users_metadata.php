@@ -1,14 +1,14 @@
-<?php
+﻿<?php
 require '../lang/' . $language . '/folder/details.php';
 
-$string['importmetadata'] = '1Import Metadata';
-$string['msg'] = '1CSV file should have a header file with the field names in. Next the first column should be username followed by the data. The example below shows two metadata pieces of information (\'Site\' and \'Project Group\').';
-$string['year'] = '1Year';
-$string['file'] = '1File';
-$string['import'] = '1Import';
-$string['cancel'] = '1Cancel';
-$string['ok'] = '1OK';
-$string['uploadedcorrectly'] = '1uploaded correctly.';
-$string['notrecognised'] = '1usernames not recognised:';
-$string['loadingdata'] = '1Loading data...';
+$string['importmetadata'] = 'Importuj metadane';
+$string['msg'] = 'Plik CSV powinien mieć plik nagłówkowy zawierający nazwy pól. Pierwsza kolumna powinna zawierać nazwę użytkownika, a następne - dane. Poniższy przykład przedstawia dwa rekordy metadanych (\'Site\' i \'Project Group\').';
+$string['year'] = 'Rok';
+$string['file'] = 'Plik';
+$string['import'] = 'Importuj';
+$string['cancel'] = 'Anuluj';
+$string['ok'] = 'OK';
+$string['uploadedcorrectly'] = 'Poprawnie załadowane.';
+$string['notrecognised'] = 'Nie dodano nazw użytkowników:';
+$string['loadingdata'] = 'Ładowanie danych...';
 ?>

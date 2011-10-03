@@ -1,29 +1,29 @@
-<?php
+﻿<?php
 require '../lang/' . $language . '/include/user_search_options.inc';
 
-$string['createnewuser'] = '1Create new User';
-$string['getldapdetails'] = '1Get LDAP details';
-$string['lastname'] = '1Last Name';
-$string['firstnames'] = '1First Names(s)';
-$string['email'] = '1Email';
-$string['password'] = '1Password';
-$string['yearofstudy'] = '1Year of Study';
-$string['typecourse'] = '1Type/Course';
-$string['gender'] = '1Gender';
-$string['studentid'] = '1Student ID';
-$string['onlyifstudent'] = '1(only if student)';
-$string['sendwelcomeemail'] = '1Send welcome email to user (inc. password)';
-$string['createaccount'] = '1Create Account';
-$string['male'] = '1Male';
-$string['female'] = '1Female';
-$string['universitystaff'] = '1University Staff';
-$string['academiclecturer'] = '1Academic Lecturer';
-$string['administrator'] = '1Administrator';
-$string['ittechnical'] = '1IT/Technical';
-$string['externalstaff'] = '1External Staff';
-$string['nhslecturer'] = '1NHS Lecturer/Consultant';
-$string['nhsadmin'] = '1NHS Admin';
-$string['externalexaminer'] = '1External Examiner';
-$string['invigilator'] = '1Invigilator';
-$string['students'] = '1Students';
+$string['createnewuser'] = 'Utwórz nowego użytkownika';
+$string['getldapdetails'] = 'Uzyskaj szczegóły LDAP';
+$string['lastname'] = 'Nazwisko';
+$string['firstnames'] = 'Imiona';
+$string['email'] = 'Email';
+$string['password'] = 'Hasło';
+$string['yearofstudy'] = 'Rok studiów';
+$string['typecourse'] = 'Typ/Kurs';
+$string['gender'] = 'Płeć';
+$string['studentid'] = 'Numer legitymacji';
+$string['onlyifstudent'] = '(tylko dla studentów)';
+$string['sendwelcomeemail'] = 'Wyślij do użytkownika list powitalny (zawierający hasło)';
+$string['createaccount'] = 'Utwórz konto';
+$string['male'] = 'Mężczyzna';
+$string['female'] = 'Kobieta';
+$string['universitystaff'] = 'Pracownik administracyjny uniwersytetu';
+$string['academiclecturer'] = 'Wykładowca';
+$string['administrator'] = 'Administrator';
+$string['ittechnical'] = 'Specjalista IT';
+$string['externalstaff'] = 'Pracownik zewnętrzny';
+$string['nhslecturer'] = 'Wykładowca/konsultant medyczny'; //???
+$string['nhsadmin'] = 'Pracownik administracji medycznej'; //???
+$string['externalexaminer'] = 'Zewnętrzny egzaminator';
+$string['invigilator'] = 'Nadzorujący'; //???
+$string['students'] = 'Studenci';
 ?>
