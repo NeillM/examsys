@@ -1,10 +1,10 @@
-<?php
+﻿<?php
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['helpsupport'] = 'Pomoc i Wsparcie';
 $string['admintools'] = '1Administrative Tools';
-$string['calendar'] = '1Calendar';
+$string['calendar'] = 'Kalendarzłłaśęć';
 $string['usermanagement'] = '1User Management';
 $string['makeafolder'] = '1Make a new folder';
 $string['mypersonalkeywords'] = '1My Personal Keywords';
