@@ -1111,22 +1111,24 @@ if (!isset($_POST['update'])) {
     $result->bind_result($o_id, $correct);
     while ($result->fetch()) {
       $parts = explode(';', $correct);
-      $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
-      if ($parts[7] == 'single') {
-        $new_correct .= 'single;label';
-      } elseif ($parts[7] == 'multiple') {
-        $new_correct .= 'multiple;label';
-      } else {
-        $new_correct .= 'single;menu';
+      if(isset($parts[0])) {
+        $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
+        if ($parts[7] == 'single') {
+          $new_correct .= 'single;label';
+        } elseif ($parts[7] == 'multiple') {
+          $new_correct .= 'multiple;label';
+        } else {
+          $new_correct .= 'single;menu';
+        }
+        for ($i=8; $i<count($parts); $i++) {
+          $new_correct .= ';' . $parts[$i];
+        }
+        
+        $adjust = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
+        $adjust->bind_param('si', $new_correct, $o_id);
+        $adjust->execute();
+        $adjust->close();
       }
-      for ($i=8; $i<count($parts); $i++) {
-        $new_correct .= ';' . $parts[$i];
-      }
-      
-      $adjust = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
-      $adjust->bind_param('si', $new_correct, $o_id);
-      $adjust->execute();
-      $adjust->close();
     }
     $result->close();
     echo "<li>Updated the format of Labelling questions</li>";
