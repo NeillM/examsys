@@ -2,7 +2,7 @@
 require '../lang/' . $language . '/folder/details.php';
 
 $string['importmetadata'] = 'Importuj metadane';
-$string['msg'] = 'Plik CSV powinien mieć plik nagłówkowy zawierający nazwy pól. Pierwsza kolumna powinna zawierać nazwę użytkownika, a następne - dane. Poniższy przykład przedstawia dwa rekordy metadanych (\'Site\' i \'Project Group\').';
+$string['msg'] = 'Plik CSV powinien mieć plik nagłówkowy zawierający nazwy pól. Pierwsza kolumna powinna zawierać nazwę użytkownika, a następne - dane. Poniższy przykład przedstawia informacje z dwóch metadanych (\'Site\' i \'Project Group\').';
 $string['year'] = 'Rok';
 $string['file'] = 'Plik';
 $string['import'] = 'Importuj';
