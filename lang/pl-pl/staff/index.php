@@ -2,7 +2,7 @@
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['helpsupport'] = 'Pomoc i Wsparcie';
+$string['helpsupport'] = 'Pomoc i Wsparciełąęśćóńżź';
 $string['admintools'] = '1Administrative Tools';
 $string['calendar'] = 'Kalendarzłłaśęć';
 $string['usermanagement'] = '1User Management';
