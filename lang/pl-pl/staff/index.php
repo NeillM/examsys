@@ -2,12 +2,12 @@
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['helpsupport'] = 'Pomoc i Wsparciełąęśćóńżź';
-$string['admintools'] = '1Administrative Tools';
-$string['calendar'] = 'Kalendarzłłaśęć';
-$string['usermanagement'] = '1User Management';
-$string['makeafolder'] = '1Make a new folder';
-$string['mypersonalkeywords'] = '1My Personal Keywords';
+$string['helpsupport'] = 'Pomoc i wsparcie';
+$string['admintools'] = 'Narzędzia aministracyjne';
+$string['calendar'] = 'Kalendarz';
+$string['usermanagement'] = 'Zarządzanie użytkownikami';
+$string['makeafolder'] = 'Utwórz nowy folder';
+$string['mypersonalkeywords'] = 'Moje własne słowa kluczowe';
 $string['papertasks'] = '1Paper Tasks';
 $string['createnewpaper'] = '1Create new Paper';
 $string['listpapers'] = '1List Papers';
