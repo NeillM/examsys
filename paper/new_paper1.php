@@ -105,7 +105,7 @@ require '../include/staff_auth.inc';
 <br />
 <span style="color:#001687"><?php echo $string['name']; ?><span> <input type="text" id="paper_name" name="paper_name" value="" style="width:650px" />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
-<input type="text" id="paper_type" name="paper_type" value="" />
+<input type="hidden" id="paper_type" name="paper_type" value="" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <br />
 <br />
