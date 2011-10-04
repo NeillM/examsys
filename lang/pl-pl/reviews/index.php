@@ -1,16 +1,16 @@
-<?php
-$string['externalexaminerarea'] = '1External Examiner Area';
-$string['expired'] = '1&lt;expired&gt; - you may still view the paper and read %s actions/reponses to your comments.';
-$string['instructions'] = '1Instructions';
-$string['externalexamineraccess'] = '1External Examiner Access';
-$string['notreviewed'] = '1Not Reviewed';
-$string['reviewed'] = '1Reviewed: %s';
-$string['msg1'] = '1Below is a list of exam papers requiring review. After clicking on their titles the assessment will launch in a new window. Beneath each question are three buttons for you to rate the question: 1) <span style="background-color:#C0FFC0; background-image:url(\'../artwork/ok_background.png\'); background-repeat:repeat-x; color:#004000">&nbsp;Question&nbsp;OK&nbsp;</span> (Default), 2) <span style="background-color:#FFFFC0; background-image:url(\'../artwork/minor_background.png\'); background-repeat:repeat-x; color:#404000">&nbsp;Minor/some&nbsp;problems&nbsp;</span>, or 3) <span style="background-color:#FFC0C0; background-image:url(\'../artwork/major_background.png\'); background-repeat:repeat-x; color:#800000">&nbsp;Major/several&nbsp;problems&nbsp;</span>. There is also a textbox to directly record your feedback to us where you feel there are points to raise.';
-$string['msg2'] = '1Navigation buttons for moving between screens can be found at the bottom of each screen. The correct answers are displayed for all questions in this review mode (students will receive unanswered papers). You may launch a paper any number of times. Comments will be saved automatically when you navigate between screens and click \'Finish\'.';
-$string['yourpapersforreview'] = '1Your papers for review include:';
-$string['nopapersfound'] = '1No papers found!';
-$string['copyrightmsg'] = '1Questions held within TouchStone are protected by UK copyright law and are held by %s.';
-$string['helpandsupport'] = '1Help and Support';
-$string['onlinesupportsystem'] = '1Online support system for students';
-$string['email'] = '1Email';
+﻿<?php
+$string['externalexaminerarea'] = 'domena egzaminatora zewnętrznego';//area??
+$string['expired'] = '1&lt;wygasły&gt; - nadal możesz przeglądać arkusze i zapoznać się z %s działaniami/odpowiedziami na Twoje komentarze.';
+$string['instructions'] = 'Instrukcje';
+$string['externalexamineraccess'] = 'Dostęp dla egzaminatora zewnętrznego';
+$string['notreviewed'] = 'Nie recenzowane';
+$string['reviewed'] = 'Recenzowane: %s';
+$string['msg1'] = 'Poniższa lista obejmuje arkusze wymagające recencji. Po wybraniu ich tytułu ocena będzie przedstawiony w nowym oknie.  Poniżej każdego pytania znajdują się trzy przyciski pozwalajace wartościować pytanie : 1) <span style="background-color:#C0FFC0; background-image:url(\'../artwork/ok_background.png\'); background-repeat:repeat-x; color:#004000">&nbsp;Pytanie&nbsp;dobre&nbsp;</span> (Domyślne), 2) <span style="background-color:#FFFFC0; background-image:url(\'../artwork/minor_background.png\'); background-repeat:repeat-x; color:#404000">&nbsp;Drobne/nieliczne&nbsp;problemy&nbsp;</span> lub 3) <span style="background-color:#FFC0C0; background-image:url(\'../artwork/major_background.png\'); background-repeat:repeat-x; color:#800000">&nbsp;Poważne/liczne&nbsp;problemy&nbsp;</span>. Dostępne jest także pole tekstowe przeznaczone do odnotowania twoich bezpośrednich uwag co do poprawy pytania.';
+$string['msg2'] = 'Przyciski nawigacyjne przemieszczające pomiędzy ekranami mozna znaleźć na dole ekranu. W niniejszym trybie recenzji dla wszystkich pytań wyświetlane są poprawne odpowiedzi (studenci otrzymają arkusze bez odpowiedzi). Arkusz można aktualizować wielokrotnie. Komentarze będa automatycznie zapisane podczas przechodzenia pomiędzy ekranami i po wybraniu \'Finish\'.';
+$string['yourpapersforreview'] = 'Arkusze do oceny obejmują:';
+$string['nopapersfound'] = 'Nie znaleziono żadnego arkusza!';
+$string['copyrightmsg'] = 'Pytania zawarte w TouchStone są chronione prawem autorskim i należą do %s.';
+$string['helpandsupport'] = 'Pomoc i wsparcie';
+$string['onlinesupportsystem'] = 'System pomocy online dla studentów';
+$string['email'] = 'Email';
 ?>

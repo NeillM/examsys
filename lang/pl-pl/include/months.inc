@@ -1,14 +1,14 @@
-<?php
-$string['january'] = '1January';
-$string['february'] = '1February';
-$string['march'] = '1March';
-$string['april'] = '1April';
-$string['may'] = '1May';
-$string['june'] = '1June';
-$string['july'] = '1July';
-$string['august'] = '1August';
-$string['september'] = '1September';
-$string['october'] = '1October';
-$string['november'] = '1November';
-$string['december'] = '1December';
+﻿<?php
+$string['january'] = 'Styczeń';
+$string['february'] = 'Luty';
+$string['march'] = 'Marzec';
+$string['april'] = 'Kwiecień';
+$string['may'] = 'Maj';
+$string['june'] = 'Czerwiec';
+$string['july'] = 'Lipiec';
+$string['august'] = 'Sierpień';
+$string['september'] = 'Wrzesień';
+$string['october'] = 'Październik';
+$string['november'] = 'Listopad';
+$string['december'] = 'Grudzień';
 ?>
