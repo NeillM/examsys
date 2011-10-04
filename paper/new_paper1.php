@@ -34,31 +34,31 @@ require '../include/staff_auth.inc';
   body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:6px; font-size:90%}
   table {font-size:100%}
   textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-  .icon {padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
+  .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
 </style>
 
 <script language="JavaScript">
   function over(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).style.backgroundImage = "url('../artwork/over.png');";
+      document.getElementById(id).style.backgroundImage = "url('../artwork/over.png')";
     }
   }
   
   function out(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).style.backgroundImage = "url('../artwork/off.png');";
+      document.getElementById(id).style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
     }
   }
   
   function activate(id) {
-    document.getElementById('formative').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('progress').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('summative').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('survey').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('osce').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('offline').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('formative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('progress').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('summative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('survey').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('osce').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('offline').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
   
-    document.getElementById(id).style.backgroundImage = "url('../artwork/on.png');";
+    document.getElementById(id).style.backgroundImage = "url('../artwork/on.png')";
     document.getElementById('paper_type').value = id;
   }
   

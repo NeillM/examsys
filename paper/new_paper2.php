@@ -54,35 +54,35 @@ require_once '../classes/dateutils.class.php';
   body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:6px; font-size:90%}
   table {font-size:100%}
   textarea, input[type=text], select {font-family: Arail,sans-serif; border: 1px solid #7F9DB9}
-  .icon {padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
+  .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
 </style>
 <script language="JavaScript">
   function over(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).style.backgroundImage = "url('../artwork/over.png');";
+      document.getElementById(id).style.backgroundImage = "url('../artwork/over.png')";
     }
   }
   
   function out(id) {
     if (id != document.getElementById('paper_type').value) {
-      document.getElementById(id).style.backgroundImage = "url('../artwork/off.png');";
+      document.getElementById(id).style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
     }
   }
   
   function activate(id) {
-    document.getElementById('formative').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('progress').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('summative').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('survey').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('osce').style.backgroundImage = "url('../artwork/off.png');";
-    document.getElementById('offline').style.backgroundImage = "url('../artwork/off.png');";
+    document.getElementById('formative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('progress').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('summative').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('survey').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('osce').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
+    document.getElementById('offline').style.backgroundImage = "url('../artwork/blank_tick_cross.gif')";
   
     document.getElementById(id).style.backgroundImage = "url('../artwork/on.png');";
     document.getElementById('paper_type').value = id;
   }
   
   function warning() {
-    alert("The name '<?php echo $_POST['paper_name']; ?>' is already in use. Please select an alternative paper title.");
+    alert("<?php printf($string['msg5'], $_POST['paper_name']); ?>");
   }
 </script>
 </head>
@@ -92,7 +92,7 @@ require_once '../classes/dateutils.class.php';
 <div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
-<td colspan="7" style="font-size:120%; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5">&nbsp;Paper Type</td>
+<td colspan="7" style="font-size:120%; font-weight:bold; background-color:#DDE7EE; color:#001687; border-bottom:1px solid #C5C5C5">&nbsp;<?php echo $string['papertype']; ?></td>
 </tr>
 <tr>
 <?php
@@ -132,12 +132,12 @@ require_once '../classes/dateutils.class.php';
 </table>
 </div>
 <br />
-<span style="font-weight:bold; color:#001687; font-size:120%">Name<span> <input type="text" id="paper_name" name="paper_name" style="background-color:#FFC0C0; color:#800000" value="<?php echo $_POST['paper_name']; ?>" style="width:650px" />
+<div style="color:#001687"><?php echo $string['name']; ?></div> <input type="text" id="paper_name" name="paper_name" style="width:650px; background-color:#FFC0C0; color:#800000" value="<?php echo $_POST['paper_name']; ?>" style="width:650px" />
 <input type="hidden" id="paper_type" name="paper_type" value="<?php echo $_POST['paper_type']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
 <br />
 <br />
-<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="Cancel" style="width:100px" />&nbsp;<input type="submit" name="submit" value="Next &gt;" style="width:100px" /></div>
+<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" />&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:100px" /></div>
 </form>
 
 <?php
@@ -227,7 +227,7 @@ require_once '../classes/dateutils.class.php';
       }
     }
     if (moduleList == '') {
-      alert ("There are no modules selected. Papers must be assigned to at least one module.");
+      alert ("<?php echo $string['msg4']; ?>");
       return false;
     }
   }
@@ -238,10 +238,10 @@ require_once '../classes/dateutils.class.php';
 <tr>
 <td>
 <?php
-  echo "<table width=\"100%\"><tr><td><span style=\"font-weight:bold; color:#001687; font-size:120%\">Availability<span></td></tr>\n";
+  echo "<table width=\"100%\"><tr><td><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['availability'] . "<span></td></tr>\n";
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
     $next_flag = 1;
-    echo "<tr><td align=\"right\" valign=\"top\">Academic Session&nbsp;</td><td>";
+    echo "<tr><td align=\"right\" valign=\"top\">" . $string['academicsession'] . "&nbsp;</td><td>";
     $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM student_modules ORDER BY calendar_year DESC");
     $module_details->execute();
     $module_details->bind_result($calendar_year);
@@ -259,7 +259,7 @@ require_once '../classes/dateutils.class.php';
     echo "<input type=\"hidden\" name=\"session\" value=\"null\" />\n";
   }
   
-  echo "<tr><td align=\"right\" valign=\"top\">From&nbsp;</td><td>";
+  echo "<tr><td align=\"right\" valign=\"top\">" . $string['from'] . "&nbsp;</td><td>";
   $date_array = getdate();
 
   // Available from Month
@@ -320,7 +320,7 @@ require_once '../classes/dateutils.class.php';
     echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
   }
   echo "</select>\n</td>";
-  echo "<td align=\"right\">To&nbsp;</td><td><select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
+  echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td><select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
   // Available to Month
   $months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
   for ($i=1; $i<=12; $i++) {
@@ -381,7 +381,7 @@ require_once '../classes/dateutils.class.php';
   }
   echo "</select>\n</td></tr>\n";
 
-  echo "<tr><td align=\"right\">Time Zone</td><td><select name=\"timezone\">";
+  echo "<tr><td align=\"right\">" . $string['timezone'] . "</td><td><select name=\"timezone\">";
   $timezone_array = array('*Africa','Dakar','Johannesburg','*America','Anchorage','Denver','Chicago','Halifax','Los_Angeles','New_York','Mexico_City','*Asia','Dubai','Istanbul','Kuala_Lumpur','Shanghai','Singapore','Tokyo','*Australia','Adelaide','Perth','Sydney','Victoria','*Europe','Budapest','London','Moscow','Oslo','Paris','Vienna','*Pacific','Fiji','Auckland');
   $old_prefix = '';
   foreach ($timezone_array as $individual_zone) {
@@ -401,7 +401,7 @@ require_once '../classes/dateutils.class.php';
   
   echo "</table>\n";
   
-  echo "<div style=\"font-weight:bold; color:#001687; font-size:120%\">Module(s)</div><div style=\"display:block; background-color:white; height:250px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+  echo "<div style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['modules'] . "</div><div style=\"display:block; background-color:white; height:250px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
   $team_sql = implode("','", $teams);
   if ($team_sql != '') $team_sql = "'$team_sql'";
   
@@ -435,7 +435,7 @@ require_once '../classes/dateutils.class.php';
   echo "<input type=\"hidden\" name=\"folder\" value=\"" . $_POST['folder'] . "\" />\n";
 ?>
 <br />
-<div style="text-align:right"><input type="submit" name="submit2" value="Finish" style="width:100px" /></div>
+<div style="text-align:right"><input type="submit" name="submit2" value="<?php echo $string['finish']; ?>" style="width:100px" /></div>
 
 </td>
 </tr>
