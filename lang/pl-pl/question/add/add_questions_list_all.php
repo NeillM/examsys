@@ -1,10 +1,10 @@
-<?php
+﻿<?php
 require '../../lang/' . $language . '/include/question_types.inc';
 
-$string['allmyquestions'] = '1All My Questions';
-$string['question'] = '1Question';
-$string['type'] = '1Type';
-$string['modified'] = '1Modified';
-$string['warningnoleadin'] = '1WARNING: no question lead-in!';
-$string['locked'] = '1Locked';
+$string['allmyquestions'] = 'Moje wszystkie pytania';
+$string['question'] = 'Pytanie';
+$string['type'] = 'Typ';
+$string['modified'] = 'Zmodyfikowane';
+$string['warningnoleadin'] = 'Ostrzeżenie: brak pytania wprowadzającego!';//no question lead-in
+$string['locked'] = 'Zablokowane';
 ?>

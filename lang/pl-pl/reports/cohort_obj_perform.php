@@ -1,17 +1,17 @@
-<?php
-$string['learningobjectiveanalysis'] = '1Learning Objective Analysis';
-$string['learningobjectives'] = '1Learning Objectives';
-$string['totalcandidate'] = '1Total Candidate #';
-$string['key1'] = '1Acquisition of 80-100% of specific objective';
-$string['key2'] = '1Acquisition of 50-79% of specific objective';
-$string['key3'] = '1Acquisition of 0-49% of specific objective';
-$string['key4'] = '1<a href="" onclick="return false;">hyperlink</a> - jump to section in the VLE for further details';
-$string['msg'] = '1Below is a list of the %d unique learning objectives assessed by this paper. Because multiple questions may test the same objective it is possible to have partial acquisition of an objective. The following list is order by percentage of cohort acquiring each objective - highest acquisition first.';
-$string['uppersize'] = '1Upper group size';
-$string['lowersize'] = '1Lower group size';
-$string['candidates'] = '1candidates';
-$string['completely'] = '1Completely/Mostly acquired';
-$string['partically'] = '1Partically acquired';
-$string['mostly'] = '1Mostly not acquired';
-$string['shortcut'] = '1Shortcut';
+﻿<?php
+$string['learningobjectiveanalysis'] = 'Analiza celów kształcenia';
+$string['learningobjectives'] = 'Cele kształcenia';
+$string['totalcandidate'] = 'Całkowita liczba kandydatów';
+$string['key1'] = 'Wypełnienie 80-100% celów szczegółowych';
+$string['key2'] = 'Wypełnienie of 50-79% celów szczegółowych';
+$string['key3'] = 'Wypełnienie of 0-49% celów szczegółowych';
+$string['key4'] = '<a href="" onclick="return false;">hiperłącze</a> - przejście do sekcji VLE w poszukiwaniu dalszych szczegółów';
+$string['msg'] = 'Poniżej znajduje się lista %d specyficznych celów kształcenia weryfikowanych przez ten arkusz. Ponieważ pytania złożone moga testować te same cele, może zdarzyć się częściowe wypełnianie celu. Lista ta jest uporządkowana malejąco wg. procentu grupy wypełniającej dany cel.';
+$string['uppersize'] = 'rozmiar górnej grupy';
+$string['lowersize'] = 'rozmiar dolnej grupy';
+$string['candidates'] = 'kandydaci';
+$string['completely'] = 'Całkowicie/znacznie wypełnione ';
+$string['partically'] = 'Wystarczająco wypełnione';
+$string['mostly'] = 'W większości niewypełnione';
+$string['shortcut'] = 'Niewystarczające';
 ?>

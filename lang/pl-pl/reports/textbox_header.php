@@ -1,7 +1,7 @@
-<?php
-$string['hidemarked'] = '1Hide already marked';
-$string['primarymarking'] = '1Primary Marking';
-$string['secondmarking'] = '1Second Marking';
-$string['finalisemarks'] = '1Finalise Marks';
-$string['candidates'] = '1Candidates';
+﻿<?php
+$string['hidemarked'] = 'Ukryj już ocenione';
+$string['primarymarking'] = 'Ocena pierwotna';
+$string['secondmarking'] = 'Ocena wtórna';
+$string['finalisemarks'] = 'Ocena ostateczna';
+$string['candidates'] = 'Kandydaci';
 ?>

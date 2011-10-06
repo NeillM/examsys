@@ -1,8 +1,8 @@
-<?php
-$string['textboxmarking'] = '1Textbox Marking';
-$string['primarymarking'] = '1Primary Marking';
-$string['secondmarking'] = '1Second Marking';
-$string['finalisemarks'] = '1Finalise Marks';
-$string['candidates'] = '1candidates';
-$string['msg'] = '1Select the question you wish to mark from the list below.';
+﻿<?php
+$string['textboxmarking'] = 'Ocena opisowa';
+$string['primarymarking'] = 'Ocena pierwotna';
+$string['secondmarking'] = 'Ocena wtórna';
+$string['finalisemarks'] = 'Ocena ostateczna';
+$string['candidates'] = 'kandydatów';
+$string['msg'] = 'Z poniższej listy wybierz pytanie, które chcesz ocenić.';
 ?>

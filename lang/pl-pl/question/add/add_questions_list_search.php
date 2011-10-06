@@ -1,14 +1,14 @@
-<?php
+﻿<?php
 require '../../lang/' . $language . '/include/question_types.inc';
 
-$string['wordphrase'] = '1Word/phrase';
-$string['in'] = '1in';
-$string['search'] = '1Search';
-$string['question'] = '1Question';
-$string['type'] = '1Type';
-$string['modified'] = '1Modified';
-$string['warningnoleadin'] = '1WARNING: no question lead-in!';
-$string['locked'] = '1Locked';
-$string['anyowner'] = '1(any owner)';
-$string['myquestionsonly'] = '1(my questions only)';
+$string['wordphrase'] = 'Słowo/fraza';
+$string['in'] = 'w';
+$string['search'] = 'Wszukiwanie';
+$string['question'] = 'Pytanie';
+$string['type'] = 'Typ';
+$string['modified'] = 'Zmodyfikowane';
+$string['warningnoleadin'] = 'Ostrzeżenie: brak pytania wprowadzającego!';//no question lead-in
+$string['locked'] = 'Zablokowane';
+$string['anyowner'] = '(każdy właściciel)';
+$string['myquestionsonly'] = '(tylko moje pytania)';
 ?>

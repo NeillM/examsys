@@ -1,4 +1,4 @@
-<?php
-$string['screen'] = '1Screen';
-$string['addquestions'] = '1Add Questions';
+﻿<?php
+$string['screen'] = 'Ekran';
+$string['addquestions'] = 'Dodaj pytania';
 ?>
