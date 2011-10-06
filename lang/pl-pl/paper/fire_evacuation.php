@@ -1,6 +1,6 @@
-<?php
-$string['top_msg'] = '1Proceed now to the nearest Fire Exit';
-$string['donotrun'] = '1Do not run!';
-$string['bottom_msg'] = '1If you clicked by mistake on the fire exit, click here:';
-$string['continue'] = '1Continue Exam';
+﻿<?php
+$string['top_msg'] = 'Skieruj się do najbliższego wyjścia ';
+$string['donotrun'] = 'Nie biegnij!';
+$string['bottom_msg'] = 'Jeśli przypadkowo kliknąłeś/kliknęłaś alarm pożarowy, kliknij tu:';
+$string['continue'] = 'Kontynuuj egzamin';
 ?>

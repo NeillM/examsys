@@ -1,35 +1,35 @@
-<?php
+﻿<?php
 require '../lang/' . $language . '/include/months.inc';
 
-$string['survey'] = '1Survey';
-$string['assessment'] = '1Assessment';
-$string['finish'] = '1Finish';
-$string['screen'] = '1Screen';
-$string['mark'] = '1mark';
-$string['marks'] = '1marks';
-$string['note'] = '1Note';
-$string['true'] = '1True';
-$string['false'] = '1False';
-$string['yes'] = '1Yes';
-$string['no'] = '1No';
-$string['abstain'] = '1Abstain';
-$string['na'] = '1N/A';
-$string['unanswered'] = '1Unanswered';
-$string['unansweredquestion'] = '= 1unanswered question';
-$string['negmarking'] = '1negative marking';
-$string['bonusmark'] = '1for correct options, plus 1 bonus mark for fully correct order';
-$string['calculator'] = '1Calculator';
-$string['finishnote'] = '1<strong>NOTE:</strong> Please complete all questions before clicking &#145;Finish&#146;, you will not be able to go back.';
-$string['gobackpink'] = '1When you go back unanswered questions will be highlighted in pink.';
-$string['fireexit'] = '1Fire Exit';
-$string['pleasecomplete'] = '1<strong>NOTE:</strong> Please complete all questions before clicking &#145;Screen %d &gt;&#146;, you will not be able to go back.';
-$string['javacheck1'] = '1Have you completed all the questions on this screen, you will NOT be able to go back.\nAre you sure you wish to continue?';
-$string['javacheck2'] = "1Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.";
-$string['error_keywords'] = '1ERROR: unable to find unique question for supplied keywords';
-$string['error_paper'] = '1The requested paper cannot be found.';
-$string['specificpassword'] = '1There is a specific password assigned to this paper.';
-$string['denied_location'] = '1Access to this paper is not permitted from your current location.';
-$string['error_time'] = '1The paper you are attempting to access is only available between %s and %s';
-$string['error_module'] = '1This paper is not on any module.';
-$string['error_metadata'] = '1User metadata does not match <strong>%s: %s</strong>';
+$string['survey'] = 'Ankieta';
+$string['assessment'] = 'Ocena';
+$string['finish'] = 'Zakończ';
+$string['screen'] = 'Ekran';
+$string['mark'] = 'punkt';
+$string['marks'] = 'punkty';
+$string['note'] = 'Uwaga';
+$string['true'] = 'Prawda';
+$string['false'] = 'Fałsz';
+$string['yes'] = 'Tak';
+$string['no'] = 'Nie';
+$string['abstain'] = 'Wstrzymany';
+$string['na'] = 'Nie dotyczy'; //N/A
+$string['unanswered'] = 'Brak odpowiedzi';
+$string['unansweredquestion'] = '= pytanie bez odpowiedzi';
+$string['negmarking'] = 'punkty ujemne';
+$string['bonusmark'] = 'dla prawidłowej opcji, plus 1 punkt dodatkowy za poprawna kolejność';
+$string['calculator'] = 'Kalkulator';
+$string['finishnote'] = '<strong>Uwaga:</strong> Należy wypełnić wszystkie odpowiedzi przed wybraniem &#145;Finalizuj&#146; - powrót nie jest możliwy.';
+$string['gobackpink'] = 'Po powrocie pytania na które nie udzielono odpowiedzi będą podświetlone na różowo.';
+$string['fireexit'] = 'Alarm pożarowy';
+$string['pleasecomplete'] = '<strong>Uwaga:</strong> Należy wypełnić wszystkie odpowiedzi przed wybraniem &#145;Ekranu %d &gt;&#146;, - powrót nie jest możliwy.';
+$string['javacheck1'] = 'Czy wypełniłeś wszystkie odpowiedzi na ekranie - powrót NIE będzie jest możliwy, czy na pewno chcesz kontynuować?';
+$string['javacheck2'] = "Czy na pewno chcesz finalizować? Po wybraniu 'OK' nie będziesz mógł powrócić.";
+$string['error_keywords'] = 'BŁĄD: nie można odszukać unikalnego pytania dla podanych słów kluczowych';
+$string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
+$string['specificpassword'] = 'Do tego arkusza przypisane jest specyficzne hasło.';
+$string['denied_location'] = 'Dostęp do tego arkusza nie jest dozwolony z aktualnej lokalizacji.';
+$string['error_time'] = 'Arkusz, który chcesz zobaczyć dostępny jest tylko pomiędzy %s i %s';
+$string['error_module'] = 'Ten arkusz nie występuje w żadnym module.';
+$string['error_metadata'] = 'Metadane użytkownika nie są zgodne <strong>%s: %s</strong>';
 ?>

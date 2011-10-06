@@ -1,5 +1,4 @@
-<?php
-$string['paperretired'] = '1Paper Retired';
-$string['ok'] = '1OK';
-$string['msg'] = '1Paper successfully retired.';
+﻿<?php
+$string['paperretired'] = 'Arkusz wycofany';
+$string['msg'] = 'Wycofywanie arkusza zakończone sukcesem.';
 ?>

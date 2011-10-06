@@ -1,12 +1,12 @@
-<?php
+﻿<?php
 require '../lang/' . $language . '/include/paper_options.inc';
 require 'shared.inc';
 
-$string['import'] = '1Import';
-$string['importfromqti'] = '1Import from QTI';
-$string['file'] = '1File';
-$string['qtiimporterror'] = '1There has been an error importing your QTI file';
-$string['qtiimported'] = '1Your QTI file has been imported';
-$string['questionproblems'] = '1Some of your questions did not import correctly.';
-$string['hadproblemsimporting'] = '1%d out of %d questions had problems importing.';
-$string['importedquestions'] = '1Imported %d question(s).';
+$string['import'] = 'Importuj';
+$string['importfromqti'] = 'Importuj z QTI';
+$string['file'] = 'Plik';
+$string['qtiimporterror'] = 'Błąd importowania pliku QTI';
+$string['qtiimported'] = 'Zaimportowano plik QTI';
+$string['questionproblems'] = 'Niektóre z pytań nie zostały zaimportowane poprawnie.';
+$string['hadproblemsimporting'] = 'Błąd importowania %d z %d pytań.';
+$string['importedquestions'] = 'Zaimportowano %d pytań.';

@@ -1,11 +1,10 @@
-<?php
-$string['copypaper'] = '1Copy Paper';
-$string['warning'] = '1Warning';
-$string['titlewarning'] = '1Title Warning';
-$string['nameused'] = '1The name \'<strong>%s</strong>\' has already been used.<br />Please select a different paper name which is unique.';
-$string['back'] = '1&lt; Back';
-$string['copyerror'] = '1Question Number $q_no) Copy Error (Question) File <strong>\'%s\'</strong> could not be copied.';
-$string['completemsg'] = '1Your paper and questions have been copied but the following image have not been copied.';
-$string['ok'] = '1OK';
-$string['filecopywarning'] = '1File Copy Warning';
+﻿<?php
+$string['copypaper'] = 'Kopiuj arkusz';
+$string['warning'] = 'Ostrzeżenie';
+$string['titlewarning'] = 'Ostrzeżenie dot. tytułu';
+$string['nameused'] = 'Nazwa \'<strong>%s</strong>\' już jest wykorzystywana.<br />Wybierz proszę nową i unikalną nazwę.';
+$string['back'] = '&lt; Wstecz';
+$string['copyerror'] = 'Pytanie numer $q_no) Bład kopiowania (pytania). Plik <strong>\'%s\'</strong> nie mógł być skopiowany.';
+$string['completemsg'] = 'Twój arkusz i pytania zostały skopiowane lecz następujacy obraz nie.';
+$string['filecopywarning'] = 'Ostrzeżenie dot. kopiowania plików';
 ?>

@@ -1,6 +1,6 @@
-<?php
-$string['confirmretirepaper'] = '1Confirm Retire Paper';
-$string['msg'] = '1Do you wish to retire:<br /><br />1) just the paper, or 2) the paper and the questions?';
-$string['paper'] = '1Paper';
-$string['paperquestions'] = '1Paper &amp; Questions';
+﻿<?php
+$string['confirmretirepaper'] = 'Potwierdź ';
+$string['msg'] = 'Czy chcesz wycofać:<br /><br />1) tylko arkusz, czy 2) arkusz wraz z pytaniami?';
+$string['paper'] = 'Arkusz';
+$string['paperquestions'] = 'Arkusz i pytania';
 ?>

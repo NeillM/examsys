@@ -1,8 +1,8 @@
-<?php
-$string['moreinformation'] = '1More Information';
-$string['viewdetails'] = '1View Details';
-$string['debuginformation'] = '1Debug Information';
-$string['loadingdebug'] = '1Loading Debug';
-$string['intermediateformatdebug'] = '1Intermediate Format Debug';
-$string['savingdebug'] = '1Saving Debug';
-$string['generaldebuginfo'] = '1General Debug Info';
+﻿<?php
+$string['moreinformation'] = 'Więcej informacji';
+$string['viewdetails'] = 'Ogląd szczegółów';
+$string['debuginformation'] = 'Informacje dot. błędów';
+$string['loadingdebug'] = 'Wyszukiwanie błędów ładowania';
+$string['intermediateformatdebug'] = 'Wyszukiwanie błędów pośrednich';
+$string['savingdebug'] = 'Zapisywanie wyników wyszukiwanie błędów';
+$string['generaldebuginfo'] = 'Ogólne informacje dot. błędów';
