@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require '../lang/' . $language . '/include/months.inc';
 
 $string['survey'] = 'Ankieta';

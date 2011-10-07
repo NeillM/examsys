@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once '../lang/' . $language . '/include/paper_types.inc';
 
 $string['createnewpaper'] = 'Utwórz nowy arkusz';

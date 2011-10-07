@@ -1,5 +1,5 @@
 <?php
-$string['osce'] = '1OSCE:';
-$string['examiner'] = '1Examiner:';
-$string['date'] = '1Date:';
+$string['osce'] = 'OSCE:';
+$string['examiner'] = 'Examiner:';
+$string['date'] = 'Date:';
 ?>

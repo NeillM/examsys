@@ -1,10 +1,10 @@
 <?php
-$string['machine'] = '1machine';
-$string['machines'] = '1machines';
-$string['createnewlab'] = '1Create new lab';
-$string['vieweditdetails'] = '1View/Edit Details';
-$string['deletelab'] = '1Delete Lab';
-$string['lowbandwidth'] = '1Low Bandwidth';
-$string['administrativetools'] = '1Administrative Tools';
-$string['computerlabs'] = '1Computer Labs';
+$string['machine'] = 'machine';
+$string['machines'] = 'machines';
+$string['createnewlab'] = 'Create new lab';
+$string['vieweditdetails'] = 'View/Edit Details';
+$string['deletelab'] = 'Delete Lab';
+$string['lowbandwidth'] = 'Low Bandwidth';
+$string['administrativetools'] = 'Administrative Tools';
+$string['computerlabs'] = 'Computer Labs';
 ?>

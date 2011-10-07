@@ -1,4 +1,19 @@
 <?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
 * 
 * @author  Anthony Brown
@@ -7,19 +22,8 @@
 * @package
 */
 
-if (strpos($_SERVER['PHP_SELF'],'student_help') !== false) {
-  $require_file = '../include/staff_student_auth.inc';
-} else {
-  $require_file = '../include/staff_auth.inc';
-}
-
-require $require_file;
-
-if (strpos($_SERVER['PHP_SELF'],'student_help') !== false) {
-  $path = $cfg_web_root . 'student_help/images/';
-} else {
-  $path = $cfg_web_root . 'staff_help/images/';
-}
+require '../include/staff_auth.inc';
+$path = $cfg_web_root . 'staff_help/images/';
 
 function unique_filename($filename, $path) {
   if ($filename != '' and $filename != 'none') {
@@ -67,9 +71,8 @@ body {background-color:#EEECDC; color:black; font-family:Arial,sans-serif; font-
 input, textarea {font-family:Arial,sans-serif}
 </style>
 <?php
-if($_FILES['FileName'] != '') {
+if ($_FILES['FileName'] != '') {
     //proc upload
-    
     
     $filename = $_FILES['FileName']['tmp_name'];
     //make the dirs

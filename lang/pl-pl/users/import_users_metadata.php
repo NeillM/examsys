@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require '../lang/' . $language . '/folder/details.php';
 
 $string['importmetadata'] = 'Importuj metadane';

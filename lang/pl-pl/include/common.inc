@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['home'] = 'Strona główna';
 $string['help'] = 'Pomoc';
 $string['cancel'] = 'Anuluj';

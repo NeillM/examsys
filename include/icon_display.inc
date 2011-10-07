@@ -1,60 +1,75 @@
 <?php
-  function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked) {
-    global $string;
-    switch ($paper_type) {
-      case 0:
-        $html = "<img src=\"../artwork/formative" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative self-assessment'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 1:
-        $html = "<img src=\"../artwork/progress" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progresstest'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 2:
-        $html = "<img src=\"../artwork/summative" . $shared . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative exam'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 3:
-        $html = "<img src=\"../artwork/survey" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 4:
-        $html = "<img src=\"../artwork/osce" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['osce station'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-      case 5:
-        $html = "<img src=\"../artwork/offline" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offline paper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
-        break;
-    }
-    return $html;
-  }
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-  function displayPaperIcon2($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname) {
-    global $folder, $string;
-    
-    echo '<div class="file">';
-    echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
-    $icon_type = $paper_type;
-    if (date("YmdHis", time()) >= $start_date) {
-      $locked = '_locked';
-    } else {
-      $locked = '';
-    }
-    echo "<a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=\">" . displayIcon($icon_type, $title, $initials, $surname, '', $locked) . "</a></td>\n";
-    echo "</td><td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=\" class=\"blacklink\">" . $paper_title . '</a><br />';
-    echo '  <span style="color:#808080">';
-    if ($screens == NULL) {
-      echo '0 ' . $string['screens'] . ', ';
-    } elseif ($screens == 1) {
-      echo $screens . ' ' . $string['screen'];
-    } else {
-      echo $screens . ' ' . $string['screens'];
-    }
-    echo ', <span style="color:red">' . $string['nomodulesset'] . '</span>';
-    echo '<br />';
-    echo '  ' . $display_start_date;
-    if ($icon_type == 2) {
-      echo ', ' . $exam_duration . $string['mins'];
-    } else {
-      echo ' to ' . $display_end_date;
-    }
-    echo "</td></tr></table></div>\n";
+function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked) {
+  global $string;
+  switch ($paper_type) {
+    case 0:
+      $html = "<img src=\"../artwork/formative" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative self-assessment'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+      break;
+    case 1:
+      $html = "<img src=\"../artwork/progress" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progresstest'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+      break;
+    case 2:
+      $html = "<img src=\"../artwork/summative" . $shared . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative exam'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+      break;
+    case 3:
+      $html = "<img src=\"../artwork/survey" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+      break;
+    case 4:
+      $html = "<img src=\"../artwork/osce" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['osce station'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+      break;
+    case 5:
+      $html = "<img src=\"../artwork/offline" . $shared . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offline paper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+      break;
   }
+  return $html;
+}
+
+function displayPaperIcon2($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname) {
+  global $folder, $string;
+  
+  echo '<div class="file">';
+  echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
+  $icon_type = $paper_type;
+  if (date("YmdHis", time()) >= $start_date) {
+    $locked = '_locked';
+  } else {
+    $locked = '';
+  }
+  echo "<a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=\">" . displayIcon($icon_type, $title, $initials, $surname, '', $locked) . "</a></td>\n";
+  echo "</td><td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=\" class=\"blacklink\">" . $paper_title . '</a><br />';
+  echo '  <span style="color:#808080">';
+  if ($screens == NULL) {
+    echo '0 ' . $string['screens'] . ', ';
+  } elseif ($screens == 1) {
+    echo $screens . ' ' . $string['screen'];
+  } else {
+    echo $screens . ' ' . $string['screens'];
+  }
+  echo ', <span style="color:red">' . $string['nomodulesset'] . '</span>';
+  echo '<br />';
+  echo '  ' . $display_start_date;
+  if ($icon_type == 2) {
+    echo ', ' . $exam_duration . $string['mins'];
+  } else {
+    echo ' to ' . $display_end_date;
+  }
+  echo "</td></tr></table></div>\n";
+}
   
 function displayPaperIcon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID) {
   global $userroles, $type, $folder, $module, $mysqli, $userID, $teams, $string;
@@ -120,5 +135,4 @@ function displayPaperIcon($paper_ownerID, $property_id, $paper_type, $screens, $
   }
   echo "</td></tr></table></div>\n";
 }
-  
 ?>

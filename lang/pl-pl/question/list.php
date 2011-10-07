@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['question'] = 'Pytanie';
 $string['questionbank'] = 'Bank pytań';
 $string['type'] = 'Typ';

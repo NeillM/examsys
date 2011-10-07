@@ -1,18 +1,18 @@
 <?php
-// This file is part of TouchStone
+// This file is part of Rogō
 //
-// TouchStone is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// TouchStone is distributed in the hope that it will be useful,
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 *
@@ -29,7 +29,7 @@
   require '../config/index.inc';
 
   // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
-  if(strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === false and strpos($userroles,'Admin') === false and strpos($userroles,'SysAdmin') === false) {
+  if (strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === false and strpos($userroles,'Admin') === false and strpos($userroles,'SysAdmin') === false) {
     header("location: " . $protocol. $_SERVER['HTTP_HOST'] . "../students/");
     exit;
   } elseif ($userroles == 'External Examiner') {
@@ -42,12 +42,11 @@
 
 // If we're still here we should be staff
 require '../include/staff_auth.inc';
-?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <title>TouchStone<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
@@ -142,7 +141,7 @@ require '../include/staff_auth.inc';
 
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
-    <td style="background-color:#F1F5FB"><div style="font-size:22pt; font-weight:bold">&nbsp;TouchStone<?php echo " $cfg_install_type"; ?></div><div style="position:relative; left:12px; top:-3px; font-size:8pt">Assessment Management System</div></td>
+    <td style="background-color:#F1F5FB; padding-left:20px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="logo" border="0" /></td>
     <td style="background-color:#F1F5FB; text-align:right"><?php echo $logo_html; ?>&nbsp;&nbsp;</td>
   </tr>
   <tr>

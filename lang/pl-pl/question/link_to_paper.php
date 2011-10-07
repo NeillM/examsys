@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['linktopaper'] = 'Powiąż z arkuszem';
 $string['addtopaper'] = 'Dodaj do arkusza';
 $string['back'] = 'Wstecz';

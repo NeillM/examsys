@@ -1,6 +1,5 @@
 <?php
-$string['questiondeleted'] = '1Question Deleted';
-$string['recyclebin'] = '1Recycle Bin';
-$string['msg'] = '1Question successfully deleted from question bank.';
-$string['ok'] = '1OK';
+$string['questiondeleted'] = 'Question Deleted';
+$string['recyclebin'] = 'Recycle Bin';
+$string['msg'] = 'Question successfully deleted from question bank.';
 ?>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['copyontopaper'] = 'Przekopiuj do arkusza';
 $string['back'] = 'Wstecz';
 $string['warning'] = 'Ostrzeżenie';

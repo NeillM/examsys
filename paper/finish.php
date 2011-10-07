@@ -1,22 +1,22 @@
 <?php
-// This file is part of TouchStone
+// This file is part of Rog≈ç
 //
-// TouchStone is free software: you can redistribute it and/or modify
+// Rog≈ç is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// TouchStone is distributed in the hope that it will be useful,
+// Rog≈ç is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rog≈ç.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 * 
-* Completes final log of the last screen to the ëlogXí table and then will display feedback if the paper is in ëformativeí 
+* Completes final log of the last screen to the 'logX' table and then will display feedback if the paper is in 'formative' 
 * mode or will display a confirmation notice to the examinee stating all answers and marks have been successfully recorded.
 * 
 * @author Simon Wilkinson, Anthony Brown

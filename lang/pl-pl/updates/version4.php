@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['systemupdate'] = 'Aktualizacja systemu';
 $string['actionrequired'] = 'Wymagane działania';
 $string['readonly'] = "Nie zapomnij nadać plikowi <strong>/config/config.inc.php</strong> atrybut 'readonly'! (chmod 444)";

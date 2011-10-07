@@ -1,30 +1,29 @@
 <?php
-/// This file is part of TouchStone
+// This file is part of Rogo
 //
-// TouchStone is free software: you can redistribute it and/or modify
+// Rogo is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// TouchStone is distributed in the hope that it will be useful,
+// Rogo is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 * 
-* Sidebar menu of the TouchStone homepage
+* Sidebar menu of the Rogō homepage
 * 
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-?>
-<div id="left-sidebar" class="sidebar">
+?><div id="left-sidebar" class="sidebar">
 <br />
 <table id="general" cellpadding="4" cellspacing="0" border="0" width="185" style="margin-left:2px; font-size:90%">
 <tr><td width="16"><a href="#" onclick="launchHelp(1); return false;"><img src="/artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(1); return false;"><?php echo $string['helpsupport']; ?></a></td></tr>
@@ -79,7 +78,7 @@
 </td></tr>
 </table>
 
-<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%"><a style="color:blue" href="#" onclick="displayCredits(); return false;">TouchStone <?php echo $ts_version; ?> - &copy; 2011</a></div>
+<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%"><a style="color:blue" href="#" onclick="displayCredits(); return false;">Rogō <?php echo $ts_version; ?> - &copy; 2011</a></div>
 </div>
 
 <?php

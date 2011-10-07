@@ -1,18 +1,18 @@
 <?php
 require '../lang/' . $language . '/include/paper_options.inc';
 
-$string['start'] = '1Start';
-$string['owner'] = '1Owner';
-$string['question'] = '1Question';
-$string['type'] = '1Type';
-$string['marks'] = '1Marks';
-$string['modified'] = '1Modified';
-$string['passmark'] = '1Pass Mark';
-$string['mappingbyyear'] = '1Mapping by Year';
-$string['bysession'] = '1by Session';
-$string['byquestion'] = '1by Question';
-$string['longitudinal'] = '1Longitudinal';
-$string['screen'] = '1Screen';
-$string['warning'] = '1Warning';
-$string['nomatchsession'] = '1The session in the paper title (%s) does not match the paper session (%s).';
+$string['start'] = 'Start';
+$string['owner'] = 'Owner';
+$string['question'] = 'Question';
+$string['type'] = 'Type';
+$string['marks'] = 'Marks';
+$string['modified'] = 'Modified';
+$string['passmark'] = 'Pass Mark';
+$string['mappingbyyear'] = 'Mapping by Year';
+$string['bysession'] = 'by Session';
+$string['byquestion'] = 'by Question';
+$string['longitudinal'] = 'Longitudinal';
+$string['screen'] = 'Screen';
+$string['warning'] = 'Warning';
+$string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
 ?>

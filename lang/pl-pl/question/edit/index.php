@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
 require '../../lang/' . $language . '/include/question_types.inc';

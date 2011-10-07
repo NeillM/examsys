@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['questioninformation'] = 'Informacje o pytaniu';
 $string['author'] = 'Autor';
 $string['status'] = 'Status';

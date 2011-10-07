@@ -1,14 +1,14 @@
 <?php
-$string['invigilatoraccess'] = '1Invigilator Access';
-$string['lab'] = '1Lab:';
-$string['unknownlab'] = '1 - unknown lab';
-$string['nopapersfound'] = '1No papers found!';
-$string['emergencynumbers'] = '1Emergency Numbers';
-$string['start'] = '1Start:';
-$string['duration'] = '1Duration:';
-$string['mins'] = '1mins';
-$string['papernote'] = '1Paper Note';
-$string['extratime'] = '1Extra Time';
+$string['invigilatoraccess'] = 'Invigilator Access';
+$string['lab'] = 'Lab:';
+$string['unknownlab'] = ' - unknown lab';
+$string['nopapersfound'] = 'No papers found!';
+$string['emergencynumbers'] = 'Emergency Numbers';
+$string['start'] = 'Start:';
+$string['duration'] = 'Duration:';
+$string['mins'] = 'mins';
+$string['papernote'] = 'Paper Note';
+$string['extratime'] = 'Extra Time';
 $string['checklist'] = '<div><strong>Tasklist</strong></div>
     <div><em>Pre-Exam</em></div>
     <ol>
@@ -34,6 +34,5 @@ $string['checklist'] = '<div><strong>Tasklist</strong></div>
     <li>Collect and dispose of blank paper</li>
     <li>Ensure <strong>all</strong> workstations are logged out</li>
     </ol>';
-
 
 ?>

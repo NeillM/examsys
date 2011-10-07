@@ -1,11 +1,11 @@
 <?php
-$string['blooms'] = '1Blooms';
-$string['bloomstaxonomy'] = "1Bloom's Taxonomy";
-$string['alllevels'] = '1(All levels)';
-$string['knowledge'] = '1Knowledge';
-$string['comprehension'] = '1Comprehension';
-$string['application'] = '1Application';
-$string['analysis'] = '1Analysis';
-$string['synthesis'] = '1Synthesis';
-$string['evaluation'] = '1Evaluation';
+$string['blooms'] = 'Blooms';
+$string['bloomstaxonomy'] = "Bloom's Taxonomy";
+$string['alllevels'] = '(All levels)';
+$string['knowledge'] = 'Knowledge';
+$string['comprehension'] = 'Comprehension';
+$string['application'] = 'Application';
+$string['analysis'] = 'Analysis';
+$string['synthesis'] = 'Synthesis';
+$string['evaluation'] = 'Evaluation';
 ?>

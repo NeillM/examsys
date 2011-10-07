@@ -1,18 +1,18 @@
 <?php
-// This file is part of TouchStone
+// This file is part of Rogō
 //
-// TouchStone is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// TouchStone is distributed in the hope that it will be useful,
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 * 
@@ -169,11 +169,11 @@
         $result->execute();  
         $result->bind_result($moduleID, $paper_ownerID);
         while ($result->fetch()) {
-          if($paper_ownerID != $userID) {
+          if ($paper_ownerID != $userID) {
             $moduleIDs = explode(',',$moduleID);
             $on_team = false;
             foreach ($moduleIDs as $g) {
-              if(isset($teams[$g])) { 
+              if (isset($teams[$g])) { 
                 $on_team = true;
                 break;
               }

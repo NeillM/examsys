@@ -1,15 +1,15 @@
 <?php
 require '../lang/' . $language . '/include/months.inc';
 
-$string['summativeexamstats'] = '1Summative Exam Stats';
-$string['administrativetools'] = '1Administrative Tools';
-$string['month'] = '1Month';
-$string['papers'] = '1Papers';
-$string['owner'] = '1Owners';
-$string['mean'] = '1Mean';
-$string['min'] = '1Min';
-$string['max'] = '1Max';
-$string['studentpapers'] = '1Student/Papers';
-$string['cohortsizes'] = '1Cohort Sizes';
-$string['uniquestudents'] = '1Unique students = %s';
+$string['summativeexamstats'] = 'Summative Exam Stats';
+$string['administrativetools'] = 'Administrative Tools';
+$string['month'] = 'Month';
+$string['papers'] = 'Papers';
+$string['owner'] = 'Owners';
+$string['mean'] = 'Mean';
+$string['min'] = 'Min';
+$string['max'] = 'Max';
+$string['studentpapers'] = 'Student/Papers';
+$string['cohortsizes'] = 'Cohort Sizes';
+$string['uniquestudents'] = 'Unique students = %s';
 ?>

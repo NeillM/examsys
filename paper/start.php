@@ -1,23 +1,23 @@
 <?php
-// This file is part of TouchStone
+// This file is part of Rog≈ç
 //
-// TouchStone is free software: you can redistribute it and/or modify
+// Rog≈ç is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// TouchStone is distributed in the hope that it will be useful,
+// Rog≈ç is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rog≈ç.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 * 
-* Handles paper display and the recording of marks to the ëlogXí tables. Uses functions within ëdisplay_functions.incí to process specific 
-* types of questions. Start.php continues calling itself while there are further screens to be displayed and then calls ëfinish.phpí 
+* Handles paper display and the recording of marks to the 'logX' tables. Uses functions within 'display_functions.inc' to process specific 
+* types of questions. Start.php continues calling itself while there are further screens to be displayed and then calls 'finish.php'
 * to end.
 * 
 * @author Simon Wilkinson, Anthony Brown

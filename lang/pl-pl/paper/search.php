@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['papersearch'] = 'Wyszukiwanie arkuszy';
 $string['wordorphrase'] = 'Słowo lub fraza';
 $string['formative'] = 'Formatywna samoocena';

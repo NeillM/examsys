@@ -1,13 +1,12 @@
 <?php
-$string['administrativetools'] = '1Administrative Tools';
-$string['schools'] = '1Schools';
-$string['addschools'] = '1Add Schools';
-$string['school'] = '1School';
-$string['faculty'] = '1Faculty';
-$string['add'] = '1Add';
-$string['cancel'] = '1Cancel';
-$string['prompt'] = '1School of';
-$string['createschool'] = '1Create new School';
-$string['editschool'] = '1Edit School';
-$string['enternameofschool'] = '1Please enter name for the school.';
+$string['administrativetools'] = 'Administrative Tools';
+$string['schools'] = 'Schools';
+$string['addschools'] = 'Add Schools';
+$string['school'] = 'School';
+$string['faculty'] = 'Faculty';
+$string['add'] = 'Add';
+$string['prompt'] = 'School of';
+$string['createschool'] = 'Create new School';
+$string['editschool'] = 'Edit School';
+$string['enternameofschool'] = 'Please enter name for the school.';
 ?>

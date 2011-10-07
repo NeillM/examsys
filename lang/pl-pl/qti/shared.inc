@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['moreinformation'] = 'Więcej informacji';
 $string['viewdetails'] = 'Ogląd szczegółów';
 $string['debuginformation'] = 'Informacje dot. błędów';

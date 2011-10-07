@@ -1,18 +1,18 @@
 <?php
-// This file is part of TouchStone
+// This file is part of Rogō
 //
-// TouchStone is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// TouchStone is distributed in the hope that it will be useful,
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 * 
@@ -565,8 +565,8 @@ Class InstallUtils {
     $touchstone_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      $errors['90'] = "<p>TouchStone has already been installed! remove/rename $touchstone_path/config/config.inc.php to run set up again.</p>";
-      $errors['90'] .= "<p>or go to the <a href=\"/touchstone\">staff interfaces</a></p>";
+      $errors['90'] = "<p>Rogō has already been installed! remove/rename $touchstone_path/config/config.inc.php to run set up again.</p>";
+      $errors['90'] .= "<p>or go to the <a href=\"/staff\">staff interfaces</a></p>";
     }
   }
   
@@ -594,23 +594,23 @@ Class InstallUtils {
     $errors = array();
     //tmp
     if (!is_writable('/tmp')) {
-      $errors['100'] = "TouchStone requires /tmp to exist and be writeable to the webserver";
+      $errors['100'] = "Rogō requires /tmp to exist and be writeable to the webserver";
     }
     //media
     if (!is_writable(self::$touchstone_path . '/media')) {
-      $errors['102'] = "TouchStone requires " . self::$touchstone_path . "/media to exist and be writeable to the webserver";
+      $errors['102'] = "Rogō requires " . self::$touchstone_path . "/media to exist and be writeable to the webserver";
     }    
     //qti imports
     if (!is_writable(self::$touchstone_path . '/qti/imports')) {
-      $errors['103'] = "TouchStone requires " . self::$touchstone_path . "/qti/imports to exist and be writeable to the webserver";
+      $errors['103'] = "Rogō requires " . self::$touchstone_path . "/qti/imports to exist and be writeable to the webserver";
     }
     //qti exports
     if (!is_writable(self::$touchstone_path . '/qti/exports')) {
-      $errors['104'] = "TouchStone requires " . self::$touchstone_path . "/qti/exports to exist and be writeable to the webserver";
+      $errors['104'] = "Rogō requires " . self::$touchstone_path . "/qti/exports to exist and be writeable to the webserver";
     }
     //temp
     if (!is_writable(self::$touchstone_path . '/temp')) {
-      $errors['105'] = "TouchStone requires " . self::$touchstone_path . "/temp to exist and be writeable to the webserver";
+      $errors['105'] = "Rogō requires " . self::$touchstone_path . "/temp to exist and be writeable to the webserver";
     }
     if (count($errors) > 0) {
       self::displayError($errors);  
@@ -629,22 +629,22 @@ Class InstallUtils {
     $apache_min_ver = '2.0';
     if ( isset($apache[0]) and isset($apache[1]) ) {
       if ($apache[0] != 'Apache') {
-        $errors['200'] = "TouchStone requires Apache version $apache_min_ver" . $apache[1];
+        $errors['200'] = "Rogō requires Apache version $apache_min_ver" . $apache[1];
       }
       $ver = explode(' ',$apache[1]);
       if (isset($ver[0]) and $ver[0] < $apache_min_ver) {
-        $errors['201'] = "TouchStone requires Apache version $apache_min_ver or above you have " . $ver[0];
+        $errors['201'] = "Rogō requires Apache version $apache_min_ver or above you have " . $ver[0];
       }
     }
     
     //php
     $php_min_ver = '5.0';
     if (phpversion() < $php_min_ver) {
-      $errors['202'] = "TouchStone requires PHP version $php_min_ver or above";
+      $errors['202'] = "Rogō requires PHP version $php_min_ver or above";
     }
     $phpModules = get_loaded_extensions();
     if ( !in_array('mysqli',$phpModules) ) {
-      $errors['203'] = "TouchStone requires the PHP mysqli moduel to function please install or activate it.";
+      $errors['203'] = "Rogō requires the PHP mysqli moduel to function please install or activate it.";
     }
     
     if (count($errors) > 0) {
@@ -715,9 +715,10 @@ Class InstallUtils {
   */
   static function displayHeader() {
     ?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     <head>
-      <title>TouchStone Install script</title>
+      <title>Rogō Install script</title>
       <style type="text/css">
         html { padding: 0em; margin: 0em; width: 100%}
         body { padding: 0em; margin: 0em; width: 100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black }
@@ -743,8 +744,8 @@ Class InstallUtils {
     <body>
     <table class="topbar"> 
       <tr> 
-        <td><div style="font-size:26pt; font-weight:bold; color:#003163">&nbsp;System Installation</div></td> 
-        <td style="text-align:right"><img src="../artwork/touchstone_logo_330_85.png" width="330" height="85" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
+        <td><div style="font-size:26pt; font-weight:bold; color:black">&nbsp;System Installation</div></td> 
+        <td style="text-align:right; padding-top:4px; padding-right:15px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="logo" border="0" /></td> 
       </tr> 
       <tr> 
         <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td> 

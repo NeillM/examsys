@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['examscript'] = 'Skrypt egzaminacyjny';
 $string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
 $string['specificpassword'] = 'Do tego arkusza przypisane jest specyficzne hasło.';

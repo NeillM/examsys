@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['textboxmarking'] = 'Ocena opisowa';
 $string['primarymarking'] = 'Ocena pierwotna';
 $string['secondmarking'] = 'Ocena wtórna';

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['hidemarked'] = 'Ukryj już ocenione';
 $string['primarymarking'] = 'Ocena pierwotna';
 $string['secondmarking'] = 'Ocena wtórna';

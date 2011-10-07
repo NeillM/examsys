@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['learningobjectiveanalysis'] = 'Analiza celów kształcenia';
 $string['learningobjectives'] = 'Cele kształcenia';
 $string['totalcandidate'] = 'Całkowita liczba kandydatów';

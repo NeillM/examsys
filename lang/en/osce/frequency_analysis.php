@@ -1,3 +1,3 @@
 <?php
-$string['frequencyanalysis'] = '1OSCE: Frequency Analysis';
+$string['frequencyanalysis'] = 'OSCE: Frequency Analysis';
 ?>

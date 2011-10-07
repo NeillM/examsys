@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['myunused'] = 'Moje nieużywane';
 $string['allmyquestions'] = 'Moje wszystkie pytania';
 $string['bykeywords'] = 'wg. słów kluczowych';

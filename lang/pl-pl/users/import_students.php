@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require '../lang/' . $language . '/include/user_search_options.inc';
 
 $string['sendwelcomeemail'] = 'Wyślij do użytkownika list powitalny';

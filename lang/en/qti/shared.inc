@@ -1,8 +1,8 @@
 <?php
-$string['moreinformation'] = '1More Information';
-$string['viewdetails'] = '1View Details';
-$string['debuginformation'] = '1Debug Information';
-$string['loadingdebug'] = '1Loading Debug';
-$string['intermediateformatdebug'] = '1Intermediate Format Debug';
-$string['savingdebug'] = '1Saving Debug';
-$string['generaldebuginfo'] = '1General Debug Info';
+$string['moreinformation'] = 'More Information';
+$string['viewdetails'] = 'View Details';
+$string['debuginformation'] = 'Debug Information';
+$string['loadingdebug'] = 'Loading Debug';
+$string['intermediateformatdebug'] = 'Intermediate Format Debug';
+$string['savingdebug'] = 'Saving Debug';
+$string['generaldebuginfo'] = 'General Debug Info';

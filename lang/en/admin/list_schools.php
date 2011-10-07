@@ -1,9 +1,9 @@
 <?php
-$string['administrativetools'] = '1Administrative Tools';
-$string['schools'] = '1Schools';
-$string['name'] = '1Name';
-$string['faculty'] = '1Faculty';
-$string['modules'] = '1Modules';
-$string['createschool'] = '1Create new School';
-$string['editschool'] = '1Edit School';
+$string['administrativetools'] = 'Administrative Tools';
+$string['schools'] = 'Schools';
+$string['name'] = 'Name';
+$string['faculty'] = 'Faculty';
+$string['modules'] = 'Modules';
+$string['createschool'] = 'Create new School';
+$string['editschool'] = 'Edit School';
 ?>

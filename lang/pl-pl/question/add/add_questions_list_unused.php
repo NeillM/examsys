@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require '../../lang/' . $language . '/include/question_types.inc';
 
 $string['myunusedquestions'] = 'Moje nieużywane pytania';

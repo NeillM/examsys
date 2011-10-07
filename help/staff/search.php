@@ -1,4 +1,19 @@
 <?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
 * 
 * @author Simon Wilkinson
@@ -7,56 +22,56 @@
 * @package
 */
 
-  require '../../include/staff_auth.inc';
+require '../../include/staff_auth.inc';
 
-  function getPath($path, $pageID, $tmp_highlight) {
-    $parts = explode('/',$path);
-    $path = '<a class="path" href="display_page.php?id=1">Help</a>';
-    for ($i=0; $i<count($parts); $i++) {
-      if ($i == (count($parts)-1)) {
-        $path .= " > <a class=\"path\" href=\"display_page.php?id=$pageID&highlight=$tmp_highlight\">" . $parts[$i] . "</a>";
-      } else {
-        $path .= " > <a class=\"path\" href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
-      }
+function getPath($path, $pageID, $tmp_highlight) {
+  $parts = explode('/',$path);
+  $path = '<a class="path" href="display_page.php?id=1">Help</a>';
+  for ($i=0; $i<count($parts); $i++) {
+    if ($i == (count($parts)-1)) {
+      $path .= " > <a class=\"path\" href=\"display_page.php?id=$pageID&highlight=$tmp_highlight\">" . $parts[$i] . "</a>";
+    } else {
+      $path .= " > <a class=\"path\" href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
     }
-    
-    return $path;
   }
   
-  function displayTitle($title) {
-    $parts = explode('/',$title);
-    $end_no = count($parts) - 1;
-    return $parts[$end_no];
-  }
-  
-  function drawHeader($tmp_page_no) {
-    global $page_size, $total_hits, $hit_stop, $page_total, $string;
-    
-    $hit_start = (($page_size * $tmp_page_no) - $page_size) + 1;
-    $hit_stop = $page_size * $tmp_page_no;
-    if ($hit_stop > $total_hits) $hit_stop = $total_hits;
+  return $path;
+}
 
-    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-    echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;" . sprintf($string['results'], $hit_start, $hit_stop, $total_hits) . "</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">Pages:&nbsp;";
-    for ($i=1; $i<=$page_total; $i++) {
-      if ($i == $tmp_page_no) {
-        echo "&nbsp;[<strong>$i</strong>]&nbsp;";
-      } else {
-        echo "&nbsp;<a class=\"page\" href=\"#\" onclick=\"displayPage($i,$page_total); return false;\">$i</a>&nbsp;";
-      }
-    }
-    if ($tmp_page_no > 1) {
-      echo '&nbsp;<img onclick="displayPage(' . ($tmp_page_no-1) . ',' . $page_total . ')" src="../previous_active.png" width="11" height="11" alt="' . $string['previous'] . '" border="0" />&nbsp;';
+function displayTitle($title) {
+  $parts = explode('/',$title);
+  $end_no = count($parts) - 1;
+  return $parts[$end_no];
+}
+
+function drawHeader($tmp_page_no) {
+  global $page_size, $total_hits, $hit_stop, $page_total, $string;
+  
+  $hit_start = (($page_size * $tmp_page_no) - $page_size) + 1;
+  $hit_stop = $page_size * $tmp_page_no;
+  if ($hit_stop > $total_hits) $hit_stop = $total_hits;
+
+  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
+  echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;" . sprintf($string['results'], $hit_start, $hit_stop, $total_hits) . "</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">Pages:&nbsp;";
+  for ($i=1; $i<=$page_total; $i++) {
+    if ($i == $tmp_page_no) {
+      echo "&nbsp;[<strong>$i</strong>]&nbsp;";
     } else {
-      echo '&nbsp;<img src="../previous_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
+      echo "&nbsp;<a class=\"page\" href=\"#\" onclick=\"displayPage($i,$page_total); return false;\">$i</a>&nbsp;";
     }
-    if ($tmp_page_no < $page_total) {
-      echo '&nbsp;&nbsp;<a class="page" href="" onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . '); return false;">' . $string['next'] . '</a>&nbsp;<img onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . ')" src="../next_active.png" width="11" height="11" alt="' . $string['next'] . '" border="0" />&nbsp;';
-    } else {
-      echo '&nbsp;&nbsp;' . $string['next'] . '&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
-    }
-    echo "</td></tr></table>\n";
   }
+  if ($tmp_page_no > 1) {
+    echo '&nbsp;<img onclick="displayPage(' . ($tmp_page_no-1) . ',' . $page_total . ')" src="../previous_active.png" width="11" height="11" alt="' . $string['previous'] . '" border="0" />&nbsp;';
+  } else {
+    echo '&nbsp;<img src="../previous_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
+  }
+  if ($tmp_page_no < $page_total) {
+    echo '&nbsp;&nbsp;<a class="page" href="" onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . '); return false;">' . $string['next'] . '</a>&nbsp;<img onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . ')" src="../next_active.png" width="11" height="11" alt="' . $string['next'] . '" border="0" />&nbsp;';
+  } else {
+    echo '&nbsp;&nbsp;' . $string['next'] . '&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
+  }
+  echo "</td></tr></table>\n";
+}
 ?>
 <html>
 <head>

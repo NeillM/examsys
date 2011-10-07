@@ -1,4 +1,4 @@
 <?php
-$string['createnewgrid'] = '1Create new Grid';
-$string['editgrid'] = '1Edit Grid';
+$string['createnewgrid'] = 'Create new Grid';
+$string['editgrid'] = 'Edit Grid';
 ?>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['externalexaminerarea'] = 'domena egzaminatora zewnętrznego';//area??
 $string['expired'] = '1&lt;wygasły&gt; - nadal możesz przeglądać arkusze i zapoznać się z %s działaniami/odpowiedziami na Twoje komentarze.';
 $string['instructions'] = 'Instrukcje';

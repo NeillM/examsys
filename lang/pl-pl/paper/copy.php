@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['copypaper'] = 'Kopiuj arkusz';
 $string['warning'] = 'Ostrzeżenie';
 $string['titlewarning'] = 'Ostrzeżenie dot. tytułu';

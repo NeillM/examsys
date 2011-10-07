@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['classtotals'] = 'Całość klasy';
 $string['studentsonly'] = 'Tylko studenci';
 $string['paper'] = 'Arkusz';

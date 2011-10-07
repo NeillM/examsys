@@ -1,6 +1,4 @@
 <?php
-$string['editfaculty'] = '1Edit Faculty';
-$string['ok'] = '1OK';
-$string['cancel'] = '1Cancel';
-$string['warning'] = '1Faculty name already exists. Please choose a different name.';
+$string['editfaculty'] = 'Edit Faculty';
+$string['warning'] = 'Faculty name already exists. Please choose a different name.';
 ?>

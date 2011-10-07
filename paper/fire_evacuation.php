@@ -1,26 +1,26 @@
 <?php
-// This file is part of TouchStone
+// This file is part of Rog≈ç
 //
-// TouchStone is free software: you can redistribute it and/or modify
+// Rog≈ç is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// TouchStone is distributed in the hope that it will be useful,
+// Rog≈ç is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with TouchStone.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rog≈ç.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 * 
-* This script can only be called from a paper in ësummativeí mode from one of the four green fire exit icons displayed in ëstart.phpí.
+* This script can only be called from a paper in 'summative' mode from one of the four green fire exit icons displayed in 'start.php'.
 *  It does three main things: 
-*        1) record the current screen data to the ëlogí table, 
+*        1) record the current screen data to the 'log' table, 
 *        2) blank the screen to prevent plagiarism among evacuating examinees, and 
-*        3) has a ëcontinueí button at the bottom of the screen with passes the correct parameters back to ëstart.phpí if the 
+*        3) has a 'continue' button at the bottom of the screen with passes the correct parameters back to 'start.php' if the 
 *           examinees are allowed to re-enter the building.
 * 
 * @author Simon Wilkinson

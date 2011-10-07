@@ -1,10 +1,10 @@
 <?php
 require '../../lang/' . $language . '/include/question_types.inc';
 
-$string['byteam'] = '1by Team';
-$string['question'] = '1Question';
-$string['type'] = '1Type';
-$string['modified'] = '1Modified';
-$string['warningnoleadin'] = '1WARNING: no question lead-in!';
-$string['locked'] = '1Locked';
+$string['byteam'] = 'by Team';
+$string['question'] = 'Question';
+$string['type'] = 'Type';
+$string['modified'] = 'Modified';
+$string['warningnoleadin'] = 'WARNING: no question lead-in!';
+$string['locked'] = 'Locked';
 ?>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require '../../lang/' . $language . '/include/question_types.inc';
 
 $string['allmyquestions'] = 'Moje wszystkie pytania';

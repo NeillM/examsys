@@ -1,5 +1,5 @@
 <?php
-$string['occurrance'] = '1Occurrance';
-$string['percent'] = '1Percent';
-$string['adjustedpercent'] = '1Adjusted Percent';
+$string['occurrance'] = 'Occurrance';
+$string['percent'] = 'Percent';
+$string['adjustedpercent'] = 'Adjusted Percent';
 ?>

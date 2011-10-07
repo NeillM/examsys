@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['standardssetting'] = 'Ustawienia standardowe';
 $string['modifiedangoffmethod'] = 'Modyfikowana metoda Angoffa';
 $string['ebelmethod'] = 'Metoda Ebla';

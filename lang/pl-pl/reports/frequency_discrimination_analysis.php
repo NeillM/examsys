@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['reporttitle'] = 'Raport analizy częstości i różnicowania (U-L)';
 $string['totalcandidatenumber'] = 'Całkowita liczba kandydatów';
 $string['groupsizes'] = 'Górne/dolne rozmiary grup';

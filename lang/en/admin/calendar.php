@@ -1,14 +1,14 @@
 <?php
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = '1Administrative Tools';
-$string['allschools'] = '&lt;1All Schools&gt;';
-$string['calendar'] = '1Calendar';
-$string['calendaryears'] = '1Calendar Years';
-$string['monday'] = '1Monday';
-$string['tuesday'] = '1Tuesday';
-$string['wednesday'] = '1Wednesday';
-$string['thursday'] = '1Thursday';
-$string['friday'] = '1Friday';
-$string['saturday'] = '1Saturday';
+$string['administrativetools'] = 'Administrative Tools';
+$string['allschools'] = '&lt;All Schools&gt;';
+$string['calendar'] = 'Calendar';
+$string['calendaryears'] = 'Calendar Years';
+$string['monday'] = 'Monday';
+$string['tuesday'] = 'Tuesday';
+$string['wednesday'] = 'Wednesday';
+$string['thursday'] = 'Thursday';
+$string['friday'] = 'Friday';
+$string['saturday'] = 'Saturday';
 ?>

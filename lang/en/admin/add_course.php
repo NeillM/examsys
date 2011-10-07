@@ -1,12 +1,11 @@
 <?php
-$string['administrativetools'] = '1Administrative Tools';
-$string['createnewcourse'] = '1Create new Course';
-$string['code'] = '1code';
-$string['name'] = '1Name';
-$string['school'] = '1School';
-$string['add'] = '1Add';
-$string['cancel'] = '1Cancel';
-$string['createcourse'] = '1Create new Course';
-$string['editcourse'] = '1Edit Course';
-$string['deletecourse'] = '1Delete Course';
+$string['administrativetools'] = 'Administrative Tools';
+$string['createnewcourse'] = 'Create new Course';
+$string['code'] = 'code';
+$string['name'] = 'Name';
+$string['school'] = 'School';
+$string['add'] = 'Add';
+$string['createcourse'] = 'Create new Course';
+$string['editcourse'] = 'Edit Course';
+$string['deletecourse'] = 'Delete Course';
 ?>

@@ -1,5 +1,4 @@
 <?php
-$string['paperretired'] = '1Paper Retired';
-$string['ok'] = '1OK';
-$string['msg'] = '1Paper successfully retired.';
+$string['paperretired'] = 'Paper Retired';
+$string['msg'] = 'Paper successfully retired.';
 ?>

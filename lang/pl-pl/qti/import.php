@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require '../lang/' . $language . '/include/paper_options.inc';
 require 'shared.inc';
 

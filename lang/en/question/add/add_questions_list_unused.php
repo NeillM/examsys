@@ -1,9 +1,9 @@
 <?php
 require '../../lang/' . $language . '/include/question_types.inc';
 
-$string['myunusedquestions'] = '1My Unused Questions';
-$string['question'] = '1Question';
-$string['type'] = '1Type';
-$string['modified'] = '1Modified';
-$string['warningnoleadin'] = '1WARNING: no question lead-in!';
+$string['myunusedquestions'] = 'My Unused Questions';
+$string['question'] = 'Question';
+$string['type'] = 'Type';
+$string['modified'] = 'Modified';
+$string['warningnoleadin'] = 'WARNING: no question lead-in!';
 ?>
