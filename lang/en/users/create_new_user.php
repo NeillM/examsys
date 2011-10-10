@@ -1,7 +1,7 @@
 <?php
 require '../lang/' . $language . '/include/user_search_options.inc';
 
-$string['createnewuser'] = 'Create new User';
+$string['createnewuser'] = 'Create New User';
 $string['getldapdetails'] = 'Get LDAP details';
 $string['lastname'] = 'Last Name';
 $string['firstnames'] = 'First Names(s)';
@@ -26,4 +26,13 @@ $string['nhsadmin'] = 'NHS Admin';
 $string['externalexaminer'] = 'External Examiner';
 $string['invigilator'] = 'Invigilator';
 $string['students'] = 'Students';
+$string['rogoaccount'] = 'Rogō Account';
+$string['newaccountcreated'] = 'New account created for';
+$string['reqfirstname'] = "Please enter the user's First names.";
+$string['reqsurname'] = "Please enter the user's Surname.";
+$string['reqemail'] = "Please enter the user's Email Address.";
+$string['reqcourse'] = "Please enter a Type/Course for the user.";
+$string['requsername'] = "Please enter a Username for the user.";
+$string['usernamechars'] = "A username cannot contain an underscore character.";
+$string['reqpassword'] = "Please enter a default Password for the user.";
 ?>

@@ -121,10 +121,12 @@
       $headers = "From: " . $row['email'] . "\n";
       $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
       $headers .= "bcc: " . $row['email'] . "\n";
-      $message = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">
+      $sname = ucwords($_POST['new_surname']);
+      $message = <<< MESSAGE
+<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">
 <html>
 <head>
-<title>TouchStone Account</title>
+<title>{$string['rogoaccount']}</title>
 <style>
 body, td, p, div {font-family:Arial,sans-serif; background-color:white; color:#003366; font-size:90%}
 h1 {font-size:140%}
@@ -132,10 +134,11 @@ h2 {font-size:120%}
 </style>
 </head>
 <body>
-<p>Dear " . $_POST['new_users_title'] . " " . ucwords($_POST['new_surname']) . ",</p>
-<p>" . $string['email1'] . "</p>
-<p>" . $string['username'] . ": " . $_POST['new_username'] . "<br />
-" . $string['password'] . ": " . $_POST['new_password'] . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">" . $string['casesensitive'] . "</span></p>";
+<p>Dear {$_POST['new_users_title']} {$sname},</p>
+<p>{$string['email1']}</p>
+<p>{$string['username']}: {$_POST['new_username']}<br />
+{$string['password']}: {$_POST['new_password']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>"
+MESSAGE;
 
       if (strpos($tmp_roles,'Staff') !== false) {
         $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
@@ -151,7 +154,7 @@ h2 {font-size:120%}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone: Create User<?php echo " $cfg_install_type"; ?></title>
+<title>Rog&#333;: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <body>
@@ -159,7 +162,7 @@ h2 {font-size:120%}
   include '../include/user_search_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
-<p>New account created for <?php echo $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
+<p><?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
 </div>
     <?php
   } else {
@@ -168,7 +171,7 @@ h2 {font-size:120%}
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone: Create User<?php echo " $cfg_install_type"; ?></title>
+<title>Rog&#333;: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style>
@@ -180,36 +183,36 @@ textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px so
 <script language="JavaScript">
 function checkForm() {
   if (document.newUser.new_first_names.value == "") {
-    alert("Please enter the user's First names.");
+    alert("<?php echo $string['reqfirstname'] ?>");
     return false;
   }
   if (document.newUser.new_surname.value == "") {
-    alert("Please enter the user's Surname.");
+    alert("<?php echo $string['reqsurname'] ?>");
     return false;
   }
   if (document.newUser.new_email.value == "" || document.newUser.new_email.value == "@nottingham.ac.uk") {
-    alert("Please enter the user's Email Address.");
+    alert("<?php echo $string['reqemail'] ?>");
     return false;
   }
   if (document.newUser.new_grade.options[document.newUser.new_grade.selectedIndex].value == "") {
-    alert("Please enter a Type/Course for the user.");
+    alert("<?php echo $string['reqcourse'] ?>");
     return false;
   }
   if (document.newUser.new_username.value == "") {
-    alert("Please enter a Username for the user.");
+    alert("<?php echo $string['requsername'] ?>");
     return false;
   } else {
     username = document.newUser.new_username.value;
     for (a=0; a<username.length; a++) {
       char = username.substr(a,1);
       if (char == '_') {
-        alert('A username cannot contain an underscore character.');
+        alert('<?php echo $string['usernamechars'] ?>');
         return false;
       }
     }
   }
   if (document.newUser.new_password.value == "") {
-    alert("Please enter a default Password for the user.");
+    alert("<?php echo $string['reqpassword'] ?>");
     return false;
   }
 }
