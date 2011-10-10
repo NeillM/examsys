@@ -107,9 +107,9 @@ if (!isset($_POST['update'])) {
    </html>
   <?php
 
- } else {
+} else {
   
-  $mysqli = new $dbclass($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database);
+  $mysqli = new $dbclass($cfg_db_host, $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database);
   
   if ($mysqli->connect_error) {
     echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
@@ -1100,7 +1100,7 @@ if (!isset($_POST['update'])) {
     $sql[] = "UPDATE options set option_text = REPLACE(REPLACE(option_text,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE option_text LIKE '%[tex]%[/tex]%'";
     $sql[] = "UPDATE options set feedback_right = REPLACE(REPLACE(feedback_right,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE feedback_right LIKE '%[tex]%[/tex]%'";
     $sql[] = "UPDATE options set feedback_wrong = REPLACE(REPLACE(feedback_wrong,'[tex]','<span class=\"mee\">'),'[/tex]','</span>') WHERE feedback_wrong LIKE '%[tex]%[/tex]%'";
-    foreach($sql as $q) {
+    foreach ($sql as $q) {
       $adjust = $mysqli->prepare($q);
       $adjust->execute();
       $adjust->close();
@@ -1148,6 +1148,67 @@ if (!isset($_POST['update'])) {
     $result->close();
     echo "<li>Updated the format of Labelling questions</li>";
   }
+  
+  //ADD new role based MySQL users - 10/10/2011
+  $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_sct'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($tmp_user);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    
+    $cfg_db_sct_username = $cfg_db_database . '_sct';
+    $cfg_db_sct_password = PasswordUtils::gen_password(16);
+        
+    $priv_SQL = array();
+    //create touchstone 'database user staff user' and grant permissions
+    $mysqli->query("CREATE USER  '" . $cfg_db_sct_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sct_password . "'");
+    echo "<li>NEW DB USER:: $cfg_db_sct_username created</li>";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions_metadata TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_metadata_security TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".paper_notes TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sct_reviews TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "FLUSH PRIVILEGES";
+    
+    foreach ($priv_SQL as $sql) {
+      $mysqli->query($sql);
+      if ($mysqli->errno != 0) {
+        echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
+      }  
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    //  update the config file!!
+    //
+
+    $new_cfg_str = array();
+    $new_cfg_str[] =  "// SCT db user\n";
+    $new_cfg_str[] =  "  \$cfg_db_sct_user = '$cfg_db_sct_username';\n";
+    $new_cfg_str[] =  "  \$cfg_db_sct_passwd = '$cfg_db_sct_password';\n";
+    
+    $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+    
+    $cfg = file($touchstone_path . '/config/config.inc.php');
+
+    //add the new config chunk
+    array_splice($cfg, 36, 0, $new_cfg_str);
+    
+    
+    if (file_exists($touchstone_path . '/config/config.inc.php')) {
+      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old1.php');
+    }
+    
+    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    ///////////////////////  update the config file!! //////////////////////////////////////
+    
+  } // END Create DB user
+  
 
   echo "</ol>\n";
   

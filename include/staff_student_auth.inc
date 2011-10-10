@@ -72,7 +72,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
           $stmt->bind_param('ss', $encpw_details, $_SERVER['PHP_AUTH_USER']);
           $stmt->execute();
           if ($stmt->affected_rows == 0) {
-            //user has no touchstone account but valid LDAP
+            //user has no Rogo account but valid LDAP
             $stmt->close();
 
             $message = $string['notsaccount'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>Please contact <a href=\"mailto:$support_email\">$support_email</a> if you believe you should have access.</li>\n";
@@ -119,7 +119,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
     } 
   }
 } else {
-  echo "<html>\n<body style=\"font-family:Arial,sans-serif\">\n<p style=\"font-size:150%;color:#C00000\"><strong>WARNING:</strong> Incompatible Browser</p>\n<p><strong>TouchStone currently requires MS Internet Explorer 5 (or above) or Firefox 2 (or above).</strong></p>\n<p><strong>You are running </strong>" . $_SERVER['HTTP_USER_AGENT'] . "</p>\n</body>\n</html>\n";
+  echo "<html>\n<body style=\"font-family:Arial,sans-serif\">\n<p style=\"font-size:150%;color:#C00000\"><strong>WARNING:</strong> Incompatible Browser</p>\n<p><strong>Rogo currently requires MS Internet Explorer 5 (or above) or Firefox 2 (or above).</strong></p>\n<p><strong>You are running </strong>" . $_SERVER['HTTP_USER_AGENT'] . "</p>\n</body>\n</html>\n";
   $mysqli->close();
   exit;
 }

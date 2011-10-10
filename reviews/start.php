@@ -68,7 +68,7 @@ $stmt->bind_param('i', $_GET['paperID']);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password);
-while ($row = $stmt->fetch()) {
+while ($stmt->fetch()) {
   $no_screens = $screen;
   $original_paper_type = $paper_type;
   if ($q_type != 'info') {

@@ -23,23 +23,27 @@
 */
 
   $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-  require_once $root . 'config/config.inc';
+  require_once $root . 'config/config.inc.php';
+  require_once $cfg_web_root . 'classes/lang.class.php';
   require '../include/media.inc';
   require '../include/errors.inc';
   require '../include/sct_review.inc';
-      
+  
+  // Connect to the database as the SCT user.
+  $mysqli = new $dbclass($cfg_db_host, $cfg_db_sct_user, $cfg_db_sct_passwd, $cfg_db_database);
+
   // Check for key parameters
   check_var('paperID', 'POST', true, false);
   check_var('reviewer_name', 'POST', true, false);
   check_var('reviewer_email', 'POST', true, false);
 
-  function display_question($question, &$question_no, $answers) {
+  function display_question($question, &$question_no, $answers, $string) {
     $question_no++;
 
     if ($question['scenario'] != '') {
-      echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">Clinical Vignette</td></tr>\n";
+      echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">" . $string['clinicalvignette'] . "</td></tr>\n";
       echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
-      if ($question['notes'] != '') echo '<p class="note"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
+      if ($question['notes'] != '') echo '<p class="note"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
@@ -54,23 +58,11 @@
     $sct_parts = explode('~',$question['leadin']);
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
     $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
-    echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['score_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">New Information</td></tr>\n";
+    echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string[$sct_titles[$question['display_method']]] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
     echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
     echo "</table>\n";
       
-    echo '<p><strong>';
-    if ($question['score_method'] == 1) {
-      echo 'Then this hypothesis becomes:';
-    } elseif ($question['score_method'] == 2) {
-      echo 'Then this investigation becomes:';
-    } elseif ($question['score_method'] == 3) {
-      echo 'Then this prescription becomes:';
-    } elseif ($question['score_method'] == 4) {
-      echo 'Then this intervention becomes:';
-    } elseif ($question['score_method'] == 5) {
-      echo 'Then this treatment becomes:';
-    }
-    echo '</strong></p>';
+    echo '<p><strong>' . $string['sct_msg' . $question['display_method']] . '</strong></p>';
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
       
     $part_id = 0;
@@ -84,7 +76,7 @@
     }
     echo "</table>\n</blockquote>\n";
     
-    echo "<span style=\"color:#808080\">Brief reason why?</span><br /><textarea name=\"reason$question_no\" cols=\"100\" rows=\"3\" />";
+    echo "<span style=\"color:#808080\">" . $string['briefreasonwhy'] . "</span><br /><textarea name=\"reason$question_no\" cols=\"100\" rows=\"3\" />";
     if (isset($answers[$question['q_id']]['reason'])) echo $answers[$question['q_id']]['reason'];
     echo "</textarea>\n";
     echo "</td></tr>\n";
@@ -123,13 +115,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>SCT Review</title>
+<title><?php echo $string['sctreview']; ?></title>
 <script language="JavaScript" src="../javascript/jquery-1.6.1.min.js"></script>
 <?php
   if (isset($_POST['submit'])) {
 ?>
 <script language="JavaScript">
-   $(function() { alert('Your answers and reasons have been saved. You can make further changes or close the browser down to exit.'); });
+   $(function() { alert('<?php echo $string['saved_msg']; ?>'); });
  </script>
  <?php
   }
@@ -172,7 +164,7 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   
   echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 1px solid #C0C000; background-color:#FFFFC0; width:100%; font-size:100%\">\n";
   echo "<col width=\"80\"><col>\n";
-  echo "<tr><td colspan=\"2\">This screen is designed to allow you to answer the following Script Concordance Test questions. Please provide a brief reason why you believe each answer is correct.</td></tr>\n";
+  echo "<tr><td colspan=\"2\">" . $string['top_msg'] . "</td></tr>\n";
   echo "</table>\n</blockquote>\n";
   
   echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%; font-size:100%\">\n<col width=\"40\"><col>\n";
@@ -182,11 +174,11 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   $q_no = 0;
   $question_no = 0;
 
-  $stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, score_method, q_media, q_media_width, q_media_height, q_option_order, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
+  $stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, display_method, q_media, q_media_width, q_media_height, q_option_order, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
   $stmt->bind_param('i', $paperID);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $score_method, $q_media, $q_media_width, $q_media_height, $q_option_order, $option_text);
+  $stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $display_method, $q_media, $q_media_width, $q_media_height, $q_option_order, $option_text);
   while ($stmt->fetch()) {
     if ($old_q_id != $q_id) {
       $q_no++;
@@ -195,7 +187,7 @@ pre {font-family:Arial,sans-serif; font-size:100%}
       $questions_array[$q_no]['leadin'] = trim($leadin);
       $questions_array[$q_no]['notes'] = trim($notes);
       $questions_array[$q_no]['q_id'] = $q_id;
-      $questions_array[$q_no]['score_method'] = $score_method;
+      $questions_array[$q_no]['display_method'] = $display_method;
       $questions_array[$q_no]['q_media'] = $q_media;
       $questions_array[$q_no]['q_media_width'] = $q_media_width;
       $questions_array[$q_no]['q_media_height'] = $q_media_height;
@@ -208,15 +200,15 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   $stmt->close();
   
   //display the questions
-  foreach($questions_array as &$question) {
+  foreach ($questions_array as &$question) {
     if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    display_question($question, $question_no, $saved_data);	
+    display_question($question, $question_no, $saved_data, $string);	
   }
 
 ?>
 </table>
 
-<div style="text-align:center"><input type="submit" name="submit" value="Save" style="width:100px" /></div>
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="reviewer_name" value="<?php echo $_POST['reviewer_name']; ?>" />
 <input type="hidden" name="reviewer_email" value="<?php echo $_POST['reviewer_email']; ?>" />
