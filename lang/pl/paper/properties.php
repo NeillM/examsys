@@ -2,73 +2,70 @@
 require '../lang/' . $language . '/include/months.inc';
 
 // General tab
-$string['generaltab'] = '1General';
-$string['generalheading'] = '1Paper name, marking and display options';
-$string['paperdetails'] = '1Paper Details';
-$string['onlyonexamday'] = '1(only on exam day)';
-$string['url'] = '1URL';
-$string['name'] = '1Name';
-$string['type'] = '1Type';
-$string['folder'] = '1Folder';
-$string['feedback'] = '1Feedback';
-$string['objectivesreport'] = '1Objectives Report';
-$string['displayoptions'] = '1Display Options';
-$string['display'] = '1Display';
-$string['windowed'] = '1Windowed';
-$string['fullscreen'] = '1Full Screen (IE only)';
-$string['navigation'] = '1Navigation';
-$string['bidirectional'] = '1Bidirectional';
-$string['unidirectional'] = '1Unidirectional (linear)';
-$string['background'] = '1Background';
-$string['foreground'] = '1Foreground';
-$string['theme'] = '1Theme';
-$string['labelsnotes'] = '1Labels/Notes';
-$string['calculator'] = '1Calculator';
-$string['displaycalculator'] = '1display calculator';
-$string['audio'] = '1Audio';
-$string['demosoundclip'] = '1demo sound clip';
-$string['marking'] = '1Marking';
-$string['passmark'] = '1Pass Mark';
-$string['distinction'] = '1Distinction';
-$string['method'] = '1Method';
-$string['noadjustment'] = '1No Adjustment';
-$string['calculatrrandommark'] = '1Calculate Random Mark';
-$string['stdset'] = '1Std Set';
+$string['generaltab'] = 'Ogólne';
+$string['generalheading'] = 'Nazwa arkusza, punktacja i opcje wyświetlania';
+$string['paperdetails'] = 'Detale arkusza';
+$string['onlyonexamday'] = '(tylko w dniu egzaminu)';
+$string['url'] = 'URL';
+$string['name'] = 'Nazwa';
+$string['type'] = 'Typ';
+$string['folder'] = 'Folder';
+$string['feedback'] = 'Odzew';
+$string['objectivesreport'] = 'Raport celów';
+$string['displayoptions'] = 'Opcje wyświetlania';
+$string['display'] = 'Wyświetlanie';
+$string['windowed'] = 'w oknie';
+$string['fullscreen'] = 'Pełnoekranowo (tylko Internet Explorer)';
+$string['navigation'] = 'Nawigacja';
+$string['bidirectional'] = 'Dwukierunkowe';
+$string['unidirectional'] = 'Jednokierunkowe (liniowe)';
+$string['background'] = 'Tło';
+$string['foreground'] = 'Pierwszy plan';
+$string['theme'] = 'Motyw';
+$string['labelsnotes'] = 'Etykiety/Notatki';
+$string['calculator'] = 'Kalkulator';
+$string['displaycalculator'] = 'Kalkulator ekranowy';
+$string['audio'] = 'Audio';
+$string['demosoundclip'] = 'testowy plik dźwiękowy';
+$string['marking'] = 'Punktowanie';
+$string['passmark'] = 'Liczba punktów na zaliczenie';
+$string['distinction'] = 'Wyróżnik';
+$string['method'] = 'Metoda';
+$string['noadjustment'] = 'Brak dopasowania';
+$string['calculatrrandommark'] = "Oblicz liczbę punktów na 'chybił-trafił'";
+$string['stdset'] = 'Zestaw standardowy';
 
 // Security tab
-$string['securitytab'] = '1Security';
-$string['securityheading'] = '1Control the access rights over which students can see the paper.';
-$string['session'] = '1Session';
-$string['password'] = '1Password';
-$string['timezone'] = '1Time Zone';
-$string['modules'] = '1Module(s)';
-$string['duration'] = '1Duration';
-$string['mins'] = '1mins';
-$string['availablefrom'] = '1Available from';
-$string['to'] = '1to';
+$string['securitytab'] = 'Bezpieczeństwo';
+$string['securityheading'] = 'Kontroluj prawa dostępu studentów do arkuszy.';
+$string['session'] = 'Sesja';
+$string['password'] = 'Hasło';
+$string['timezone'] = 'Strefa czasowa';
+$string['modules'] = 'Moduł(y)';
+$string['duration'] = 'Czas trwania';
+$string['mins'] = 'min.';
+$string['availablefrom'] = 'Dostępne od';
+$string['to'] = 'do';
 $string['restricttolabs'] = '1Restrict to Labs';
 $string['restricttometadata'] = '1Restrict to Metadata';
 $string['na'] = '1N/A';
 
 // Reviewers tab
-$string['reviewerstab'] = '1Reviewers';
-$string['reviewersheading'] = '1Set internal/external reviewers and deadlines.';
-$string['internalreviewers'] = '1Internal Reviewers';
-$string['externalexaminers'] = '1External Examiners';
-$string['deadline'] = '1Deadline:';
+$string['reviewerstab'] = 'Recenzenci';
+$string['reviewersheading'] = 'Zestaw wewnętrznych/zewnętrzynch recenzentów z terminami finalizacji.';
+$string['internalreviewers'] = 'Wewnętrzni recenzenci';
+$string['externalexaminers'] = 'Zewnętrzni recenzenci';
+$string['deadline'] = 'Termin finalizacji:';
 
 // Exam Rubric tab
-$string['rubrictab'] = '1Exam Rubric';
-$string['rubricheading'] = '1Exam rubric displayed to students before they start a summative exam.';
+$string['rubrictab'] = 'Rubryka egzaminu';
+$string['rubricheading'] = 'Rubryka egzaminu wyświetlana u studenta przed rozpopczęciem egzaminu sumatywnego';
 
 // Prologue tab
-$string['prologuetab'] = '1Prologue';
-$string['prologueheading'] = '1Text displayed at the top of screen 1 when paper is started.';
+$string['prologuetab'] = 'Wstęp';
+$string['prologueheading'] = 'Tekst wyświetlany u góry ekranu 1 przy rozpoczęciu arkusza.';
 
 // Postscript tab
-$string['postscripttab'] = '1Postscript';
-$string['postscriptheading'] = "1Text displayed after the student clicks 'Finish' at the end.";
-
-$string['ok'] = '1OK';
-$string['cancel'] = '1Cancel';
+$string['postscripttab'] = 'Zakończenie';
+$string['postscriptheading'] = "Tekst wyświetlany po tym jak student kliknie 'Zakończ'.";
 ?>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['startscreen'] = 'Ekran startowy';
 $string['availability'] = 'Dostępność';
 $string['candidates'] = 'Kandydaci';

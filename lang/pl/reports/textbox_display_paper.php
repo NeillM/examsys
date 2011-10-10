@@ -1,4 +1,4 @@
 <?php
-$string['screen'] = 'Ekran';
+$string['screen'] = 'Ekran';//ąę
 $string['note'] = 'Notatka';
 ?>

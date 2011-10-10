@@ -1,4 +1,4 @@
 <?php
-$string['finalisemarks'] = 'Punktów ostatecznie';
+$string['finalisemarks'] = 'PunktÃ³w ostatecznie';
 $string['noanswer'] = 'Nie podano odpowiedzi';
 ?>
