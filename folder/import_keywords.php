@@ -129,7 +129,7 @@ require '../include/staff_auth.inc';
 
 <p><input type="file" size="50" name="txtfile" /></p>
 
-<p><input type="submit" style="width:100px" value="<?php echo $string['loadkeywords']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" style="width:100px" value="<?php echo $string['loadkeywordsbtn']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>
