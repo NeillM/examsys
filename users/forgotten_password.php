@@ -81,7 +81,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Send') {
 <!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">
 <html>
 <head>
-<title>TouchStone Password Reset</title>
+<title>Rogō Password Reset</title>
 <style>
 body, td, p, div {font-family:Arial,sans-serif; background-color:white; color:#003366; font-size:90%}
 h1 {font-size:140%}
@@ -90,16 +90,16 @@ h2 {font-size:120%}
 </head>
 <body>
 <p>Dear $title $surname,</p>
-<p>We have received a request to reset your password on Touchstone. To complete the request click on the link below:</p>
+<p>We have received a request to reset your password on Rogō. To complete the request click on the link below:</p>
 <p><a href="https://{$_SERVER['HTTP_HOST']}/users/reset_password.php?token=$token">Reset password</a></p>
 <p>If you did not ask for your password to be reset please <a href="mailto:$support_email">email us</a>. Your existing 
-username and password will still allow you to log in to Touchstone.</p>
+username and password will still allow you to log in to Rogō.</p>
 </body>
 </html>
 EMAIL;
 
         $mail_to = $email;
-        $subject = "TouchStone Password Reset";
+        $subject = "Rogō Password Reset";
         $headers = "From: " . $support_email . "\n";
         $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
         if(!@mail ($mail_to, $subject, $email_body, $headers)) {

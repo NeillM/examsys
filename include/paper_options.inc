@@ -26,40 +26,25 @@
 
 require $cfg_web_root . 'include/sidebar_menu.inc';
 $paperID = $_GET['paperID'];
+$max_screen = 0;
 
-$paper_details = $mysqli->query("SELECT paper_title, moduleID, folder, paper_ownerID, title, initials, surname, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%d/%m/%Y% %H:%i') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, externals, internal_reviewers, labs, calendar_year, exam_duration FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND property_id=$paperID GROUP BY paper_title");
-while ($row = $paper_details->fetch_assoc()) {
-if (date("YmdHis", time()) >= $row['start_date'] and date("YmdHis", time()) <= $row['end_date']) {
-  $active_date = 1;
-} else {
-  $active_date = 0;
+$stmt = $mysqli->prepare("SELECT paper_title, moduleID, folder, paper_ownerID, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%d/%m/%Y% %H:%i') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, externals, internal_reviewers, labs, calendar_year, exam_duration FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? GROUP BY paper_title");
+$stmt->bind_param('i', $paperID);
+$stmt->execute();
+$stmt->bind_result($paper_title, $paper_moduleID, $tmp_folder, $paper_ownerID, $tmp_module, $start_date, $end_date, $created, $max_screen, $fullscreen, $max_display_pos, $paper_type, $externals, $internal_reviewers, $labs, $session, $exam_duration);
+while ($stmt->fetch()) {
+  if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
+    $active_date = 1;
+  } else {
+    $active_date = 0;
+  }
+  if (date("YmdHis", time()) >= $start_date and $paper_type == '2') {
+    $summative_lock = 1;
+  } else {
+    $summative_lock = 0;
+  }
 }
-if (date("YmdHis", time()) >= $row['start_date'] and $row['paper_type'] == '2') {
-  $summative_lock = 1;
-} else {
-  $summative_lock = 0;
-}
-$max_display_pos = $row['display_pos'];
-$max_screen = $row['screen'];
-if ($max_screen == '') $max_screen = 0;  // In case screen was blank, i.e. no questions on the paper.
-  $paper_title = $row['paper_title'];
-  $fullscreen = $row['fullscreen'];
-  $paper_ownerID = $row['paper_ownerID'];
-  $tmp_module = $row['moduleID'];
-  $paper_type = $row['paper_type'];
-  $start_date = $row['start_date'];
-  $end_date = $row['end_date'];
-  $paper_moduleID = $row['moduleID'];
-  $paper_author = $row['surname'] . ', ' . $row['initials'] . ' ' . $row['title'];
-  $created = $row['created'];
-  $tmp_folder = $row['folder'];
-  $externals = $row['externals'];
-  $internal_reviewers = $row['internal_reviewers'];
-  $labs = $row['labs'];
-  $session = $row['calendar_year'];
-  $exam_duration = $row['exam_duration'];
-}
-$paper_details->close();
+$stmt->close();
 
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $module = $_GET['module'];
@@ -79,7 +64,7 @@ $stmt->bind_result($tmp_checklist);
 $check[] = array();
 while ($stmt->fetch()) {
   $tmp = explode(',',$tmp_checklist);
-  foreach($tmp as $c) {
+  foreach ($tmp as $c) {
     $check[$c] = $c;
   }
 }
@@ -91,7 +76,7 @@ $stmt = $mysqli->prepare("SELECT question FROM (papers, questions) WHERE papers.
 $stmt->bind_param('i', $_GET['paperID']);
 $stmt->execute();
 $stmt->bind_result($questionID);
-while ($row = $stmt->fetch()) {
+while ($stmt->fetch()) {
   $question_list[$questionID] = 0;
 }
 $stmt->close();

@@ -154,7 +154,7 @@ MESSAGE;
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rog&#333;: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
+<title>Rogō: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <body>
@@ -171,7 +171,7 @@ MESSAGE;
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Rog&#333;: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
+<title>Rogō: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style>

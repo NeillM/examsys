@@ -63,17 +63,17 @@ p {line-height:150%}
 
 <table cellspacing="0" cellpadding="0" border="0" style="width:100%; background-color:#F1F5FB">
 <tr>
-<td><div style="padding-left:6px; font-size:200%; font-weight:bold">TouchStone <?php echo $ts_version; ?></div><div style="padding-left:6px; font-size:90%; font-weight:bold"><?php echo $string['externalexamineraccess']; ?> (<?php echo $title . ' ' . $initials . ' ' . $surname; ?>)</div></td>
+<td><div style="padding-left:15px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="logo" border="0" /></div><div style="padding-left:15px; font-size:90%; font-weight:bold"><?php echo $string['externalexamineraccess']; ?> (<?php echo $title . ' ' . $initials . ' ' . $surname; ?>)</div></td>
 <td align="right"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="The University of Nottingham" border="0" /></td>
 </tr>
 <tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>
 
-<p style="font-size:130%; font-weight:bold; margin-left:10px"><?php echo $string['instructions']; ?></p>
-<p style="margin-left:10px; margin-right:10px; text-align:justify"><?php echo $string['msg1']; ?></p>
+<p style="font-size:130%; font-weight:bold; margin-left:15px"><?php echo $string['instructions']; ?></p>
+<p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg1']; ?></p>
 
-<p style="margin-left:10px; margin-right:10px; text-align:justify"><?php echo $string['msg2']; ?></p>
-<p style="margin-left:10px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
+<p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg2']; ?></p>
+<p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
   $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,'$cfg_short_date') AS display_deadline FROM (properties, papers) WHERE deleted IS NULL AND DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() AND properties.property_id=papers.paper AND externals LIKE '%$userID%' GROUP BY paper");
@@ -91,12 +91,12 @@ p {line-height:150%}
     $log_results->close();
     $restartdate = '';
     echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$property_id',$fullscreen); return false;\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" border=\"0\" /></a></td>\n";
-    echo "  <td><a href=\"#\" onclick=\"startPaper('$property_id',$fullscreen); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">Deadline: ";
+    echo "  <td><a href=\"#\" onclick=\"startPaper('$property_id',$fullscreen); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if (date("Ymd") > $external_review_deadline) {
       printf($string['expired'], $cfg_company);
     } else {
       if ($display_deadline == '00/00/0000') {
-        echo '&lt;not set&gt;';
+        echo $string['notset'];
       } else {
         echo $display_deadline;
       }
@@ -114,7 +114,7 @@ p {line-height:150%}
     echo "<tr><td colspan=\"2\"><p style=\"color:red\">" . $string['nopapersfound'] . "</p></td></tr>\n";
   }
   $result->close();
-  echo "</td></tr>\n<tr><td colspan=\"2\" style=\"text-align:left\"><hr noshade=\"noshade\" style=\"text-align:left; background-color:#C0C0C0; color:#C0C0C0; height:1px; border:0; width:400px\" /></td>\n</tr>\n";
+  echo "</td></tr>\n<tr><td colspan=\"2\" style=\"text-align:left\"><hr noshade=\"noshade\" align=\"left\" style=\"text-align:left; background-color:#C0C0C0; color:#C0C0C0; height:1px; border:0; width:400px\" /></td>\n</tr>\n";
   echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"#\" onclick=\"launchHelp(); return false;\"><img src=\"../artwork/help_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"#\" onclick=\"launchHelp(); return false;\">" . $string['helpandsupport'] . "</a><br /><span style=\"color:#808080\">" . $string['onlinesupportsystem'] . "</span></td></tr>\n";
   
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";

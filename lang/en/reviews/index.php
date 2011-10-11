@@ -13,4 +13,6 @@ $string['copyrightmsg'] = 'Questions held within TouchStone are protected by UK 
 $string['helpandsupport'] = 'Help and Support';
 $string['onlinesupportsystem'] = 'Online support system for students';
 $string['email'] = 'Email';
+$string['deadline'] = '1Deadline:';
+$string['notset'] = '&lt;not set&gt;';
 ?>
