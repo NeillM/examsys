@@ -1,6 +1,6 @@
 <?php
 $string['question'] = 'Pytania';//ąę
 $string['type'] = 'Typ';
-$string['modified'] = 'Zmodyfikowane';
+$string['modified'] = 'Zmodyfikowano';
 $string['screen'] = 'Ekran';
 ?>

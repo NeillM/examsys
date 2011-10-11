@@ -2,7 +2,7 @@
 $string['question'] = 'Pytanie';
 $string['questionbank'] = 'Bank pytań';
 $string['type'] = 'Typ';
-$string['modified'] = 'Zmodyfikowane';
+$string['modified'] = 'Zmodyfikowano';
 $string['status'] = 'Status';
 $string['myquestionsonly'] = 'tylko moje pytania';
 $string['questionbanktasks'] = 'Działania dot. banku pytań';
