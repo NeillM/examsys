@@ -640,7 +640,7 @@
           $max_col1 = 0;
           $max_col2 = 0;
           $tmp_first_split = explode(';', $correct);
-          $tmp_second_split = explode('|', $tmp_first_split[8]);
+          $tmp_second_split = explode('|', $tmp_first_split[11]);
           foreach ($tmp_second_split as $ind_label) {
             $label_parts = explode('$', $ind_label);
             if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
@@ -675,6 +675,7 @@
     </div>
     <br />
 <?php
+
           echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
           $i = 1;
           foreach ($correct_buf as $individual_coord) {
@@ -1528,7 +1529,7 @@ p {margin-left:0px; margin-right:0px}
       }
       if ($q_type == 'labelling') {
         $tmp_first_split = explode(';', $correct);
-        $tmp_second_split = explode('$', $tmp_first_split[8]);
+        $tmp_second_split = explode('$', $tmp_first_split[11]);
         for ($label_no = 4; $label_no <= 200; $label_no += 4) {
           if (array_key_exists($label_no,$tmp_second_split)) {
             if (substr($tmp_second_split[$label_no],0,1) != '|') {

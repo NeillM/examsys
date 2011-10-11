@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../include/std_set_shared_functions.inc');
+require_once $cfg_web_root . 'include/std_set_shared_functions.inc';
 
 $stdID = 0;
 

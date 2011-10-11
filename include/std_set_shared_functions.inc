@@ -752,7 +752,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       break;
     case 'labelling':
       $tmp_first_split = explode(';', $firstoption['correct']);
-      $tmp_second_split = explode('$', $tmp_first_split[8]);
+      $tmp_second_split = explode('$', $tmp_first_split[11]);
       $tmp_height = $firstoption['q_media_height'];
       if ($tmp_height < ($marks * 55)) $tmp_height = ($marks * 55);
       

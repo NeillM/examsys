@@ -489,7 +489,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
     $correct_labels = array();
     
     $tmp_first_split = explode(';', $paper_buffer[$q_id]['correct'][0]);
-    $tmp_second_split = explode('$', $tmp_first_split[8]);
+    $tmp_second_split = explode('$', $tmp_first_split[11]);
     $label_count = 0;
     $placeholders = 0;
     $i = 0;
