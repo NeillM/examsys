@@ -104,14 +104,14 @@ textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px so
 <table>
 <?php
   if (isset($_POST['username']) and $_POST['username'] != '') {
-    echo "<tr><td>$string['username']</td><td><input type=\"text\" name=\"username\" value=\"" . $_POST['username'] . "\" size=\"20\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /></td></tr>\n";
+    echo "<tr><td>".$string['username']."</td><td><input type=\"text\" name=\"username\" value=\"" . $_POST['username'] . "\" size=\"20\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /></td></tr>\n";
   } else {
-    echo "<tr><td>$string['username']</td><td><input type=\"text\" name=\"username\" value=\"\" size=\"20\" /></td></tr>\n";
+    echo "<tr><td>".$string['username']."</td><td><input type=\"text\" name=\"username\" value=\"\" size=\"20\" /></td></tr>\n";
   }
   if (isset($_POST['surname']) and $_POST['surname'] != '') {
-    echo "<tr><td>$string['surname']</td><td><input type=\"text\" name=\"surname\" value=\"" . $_POST['surname'] . "\" size=\"40\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /></td></tr>\n";
+    echo "<tr><td>".$string['surname']."</td><td><input type=\"text\" name=\"surname\" value=\"" . $_POST['surname'] . "\" size=\"40\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /></td></tr>\n";
   } else {
-    echo "<tr><td>$string['surname']</td><td><input type=\"text\" name=\"surname\" value=\"\" size=\"40\" /></td></tr>\n";
+    echo "<tr><td>".$string['surname']."</td><td><input type=\"text\" name=\"surname\" value=\"\" size=\"40\" /></td></tr>\n";
   }
 ?>
 <tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="Lookup" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:100px" /></td></tr>
