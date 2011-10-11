@@ -28,7 +28,7 @@ $string['checklist'] = '<div><strong>Lista zadań</strong></div>
     
     <div><em>Po egzaminie</em></div>
     <ol start="4">
-    <li>"To już koniec egzaminu. Prosze przejść do ostatniego ekranu i klinąć na \'Zakończ\'."</li>
+    <li>"To już koniec egzaminu. Proszę przejść do ostatniego ekranu i klinąć na \'Zakończ\'."</li>
     <li>"Proszę kliknąć \'Zamknij okno\' a następnie nacisnąć równocześnie CTRL, ALT i DELETE aby się wylogować."</li>
     <li>Zbierz instrukcje logowania</li>
     <li>Zbierz pozostałe czyste kartki</li>

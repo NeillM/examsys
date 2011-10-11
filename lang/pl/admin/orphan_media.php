@@ -9,6 +9,6 @@ $string['toonew'] = 'Jest zbyt nowy';
 $string['missingfiles'] = 'Brak plików!';
 $string['cleanupsummary'] = 'Podsumowanie oczyszczania';
 $string['filedeleted'] = 'Pliki usunięte';
-$string['spacereclaimed'] = 'Odyskano miejsce';
+$string['spacereclaimed'] = 'Odyskane miejsce';
 $string['deletingfiles'] = 'Usuwanie plików';
 ?>

@@ -9,7 +9,8 @@ $string['owner'] = 'Właściciele';
 $string['mean'] = 'Średnia';
 $string['min'] = 'Minimum';
 $string['max'] = 'Maksimum';
-$string['studentpapers'] = 'Student/Arkusze';
+$string['studentpapers'] = 'Studenci/Arkusze';
 $string['cohortsizes'] = 'Rozmiary grup';
-$string['uniquestudents'] = 'Student unikalni = %s';//??
+$string['uniquestudents'] = 'Studentów niepowtarzalnie = %s';//??
+$string['totals'] = 'Wszystkich';
 ?>

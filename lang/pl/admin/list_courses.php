@@ -1,7 +1,7 @@
 <?php
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['courses'] = 'Kursy';
-$string['code'] = 'kod';
+$string['code'] = 'Kod';
 $string['name'] = 'Nazwa';
 $string['school'] = 'Katedra';
 $string['createcourse'] = 'Utwórz nowy kurs';

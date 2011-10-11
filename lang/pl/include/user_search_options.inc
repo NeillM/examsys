@@ -1,5 +1,5 @@
 ﻿<?php
-$string['genmsg'] = 'Szukaj wg. jednego lub wielu poniższych kryteriów.';
+$string['genmsg'] = 'Szukaj wg. jednego lub wielu poniższych kryteriów';
 $string['name'] = 'Nazwisko';
 $string['username'] = 'Nazwa użytkownika';
 $string['studentid'] = 'Numer legitymacji';
@@ -26,8 +26,8 @@ $string['cohorttasks'] = 'Działania dot. grupy';//???
 $string['importstudents'] = 'Importuj studentów';//???
 $string['importmodules'] = 'Importuj moduły';//???
 $string['emailcohort'] = 'Wyślij Email do grupy';//???
-$string['anyyear'] = 'każdy rok';
-$string['anymodule'] = '(każdy moduł)';
+$string['anyyear'] = 'wszystkie lata';
+$string['anymodule'] = '(wszystkie moduły)';
 $string['title'] = 'Tytuł';
 $string['year'] = 'Rok';
 $string['course'] = 'Kurs';

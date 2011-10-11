@@ -2,7 +2,7 @@
 $string['classtotals'] = 'Całkowita liczba klas';
 $string['studentsonly'] = 'Tylko studenci';
 $string['paper'] = 'Arkusz';
-$string['temporaryaccountswarning'] = '<strong>Uwaga konta tymczasowe</strong>&nbsp;&nbsp;&nbsp;Proszę przypisz do właściwych kont studenckich.';
+$string['temporaryaccountswarning'] = '<strong>Uwaga konta tymczasowe</strong>&nbsp;&nbsp;&nbsp;Przypisz do właściwych kont studenckich.';
 $string['moredetails'] = 'Kliknij aby uzyskać więcej szczegółów.';
 $string['latesubmissions'] = '<strong>Spóźnione przedłożenie</strong>&nbsp;&nbsp;&nbsp;Użytkownik zapisał dane po upłynięciu czasu sprawdzianu.';
 $string['candidatenotcomplete'] = 'kandydaci nie wypełnili wszystkich ekranów';

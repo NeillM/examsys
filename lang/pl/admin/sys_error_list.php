@@ -5,9 +5,9 @@ $string['date'] = 'Data';
 $string['type'] = 'Typ';
 $string['message'] = 'Wiadomość';
 $string['file'] = 'Plik';
-$string['lineno'] = 'Numer linii';
+$string['lineno'] = 'Nr. linii';
 $string['user'] = 'Użytkownik';
-$string['userid'] = 'Identyfikator użytkownika';
+$string['userid'] = 'Id. użytkownika';
 $string['showfixed'] = 'Pokaż błędy usunięte';
 $string['displaydetails'] = 'Wyświetl detale';
 ?>
