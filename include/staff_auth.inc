@@ -51,10 +51,11 @@
   } elseif (strpos($userroles,'Admin') !== false) {
     //For 'Admin' users look up permissions from 'admin_access' table.
     
+    $on_team = false;
+    $failed_paper = false;
+
     //Can the user access the paper?
     if ((isset($_GET['paperID']) and $_GET['paperID'] != '') or (isset($_POST['paperID']) and $_POST['paperID'] != '')) {
-      $on_team = false;
-
       if (isset($_GET['paperID'])) {
         $tmp_paperID = $_GET['paperID'];
       } else {
@@ -83,12 +84,12 @@
         
         // Override access for the system training module.
         if ($on_team == false and strpos($moduleID,'SYSTEM') === false) {
-          access_denied($string['denied_paper'], false);
+          $failed_paper = true;
         }
       }
     }
     
-    if (isset($_GET['module']) and $_GET['module'] != '') {
+    if ($on_team == false and isset($_GET['module']) and $_GET['module'] != '') {
       // Is 'Admin' on the module as normal
       $result = $mysqli->prepare("SELECT groupID FROM teams WHERE memberID=? AND name=?");
       $result->bind_param('is', $userID, $_GET['module']);
@@ -118,7 +119,8 @@
         
       // Override access for the system training module.
       if ($on_team == false and strpos($_GET['module'],'SYSTEM') === false) {
-        access_denied($string['denied_folder'], false);
+        $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
+        access_denied($message, false);
       }
     }
     
