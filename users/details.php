@@ -30,15 +30,7 @@
   require '../include/errors.inc';
   require '../include/demo_replace.inc';
   require_once '../classes/schoolutils.class.php';
-
-  function check_email_domain($output, $domain) {
-    global $email;
-    
-    if($output !== true) {
-      $output = (substr($email, (strlen($domain) * -1)) == $domain);
-    }
-    return $output;
-  }
+  require_once '../classes/networkutils.class.php';
   
   check_var('userID', 'GET', true, false);
 
@@ -484,7 +476,7 @@ a.access:hover {color:white}
 
     if (strpos($userroles,'SysAdmin') !== false ) {
       echo "<tr><td>&nbsp;" . $string['username'] . "&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"username\" value=\"$username\" /></td><td>&nbsp;" . $string['password'] . "</td><td colspan=\"2\">";
-      if($cfg_use_ldap and array_reduce($cfg_institutional_domains, 'check_email_domain')) {
+      if($cfg_use_ldap and array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
         echo $string['externalauth'];
       } else {
         $url_email = urlencode($email);

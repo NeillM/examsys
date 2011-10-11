@@ -30,6 +30,7 @@ require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc';   // Include common language file that all scripts need
+require_once $cfg_web_root . 'classes/networkutils.class.php';
 
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</p>\n";
 
@@ -96,7 +97,9 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
             $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
           }
           $message .= "<li>" . $ldap_user_data['error'] . "</li></ul>";
-          if(strpos($userroles,'External Examiner') !== false) $message .= $fp_link;
+          if(!array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
+            $message .= $fp_link;
+          }
           access_denied($message, true);
         }
       } else {

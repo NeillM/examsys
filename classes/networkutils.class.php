@@ -38,5 +38,14 @@ Class NetworkUtils {
     }
     return $tmp_client_ipaddress;
   }
+
+  static function check_email_domain($output, $domain) {
+    global $email;
+    
+    if($output !== true) {
+      $output = (substr($email, (strlen($domain) * -1)) == $domain);
+    }
+    return $output;
+  }
 }
 ?>

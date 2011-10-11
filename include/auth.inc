@@ -116,7 +116,7 @@ function ldap_auth($u, $p, &$data){
  *
  */
 function db_auth($u, $p, $db) {
-  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
@@ -134,11 +134,11 @@ function db_auth($u, $p, $db) {
   $split_username = explode('_', $u);
   $tmp_u = $split_username[0];
   
-  $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, grade, yearofstudy, special_needs FROM users WHERE username=?");
+  $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE username=?");
   $stmt->bind_param('s', $tmp_u);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $grade, $year, $special_needs);
+  $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs);
   $stmt->fetch();
   if ($stmt->num_rows > 0) {
     if ($p != '' AND crypt($p,$password) == $password) {
@@ -187,7 +187,7 @@ function db_auth($u, $p, $db) {
       return false;
     }
   } else {
-    $password = $userID = $userroles = $title = $surname = $username = $grade = $year = '';
+    $password = $userID = $userroles = $title = $surname = $username = $email = $grade = $year = '';
     if ($stmt->num_rows == 0) {
       $db_errors = '<strong>' . $string['notsaccount'] . '</strong>';
     }
