@@ -439,6 +439,7 @@ if (!isset($_POST['update'])) {
     $mysqli->query("CREATE USER  '" . $cfg_db_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_username created</li>";
     $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, UPDATE, INSERT ON " . $cfg_db_database . ".password_tokens TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sid TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
