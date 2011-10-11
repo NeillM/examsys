@@ -1,7 +1,7 @@
 <?php
 $string['administrativetools'] = 'Narzędzia administracyjne';
-$string['clearguestaccounts'] = 'Usuń konta gości';
-$string['clear'] = 'Usuń';
+$string['clearguestaccounts'] = 'Oczyść konta gości';
+$string['clear'] = 'Oczyść';
 $string['user'] = 'Użytkownik';
 $string['password'] = 'Hasło';
 $string['surname'] = 'Nazwisko';
