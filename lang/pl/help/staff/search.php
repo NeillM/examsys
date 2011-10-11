@@ -1,9 +1,9 @@
 <?php
-$string['previous'] = '1Previous';
-$string['next'] = '1Next';
-$string['results'] = '1Results %d-%d of %d';
-$string['searchedfor'] = '1Searched for: "%s"';
-$string['noresults'] = '1No results were found matching "%s".';
-$string['tips'] = '1Tips for better search results:';
-$string['tipsli'] = '<span style="color:black">Try a different phrase</span></li><li><span style="color:black">Check your spelling</span>';
+$string['previous'] = 'Poprzednia';
+$string['next'] = 'Następna';
+$string['results'] = 'Wyniki %d-%d z %d';
+$string['searchedfor'] = 'Szukano: "%s"';
+$string['noresults'] = 'Nie znaleziono wyników pasujących do "%s".';
+$string['tips'] = 'Wskazówki na skuteczniejsze wyszukiwanie:';
+$string['tipsli'] = '<span style="color:black">Użyj innej frazy</span></li><li><span style="color:black">Sprawdź poprawność słów</span>';
 ?>

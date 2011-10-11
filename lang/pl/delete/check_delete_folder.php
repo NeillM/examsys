@@ -1,7 +1,6 @@
 <?php
-$string['deletefolder'] = '1Delete Folder?';
-$string['msg'] = '1Are you sure you wish to delete this folder?<br /><br />Deleting the folder will <strong>not</strong> delete the papers contained within.';
-$string['delete'] = '1Delete Folder';
-$string['cancel'] = '1Cancel';
-$string['recyclebin'] = '1Recycle Bin';
+$string['deletefolder'] = 'Usunąć folder?';
+$string['msg'] = 'Czy na pewno usunąć ten folder?<br /><br />Usunięcie folderu <strong>nie</strong> usuwa zawartych w nim plików.';
+$string['delete'] = 'Usuń folder';
+$string['recyclebin'] = 'Kosz';
 ?>

@@ -1,7 +1,7 @@
 <?php
-$string['faculties'] = '1Faculties';
-$string['administrativetools'] = '1Administrative Tools';
-$string['name'] = '1Name';
-$string['createfaculty'] = '1Create new Faculty';
-$string['editfaculty'] = '1Edit Faculty';
+$string['faculties'] = 'Wydziały';
+$string['administrativetools'] = 'Narzędzia administracyjne';
+$string['name'] = 'Nazwa';
+$string['createfaculty'] = 'Utwórz nowy wydział';
+$string['editfaculty'] = 'Edytuj wydział';
 ?>

@@ -26,4 +26,13 @@ $string['nhsadmin'] = 'Pracownik administracji medycznej'; //???
 $string['externalexaminer'] = 'Zewnętrzny egzaminator';
 $string['invigilator'] = 'Nadzorujący'; //???
 $string['students'] = 'Studenci';
+$string['rogoaccount'] = 'Konto Rogō';
+$string['newaccountcreated'] = 'Nowe konto utworzone dla';
+$string['reqfirstname'] = "Wprowadź imiona użytkownika.";
+$string['reqsurname'] = "Wprowadź nazwisko użytkownika.";
+$string['reqemail'] = "Wprowadź Email użytkownika.";
+$string['reqcourse'] = "Wprowadź typ/kurs dla użytkownika.";
+$string['requsername'] = "Wprowadź nazwę użytkownika.";
+$string['usernamechars'] = "Nazwa użytkownika nie może zawierać podkreślnika.";
+$string['reqpassword'] = "Wprowadź domyślne hasło dla użytkownika.";
 ?>

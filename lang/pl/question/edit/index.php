@@ -18,7 +18,7 @@ $string['scenario'] = 'Scenariusz';
 $string['scenariomsg'] = '(informacje wstępne)';//background info
 $string['current'] = 'Aktualny';
 $string['change'] = 'Zmień';
-$string['media'] = 'Media';
+$string['Pliki medialne'] = 'Pliki medialne';
 $string['questionswf'] = 'Pytanie SWF';
 $string['answerswf'] = 'Odpowiedź SWF';
 $string['leadin'] = 'Wprowadzenie';
@@ -84,11 +84,10 @@ $string['plaintext'] = 'Czysty tekst';
 $string['wysiwyg'] = 'WYSIWYG';
 $string['changes'] = 'Zmiany';
 $string['comments'] = 'Komentarze';
-$string['mapping'] = 'Mapowanie'; //odwzorowanie, projekcja
+$string['mapping'] = 'Odwzorowanie'; //Mapowanie,odwzorowanie, projekcja
 $string['limitedsave'] = 'Ograniczone zapisywanie';
 $string['save'] = 'Zapisz zmiany';
 $string['correct'] = 'Poprawnie';
-$string['cancel'] = 'Anuluj';
 $string['mscaamsg'] = '<strong>Pytania MSC-AA</strong> To pytanie było importowane z MSC-AA i nie może być zmienione.';
 $string['lockedmsg'] = '<strong>Pytanie zablokowane</strong> To pytanie jest zablokowane i nie może być zmienione. <a href="#" class="help-link" rel="161">Kliknij aby dowiedzieć się więcej.</a>';
 $string['date'] = 'Data';
@@ -105,7 +104,7 @@ $string['actiontaken'] = 'Działania podjęte';
 $string['internalresponse'] = 'Wewnętrzna odpowiedż';
 $string['notactioned'] = 'nie podjęto działań';//Not actioned
 $string['readdisagree'] = 'Przeczytano - brak zgody';
-$string['readactioned'] = 'Przeczytano - podjeto działania';
+$string['readactioned'] = 'Przeczytano - podjęto działania';
 $string['nocomments'] = 'Brak komentarzy';
 $string['commentsmsg'] = 'Nie zanotowano komentarzy dla tego pytania.';
 $string['objectives'] = 'Cele';
@@ -135,15 +134,15 @@ $string['correctanswers'] = 'Poprawne odpowiedzi';
 $string['correctanswersmsg'] = '(Zastosuj kliknięcie z &lt;ctrl&gt;<br />by zaznaczyć kilka elementów)';
 $string['onlinehelp'] = 'Pomoc online';
 $string['blankinstructionsddl'] = 'Aby utworzyć puste pole umieść znaczniki [blank] oraz [/blank] przed i po opcji, którą chcesz dodać.<br />Zawsze umieszczaj poprawną odpowiedź jako <strong>pierwszą</strong> opcję, po któej umieść dystraktory (kolejność wszsystkich opcji jest losowana automatycznie.<br />np. Bolesław <span class="blank-tag">[blank]</span>Chrobry,Krzywousty,Wstydliwy,Pobożny<span class="blank-tag">[/blank]</span> był pierwszym koronowanym władcą Polski;';
-//$string['blankinstructionsddl'] = '1To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Always put the correct answer as the <strong>first</strong> option, followed by the distractors (all options are randomised automatically).<br />e.g. Tyrannosaurus <span class="blank-tag">[blank]</span>Rex,Roger,Roderick,Ramsey<span class="blank-tag">[/blank]</span> was a large bipedal flesh-eating&hellip;';
+//$string['blankinstructionsddl'] = 'To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Always put the correct answer as the <strong>first</strong> option, followed by the distractors (all options are randomised automatically).<br />e.g. Tyrannosaurus <span class="blank-tag">[blank]</span>Rex,Roger,Roderick,Ramsey<span class="blank-tag">[/blank]</span> was a large bipedal flesh-eating&hellip;';
 $string['blankinstructionstextboxes'] = 'Aby utworzyć puste pole umieść znaczniki [blank] oraz [/blank] przed i po opcji, którą chcesz dodać.<br />Pomiędzy znacznikami [blank] dodaj odpowiedź poprawną i wszystkie odpowiedzi alternatywne, które brzmią prawdopodobnie (rozdzielone przecinkami).<br />np. Londyn jest stolicą <span class="blank-tag">[blank]</span>Anglii,Wielkiej Brytanii,Zjednoczonego Królestwa,UK,GB<span class="blank-tag">[/blank]</span>?';
-//$string['blankinstructionstextboxes'] = '1To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Within the [blank] tags add the correct answer and any alternatives also deemed to be correct (separate with commas).<br />e.g. What country are we in <span class="blank-tag">[blank]</span>UK,United Kingdom,Britain,Great Britain,GB<span class="blank-tag">[/blank]</span>?';
+//$string['blankinstructionstextboxes'] = 'To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Within the [blank] tags add the correct answer and any alternatives also deemed to be correct (separate with commas).<br />e.g. What country are we in <span class="blank-tag">[blank]</span>UK,United Kingdom,Britain,Great Britain,GB<span class="blank-tag">[/blank]</span>?';
 $string['dropdownlists'] = 'Lista wyboru (losowana kolejność)';
 $string['textboxes'] = 'Puste pole tekstowe';
 $string['rows'] = 'wiersze(y)';
 $string['cols'] = 'kolumn(y)';
 $string['assessmentdata'] = 'Dane Oceny';
-$string['terms'] = 'Semetry';//??
+$string['terms'] = 'Terminy';
 $string['termsmsg'] = '(rozdzielone przecinkami)';
 $string['clinicalvignette'] = 'przypadek kliniczny';//|??
 $string['newinformation'] = 'Nowa Informacja';
@@ -199,8 +198,8 @@ $string['editscenario'] = 'Edytuj scenariusz';
 $string['mediadeleted'] = 'Media usuniete';
 $string['optionno'] = 'Opcja nr. %d';
 $string['optiontext'] = $string['optionno'] . ' Text';
-$string['optionmedia'] = $string['optionno'] . ' Media';
-$string['optionanswer'] = $string['optionno'] . ' Answer';
+$string['optionmedia'] = $string['optionno'] . ' Pliki medialne';
+$string['optionanswer'] = $string['optionno'] . ' Odpowiedź';
 $string['optionfbcorrect'] = $string['optionno'] . ' Odzew poprawny';
 $string['optionfbincorrect'] = $string['optionno'] . ' Odzew niepoprawny';
 $string['newoption'] = 'Nowa opcja';
@@ -218,5 +217,5 @@ $string['showmore'] = 'Pokaż więcej';
 $string['hidemore'] = 'Ukryj więcej';
 $string['minor'] = 'Drobne';
 $string['major'] = 'Znaczące';
-$string['pleaserank'] = 'Oceń proszę co nsatępuje &hellip; zaczynając od &hellip; pierwszego:';
+$string['pleaserank'] = 'Oceń proszę co następuje &hellip; zaczynając od &hellip; pierwszego:';
 ?>

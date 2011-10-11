@@ -1,5 +1,5 @@
 <?php
-$string['standardssetting'] = 'Ustawienia standardowe';
+$string['standardssetting'] = 'Ustalanie standardów';
 $string['modifiedangoffmethod'] = 'Modyfikowana metoda Angoffa';
 $string['ebelmethod'] = 'Metoda Ebla';
 $string['modangoffstep1'] = 'Dla każdego pytania użyj jasnoniebieskiej listy wyboru aby określić <strong>procent graniczny</strong> (kompetencje minimalne) wymagane od kandydatów do zaliczenia odpowiedzi.';

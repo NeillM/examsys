@@ -1,9 +1,8 @@
 <?php
-$string['deletequestion'] = '1Delete Question';
-$string['msg'] = '1You are attempting to delete a question from the question bank.<br /><br /><strong>Please confirm that this is your intention.';
-$string['recyclebin'] = '1Recycle Bin';
-$string['delete'] = '1Delete';
-$string['cancel'] = '1Cancel';
-$string['warning1'] = '1You cannot delete this question, it is used in the following papers:';
-$string['warning2'] = '1Delete all pointers to this question before deleting the original.';
+$string['deletequestion'] = 'Usuń pytanie';
+$string['msg'] = 'Próbujesz usunąć pytanie z banku pytań.<br /><br /><strong>Potwierdź, że taki jest twój rzeczywisty zamiar.';
+$string['recyclebin'] = 'Kosz';
+$string['delete'] = 'Usuń';
+$string['warning1'] = 'Nie możesz usunąć tego pytania, gdyż używane jest ona w następujących arkuszach:';
+$string['warning2'] = 'Usuń wszyskie wskaźniki do tego pytania zanim usuniesz samo pytania.';
 ?>

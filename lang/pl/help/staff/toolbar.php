@@ -1,14 +1,14 @@
 <?php
-$string['back'] = '1Back';
-$string['forwards'] = '1Forwards';
-$string['refresh'] = '1Refresh';
-$string['print'] = '1Print';
-$string['delete'] = '1Delete Page';
-$string['new'] = '1New Page';
-$string['pointer'] = '1Pointer';
-$string['edit'] = '1Edit Page';
-$string['recyclebin'] = '1Recycle Bin';
-$string['info'] = '1Info';
-$string['search'] = '1Search';
-$string['confirmdelete'] = '1Are you sure you wish to delete the current page?';
+$string['back'] = 'Wstecz';
+$string['forwards'] = 'Naprzód';
+$string['refresh'] = 'Odśwież';
+$string['print'] = 'Drukuj';
+$string['delete'] = 'Usuń stronę';
+$string['new'] = 'Nowa strona';
+$string['pointer'] = 'Wskaźnik';
+$string['edit'] = 'Edytuj stronę';
+$string['recyclebin'] = 'Kosz';
+$string['info'] = 'Info';
+$string['search'] = 'Szukaj';
+$string['confirmdelete'] = 'Czy na pewno usunąć aktualną stronę?';
 ?>

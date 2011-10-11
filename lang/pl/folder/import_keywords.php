@@ -1,11 +1,10 @@
 <?php
-$string['loadkeywords'] = '1Load Keywords';
-$string['msg1'] = '1Keywords should be listed one per line.';
-$string['msg2'] = '1Please select the TXT file you wish to load:';
-$string['cancel'] = '1Cancel';
-$string['createnewkeyword'] = '1Create new Keyword';
-$string['editkeyword'] = '1Edit Keyword';
-$string['deletekeyword'] = '1Delete Keyword';
-$string['exportkeywords'] = '1Export Keywords';
-$string['importkeywords'] = '1Import Keywords';
+$string['loadkeywords'] = 'Załaduj słowa kluczowe';
+$string['msg1'] = 'Słowa kluczowe powinny być umieszczone pojedynczo w wierszach listy.';
+$string['msg2'] = 'Wskaż plik TXT do załadowania:';
+$string['createnewkeyword'] = 'Utwórz słowo kluczowe';
+$string['editkeyword'] = 'Edytuj słowo kluczowe';
+$string['deletekeyword'] = 'Usuń słowo kluczowe';
+$string['exportkeywords'] = 'Eksportuj słowa kluczowe';
+$string['importkeywords'] = 'Importuj słowa kluczowe';
 ?>

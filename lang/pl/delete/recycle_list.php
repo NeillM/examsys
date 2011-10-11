@@ -2,11 +2,11 @@
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['recyclebin'] = '1Recycle Bin';
-$string['recyclebintasks'] = '1Recycle Bin Tasks';
-$string['restorethisitem'] = '1Restore this item';
-$string['name'] = '1Name';
-$string['datedeleted'] = '1Date Deleted';
-$string['type'] = '1Type';
-$string['folder'] = '1Folder';
+$string['recyclebin'] = 'Kosz';
+$string['recyclebintasks'] = 'Działania dot. kosza';
+$string['restorethisitem'] = 'Odzyskaj ten element';
+$string['name'] = 'Nazwa';
+$string['datedeleted'] = 'Data usunięta';//??
+$string['type'] = 'Typ';
+$string['folder'] = 'Folder';
 ?>

@@ -10,9 +10,9 @@ $string['d_definition'] = 'moc różnicująca';
 $string['t_definition'] = 'procent <strong>całości</strong> grupy odpowiadającej';
 $string['u_definition'] = 'procent <strong>górnej</strong> części grupy odpowiadającej';
 $string['l_definition'] = 'procent <strong>dolnej</strong> części grupy odpowiadającej';
-$string['warning'] = 'Uwaga';
-$string['p_warning'] = '<strong>p < 0.2</strong> (np. bardzo trudne)';
-$string['d_warning'] = "<strong>d < 0.15</strong> (np. niski)<br />Rozważ czerwone flagi i jeśli uznasz, że element jest słaby wyklucz go wybierając ikonę <img src=\"../artwork/exclude_off.gif\" style=\"cursor:pointer\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" /> a następnie wybierając 'Zapisz'";
+$string['warning'] = 'Ostrzeżenie';
+$string['p_warning'] = '<strong>p < 0.2</strong> (tj. bardzo trudne)';
+$string['d_warning'] = "<strong>d < 0.15</strong> (tj. niski)<br />Rozważ czerwone flagi i jeśli uznasz, że element jest słaby wyklucz go wybierając ikonę <img src=\"../artwork/exclude_off.gif\" style=\"cursor:pointer\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" /> a następnie wybierając 'Zapisz'";
 $string['summary'] = 'Podsumowanie';
 $string['msg'] = 'Liczba elementów może być większa od liczby pytań, jako że pytania rozdzielające, etykietujące oraz o rozszerzonym dopasowaniu tworzone są przez łączenie kilku elementów każdego z indywidualnymi wartościami p i d.';
 $string['difficulty'] = 'Trudność';
@@ -30,6 +30,6 @@ $string['intermediate'] = 'Umiarkowany';
 $string['low'] = 'Niski';
 $string['save'] = 'Zapisz wyjątki';//Save Exclusions
 $string['screen'] = 'Ekran';
-$string['warning1'] = 'Uwaga: Trudność jest mniejsza niż 0.2';
-$string['warning2'] = 'Uwaga: Różnicowanie jest mniejsze niż 0.15';
+$string['warning1'] = 'Ostrzeżenie: Trudność jest mniejsza niż 0.2';
+$string['warning2'] = 'Ostrzeżenie: Różnicowanie jest mniejsze niż 0.15';
 ?>

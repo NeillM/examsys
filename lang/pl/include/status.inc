@@ -1,9 +1,9 @@
 <?php
-$string['status'] = '1Status';
-$string['anystatus'] = '1(any status)';
-$string['normal'] = '1Normal';
-$string['retired'] = '1Retired';
-$string['incomplete'] = '1Incomplete';
-$string['experimental'] = '1Experimental';
-$string['beta'] = '1Beta ';
+$string['status'] = 'Stan';
+$string['anystatus'] = '(każdy stan)';
+$string['normal'] = 'Normalne';
+$string['retired'] = 'Wycofane';
+$string['incomplete'] = 'Niekompletne';
+$string['experimental'] = 'Eksperymentalne';
+$string['beta'] = 'Beta ';
 ?>

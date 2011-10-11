@@ -1,39 +1,39 @@
 <?php
-$string['invigilatoraccess'] = '1Invigilator Access';
-$string['lab'] = '1Lab:';
-$string['unknownlab'] = '1 - unknown lab';
-$string['nopapersfound'] = '1No papers found!';
-$string['emergencynumbers'] = '1Emergency Numbers';
-$string['start'] = '1Start:';
-$string['duration'] = '1Duration:';
-$string['mins'] = '1mins';
-$string['papernote'] = '1Paper Note';
-$string['extratime'] = '1Extra Time';
-$string['checklist'] = '<div><strong>Tasklist</strong></div>
-    <div><em>Pre-Exam</em></div>
+$string['invigilatoraccess'] = 'Dostęp osoby nadzorującej';
+$string['lab'] = 'Pracownia:';
+$string['unknownlab'] = ' - nieznana pracownia';
+$string['nopapersfound'] = 'Nie znaleziono arkuszy!';
+$string['emergencynumbers'] = 'Numery awaryjne';
+$string['start'] = 'Start:';
+$string['duration'] = 'Czas trwania:';
+$string['mins'] = 'min.';
+$string['papernote'] = 'Uwagi dot. arkusza';
+$string['extratime'] = 'Dodatkowy czas';
+$string['checklist'] = '<div><strong>Lista zadań</strong></div>
+    <div><em>Przed egzaminem</em></div>
     <ol>
-    <li>Place log in instructions at each workstation</li>
-    <li>Place blank paper each workstation</li>
-    <li>Check all students have logged in correctly</li>
-    <li>Use \'guest\' accounts for anyone not able to log in</li>
-    <li><strong>NOTE:</strong> Do not start before scheduled start time</li>
+    <li>Rozłóż instrukcje logowania przy każdym komputerze</li>
+    <li>Umieść przy każdym komputerze czystą kartkę papieru</li>
+    <li>Sprawdź czy każdy student zalogował się poprawnie</li>
+    <li>Użyj konta \'gość\' dla każdego studenta, który nie mógł się zalogować</li>
+    <li><strong>Uwaga:</strong> Nie rozpoczynaj przez zaplanowanym czasem startu</li>
     </ol>
     
-    <div><em>Mid-Exam</em></div>
+    <div><em>W czasie egzaminu</em></div>
     <ol>
-    <li>Record minor problems in the students\' file (<a href="help.html" target="_blank">example problems</a>)</li>
-    <li>Record problems with paper/question content</li>
-    <li>Call number below for major problems</li>
+    <li>Rejestruj drobne problemy w plikach studentów (<a href="help.html" target="_blank">przykładowe problemy</a>)</li>
+    <li>Rejestruj problemy z tresciami arkuszy/pytań</li>
+    <li>Zadzwoń na poniższy numer w razie większych kłopotów</li>
     </ol>
     
-    <div><em>Post-Exam</em></div>
+    <div><em>Po egzaminie</em></div>
     <ol start="4">
-    <li>"That is the end of the exam. Please navigate to the last screen and click \'Finish\'."</li>
-    <li>"Click \'Close Window\' and then CTRL, ALT and DELETE and log out of your workstation."</li>
-    <li>Collect up log in instructions for reuse</li>
-    <li>Collect and dispose of blank paper</li>
-    <li>Ensure <strong>all</strong> workstations are logged out</li>
-    </ol>';
+    <li>"To już koniec egzaminu. Prosze przejść do ostatniego ekranu i klinąć na \'Zakończ\'."</li>
+    <li>"Proszę kliknąć \'Zamknij okno\' a następnie nacisnąć równocześnie CTRL, ALT i DELETE aby się wylogować."</li>
+    <li>Zbierz instrukcje logowania</li>
+    <li>Zbierz pozostałe czyste kartki</li>
+    <li>Upewnij się, że wylogowano się, że <strong>wszystkich</strong> komputerów</li>
+    </ol>'; //??
 
 
 ?>

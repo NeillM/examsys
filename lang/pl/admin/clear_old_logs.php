@@ -1,6 +1,6 @@
 <?php
-$string['administrativetools'] = '1Administrative Tools';
-$string['clearoldlogs'] = '1Clear Old Logs';
-$string['log0deleted'] = '1Log0 records deleted:';
-$string['log1deleted'] = '1Log1 records deleted:';
+$string['administrativetools'] = 'Narzędzia administracyjne';
+$string['clearoldlogs'] = 'Usuń stare logi';
+$string['log0deleted'] = 'Rekordy Log0 usunięte:';
+$string['log1deleted'] = 'Rekordy Log1 usunięte:';
 ?>

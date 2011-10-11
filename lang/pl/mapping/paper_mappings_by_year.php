@@ -1,18 +1,18 @@
 <?php
 require '../lang/' . $language . '/include/paper_options.inc';
 
-$string['start'] = '1Start';
-$string['owner'] = '1Owner';
-$string['question'] = '1Question';
-$string['type'] = '1Type';
-$string['marks'] = '1Marks';
-$string['modified'] = '1Modified';
-$string['passmark'] = '1Pass Mark';
-$string['mappingbyyear'] = '1Mapping by Year';
-$string['bysession'] = '1by Session';
-$string['byquestion'] = '1by Question';
-$string['longitudinal'] = '1Longitudinal';
-$string['screen'] = '1Screen';
-$string['warning'] = '1Warning';
-$string['nomatchsession'] = '1The session in the paper title (%s) does not match the paper session (%s).';
+$string['start'] = 'Start';
+$string['owner'] = 'Właściciel';
+$string['question'] = 'Pytanie';
+$string['type'] = 'Typ';
+$string['marks'] = 'Punkty';
+$string['modified'] = 'Zmodyfikowane';
+$string['passmark'] = 'Liczba punktów na zaliczenie';
+$string['mappingbyyear'] = 'Odwzorowanie wg. roku';
+$string['bysession'] = 'wg. sesji';
+$string['byquestion'] = 'wg. pytania';
+$string['longitudinal'] = 'geograficznie';
+$string['screen'] = 'Ekran';
+$string['warning'] = 'Ostrzeżenie';
+$string['nomatchsession'] = 'Sesja w tytule arkusza (%s) nie odpowiada sesji akrusza (%s).';
 ?>

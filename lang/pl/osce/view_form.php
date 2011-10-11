@@ -1,16 +1,17 @@
 <?php
-$string['osceform'] = '1OSCE: Form';
-$string['overallclassification'] = '1Overall Classification:';
-$string['feedback'] = '1Feedback';
-$string['clear fail'] = '1Clear Fail';
-$string['borderline'] = '1Borderline';
-$string['clear pass'] = '1Clear Pass';
-$string['fail'] = '1Fail';
-$string['borderline fail'] = '1Borderline fail';
-$string['borderline pass'] = '1Borderline pass';
-$string['pass'] = '1Pass';
-$string['good pass'] = '1Good pass';
-$string['honours pass'] = '1Honours PASS';
-$string['unsatisfactory'] = '1Unsatisfactory';
-$string['competent'] = '1Competent';
+$string['osceform'] = 'OSCE: Formularz';
+$string['overallclassification'] = 'Klasyfikacja całościowa:';
+$string['feedback'] = 'Odzew';
+$string['borderline'] = 'niepewne';
+$string['clear fail'] = 'jednoznaczne niezaliczenie';
+$string['borderline'] = 'niepewne';
+$string['clear pass'] = 'jednoznaczne zaliczenie';
+$string['fail'] = 'niezaliczenie';
+$string['borderline fail'] = 'niepewne niezaliczenie';
+$string['borderline pass'] = 'niepewne zaliczenie';
+$string['pass'] = 'zaliczenie';
+$string['good pass'] = 'zdecydowane zaliczenie';
+$string['honours pass'] = 'wyróżniające zaliczenie';
+$string['unsatisfactory'] = 'niesatysfakcjonujacy';
+$string['competent'] = 'kompetentny';
 ?>

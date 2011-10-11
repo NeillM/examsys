@@ -1,7 +1,6 @@
 <?php
-$string['confirmdelete'] = '1Confirm Pointer Delete';
-$string['msg'] = '1Deleting the pointer to this question will only delete it from the question paper.<br /><br />It does <strong>not</strong> delete the actual question in the question bank.';
-$string['delete'] = '1Delete Pointer';
-$string['cancel'] = '1Cancel';
-$string['recyclebin'] = '1Recycle Bin';
+$string['confirmdelete'] = 'Potwierdzenie usunięcia wskaźnika';
+$string['msg'] = 'Usunięcie wskaźnika do tego pytania usunie go tylko z arkusza pytań.<br /><br /><strong>Nie</strong> usunie to samego pytania z banku pytań.';
+$string['delete'] = 'Usuń wskaźnik';
+$string['recyclebin'] = 'Kosz';
 ?>

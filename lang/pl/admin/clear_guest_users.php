@@ -1,16 +1,16 @@
 <?php
-$string['administrativetools'] = '1Administrative Tools';
-$string['clearguestaccounts'] = '1Clear Guest Accounts';
-$string['clear'] = '1Clear';
-$string['user'] = '1User';
-$string['password'] = '1Password';
-$string['surname'] = '1Surname';
-$string['firstnames'] = '1First Names';
-$string['title'] = '1Title';
-$string['studentid'] = '1Student ID';
-$string['datereserved'] = '1Date Account Reserved';
-$string['assessmenttaken'] = '1Assessment Taken';
-$string['free'] = '1free';
-$string['cleanup'] = '1Clean Up';
-$string['unset'] = '1&lt;unset&gt;';
+$string['administrativetools'] = 'Narzędzia administracyjne';
+$string['clearguestaccounts'] = 'Usuń konta gości';
+$string['clear'] = 'Usuń';
+$string['user'] = 'Użytkownik';
+$string['password'] = 'Hasło';
+$string['surname'] = 'Nazwisko';
+$string['firstnames'] = 'Imię';
+$string['title'] = 'Tytuł';
+$string['studentid'] = 'Numer legitymacji';
+$string['datereserved'] = 'Dane konta chronione';
+$string['assessmenttaken'] = 'Egzamin podjęty';
+$string['free'] = 'wolne';
+$string['cleanup'] = 'Oczyść';
+$string['unset'] = '&lt;nieokreślone&gt;';
 ?>

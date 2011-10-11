@@ -1,19 +1,19 @@
 <?php
 require '../../lang/' . $language . '/include/months.inc';
 
-$string['from'] = '1From:';
-$string['to'] = '1To:';
-$string['page'] = '1Page';
-$string['hits'] = '1Hits';
-$string['tutorial'] = '1Tutorial';
-$string['searches'] = '1Searches';
-$string['term'] = '1Term';
-$string['results'] = '1Results';
-$string['pagehits'] = '1Page Hits';
-$string['searches'] = '1Searches';
-$string['tutorialstats'] = '1Tutotial Stats';
-$string['filter'] = '1Filter';
-$string['nohits'] = '1There were no hits';
-$string['nosearches'] = '1There were no searches';
-$string['notutorials'] = '1There were no tutorials viewed.';
+$string['from'] = 'Od:';
+$string['to'] = 'Do:';
+$string['page'] = 'Strona';
+$string['hits'] = 'Znaleziono';
+$string['tutorial'] = 'Instrukcja';
+$string['searches'] = 'Wyszukiwania';
+$string['term'] = 'Termin';
+$string['results'] = 'Wyniki';
+$string['pagehits'] = 'Znaleziono na stronie';//??
+$string['searches'] = 'Wyszukiwania';
+$string['tutorialstats'] = 'Statystyka instrukcji';
+$string['filter'] = 'Filtr';
+$string['nohits'] = 'Brak wyników';
+$string['nosearches'] = 'Brak wyszukań';
+$string['notutorials'] = 'Nie przejrzano żadnych instrukcji.';
 ?>

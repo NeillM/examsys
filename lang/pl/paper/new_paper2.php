@@ -10,5 +10,5 @@ $string['timezone'] = 'Strefa czasowa';
 $string['from'] = 'Od';
 $string['to'] = 'Do';
 $string['modules'] = 'Moduł(y)';
-$string['finish'] = 'Finalizuj';
+$string['finish'] = 'Zakończ';
 ?>

@@ -1,3 +1,3 @@
 <?php
-$string['toc'] = '1Table of Contents';
+$string['toc'] = 'Spis treści';
 ?>

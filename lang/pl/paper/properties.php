@@ -46,9 +46,9 @@ $string['duration'] = 'Czas trwania';
 $string['mins'] = 'min.';
 $string['availablefrom'] = 'Dostępne od';
 $string['to'] = 'do';
-$string['restricttolabs'] = '1Restrict to Labs';
-$string['restricttometadata'] = '1Restrict to Metadata';
-$string['na'] = '1N/A';
+$string['restricttolabs'] = 'Ogranicz do pracowni';
+$string['restricttometadata'] = 'Ogranicz do metadanych';
+$string['na'] = 'Nie dotyczy';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';
@@ -59,7 +59,7 @@ $string['deadline'] = 'Termin finalizacji:';
 
 // Exam Rubric tab
 $string['rubrictab'] = 'Rubryka egzaminu';
-$string['rubricheading'] = 'Rubryka egzaminu wyświetlana u studenta przed rozpopczęciem egzaminu sumatywnego';
+$string['rubricheading'] = 'Rubryka egzaminu wyświetlana u studenta przed rozpoczęciem egzaminu sumatywnego';
 
 // Prologue tab
 $string['prologuetab'] = 'Wstęp';
