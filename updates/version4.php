@@ -60,8 +60,8 @@ set_time_limit(0);
   <body>
   <table class="topbar"> 
     <tr> 
-      <td><div style="font-size:26pt; font-weight:bold; color:#003163">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:56px; top:-8px; font-size:10pt; color:#003163">version 4.x to 4.1</div></td> 
-      <td style="text-align:right"><img src="../artwork/touchstone_logo_330_85.png" width="330" height="85" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
+      <td><div style="font-size:26pt; font-weight:bold">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:56px; top:-8px; font-size:10pt">version 4.x to 4.1</div></td> 
+      <td style="text-align:right; padding-top:10px; padding-right:10px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
     </tr> 
     <tr> 
       <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td> 
