@@ -104,7 +104,7 @@ while ($result->fetch()) {
 
     if ($old_month != '') {
       if ($month_paper_no > 0) {
-        echo "<tr><td>$old_month</td><td class=\"n\">$month_paper_no</td><td class=\"n\">" . round($month_student_no/$month_paper_no,1) . "</td><td class=\"n\">$month_min</td><td class=\"n\">$month_max</td><td class=\"n\">" . number_format($month_student_no) . "</td></tr>\n";
+        echo "<tr><td>x1 $old_month</td><td class=\"n\">$month_paper_no</td><td class=\"n\">" . round($month_student_no/$month_paper_no,1) . "</td><td class=\"n\">$month_min</td><td class=\"n\">$month_max</td><td class=\"n\">" . number_format($month_student_no) . "</td></tr>\n";
       }
     }
     $month_paper_no = 0;
@@ -125,7 +125,7 @@ while ($result->fetch()) {
   $old_month = $month;
 }
 if ($month_paper_no > 0) {
-  echo "<tr><td>x $old_month</td><td class=\"n\">y $month_paper_no</td><td class=\"n\">" . round($month_student_no/$month_paper_no,1) . "</td><td class=\"n\">$month_min</td><td class=\"n\">$month_max</td><td class=\"n\">" . number_format($month_student_no) . "</td></tr>\n";
+  echo "<tr><td>x2 $old_month</td><td class=\"n\">$month_paper_no</td><td class=\"n\">" . round($month_student_no/$month_paper_no,1) . "</td><td class=\"n\">$month_min</td><td class=\"n\">$month_max</td><td class=\"n\">" . number_format($month_student_no) . "</td></tr>\n";
 }
 echo "<tr><td><strong>".$string['totals']."</strong></td><td class=\"n\"><strong>" . number_format($total_paper_no) . "</strong></td><td colspan=\"3\">&nbsp;</td><td class=\"n\"><strong>" . number_format($total_student_no) . "</strong></td></tr>\n";
 
