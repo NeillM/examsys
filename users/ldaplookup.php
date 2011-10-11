@@ -195,7 +195,7 @@ textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px so
 <form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <div style="text-align:center">
 <table style="text-align:left">
-<tr><td>Username</td><td><input type="text" name="username" size="20" /></td></tr>
+<tr><td>xUsername</td><td><input type="text" name="username" size="20" /></td></tr>
 <tr><td>Surname</td><td><input type="text" name="surname" size="40" /></td></tr>
 <tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="Lookup" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:100px" /></td></tr>
 </table>
