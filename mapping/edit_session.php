@@ -277,7 +277,7 @@ require '../include/staff_auth.inc';
     $selected = ($month == $currentmonth ) ? ' selected="selected"' : '';
     $month_value = $month;
     if ($month_value < 10) $month_value = '0' . $month_value;
-    $validfrom .= "<option value=\"$month_value\" $selected>" . substr($string[$month_names[$month]],0,3) . "</option>\n";
+    $validfrom .= "<option value=\"$month_value\" $selected>" . mb_substr($string[$month_names[$month]],0,3) . "</option>\n";
   }
   $validfrom .= '</select>&nbsp;';
   echo $validfrom;

@@ -282,7 +282,7 @@ function showTab(tabID) {
     </tr>
     <tr>
     <?php
-      if (isset($_GET['paperID']) and $_GET['paperID'] != '' and substr($_GET['paperID'],0,5) != 'list:') {
+      if (isset($_GET['paperID']) and $_GET['paperID'] != '' and mb_substr($_GET['paperID'],0,5) != 'list:') {
         echo '<td colspan="2" style="text-align: center"><input style="width:150px" type="submit" name="addbank" onmousedown="AddToBank();" value="Add to Bank">&nbsp;<input style="width:150px" type="submit" name="addpaper" value="Add to Bank &amp; Paper">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /><input type="hidden" name="mcqconvert" id="mcqconvert" value="0" /></td>';
       } else {
         echo '<td colspan="2" style="text-align: center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /><input type="hidden" name="mcqconvert" id="mcqconvert" value="0" /></td>';

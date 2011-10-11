@@ -197,7 +197,7 @@
       $validfrom = '<select name="session">'."\n";
       $startyear = ( date('Y') - 1 );
       for ($i = 0; $i < 2; $i++){
-        $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
+        $tmp_session = ($startyear + $i) . '/' . mb_substr(($startyear + $i + 1),2);
         if ($tmp_session == $session) {
           $validfrom .= '<option value="' . $tmp_session . '" selected>' . $tmp_session . '</option>';
         } else {
@@ -217,7 +217,7 @@
       $month_names = array(1=>'january',2=>'february',3=>'march',4=>'april',5=>'may',6=>'june',7=>'july',8=>'august',9=>'september',10=>'october',11=>'november',12=>'december');
       for ($month = 1; $month <= 12; $month++) {
         $selected = ($month == $currentmonth ) ? ' selected="selected"' : '';
-        $validfrom .= '<option value="'. $month .'"'. $selected .'>' . substr($string[$month_names[$month]],0,3) . '</option>'."\n";
+        $validfrom .= '<option value="'. $month .'"'. $selected .'>' . mb_substr($string[$month_names[$month]],0,3) . '</option>'."\n";
       }
       $validfrom .= '</select>&nbsp;';
       echo $validfrom;

@@ -114,7 +114,7 @@ Class QuestionHOTSPOT extends Question {
               }
               
               $first_comma = strpos($student_record, ',') + 1;
-              $tmp_user_answer = substr($student_record,$first_comma);
+              $tmp_user_answer = mb_substr($student_record,$first_comma);
               
               $result = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=?, user_answer=? WHERE id=?");
               $result->bind_param('disi', $mark, $totalpos, $tmp_user_answer, $database_id);

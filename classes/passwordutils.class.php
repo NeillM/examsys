@@ -44,9 +44,9 @@ Class PasswordUtils {
     $chars = array($lower,$lower,$lower,$special,$num,$num,$upper,$upper);
     for($i = 0; $i < $len; $i++) { 
       if($i < 7) {
-        $pass .= substr($chars[$i],rand(0,51),1);
+        $pass .= mb_substr($chars[$i],rand(0,51),1);
       } else {
-        $pass .= substr($chars[rand(2,6)],rand(0,51),1);
+        $pass .= mb_substr($chars[rand(2,6)],rand(0,51),1);
       }
     }
     return $pass;
@@ -62,7 +62,7 @@ Class PasswordUtils {
    *
    */
   static function encpw($u,$p) {
-    $salt = '$1$' . substr(md5($u),0,12) . '$';
+    $salt = '$1$' . mb_substr(md5($u),0,12) . '$';
     return crypt($p,$salt);
   }
 

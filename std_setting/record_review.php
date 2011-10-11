@@ -303,7 +303,7 @@
           $tmp_first_split = explode(';', $row['correct']);
           $tmp_second_split = explode('$', $tmp_first_split[8]);
           for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-            if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 200) {
+            if (mb_substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 200) {
               $qid = 'std' . $question_no . '_' . $question_part;
               if ($rating == '') {
                 $rating = $_POST["$qid"];

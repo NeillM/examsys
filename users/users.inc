@@ -39,11 +39,11 @@ function fixcase_callback($word) {
    
   $word = ucfirst($word); 
        
-  if (substr($word,1,1) == "'") { 
-    if (substr($word,0,1) == "D") { 
+  if (mb_substr($word,1,1) == "'") { 
+    if (mb_substr($word,0,1) == "D") { 
       $word = strtolower($word); 
     } 
-    $next = substr($word,2,1); 
+    $next = mb_substr($word,2,1); 
     $next = strtoupper($next); 
     $word = substr_replace($word, $next, 2, 1); 
   }
@@ -110,7 +110,7 @@ function add_users_from_file($fileName) {
     $initial = explode(' ',$forname);
     $initials = '';
     foreach ($initial as $name) {
-      $initials .= substr($name,0,1);
+      $initials .= mb_substr($name,0,1);
     }
     $initials = strtoupper($initials);
     $surname = my_ucwords(trim($fields[$header['surname']]));

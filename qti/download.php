@@ -41,7 +41,7 @@ $xml = simplexml_load_string($xmlStr);
 if ($userID != $xml->owner) exit;
 
 $xmlfile = $base_dir.$path."/".$file;
-$ext = strtolower(substr($file, strrpos($file, ".") + 1));
+$ext = strtolower(mb_substr($file, strrpos($file, ".") + 1));
 
 $filename = $file;
 if ($title) $filename = CleanFileName($title).".".$ext;

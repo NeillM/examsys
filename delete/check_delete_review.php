@@ -27,7 +27,7 @@ require '../include/staff_auth.inc';
   $mysqli->close();
   
   function niceDate($tmp_date) {
-    return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);
+    return mb_substr($tmp_date,6,2) . '/' . mb_substr($tmp_date,4,2) . '/' . mb_substr($tmp_date,0,4) . ' ' . mb_substr($tmp_date,8,2) . ':' . mb_substr($tmp_date,10,2);
   }
 ?>
 <html>

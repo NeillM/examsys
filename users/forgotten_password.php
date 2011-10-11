@@ -22,7 +22,7 @@
 * @package
 */
 
-$root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
+$root = (mb_substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 require_once $root . 'config/config.inc.php';
 require_once $cfg_web_root . 'classes/formutils.class.php';
 
@@ -55,7 +55,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Send') {
         $errors[] = 'Email address not found';
       } else {
         // If they do exist, create a token and send it to them in an email
-        $token = substr(md5(rand(10000000,99999999)), 0, 15);
+        $token = mb_substr(md5(rand(10000000,99999999)), 0, 15);
         
         // Check if there is already a token for the user and update reather than continually adding new ones
         // if they refresh the browser

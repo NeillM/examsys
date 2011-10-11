@@ -22,7 +22,7 @@
 * @package
 */
 
-$root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
+$root = (mb_substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 require_once $root . 'config/config.inc.php';
 require '../include/media.inc';
 require '../include/errors.inc';

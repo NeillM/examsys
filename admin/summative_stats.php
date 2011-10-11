@@ -52,14 +52,14 @@
 <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
 </tr>
 <tr>
-<td colspan="2" style="background-color:#F1F5FB"><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $_GET['year']; ?>/<?php echo (substr($_GET['year'],2,2)+1); ?> <?php echo $string['summativeexamstats']; ?></td>
+<td colspan="2" style="background-color:#F1F5FB"><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $_GET['year']; ?>/<?php echo (mb_substr($_GET['year'],2,2)+1); ?> <?php echo $string['summativeexamstats']; ?></td>
 <td style="background-color:#F1F5FB; text-align:right; vertical-align:bottom; padding-bottom:2px; padding-right:6px"><select name="year" id="year" onchange="jumpTo()">
 <?php
 for ($i=2005; $i<=date('Y'); $i++) {
   if ($i == $_GET['year']) {
-    echo "<option value=\"$i\" selected>$i/" . substr(($i+1),2,2) . "</option>\n";
+    echo "<option value=\"$i\" selected>$i/" . mb_substr(($i+1),2,2) . "</option>\n";
   } else {
-    echo "<option value=\"$i\">$i/" . substr(($i+1),2,2) . "</option>\n";
+    echo "<option value=\"$i\">$i/" . mb_substr(($i+1),2,2) . "</option>\n";
   }
 }
 ?>

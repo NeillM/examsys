@@ -64,7 +64,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   // Update the properties of the module.
   $tmp_moduleid = trim($_POST['moduleid']);
   $tmp_fullname = trim($_POST['fullname']);
-  $tmp_checklist = substr($checklist,1); 
+  $tmp_checklist = mb_substr($checklist,1); 
   
   $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=?, ebel_grid_template=? WHERE moduleid=?");
   $result->bind_param('ssisssiiiis', $tmp_moduleid, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $_POST['old_moduleid']);

@@ -65,8 +65,8 @@
               } else {
                 $end_start_tag = strpos($blank_details[$blank_count],']');
                 $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
-                $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
-                $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
+                $blank_options = mb_substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
+                $remainder = mb_substr($blank_details[$blank_count], ($start_end_tag+8));
                 echo '<span style="color:#800000; font-weight:bold">[blank]</span>';
                 $options_array = array();
                 $options_array = explode(',',$blank_options);
@@ -506,7 +506,7 @@ td {vertical-align:top}
         break;
       case 'dichotomous':
         for ($i=0; $i<strlen($tmp_answer); $i++) {
-          $tmp_individual_answer = substr($tmp_answer, $i, 1);
+          $tmp_individual_answer = mb_substr($tmp_answer, $i, 1);
           if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
             $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
           } else {
@@ -538,13 +538,13 @@ td {vertical-align:top}
         }
         break;
       case 'hotspot':
-        if (substr($tmp_answer,0,1) == '1') {
+        if (mb_substr($tmp_answer,0,1) == '1') {
           if (isset($log_array[$screen][$question_ID][1]['1'])) {
             $log_array[$screen][$question_ID][1]['1']++;
           } else {
             $log_array[$screen][$question_ID][1]['1'] = 1;
           }
-        } elseif (substr($tmp_answer,0,1) == '0') {
+        } elseif (mb_substr($tmp_answer,0,1) == '0') {
           if (isset($log_array[$screen][$question_ID][1]['0'])) {
             $log_array[$screen][$question_ID][1]['0']++;
           } else {
@@ -558,14 +558,14 @@ td {vertical-align:top}
           }
         }
         if ($log_array[$screen][$question_ID][1]['coords'] == '') {
-          $log_array[$screen][$question_ID][1]['coords'] = substr($tmp_answer,2);
+          $log_array[$screen][$question_ID][1]['coords'] = mb_substr($tmp_answer,2);
         } else {
-          $log_array[$screen][$question_ID][1]['coords'] .= ';' . substr($tmp_answer,2);
+          $log_array[$screen][$question_ID][1]['coords'] .= ';' . mb_substr($tmp_answer,2);
         }
         break;
       case 'mcq':
-        if (substr($tmp_answer,0,5) == 'other') {
-          $log_array[$screen][$question_ID][1]['other'][] = substr($tmp_answer,6);
+        if (mb_substr($tmp_answer,0,5) == 'other') {
+          $log_array[$screen][$question_ID][1]['other'][] = mb_substr($tmp_answer,6);
         } elseif ($tmp_answer == 0) {
           if (isset($log_array[$screen][$question_ID][1]['u'])) {
             $log_array[$screen][$question_ID][1]['u']++;
@@ -582,7 +582,7 @@ td {vertical-align:top}
         break;
       case 'mrq':
         for ($i=0; $i<strlen($tmp_answer); $i++) {
-          $tmp_individual_answer = substr($tmp_answer, $i, 1);
+          $tmp_individual_answer = mb_substr($tmp_answer, $i, 1);
           if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
             $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
           } else {
@@ -758,8 +758,8 @@ td {vertical-align:top}
       $tmp_first_split = explode(';', $correct);
       $tmp_second_split = explode('|', $tmp_first_split[8]);
       for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-        if (substr($tmp_second_split[$label_no],0,1) != '|') {
-          $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')));
+        if (mb_substr($tmp_second_split[$label_no],0,1) != '|') {
+          $options_buffer[] = trim(mb_substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')));
           $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
         }
       }

@@ -242,7 +242,7 @@ function displayObjectivesMappingForm($paper_id, $touchstonedb) {
  * 
  */
 function save_objective_mappings($db, $modules, $paper_id, $question_id) {
-  if ($paper_id != '' and substr($paper_id,0,5) != 'find:') {
+  if ($paper_id != '' and mb_substr($paper_id,0,5) != 'find:') {
     $modules = explode(',',$modules);
     $old_mappings = '';
     $new_mappings = '';
@@ -294,7 +294,7 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
  * 
  */
 function saveObjMappings($paper_id, $question_id, $touchstonedb) {
-  if (isset($_POST['modules']) and $paper_id != '' and substr($paper_id,0,5) != 'find:') {
+  if (isset($_POST['modules']) and $paper_id != '' and mb_substr($paper_id,0,5) != 'find:') {
     $modules = $_POST['modules'];
     $modules = explode(',',$modules);
     foreach ($modules as $moduleid) {

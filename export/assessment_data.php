@@ -68,7 +68,7 @@
         $old_correct = '';
         $split1 = explode('[blank]',$option_text);
         for ($i=1; $i<count($split1); $i++) {
-          $split2 = explode(',', substr($split1[$i],0,strpos($split1[$i],'[/blank]')));
+          $split2 = explode(',', mb_substr($split1[$i],0,strpos($split1[$i],'[/blank]')));
           $old_correct .= ',' . $split2[0];
         }
       }
@@ -79,7 +79,7 @@
         $old_correct .= ',' . $correct;
       } else {
         $old_correct = ',' . str_replace('|',",",$correct);
-        if (substr($old_correct,-1,1) == ',') $old_correct = substr($old_correct,0,strlen($old_correct)-1);
+        if (mb_substr($old_correct,-1,1) == ',') $old_correct = mb_substr($old_correct,0,strlen($old_correct)-1);
       }
     }
     $old_q_id = $q_id;
@@ -200,30 +200,30 @@
         switch ($paper_buffer[$i]['type']) {
           case 'blank':
             for ($sec=1; $sec<=substr_count($paper_buffer[$i]['correct'],','); $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (mb_substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
             }
             break;
           case 'extmatch':
             $correct_parts = explode(',',$paper_buffer[$i]['correct']);
             $partID = 0;
             for ($sec=1; $sec<substr_count($paper_buffer[$i]['correct'],',') + 1; $sec++) {
-              if (substr($tmp_exclude,$partID,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (mb_substr($tmp_exclude,$partID,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
               $partID += substr_count($correct_parts[$sec],'$') + 1;
             }
             break;
           case 'matrix':
             for ($sec=1; $sec<substr_count($paper_buffer[$i]['correct'],',') + 1; $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (mb_substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
             }
             break;
           case 'rank':
             for ($sec=1; $sec<=substr_count($paper_buffer[$i]['correct'],','); $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (mb_substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
             }
             break;
           case 'dichotomous':
             for ($sec=1; $sec<=substr_count($paper_buffer[$i]['correct'],','); $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (mb_substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
             }
             break;
           case 'mrq':
@@ -259,21 +259,21 @@
           case 'blank':
             $correct_parts = explode(',',$paper_buffer[$i]['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
-              if (substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$partID];
+              if (mb_substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$partID];
             }
             break;
           case 'extmatch':
             $correct_parts = explode(',',$paper_buffer[$i]['correct']);
             $partID=1;
             for ($outer=1; $outer<=count($correct_parts)-1; $outer++) {
-              if (substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$outer];
+              if (mb_substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$outer];
               $partID += substr_count($correct_parts[$outer],'$') + 1;
             }
             break;
           case 'matrix':
             $correct_parts = explode(',',$paper_buffer[$i]['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
-              if (substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$partID];
+              if (mb_substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$partID];
             }
             break;
           case 'rank':
@@ -289,7 +289,7 @@
           case 'dichotomous':
             $correct_parts = explode(',',$paper_buffer[$i]['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
-              if (substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$partID];
+              if (mb_substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $correct_parts[$partID];
             }
             break;
           case 'mrq':
@@ -323,7 +323,7 @@
           $tmp_answers = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           for ($partID=1; $partID<count($correct_parts); $partID++) {
-            if (substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $tmp_answers[$partID];
+            if (mb_substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $tmp_answers[$partID];
           }
           break;
         case 'calculation':
@@ -339,10 +339,10 @@
         case 'dichotomous':
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           for ($partID=0; $partID<count($correct_parts)-1; $partID++) {
-            if (substr($tmp_exclude,$partID,1) == '0') {
+            if (mb_substr($tmp_exclude,$partID,1) == '0') {
               echo ',';
               if(isset($individual[$tmp_screen][$tmp_question_ID])) {
-                echo substr($individual[$tmp_screen][$tmp_question_ID],$partID,1);
+                echo mb_substr($individual[$tmp_screen][$tmp_question_ID],$partID,1);
               } else {
                 echo 'u';
               }
@@ -354,7 +354,7 @@
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           $partID = 0;
           for ($outer=1; $outer<=count($correct_parts)-1; $outer++) {
-            if (substr($tmp_exclude,$partID,1) == '0') echo ',' . $answer_parts[$outer-1];
+            if (mb_substr($tmp_exclude,$partID,1) == '0') echo ',' . $answer_parts[$outer-1];
             $partID += substr_count($correct_parts[$outer],'$') + 1;
           }
           break;
@@ -362,7 +362,7 @@
           $answer_parts = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           for ($partID=0; $partID<count($correct_parts)-1; $partID++) {
-            if (substr($tmp_exclude,$partID,1) == '0') {
+            if (mb_substr($tmp_exclude,$partID,1) == '0') {
               echo ',';
               if($answer_parts[$partID] != '') {
                 echo $answer_parts[$partID];
@@ -389,10 +389,10 @@
         case 'dichotomous':
         case 'mrq':
           for ($char_pos=0; $char_pos<substr_count($paper_buffer[$i]['correct'],','); $char_pos++) {
-            echo ',"' . substr($individual[$tmp_screen][$tmp_question_ID], $char_pos, 1) , '"';
+            echo ',"' . mb_substr($individual[$tmp_screen][$tmp_question_ID], $char_pos, 1) , '"';
           }
           $char_pos = substr_count($paper_buffer[$i]['correct'],',') + 1;
-          if ($paper_buffer[$i]['score_method'] == 'other') echo ',' . substr($individual[$tmp_screen][$tmp_question_ID], $char_pos+1);
+          if ($paper_buffer[$i]['score_method'] == 'other') echo ',' . mb_substr($individual[$tmp_screen][$tmp_question_ID], $char_pos+1);
           break;
         case 'textbox':
           if(isset($individual[$tmp_screen][$tmp_question_ID])) {
@@ -403,7 +403,7 @@
           $tmp_data = preg_replace("/(\r\n|\n|\r)/", "", $tmp_data);
           $tmp_data = str_replace('"',"'",$tmp_data);
           
-          if (substr($tmp_data,0,1) == '-') $tmp_data = trim(substr($tmp_data,1));
+          if (mb_substr($tmp_data,0,1) == '-') $tmp_data = trim(mb_substr($tmp_data,1));
           echo ',"' . $tmp_data . '"';
           break;
         default:

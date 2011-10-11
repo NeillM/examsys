@@ -69,11 +69,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
     $mark = 0;
     $all_correct = true;
     for ($i=0; $i<strlen($correct_answers); $i++) {
-      if (substr($correct_answers,$i,1) == substr($user_answer,$i,1)) {
+      if (mb_substr($correct_answers,$i,1) == mb_substr($user_answer,$i,1)) {
         if ($_POST['score_method'] == 'AllNegative') {
           $mark++;
         } else {
-          if (substr($correct_answers,$i,1) == 'y') $mark++;
+          if (mb_substr($correct_answers,$i,1) == 'y') $mark++;
         }
       } else {
         if ($_POST['score_method'] == 'AllNegative') {

@@ -123,8 +123,8 @@
             } else {
               $end_start_tag = strpos($blank_details[$blank_count],']');
               $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
-              $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
-              $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
+              $blank_options = mb_substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
+              $remainder = mb_substr($blank_details[$blank_count], ($start_end_tag+8));
               echo '<span style="color:#800000; font-weight:bold">[blank]</span>';
               
               if ($score_method == 'dropdown') {
@@ -534,8 +534,8 @@ if (isset($_GET['scrOfY'])) {
       $tmp_first_split = explode(';', $correct);
       $tmp_second_split = explode('$', $tmp_first_split[8]);
       for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-        if (substr($tmp_second_split[$label_no],0,1) != '|') {
-          $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
+        if (mb_substr($tmp_second_split[$label_no],0,1) != '|') {
+          $options_buffer[] = trim(mb_substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
           if ($tmp_second_split[$label_no-2] > 150) {
             $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
           }
@@ -548,8 +548,8 @@ if (isset($_GET['scrOfY'])) {
         $blank_details[$i] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$blank_details[$i]);
         $blank_details[$i] = preg_replace("| size=\"([0-9]{1,3})\"|","",$blank_details[$i]);
 
-        $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
-        $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
+        $blank_details[$i] = mb_substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
+        $blank_details[$i] = mb_substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
         $answer_list = explode(',',$blank_details[$i]);
         $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
         if ($score_method == 'textboxes') {

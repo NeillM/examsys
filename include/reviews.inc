@@ -25,9 +25,9 @@
 require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/networkutils.class.php');
 
 function time_to_seconds($seconds) {
-  $hr = intval(substr($seconds,8,2));
-  $min = intval(substr($seconds,10,2));
-  $sec = intval(substr($seconds,12,2));
+  $hr = intval(mb_substr($seconds,8,2));
+  $min = intval(mb_substr($seconds,10,2));
+  $sec = intval(mb_substr($seconds,12,2));
   return ($hr * 3600) + ($min * 60) + $sec;
 }
 

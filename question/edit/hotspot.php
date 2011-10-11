@@ -58,7 +58,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
       }
       
       $first_comma = strpos($student_record, ',') + 1;
-      $tmp_user_answer = substr($student_record,$first_comma);
+      $tmp_user_answer = mb_substr($student_record,$first_comma);
       
       $result = $mysqli->prepare("UPDATE log2 SET mark=?, user_answer=? WHERE id=?");
       $result->bind_param('dsi', $mark, $tmp_user_answer, $database_id);
@@ -131,7 +131,7 @@ if (isset($_POST['Corrected']) and $_POST['Corrected'] == 'OK') {
     }
   }
   $result->close();
-  $fix_data = substr($fix_data,1);
+  $fix_data = mb_substr($fix_data,1);
 ?>  
   <script language="JavaScript">
     function swfLoaded1(message) {

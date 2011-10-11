@@ -255,7 +255,7 @@ function ConvertType($type) {
 }
 
 function GenerateMediaType($filename) {
-  $ext = strtolower(substr($filename, strrpos($filename, ".") + 1));
+  $ext = strtolower(mb_substr($filename, strrpos($filename, ".") + 1));
   //echo "Extension : $ext<br>";
   return "image/".$ext;
 }
@@ -271,8 +271,8 @@ function for_id($in) {
 function MakeValidHTML($in) {
   // remove any closing tags at start just in case
   $in = trim($in);
-  if (substr($in, 0, 2) == "</") {
-    $in = substr($in, strpos($in, ">") + 1);
+  if (mb_substr($in, 0, 2) == "</") {
+    $in = mb_substr($in, strpos($in, ">") + 1);
   }
 
   $in = "<div>XXX-START-XXX".$in."XXX-END-XXX</div>";
@@ -290,12 +290,12 @@ function MakeValidHTML($in) {
    echo "<pre>";
    echo htmlentities($in);
    echo "</pre>";*/
-  $in = substr($in, strpos($in, "XXX-START-XXX") + 13);
-  $in = substr($in, 0, strpos($in, "XXX-END-XXX"));
+  $in = mb_substr($in, strpos($in, "XXX-START-XXX") + 13);
+  $in = mb_substr($in, 0, strpos($in, "XXX-END-XXX"));
   $in = trim($in);
   // remove any closing tags at start just in case
-  if (substr($in, 0, 2) == "</") {
-    $in = substr($in, strpos($in, ">") + 1);
+  if (mb_substr($in, 0, 2) == "</") {
+    $in = mb_substr($in, strpos($in, ">") + 1);
   }
   /*echo "Result:<br>";
    echo "<pre>";
@@ -307,26 +307,26 @@ function MakeValidHTML($in) {
 function RemoveLoneP($in) {
   // some qti files have a lone . at end of <p> or <span> tags, remove it
   $append = "";
-  if (substr($in, strlen($in) - 2, 2) == ">.") {
-    $in = substr($in, 0, strlen($in) - 1);
+  if (mb_substr($in, strlen($in) - 2, 2) == ">.") {
+    $in = mb_substr($in, 0, strlen($in) - 1);
     $append = ".";
   }
 
   //echo htmlentities("IN :!$in!")."<br>";
   $in = trim($in);
-  if (substr($in, 0, 1) == "<" && substr($in, strlen($in) - 1, 1) == ">" && strlen($in) > 10) {
-    $opentag = strtolower(substr($in, 1, strpos($in, ">") - 1));
-    $opentag = trim(substr($opentag, 0, strpos($opentag, " ")));
-    $closetag = substr($in, strrpos($in, "<") + 2);
-    $closetag = strtolower(substr($closetag, 0, strlen($closetag) - 1));
+  if (mb_substr($in, 0, 1) == "<" && mb_substr($in, strlen($in) - 1, 1) == ">" && strlen($in) > 10) {
+    $opentag = strtolower(mb_substr($in, 1, strpos($in, ">") - 1));
+    $opentag = trim(mb_substr($opentag, 0, strpos($opentag, " ")));
+    $closetag = mb_substr($in, strrpos($in, "<") + 2);
+    $closetag = strtolower(mb_substr($closetag, 0, strlen($closetag) - 1));
     //echo htmlentities("OPEN :!$opentag!, CLOSE :!$closetag!")."<br>";
 
     if ($opentag != $closetag) return $in.$append;
 
     if ($opentag != "p" && $opentag != "div" && $opentag != "span") return $in.$append;
 
-    $middletext = substr($in, strpos($in, ">") + 1);
-    $middletext = substr($middletext, 0, strrpos($middletext, "<"));
+    $middletext = mb_substr($in, strpos($in, ">") + 1);
+    $middletext = mb_substr($middletext, 0, strrpos($middletext, "<"));
     //echo htmlentities("Middle Test : !$middletext!")."<br>";
     if (strpos(" ".$middletext, "<".$opentag.">") > 0) return $in.$append;
 
@@ -370,7 +370,7 @@ function RemoveStNdRd($in) {
 }
 
 function MonthToNumeric($month) {
-  $month = strtolower(substr($month, 0, 3));
+  $month = strtolower(mb_substr($month, 0, 3));
   if ($month == "jan") return 1;
   if ($month == "feb") return 2;
   if ($month == "mar") return 3;

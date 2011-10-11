@@ -46,17 +46,17 @@ function ordinal_suffix($number) {
 
 function display_media($filename,$width,$height,$imageid) {
   // Is the file an image or something else (e.g. RasMol)?
-  if (strtolower(substr($filename, -4)) == '.gif' or strtolower(substr($filename, -4)) == '.jpg' or strtolower(substr($filename, -4)) == 'jpeg' or strtolower(substr($filename, -4)) == '.png') {
+  if (strtolower(mb_substr($filename, -4)) == '.gif' or strtolower(mb_substr($filename, -4)) == '.jpg' or strtolower(mb_substr($filename, -4)) == 'jpeg' or strtolower(mb_substr($filename, -4)) == '.png') {
     $html = "<img src=\"../media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" />";
-  } elseif (strtolower(substr($filename, -4)) == '.wav' or strtolower(substr($filename, -4)) == '.wma' or strtolower(substr($filename, -4)) == '.mid') {
+  } elseif (strtolower(mb_substr($filename, -4)) == '.wav' or strtolower(mb_substr($filename, -4)) == '.wma' or strtolower(mb_substr($filename, -4)) == '.mid') {
     $html = "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"../media/$filename\">Audio Clip</a>";
-  } elseif (strtolower(substr($filename, -4)) == '.doc' or strtolower(substr($filename, -4)) == '.ppt' or strtolower(substr($filename, -4)) == '.xls' or strtolower(substr($filename, -4)) == '.pdf') {
+  } elseif (strtolower(mb_substr($filename, -4)) == '.doc' or strtolower(mb_substr($filename, -4)) == '.ppt' or strtolower(mb_substr($filename, -4)) == '.xls' or strtolower(mb_substr($filename, -4)) == '.pdf') {
     $html = "<iframe src=\"../media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
-  } elseif (strtolower(substr($filename, -3)) == '.rm') {
+  } elseif (strtolower(mb_substr($filename, -3)) == '.rm') {
     $html = "<embed src=\"../media/$filename\" width=\"240\" height=\"180\" controls=\"ImageWindow autostart=false\" console=\"TheConsole\"><br />\n";
     $html .= "<embed src=\"../media/$filename\" width=\"240\" height=\"30\" controls=\"ControlPanel autostart=false\" console=\"TheConsole\"><br />\n";
     $html .= "<embed src=\"../media/$filename\" width=\"240\" height=\"20\" controls=\"StatusBar autostart=false\" console=\"TheConsole\">";
-  } elseif (strtolower(substr($filename, -4)) == '.avi') {
+  } elseif (strtolower(mb_substr($filename, -4)) == '.avi') {
     $html = "<embed src=\"/media/$filename\" width=\"$width\" height=\"$height\" autoplay=true loop=false></embed>";
   } else {
     $html = "<embed src=\"../media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\"></embed>";
@@ -175,7 +175,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
         if ($li_set == 0) echo '<tr><td class="question_no">' . $q_no . '.&nbsp;</td><td>';
         $li_set = 1;
         $qn_set = true;
-        if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
+        if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
           echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height,$question_no) . "</p>\n";
         } else {
           echo "<p>" . display_media($q_media,$q_media_width,$q_media_height,$question_no) . "</p>\n";

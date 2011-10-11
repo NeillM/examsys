@@ -57,8 +57,8 @@ if (isset($_POST['submit'])) {
       $lines = file('/tmp/' . $userID . '_load_objectives.txt');
       foreach ($lines as $separate_line) {
 
-        if (substr($separate_line,0,1) == '#') {   // Sub-heading
-          $title = substr($separate_line,1);
+        if (mb_substr($separate_line,0,1) == '#') {   // Sub-heading
+          $title = mb_substr($separate_line,1);
           $identifier++;
      
           $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL,?,?,?,'',?,NOW())");
@@ -146,7 +146,7 @@ if (isset($_POST['submit'])) {
   echo "<td style=\"text-align:right\">" . $string['session'] . "</td><td><select name=\"session\">\n";
   $startyear = ( date('Y') - 1 );
   for ($i = 0; $i < 2; $i++) {
-    $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
+    $tmp_session = ($startyear + $i) . '/' . mb_substr(($startyear + $i + 1),2);
     echo "<option value=\"$tmp_session\">$tmp_session</option>\n";
   }
   echo "</select></td>\n";

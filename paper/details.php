@@ -97,7 +97,7 @@ function randomDetails($questionID) {
     while ($row=$result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-        if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
+        if (strlen($old_leadin) > 160) $old_leadin = mb_substr($old_leadin,0,160) . '...';
         $random_questions[$question_no]['theme'] = $old_theme;
         $random_questions[$question_no]['q_id'] = $old_q_id;
         $random_questions[$question_no]['type'] = $old_q_type;
@@ -130,7 +130,7 @@ function randomDetails($questionID) {
 
     // Write out the last question.
     $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-    if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
+    if (strlen($old_leadin) > 160) $old_leadin = mb_substr($old_leadin,0,160) . '...';
     $random_questions[$question_no]['theme'] = $old_theme;
     $random_questions[$question_no]['q_id'] = $old_q_id;
     $random_questions[$question_no]['type'] = $old_q_type;
@@ -549,7 +549,7 @@ if (isset($_GET['change_screen'])) {
       
       $temp_array[$row_no]['leadin'] = preg_replace('/ style="[\w-,:; \']*"/i', '', $temp_array[$row_no]['leadin']);
       
-      //if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
+      //if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = mb_substr($temp_array[$row_no]['leadin'],0,160) . '...';
       $temp_array[$row_no]['scenario'] = $scenario;
       $temp_array[$row_no]['p_id'] = $p_id;
       $temp_array[$row_no]['q_id'] = $q_id;
@@ -741,9 +741,9 @@ if (isset($_GET['change_screen'])) {
     }
     echo "</td></tr>\n";
   } elseif ($paper_type == '2') {
-    $tmp_hour = substr($display_start_date,0,2);
-    if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
-    if (substr($display_start_date,12,4) > (date("Y")+1)) {
+    $tmp_hour = mb_substr($display_start_date,0,2);
+    if (mb_substr($tmp_hour,0,1) == '0') $tmp_hour = mb_substr($tmp_hour,1,1);
+    if (mb_substr($display_start_date,12,4) > (date("Y")+1)) {
       echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">";
       printf($string['farfuturewarning'], $display_start_date); 
       echo "</td></tr>\n";

@@ -21,7 +21,7 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-$root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
+$root = (mb_substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 require $root . 'include/staff_student_auth.inc';
 require_once $root . 'config/config.inc';
 require_once $root . 'classes/userutils.class.php';

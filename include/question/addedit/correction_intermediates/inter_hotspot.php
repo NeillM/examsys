@@ -36,7 +36,7 @@ while ($row = $result->fetch()) {
   }
 }
 $result->close();
-$fix_data = substr($fix_data,1);
+$fix_data = mb_substr($fix_data,1);
   
 $media = $question->get_media();
 $plugin_height = max($media['height'] + 25, 380);

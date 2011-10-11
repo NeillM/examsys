@@ -120,13 +120,13 @@
       $tmp_match = '';
       if (preg_match( '/\d\d\d\d.\d\d\d\d/' , $paper_title , $matches) == 1) {
         $year_in_title = true;
-        $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
+        $tmp_match = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
       } elseif (preg_match( '/\d\d\d\d.\d\d/' , $paper_title , $matches) == 1) {
         $year_in_title = true;
-        $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
+        $tmp_match = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
       } elseif (preg_match( '/\d\d.\d\d/' , $paper_title , $matches) == 1) {
         $year_in_title = true;      
-        $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
+        $tmp_match = '20' . mb_substr($matches[0],0,2) . '/' . mb_substr($matches[0],-2);
       }
       if ($year_in_title == true) {
         if ($tmp_match != $session) {
@@ -150,7 +150,7 @@
     $temp_array[$row_no]['screen'] = $screen;
     $temp_array[$row_no]['q_type'] = $q_type;
     $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin))));
-    if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . "...";
+    if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = mb_substr($temp_array[$row_no]['leadin'],0,160) . "...";
     $temp_array[$row_no]['p_id'] = $p_id;
     $temp_array[$row_no]['q_id'] = $q_id;
     $temp_array[$row_no]['display_last_edited'] = $display_last_edited;

@@ -34,7 +34,7 @@ function displayEditTab($created, $modified, $locked) {
   $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('commentstab');\">Comments</td>\n";
   if (!isset($_GET['paperID']) or strpos($_SERVER['PHP_SELF'],'info.php') !== false or strpos($_SERVER['PHP_SELF'],'likert.php') !== false) {  // Disabled the mapping tab.
     $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
-  } elseif (substr($_GET['paperID'],0,5) == 'find:') {
+  } elseif (mb_substr($_GET['paperID'],0,5) == 'find:') {
     $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
   } else {
     $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
@@ -102,8 +102,8 @@ function redirect() {
     $result->close();
   }
 
-  if (substr($_POST['paperID'],0,5) == 'list:') {
-    $type = substr($_POST['paperID'],5);
+  if (mb_substr($_POST['paperID'],0,5) == 'list:') {
+    $type = mb_substr($_POST['paperID'],5);
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/list.php?keyword=" . $_POST['keyword'] . "&team=" . $_POST['team']);
   } elseif ($_POST['calling'] == 'find') {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/search.php");
@@ -341,7 +341,7 @@ HTML;
 <input type="submit" id="addbank" name="addbank" value="Add to Bank" class="submit">
 
 HTML;
-    if (substr($paper_id, 0, 5) != 'list:') {
+    if (mb_substr($paper_id, 0, 5) != 'list:') {
       $html .= <<< HTML
   <input type="submit" name="addpaper" value="Add to Bank &amp; Paper" class="submit form-small">
 

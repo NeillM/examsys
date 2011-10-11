@@ -80,11 +80,11 @@ if (isset($_POST['submit'])) {
 <?php
     echo "<tr><td><strong>Paper</strong></td><td>$paper</td></tr>\n";
     
-    $feedback_year = substr($release_date,0,4);
-    $feedback_month = substr($release_date,4,2);
-    $feedback_day = substr($release_date,6,2);
-    $split_hour = substr($release_date,8,2);
-    $split_minute = substr($release_date,10,2);
+    $feedback_year = mb_substr($release_date,0,4);
+    $feedback_month = mb_substr($release_date,4,2);
+    $feedback_day = mb_substr($release_date,6,2);
+    $split_hour = mb_substr($release_date,8,2);
+    $split_minute = mb_substr($release_date,10,2);
     $date_array = getdate();
     
     echo "<tr><td align=\"right\"><strong>Release Date&nbsp;</strong></td><td><select name=\"month\">\n";

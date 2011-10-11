@@ -86,7 +86,7 @@ a:visited {color:#003DB2}
   for ($i=0; $i<$help_section; $i++) {
     $slash_pos = strpos($help_toc[$i]['title'], '/');
     if ($slash_pos !== false) {
-      $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
+      $tmp_title = mb_substr($help_toc[$i]['title'], ($slash_pos + 1));
       $icon = 'single_page.png';
     } else {
       if ($old_title != '' and strpos($help_toc[($i)]['title'], $old_title) === false and $sub_section == 1) {

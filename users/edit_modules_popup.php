@@ -64,9 +64,9 @@
       $moduleid = $mod[$module_no]['id'];
       $fullname = $mod[$module_no]['fullname'];
       
-      if ($old_letter != strtoupper(substr($moduleid,0,1))) {
-        echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-        //echo "<div style=\"background-color:white; font-weight:bold\">&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</div>\n<div style=\"background-color:white; padding-top:2px\"><img src=\"../artwork/divider_bar.gif\" width=\"290\" height=\"1\" /></div>\n";
+      if ($old_letter != strtoupper(mb_substr($moduleid,0,1))) {
+        echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(mb_substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+        //echo "<div style=\"background-color:white; font-weight:bold\">&nbsp;" . strtoupper(mb_substr($moduleid,0,1)) . "</div>\n<div style=\"background-color:white; padding-top:2px\"><img src=\"../artwork/divider_bar.gif\" width=\"290\" height=\"1\" /></div>\n";
       }
 
       $match = false;
@@ -79,7 +79,7 @@
       } else {
         echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $module_no . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $module_no . "')\" name=\"mod" . $id . "_" . $module_no . "\" value=\"" . $moduleid . "\" />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
       }
-      $old_letter = strtoupper(substr($moduleid,0,1));
+      $old_letter = strtoupper(mb_substr($moduleid,0,1));
     }
     echo "</div>\n</div>\n";
   }

@@ -72,7 +72,7 @@ if (isset($_GET['reviewers'])) {
   }
 }
 $reviews = array();
-$review_string = substr($review_string,1);
+$review_string = mb_substr($review_string,1);
 
 if ($setterID != '') {
   $query_string = "SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=$paperID AND setterID=$setterID AND std_set=$dateID";
@@ -249,7 +249,7 @@ while($stmt->fetch()) {
       $li_set = 1;
     }
     if ($q_media != '' and $q_media != NULL and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
-      if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
+      if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
         if ($li_set == 0) echo '<tr><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
         $li_set = 1;
         echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, $question_no) . "</p>\n";

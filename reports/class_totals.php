@@ -679,11 +679,11 @@ a.user:hover {color:white; background-color:#000080}
     echo "<tr><td colspan=\"" . (11 + $cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . (11 + $cols) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
-    echo "<tr><td>&nbsp;</td><td colspan=\"10\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking,0,1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td colspan=\"10\"><img src=\"draw_distribution_chart.php?adjust=" . mb_substr($marking,0,1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
 
     echo "<tr><td colspan=\"" . (11 + $cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . (11 + $cols) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td colspan=\"10\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking,0,1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
+    echo "<tr><td>&nbsp;</td><td colspan=\"10\"><img src=\"draw_scatter_plot.php?adjust=" . mb_substr($marking,0,1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
 
     // Display summary -------------------------------------------------------------------------------------
     echo "<tr><td colspan=\"" . (11 + $cols) . "\" height=\"9\">&nbsp;</td></tr>\n";

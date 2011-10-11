@@ -132,7 +132,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     </tr>
     <tr>
     <?php
-      if (isset($_GET['paperID']) and $_GET['paperID'] != '' and substr($_GET['paperID'],0,5) != 'list:') {
+      if (isset($_GET['paperID']) and $_GET['paperID'] != '' and mb_substr($_GET['paperID'],0,5) != 'list:') {
         echo '<td colspan="2" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank">&nbsp;<input style="width:150px" type="submit" name="addpaper" value="Add to Bank &amp; Paper">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';
       } else {
         echo '<td colspan="2" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';

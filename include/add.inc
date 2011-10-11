@@ -42,8 +42,8 @@ function displayEditTab() {
 function redirect($p_id) {
   global $protocol, $mysqli;
   
-  if (substr($p_id,0,5) == 'list:') {
-    $type = substr($p_id,5);
+  if (mb_substr($p_id,0,5) == 'list:') {
+    $type = mb_substr($p_id,5);
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/list.php");
   } elseif ($p_id != '') {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);

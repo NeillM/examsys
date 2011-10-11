@@ -243,7 +243,7 @@
               if ($first_day == true) {
                 $tmp_month = strtolower(date("F", mktime(0, 0, 0, $current_month, 1, $current_year)));
                 //echo ($day_no-$subtract) . ' ' . date("M", mktime(0, 0, 0, $current_month, 1, $current_year));
-                echo ($day_no-$subtract) . ' ' . substr($string[$tmp_month],0,3);
+                echo ($day_no-$subtract) . ' ' . mb_substr($string[$tmp_month],0,3);
                 $first_day = false;
               } else {
                 echo ($day_no-$subtract);

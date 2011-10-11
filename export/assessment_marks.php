@@ -52,7 +52,7 @@
           for ($a=0; $a<count($paper_answers); $a++) {
             $sub_parts += substr_count($paper_answers[$a],'$');
           
-            if ($paper_answers[$a] != '' and substr($tmp_exclude,$a+$sub_parts,1) == '0') echo ',Q' . $q_no . '.' . ($a+1);
+            if ($paper_answers[$a] != '' and mb_substr($tmp_exclude,$a+$sub_parts,1) == '0') echo ',Q' . $q_no . '.' . ($a+1);
           }
         } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'labelling' or $question['q_type'] == 'blank') {
           if (array_key_exists($q_id,$excluded)) {
@@ -61,7 +61,7 @@
             $tmp_exclude = '0000000000000000000000000000000000000000';
           }
           for ($a=0; $a<count($question['correct']); $a++) {
-            if (substr($tmp_exclude,$a,1) == '0') echo ',Q' . $q_no . '.' . ($a+1);
+            if (mb_substr($tmp_exclude,$a,1) == '0') echo ',Q' . $q_no . '.' . ($a+1);
           }
         } else {
           if (!array_key_exists($q_id,$excluded)) echo ',Q' . $q_no;

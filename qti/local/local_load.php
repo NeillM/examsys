@@ -262,11 +262,11 @@ class IE_Local_Load extends IE_Main {
       $endoffset = stripos($q, '[/blank]');
 
       // pull out list of options and replace segment with blankid created arlier
-      $midpart = substr($q, $offset + 7, $endoffset - $offset - 7);
+      $midpart = mb_substr($q, $offset + 7, $endoffset - $offset - 7);
       //echo "MidPart : $midpart<br>";
-      $question[] = substr($q, 0, $offset);
+      $question[] = mb_substr($q, 0, $offset);
       $question[] = $blankid;
-      $q = substr($q, $endoffset + 8);
+      $q = mb_substr($q, $endoffset + 8);
       //echo "New Question = $q<Br>";
 
       // process the options
@@ -551,10 +551,10 @@ class IE_Local_Load extends IE_Main {
     $sm = $q_row['score_method'];
 
     // extract the last part of the score method and if true has n/a
-    $store->hasna = strtolower(substr($sm, strrpos($sm, "|") + 1)) == "true" ? 1 : 0;
+    $store->hasna = strtolower(mb_substr($sm, strrpos($sm, "|") + 1)) == "true" ? 1 : 0;
 
     // trim off the last scoremethod as this stored has n/a
-    $sm = substr($sm, 0, strrpos($sm, "|"));
+    $sm = mb_substr($sm, 0, strrpos($sm, "|"));
 
     // store rest of the options in scale
     $opts = explode("|", $sm);

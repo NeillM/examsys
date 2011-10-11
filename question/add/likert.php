@@ -203,8 +203,8 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     </tr>
     <?php
     if (isset($_COOKIE['likert_format'])) {
-      $current_scale = substr($_COOKIE['likert_format'],0,strrpos($_COOKIE['likert_format'],'|'));
-      $na = substr($_COOKIE['likert_format'],strrpos($_COOKIE['likert_format'],'|')+1);
+      $current_scale = mb_substr($_COOKIE['likert_format'],0,strrpos($_COOKIE['likert_format'],'|'));
+      $na = mb_substr($_COOKIE['likert_format'],strrpos($_COOKIE['likert_format'],'|')+1);
     } else {
       $current_scale = 'Strongly<br />Disagree|Disagree|Uncertain|Agree|Strongly<br />Agree';
       $na = 'false';
@@ -258,7 +258,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     </tr>
     <tr>
       <?php
-        if (isset($_GET['paperID']) and $_GET['paperID'] != '' and substr($_GET['paperID'],0,5) != 'list:') {
+        if (isset($_GET['paperID']) and $_GET['paperID'] != '' and mb_substr($_GET['paperID'],0,5) != 'list:') {
           echo '<td colspan="2" style="text-align: center"><input style="width: 150px" type="submit" name="addbank" value="Add to Bank" onmousedown="AddToBank();">&nbsp;<input style="width: 150px" type="submit" name="addpaper" value="Add to Bank &amp; Paper">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width: 100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';
         } else {
           echo '<td colspan="2" style="text-align: center"><input style="width: 150px" type="submit" name="addbank" value="Add to Bank">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width: 100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';

@@ -42,9 +42,9 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
         while ($blank_count < $array_size) {
           $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
           $closing_blank_pos = strpos($blank_details[$blank_count],'[/blank]');
-          $tmp_first_part = substr($blank_details[$blank_count],0,$closing_blank_pos);
+          $tmp_first_part = mb_substr($blank_details[$blank_count],0,$closing_blank_pos);
           $choice_no = substr_count($tmp_first_part,',') + 1;
-          if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+          if (mb_substr($tmp_exclude,$blank_count-1,1) == '0') {
             $results = array();
             if (preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results)) {
               $marks += $results[1];
@@ -55,7 +55,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
           $blank_count++;
         }
       } else {
-        if (substr($tmp_exclude,0,1) == '0') {
+        if (mb_substr($tmp_exclude,0,1) == '0') {
           $marks = $question_marks;
         }
       }
@@ -63,25 +63,25 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
     case 'calculation':
     case 'flash':
     case 'textbox':
-      if (substr($tmp_exclude,0,1) == '0') {
+      if (mb_substr($tmp_exclude,0,1) == '0') {
         $marks = $question_marks;
       }
       break;
     case 'dichotomous':
       $correct_no = 0;
       for ($i=0; $i<count($option_text); $i++) {
-        if (substr($tmp_exclude,$i,1) == '0' and $correct[$i] != '') $marks += $question_marks;
+        if (mb_substr($tmp_exclude,$i,1) == '0' and $correct[$i] != '') $marks += $question_marks;
         if ($correct[$i] == 't' or $correct[$i] == 'f') $correct_no++;
       }
       if ($score_method == 'Mark per Question') {
-        if (substr($tmp_exclude,0,1) == '0') {
+        if (mb_substr($tmp_exclude,0,1) == '0') {
           $marks = $question_marks;    // Overwrite the marks if by question
         }
       }
       break;
     case 'labelling':
       if ($score_method == 'Mark per Question') {
-        if (substr($tmp_exclude,0,1) == '0') {
+        if (mb_substr($tmp_exclude,0,1) == '0') {
           $marks += $question_marks;
         }
       } else {
@@ -92,9 +92,9 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
         $i = 0;
         $excluded_no = 0;
         for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-          if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
-          if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-            if (substr($tmp_exclude,$i,1) == '0') {
+          if (mb_substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
+          if (mb_substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+            if (mb_substr($tmp_exclude,$i,1) == '0') {
               $placeholders++;
               $marks += $question_marks;
             } else {
@@ -106,7 +106,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'mcq':
-      if (substr($tmp_exclude,0,1) == '0') $marks += $question_marks;
+      if (mb_substr($tmp_exclude,0,1) == '0') $marks += $question_marks;
       break;
     case 'mrq':
       $correct_no = 0;
@@ -114,7 +114,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
         if ($correct[$i] == 'y') $correct_no++;
       }
     
-      if (substr($tmp_exclude,0,1) == '0') {
+      if (mb_substr($tmp_exclude,0,1) == '0') {
         if ($score_method == 'Mark per Option') {
           $marks += ($correct_no * $question_marks);
         } elseif ($score_method == 'Mark per Question') {
@@ -126,19 +126,19 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       break;
     case 'matrix':
       if ($score_method == 'Mark per Question') {
-        if (substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
+        if (mb_substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
       } else {
         $correct_no = 0;
         $matching_correct = explode('|', $correct[0]);
         for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
-          if ($matching_correct[$part_id] != '' and substr($tmp_exclude,$part_id,1) == '0') $correct_no++;
+          if ($matching_correct[$part_id] != '' and mb_substr($tmp_exclude,$part_id,1) == '0') $correct_no++;
         }
         $marks += $correct_no * $question_marks;
       }
       break;
     case 'extmatch':
       if ($score_method == 'Mark per Question') {
-        if (substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
+        if (mb_substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
       } else {
         $correct_array = explode('|',$correct[0]);
         $i = 0;
@@ -148,7 +148,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
             $sub_array = explode('$',$individual_correct);
             $correct_no = 0;
             foreach ($sub_array as $subpart) {
-              if (substr($tmp_exclude,$sub_part_no,1) == '0') {
+              if (mb_substr($tmp_exclude,$sub_part_no,1) == '0') {
                 $correct_no++;
                 $marks += $question_marks;
               }
@@ -160,14 +160,14 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'sct':
-      if (substr($tmp_exclude,0,1) == '0') $marks = 1;
+      if (mb_substr($tmp_exclude,0,1) == '0') $marks = 1;
       break;
     case 'rank':
       $correct_no = 0;
       for ($i=0; $i<count($correct); $i++) {
         if ($correct[$i] != 0) $correct_no++;
       }
-      if (substr($tmp_exclude,0,1) == '0') {
+      if (mb_substr($tmp_exclude,0,1) == '0') {
         $correct++;
         if ($score_method == 'Mark per Option') {
           $marks += count($option_text);
@@ -182,7 +182,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       break;
     case 'hotspot':
       if ($score_method == 'Mark per Question') {
-        if (substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
+        if (mb_substr($tmp_exclude,0,1) == '0') $marks = $question_marks;
       } else {
         $marks += ((substr_count($correct[0],'|') + 1) - substr_count($tmp_exclude, '1')) * $question_marks;
       }
@@ -208,7 +208,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       break;
     case 'dichotomous':
       for ($i=0; $i<count($option_text); $i++) {
-        if (substr($tmp_exclude,$i,1) == '0') {
+        if (mb_substr($tmp_exclude,$i,1) == '0') {
           $random_mark += 0.5;
         }
       }
@@ -221,9 +221,9 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       $i = 0;
       $excluded_no = 0;
       for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-        if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
-        if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-          if (substr($tmp_exclude,$i,1) == '0') {
+        if (mb_substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
+        if (mb_substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+          if (mb_substr($tmp_exclude,$i,1) == '0') {
             $placeholders++;
           } else {
             $excluded_no++;
@@ -234,7 +234,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       $random_mark += (($label_count - $excluded_no) == 0) ? 0 : ($placeholders / ($label_count - $excluded_no));
       break;
     case 'mcq':
-      if (substr($tmp_exclude,0,1) == '0') {
+      if (mb_substr($tmp_exclude,0,1) == '0') {
         $random_mark += 1 / count($option_text);
       }
       break;
@@ -244,7 +244,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
         if ($correct[$i] == 'y') $correct_no++;
       }
 
-      if (substr($tmp_exclude,0,1) == '0') {
+      if (mb_substr($tmp_exclude,0,1) == '0') {
         if ($score_method == 'Mark per Option') {
           $random_mark += ($correct_no * $correct_no) / count($option_text);
         } elseif ($score_method == 'Mark per Question') {
@@ -262,7 +262,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       $correct_no = 0;
       $matching_correct = explode('|', $correct[0]);
       for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
-        if ($matching_correct[$part_id] != '' and substr($tmp_exclude,$part_id,1) == '0') $correct_no++;
+        if ($matching_correct[$part_id] != '' and mb_substr($tmp_exclude,$part_id,1) == '0') $correct_no++;
       }
       $random_mark += (1 / count($option_text)) * $correct_no;
       break;
@@ -275,7 +275,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
           $sub_array = explode('$',$individual_correct);
           $correct_no = 0;
           foreach ($sub_array as $subpart) {
-            if (substr($tmp_exclude,$sub_part_no,1) == '0') {
+            if (mb_substr($tmp_exclude,$sub_part_no,1) == '0') {
               $correct_no++;
             }
             $sub_part_no++;
@@ -286,7 +286,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       }
       break;
     case 'sct':
-      if (substr($tmp_exclude,0,1) == '0') {
+      if (mb_substr($tmp_exclude,0,1) == '0') {
         $random_mark += 1 / count($option_text);
       }
       break;
@@ -295,7 +295,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       for ($i=0; $i<count($correct); $i++) {
         if ($correct[$i] != 0) $correct_no++;
       }
-      if (substr($tmp_exclude,0,1) == '0') {
+      if (mb_substr($tmp_exclude,0,1) == '0') {
         $correct++;
         if ($score_method == 'Mark per Option') {
           if ($correct_no == count($option_text)) {
@@ -320,9 +320,9 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       while ($blank_count < $array_size) {
         $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
         $closing_blank_pos = strpos($blank_details[$blank_count],'[/blank]');
-        $tmp_first_part = substr($blank_details[$blank_count],0,$closing_blank_pos);
+        $tmp_first_part = mb_substr($blank_details[$blank_count],0,$closing_blank_pos);
         $choice_no = substr_count($tmp_first_part,',') + 1;
-        if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+        if (mb_substr($tmp_exclude,$blank_count-1,1) == '0') {
           $results = array();
           if (preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results)) {
             if ($display_method == 'dropdown') $random_mark += (1 / $choice_no) * $results[1];
@@ -334,7 +334,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       }
       break;
     case 'hotspot':
-      if (substr($tmp_exclude,0,1) == '0' and $correct[0] != '') {
+      if (mb_substr($tmp_exclude,0,1) == '0' and $correct[0] != '') {
         $hotspot_layers = explode('|',$correct[0]);
         $hotspot_image_area = $old_q_media_width * $old_q_media_height;
         foreach ($hotspot_layers as $hotspot_layer) {

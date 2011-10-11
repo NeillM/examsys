@@ -62,7 +62,7 @@
     if (isset($_POST['survey']) and $_POST['survey'] == '1') $type .= " OR paper_type='3'";
     if (isset($_POST['osce']) and $_POST['osce'] == '1') $type .= " OR paper_type='4'";
     if (isset($_POST['offline']) and $_POST['offline'] == '1') $type .= " OR paper_type='5'";
-    if (strlen($type) > 0) $type = 'AND (' . substr($type,4) . ')';
+    if (strlen($type) > 0) $type = 'AND (' . mb_substr($type,4) . ')';
   }
   
   $params = '';

@@ -113,7 +113,7 @@
             $names = explode(' ',$sms->Forename);
             $initials = '';
             foreach ($names as $tmp_name) {
-              $initials .= substr($tmp_name,0,1);
+              $initials .= mb_substr($tmp_name,0,1);
             }          
           
             $result = $mysqli->prepare("INSERT INTO users VALUES ('',?,?,?,?,?,?,'Student',NULL,?,?,NULL,0,?)");
@@ -180,7 +180,7 @@
         $names = explode(' ',$sms->Forename);
         $tmp_initials = '';
         foreach ($names as $tmp_name) {
-          $tmp_initials .= substr($tmp_name,0,1);
+          $tmp_initials .= mb_substr($tmp_name,0,1);
         }
         if ($current_users[$lookup_username]['year'] != $sms->YearofStudy or $tmp_initials != $current_users[$lookup_username]['initials'] or $current_users[$lookup_username]['grade'] != $sms->CourseCode or $current_users[$lookup_username]['title'] != $sms->Title or $current_users[$lookup_username]['surname'] != $sms->Surname  or $current_users[$lookup_username]['first_names'] != $sms->Forename or $current_users[$lookup_username]['roles'] != $new_roles) {
           $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, roles=?, grade=?, title=?, surname=?, first_names=?, initials=? WHERE username=?");

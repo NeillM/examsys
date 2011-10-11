@@ -325,7 +325,7 @@ function display_options($options,$q_id, $current_theme) {
             } else {
               $blank_mark[$blank_count] = 1;
             }
-            $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
+            $blank_details[$blank_count] = mb_substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
             $answer_list = explode(',',$answer_options[0]);
             shuffle($answer_list);            // Shuffle the answers up.
@@ -358,7 +358,7 @@ function display_options($options,$q_id, $current_theme) {
         foreach ($hs_parts as $part) {
           echo '<p>' . $part . '</p>';
           if ($question['q_media'] != '' and $question['q_media'] != NULL) {
-            if (substr($question['q_media'], -4) == '.gif' or substr($question['q_media'], -4) == '.jpg' or substr($question['q_media'], -4) == 'jpeg' or substr($question['q_media'], -4) == '.png') {
+            if (mb_substr($question['q_media'], -4) == '.gif' or mb_substr($question['q_media'], -4) == '.jpg' or mb_substr($question['q_media'], -4) == 'jpeg' or mb_substr($question['q_media'], -4) == '.png') {
               echo "<p align=\"center\">" . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height'],$question_no) . "</p>\n";
             } else {
               echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
@@ -612,7 +612,7 @@ function display_options($options,$q_id, $current_theme) {
 }                      // End function 'display_options'.
 
 function make_para_if_not($string) {
-  if(substr($string, 0, 3) != '<p>') {
+  if(mb_substr($string, 0, 3) != '<p>') {
     return "<p>$string</p>";
   } else {
     return $string;

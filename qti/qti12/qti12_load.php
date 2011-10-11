@@ -490,9 +490,9 @@ class IE_qti12_Load extends IE_Main {
     foreach ($bits as $bit) {
       $bit = trim($bit);
       if ($bit == "") continue;
-      if (substr($bit, strlen($bit) - 1, 1) == ">") continue;
+      if (mb_substr($bit, strlen($bit) - 1, 1) == ">") continue;
 
-      if (strpos(" ".$bit, ">") > 0) $bit = substr($bit, strpos($bit, ">") + 1);
+      if (strpos(" ".$bit, ">") > 0) $bit = mb_substr($bit, strpos($bit, ">") + 1);
 
       // if it fits into title and is longer then X character
       if (strlen($bit) < 5) continue;
@@ -570,7 +570,7 @@ class IE_qti12_Load extends IE_Main {
     $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
 
     foreach ($dest->question as & $chunk) {
-      if (substr($chunk, 0, 1) != "%") $chunk = " ".$chunk." ";
+      if (mb_substr($chunk, 0, 1) != "%") $chunk = " ".$chunk." ";
     }
 
     return $dest;

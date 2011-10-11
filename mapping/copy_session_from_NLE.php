@@ -126,7 +126,7 @@ if (isset($_POST['submit'])) {
   echo "<td style=\"text-align:right\">Session</td><td><select name=\"nle_session\">\n";
   $startyear = ( date('Y') - 1 );
   for ($i = 0; $i < 2; $i++){
-    $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
+    $tmp_session = ($startyear + $i) . '/' . mb_substr(($startyear + $i + 1),2);
     if ($tmp_session == $session) {
       echo "<option value=\"$tmp_session\" selected>$tmp_session</option>\n";
     } else {
@@ -143,7 +143,7 @@ if (isset($_POST['submit'])) {
   echo "<td style=\"text-align:right\">Session</td><td><select name=\"touchstone_session\">\n";
   $startyear = ( date('Y') - 1 );
   for ($i = 0; $i < 2; $i++){
-    $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
+    $tmp_session = ($startyear + $i) . '/' . mb_substr(($startyear + $i + 1),2);
     if ($tmp_session == $session) {
       echo "<option value=\"$tmp_session\" selected>$tmp_session</option>\n";
     } else {

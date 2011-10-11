@@ -84,7 +84,7 @@ function add_users_from_file($fileName) {
     $initial = explode(' ',$forname);
     $initials = '';
     foreach ($initial as $name) {
-      $initials .= substr($name,0,1);
+      $initials .= mb_substr($name,0,1);
     }
     $initials = strtoupper($initials);
     if (isset($header['surname'])) {

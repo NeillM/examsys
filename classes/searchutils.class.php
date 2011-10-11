@@ -142,16 +142,16 @@ Class SearchUtils {
     
     $old_letter = '';
     foreach ($owners as $ownerID=>$details) {
-      if ($old_letter != strtoupper(substr($details['surname'],0,1))) {
+      if ($old_letter != strtoupper(mb_substr($details['surname'],0,1))) {
         if ($old_letter != '') echo "</optgroup>\n";
-        echo "<optgroup label=\"" . strtoupper(substr($details['surname'],0,1)) . "\">\n";
+        echo "<optgroup label=\"" . strtoupper(mb_substr($details['surname'],0,1)) . "\">\n";
       }
       if ((isset($_COOKIE['owner']) and $_COOKIE['owner'] == $ownerID) or (isset($_POST['owner']) and $_POST['owner'] == $ownerID)) {
         echo "<option value=\"$ownerID\" selected>" . $details['surname'] . ", " . $details['initials'] . ". " . $details['title'] . "</option>\n";
       } else {
         echo "<option value=\"$ownerID\">" . $details['surname'] . ", " . $details['initials'] . ". " . $details['title'] . "</option>\n";
       }
-      $old_letter = strtoupper(substr($details['surname'],0,1));
+      $old_letter = strtoupper(mb_substr($details['surname'],0,1));
     }
     echo "</optgroup>\n</select>\n";
   }

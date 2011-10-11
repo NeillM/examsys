@@ -120,8 +120,8 @@
   $staff_no = 0;
   $old_letter = '';
   while ($row = $query_string->fetch_assoc()) {
-    if ($old_letter != strtoupper(substr($row['surname'],0,1))) {
-      echo "<table border=\"0\" style=\"padding-bottom:5px; width:95%; background-color:white; color:#1E3287\"><tr><td><nobr>" . strtoupper(substr($row['surname'],0,1)) . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" style=\"width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5\" /></td></tr></table>\n";
+    if ($old_letter != strtoupper(mb_substr($row['surname'],0,1))) {
+      echo "<table border=\"0\" style=\"padding-bottom:5px; width:95%; background-color:white; color:#1E3287\"><tr><td><nobr>" . strtoupper(mb_substr($row['surname'],0,1)) . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" style=\"width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5\" /></td></tr></table>\n";
     }
   
     $match = false;
@@ -140,7 +140,7 @@
       $display_text = $row['initials'];
     }
     echo "&nbsp;" . $row['surname'] . '<span style="color:#808080">, ' . $display_text . '. ' . $row['title'] . "</span></div>\n";
-    $old_letter = strtoupper(substr($row['surname'],0,1));
+    $old_letter = strtoupper(mb_substr($row['surname'],0,1));
     $staff_no++;
   }
   $query_string->close();

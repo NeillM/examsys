@@ -388,7 +388,7 @@ if (isset($_POST['Submit'])) {
        $std_set_details->store_result();
        if ($std_set_details->num_rows > 0) {
          echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
-         if (substr($marking,0,1) == '2') echo ' checked';
+         if (mb_substr($marking,0,1) == '2') echo ' checked';
          echo " />";
          echo 'Std Set <select name="std_set">';
          $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date, $group_review);

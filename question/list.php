@@ -154,7 +154,7 @@
       echo "<td></td>";
     }
     $tmp_leadin = $row['leadin'];
-    if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
+    if (strlen($tmp_leadin) > 160) $tmp_leadin = mb_substr($tmp_leadin,0,160) . '...';
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
     echo "<td class=\"d\">$tmp_leadin <span class=\"owner\">(" . $row['title'] . " " . $row['initials'] . " " . $row['surname'] . ")</span></td>";
     echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . $string[$row['q_type']] . "</nobr></td>";

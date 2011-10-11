@@ -265,11 +265,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
       }
     }
     
-    $tmp_scenario = substr($tmp_scenario,1);
-    $tmp_old_scenario = substr($tmp_old_scenario,1);
-    $tmp_answer = substr($tmp_answer,1);
-    $old_tmp_answer = substr($old_tmp_answer,1);
-    $tmp_correct_feedback = substr($tmp_correct_feedback,1);
+    $tmp_scenario = mb_substr($tmp_scenario,1);
+    $tmp_old_scenario = mb_substr($tmp_old_scenario,1);
+    $tmp_answer = mb_substr($tmp_answer,1);
+    $old_tmp_answer = mb_substr($old_tmp_answer,1);
+    $tmp_correct_feedback = mb_substr($tmp_correct_feedback,1);
 
     // Have any of the answers changed?
     if ($tmp_answer != $old_tmp_answer) {

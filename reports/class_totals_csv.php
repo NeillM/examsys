@@ -112,7 +112,7 @@
     echo $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
     if ($marking == '1') {
       echo $string['randommark'] . "," . number_format($total_random_mark, 2, '.', ',') . ",,,,,,,,,,\n";
-    } elseif (substr($marking,0,1) == '2') {
+    } elseif (mb_substr($marking,0,1) == '2') {
       echo $string['ss'] . "," . round($ss_pass,2) . ",,,,,,,,,,\n";
       echo $string['ssdistinction'] . "," . round($ss_hon,2) . ",,,,,,,,,,\n";
     }

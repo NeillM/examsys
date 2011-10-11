@@ -217,7 +217,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
     echo "<tr>\n<td class=\"field\"><span class=\"mandatory\">*</span>&nbsp;Lead-in<br /><span style=\"font-weight:normal; font-size:90%; color:#808080\">(the question)</span></td>\n<td><textarea style=\"display:none\" name=\"old_leadin\" id=\"old_leadin\">" . htmlentities($leadin) . "</textarea>";
     echo wysiwyg_editor('oEdit2','leadin',$leadin);
     echo "</td>\n</tr>";
-    $current_scale = substr($score_method,0,strrpos($score_method,'|'));
+    $current_scale = mb_substr($score_method,0,strrpos($score_method,'|'));
     $scale_types = array('line','OSCE Stations Scales','0|1','0, 1','0|1|2','0, 1, 2','Fail|Borderline|Pass','Fail, Borderline, Pass','line','3 Point Scales','Low||High','Low to High','Never||Always','Never to Always','Disagree|Neutral|Agree','Disagree, Neutral, Agree','line','4 Point Scales','Low|||High','Low to High','Never|||Always','Never to Always','Strongly<br />Disagree|Disagree|Agree|Strongly<br />Agree','Strongly Disagree, Disagree, Agree, Strongly Agree','line','5 Point Scales','Low||||High','Low to High','Never||||Always','Never to Always','Strongly<br />Disagree|Disagree|Neither Disagree<br />nor Agree|Agree|Strongly<br />Agree','Strongly Disagree, Disagree, Neither Disagree nor Agree, Agree, Strongly Agree','Strongly<br />Disagree|Disagree|Uncertain|Agree|Strongly<br />Agree','Strongly Disagree, Disagree, Uncertain, Agree, Strongly Agree','Strongly<br />Disagree|Disagree|Neutral|Agree|Strongly<br />Agree','Strongly Disagree, Disagree, Neutral, Agree, Strongly Agree');
     echo "<tr><td class=\"field\">Scale</td><td><select name=\"scale_type\" onchange=\"javascript: checkCustom(this);\">";
     $scale_match = false;
@@ -242,7 +242,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
       $score_parts = explode("|",$score_method);
     }
     echo "</select></optgroup><input type=\"hidden\" name=\"old_scale_type\" value=\"". $current_scale . "\" /></td></tr>\n";
-    $na = substr($score_method,strrpos($score_method,'|')+1);
+    $na = mb_substr($score_method,strrpos($score_method,'|')+1);
     echo "<tr><td class=\"field\">N/A Column</td><td><input type=\"hidden\" name=\"old_notapplicable\" value=\"$na\" />";
     if ($na == 'true') {
       echo "<input type=\"checkbox\" name=\"notapplicable\" checked /> include 'not applicable' option</td>\n</tr>\n";

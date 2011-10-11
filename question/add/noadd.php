@@ -25,11 +25,11 @@
   require '../../include/staff_auth.inc';
   
   function englishDate($orig_date) {
-    $tmp_date = substr($orig_date,6,2);
-    $tmp_date .= '/' . substr($orig_date,4,2);
-    $tmp_date .= '/' . substr($orig_date,0,4);
-    $tmp_date .= ' ' . substr($orig_date,8,2);
-    $tmp_date .= ':' . substr($orig_date,10,2);
+    $tmp_date = mb_substr($orig_date,6,2);
+    $tmp_date .= '/' . mb_substr($orig_date,4,2);
+    $tmp_date .= '/' . mb_substr($orig_date,0,4);
+    $tmp_date .= ' ' . mb_substr($orig_date,8,2);
+    $tmp_date .= ':' . mb_substr($orig_date,10,2);
     return $tmp_date;
   }
 ?>

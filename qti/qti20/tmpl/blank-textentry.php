@@ -39,7 +39,7 @@
 <? $respid = 1; ?>
 <? foreach ($question->question as & $q) : ?>
 <? // do we have a blank to output? ?>
-<? if (substr($q, 0, 1) == "%") : ?>
+<? if (mb_substr($q, 0, 1) == "%") : ?>
 		<textEntryInteraction responseIdentifier="RESPONSE<?=$respid?>" expectedLength="15"/>
 <? $respid++; ?>
 <? // otherwise output the material ?>

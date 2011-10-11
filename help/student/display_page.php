@@ -159,13 +159,13 @@ h2 {font-size:140%; color:#f27000}
     do {
       $found = stripos($tmp_body, $_GET['highlight'], $offset);
       if ($found !== false) {
-        $first_part = substr($tmp_body, 0 , $found);
+        $first_part = mb_substr($tmp_body, 0 , $found);
         $open_bracket = strrpos($first_part, '<');
         $close_bracket = strrpos($first_part, '>');
         if (($open_bracket < $found and $found < $close_bracket) or ($close_bracket < $open_bracket)) {
           $offset = $found + strlen($_GET['highlight']);
         } else {
-          $tmp_body = substr($tmp_body, 0, $found) . '<span style="background-color:#FFFF00">' . substr($tmp_body, $found, strlen($_GET['highlight'])) . '</span>' . substr($tmp_body, $found + strlen($_GET['highlight']));
+          $tmp_body = mb_substr($tmp_body, 0, $found) . '<span style="background-color:#FFFF00">' . mb_substr($tmp_body, $found, strlen($_GET['highlight'])) . '</span>' . mb_substr($tmp_body, $found + strlen($_GET['highlight']));
           $offset = $found + 48;
         }
       }

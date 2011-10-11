@@ -42,7 +42,7 @@
 <? $respid = 1; ?>
 <? foreach ($question->question as & $q) : ?>
 <? // do we have a blank to output? ?>
-<? if (substr($q, 0, 1) == "%") : ?>
+<? if (mb_substr($q, 0, 1) == "%") : ?>
 			<inlineChoiceInteraction responseIdentifier="RESPONSE<?=$respid?>" shuffle="true">
 <? foreach ($question->options[$q] as $oid => $option) : ?>
 				<inlineChoice identifier="<?=$this->ll[$oid+1]?>"><?= $option->display ?></inlineChoice>

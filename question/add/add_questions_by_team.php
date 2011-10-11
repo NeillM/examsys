@@ -100,7 +100,7 @@
   if ($stmt->num_rows > 0) {
     while ($stmt->fetch()) {
       $tmp_leadin = strip_tags($leadin);
-      if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
+      if (strlen($tmp_leadin) > 160) $tmp_leadin = mb_substr($tmp_leadin,0,160) . '...';
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
       
       echo "<tr><td>";

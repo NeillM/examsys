@@ -139,8 +139,8 @@ Class QuestionLIKERT extends Question {
   public function get_display_method() {
     if ($this->display_method != '') {
       $pos = strrpos($this->display_method, '|');
-      $this->scale_type = substr($this->display_method, 0, $pos);
-      $this->not_applicable = substr($this->display_method, $pos + 1);
+      $this->scale_type = mb_substr($this->display_method, 0, $pos);
+      $this->not_applicable = mb_substr($this->display_method, $pos + 1);
     }
     return $this->display_method;
   }
