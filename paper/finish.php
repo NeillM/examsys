@@ -1694,7 +1694,7 @@ table {font-size:100%}
           }
           break;
         case 'textbox':
-          $textbox_size = explode('x',$paper[$question]['score_method']);
+          $textbox_size = explode('x', $paper[$question]['score_method']);
           if ($paper[$question]['scenario'] != '') {
             echo echo_content($paper[$question]['scenario']);
             if ($paper[$question]['q_media'] != '') {
@@ -1787,7 +1787,7 @@ table {font-size:100%}
                 }
               }
               if ($correct_flag == true) {
-                $paper[$question]['mark']++;
+                $paper[$question]['mark'] += $paper[$question]['marks_correct'];;
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
@@ -1824,7 +1824,7 @@ table {font-size:100%}
 
               if (isset($user_choices[$blank_count]) and str_replace('&nbsp;',' ',html_entity_decode(trim($answer_list[0]))) == str_replace('&nbsp;',' ',html_entity_decode(trim($user_choices[$blank_count])))) {
                 if (substr($tmp_exclude,$blank_count-1,1) == '0') {
-                  $paper[$question]['mark']++;
+                  $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                   if ($tmp_display_students_response == '1') echo  '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                 }
               } else {
@@ -1844,6 +1844,10 @@ table {font-size:100%}
           echo "</span></p>\n";
           if ($paper[$question]['correct_fback'] != '') {
             echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
+          }
+          
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
+            $paper[$question]['mark'] = ($paper[$question]['mark'] == ($no_blanks - 1) * $paper[$question]['marks_correct']) ? $paper[$question]['marks_correct'] : 0;
           }
           break;
         case 'hotspot':

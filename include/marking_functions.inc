@@ -634,8 +634,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             $totalpos += $mark_matches[1];
             $individual_q_mark = $mark_matches[1];
           } else {
-            $totalpos++;
-            $individual_q_mark = 1;
+            $totalpos += $marks_correct;
+            $individual_q_mark = $marks_correct;
           }
 
           // Get correct answer.
@@ -650,6 +650,12 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           } else {
             if (isset($_POST[$qid]) and str_replace('&nbsp;',' ',trim($_POST[$qid])) == str_replace('&nbsp;',' ',($answer_list[0]))) $mark += $individual_q_mark;
           }
+        }
+        
+        // Recalculate if mark per question
+        if ($score_method == 'Mark per Question') {
+          $mark = ($mark == $totalpos) ? $marks_correct : 0;
+          $totalpos = $marks_correct;
         }
         break;
       case 'textbox':
