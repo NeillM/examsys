@@ -22,7 +22,7 @@
 * @package
 */
 
-$mandatory = ($index <= 3) ? '<span class="mandatory">*</span>' : '';
+$mandatory = ($index <= 2) ? '<span class="mandatory">*</span>' : '';
 $hidden = (($num_options == 0 and $index > 5) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
 $correct = ($option->get_correct() == $index) ? ' checked="checked"' : '';
 if ($index %2 == 0) {

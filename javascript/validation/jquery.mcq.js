@@ -18,20 +18,12 @@ $(function() {
             return $('#option_media2').val() == '';
           }
         } 
-      },
-      option_text3: {
-        required: {
-          depends: function (element) {
-            return $('#option_media3').val() == '';
-          }
-        } 
       }
     },
     messages: {
       leadin: 'Please enter a leadin for the question',
       option_text1: '<br />Please enter either option text or a media file for this option',
-      option_text2: '<br />Please enter either option text or a media file for this option',
-      option_text3: '<br />Please enter either option text or a media file for this option'
+      option_text2: '<br />Please enter either option text or a media file for this option'
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
@@ -41,8 +33,6 @@ $(function() {
         error.insertAfter('#option_media1');
       } else if(element.attr('name') == 'option_text2') {
         error.insertAfter('#option_media2');
-      } else if(element.attr('name') == 'option_text3') {
-        error.insertAfter('#option_media3');
       } else {
         error.insertAfter(element);
       }
