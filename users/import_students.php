@@ -111,7 +111,7 @@
 <br />
 <div style="text-align:center">
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
-<p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" /></p>
+<p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" value="xxx" /></p>
 
 <div align="center"><input type="checkbox" name="welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></div>
 <p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
