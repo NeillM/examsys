@@ -1,6 +1,7 @@
 <?php
 require '../lang/' . $language . '/include/user_search_options.inc';
 
+$string['usermanagement'] = 'User Management';
 $string['status'] = 'Status';
 $string['student'] = 'Student';
 $string['externalexaminer'] = 'External Examiner';
@@ -13,6 +14,7 @@ $string['externalauth'] = '[Using external auth]';
 $string['gender'] = 'Gender';
 $string['male'] = 'Male';
 $string['female'] = 'Female';
+$string['year'] = 'Year';
 $string['yearofstudy'] = 'Year of Study';
 $string['course'] = 'Course';
 $string['databaseid'] = 'Database ID';
@@ -68,4 +70,16 @@ $string['editteams'] = 'Edit Teams...';
 $string['editmodules'] = 'Edit Modules...';
 $string['system'] = 'System';
 $string['na'] = 'N/A';
+$string['universitylecturer'] = 'University Lecturer';
+$string['universitylibrarian'] = 'University Librarian';
+$string['universityadmin'] = 'University Admin';
+$string['universitytechnical'] = 'University IT/Technical';
+$string['nhslecturer'] = 'NHS Lecturer/Consultant';
+$string['nhsadmin'] = 'NHS Admin';
+$string['invigilator'] = 'Invigilator';
+$string['inactivestaff'] = 'Inactive Staff';
+$string['sysadmin'] = 'SysAdmin';
+$string['reset'] = 'Reset';
+$string['forcereset'] = 'Force Reset';
+$string['classifiedinfo'] = 'classified information';
 ?>

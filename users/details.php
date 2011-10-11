@@ -233,7 +233,7 @@
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>User Management</title>
+<title><?php echo $string['usermanagement'] ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style style="text/css">
 body {font-size:100%}
@@ -449,32 +449,32 @@ a.access:hover {color:white}
       echo "<tr><td>&nbsp;" . $string['type'] . "<input type=\"hidden\" name=\"year\" value=\"$tmp_year\" /></td><td>";
       echo "<select name=\"grade\">\n<option value=\"\"></option>\n";
       ?>
-      <option value="University Lecturer"<?php if ($grade == 'University Lecturer' and $tmp_roles != 'inactive') echo ' selected'; ?>>University Lecturer</option>
-      <option value="University Librarian"<?php if ($grade == 'University Librarian' and $tmp_roles != 'inactive') echo ' selected'; ?>>University Librarian</option>
-      <option value="University Admin"<?php if ($grade == 'University Admin' and $tmp_roles != 'inactive') echo ' selected'; ?>>University Admin</option>
-      <option value="Technical Staff"<?php if ($grade == 'Technical Staff' and $tmp_roles != 'inactive') echo ' selected'; ?>>University IT/Technical</option>
-      <option value="NHS Lecturer"<?php if ($grade == 'NHS Lecturer' and $tmp_roles != 'inactive') echo ' selected'; ?>>NHS Lecturer/Consultant</option>
-      <option value="NHS Admin"<?php if ($grade == 'NHS Admin' and $tmp_roles != 'inactive') echo ' selected'; ?>>NHS Admin</option>
-      <option value="Staff External Examiner"<?php if ($grade == 'Staff External Examiner' and $tmp_roles != 'inactive') echo ' selected'; ?>>External Examiner</option>
-      <option value="Invigilator"<?php if ($grade == 'Invigilator' and $tmp_roles != 'inactive') echo ' selected'; ?>>Invigilator</option>
-      <option value="inactive"<?php if ($tmp_roles == 'inactive') echo ' selected'; ?>>Inactive Staff</option>
-      <option value="left"<?php if ($tmp_grade == 'left') echo ' selected'; ?>>left</option>
+      <option value="University Lecturer"<?php if ($grade == 'University Lecturer' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universitylecturer'] ?></option>
+      <option value="University Librarian"<?php if ($grade == 'University Librarian' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universitylibrarian'] ?></option>
+      <option value="University Admin"<?php if ($grade == 'University Admin' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universityadmin'] ?></option>
+      <option value="Technical Staff"<?php if ($grade == 'Technical Staff' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universitytechnical'] ?></option>
+      <option value="NHS Lecturer"<?php if ($grade == 'NHS Lecturer' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['nhslecturer'] ?></option>
+      <option value="NHS Admin"<?php if ($grade == 'NHS Admin' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['nhsadmin'] ?></option>
+      <option value="Staff External Examiner"<?php if ($grade == 'Staff External Examiner' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['externalexaminer'] ?></option>
+      <option value="Invigilator"<?php if ($grade == 'Invigilator' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['invigilator'] ?></option>
+      <option value="inactive"<?php if ($tmp_roles == 'inactive') echo ' selected'; ?>><?php echo $string['inactivestaff'] ?></option>
+      <option value="left"<?php if ($tmp_grade == 'left') echo ' selected'; ?>><?php echo $string['leftuniversity'] ?></option>
       <?php
       echo "</select>\n&nbsp;";
       if (strpos($userroles,'SysAdmin') !== false) {
         if (strpos($tmp_roles,'SysAdmin') !== false) {
-          echo "<input type=\"checkbox\" name=\"sysadmin\" value=\"1\" checked />SysAdmin";
+          echo "<input type=\"checkbox\" name=\"sysadmin\" value=\"1\" checked />" . $string['sysadmin'];
         } else {
-          echo "<input type=\"checkbox\" name=\"sysadmin\" value=\"1\" />SysAdmin";
+          echo "<input type=\"checkbox\" name=\"sysadmin\" value=\"1\" />" . $string['sysadmin'];
         }
       } else {
         // Do not allow lower levels of permission to change their account to SysAdmin
       }
       
       if (strpos($tmp_roles,'Admin') !== false and strpos($tmp_roles,'SysAdmin') === false) {
-        echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"admin\" value=\"1\" checked />Admin";
+        echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"admin\" value=\"1\" checked />" . $string['admin'];
       } else {
-        echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"admin\" value=\"1\" />Admin";
+        echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"admin\" value=\"1\" />" . $string['admin'];
       }      
       
       echo "<input type=\"hidden\" name=\"roles\" value=\"$tmp_roles\" /></td>\n";
@@ -488,10 +488,10 @@ a.access:hover {color:white}
         echo $string['externalauth'];
       } else {
         $url_email = urlencode($email);
-        echo "<input type=\"button\" onclick=\"resetPassword('$url_email')\" value=\"Reset\" />";
+        echo "<input type=\"button\" onclick=\"resetPassword('$url_email')\" value=\"{$string['reset']}\" />";
 
         if(strpos($userroles, 'SysAdmin')) {
-          echo "&nbsp;<input type=\"button\" onclick=\"forceResetPassword('$username')\" value=\"Force reset\" />";
+          echo "&nbsp;<input type=\"button\" onclick=\"forceResetPassword('$username')\" value=\"{$string['forcereset']}\" />";
         }
         
       } 
@@ -528,11 +528,11 @@ a.access:hover {color:white}
     }
     echo "<tr><td>&nbsp;Email</td><td><a href=\"mailto:$email\">$email</a></td></tr>\n";
     if ($tmp_roles == 'Student') {
-      echo "<tr><td>&nbsp;" . $string['yearofstudy'] . "</td><td>Year $year</td></tr>\n";
+      echo "<tr><td>&nbsp;" . $string['yearofstudy'] . "</td><td>{$string['year']} $year</td></tr>\n";
       echo "<tr><td>&nbsp;" . $string['course'] . "</td><td>$grade - $description</td></tr>\n";
     }
     echo "<tr><td>&nbsp;" . $string['username'] . "</td><td>$username</td></tr>\n";
-    echo "<tr><td>&nbsp;" . $string['password'] . "</td><td style=\"color:#808080\">&lt;classified information&gt;</td></tr>\n";
+    echo "<tr><td>&nbsp;" . $string['password'] . "</td><td style=\"color:#808080\">&lt;{$string['classifiedinfo']}&gt;</td></tr>\n";
     echo "<tr><td>&nbsp;" . $string['gender'] . "</td><td>$gender</td></tr>\n";
     echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
