@@ -34,7 +34,7 @@
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
+<title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
 a.user {color:black}

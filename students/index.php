@@ -116,7 +116,7 @@ for($i = 0; $i < count($modules); $i++) {
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone<?php echo " $cfg_install_type"; ?></title>
+<title>Rogō<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style type="text/css">
 body { padding-left: 0px; }

@@ -1,4 +1,6 @@
 <?php
+require_once '../lang/' . $language . '/include/status.inc';
+
 $string['question'] = 'Pytanie';
 $string['questionbank'] = 'Bank pytań';
 $string['type'] = 'Typ';
@@ -21,9 +23,4 @@ $string['copyontopaperx'] = 'Przekopiuj do arkusza X...';
 $string['linktopaperx'] = 'Powiąż z arkuszem X...';
 $string['deletequestion'] = 'Usuń pytanie';
 $string['noquestionleadin'] = 'Uwaga: brak pytania wprowadzającego!';//no question lead-in
-$string['normal'] = 'Normalne';
-$string['retired'] = 'Wycofane';
-$string['incomplete'] = 'Niekompletne';
-$string['experimental'] = 'Eksperymentalne';
-$string['beta'] = 'Beta';
 ?>

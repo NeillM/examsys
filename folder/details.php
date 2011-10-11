@@ -101,7 +101,7 @@ if (isset($_GET['module'])) {
 <html onclick="hideMenus()">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone<?php echo " $cfg_install_type"; ?></title>
+<title>Rogō<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
 <script src="../javascript/sidebar.js" type="text/javascript"></script>

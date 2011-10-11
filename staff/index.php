@@ -16,7 +16,7 @@
 
 /**
 *
-* TouchStone hompage. Uses ./include/options_menu.inc for the sidebar menu.
+* Rogō hompage. Uses ../include/options_menu.inc for the sidebar menu.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -47,7 +47,7 @@ require '../include/staff_auth.inc';
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<title>TouchStone<?php echo " $cfg_install_type"; ?></title>
+<title>Rogō<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>

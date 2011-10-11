@@ -69,10 +69,10 @@
   }
 </script>
 
-<div style="display:none; position:fixed; left:190px; top:60px; filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=4)" id="stats_menu" onclick="showAssStatsMenu(event);">
-<table border="0" cellpadding="3" cellspacing="1" style="width:490px; border:1px solid #C0C0C0; font-size:80%; background-color:white">
+<div style="z-index:20; display:none; background-color:white; position:fixed; left:190px; top:60px; box-shadow: 2px 2px 2px #808080" id="stats_menu" onclick="showAssStatsMenu(event);">
+<table border="0" cellpadding="3" cellspacing="1" style="width:490px; border:1px solid #C0C0C0; font-size:80%">
 <tr>
-<td style="background-color:#F2B100; height:5px"> </td>
+<td style="background-color:#F2B100; height:5px"></td>
 </tr>
 <tr>
 <td align="left">
@@ -118,9 +118,9 @@
   echo "<select name=\"start_month\">\n";
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($start_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
     } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
     }
   }
   echo "</select>\n";
@@ -201,9 +201,9 @@
   echo "<select name=\"end_month\">\n";
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($end_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
     } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
     }
   }
   echo "</select>\n";
@@ -422,6 +422,7 @@ if ($paper_type == '3') {
   echo "<div style=\"margin-left:25px\"><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"#\" onclick=\"go('../export/survey_csv_data.php?',event)\">" . $string['rawdatacsv'] . "</a></div>\n";
 }
 ?>
+<br />
 </form>
 </td>
 </tr>

@@ -139,7 +139,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>TouchStone: User Management<?php echo " $cfg_install_type"; ?></title>
+<title>Rogō: <?php echo $string['usermanagement'] . ' ' . $cfg_install_type; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style style="text/css">

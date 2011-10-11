@@ -40,11 +40,8 @@
   }
 </script>
 
-<div style="display:none; position:fixed; left:190px; top:80px; filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=4)" id="copy_submenu" onclick="showCopyMenu(event);">
+<div style="z-index:20; display:none; background-color:white; position:fixed; left:190px; top:150px; box-shadow: 2px 2px 2px #808080" id="copy_submenu" onclick="showCopyMenu(event);">
 <form method="post" action="copy.php">
-<br />
-<br />
-<br />
 
 <table cellpadding="1" cellspacing="1" border="0" style="background-color:white; border:1px solid #C0C0C0; font-size:90%">
 <tr>

@@ -94,7 +94,7 @@ function randomDetails($questionID) {
   $result->store_result();
   if ($result->num_rows > 0) {
     $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
-    while ($row=$result->fetch()) {
+    while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
         if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
@@ -200,7 +200,8 @@ if (isset($_GET['change_screen'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onscroll="scrollXY();" onclick="qOff(); hideMenus(); hideAssStatsMenu(event);">
 <head>
-<title>TouchStone<?php echo " $cfg_install_type"; ?></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Rogō<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style style="text/css">
   .qline {cursor:pointer;}
@@ -216,9 +217,9 @@ if (isset($_GET['change_screen'])) {
   .mee {font-size:100%;}
 </style>
 
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
-<script type="text/javascript" src="/javascript/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+<script type="text/javascript" src="../javascript/staff_help.js"></script>
+<script type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <script language="JavaScript">
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, prev_screen, next_screen, current_screen, menuID, subparts, evt) {
     tmp_ID = document.PapersMenu.oldQuestionID.value;
