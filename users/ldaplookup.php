@@ -114,7 +114,7 @@ textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px so
     echo "<tr><td>".$string['surname']."</td><td><input type=\"text\" name=\"surname\" value=\"\" size=\"40\" /></td></tr>\n";
   }
 ?>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="Lookup" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:100px" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" style="width:100px" /></td></tr>
 </table>
 </div>
 </form>
