@@ -39,6 +39,8 @@ $(function () {
   trimLongChanges();
   
   $('#addbank').click(checkMapping);
+  
+  $('#media-labels-link').click(function() { $('#media-label-upload').slideToggle(); return false;})
 });
 
 function changeTab() {

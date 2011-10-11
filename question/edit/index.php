@@ -98,6 +98,18 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
   } else {
     $critical_error = $string['mediauploaderror'];
   }
+  
+  // Handle label images for Labelling questions. These never really hit the question object as items in their own right  
+  // but are used in parameters to the Flash setup JS function
+  if ($question->get_type() == 'labelling') {
+    $label_images = array();
+    for ($i = 1; $i <= 6; $i++) {
+      $lab_media = uploadFile('label_media' . $i);
+      if ($lab_media !== false) {
+        $label_images[] = $lab_media;
+      }
+    }
+  }
 }
 
 if ($critical_error == '') {  
@@ -450,7 +462,8 @@ if($critical_error != '') {
 	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput">
 <?php
   if ($show_media_upload) {
-    include '../../include/question/addedit/media_upload.php';
+    $upload_file = "../../include/question/addedit/media_upload/media_upload_{$question->get_type()}.php";
+    include $upload_file;
   }
 ?>
 

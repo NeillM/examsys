@@ -64,12 +64,20 @@ require_once 'detail_parts/details_leadin.php';
               <td>
 <?php
 if ($media['filename'] != ''):
-  $flash_path = (strtolower($mode) == 'edit') ? './label_edit.swf' : '../add/label_add.swf';
+  $img_str = '';
+  if (strtolower($mode) == 'edit') {
+    $flash_path = './label_edit.swf';
+  } else {
+    $flash_path = '../add/label_add.swf';
+    foreach ($label_images as $lab_img) {
+      $img_str .= implode(',', $lab_img) . ';';
+    }
+  }
 ?>
                 <script type="text/javascript">
                   function swfLoaded1(message) {
                     var num = message.substring(5,message.length);
-                    setUpFlash(num, message, '<?php echo $media['filename'] ?>', '<?php echo trim(str_replace('"','&#034;',str_replace("'",'&#039;',str_replace('¬','&#172;',$correct)))); ?>', undefined, '');
+                    setUpFlash(num, message, '<?php echo $media['filename'] ?>', '<?php echo trim(str_replace('"','&#034;',str_replace("'",'&#039;',str_replace('ï¿½','&#172;',$correct)))); ?>', undefined, '<?php echo $img_str ?>');
                   }
                   write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash1" width="<?php echo ($media['width'] + 221); ?>" height="<?php echo ($plugin_height); ?>" align="middle">');
                   write_string('<param name="allowScriptAccess" value="always" />');
