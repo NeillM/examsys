@@ -121,7 +121,7 @@
     $temp_array[$q_id]['screen'] = $screen;
     $temp_array[$q_id]['q_type'] = $q_type;
     $temp_array[$q_id]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin))));
-    if (strlen($temp_array[$q_id]['leadin']) > 160) $temp_array[$row_no]['leadin'] = mb_substr($temp_array[$q_id]['leadin'],0,160) . "...";
+    if (strlen($temp_array[$q_id]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$q_id]['leadin'],0,160) . "...";
     $temp_array[$q_id]['p_id'] = $p_id;
     $temp_array[$q_id]['q_id'] = $q_id;
     $temp_array[$q_id]['display_last_edited'] = $display_last_edited;
@@ -142,7 +142,7 @@
   }
   $result->close();
 
-  $questionID_list = mb_substr($questionID_list,0,-1);
+  $questionID_list = substr($questionID_list,0,-1);
   $total_random_mark = 0;
   $total_marks = 0;
   if ($row_no > 0) {
@@ -162,13 +162,13 @@
       $tmp_match = '';
       if (preg_match( '/\d\d\d\d.\d\d\d\d/' , $paper_title , $matches) == 1) {
         $year_in_title = true;
-        $tmp_match = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
+        $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
       } elseif (preg_match( '/\d\d\d\d.\d\d/' , $paper_title , $matches) == 1) {
         $year_in_title = true;
-        $tmp_match = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
+        $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
       } elseif (preg_match( '/\d\d.\d\d/' , $paper_title , $matches) == 1) {
         $year_in_title = true;      
-        $tmp_match = '20' . mb_substr($matches[0],0,2) . '/' . mb_substr($matches[0],-2);
+        $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
       }
       if ($year_in_title == true) {
         if ($tmp_match != $session) {

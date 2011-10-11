@@ -297,8 +297,8 @@
   echo '<?mso-application progid="Word.Document"?>
 <w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
   echo $paper;
-  $tmp_start = mb_substr($_GET['startdate'], 6, 2) . '/' . mb_substr($_GET['startdate'], 4, 2) . '/' . mb_substr($_GET['startdate'], 0, 4) . ' ' . mb_substr($_GET['startdate'], 8, 2) . ':' . mb_substr($_GET['startdate'], 10, 2);
-  $tmp_end = mb_substr($_GET['enddate'], 6, 2) . '/' . mb_substr($_GET['enddate'], 4, 2) . '/' . mb_substr($_GET['enddate'], 0, 4) . ' ' . mb_substr($_GET['enddate'], 8, 2) . ':' . mb_substr($_GET['enddate'], 10, 2);
+  $tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
+  $tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
   echo '</o:Title><o:Author>TouchStone ' . $ts_version . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>TouchStone ' . $ts_version . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
   echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
   echo '</o:Created><o:LastSaved>';
@@ -366,7 +366,7 @@
         break;
       case 'dichotomous':
         for ($i=0; $i<strlen($tmp_answer); $i++) {
-          $tmp_individual_answer = mb_substr($tmp_answer, $i, 1);
+          $tmp_individual_answer = substr($tmp_answer, $i, 1);
           if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
             $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
           } else {
@@ -398,22 +398,22 @@
         }
         break;
       case 'hotspot':
-        if (mb_substr($tmp_answer,0,1) == '1') {
+        if (substr($tmp_answer,0,1) == '1') {
           $log_array[$screen][$question_ID][1]['1']++;
-        } elseif (mb_substr($tmp_answer,0,1) == '0') {
+        } elseif (substr($tmp_answer,0,1) == '0') {
           $log_array[$screen][$question_ID][1]['0']++;
         } else {
           $log_array[$screen][$question_ID][1]['u']++;
         }
         if ($log_array[$screen][$question_ID][1]['coords'] == '') {
-          $log_array[$screen][$question_ID][1]['coords'] = mb_substr($tmp_answer,2);
+          $log_array[$screen][$question_ID][1]['coords'] = substr($tmp_answer,2);
         } else {
-          $log_array[$screen][$question_ID][1]['coords'] .= ';' . mb_substr($tmp_answer,2);
+          $log_array[$screen][$question_ID][1]['coords'] .= ';' . substr($tmp_answer,2);
         }
         break;
       case 'mcq':
-        if (mb_substr($tmp_answer,0,5) == 'other') {
-          $log_array[$screen][$question_ID][1]['other'][] = mb_substr($tmp_answer,6);
+        if (substr($tmp_answer,0,5) == 'other') {
+          $log_array[$screen][$question_ID][1]['other'][] = substr($tmp_answer,6);
         } elseif ($tmp_answer == 0) {
           if (isset($log_array[$screen][$question_ID][1]['u'])) {
             $log_array[$screen][$question_ID][1]['u']++;
@@ -430,7 +430,7 @@
         break;
       case 'mrq':
         for ($i=0; $i<strlen($tmp_answer); $i++) {
-          $tmp_individual_answer = mb_substr($tmp_answer, $i, 1);
+          $tmp_individual_answer = substr($tmp_answer, $i, 1);
           if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
             $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
           } else {
@@ -583,8 +583,8 @@
         $tmp_first_split = explode(';', $correct);
         $tmp_second_split = explode('$', $tmp_first_split[8]);
         for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-          if (mb_substr($tmp_second_split[$label_no],0,1) != '|') {
-            $options_buffer[] = trim(mb_substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')));
+          if (substr($tmp_second_split[$label_no],0,1) != '|') {
+            $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')));
             $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
           }
         }

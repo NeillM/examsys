@@ -74,7 +74,7 @@ require '../include/staff_auth.inc';
     
     paperTitle = document.theform.paper_name.value;
     for (a=0; a<paperTitle.length; a++) {
-      char = paperTitle.mb_substr(a,1);
+      char = paperTitle.substr(a,1);
       if (char == '&' || char == '#' || char == '@' || char == '?' || char == '^' || char == '~') {
         alert('<?php echo $string['msg3']; ?>');
         return false;

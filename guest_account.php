@@ -28,7 +28,7 @@ require_once './classes/networkutils.class.php';
 */
 
 function encpw($u,$p) {
-  $salt = '$1$' . mb_substr(md5($u),0,12) . '$';
+  $salt = '$1$' . substr(md5($u),0,12) . '$';
   return crypt($p,$salt);
 }
 

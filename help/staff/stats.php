@@ -64,24 +64,24 @@ a:visited.page {color:white}
   
   echo "<tr><td colspan=\"3\" style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\">\n<form action=\"\" method=\"post\">\n" . $string['from'] . "\n"; 
     // Split the end date
-    $split_year = mb_substr($start_date,0,4);
-    $split_month = mb_substr($start_date,4,2);
-    $split_day = mb_substr($start_date,6,2);
+    $split_year = substr($start_date,0,4);
+    $split_month = substr($start_date,4,2);
+    $split_day = substr($start_date,6,2);
     echo "\n<select name=\"startmonth\">\n";
     // start Month
     $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
     for ($i=0; $i<12; $i++) {
       if (($split_month-1) == $i) {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       } else {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       }
     }
@@ -125,23 +125,23 @@ a:visited.page {color:white}
     echo "</select>\n";
     echo $string['to'];
     // Split the end date
-    $split_year = mb_substr($end_date,0,4);
-    $split_month = mb_substr($end_date,4,2);
-    $split_day = mb_substr($end_date,6,2);
+    $split_year = substr($end_date,0,4);
+    $split_month = substr($end_date,4,2);
+    $split_day = substr($end_date,6,2);
     echo "<select name=\"endmonth\">\n";
     // end Month
     for ($i=0; $i<12; $i++) {
       if (($split_month-1) == $i) {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       } else {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
         }
       }
     }

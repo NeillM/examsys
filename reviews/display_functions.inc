@@ -144,7 +144,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   switch ($question['q_type']) {
     case 'dichotomous':
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-      if (mb_substr($question['score_method'],0,2) == 'TF') {
+      if (substr($question['score_method'],0,2) == 'TF') {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">True</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">False</td>";
       } else {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">No</td>";
@@ -469,7 +469,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       case 'sct':
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
         echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" /></td><td>";
-        if (mb_substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
+        if (substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
           $class_type = 'inactive';
         } else {
           $class_type = 'active';
@@ -525,7 +525,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             } else {
               $blank_mark[$blank_count] = 1;
             }
-            $blank_details[$blank_count] = mb_substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
+            $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
             $answer_options = explode("[/blank]",$blank_details[$blank_count]);
             $answer_list = explode(",",$answer_options[0]);
             $correct_answer = $answer_list[0];

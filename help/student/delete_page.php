@@ -53,7 +53,7 @@
       $results = $mysqli->query("SELECT id FROM student_help WHERE body LIKE '%$filename%' AND id != " . $_GET['id']);
       if ($results->num_rows == 0) {
         // No records found - delete file
-        $target = $path . mb_substr($filename,1);
+        $target = $path . substr($filename,1);
         unlink($target);
       }
       $results->close();

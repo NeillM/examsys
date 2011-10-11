@@ -120,7 +120,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         $names = explode(' ',$student->Forename);
         $initials = '';
         foreach ($names as $tmp_name) {
-          $initials .= mb_substr($tmp_name,0,1);
+          $initials .= substr($tmp_name,0,1);
         }
         $tmp_userID = UserUtils::usernameExists($student->Username, $mysqli);
         if ($tmp_userID === false) {

@@ -35,10 +35,10 @@ Class LangUtils {
     while ($i < count($langs) and $language == '') {
       $parts = explode(';',$langs[$i]);
       $test_lang = $parts[0];
-      if (file_exists($web_root . "/lang/" . mb_substr($test_lang,0,5) . "/")) {
-        $language = mb_substr($test_lang,0,5);
-      } elseif (file_exists($web_root . "/lang/" . mb_substr($test_lang,0,2) . "/")) {
-        $language = mb_substr($test_lang,0,2);
+      if (file_exists($web_root . "/lang/" . substr($test_lang,0,5) . "/")) {
+        $language = substr($test_lang,0,5);
+      } elseif (file_exists($web_root . "/lang/" . substr($test_lang,0,2) . "/")) {
+        $language = substr($test_lang,0,2);
       }
       $i++;
     }

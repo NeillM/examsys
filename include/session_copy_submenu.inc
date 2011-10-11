@@ -90,12 +90,12 @@ function checkCopyYearForm() {
 		$dest_years = array(end($source_years));
 
 		// Get a list of destination years. Selected year will be removed by JS
-		$start_year = mb_substr(end($source_years), 0, 4);
+		$start_year = substr(end($source_years), 0, 4);
 		
 		if (is_numeric($start_year)) {
 			for ($i = $start_year + 1; $i <= $session_parts[0]; $i++) {
 				$next = $i + 1;
-				array_unshift($dest_years, $i . '/' . mb_substr($next, 2, 2));
+				array_unshift($dest_years, $i . '/' . substr($next, 2, 2));
 			}
 		} else {
 			$message = $string['msg3'];

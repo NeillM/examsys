@@ -138,11 +138,11 @@ function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
 function formatsec($seconds) {
   $diff_hour = ($seconds / 60) / 60;
   $tmp_position = strpos($diff_hour, '.');
-  if ($tmp_position > 0) $diff_hour = mb_substr($diff_hour, 0, $tmp_position);
+  if ($tmp_position > 0) $diff_hour = substr($diff_hour, 0, $tmp_position);
   if ($diff_hour > 0) $seconds -= ($diff_hour * 60) * 60;
   $diff_min = $seconds / 60;
   $tmp_position = strpos($diff_min, '.');
-  if ($tmp_position > 0) $diff_min = mb_substr($diff_min, 0, $tmp_position);
+  if ($tmp_position > 0) $diff_min = substr($diff_min, 0, $tmp_position);
   if ($diff_min > 0) $seconds -= $diff_min * 60;
   $diff_sec = $seconds;
   $timestring = '';

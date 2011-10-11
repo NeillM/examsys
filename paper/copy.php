@@ -66,11 +66,11 @@
   function checkSession($session) {
     $updated_session = $session;
     if (preg_match( '/\d\d\d\d.\d\d\d\d/' , $_POST['new_paper'], $matches) == 1) {
-      $updated_session = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
+      $updated_session = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
     } elseif (preg_match( '/\d\d\d\d.\d\d/' , $_POST['new_paper'], $matches) == 1) {
-      $updated_session = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
+      $updated_session = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
     } elseif (preg_match( '/\d\d.\d\d/' , $_POST['new_paper'], $matches) == 1) {
-      $updated_session = '20' . mb_substr($matches[0],0,2) . '/' . mb_substr($matches[0],-2);
+      $updated_session = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
     }
 
     return $updated_session;

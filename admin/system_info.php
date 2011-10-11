@@ -75,7 +75,7 @@ a.heading:hover {color:#428EFF; font-weight:bold}
     if ($row['Engine'] == 'InnoDB') {
       echo "<td>&nbsp;<span style=\"color:#808080\">" . $string['na'] . "</span></td>";
     } else {
-      echo "<td>&nbsp;" . mb_substr($row['Update_time'], 8, 2) . "/" . mb_substr($row['Update_time'], 5, 2) . "/" . mb_substr($row['Update_time'], 0, 4) .  "</td>";
+      echo "<td>&nbsp;" . substr($row['Update_time'], 8, 2) . "/" . substr($row['Update_time'], 5, 2) . "/" . substr($row['Update_time'], 0, 4) .  "</td>";
     }
     echo "<td>" . $row['Engine'] . "</td></tr>\n";
   }
@@ -141,7 +141,7 @@ if ($cfg_use_ldap == true) {
         if (strpos($individual_line,'The physical processor') !== false) {
           $tmp_line = str_replace('The physical processor has ','',trim($individual_line));
           $physical++;
-          $virtual += mb_substr($tmp_line,0,1);
+          $virtual += substr($tmp_line,0,1);
         }
         if (strpos($individual_line,'clock') !== false) {
           $processor = trim($individual_line);

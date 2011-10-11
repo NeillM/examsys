@@ -45,7 +45,7 @@ Class QuestionDICHOTOMOUS extends Question {
    * Get the labels for true/false options. These change depending on the score method
    */
   public function get_tf_labels() {
-    if (mb_substr($this->get_display_method(), 0, 2) == 'YN') {
+    if (substr($this->get_display_method(), 0, 2) == 'YN') {
       $labels = array('true' => $this->_lang_strings['abbryes'], 'false' => $this->_lang_strings['abbrno']);
     } else {
       $labels = array('true' => $this->_lang_strings['abbrtrue'], 'false' => $this->_lang_strings['abbrfalse']);

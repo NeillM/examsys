@@ -57,7 +57,7 @@ if (isset($_GET['module'])) {
 
     if (substr_count($folder_name,';') > 0) {
       $last_semicolon = strrpos($folder_name,';');
-      $path = mb_substr($folder_name,0,$last_semicolon);
+      $path = substr($folder_name,0,$last_semicolon);
       $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
       $parent_results->bind_param('si', $path, $userID);
       $parent_results->execute();

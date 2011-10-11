@@ -183,7 +183,7 @@ if (isset($_POST['Submit'])) {
       $folder_array = explode(';',$full_path);
       $sections = substr_count($full_path,';');
       $current_folder = $folder_array[$sections];
-      $prefix = mb_substr($full_path,0,strrpos($full_path,';'));
+      $prefix = substr($full_path,0,strrpos($full_path,';'));
       echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" style=\"width:100%\" >\n";
       echo "<tr><td align=\"right\"><strong>Folder&nbsp;Name&nbsp;</strong></td><td colspan=\"3\"><input type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" name=\"folder\" onkeypress=\"if (event.keyCode == 38 || event.keyCode == 59 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94)  illegalChar(event.keyCode);\" /><input type=\"hidden\" name=\"old_folder\" value=\"$full_path\"></td></tr>\n";
       echo "<input type=\"hidden\" name=\"folderID\" value=\"" . $_GET['folder'] . "\" />";
@@ -225,12 +225,12 @@ if (isset($_POST['Submit'])) {
           }
           if ($match == true) {
             if (in_array($row['moduleid'],$teams) or strpos($userroles,'SysAdmin') !== false) {
-              echo "<div style=\"background-color:highlight; color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $row['moduleid'] . "\" checked>&nbsp;" . $row['moduleid'] . ": " . mb_substr($row['fullname'],0,60) . "</div>\n";
+              echo "<div style=\"background-color:highlight; color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $row['moduleid'] . "\" checked>&nbsp;" . $row['moduleid'] . ": " . substr($row['fullname'],0,60) . "</div>\n";
             } else {
-              echo "<div style=\"background-color:highlight; color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $row['moduleid'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $row['moduleid'] . "\" checked>&nbsp;" . $row['moduleid'] . ": " . mb_substr($row['fullname'],0,60) . "</div>\n";
+              echo "<div style=\"background-color:highlight; color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $row['moduleid'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $row['moduleid'] . "\" checked>&nbsp;" . $row['moduleid'] . ": " . substr($row['fullname'],0,60) . "</div>\n";
             }
           } else {
-            echo "<div style=\"background-color:white; color:black\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $row['moduleid'] . "\">&nbsp;" . $row['moduleid'] . ": " . mb_substr($row['fullname'],0,60) . "</div>\n";
+            echo "<div style=\"background-color:white; color:black\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $row['moduleid'] . "\">&nbsp;" . $row['moduleid'] . ": " . substr($row['fullname'],0,60) . "</div>\n";
           }
           $module_no++;
         }

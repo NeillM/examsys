@@ -59,7 +59,7 @@ function parse_leadin_word_2003($text,$parts) {
         $tmptext .= ltrim($starts[$i]);
 
         if($i < ($count -1)) {
-	      if(mb_substr($starts[$i],-1) != ']' OR mb_substr($starts[$i],-1) != 'li>') {
+	      if(substr($starts[$i],-1) != ']' OR substr($starts[$i],-1) != 'li>') {
 	        $end_tags = '</w:t></w:r>';
 	        $rep_tags = '</w:t></w:r><w:r><w:t>';
 	      } else {

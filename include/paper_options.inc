@@ -474,19 +474,19 @@ if ($paper_type == '2') {
   $tmp_match = '';
   if (preg_match( '/\d\d\d\d[\/-]\d\d\d\d/' , $paper_title , $matches) == 1) {
     $year_in_title = true;
-    $tmp_match = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
+    $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
   } elseif (preg_match( '/\d\d\d\d[\/-]\d\d/' , $paper_title , $matches) == 1) {
     $year_in_title = true;
-    $tmp_match = mb_substr($matches[0],0,4) . '/' . mb_substr($matches[0],-2);
+    $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
   } elseif (preg_match( '/\d\d[\/-]\d\d/' , $paper_title , $matches) == 1) {
     $year_in_title = true;
-    $tmp_match = '20' . mb_substr($matches[0],0,2) . '/' . mb_substr($matches[0],-2);
+    $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
   }
   if ($year_in_title == true and $tmp_match != $session) {
     echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['session'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['mismatch'] . "</strong></td></tr>\n";
   }
   // Times
-  if (mb_substr($start_date,-6) == mb_substr($end_date,-6) or mb_substr($start_date,-6) == '000000' or mb_substr($start_date,-6) == '000000') {
+  if (substr($start_date,-6) == substr($end_date,-6) or substr($start_date,-6) == '000000' or substr($start_date,-6) == '000000') {
     echo "<tr><td><img src=\"/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a href=\"\" style=\"color:black\" onclick=\"paperProperties(); return false;\">" . $string['examtime'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['incorrect'] . "</strong></td></tr>\n";
   }
   

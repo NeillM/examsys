@@ -95,9 +95,9 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   }
 
   // Strip the first bar off the front.
-  $tmp_scenario = mb_substr($tmp_scenario,1);
-  $tmp_answer = mb_substr($tmp_answer,1);
-  $tmp_correct_feedback = mb_substr($tmp_correct_feedback,1);
+  $tmp_scenario = substr($tmp_scenario,1);
+  $tmp_answer = substr($tmp_answer,1);
+  $tmp_correct_feedback = substr($tmp_correct_feedback,1);
 
   // Insert into Questions
   $question_id = insert_into_questions('extmatch',$tmp_theme,$tmp_scenario,$tmp_leadin,$tmp_correct_feedback,$tmp_incorrect_feedback,'',$tmp_notes,$userID,$tmp_media,$tmp_media_width,$tmp_media_height,date("YmdHis"),date("YmdHis"),$tmp_bloom,getTeams(),$_POST['status'],$_POST['option_order']);
@@ -310,7 +310,7 @@ echo displayEditTab();
 </tr>
 <tr>
   <?php
-    if (isset($_GET['paperID']) and $_GET['paperID'] != '' and mb_substr($_GET['paperID'],0,5) != 'list:') {
+    if (isset($_GET['paperID']) and $_GET['paperID'] != '' and substr($_GET['paperID'],0,5) != 'list:') {
       echo '<td colspan="3" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank" onmousedown="AddToBank();">&nbsp;<input style="width:150px" type="submit" name="addpaper" value="Add to Bank &amp; Paper">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width: 100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';
     } else {
       echo '<td colspan="3" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';

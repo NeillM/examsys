@@ -60,7 +60,7 @@
       } else {
         $tmp_paperID = $_POST['paperID'];
       }
-      if (mb_substr($tmp_paperID,0,5) != 'find:') {
+      if (substr($tmp_paperID,0,5) != 'find:') {
         // Get the moduleID of the paper
         $result = $mysqli->prepare("SELECT moduleID, paper_ownerID FROM properties WHERE property_id=?");
         $result->bind_param('i', $tmp_paperID);
@@ -163,7 +163,7 @@
       } else {
         $tmp_paperID = $_POST['paperID'];
       }
-      if (mb_substr($tmp_paperID,0,5) != 'find:') {
+      if (substr($tmp_paperID,0,5) != 'find:') {
         $result = $mysqli->prepare("SELECT moduleID, paper_ownerID FROM properties WHERE property_id=?");
         $result->bind_param('i',$tmp_paperID);
         $result->execute();  

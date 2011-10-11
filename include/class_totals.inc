@@ -60,7 +60,7 @@ function getRandomDetails($questionID) {
     while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
         $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-        if (strlen($old_leadin) > 160) $old_leadin = mb_substr($old_leadin,0,160) . '...';
+        if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
         $paper_buffer[$old_q_id]['theme'] = $old_theme;
         $paper_buffer[$old_q_id]['q_id'] = $old_q_id;
         $paper_buffer[$old_q_id]['q_type'] = $old_q_type;
@@ -94,7 +94,7 @@ function getRandomDetails($questionID) {
 
     // Write out the last question.
     $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
-    if (strlen($old_leadin) > 160) $old_leadin = mb_substr($old_leadin,0,160) . '...';
+    if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
     $paper_buffer[$old_q_id]['theme'] = $old_theme;
     $paper_buffer[$old_q_id]['q_id'] = $old_q_id;
     $paper_buffer[$old_q_id]['q_type'] = $old_q_type;
@@ -134,7 +134,7 @@ function checkDisplayExcluded(&$html, $q_id, $exclude, $q_no) {
    $subpart = '';
    if (strlen($exclude[$q_id]) > 1) {
      for ($i=0; $i<strlen($exclude[$q_id]); $i++) {
-       if (mb_substr($exclude[$q_id],$i,1) == '1') {
+       if (substr($exclude[$q_id],$i,1) == '1') {
          if ($subpart == '') {
            $subpart = chr($i+97);
          } else {
@@ -184,7 +184,7 @@ function get_ss_pass(&$pass_score, &$distinction_score) {
     if ($status != 'Experimental') {
       $individual_ratings = explode(',',$rating);
       for ($i=0; $i<count($individual_ratings); $i++) {
-        if (!isset($excluded[$questionID]) or mb_substr($excluded[$questionID],$i,1) == 0) {
+        if (!isset($excluded[$questionID]) or substr($excluded[$questionID],$i,1) == 0) {
           if (in_array($individual_ratings[$i],$std_types)) $ebel_marks[$individual_ratings[$i]]++;
         }
         $std_total += $individual_ratings[$i];
@@ -315,7 +315,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
     if ($marking == '1') {                                   // Monkey mark
       $master_array[$user_number]['percent'] = round(($tmp_user_mark/$total_marks)*100);
       $master_array[$user_number]['adj_percent'] = round((($tmp_user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100);
-    } elseif (mb_substr($marking,0,1) == '2') {                 // Standards Setting
+    } elseif (substr($marking,0,1) == '2') {                 // Standards Setting
       $master_array[$user_number]['percent'] = ($tmp_user_mark/$total_marks)*100;
       $master_array[$user_number]['adj_percent'] = ($tmp_user_mark/$total_marks)*100;
     } else {                                                 // Unadjusted mark
@@ -403,7 +403,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           $sub_user_answers = explode('$',$user_answers[$a]);
           $exclude_on = true;
           for ($b=0; $b<count($sub_paper_answers); $b++) {
-            if (mb_substr($tmp_exclude,$section,1) == '0') {
+            if (substr($tmp_exclude,$section,1) == '0') {
               for ($c=0; $c<count($sub_user_answers); $c++) {
                 if ($sub_paper_answers[$b] == $sub_user_answers[$c]) $answers_correct++;
               }
@@ -414,7 +414,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           $tmp_mark += $answers_correct;
           if ($exclude_on == false) $tmp_user_mark_array[] = $answers_correct;
         } else {   // Matrix
-          if (mb_substr($tmp_exclude,$a,1) == '0') {
+          if (substr($tmp_exclude,$a,1) == '0') {
             if ($paper_answers[$a] == $user_answers[$a]) {
               $tmp_mark++;
               $tmp_user_mark_array[] = 1;
@@ -433,7 +433,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       $tmp_exclude = '0000000000000000000000000000000000000000';
     }
     for ($a=0; $a<count($user_answers)-1; $a++) {
-      if (mb_substr($tmp_exclude,$a,1) == '0') {
+      if (substr($tmp_exclude,$a,1) == '0') {
         if ($paper_buffer[$q_id]['score_method'] == 'dropdown') {
           if ($paper_buffer[$q_id]['correct'][$a] == $user_answers[$a+1]) {
             $tmp_mark++;
@@ -464,12 +464,12 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       } else {
         $tmp_exclude = '0000000000000000000000000000000000000000';
       }
-      if (mb_substr($tmp_exclude,$a,1) == '0') {
-        if ($paper_buffer[$q_id]['correct'][$a] == mb_substr($tmp_user_answer,$a,1)) {
+      if (substr($tmp_exclude,$a,1) == '0') {
+        if ($paper_buffer[$q_id]['correct'][$a] == substr($tmp_user_answer,$a,1)) {
           $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
           $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
         } else {
-          if (mb_substr($tmp_user_answer,$a,1) == 'a' or mb_substr($tmp_user_answer,$a,1) == 'u') {
+          if (substr($tmp_user_answer,$a,1) == 'a' or substr($tmp_user_answer,$a,1) == 'u') {
             $tmp_mark += 0;
             $tmp_user_mark_array[] = 0;
           } else {
@@ -495,12 +495,12 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
     $i = 0;
     $excluded_no = 0;
     for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-      if (mb_substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
-      if (mb_substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-        if (mb_substr($tmp_exclude,$i,1) == '0') {
+      if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
+      if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+        if (substr($tmp_exclude,$i,1) == '0') {
           $x = $tmp_second_split[$label_no-2];
           $y = $tmp_second_split[$label_no-1] - 25;
-          $correct_labels[$x . 'x' . $y] = mb_substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
+          $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
           $placeholders++;
         } else {
           $excluded_no++;
@@ -551,11 +551,11 @@ function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
 function formatsec($seconds) {
   $diff_hour = ($seconds / 60) / 60;
   $tmp_position = strpos($diff_hour, '.');
-  if ($tmp_position > 0) $diff_hour = mb_substr($diff_hour, 0, $tmp_position);
+  if ($tmp_position > 0) $diff_hour = substr($diff_hour, 0, $tmp_position);
   if ($diff_hour > 0) $seconds -= ($diff_hour * 60) * 60;
   $diff_min = $seconds / 60;
   $tmp_position = strpos($diff_min, '.');
-  if ($tmp_position > 0) $diff_min = mb_substr($diff_min, 0, $tmp_position);
+  if ($tmp_position > 0) $diff_min = substr($diff_min, 0, $tmp_position);
   if ($diff_min > 0) $seconds -= $diff_min * 60;
   $diff_sec = $seconds;
   $timestring = '';
@@ -669,8 +669,8 @@ while ($result->fetch()) {
       for ($i=1; $i<=$no_answers; $i++) {
         $blank_details[$i] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$blank_details[$i]);
         $blank_details[$i] = preg_replace("| size=\"([0-9]{1,3})\"|","",$blank_details[$i]);
-        $blank_details[$i] = mb_substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
-        $blank_details[$i] = mb_substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
+        $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
+        $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
         $answer_list = explode(',',$blank_details[$i]);
         $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
         if ($score_method == 'textboxes') {
@@ -1017,7 +1017,7 @@ if ($log_query->num_rows > 0) {
   }
 }
 
-if (mb_substr($marking,0,1) == '2') {
+if (substr($marking,0,1) == '2') {
   get_ss_pass($ss_pass, $ss_hon);
 
   for ($i=0; $i<$user_no; $i++) {

@@ -153,15 +153,15 @@ HTML;
       $change_new_more = '';
       $split_pos = 0;
       if (strlen($change['old']) > $cutoff) {
-        $split_pos = strrpos(mb_substr($change['old'], 0, $cutoff), ' ');
-        $change_old = mb_substr($change['old'], 0, $split_pos);
-        $change_old_more = mb_substr($change['old'], $split_pos);
+        $split_pos = strrpos(substr($change['old'], 0, $cutoff), ' ');
+        $change_old = substr($change['old'], 0, $split_pos);
+        $change_old_more = substr($change['old'], $split_pos);
         $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
       }
       if (strlen($change['new']) > $cutoff) {
-        $split_pos = strrpos(mb_substr($change['new'], 0, $cutoff), ' ');
-        $change_new = mb_substr($change['new'], 0, $split_pos);
-        $change_new_more = mb_substr($change['new'], $split_pos);
+        $split_pos = strrpos(substr($change['new'], 0, $cutoff), ' ');
+        $change_new = substr($change['new'], 0, $split_pos);
+        $change_new_more = substr($change['new'], $split_pos);
         $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
       }
       $html .= <<< HTML

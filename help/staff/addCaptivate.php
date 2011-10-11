@@ -35,22 +35,22 @@ function unique_filename($filename, $path) {
     $filename = str_replace('@','',$filename);
     $filename = str_replace('+','',$filename);
     while (file_exists($path . $filename)) {
-      $tmp_file_ext = mb_substr($filename,strpos($filename,".")+1);
-      if (intval(mb_substr($filename,strpos($filename,".")-4)) > 0) {
-        $tmp_file_name = mb_substr($filename,0,strpos($filename,".")-4);
-        $tmp_file_no = mb_substr($filename,strpos($filename,".")-4,4);
-      } elseif (intval(mb_substr($filename,strpos($filename,".")-3)) > 0) {
-        $tmp_file_name = mb_substr($filename,0,strpos($filename,".")-3);
-        $tmp_file_no = mb_substr($filename,strpos($filename,".")-3,3);
-      } elseif (intval(mb_substr($filename,strpos($filename,".")-2)) > 0) {
-        $tmp_file_name = mb_substr($filename,0,strpos($filename,".")-2);
-        $tmp_file_no = mb_substr($filename,strpos($filename,".")-2,2);
-      } elseif (intval(mb_substr($filename,strpos($filename,".")-1)) > 0) {
-        $tmp_file_name = mb_substr($filename,0,strpos($filename,".")-1);
-        $tmp_file_no = mb_substr($filename,strpos($filename,".")-1,1);
+      $tmp_file_ext = substr($filename,strpos($filename,".")+1);
+      if (intval(substr($filename,strpos($filename,".")-4)) > 0) {
+        $tmp_file_name = substr($filename,0,strpos($filename,".")-4);
+        $tmp_file_no = substr($filename,strpos($filename,".")-4,4);
+      } elseif (intval(substr($filename,strpos($filename,".")-3)) > 0) {
+        $tmp_file_name = substr($filename,0,strpos($filename,".")-3);
+        $tmp_file_no = substr($filename,strpos($filename,".")-3,3);
+      } elseif (intval(substr($filename,strpos($filename,".")-2)) > 0) {
+        $tmp_file_name = substr($filename,0,strpos($filename,".")-2);
+        $tmp_file_no = substr($filename,strpos($filename,".")-2,2);
+      } elseif (intval(substr($filename,strpos($filename,".")-1)) > 0) {
+        $tmp_file_name = substr($filename,0,strpos($filename,".")-1);
+        $tmp_file_no = substr($filename,strpos($filename,".")-1,1);
       } else {
         // Trap the filename with no number.
-        $tmp_file_name = mb_substr($filename,0,strpos($filename,"."));
+        $tmp_file_name = substr($filename,0,strpos($filename,"."));
       }
       $tmp_file_no++;
       $filename = $tmp_file_name . $tmp_file_no . "." . $tmp_file_ext;

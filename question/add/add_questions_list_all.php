@@ -91,7 +91,7 @@ require '../../include/staff_auth.inc';
   $question_array = array();
   while ($row = $question_data->fetch_assoc()) {
     $tmp_leadin = strip_tags($row['leadin']);
-    if (strlen($tmp_leadin) > 160) $tmp_leadin = mb_substr($tmp_leadin,0,160) . '...';
+    if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
       
     echo "<tr><td>";

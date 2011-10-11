@@ -150,7 +150,7 @@ require '../include/staff_auth.inc';
           $chars = strlen($log_array[$tmp_user_ID][$tmp_question_ID]);
           for ($char_pos=0; $char_pos<$chars; $char_pos++) {
             echo "<question no=\"$Qno.$sub_part\">";
-            echo mb_substr($log_array[$tmp_user_ID][$tmp_question_ID], $char_pos, 1);
+            echo substr($log_array[$tmp_user_ID][$tmp_question_ID], $char_pos, 1);
             echo "</question>\n";
             $sub_part++;
           }

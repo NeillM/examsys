@@ -58,11 +58,11 @@
   while ($row = $changes->fetch()) {
     $new = strip_tags($new);
     $new = str_replace('&nbsp;','',$new);
-    if (strlen($new) > 100) $new = mb_substr($new, 0, 100) . '...';
+    if (strlen($new) > 100) $new = substr($new, 0, 100) . '...';
     
     $old = strip_tags($old);
     $old = str_replace('&nbsp;','',$old);
-    if (strlen($old) > 100) $old = mb_substr($old, 0, 100) . '...';
+    if (strlen($old) > 100) $old = substr($old, 0, 100) . '...';
     
     if ($new == '') $new = '&nbsp;';
     if ($old == '') $old = '&nbsp;';

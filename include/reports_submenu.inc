@@ -82,15 +82,15 @@
 <tr>
 
 <?php
-  $start_year = mb_substr($start_date,0,4);
-  $start_month = mb_substr($start_date,4,2);
-  $start_day = mb_substr($start_date,6,2);
-  $start_time = mb_substr($start_date,8,4) . '00';
+  $start_year = substr($start_date,0,4);
+  $start_month = substr($start_date,4,2);
+  $start_day = substr($start_date,6,2);
+  $start_time = substr($start_date,8,4) . '00';
 
-  $end_year = mb_substr($end_date,0,4);
-  $end_month = mb_substr($end_date,4,2);
-  $end_day = mb_substr($end_date,6,2);
-  $end_time = mb_substr($end_date,8,4) . '00';
+  $end_year = substr($end_date,0,4);
+  $end_month = substr($end_date,4,2);
+  $end_day = substr($end_date,6,2);
+  $end_time = substr($end_date,8,4) . '00';
 
   $month_names = array('january','february','march','april','may','june','july','august','september','october','november','december');
   $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
@@ -118,9 +118,9 @@
   echo "<select name=\"start_month\">\n";
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($start_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . substr($string[$month_names[$i]],0,3) . "</option>\n";
     } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\">" . substr($string[$month_names[$i]],0,3) . "</option>\n";
     }
   }
   echo "</select>\n";
@@ -201,9 +201,9 @@
   echo "<select name=\"end_month\">\n";
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($end_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . substr($string[$month_names[$i]],0,3) . "</option>\n";
     } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
+      echo "<option value=\"" . $month_nos[$i] . "\">" . substr($string[$month_names[$i]],0,3) . "</option>\n";
     }
   }
   echo "</select>\n";

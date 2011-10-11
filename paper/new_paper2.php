@@ -248,7 +248,7 @@ require_once '../classes/dateutils.class.php';
     echo "<select name=\"session\">\n";
     while ($row = $module_details->fetch()) {
       if ($next_flag == 1) {
-        $next_session = (mb_substr($calendar_year,0,4) + 1) . '/' . (mb_substr($calendar_year,-2) + 1);
+        $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
         echo "<option value=\"$next_session\">$next_session</option>\n";
         $next_flag = 0;
       }
@@ -385,10 +385,10 @@ require_once '../classes/dateutils.class.php';
   $timezone_array = array('*Africa','Dakar','Johannesburg','*America','Anchorage','Denver','Chicago','Halifax','Los_Angeles','New_York','Mexico_City','*Asia','Dubai','Istanbul','Kuala_Lumpur','Shanghai','Singapore','Tokyo','*Australia','Adelaide','Perth','Sydney','Victoria','*Europe','Budapest','London','Moscow','Oslo','Paris','Vienna','*Pacific','Fiji','Auckland');
   $old_prefix = '';
   foreach ($timezone_array as $individual_zone) {
-    if (mb_substr($individual_zone,0,1) == '*') {
+    if (substr($individual_zone,0,1) == '*') {
       if ($old_prefix != '') echo "</optgroup>\n";
-      echo "<optgroup label=\"" . mb_substr($individual_zone,1) . "\">\n";
-      $old_prefix = mb_substr($individual_zone,1);
+      echo "<optgroup label=\"" . substr($individual_zone,1) . "\">\n";
+      $old_prefix = substr($individual_zone,1);
     } else {
       if ($individual_zone == 'London') {  // Make UK time the default.
         echo "<option value=\"" . $old_prefix . "/" . $individual_zone . "\" selected>" . str_replace('_',' ',$individual_zone) . "</option>";
@@ -418,9 +418,9 @@ require_once '../classes/dateutils.class.php';
   $result->bind_result($module_id, $module_name);
   while ($row = $result->fetch()) {
     if (isset($_POST['module']) and $_POST['module'] == $module_id) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" checked />&nbsp;" . $module_id . " - " . mb_substr($module_name,0,60) . "</div>\n";
+      echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" checked />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" />&nbsp;" . $module_id . " - " . mb_substr($module_name,0,60) . "</div>\n";
+      echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
     }
     $module_no++;
   }

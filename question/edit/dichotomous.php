@@ -66,10 +66,10 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Correct') {
   while ($row = $result->fetch()) {
     $mark = 0;
     for ($i=0; $i<strlen($correct_answers); $i++) {
-      if (mb_substr($correct_answers,$i,1) == mb_substr($user_answer,$i,1)) {
+      if (substr($correct_answers,$i,1) == substr($user_answer,$i,1)) {
         $mark++;
       } else {
-        if (mb_substr($user_answer,$i,1) == 't' or mb_substr($user_answer,$i,1) == 'f') $mark -= $subtract;    // Do not subtract marks for unanswered or abstein.
+        if (substr($user_answer,$i,1) == 't' or substr($user_answer,$i,1) == 'f') $mark -= $subtract;    // Do not subtract marks for unanswered or abstein.
       }
     }
     $updateLog = $mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");

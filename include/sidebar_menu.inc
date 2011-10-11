@@ -69,10 +69,10 @@
     if (count($options) > 20) echo "<div id=\"" . $menuNo . "_up\" class=\"popupitem\" onMouseOver=\"scrollUpStart('popup$menuNo',myOptions" . $menuNo . ",myURLs" . $menuNo . ",'myOptions" . $menuNo . "')\" onMouseOut=\"scrollUpEnd()\"><img src=\"/artwork/submenu_up_off.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
     foreach ($options as $title=>$url) {
       $itemID = $menuNo . '_' . $line;
-      if (mb_substr($url,0,1) == '-') {
+      if (substr($url,0,1) == '-') {
         echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"hideMenus(event)\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:red; color:red\" /></div>\n";
-        } elseif (mb_substr($url,0,1) == '#') {
-        echo "<div class=\"popupitembold\" id=\"$itemID\">" . mb_substr($url,1) . "</div>\n";
+        } elseif (substr($url,0,1) == '#') {
+        echo "<div class=\"popupitembold\" id=\"$itemID\">" . substr($url,1) . "</div>\n";
       } else {
         if (stripos($url,'JavaScript:') === false) {
           echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"window.location='$url'\" onmouseover=\"menuRowOn('$itemID');\" onmouseout=\"menuRowOff('$itemID');\">/$title</div>\n";

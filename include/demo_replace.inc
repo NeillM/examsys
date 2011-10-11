@@ -36,7 +36,7 @@ function demo_replace($text, $demo_on) {
     $new_text = '';
     $upper_flag = true;
     for ($i=0; $i<strlen($text); $i++) {
-      if (mb_substr($text,$i,1) == ' ') {
+      if (substr($text,$i,1) == ' ') {
         $new_text .= ' ';
         $upper_flag = true;
       } elseif ($upper_flag == true) {

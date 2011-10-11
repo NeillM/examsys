@@ -33,9 +33,9 @@ require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/networkutils.c
  *
  */
 function time_to_seconds($seconds) {
-  $hr = intval(mb_substr($seconds,8,2));
-  $min = intval(mb_substr($seconds,10,2));
-  $sec = intval(mb_substr($seconds,12,2));
+  $hr = intval(substr($seconds,8,2));
+  $min = intval(substr($seconds,10,2));
+  $sec = intval(substr($seconds,12,2));
   return ($hr * 3600) + ($min * 60) + $sec;
 }
 
@@ -639,8 +639,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           }
 
           // Get correct answer.
-          $blank_details[$i] = mb_substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
-          $blank_details[$i] = mb_substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
+          $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
+          $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
           $answer_list = explode(',',$blank_details[$i]);
           $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
           if ($score_method == 'textboxes') {

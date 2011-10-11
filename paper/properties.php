@@ -409,7 +409,7 @@ if (isset($_POST['Submit'])) {
       
       paperTitle = edit_form.paper.value;
       for (a=0; a<paperTitle.length; a++) {
-        char = paperTitle.mb_substr(a,1);
+        char = paperTitle.substr(a,1);
         if (char == '&' || char == '#' || char == '@' || char == '?' || char == '^' || char == '~') {
           alert('A paper name cannot contain any of the following characters:\r      &  #  @  ?  ^  ~');
           return false;
@@ -852,7 +852,7 @@ if ($paper_type != '4' and $paper_type != '5') {
       $std_set_details->store_result();
       if ($std_set_details->num_rows > 0) {
         echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\"";
-        if (mb_substr($marking,0,1) == '2') echo ' checked';
+        if (substr($marking,0,1) == '2') echo ' checked';
         echo " />";
         echo $string['stdset'] . ' <select name="std_set">';
         $std_set_details->bind_result($std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $std_set_date, $group_review);
@@ -931,10 +931,10 @@ if ($paper_type != '4' and $paper_type != '5') {
     $timezone_array = array('*Africa','Dakar','Johannesburg','*America','Anchorage','Denver','Chicago','Halifax','Los_Angeles','New_York','Mexico_City','*Asia','Dubai','Istanbul','Kuala_Lumpur','Shanghai','Singapore','Tokyo','*Australia','Adelaide','Perth','Sydney','Victoria','*Europe','Budapest','London','Moscow','Oslo','Paris','Vienna','*Pacific','Fiji','Auckland');
     $old_prefix = '';
     foreach ($timezone_array as $individual_zone) {
-      if (mb_substr($individual_zone,0,1) == '*') {
+      if (substr($individual_zone,0,1) == '*') {
         if ($old_prefix != '') echo "</optgroup>\n";
-        echo "<optgroup label=\"" . mb_substr($individual_zone,1) . "\">\n";
-        $old_prefix = mb_substr($individual_zone,1);
+        echo "<optgroup label=\"" . substr($individual_zone,1) . "\">\n";
+        $old_prefix = substr($individual_zone,1);
       } else {
         if ($timezone == $old_prefix . '/' . $individual_zone) {
           echo "<option value=\"" . $old_prefix . "/" . $individual_zone . "\" selected>" . str_replace('_',' ',$individual_zone) . "</option>";
@@ -956,17 +956,17 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "<tr><td align=\"right\" valign=\"top\">" . $string['availablefrom'] . "</td><td>";
 
     // Split the start date
-    $split_year = mb_substr($start_date,0,4);
-    $split_month = mb_substr($start_date,5,2);
-    $split_day = mb_substr($start_date,8,2);
-    $split_hour = mb_substr($start_date,11,2);
-    $split_minute = mb_substr($start_date,14,2);
+    $split_year = substr($start_date,0,4);
+    $split_month = substr($start_date,5,2);
+    $split_day = substr($start_date,8,2);
+    $split_hour = substr($start_date,11,2);
+    $split_minute = substr($start_date,14,2);
 
     // Available from Month
     echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
     $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
     for ($i=0; $i<12; $i++) {
-      $trans_month = mb_substr($string[$months[$i]],0,3);
+      $trans_month = substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
@@ -1031,18 +1031,18 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "</select>\n</td>\n";
 
     // Split the end date
-    $split_year = mb_substr($end_date,0,4);
-    $split_month = mb_substr($end_date,5,2);
-    $split_day = mb_substr($end_date,8,2);
-    $split_hour = mb_substr($end_date,11,2);
-    $split_minute = mb_substr($end_date,14,2);
+    $split_year = substr($end_date,0,4);
+    $split_month = substr($end_date,5,2);
+    $split_day = substr($end_date,8,2);
+    $split_hour = substr($end_date,11,2);
+    $split_minute = substr($end_date,14,2);
 
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td><select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
     // Available to Month
     //$months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
 
     for ($i=0; $i<12; $i++) {
-      $trans_month = mb_substr($string[$months[$i]],0,3);
+      $trans_month = substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
@@ -1135,12 +1135,12 @@ if ($paper_type != '4' and $paper_type != '5') {
         }
         if ($match == true) {
           if (in_array($module['id'],$teams) or strpos($userroles,'SysAdmin') !== false) {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . mb_substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . mb_substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           }
         } else {
-          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . mb_substr($module['fullname'],0,60) . "</div>\n";
+          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
         }
         $module_no++;  
         $old_school = $module['school'];        
@@ -1214,15 +1214,15 @@ if ($paper_type != '4' and $paper_type != '5') {
 <tr><td><?php echo $string['deadline']; ?>&nbsp;
 <?php
     // Split the end date
-    $split_year = mb_substr($internal_review_deadline,0,4);
-    $split_month = mb_substr($internal_review_deadline,5,2);
-    $split_day = mb_substr($internal_review_deadline,8,2);
+    $split_year = substr($internal_review_deadline,0,4);
+    $split_month = substr($internal_review_deadline,5,2);
+    $split_day = substr($internal_review_deadline,8,2);
 
     echo "<select name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     // Available to Month
     //$months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
     for ($i=0; $i<12; $i++) {
-      $trans_month = mb_substr($string[$months[$i]],0,3);
+      $trans_month = substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
@@ -1284,9 +1284,9 @@ if ($paper_type != '4' and $paper_type != '5') {
 <td><?php echo $string['deadline']; ?>&nbsp;
 <?php
     // Split the end date
-    $split_year = mb_substr($external_review_deadline,0,4);
-    $split_month = mb_substr($external_review_deadline,5,2);
-    $split_day = mb_substr($external_review_deadline,8,2);
+    $split_year = substr($external_review_deadline,0,4);
+    $split_month = substr($external_review_deadline,5,2);
+    $split_day = substr($external_review_deadline,8,2);
 
     echo "<select name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     // Available to Month

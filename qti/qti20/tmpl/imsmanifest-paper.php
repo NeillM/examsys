@@ -148,7 +148,7 @@ http://www.imsglobal.org/xsd/imsmd_v1p2 http://www.imsglobal.org/xsd/imsmd_v1p2p
 			</metadata>
 <? foreach ($data->files as $file) : ?>
 <? if ($file->id != $question->load_id) continue; ?>
-<? //if (strtolower(mb_substr($file->filename,strlen($file->filename)-3,3)) == "xml") continue; ?>
+<? //if (strtolower(substr($file->filename,strlen($file->filename)-3,3)) == "xml") continue; ?>
 			<file href="<?=$file->filename?>"/>
 <? endforeach; ?>
 		</resource>

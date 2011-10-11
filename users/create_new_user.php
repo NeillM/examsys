@@ -39,11 +39,11 @@
     
     $word = ucfirst($word); 
        
-    if (mb_substr($word,1,1) == "'") { 
-      if (mb_substr($word,0,1) == "D") { 
+    if (substr($word,1,1) == "'") { 
+      if (substr($word,0,1) == "D") { 
         $word = strtolower($word); 
       } 
-      $next = mb_substr($word,2,1); 
+      $next = substr($word,2,1); 
       $next = strtoupper($next); 
       $word = substr_replace($word, $next, 2, 1); 
     }
@@ -87,7 +87,7 @@
     $initials = '';
     $first_names_array = explode(' ',$_POST['new_first_names']);
     foreach ($first_names_array as $individual_name) {
-      $initials .= trim(mb_substr($individual_name,0,1));
+      $initials .= trim(substr($individual_name,0,1));
     }
     $initials = strtoupper($initials);
   
@@ -204,7 +204,7 @@ function checkForm() {
   } else {
     username = document.newUser.new_username.value;
     for (a=0; a<username.length; a++) {
-      char = username.mb_substr(a,1);
+      char = username.substr(a,1);
       if (char == '_') {
         alert('<?php echo $string['usernamechars'] ?>');
         return false;

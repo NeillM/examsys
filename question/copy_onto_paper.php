@@ -55,7 +55,7 @@ td {font-size:80%}
 
     paperTitle = theForm.new_paper.value;
     for (a=0; a<paperTitle.length; a++) {
-      char = paperTitle.mb_substr(a,1);
+      char = paperTitle.substr(a,1);
       if (char == '&' || char == '#' || char == '@' || char == '?' || char == '^' || char == '~') {
         alert('A paper name cannot contain any of the following characters:\r      &  #  @  ?  ^  ~');
         return false;

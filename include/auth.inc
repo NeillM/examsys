@@ -206,7 +206,7 @@ function db_auth($u, $p, $db) {
  *
  */
 function encpw($u,$p) {
-  $salt = '$1$' . mb_substr(md5($u),0,12) . '$';
+  $salt = '$1$' . substr(md5($u),0,12) . '$';
   return crypt($p,$salt);
 }
 
@@ -226,7 +226,7 @@ function gen_password() {
   $pass = '';
   $chars = array($lower,$lower,$lower,$special,$num,$num,$upper,$upper);
   for($i = 0; $i < 8; $i++) { 
-    $pass .= mb_substr($chars[$i],rand(0,51),1);
+    $pass .= substr($chars[$i],rand(0,51),1);
   }
   return $pass;
 }

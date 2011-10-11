@@ -491,7 +491,7 @@ QUERY;
   
   public static function option_factory($mysqli, $user_id, $question, $number, &$lang_strings, $data=-1) {
     $object = null;
-    $root = (mb_substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
+    $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
     $root .= 'classes/';
     
     $question_type = $question->get_type();

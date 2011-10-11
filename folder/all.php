@@ -125,17 +125,17 @@
     $results = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM (schools, admin_access, modules) WHERE schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=$userID ORDER BY moduleid");
   }
   while ($row = $results->fetch_assoc()) {
-    if ($old_letter !== mb_substr($row['moduleid'],0,1)) {
+    if ($old_letter !== substr($row['moduleid'],0,1)) {
       if ($module_block == true) {
         echo "</div>\n";
         $module_block = false;
       }
     }
-    if ($old_letter !== mb_substr($row['moduleid'],0,1)) {
+    if ($old_letter !== substr($row['moduleid'],0,1)) {
       if ($row['moduleid'] === '') {
-        echo "<div class=\"greysch\"><img src=\"../artwork/folder_16_grey.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" />&nbsp;" . mb_substr($row['moduleid'],0,1) . "</div>\n";
+        echo "<div class=\"greysch\"><img src=\"../artwork/folder_16_grey.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" />&nbsp;" . substr($row['moduleid'],0,1) . "</div>\n";
       } else {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" onclick=\"showHide($block_id)\" />&nbsp;<a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">" . mb_substr($row['moduleid'],0,1) . "</a></div>\n";
+        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" onclick=\"showHide($block_id)\" />&nbsp;<a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">" . substr($row['moduleid'],0,1) . "</a></div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -146,7 +146,7 @@
     if ($row['moduleid'] !== '') {
       echo "<div class=\"mod\"><a href=\"details.php?module=" . $row['moduleid'] . "\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" /></a>&nbsp;<a href=\"details.php?module=" . $row['moduleid'] . "\" target=\"_top\">" . $row['moduleid'] . ": " . $row['fullname'] . "</a></div>\n";
     }
-    $old_letter = mb_substr($row['moduleid'],0,1);
+    $old_letter = substr($row['moduleid'],0,1);
   }
   $results->close();
 

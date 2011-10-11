@@ -201,7 +201,7 @@ class IE_qti12_Save extends IE_Main {
   function SaveCalculation(&$question) {
     $question->formula = trim($question->formula);
 
-    if (mb_substr($question->formula, 0, 1) == "=") $question->formula = mb_substr($question->formula, 1);
+    if (substr($question->formula, 0, 1) == "=") $question->formula = substr($question->formula, 1);
 
     $question->origleadin = $question->leadin;
     $q_text = $question->leadin;

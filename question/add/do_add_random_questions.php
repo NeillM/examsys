@@ -42,7 +42,7 @@
       
       $leadin = trim(strip_tags($leadin));
       $leadin = preg_replace( '/\r\n/', ' ',$leadin);
-      if (strlen($leadin) > 160) $leadin = mb_substr($leadin,0,160) . '...';
+      if (strlen($leadin) > 160) $leadin = substr($leadin,0,160) . '...';
       $newHTML .= "<div style=\"background-color:highlight; color:white\" id=\"divquestion_$question_no\"><input type=\"hidden\" name=\"question_id$question_no\" value=\"$item\" /><input type=\"checkbox\" onclick=\"toggle(\'divquestion_$question_no\'); updateList();\" id=\"question_text$question_no\" name=\"question_text$question_no\" value=\"" . addslashes($leadin) . "\" checked>&nbsp;" .  addslashes($leadin) . "</div>";
       $question_no++;
     }

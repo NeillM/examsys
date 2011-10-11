@@ -97,7 +97,7 @@
     if (isset($_GET['graduates']) and $_GET['graduates'] != '') $roles_sql .= " OR roles = 'Graduate'";
     if (isset($_GET['leavers']) and $_GET['leavers'] != '') $roles_sql .= " OR roles = 'left'";
     if (isset($_GET['suspended']) and $_GET['suspended'] != '') $roles_sql .= " OR roles = 'suspended'";
-    if ($roles_sql != '') $roles_sql = '(' . mb_substr($roles_sql,4) . ')';
+    if ($roles_sql != '') $roles_sql = '(' . substr($roles_sql,4) . ')';
     if (isset($_GET['leavers']) and $_GET['leavers'] == '' and isset($_GET['staff']) and  $_GET['staff'] != '') $roles_sql .= " AND grade != 'left'";
 
     $needs_array = array();
@@ -313,12 +313,12 @@ if ($sortby == 'title') {
   $old_year = '';
   $x = 0;
   while ($row = $user_data->fetch_assoc()) {
-    if ($old_letter != strtoupper(mb_substr($row['surname'],0,1)) and $sortby == 'surname') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . strtoupper(mb_substr($row['surname'],0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+    if ($old_letter != strtoupper(substr($row['surname'],0,1)) and $sortby == 'surname') {
+      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . strtoupper(substr($row['surname'],0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_title != $row['title'] and $sortby == 'title') {
       echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string[strtolower($row['title'])] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_username != mb_substr($row['username'],0,4) and $sortby == 'username') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . mb_substr($row['username'],0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+    } elseif ($old_username != substr($row['username'],0,4) and $sortby == 'username') {
+      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . substr($row['username'],0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_grade != $row['grade'] and $sortby == 'grade') {
       echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $row['grade'] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_year != $row['yearofstudy'] and $sortby == 'yearofstudy') {
@@ -389,9 +389,9 @@ if ($sortby == 'title') {
       echo "<td class=\"fn\">" . $string['na'] . "</td>";
     }
     echo "<td>" . $row['yearofstudy'] . "</td><td>&nbsp;" . $row['grade'] . "</td></tr>\n";
-    $old_letter = strtoupper(mb_substr($row['surname'],0,1));
+    $old_letter = strtoupper(substr($row['surname'],0,1));
     $old_title = $row['title'];
-    $old_username = mb_substr($row['username'],0,4);
+    $old_username = substr($row['username'],0,4);
     $old_grade = $row['grade'];
     $old_year = $row['yearofstudy'];
     $x++;

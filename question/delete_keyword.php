@@ -34,7 +34,7 @@ require './include/staff_auth.inc';
     $new_keyword_list = preg_replace('/;' . $_POST['deleteword'] . '$/', '', $new_keyword_list);
     $new_keyword_list = preg_replace('/^' . $_POST['deleteword'] . '$/', '', $new_keyword_list);
     
-    if (mb_substr($new_keyword_list,0,1) == ';') $new_keyword_list = mb_substr($new_keyword_list,1);
+    if (substr($new_keyword_list,0,1) == ';') $new_keyword_list = substr($new_keyword_list,1);
     echo "<div>UPDATE questions SET keywords=\"$new_keyword_list\" WHERE q_id=" . $row['q_id'] . "</div>\n";
   }
     exit;

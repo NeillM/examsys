@@ -707,11 +707,11 @@ class ST_QTI12_Material // <material>
       $output = "";
       while ($text) {
         if (stripos(" ".$text, "<img") > 0) {
-          $pre = mb_substr($text, 0, stripos($text, "<img"));
-          $imgtag = mb_substr($text, stripos($text, "<img"));
-          $imgtag = mb_substr($imgtag, 0, stripos($imgtag, ">") + 1);
-          $rest = mb_substr($text, stripos($text, "<img"));
-          $rest = mb_substr($rest, stripos($rest, ">") + 1);
+          $pre = substr($text, 0, stripos($text, "<img"));
+          $imgtag = substr($text, stripos($text, "<img"));
+          $imgtag = substr($imgtag, 0, stripos($imgtag, ">") + 1);
+          $rest = substr($text, stripos($text, "<img"));
+          $rest = substr($rest, stripos($rest, ">") + 1);
 
           $output .= $pre;
 
@@ -862,7 +862,7 @@ function parseHtml($s_str) {
     // Get everything into tag...
     $i_indicatorL++;
     $i_indicatorR = strpos($s_str, ">", $i_indicatorL);
-    $s_temp = mb_substr($s_str, $i_indicatorL, ($i_indicatorR - $i_indicatorL));
+    $s_temp = substr($s_str, $i_indicatorL, ($i_indicatorR - $i_indicatorL));
     $a_tag = explode(' ', $s_temp);
     // Here we get the tag's name
     list(, $s_tagName, , ) = each($a_tag);
@@ -877,8 +877,8 @@ function parseHtml($s_str) {
       do {
         $s_tagTokOption = strtolower(strtok($s_tagOption[1], "="));
         $s_tagTokValue = trim(strtok("="));
-        if (mb_substr($s_tagTokValue, 0, 1) == "\"" && mb_substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == "\"") $s_tagTokValue = mb_substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
-        if (mb_substr($s_tagTokValue, 0, 1) == "'" && mb_substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == "'") $s_tagTokValue = mb_substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
+        if (substr($s_tagTokValue, 0, 1) == "\"" && substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == "\"") $s_tagTokValue = substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
+        if (substr($s_tagTokValue, 0, 1) == "'" && substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == "'") $s_tagTokValue = substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
         $a_html[$s_tagName][$i_arrayCounter][$s_tagTokOption] = $s_tagTokValue;
         $b_boolOptions = is_array(($s_tagOption = each($a_tag))) && $s_tagOption[1];
       } while ($b_boolOptions);

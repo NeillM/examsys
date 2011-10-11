@@ -177,7 +177,7 @@ if (isset($_POST['submit'])) {
     }
     
     $search_string = $themeSQL . $scenarioSQL . $leadinSQL . $stemsSQL;
-    $search_string = 'AND (' . mb_substr($search_string, 4) . ')';
+    $search_string = 'AND (' . substr($search_string, 4) . ')';
   }
   
   if ($_POST['team'] != '') {
@@ -318,7 +318,7 @@ if (isset($_POST['submit'])) {
     }
 
     $tmp_leadin = trim($temp_line['leadin']);
-    if (strlen($tmp_leadin) > 160) $tmp_leadin = mb_substr($tmp_leadin,0,160) . '...';
+    if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
     
     if ($temp_line['ownerID'] == $userID or strpos($userroles,'SysAdmin') !== false) {
