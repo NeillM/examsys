@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['january'] = 'Styczeń';
 $string['february'] = 'Luty';
 $string['march'] = 'Marzec';

@@ -17,7 +17,7 @@
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   $reviews = array();
   
-  if($mode == 'index') {
+  if ($mode == 'index') {
     $reviews_query = $mysqli->query("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=$paperID ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
   } else {
     $reviews_query = $mysqli->query("SELECT '' AS q_type, questionID, '' AS category, 0 AS percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, '' AS paper_title FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=$paperID ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
@@ -45,8 +45,8 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     $question_no = 0;
     $std_total = 0;
     $review_no = 0;
-    $ebel_percents = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
-    $ebel_marks = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
+    $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
+    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
     $angoff_review_marks = 0;
   
     $reviews = array();
@@ -89,7 +89,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
           $distinction_score = round($distinction_score,1);
         }
-        if($old_group_review == 'No') $no_reviews++;
+        if ($old_group_review == 'No') $no_reviews++;
         $reviews[] = array(
         	'group_review' => $old_group_review,
         	'review_total' => $review_total, 
@@ -102,8 +102,8 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           'distinction_score' => $distinction_score,
           'pass_score' => $pass_score,
           'name' => "$old_title $old_initials $old_surname");
-        $ebel_percents = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
-        $ebel_marks = array('EE'=>0,'EI'=>0,'EN'=>0,'ME'=>0,'MI'=>0,'MN'=>0,'HE'=>0,'HI'=>0,'HN'=>0);
+        $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
+        $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
         $question_no = 0;
         $std_total = 0;
         $angoff_review_marks = 0;
@@ -407,7 +407,11 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       break;
     case 'dichotomous':
       $tmp_user_answer = $display_option['correct'];
-      if (($firstoption['display_method'] == 'TF_NegativeAbstain') or ($firstoption['display_method'] == 'TF_PostiveAbstain') or ($firstoption['display_method'] == "YN_NegativeAbstain") or ($firstoption['display_method'] == "YN_PostiveAbstain")) $abstain = true;
+      if (($firstoption['display_method'] == 'TF_NegativeAbstain') or ($firstoption['display_method'] == 'TF_PostiveAbstain') or ($firstoption['display_method'] == "YN_NegativeAbstain") or ($firstoption['display_method'] == "YN_PostiveAbstain")) {
+        $abstain = true;
+      } else {
+        $abstain = false;
+      }
 
       echo '<tr>';
       echo '<td align="center">';
@@ -896,8 +900,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
       $html .= "</select>\n";
       break;
   }
-  //$marks = 4;  // remove this line
-  $html .= "<input type=\"hidden\" id=\"std" . $stdID . "_marks\" value=\"$marks\" />\n";
+  $html .= "<input type=\"text\" id=\"std" . $stdID . "_marks\" value=\"$marks\" />\n";
   $stdID++;
   return $html;
 }

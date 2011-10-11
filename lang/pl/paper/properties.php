@@ -1,5 +1,6 @@
 <?php
 require '../lang/' . $language . '/include/months.inc';
+require '../lang/' . $language . '/include/paper_types.inc';
 
 // General tab
 $string['generaltab'] = 'Ogólne';

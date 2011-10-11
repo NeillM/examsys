@@ -670,12 +670,12 @@ if ($paper_type != '4' and $paper_type != '5') {
    ?>
      <tr><td align="right" valign="top"><?php echo $string['type']; ?>&nbsp;</td><td>
      <select name="paper_type" onclick="changeType();">
-     <option value="0"<?php if ($paper_type == '0') echo ' selected'; ?> />Formative Self-Assessment</option>
-     <option value="1"<?php if ($paper_type == '1') echo ' selected'; ?> />Progress Test</option>
-     <option value="2"<?php if ($paper_type == '2') echo ' selected'; ?> />Summative Exam</option>
-     <option value="3"<?php if ($paper_type == '3') echo ' selected'; ?> />Survey (Questionnaire)</option>
-     <option value="4"<?php if ($paper_type == '4') echo ' selected'; ?> />OSCE</option>
-     <option value="5"<?php if ($paper_type == '5') echo ' selected'; ?> />Offline Assessment</option>
+     <option value="0"<?php if ($paper_type == '0') echo ' selected'; ?> /><?php echo $string['formative self-assessment']; ?></option>
+     <option value="1"<?php if ($paper_type == '1') echo ' selected'; ?> /><?php echo $string['progress test']; ?></option>
+     <option value="2"<?php if ($paper_type == '2') echo ' selected'; ?> /><?php echo $string['summative exam']; ?></option>
+     <option value="3"<?php if ($paper_type == '3') echo ' selected'; ?> /><?php echo $string['survey']; ?></option>
+     <option value="4"<?php if ($paper_type == '4') echo ' selected'; ?> /><?php echo $string['osce station']; ?></option>
+     <option value="5"<?php if ($paper_type == '5') echo ' selected'; ?> /><?php echo $string['offline paper']; ?></option>
    <?php
      echo "<td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
      echo "<option value=\"\"></option>";
