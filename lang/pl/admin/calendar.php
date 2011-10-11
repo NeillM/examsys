@@ -2,7 +2,7 @@
 require '../lang/' . $language . '/include/months.inc';
 
 $string['administrativetools'] = 'Narzędzia administracyjne';
-$string['allschools'] = '&lt;Wszystkie uczelnie&gt;';
+$string['allschools'] = '&lt;Wszystkie katedry&gt;';
 $string['calendar'] = 'Kalendarz';
 $string['calendaryears'] = 'Lata kalendarzowe';
 $string['monday'] = 'Poniedziałek';

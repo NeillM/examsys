@@ -2,7 +2,7 @@
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['moduleid'] = 'Identyfikator modułu';
 $string['name'] = 'Nazwa';
-$string['school'] = 'Uczelnia';
+$string['school'] = 'Katedra';
 $string['smsapi'] = "API SMS'ów";
 $string['objapi'] = 'API celów';
 $string['summativechecklist'] = 'Zestawienie końcowe';

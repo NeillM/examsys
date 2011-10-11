@@ -1,6 +1,6 @@
 <?php
 $string['administrativetools'] = 'Narzędzia administracyjne';
-$string['schools'] = 'Uczelnie';
+$string['schools'] = 'Katedry';
 $string['smsimportsummary'] = 'Podsumowanie importu SMS';
 $string['smsimportson'] = 'Importowanie SMS włączone';
 $string['moduleid'] = 'Identyfikator modułu';
