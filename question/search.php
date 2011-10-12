@@ -145,7 +145,7 @@ if (isset($_POST['submit'])) {
   if ($searchterm == '') {
     $search_string = '';
   } else {
-    if ($_POST['theme']) {
+    if (isset($_POST['theme']) and $_POST['theme']) {
       $themeSQL = ' OR theme LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
@@ -153,7 +153,7 @@ if (isset($_POST['submit'])) {
       $themeSQL = '';
     }
     
-    if ($_POST['scenario']) {
+    if (isset($_POST['scenario']) and $_POST['scenario']) {
       $scenarioSQL = ' OR scenario_plain LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
@@ -161,7 +161,7 @@ if (isset($_POST['submit'])) {
       $scenarioSQL = '';
     }
     
-    if ($_POST['leadin']) {
+    if (isset($_POST['leadin']) and $_POST['leadin']) {
       $leadinSQL = ' OR leadin_plain LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
@@ -169,7 +169,7 @@ if (isset($_POST['submit'])) {
       $leadinSQL = '';
     }
     
-    if ($_POST['options']) {
+    if (isset($_POST['options']) and $_POST['options']) {
       $stemsSQL = ' OR option_text LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
