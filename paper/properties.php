@@ -219,8 +219,17 @@ if (isset($_POST['Submit'])) {
     $password = trim($_POST['password']);
     $paperID = $_POST['paperID'];
     
-    $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
-    $editProperties->bind_param('sssssssssssssssiisssisisssssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor , $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $_POST['calendar_year'], $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
+    $stmt = $mysqli->prepare("SELECT paper_ownerID FROM properties WHERE property_id=?");
+    $stmt->bind_param('i', $paperID);
+    $stmt->execute();
+    $stmt->bind_result($paper_ownerID);
+    $stmt->fetch();
+    $stmt->close();
+    
+    $hash = crypt($paper_title, substr($paper_ownerID,0,2));   // Generate the encrypted name of the paper.
+
+    $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=?, crypt_name=? WHERE property_id=?");
+    $editProperties->bind_param('sssssssssssssssiisssisissssssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor , $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $_POST['calendar_year'], $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $hash, $paperID);
     $editProperties->execute();
     $editProperties->close();
     
@@ -328,10 +337,10 @@ if (isset($_POST['Submit'])) {
   $result->close();
   
   // Get the main properties of the paper
-  $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, hide_if_unanswered, paper_title, paper_type, start_date, end_date, timezone, paper_prologue, paper_postscript, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, moduleID, calendar_year, internal_reviewers, external_review_deadline, internal_review_deadline, sound_demo, password FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, hide_if_unanswered, paper_title, paper_type, start_date, end_date, timezone, paper_prologue, paper_postscript, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, moduleID, calendar_year, internal_reviewers, external_review_deadline, internal_review_deadline, sound_demo, password, crypt_name FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $timezone, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $moduleID, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $password);
+  $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $timezone, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $moduleID, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $password, $crypt_name);
   $result->fetch();
   $result->close();
   
@@ -664,7 +673,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      } elseif ($paper_type == '4') {
        echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/osce/\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "/osce/</a> " . $string['onlyonexamday'] . "</td></tr>\n";
      } else {
-       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . urlencode($paper_title) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . urlencode($paper_title) ."</a></td></tr>\n";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
      }
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper_title\" /><input type=\"hidden\" name=\"original_paper_title\" value=\"$paper_title\"><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
    ?>
@@ -966,7 +975,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
     $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
     for ($i=0; $i<12; $i++) {
-      $trans_month = substr($string[$months[$i]],0,3);
+      $trans_month = mb_substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
@@ -1042,7 +1051,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     //$months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
 
     for ($i=0; $i<12; $i++) {
-      $trans_month = substr($string[$months[$i]],0,3);
+      $trans_month = mb_substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";

@@ -25,15 +25,18 @@
 */
 
 require './include/staff_student_auth.inc';
+require './include/errors.inc';
+  
+check_var('id', 'GET', true, false);
 
-function display_duration($normal,$extra) {
+function display_duration($normal, $extra) {
   $mins = $normal;
   if ($extra != NULL) $mins .= ' + ' . ($normal/100)*$extra;
   return $mins;
 }
 
-function displayPrevTake($markTotal,$adjPercent,$totalRandomMark,$marking_style,$disDate,$type) {
-  global $rerun_date,$total_marks,$low_bandwidth;
+function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_style, $disDate, $type) {
+  global $rerun_date, $total_marks, $low_bandwidth;
 
   if ($low_bandwidth == 0) {
     echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"\" onclick=\"reviewPaper('$rerun_date',$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
@@ -79,21 +82,24 @@ if ($special_needs == 1) {
 if ($textsize == '') $textsize = 95;
 if ($font == '') $font = 'Arial';
   
-$paper = urldecode($_GET['paper']);
+//$paper = urldecode($_GET['paper']);
+
+$crypt_name = $_GET['id'];
+
 $person = $title . ' ' . $surname;
 $total_random_mark = 0;
 $total_marks = 0;
 
 //get paper info
-$paper_info = $mysqli->prepare("SELECT DISTINCT property_id, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, moduleID, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.paper_title=? AND properties.property_id=papers.paper ORDER BY screen DESC LIMIT 1");
-$paper_info->bind_param('s',$paper);
+$paper_info = $mysqli->prepare("SELECT DISTINCT property_id, paper_title, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, moduleID, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.crypt_name=? AND properties.property_id=papers.paper ORDER BY screen DESC LIMIT 1");
+$paper_info->bind_param('s',$crypt_name);
 $paper_info->execute();
-$paper_info->bind_result($property_id, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $moduleID, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password);
+$paper_info->bind_result($property_id, $paper_title, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $moduleID, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password);
 $paper_info->store_result();
 $paper_info->fetch();
 
 if ($paper_info->num_rows == 0) {
-  $tmp_string = sprintf($string['papernotfound'], $_GET['paper']);
+  $tmp_string = sprintf($string['papernotfound']);
   access_denied($tmp_string, false);
 }
 $paper_info->free_result();
@@ -112,9 +118,6 @@ $tmp_cfg_long_date_time = str_replace('%', '', $cfg_long_date_time);
 
 $display_start_date = $display_start_date->format($tmp_cfg_long_date_time);
 $display_end_date = $display_end_date->format($tmp_cfg_long_date_time);
-
-//$display_start_date = $display_start_date->format("d/m/Y H:i");
-//$display_end_date = $display_end_date->format("d/m/Y H:i");
 
 $previously_submitted = 0;
 
@@ -156,8 +159,6 @@ if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'
     access_denied($string['error_module'], false);
   }
 }
-
-$paper = urldecode($_GET['paper']);
 ?>
 <!DOCTYPE html
 PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -212,8 +213,8 @@ if ($textsize > 120) {
 <?php
   $icon_types = array('formative.png','progress.png','summative.png','survey.png');
   echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0"><tr><td style="vertical-align:top; width:54px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
-  echo "</td><td><span style=\"font-size:8pt\">TouchStone $ts_version</span><br />\n";
-  echo "<span style=\"font-size:20pt; font-weight:bold; font-family:Arial,sans-serif\">$paper</span></td>\n</tr></table></td></tr>";
+  echo "</td><td><span style=\"font-size:80%\">Rogō $ts_version</span><br />\n";
+  echo "<span style=\"font-size:20pt; font-weight:bold; font-family:Arial,sans-serif\">$paper_title</span></td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #5582D2;background-color:#DFE8FF\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {

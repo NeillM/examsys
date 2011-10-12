@@ -254,15 +254,16 @@ Class TouchStoneRestAPI extends restAPI {
     
     $papers = array();
     $paper_no = 0;
-    $res = $this->db->prepare("SELECT property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname FROM properties, papers, users WHERE properties.paper_ownerID=users.id AND properties.property_id=papers.paper AND (paper_ownerID=? $moduleSQL)$typeSQL AND deleted IS NULL GROUP BY property_id ORDER BY paper_title");
+    $res = $this->db->prepare("SELECT property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name FROM properties, papers, users WHERE properties.paper_ownerID=users.id AND properties.property_id=papers.paper AND (paper_ownerID=? $moduleSQL)$typeSQL AND deleted IS NULL GROUP BY property_id ORDER BY paper_title");
     $res->bind_param('i', $tmp_userID);
     $res->execute();
     $res->store_result();
-    $res->bind_result($property_id, $paper_title, $paper_type, $start_date, $end_date, $created, $screens, $title, $surname);
+    $res->bind_result($property_id, $paper_title, $paper_type, $start_date, $end_date, $created, $screens, $title, $surname, $crypt_name);
     if ($res->num_rows == 0) {
       return json_encode($this->db->error);
     } else {
       while($res->fetch()) {
+        $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
         $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/paper/details.php?paperID=' . $property_id;

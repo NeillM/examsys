@@ -76,7 +76,7 @@ require '../include/staff_auth.inc';
     }    
   }
 
-  if (isset($_POST['submit']) and $_POST['submit']) {
+  if (isset($_POST['submit'])) {
     if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], "/tmp/" . $userID . "_keywords.txt"))  {
         echo uploadError($_FILES['txtfile']['error']);

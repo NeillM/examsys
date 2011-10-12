@@ -857,7 +857,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 10/08/2011 - Add new column for negative marking setting for modules.
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='neg_marking'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='neg_marking'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -876,7 +876,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 15/08/2011 - Add new table to hold Ebel grid templates.
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='ebel_grid_templates' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='id'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='ebel_grid_templates' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='id'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -892,7 +892,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 08/09/2011 - Add field to Modules table to hold which Ebel grid template to use.
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='ebel_grid_template'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='modules' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='ebel_grid_template'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -1210,6 +1210,36 @@ if (!isset($_POST['update'])) {
     
   } // END Create DB user
   
+  // 12/10/2011 - Add encrypted name for a paper.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='properties' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='crypt_name'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE properties ADD COLUMN crypt_name varchar(32)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE properties ADD COLUMN crypt_name varchar(32)</li>\n";
+    ob_flush();
+    flush();
+    
+    $result2 = $mysqli->prepare("SELECT property_id, paper_ownerID, paper_title FROM properties");
+    $result2->execute();
+    $result2->store_result();
+    $result2->bind_result($property_id, $paper_ownerID, $paper_title);
+
+    $update = $mysqli->prepare("UPDATE properties SET crypt_name=? WHERE property_id=?");
+    while ($result2->fetch()) {
+      $hash = crypt($paper_title, substr($paper_ownerID,0,2));
+      $update->bind_param('si', $hash, $property_id);
+      $update->execute();
+    }
+    $update->close();
+
+    $result2->close();
+  }
+  $result->close();
 
   echo "</ol>\n";
   
