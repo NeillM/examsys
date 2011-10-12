@@ -44,5 +44,6 @@ $string['from'] = 'from';
 $string['to'] = 'to';
 $string['locked'] = 'Locked';
 $string['noquestionsfound'] = 'No questions found for specified search criteria.';
-$string['narrowyoursearch'] = 'Please narrow your search by entering a search term, question type, date modified or metadata.';
+$string['narrowyoursearch'] = 'Please narrow your search by entering a search term, question type, date modified or metadata';
+$string['notickedfields'] = 'You have not ticked any fields to search for';
 ?>

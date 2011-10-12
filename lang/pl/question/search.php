@@ -45,4 +45,5 @@ $string['to'] = 'do';
 $string['locked'] = 'zablokowane';
 $string['noquestionsfound'] = 'Nie znaleziono żadnego pytania spełniającego podane kryteria.';
 $string['narrowyoursearch'] = 'Należy zawęzić wyszukiwania przez dobór odpowiedniego słowa, typu pytania, daty zmian lub metadanych';
+$string['notickedfields'] = 'Nie zaznaczono żadnych pól do wyszukiwania';
 ?>
