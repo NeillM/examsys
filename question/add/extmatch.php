@@ -159,7 +159,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     }
     ?>
     if (document.getElementById('leadin').value == "" || document.getElementById('leadin').value == "&nbsp;" || document.getElementById('leadin').value == "<p>&nbsp;</p>" || document.getElementById('leadin').value == "<div>&nbsp;</div>" || document.getElementById('leadin').value == "<br />") {
-      alert ("Please provide Lead In instructions.");
+      alert ("<?php echo $string['privideleadin']?>");
       submit = '';
       return false;
     }
@@ -173,7 +173,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
         var cb = document.getElementById(modulesArray[j] + 'obj' + i).checked;
         if(cb == true) {
           submit = '';
-          return confirm("WARNING: All mappings will be lost if this question is not added to the paper !");
+          return confirm("<?php echo $string['mappingwarning']?>);
         }
       }
     }
@@ -212,8 +212,8 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 <tr height="70" style="background-color:#DFECFF">
 <td width="400">
 <img style="position:absolute; left:8px; top:2px;" src="../../artwork/edit_question.png" width="64" height="64" alt="Edit Logo" />
-<span style="position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt">New Question</span>
-<span style="position:absolute; left:80px; top:40px; font-family:Arial,sans-serif; font-size:12pt; font-weight:bold">(Extended Matching)</span></td>
+<span style="position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt"><?php echo $string['newquestion']?></span>
+<span style="position:absolute; left:80px; top:40px; font-family:Arial,sans-serif; font-size:12pt; font-weight:bold"><?php echo $string['extendedmatching']?></span></td>
 <td style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
 </td>
 </tr>
@@ -311,9 +311,9 @@ echo displayEditTab();
 <tr>
   <?php
     if (isset($_GET['paperID']) and $_GET['paperID'] != '' and substr($_GET['paperID'],0,5) != 'list:') {
-      echo '<td colspan="3" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank" onmousedown="AddToBank();">&nbsp;<input style="width:150px" type="submit" name="addpaper" value="Add to Bank &amp; Paper">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width: 100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';
+      echo '<td colspan="3" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="'.$string['addtobank'].'" onmousedown="AddToBank();">&nbsp;<input style="width:150px" type="submit" name="addpaper" value="'.$string['addtobankandpaper'].'">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width: 100px" type="button" name="cancel" value="'.$string['cancel'].'" onclick="history.back()" /></td>';
     } else {
-      echo '<td colspan="3" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';
+      echo '<td colspan="3" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="'.$string['addtobank'].'">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="'.$string['cancel'].'" onclick="history.back()" /></td>';
     }
   ?>
 </tr>
