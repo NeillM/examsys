@@ -16,7 +16,7 @@ $string['abstain'] = 'Wstrzymany';
 $string['na'] = 'Nie dotyczy'; //N/A
 $string['unanswered'] = 'Brak odpowiedzi';
 $string['unansweredquestion'] = '= pytanie bez odpowiedzi';
-$string['negmarking'] = 'punkty ujemne';
+$string['negmarking'] = 'Ujemna punktacja';
 $string['bonusmark'] = 'dla prawidłowej opcji, plus 1 punkt dodatkowy za poprawna kolejność';
 $string['calculator'] = 'Kalkulator';
 $string['finishnote'] = '<strong>Uwaga:</strong> Należy wypełnić wszystkie odpowiedzi przed wybraniem &#145;Zakończ&#146; - powrót nie jest możliwy.';
