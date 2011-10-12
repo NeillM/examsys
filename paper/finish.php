@@ -2103,14 +2103,14 @@ table {font-size:100%}
       
       // Write out the marks for the question
       if ($display_question_mark == '1' and $paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
-        if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
+        if (isset($paper[$question]['marks_correct']) and is_numeric($paper[$question]['marks_correct'])) {
           if ($paper[$question]['status'] == 'Experimental') {
             echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 out of 0 - Experimental Question&nbsp;</span></p>';
           } elseif ($paper[$question]['totalpos'] == 0) {
-            $paper[$question]['mark'] = 0; 
+            $paper[$question]['marks_correct'] = 0; 
             echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 out of 0&nbsp;</span></p>';
           } else {
-            echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['mark'],2) . ' out of ' . $paper[$question]['totalpos'] . '</span></p>';
+            echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['marks_correct'],2) . ' out of ' . $paper[$question]['totalpos'] . '</span></p>';
           }
         } elseif ($paper[$question]['q_type'] == 'textbox') {
           // Unmarked textbox questions.
@@ -2122,7 +2122,7 @@ table {font-size:100%}
       }
       if ($paper[$question]['status'] != 'Experimental') {
         $total_marks += $paper[$question]['totalpos'];
-        $user_mark += $paper[$question]['mark'];
+        $user_mark += $paper[$question]['marks_correct'];
       }
       if ($paper[$question]['q_type'] != 'info') echo '</td></tr>';
       echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
