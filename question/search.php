@@ -106,7 +106,7 @@ if (isset($_POST['submit'])) {
   $error = '';
 
   if (!isset($_POST['theme']) and !isset($_POST['scenario']) and !isset($_POST['leadin']) and !isset($_POST['options']) and !isset($_POST['keywords'])) {
-    $error = 'You have not ticked any fields to search for.';
+    $error = $string['notickedfields'];
   }
   
   if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['team'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
@@ -115,7 +115,7 @@ if (isset($_POST['submit'])) {
   
   if($error != '') {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong> </div></td></tr>";
+    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></td></tr>";
     ?>
     <tr>
     <td style="background-color:#F1F5FB" align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></td>
