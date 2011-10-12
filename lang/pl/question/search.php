@@ -44,5 +44,5 @@ $string['from'] = 'od';
 $string['to'] = 'do';
 $string['locked'] = 'zablokowane';
 $string['noquestionsfound'] = 'Nie znaleziono żadnego pytania spełniającego podane kryteria.';
-$string['narrowyoursearch'] = 'Please narrow your search by entering a search term, question type, date modified or metadata.';
+$string['narrowyoursearch'] = 'Należy zawęzić wyszukiwania przez dobór odpowiedniego słowa, typu pytania, daty zmian lub metadanych';
 ?>
