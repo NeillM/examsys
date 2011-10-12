@@ -18,7 +18,7 @@ $string['scenario'] = 'Scenariusz';
 $string['scenariomsg'] = '(informacje wstępne)';//background info
 $string['current'] = 'Aktualny';
 $string['change'] = 'Zmień';
-$string['media'] = 'Pliki medialne';
+$string['media'] = 'plik medialny';
 $string['questionswf'] = 'Pytanie SWF';
 $string['answerswf'] = 'Odpowiedź SWF';
 $string['leadin'] = 'Wprowadzenie';
@@ -111,7 +111,7 @@ $string['objectives'] = 'Cele';
 $string['noneabove'] = 'Żaden z powyższych';
 $string['noneabovemsg'] = 'Sprawdź tu jeśli aktualne pytanie nie wypełnia żadnego z powyższych celów z %s.'; 
 //??? 1Check here if the current question does not match any of the above objectives from 
-$string['mandatory'] = 'Oznacza, że wypełnione musi być każde pole <strong>obowiązkowe</strong>.';
+$string['mandatory'] = 'Wypełnienie tego pola jest <strong>wymagane</strong>.';
 $string['typeundefined'] = 'Nie zdefiniowano typu pytania.';
 $string['typeinvalid'] = 'Niewłaściwy typ pytania <em>%s</em>.';
 $string['questioninvalid'] = 'Niewłaściwy identyfikator pytania.';
