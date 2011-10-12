@@ -343,7 +343,7 @@ HTML;
 HTML;
     if (substr($paper_id, 0, 5) != 'list:') {
       $html .= <<< HTML
-  <input type="submit" name="addpaper" value="Add to Bank &amp; Paper" class="submit form-small">
+  <input type="submit" name="addpaper" value="{$string['addtobankandpaper']}" class="submit form-small">
 
 HTML;
     }
