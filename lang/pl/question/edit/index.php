@@ -219,6 +219,6 @@ $string['hidemore'] = 'Ukryj więcej';
 $string['minor'] = 'Drobne';
 $string['major'] = 'Znaczące';
 $string['pleaserank'] = 'Oceń co następuje &hellip; zaczynając od &hellip; pierwszego:';
-$string['addtobank'] = 'Dodaj do banku pytań';
-$string['addtobankandpaper'] = 'Dodaj do banku pytań i arkusza';
+$string['addtobank'] = 'Dodaj do banku';
+$string['addtobankandpaper'] = 'Do banku i arkusza';
 ?>
