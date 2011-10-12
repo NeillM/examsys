@@ -115,7 +115,7 @@ echo ":".$result.":".$q_id." !!!NIko";
 $result->bind_param('i', $q_id);
 $result->execute();
 $result->store_result();
-$result->bind_result($q_id, $q_type, $theme, $leadin, $leadin_plain, $correct_fback, $incorrect_fback, $score_method, $notes, $tmp_ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $created, $last_edited, $modified, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $bloom, $q_group, $checkout_time, $checkout_authorID, $locked, $status);
+$result->bind_result($q_id, $q_type, $theme, $leadin, $leadin_plain, $correct_fback, $incorrect_fback, $score_method, $notes, $tmp_ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $created, $last_edited, $modified, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks, $bloom, $q_group, $checkout_time, $checkout_authorID, $locked, $status);
 while ($row = $result->fetch()) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
