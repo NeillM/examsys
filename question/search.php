@@ -104,6 +104,9 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
 
 if (isset($_POST['submit'])) {
   $error = '';
+  if (!isset($_POST['theme']) {
+    $error = 'theme?';
+
   if ($_POST['theme'] == '' and $_POST['scenario'] == '' and $_POST['leadin'] == '' and $_POST['options'] == '' and $_POST['keywords'] == '') {
     $error = 'You have not ticked any fields to search for.';
   }
