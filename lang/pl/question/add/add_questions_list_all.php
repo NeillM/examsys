@@ -5,6 +5,6 @@ $string['allmyquestions'] = 'Moje wszystkie pytania';
 $string['question'] = 'Pytanie';
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
-$string['warningnoleadin'] = 'Ostrzeżenie: brak pytania wprowadzającego!';//no question lead-in
+$string['warningnoleadin'] = 'Ostrzeżenie: brak wprowadzenia do pytania!';//no question lead-in
 $string['locked'] = 'Zablokowane';
 ?>

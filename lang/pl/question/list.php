@@ -22,5 +22,5 @@ $string['information'] = 'Informacja';
 $string['copyontopaperx'] = 'Przekopiuj do arkusza X...';
 $string['linktopaperx'] = 'Powiąż z arkuszem X...';
 $string['deletequestion'] = 'Usuń pytanie';
-$string['noquestionleadin'] = 'Uwaga: brak pytania wprowadzającego!';//no question lead-in
+$string['noquestionleadin'] = 'Uwaga: brak wprowadzenia do pytania!';//no question lead-in
 ?>
