@@ -114,7 +114,7 @@ for ($index = 1; $index <= $question->max_stems; $index++):
 ?>
         <div class="option<?php echo $hidden ?>">
           <div class="form">
-            <h2><?php echo $string['scenario']." ".$roman[$index - 1] ?></h2>
+            <h2>Scenario <?php echo $roman[$index - 1] ?></h2>
           </div>
           
           <table id="q-options" class="form" summary="Edit scenario <?php echo $roman[$index - 1] ?>">
