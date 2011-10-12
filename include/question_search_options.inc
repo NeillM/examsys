@@ -62,7 +62,7 @@ require_once '../classes/searchutils.class.php';
   }
 
   function editQuestion() {
-    document.location.href='../question/edit/' + document.PapersMenu.qType.value + '.php?q_id=' + document.PapersMenu.questionID.value + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
+    document.location.href='../question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
   }
 
   function deleteQuestion() {
