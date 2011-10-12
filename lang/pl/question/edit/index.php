@@ -85,7 +85,7 @@ $string['wysiwyg'] = 'WYSIWYG';
 $string['changes'] = 'Zmiany';
 $string['comments'] = 'Komentarze';
 $string['mapping'] = 'Odwzorowanie'; //Mapowanie,odwzorowanie, projekcja
-$string['limitedsave'] = 'Ograniczone zapisywanie';
+$string['limitedsave'] = 'Ograniczone zapisywanie'; 
 $string['save'] = 'Zapisz zmiany';
 $string['correct'] = 'Poprawnie';
 $string['mscaamsg'] = '<strong>Pytania MSC-AA</strong> To pytanie było importowane z MSC-AA i nie może być zmienione.';
@@ -219,4 +219,6 @@ $string['hidemore'] = 'Ukryj więcej';
 $string['minor'] = 'Drobne';
 $string['major'] = 'Znaczące';
 $string['pleaserank'] = 'Oceń co następuje &hellip; zaczynając od &hellip; pierwszego:';
+$string['addtobank'] = '1Add to Bank';
+$string['addtobankandpaper'] = '1Add to Bank &amp; Paper';
 ?>
