@@ -338,7 +338,7 @@ HTML;
   
   } else {
     $html .= <<< HTML
-<input type="submit" id="addbank" name="addbank" value="Add to Bank" class="submit">
+<input type="submit" id="addbank" name="addbank" value="xAdd to Bank" class="submit">
 
 HTML;
     if (substr($paper_id, 0, 5) != 'list:') {
