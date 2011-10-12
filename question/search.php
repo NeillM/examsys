@@ -104,7 +104,7 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
 
 if (isset($_POST['submit'])) {
   $error = '';
-  if (!isset($_POST['theme']) {
+  if (!isset($_POST['theme'])) {
     $error = 'theme?';
   }
 
