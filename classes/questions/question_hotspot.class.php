@@ -43,7 +43,7 @@ Class QuestionHOTSPOT extends Question {
     $this->_fields_editable[] = 'points1';
     $this->_change_field_map['points1'] = 'points';
     $this->_fields_change = array('option_correct1', 'points1');
-    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+    //    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
   }
 
   
