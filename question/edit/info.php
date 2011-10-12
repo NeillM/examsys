@@ -102,7 +102,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
   redirect();
 } else {
 
-$result = $mysqli->prepare("SELECT q_id, q_type, theme, scenario, leadin, leadin_plain, correct_fback, incorrect_fback, score_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, DATE_FORMAT(creation_date, '%d/%m/%Y') AS creation_display, last_edited, DATE_FORMAT(last_edited, '%d/%m/%Y') AS edited_display, o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, id_num, marks, bloom, q_group, UNIX_TIMESTAMP(checkout_time) AS checkout_time, checkout_authorID, DATE_FORMAT(locked, '%d/%m/%Y') AS locked, status FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY q_id, id_num");
+$result = $mysqli->prepare("SELECT q_id, q_type, theme, scenario, leadin, leadin_plain, correct_fback, incorrect_fback, score_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, DATE_FORMAT(creation_date, '%d/%m/%Y') AS creation_display, last_edited, DATE_FORMAT(last_edited, '%d/%m/%Y') AS edited_display, o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, id_num, marks_correct, bloom, q_group, UNIX_TIMESTAMP(checkout_time) AS checkout_time, checkout_authorID, DATE_FORMAT(locked, '%d/%m/%Y') AS locked, status FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY q_id, id_num");
 $result->bind_param('i', $q_id);
 $result->execute();
 $result->store_result();

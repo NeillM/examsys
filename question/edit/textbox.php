@@ -173,7 +173,7 @@ if (isset($_POST['submit']) and ($_POST['submit'] == 'Save Changes' or $_POST['s
 <body style="background-color:white">
 <?php
 
-  $result = $mysqli->prepare("SELECT q_id, theme, scenario, scenario_plain, leadin, leadin_plain, score_method, option_text, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, DATE_FORMAT(creation_date, '%d/%m/%Y') AS creation_display, last_edited, DATE_FORMAT(last_edited, '%d/%m/%Y') AS edited_display, correct, correct_fback, bloom, q_group, marks, UNIX_TIMESTAMP(checkout_time) AS checkout_time, checkout_authorID, DATE_FORMAT(locked, '%d/%m/%Y') AS locked, status FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY q_id, id_num LIMIT 1");
+  $result = $mysqli->prepare("SELECT q_id, theme, scenario, scenario_plain, leadin, leadin_plain, score_method, option_text, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, DATE_FORMAT(creation_date, '%d/%m/%Y') AS creation_display, last_edited, DATE_FORMAT(last_edited, '%d/%m/%Y') AS edited_display, correct, correct_fback, bloom, q_group, marks_correct, UNIX_TIMESTAMP(checkout_time) AS checkout_time, checkout_authorID, DATE_FORMAT(locked, '%d/%m/%Y') AS locked, status FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY q_id, id_num LIMIT 1");
   $result->bind_param('i', $q_id);
   $result->execute();
   $result->store_result();
