@@ -135,7 +135,7 @@ $string['correctanswers'] = 'Correct Answers';
 $string['correctanswersmsg'] = '(Use &lt;ctrl&gt; plus mouse<br />to select several items)';
 $string['onlinehelp'] = 'Online help';
 $string['blankinstructionsddl'] = 'To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Always put the correct answer as the <strong>first</strong> option, followed by the distractors (all options are randomised automatically).<br />e.g. Tyrannosaurus <span class="blank-tag">[blank]</span>Rex,Roger,Roderick,Ramsey<span class="blank-tag">[/blank]</span> was a large bipedal flesh-eating&hellip;';
-$string['blankinstructionstextboxes'] = '1o create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Within the [blank] tags add the correct answer and any alternatives also deemed to be correct (separate with commas).<br />e.g. What country are we in <span class="blank-tag">[blank]</span>UK,United Kingdom,Britain,Great Britain,GB<span class="blank-tag">[/blank]</span>?';
+$string['blankinstructionstextboxes'] = 'To create a blank input box place [blank] and [/blank] tags around the options you wish to add.<br />Within the [blank] tags add the correct answer and any alternatives also deemed to be correct (separate with commas).<br />e.g. What country are we in <span class="blank-tag">[blank]</span>UK,United Kingdom,Britain,Great Britain,GB<span class="blank-tag">[/blank]</span>?';
 $string['dropdownlists'] = 'Dropdown Lists (randomised)';
 $string['textboxes'] = 'Blank Textboxes';
 $string['rows'] = 'rows';
@@ -218,4 +218,6 @@ $string['ok'] = 'OK';
 $string['minor'] = 'Minor';
 $string['major'] = 'Major';
 $string['pleaserank'] = 'Please rank the following &hellip; starting with the &hellip; first:';
+$string['addtobank'] = 'Add to Bank';
+$string['addtobankandpaper'] = 'Add to Bank &amp; Paper';
 ?>
