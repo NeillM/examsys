@@ -183,7 +183,7 @@ textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px so
       $email = $user_data[$i]['email'];
       $school = $user_data[$i]['school'];
       $role = $user_data[$i]['role'];
-      echo "<tr style=\"cursor:pointer\"><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$title</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email','$school')\">$first_names</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email','$school')\">$surname</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email','$school')\">$username</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email','$school')\">$email</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email','$school')\">$role</td></tr>\n";
+      echo "<tr style=\"cursor:pointer\"><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$title</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$first_names</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$surname</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$username</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$email</td><td onclick=\"writeDetails('$title','$first_names','$surname','$username','$email')\">$role</td></tr>\n";
     }
     echo "</table>\n";
   }

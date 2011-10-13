@@ -298,7 +298,7 @@
   echo '  </WorksheetOptions>';
   echo ' </Worksheet>';
   echo ' <Worksheet ss:Name="' . $string['summary'] . '">';
-  $exp_row_count = 17;
+  $exp_row_count = 19;
   $exp_row_count += ($marking > 1) ? '2' : $marking;
   $exp_row_count += (count($warnings['deleted_qns']) > 0) ? 1 : 0;
   
@@ -310,8 +310,16 @@
   echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
 
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['studentssubmitted'] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="Number">' . ($display_no - $absent_no) . '</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['cohortsize'] . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' . $display_no . '</Data></Cell>';
+  echo '</Row>';
+  echo '<Row>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['failureno'] . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' . $failures . '</Data></Cell>';
+  echo '</Row>';
+  echo '<Row>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['distinctionno'] . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' .$honours . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['totalmarks'] . '</Data></Cell>';
