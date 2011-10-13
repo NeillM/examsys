@@ -1209,14 +1209,19 @@ table {font-size:100%}
           echo "<tr><td></td><td></td><td></td><td style=\"color:#808080\">Experts</td><td></td></tr>\n";
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             $tmp_part_id = $option_order[$part_id];
-            if (isset($correct_answer[$tmp_part_id])) {
-              $strong_on = '<b>';
-              $strong_off = '</b>';
-            } else {
-              $strong_on = '';
-              $strong_off = '';
+            if (!isset($paper[$question]['user_answer']) or (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == '')) {
+              reset_feedback($hide_if_unanswered);
             }
-            if (isset($paper[$question]['user_answer']) AND $tmp_part_id+1 == $paper[$question]['user_answer']) {
+
+            
+            //if (isset($correct_answer[$tmp_part_id]) and $tmp_display_feedback) {
+            //  $strong_on = '<b>';
+            //  $strong_off = '</b>';
+            //} else {
+            //  $strong_on = '';
+            //  $strong_off = '';
+            //}
+            if (isset($paper[$question]['user_answer']) and $tmp_part_id+1 == $paper[$question]['user_answer']) {
               if ($tmp_display_correct_answer == '1') {
                 echo '<td>';
                 if(isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
