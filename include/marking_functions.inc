@@ -326,9 +326,11 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
               $mark = $marks_correct;
             }
           } else {
-            if ($answer_equation != '') {
+            if ($answer_equation != '' and $saved_response != '') {
               eval ("\$answer = $answer_equation;");
               $answer = round($answer, $score_array[0]);
+            } else {
+              $answer = '';
             }
             if ($saved_response_clean == $answer) {
               $mark = $marks_correct;
