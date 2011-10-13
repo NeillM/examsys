@@ -74,7 +74,7 @@
   }
 
   function edit(degreeID) {
-    document.location.href='./edit_degree.php?degreeID=' + degreeID;
+    document.location.href='./edit_course.php?degreeID=' + degreeID;
   }
 </script>
 </head>

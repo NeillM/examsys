@@ -256,7 +256,7 @@ META;
     $html = "<tr><td colspan=\"" . ($colspan + 1) . "\"><div class=\"section\">Metadata</div>\n";
     
     // Question Status
-    $html .= "<tr>\n<td class=\"field\">Status</td>\n<td colspan=\"$colspan\" style=\"font-size:90%\">";
+    $html .= "<tr>\n<td class=\"field\">Status</td>\n<td colspan=\"$colspan\">";
     $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
     foreach ($status_array as $status) {
       if ($current_status == $status) {

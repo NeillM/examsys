@@ -27,8 +27,8 @@ h2 {
 h3 {
   font-family: Arial,sans-serif; 
   font-weight: bold;
-  font-size: 100%;
-  color: #333;
+  font-size: 90%;
+  margin-top:0px;
   margin-bottom: 4px;
 }
 
@@ -472,7 +472,7 @@ input[type=text] {
 	overflow: auto;
 	background-color: #fff;
 	border: 1px solid #7f9db9;
-	
+	font-size: 90%;
 }
 
 .select-group h4 {
@@ -488,6 +488,7 @@ input[type=text] {
 .opaque {
 	background-color: #fff;
 	padding-right: 4px;
+  font-size: 110%;
 }
 
 #keyword-select {

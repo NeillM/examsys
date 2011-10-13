@@ -51,7 +51,7 @@ if (isset($_POST['submit']) and $unique_degree == true) {
   $result->execute();  
   $result->close();
   $mysqli->close();
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_degrees.php");
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_courses.php");
 } else {
   $degreeID = $_GET['degreeID'];
   $result = $mysqli->prepare("SELECT school, degree, description FROM degrees WHERE id=? LIMIT 1");
