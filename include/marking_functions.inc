@@ -327,6 +327,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             }
           } else {
             if ($answer_equation != '') {
+              var_dump($answer, $answer_equation);
+              exit;
               eval ("\$answer = $answer_equation;");
               $answer = round($answer, $score_array[0]);
             }
