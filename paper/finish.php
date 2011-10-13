@@ -1214,9 +1214,14 @@ table {font-size:100%}
             //}
 
             
-            if (isset($correct_answer[$tmp_part_id]) and $hide_if_unanswered == 0) {
-              $strong_on = '<b>';
-              $strong_off = '</b>';
+            if (isset($correct_answer[$tmp_part_id])) {
+              if ($hide_if_unanswered == 0 and isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != ''){
+                $strong_on = '<b>';
+                $strong_off = '</b>';
+              } else {
+                $strong_on = '';
+                $strong_off = '';
+              }
             } else {
               $strong_on = '';
               $strong_off = '';
