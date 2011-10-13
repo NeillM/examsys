@@ -61,7 +61,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   $log_check->bind_param('siis', $userid, $paper_id, $screen_no, $_POST['sessionid']);
   $log_check->execute();
   $log_check->bind_result($tmp_id, $tmp_q_id);
-  while ($row = $log_check->fetch()) {
+  while ($log_check->fetch()) {
     $log_ids[$tmp_q_id] = $tmp_id;
   }
   $log_check->close();
@@ -107,7 +107,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $random_data->execute();
           $random_data->store_result();
           $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $score_method, $marks_correct);
-          while ($random_row = $random_data->fetch()) {
+          while ($random_data->fetch()) {
             $paper_array[] = array('q_id'=>$new_q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'display_method'=>$display_method,'score_method'=>$score_method,'marks_correct'=>$marks_correct,'marks_incorrect'=>$marks_incorrect,'marks_partial'=>$marks_partial,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
           }
           $random_data->close();
@@ -123,7 +123,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
     $old_display_pos = $display_pos;
   }
   $questions->close();
-
+  
   // Set up new insert query ready.
   if (count($log_ids) > 0) {
     $save_answers = $dblink->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
@@ -159,7 +159,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   $display_pos = 0;
   $old_display_pos = 0;
   $all_items_abstain = true;
-  foreach ($paper_array as &$row){
+  foreach ($paper_array as &$row) {
     $q_log_id = 0;
     $q_id = $row['q_id'];
     $scenario = $row['scenario'];
@@ -245,7 +245,6 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       $mark = 0;
       $totalpos = 0;
       $saved_response = '';
-
     }  
 
     $log_id = $q_id;
@@ -536,7 +535,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
                 }
               } else {
                 $saved_response .= '|';
-                if(isset($_POST[$qid])) $saved_response .= $_POST[$qid];
+                if (isset($_POST[$qid])) $saved_response .= $_POST[$qid];
               }
               $option_no++;
             }
@@ -597,7 +596,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
         break;
       case 'sct':
-        if(isset($_POST["dismiss$question_no"])) {
+        if (isset($_POST["dismiss$question_no"])) {
           $dismiss = $_POST["dismiss$question_no"];
         } else {
           $dismiss = '';
@@ -611,7 +610,13 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         if ($saved_response == '') $saved_response = '0';
         
         if ($saved_response == $question_part) {
-          $mark = $marks_correct;
+          $max = 0;
+          foreach ($paper_array as $tmp_row) {
+            if ($tmp_row['q_id'] == $row['q_id'] and $tmp_row['correct'] > $max) $max = $tmp_row['correct'];
+          }
+          if ($max > 0) {
+            $mark = $row['correct'] / $max;
+          }
         }
         if ($totalpos == 0) {
           $totalpos += $marks_correct;
