@@ -1215,7 +1215,7 @@ table {font-size:100%}
 
             
             if (isset($correct_answer[$tmp_part_id])) {
-              var_dump($hide_if_unanswered);
+              var_dump($paper[$question]['user_answer']);
               if ($hide_if_unanswered == 0 or ($hide_if_unanswered == 1 and isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != '')){
                 $strong_on = '<b>';
                 $strong_off = '</b>';
