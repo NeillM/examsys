@@ -258,10 +258,9 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
 
     switch ($q_type) {
       case 'calculation':
+        $mark = 0;
         // Log format is 'users answer', 'correct answer', 'variable values used'.
         $score_array = explode(',', $old_display_method);
-        
-        
       
         $qid = 'q' . $question_no;
         if (isset($_POST[$qid])) {
@@ -278,7 +277,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $question_variables = '';
         }
 
-        if ($saved_response != '') {
+        //if ($saved_response != '') {
           $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
           $variable_array = explode(',',$question_variables);
           $var_no = 1;
@@ -339,10 +338,10 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
               $mark = $marks_incorrect;
             }
           }
-        } else {
-          $answer = '';
-          $mark = 0;
-        }
+        //} else {
+        //  $answer = '';
+        //  $mark = 0;
+        //}
         
         $saved_response .= '|' . $answer . '|' . $question_variables;
         $totalpos = $marks_correct;

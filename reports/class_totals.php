@@ -177,7 +177,7 @@ a.user:hover {color:white; background-color:#000080}
     document.getElementById('menudiv').style.display = 'none';
     var winwidth = screen.width-80;
     var winheight = screen.height-80;
-    window.open("../paper/finish.php?paperID=<?php echo $paperID; ?>&previous=" + document.getElementById('started').value + "&userid=" + document.getElementById('userID').value + "&surname=" + document.getElementById('display_name').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    window.open("../paper/finish.php?id=<?php echo $crypt_name; ?>&previous=" + document.getElementById('started').value + "&userid=" + document.getElementById('userID').value + "&surname=" + document.getElementById('display_name').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
   }
 
   function viewFeedback() {
@@ -713,9 +713,10 @@ a.user:hover {color:white; background-color:#000080}
       echo '</td>';
     }
     echo "</tr>\n";
-    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td align=\"right\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
+    //var_dump($cohort_size, $display_no);
+    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td align=\"right\">$failures</td><td>(" . round(($failures / $display_no) * 100) . "% of cohort)</td></tr>\n";
     if (isset($ss_hon)) {
-      echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td align=\"right\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td align=\"right\">$honours</td><td>(" . round(($honours / $display_no) * 100) . "% of cohort)</td></tr>\n";
     }
     echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td align=\"right\">";
     if ($total_marks < $orig_total_marks) echo "<span style=\"color:red; text-decoration:line-through\">$orig_total_marks</span>&nbsp;&nbsp;";

@@ -80,14 +80,14 @@
   $tmp_start_date = $start_date->format("YmdHis");
   $tmp_end_date = $end_date->format("YmdHis");
     
-  $stmt = $mysqli->prepare("SELECT paper_title, paper_ownerID FROM properties WHERE property_id=?");
+  $stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id=?");
   $stmt->bind_param('i', $property_id);
   $stmt->execute();
-  $stmt->bind_result($paper_title, $paper_ownerID);
+  $stmt->bind_result($created, $paper_ownerID);
   $stmt->fetch();
   $stmt->close();
   
-  $hash = crypt($paper_title, substr($paper_ownerID,0,2));   // Generate the encrypted name of the paper.
+  $hash = $property_id . $created . $paper_ownerID;   // Generate the encrypted name of the paper.
 
   $result = $mysqli->prepare("UPDATE properties SET moduleID=?, start_date=?, end_date=?, timezone=?, deleted=NULL, crypt_name=? WHERE property_id=? LIMIT 1");
   $result->bind_param('sssssi', $module_string, $tmp_start_date, $tmp_end_date, $timezone, $hash, $property_id);

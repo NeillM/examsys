@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require './config/config.inc.php';
+require './classes/lang.class.php';
 require_once './classes/networkutils.class.php';
 
 /**
@@ -32,8 +34,7 @@ function encpw($u,$p) {
   return crypt($p,$salt);
 }
 
-require './config/config.inc.php';
-$mysqli = new mysqli($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
+$mysqli = new mysqli($cfg_db_host, $cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
 $protocol = 'https://';
 
 // Check that the ip_address of the current user is within the exam lab.
@@ -55,17 +56,17 @@ while ($row=$results->fetch()) {
 $results->close();
 
 if ($ip_match == false) {
-  echo "<html>\n<head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
+  echo "<html>\n<head>\n<title>" . $string['accessdenied'] . "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-  echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This page can only be accessed from a university computer within the examination room.</p>\n<!-- " . NetworkUtils::get_ipaddress() . " -->\n<!-- $labs -->\n</body>\n</html>";
+  echo "<h1 style=\"margin-left:60px\">" . $string['accessdenied'] . "</h1>\n";
+  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">" . $string['denied_msg'] . "</p>\n</body>\n</html>";
   exit;
 }
 ?>
 
 <html>
 <head>
-<title>Temporary Account</title>
+<title><?php echo $string['guestaccount']; ?></title>
 <style>
 body {color:black; background-color:white; font-family:Arial,sans-serif}
 </style>
@@ -86,11 +87,11 @@ if (isset($_POST['submit'])) {
   $stmt->close();
   
   echo '<div align="center"><table cellpadding="0" cellspacing="0" style="width:450px; border:1px #C8C8C8 solid">';
-  echo '<tr style="height:70px; width:100%; background-image:url(./artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td>Allocated Account</td></tr>';
-  echo '<tr><td><table style="width:100%"><tr><td style="padding:6px">Username</td><td><strong>' . $_POST['username'] . '</strong></td></tr>';
-  echo '<tr><td style="padding:6px">Password</td><td><strong>' . $_POST['password'] . '</strong></td></tr>';
+  echo '<tr style="height:70px; width:100%; background-image:url(./artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td>' . $string['allocatedaccount'] . '</td></tr>';
+  echo '<tr><td><table style="width:100%"><tr><td style="padding:6px">' . $string['username'] . '</td><td><strong>' . $_POST['username'] . '</strong></td></tr>';
+  echo '<tr><td style="padding:6px">' . $string['password'] . '</td><td><strong>' . $_POST['password'] . '</strong></td></tr>';
   echo '<tr><td colspan="2"><td>&nbsp;</td></tr>';
-  echo '<tr><td style="text-align:center"><td><input type="button" name="login" value="Log In" style="width:120px" onclick="window.location=\'' . $protocol . $_SERVER['HTTP_HOST'] . '/index.php\';" /></td></tr>';
+  echo '<tr><td style="text-align:center"><td><input type="button" name="login" value="' . $string['login'] . '" style="width:120px" onclick="window.location=\'' . $protocol . $_SERVER['HTTP_HOST'] . '/index.php\';" /></td></tr>';
   echo '</table></td></tr></table></div>';
 } else {
   $used_accounts = array();
@@ -112,7 +113,7 @@ if (isset($_POST['submit'])) {
   }
   
   // Reserve this free account first.
-  $stmt = $mysqli->prepare("INSERT INTO temp_users VALUES (NULL,NULL,NULL,NULL,NULL,?,NOW())");
+  $stmt = $mysqli->prepare("INSERT INTO temp_users VALUES (NULL, NULL, NULL, NULL, NULL, ?, NOW())");
   $stmt->bind_param('s', $free_account);
   $stmt->execute();
   $stmt->close();
@@ -131,7 +132,7 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
-<title>Temporary Account</title>
+<title><?php echo $string['guestaccount']; ?></title>
 <style>
 body {color:black; background-color:white; font-family:Arial,sans-serif}
 </style>
@@ -141,16 +142,16 @@ body {color:black; background-color:white; font-family:Arial,sans-serif}
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div style="text-align:center">
 <table cellpadding="0" cellspacing="0" style="margin-left:auto; margin-right:auto; width:450px; border:1px #C8C8C8 solid">
-<tr style="height:70px; width:100%; background-image:url(./artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold"><td style="padding-left:6px">Guest Account Registration</td></tr>
+<tr style="height:70px; width:100%; background-image:url(./artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold"><td style="padding-left:6px"><?php echo $string['guestaccountreg']; ?></td></tr>
 
 <tr><td style="text-align:center; padding:6px">
 <table cellpadding="2" cellspacing="0" border="0">
-<tr><td>Title</td><td><select name="title"><option value="Mr">Mr</option><option value="Miss">Miss</option><option value="Mrs">Mrs</option><option value="Ms">Ms</option><option value="Dr">Dr</option></select></td></tr>
-<tr><td>First Name</td><td><input type="text" name="first_names" value="" size="40" /></td></tr>
-<tr><td>Surname</td><td><input type="text" name="surname" value="" size="40" /></td></tr>
-<tr><td>Student ID</td><td><input type="text" name="student_id" value="" size="20" /></td></tr>
+<tr><td><?php echo $string['title']; ?></td><td><select name="title"><option value="Mr">Mr</option><option value="Miss">Miss</option><option value="Mrs">Mrs</option><option value="Ms">Ms</option><option value="Dr">Dr</option></select></td></tr>
+<tr><td><?php echo $string['firstname']; ?></td><td><input type="text" name="first_names" value="" size="40" /></td></tr>
+<tr><td><?php echo $string['surname']; ?></td><td><input type="text" name="surname" value="" size="40" /></td></tr>
+<tr><td><?php echo $string['studentid']; ?></td><td><input type="text" name="student_id" value="" size="20" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="OK" style="width:100px" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px" /></td></tr>
 </table>
 </td></tr>
 </table>

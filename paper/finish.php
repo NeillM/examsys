@@ -138,13 +138,11 @@
     return $html;
   }
   
-  $paperID = $_GET['paperID'];
-  
-  if ($paper_properties = $mysqli->prepare("SELECT labs, moduleID, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE property_id=?")) {
-    $paper_properties->bind_param('i', $_GET['paperID']);
+  if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
+    $paper_properties->bind_param('s', $_GET['id']);
     $paper_properties->execute();
     $paper_properties->store_result();
-    $paper_properties->bind_result($labs, $moduleID, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
+    $paper_properties->bind_result($paperID, $labs, $moduleID, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
     while ($paper_properties->fetch()) {
       // If set overwrite the default colours with the current users' special settings
       if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
@@ -191,7 +189,7 @@
         //Check room security
         if ($labs != '') {
           $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-          $lab_info->bind_param('s',$_SERVER['REMOTE_ADDR']);
+          $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
           $lab_info->execute();
           $lab_info->bind_result($address, $low_bandwidth);
           $lab_info->store_result();
@@ -228,7 +226,7 @@
         
         // Check for any metadata security restrictions
         $metadata_security = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
-        $metadata_security->bind_param('i', $_GET['paperID']);
+        $metadata_security->bind_param('i', $paperID);
         $metadata_security->execute();
         $metadata_security->bind_result($security_type, $security_value);
         $metadata_security->store_result();
@@ -250,7 +248,7 @@
     }
     $paper_properties->close();
   } else {
-    display_error("Properties Query Error",$mysqli->error);
+    display_error("Properties Query Error", $mysqli->error);
   }
   require '../config/finish.inc';
 ?>
@@ -351,10 +349,10 @@ table {font-size:100%}
     // Get any questions to exclude.
     $excluded = array();
     $exclude_query = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
-    $exclude_query->bind_param('i', $_GET['paperID']);
+    $exclude_query->bind_param('i', $paperID);
     $exclude_query->execute();
     $exclude_query->bind_result($exclude_q_id, $exclude_parts);
-    while ($row = $exclude_query->fetch()) {
+    while ($exclude_query->fetch()) {
       $excluded[$exclude_q_id] = $exclude_parts;
     }
     $exclude_query->close();
@@ -380,7 +378,7 @@ table {font-size:100%}
       $standards_setting = array();
       $tmp_parts = explode(',',$marking);
       $std_data = $mysqli->prepare("SELECT questionID, rating FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
-      $std_data->bind_param('iis', $_GET['paperID'],$tmp_parts[1],$tmp_parts[2]);
+      $std_data->bind_param('iis', $paperID, $tmp_parts[1], $tmp_parts[2]);
       $std_data->execute();
       $std_data->bind_result($questionID, $rating);
       while ($row = $std_data->fetch()) {
@@ -399,7 +397,7 @@ table {font-size:100%}
     $user_mark = 0;
     
     $answer_data = $mysqli->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id ORDER BY screen, display_pos, id_num");
-    $answer_data->bind_param('i', $_GET['paperID']);
+    $answer_data->bind_param('i', $paperID);
     $answer_data->execute();
     $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $display_pos, $status);
     while ($answer_data->fetch()) {
@@ -754,11 +752,11 @@ table {font-size:100%}
           }
           
           if ($paper[$question]['scenario'] != '') echo "<p>" . $paper[$question]['scenario'] . "</p>\n";
-          if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
+          if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question) . "</p>\n";
           
           echo_content($tmp_leadin);
           
-          $score_array = explode(',',$paper[$question]['display_method']);
+          $score_array = explode(',', $paper[$question]['display_method']);
           echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
           if ($tmp_display_correct_answer == '1') {
             echo '<td>';
@@ -769,7 +767,7 @@ table {font-size:100%}
           }
           $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
           if ($tmp_answer[0] == '') {
-            echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[2];
+            echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[3];
           } else {
             echo '<td>';
             if ($tmp_exclude == '1')  echo '<span style="color:red; text-decoration:line-through">';
@@ -791,13 +789,14 @@ table {font-size:100%}
           }
           if ($tmp_display_correct_answer == '1' and $score_array[2] != 'Formula') {
             if (is_double($tmp_answer[1])) {
-              echo ' <strong>(' . number_format($tmp_answer[1],$score_array[0], '.', '') . $score_array[3] . ')</strong>';
+              echo ' <strong>(' . number_format($tmp_answer[1],$score_array[0], '.', '') . ' ' . $score_array[3] . ')</strong>';
             } else {
               echo ' <strong>(' . $tmp_answer[1] . ')</strong>';
             }
           } else {
             echo ' ';
           }
+                    
           if ($saved_response_clean <> $tmp_answer[1] and $tmp_mark == $paper[$question]['marks_correct']) echo ' with a tolerance of ' . $score_array[1];
           
           if ($tmp_exclude == '1')  echo '</span>';
@@ -2083,7 +2082,7 @@ table {font-size:100%}
       
       // Display any objectives mapped
       if ($paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
-        $objByModule = getObjectivesByMapping($moduleID,$calendar_year,$_GET['paperID'],$paper[$question]['q_id'],$mysqli);
+        $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $mysqli);
         
         if (count($objByModule) > 0) {
           echo "<br />\n<div class=\"objH\">Learning Objectives</div>\n<ul>\n";
@@ -2170,11 +2169,7 @@ table {font-size:100%}
     echo '</table>';
   } else {
     echo '<blockquote>';
-    //if ($low_bandwidth == 1) {
-      echo '<p style="font-size:450%;font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank you</p>';
-    //} else {
-    //  echo '<p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p>';
-    //}
+    echo '<p style="font-size:450%;font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank you</p>';
     echo '<p>' . sprintf($string['msg'], $paper_title) . '</p><br />';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';

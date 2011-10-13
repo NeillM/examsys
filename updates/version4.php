@@ -487,7 +487,7 @@ if (!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_late TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".temp_users TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".temp_users TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";    
     $priv_SQL[] = "FLUSH PRIVILEGES";
  
@@ -1224,14 +1224,18 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
     
-    $result2 = $mysqli->prepare("SELECT property_id, paper_ownerID, paper_title FROM properties");
+    $adjust = $mysqli->prepare("ALTER TABLE properties ADD INDEX crypt_name_idx (crypt_name)");
+    $adjust->execute();
+    $adjust->close();
+    
+    $result2 = $mysqli->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties");
     $result2->execute();
     $result2->store_result();
-    $result2->bind_result($property_id, $paper_ownerID, $paper_title);
+    $result2->bind_result($property_id, $created, $paper_ownerID);
 
     $update = $mysqli->prepare("UPDATE properties SET crypt_name=? WHERE property_id=?");
     while ($result2->fetch()) {
-      $hash = crypt($paper_title, substr($paper_ownerID,0,2));
+      $hash = $property_id . $created . $paper_ownerID;
       $update->bind_param('si', $hash, $property_id);
       $update->execute();
     }

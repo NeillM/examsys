@@ -234,11 +234,11 @@ if ($special_needs == 1) {
 // Get how many screens make up the question paper.
 $screen_data = array();
 $row_no = 0;
-$stmt = $mysqli->prepare("SELECT labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND property_id=? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY screen");
-$stmt->bind_param('i', $_GET['paperID']);
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY screen");
+$stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $latex_needed, $password);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $latex_needed, $password);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
   access_denied($string['error_paper'], $output_header = false);
 }
@@ -319,7 +319,7 @@ while ($stmt->fetch()) {
       
       // Check for any metadata security restrictions
       $metadata_security = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
-      $metadata_security->bind_param('i', $_GET['paperID']);
+      $metadata_security->bind_param('i', $property_id);
       $metadata_security->execute();
       $metadata_security->bind_result($security_type, $security_value);
       $metadata_security->store_result();
@@ -356,7 +356,7 @@ if (isset($_POST['sessionid'])) {
   $current_screen = 1;
   if (($paper_type == '1' or $paper_type == '2' or $paper_type == '3') and !isset($_GET['mode'])) {  //Mode is used for staff preview.
     $stmt = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
-    $stmt->bind_param('ii', $_GET['paperID'], $userID);
+    $stmt->bind_param('ii', $property_id, $userID);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($sessionid, $current_screen);
@@ -434,7 +434,7 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 ?>
   function fire(scrno) {
     document.questions.button_pressed.value='previous';
-    document.questions.action="fire_evacuation.php?paperID=<?php echo $_GET['paperID']; ?>";
+    document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
     document.questions.submit();
   }
 <?php
@@ -481,7 +481,7 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
   }
   function jumpScreen() {
     document.questions.button_pressed.value='previous';
-    document.questions.action="start.php?paperID=<?php echo $_GET['paperID']; ?>";
+    document.questions.action="start.php?id=<?php echo $_GET['id']; ?>";
     if (confirmSubmit()) {
       document.questions.submit();
     }
@@ -498,9 +498,9 @@ if (stripos($userroles,'Student') !== false) {
   echo '<body onload="StartClock();" onunload="KillClock()">';
 }
 if ($current_screen < $no_screens) {
-  echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "\"";
+  echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\"";
 } else {
-  echo "<form method=\"post\" name=\"questions\" action=\"finish.php?paperID=" . $_GET['paperID'] . "\"";
+  echo "<form method=\"post\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . "\"";
 }
 echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear navigation mode.
 ?>
@@ -508,7 +508,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   <tr><td valign="top">
 <?php
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    record_marks($_GET['paperID'], $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
+    record_marks($property_id, $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
   }
 
   echo $top_table_html;
@@ -549,7 +549,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   $screen_pre_submitted = 0;
   if (isset($_POST['sessionid']) or (isset($_POST['fire_alarm']) AND $_POST['fire_alarm'] == '1') or $restart == 1) {    // Get users previous answers for the current screen.
     $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID=? AND started=? and q_paper=? ORDER BY id");
-    $log_data->bind_param('isi', $userID, $sessionid, $_GET['paperID']);
+    $log_data->bind_param('isi', $userID, $sessionid, $property_id);
     $log_data->execute();
     $log_data->store_result();
     $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
@@ -569,7 +569,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
       $log_data->close();
       if ($paper_type == '_late') {
         $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
-        $log_data->bind_param('isi', $userID, $sessionid, $_GET['paperID']);
+        $log_data->bind_param('isi', $userID, $sessionid, $property_id);
         $log_data->execute();
         $log_data->store_result();
         $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
@@ -596,7 +596,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   $previous_q_type = '';
 
   $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
-  $question_data->bind_param('ii', $_GET['paperID'], $current_screen);
+  $question_data->bind_param('ii', $property_id, $current_screen);
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
@@ -697,7 +697,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   echo $bottom_html;
   echo '<input type="text" style="background-color:transparent;text-align:center;font-size:80%;color:white;border:0px" id="theTime" size="8" /></td><td align="right">';
   if ($bidirectional == 1 and $no_screens > 1) {
-    if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; Screen " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
+    if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; Screen " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
     if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
       echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";
       for ($i=1; $i<=$no_screens; $i++) {

@@ -82,17 +82,13 @@ if ($special_needs == 1) {
 if ($textsize == '') $textsize = 95;
 if ($font == '') $font = 'Arial';
   
-//$paper = urldecode($_GET['paper']);
-
-$crypt_name = $_GET['id'];
-
 $person = $title . ' ' . $surname;
 $total_random_mark = 0;
 $total_marks = 0;
 
 //get paper info
 $paper_info = $mysqli->prepare("SELECT DISTINCT property_id, paper_title, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, moduleID, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.crypt_name=? AND properties.property_id=papers.paper ORDER BY screen DESC LIMIT 1");
-$paper_info->bind_param('s',$crypt_name);
+$paper_info->bind_param('s', $_GET['id']);
 $paper_info->execute();
 $paper_info->bind_result($property_id, $paper_title, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $moduleID, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password);
 $paper_info->store_result();
@@ -175,14 +171,14 @@ td {text-align:left}
 </style>
 <script language="JavaScript">
 function startPaper() {
-  exam=window.open("./paper/start.php?paperID=<?php echo $property_id; ?>","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+  exam=window.open("./paper/start.php?id=<?php echo $_GET['id']; ?>","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
   if (window.focus) {
     exam.focus();
   }
   document.getElementById('start').value = '<?php echo $string['restart']; ?>';
 }
 function reviewPaper(started,type) {
-  exam=window.open("./paper/finish.php?paperID=<?php echo $property_id; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+  exam=window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
   if (window.focus) {
     exam.focus();
   }
@@ -274,7 +270,7 @@ if ($textsize > 120) {
   echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp();\" onkeypress=\"launchHelp();\" />\n";
   if ($test_type == 2) {
     $switch_info = $mysqli->prepare("SELECT property_id FROM properties WHERE paper_type IN('1','2') AND start_date > DATE_SUB(NOW(), INTERVAL 4 HOUR) AND start_date < DATE_ADD(NOW(), INTERVAL 3 HOUR) AND end_date < DATE_ADD(NOW(), INTERVAL 6 HOUR) AND property_id != ?");
-    $switch_info->bind_param('i',$property_id);
+    $switch_info->bind_param('i', $property_id);
     $switch_info->execute();
     $switch_info->bind_result($tmp_property_id);
     $switch_info->store_result();

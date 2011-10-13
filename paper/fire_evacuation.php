@@ -31,7 +31,10 @@
 
 require '../include/staff_student_auth.inc';
 require '../include/marking_functions.inc';
+require '../include/errors.inc';
   
+check_var('id', 'GET', true, false);
+
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
   $stmt->bind_param('i',$userID);
   $stmt->execute();
@@ -41,11 +44,11 @@ if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_col
 }
 $stmt->close();
 
-$stmt = $mysqli->prepare("SELECT paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year FROM properties WHERE property_id=?");
-$stmt->bind_param('i', $_GET['paperID']);
+$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year FROM properties WHERE property_id=?");
+$stmt->bind_param('i', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year);
+$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year);
 while ($row = $stmt->fetch()) {
   $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
   if (strpos($userroles,'Student') !== false) {
@@ -71,7 +74,7 @@ while ($row = $stmt->fetch()) {
     //Check room security
     if ($labs != '') {
       $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-      $lab_info->bind_param('s',$_SERVER['REMOTE_ADDR']);
+      $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
       $lab_info->execute();
       $lab_info->bind_result($address, $low_bandwidth);
       $lab_info->store_result();
@@ -102,7 +105,7 @@ while ($row = $stmt->fetch()) {
           exit;
         } else {
           $row = $module_info->fetch_array(MYSQLI_ASSOC);
-          if(is_array($row)) {
+          if (is_array($row)) {
             $attempt = $row['attempt'];
           }
         }
@@ -124,9 +127,9 @@ $stmt->free_result();
 $stmt->close();
 
 echo "<html>\n<head>\n<title></title>\n</head>\n<body style=\"font-family:Arial,sans-serif; color:black\">\n";
-echo "<form method=\"post\" name=\"questions\" action=\"start.php?paperID=" . $_GET['paperID'] . "&dont_record=true\">\n";
+echo "<form method=\"post\" name=\"questions\" action=\"start.php?id=" . $_GET['id'] . "&dont_record=true\">\n";
 
-record_marks($_GET['paperID'], $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
+record_marks($property_id, $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
 ?>
   <p style="text-align:center; font-size:200%; color:#008000"><?php echo $string['top_msg']; ?></p>
   <p style="text-align:center; font-weight:bold"><?php echo $string['donotrun']; ?></p>
