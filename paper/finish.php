@@ -1209,14 +1209,8 @@ table {font-size:100%}
           echo "<tr><td></td><td></td><td></td><td style=\"color:#808080\">Experts</td><td></td></tr>\n";
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             $tmp_part_id = $option_order[$part_id];
-            //if (!isset($paper[$question]['user_answer']) or (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == '')) {
-            //  reset_feedback($hide_if_unanswered);
-            //}
-
-            
             if (isset($correct_answer[$tmp_part_id])) {
-              var_dump($paper[$question]['user_answer']);
-              if ($hide_if_unanswered == 0 or ($hide_if_unanswered == 1 and isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != '')){
+              if ($hide_if_unanswered == 0 or ($hide_if_unanswered == 1 and isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != '0')){
                 $strong_on = '<b>';
                 $strong_off = '</b>';
               } else {
