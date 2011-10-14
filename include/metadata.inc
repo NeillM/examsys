@@ -125,19 +125,20 @@ META;
       if (count($keywords['team']) > 0) {
         $prev_heading = '';
         foreach ($keywords['team'] as $keyword) {
-          if ($prev_heading != '') {
-          $html .= <<< META
+          if ($keyword['module_id'] != $prev_heading) {
+            if ($prev_heading != '') {
+            $html .= <<< META
               	</ul>
 
 META;
-          }
+            }
           
-          if ($keyword['module_id'] != $prev_heading) {
-          $html .= <<< META
+            $html .= <<< META
       					<h4><span class="opaque">{$keyword['module_id']}</span></h4>
                 <ul class="radio-list clearfix">
 
 META;
+            $prev_heading = $keyword['module_id'];
           }
           
           $checked = $on = ''; 
