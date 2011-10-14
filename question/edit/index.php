@@ -24,9 +24,7 @@
 
 // TODO: check all options work for EITHER text or media
 // TODO: SCT - old SCT type
-// TODO: handle keyword based and random
 // TODO: check - was leadin/scenario change tracking looking at the plain version?
-// TODO: validation in JS
 // TODO: replace comment OK etc. icons with CSS BG image?
 
 // Keyword based and random questions aren't coming through here
@@ -462,7 +460,6 @@ if($critical_error != '') {
   $query_string .= ($paper_id != -1) ? '&paperID=' . $paper_id : '';
   $query_string .= ($module != '') ? '&module=' . $module : '';
 
-  // TODO: client side validation
 ?>
 	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput">
 <?php
