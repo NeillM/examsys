@@ -86,7 +86,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
         }
       } else {
         $tmp_first_split = explode(';', $correct[0]);
-        $tmp_second_split = explode('$', $tmp_first_split[8]);
+        $tmp_second_split = explode('$', $tmp_first_split[11]);
         $label_count = 0;
         $placeholders = 0;
         $i = 0;
