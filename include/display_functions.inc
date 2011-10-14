@@ -87,7 +87,7 @@ function output_Math_Editor($id) {
 }
 
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $user_answers) {
-  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $user_order, $string;
+  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $user_order, $string, $language;
 
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
@@ -776,7 +776,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $max_col1 = 0;
         $max_col2 = 0;
         $tmp_first_split = explode(";", $question['options'][0]['correct']);
-        $tmp_second_split = explode('|', $tmp_first_split[8]);
+        $tmp_second_split = explode('|', $tmp_first_split[11]);
         foreach ($tmp_second_split as $ind_label) {
           $label_parts = explode('$', $ind_label);
           if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
@@ -812,7 +812,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     <script language="javascript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $display_option['marks_correct'] . '~' . $display_option['marks_incorrect']; ?>');
+        setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if(isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]); ?>', '<?php echo $display_option['marks_correct'] . '~' . $display_option['marks_incorrect']; ?>');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');

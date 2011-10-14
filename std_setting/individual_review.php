@@ -51,6 +51,7 @@ if (isset($_POSR['paperID'])) {
 <html>
 <head>
 <title>Standards Setting<?php echo " $cfg_install_type"; ?></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <?php
 // Get any questions to exclude.
 $excluded = array();
@@ -98,7 +99,8 @@ $current_screen = 1;
   .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
 </style>
 
-<script language="JavaScript" src="../javascript/MathJaxConfig.js"></script>
+<script language="JavaScript" src="../javascript/jquery-1.6.1.min.js"></script>
+<script language="JavaScript" src="../tools/mee/mee/js/mee_src.js"></script>
 <script language="JavaScript" src="../javascript/ie_fix.js"></script>
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="JavaScript" src="../javascript/staff_help.js"></script>

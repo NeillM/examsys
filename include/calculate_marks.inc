@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
+require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
 /**
  * Returns the number of marks the question is out of.
@@ -118,7 +118,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
         if ($score_method == 'Mark per Option') {
           $marks += ($correct_no * $question_marks);
         } elseif ($score_method == 'Mark per Question') {
-          $marks += 1;
+          $marks += $question_marks;
         } else {
           $marks += count($option_text);
         }
@@ -215,7 +215,7 @@ function qRandomMarks($question_type, $tmp_exclude, $option_text, $correct, $dis
       break;
     case 'labelling':
       $tmp_first_split = explode(';', $correct[0]);
-      $tmp_second_split = explode('$', $tmp_first_split[8]);
+      $tmp_second_split = explode('$', $tmp_first_split[11]);
       $label_count = 0;
       $placeholders = 0;
       $i = 0;

@@ -195,7 +195,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       $matching_answers = explode('|', $options[0]['correct']);
   
       if ($matching_media[0] != '') {
-        echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0]) . '</p>';
+        echo '<p align="center">' . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0]) . '</p>';
       }
       $text_scenarios = 0;
       for ($part_id=0; $part_id<10; $part_id++) {
@@ -277,7 +277,8 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       }
       echo '</ol>';
       if ($options[0]['score_method'] == 'Mark per Question') {
-        echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
+        $stdID = 1;
+        echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
         $marks += $options[0]['marks_correct'];
       }
       echo '<input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" /><input type="hidden" name="multimatching' . $question_no . '_correct_no" value="' . $marks . '" />';
@@ -296,7 +297,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         }
         echo "</table>\n</blockquote>\n";
       } else {
-        echo reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,$part_id - 1,1), $review_val, $stdID, $std_excluded, $is_group);
+        echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,$part_id - 1,1), $review_val, $stdID, $std_excluded, $is_group);
         $marks += $options[0]['marks_correct'];
       }
       break;

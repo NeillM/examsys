@@ -1,11 +1,11 @@
-function setUpFlash(num, flashId, image, config, answer, extra) {
+function setUpFlash(num, flashId, lang, image, config, answer, extra) {
   var swf;
   if (navigator.appName.indexOf("Microsoft") != -1) {
     swf = document.getElementById(flashId);
   } else {
     swf = document[flashId];
   }
-  swf.imageInfo(image, num);
+  swf.imageInfo(image, num, lang);
   if (answer != undefined) {
     swf.answerInfo(answer);
   }
@@ -24,7 +24,7 @@ function addLoadEvent(func, num, flashId, image, config, answer, extra) {
   } else {
     window.onload = function() {
       if (oldonload) {
-      oldonload();
+        oldonload();
       }
       func(num, flashId, image, config, answer, extra);
     }

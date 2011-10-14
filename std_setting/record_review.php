@@ -89,7 +89,7 @@
           $total_parts++;
         }
 
-        $std_query = "INSERT INTO standards_setting VALUES (NULL,$userID,$log_id,'$now','$rating',$paperID,'$tmp_method','$group_review')";
+        $std_query = "INSERT INTO standards_setting VALUES (NULL, $userID, $log_id, '$now', '$rating', $paperID, '$tmp_method', '$group_review')";
         if (!$mysqli->query($std_query)) {
           display_error('Error writing to standards_setting table', $mysqli->error, true, true);
           $mysqli->close();
@@ -103,7 +103,7 @@
             exit;
           }
           if ($rating != $_POST["old$log_id"]) {
-            $std_query = "INSERT INTO track_changes VALUES (NULL,'Edit Question',$log_id,$userID,'" . $_POST["old$log_id"] . "','$rating','$now','Std Setting')";
+            $std_query = "INSERT INTO track_changes VALUES (NULL, 'Edit Question', $log_id, $userID, '" . $_POST["old$log_id"] . "', '$rating', '$now', 'Std Setting')";
             if (!$mysqli->query($std_query)) {
               display_error('Error writing to track_changes table', $mysqli->error, true, true);
               $mysqli->close();
@@ -157,36 +157,49 @@
             $qid = 'std' . $question_no . '_' . $i;
             if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
             if ($i == 1) {
-              $rating = $_POST["$qid"];
+              if (isset($_POST["$qid"])) {
+                $rating = $_POST["$qid"];
+              } else {
+                $rating = '';
+              }
             } else {
-              $rating .= ',' . $_POST["$qid"];
+              if (isset($_POST["$qid"])) {
+                $rating .= ',' . $_POST["$qid"];
+              } else {
+                $rating .= ',';
+              }
             }
             $total_parts++;
           }
           break;
         case 'mrq':
-          $qid = 'std' . $question_no . '_' . $question_part;
-          if ($row['correct'] == 'y' and $row['score_method'] != 'AllItemsCorrect') {
-            if ($question_part == 1) {
-              $rating = $_POST["$qid"];
-            } else {
-              $rating .= ',' . $_POST["$qid"];
-            }
-            if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
-            if ($_POST["$qid"] != '') $last_question = $question_no;
-            $total_parts++;
-          } elseif ($row['correct'] == 'n' and $row['score_method'] != 'AllItemsCorrect') {
-            if ($question_part == 1) {
-              if (isset($_POST[$qid])) {
-                $rating = $_POST[$qid];
+          if ($row['score_method'] == 'Mark per Question') {
+            $qid = 'std' . $question_no . '_1';
+            $rating = $_POST[$qid];
+          } else {
+            $qid = 'std' . $question_no . '_' . $question_part;
+            if ($row['correct'] == 'y' and $row['score_method'] != 'AllItemsCorrect') {
+              if ($question_part == 1) {
+                $rating = $_POST["$qid"];
               } else {
-                $rating = '';
+                $rating .= ',' . $_POST["$qid"];
               }
-            } else {
-              if (isset($_POST[$qid])) {
-                $rating .= ',' . $_POST[$qid];
+              if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
+              if ($_POST["$qid"] != '') $last_question = $question_no;
+              $total_parts++;
+            } elseif ($row['correct'] == 'n' and $row['score_method'] != 'AllItemsCorrect') {
+              if ($question_part == 1) {
+                if (isset($_POST[$qid])) {
+                  $rating = $_POST[$qid];
+                } else {
+                  $rating = '';
+                }
               } else {
-                $rating .= ',';
+                if (isset($_POST[$qid])) {
+                  $rating .= ',' . $_POST[$qid];
+                } else {
+                  $rating .= ',';
+                }
               }
             }
           }
@@ -217,33 +230,38 @@
           // Multimatching is similar to matching except that the separate
           // options are separated by '$' characters.
           if ($question_part == 1) {
-            $correct_options = explode('|',$row['correct']);
-            $matching_scenarios = explode('|', $row['scenario']);
-            $text_scenarios = 0;
-            for ($part_id=0; $part_id<10; $part_id++) {
-              if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') $text_scenarios++;
-            }
+            if ($row['score_method'] == 'Mark per Question') {
+              $qid = 'std' . $question_no . '_1';
+              $rating = $_POST["$qid"];
+            } else {
+              $correct_options = explode('|',$row['correct']);
+              $matching_scenarios = explode('|', $row['scenario']);
+              $text_scenarios = 0;
+              for ($part_id=0; $part_id<10; $part_id++) {
+                if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') $text_scenarios++;
+              }
 
-            $matching_media = explode('|', $row['q_media']);
-            $media_scenarios = 0;
-            for ($part_id=1; $part_id<10; $part_id++) {
-              if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
-            }
-            $scenarios = max($text_scenarios,$media_scenarios);
-            $part_id = 1;
-            $scenario_no = 0;
-            for ($scenario_no=0; $scenario_no<$scenarios; $scenario_no++) {
-              $correct_answers = explode('$',$correct_options[$scenario_no]);
-              $answer_count = count($correct_answers);
-              for ($i=1; $i<=$answer_count; $i++) {
-                $qid = 'std' . $question_no . '_' . $part_id;
-                if ($rating == '') {
-                  $rating = $_POST["$qid"];
-                } else {
-                  $rating .= ',' . $_POST["$qid"];
+              $matching_media = explode('|', $row['q_media']);
+              $media_scenarios = 0;
+              for ($part_id=1; $part_id<10; $part_id++) {
+                if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
+              }
+              $scenarios = max($text_scenarios,$media_scenarios);
+              $part_id = 1;
+              $scenario_no = 0;
+              for ($scenario_no=0; $scenario_no<$scenarios; $scenario_no++) {
+                $correct_answers = explode('$',$correct_options[$scenario_no]);
+                $answer_count = count($correct_answers);
+                for ($i=1; $i<=$answer_count; $i++) {
+                  $qid = 'std' . $question_no . '_' . $part_id;
+                  if ($rating == '') {
+                    $rating = $_POST["$qid"];
+                  } else {
+                    $rating .= ',' . $_POST["$qid"];
+                  }
+                  if ($_POST["$qid"] != '') $last_question = $question_no;
+                  $part_id++;
                 }
-                if ($_POST["$qid"] != '') $last_question = $question_no;
-                $part_id++;
               }
             }
           }
