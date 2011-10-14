@@ -98,39 +98,39 @@ require_once './classes/networkutils.class.php';
   if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[0]['paper_title']);
   } elseif ($paper_no == 0) {
-    echo "<html>\n<head>\n<title>Exams</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
+    echo "<html>\n<head>\n<title>" . $string['exams']. "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
     echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"margin-left:60px\">TouchStone cannot find any Exams</h1>\n";
 
     if (strpos($userroles,'Staff') !== false) {
-      echo "<p style=\"margin-left:60px; color:#C00000\"><strong>Note:</strong> This is the summative exams screen for students, did you want the <img src=\"/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/staff/index.php\" style=\"color:blue\"><strong>Staff management screens</strong></a>?</p>\n";
+      echo "<p style=\"margin-left:60px; color:#C00000\">" . $string['note1'] . " <img src=\"/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/staff/index.php\" style=\"color:blue\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
     }
 
-    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Most likely cause is one or more security conflicts with:</p>\n<ul style=\"margin-left:80px\">\n";
+    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
 
     $ip_info = $mysqli->query("SELECT name FROM (labs, ip_addresses) WHERE labs.id=ip_addresses.lab AND address='" . NetworkUtils::get_ipaddress() . "'");
     if ($ip_info->num_rows > 0) {
       $ip_row = $ip_info->fetch_assoc();
       $computer_lab = '(' . $ip_row['name'] . ')';
     } else {
-      $computer_lab = '<span style="color:red">(unknown address)</span>';
+      $computer_lab = '<span style="color:red">' . $string['unknownIp'] . '</span>';
     }
     $ip_info->close();
-    echo "<li>IP address - " . NetworkUtils::get_ipaddress() . " $computer_lab</li>\n";
-    echo "<li>Time/Date - " . date('d/m/Y H:i:s') . "</li>\n";
-    echo "<li>Academic Year - ";
+    echo "<li>" . $string['IPaddress'] . " - " . NetworkUtils::get_ipaddress() . " $computer_lab</li>\n";
+    echo "<li>" . $string['Time/Date'] . " - " . date('d/m/Y H:i:s') . "</li>\n";
+    echo "<li>" . $string['AcademicYear'] . " - ";
     if ($year == '') {
-      echo '<span style="color:red">no year held for user!</span>';
+      echo '<span style="color:red">' . $string['noyear'] . '</span>';
     } else {
       echo $year;
     }
     echo "</li>\n";
-    echo "<li>Modules - \n";
+    echo "<li>" . $string['Modules'] . " - \n";
     $info = $mysqli->query("SELECT moduleID, calendar_year FROM student_modules WHERE userID=$userID ORDER BY calendar_year DESC, moduleID");
     $last_cal_year = '';
     $i = 0;
     if ($info->num_rows == 0) {
-      echo '<span style="color:red">Warning: no modules registered!</span>';
+      echo '<span style="color:red">' . $string['nomodules'] . '</span>';
     } else {
       while ($row = $info->fetch_assoc()) {
         if($last_cal_year != $row['calendar_year']) {
@@ -143,19 +143,22 @@ require_once './classes/networkutils.class.php';
     }
     $info->close();
     echo "</li>\n";
-    echo "<li>User roles - ";
-    if ($userroles != 'Student') {
-      echo '<span style="color:red">' . $userroles . '</span>';
-    } else {
-      echo $userroles;
+    echo "<li>" . $string['UserRoles'] . " - ";
+    $userRolesArray = explode(',',$userroles);
+    foreach ($userRolesArray as $ur) {
+      if ($ur != 'Student') {
+        echo '<span style="color:red">' . $string[strtolower($ur)] . '</span>,';
+      } else {
+        echo $string[strtolower($ur)] . ',';
+      }
     }
-    echo "</li>\n</ul>\n<p style=\"margin-left:60px\">What you can try:</p>\n<ul style=\"margin-left:80px\">\n<li>If the time is more than 15 minutes before the start of the exam wait until within 15 minutes and press F5.</li>\n<li>Raise your hand for a member of staff.</li>\n</ul>\n</body>\n</html>\n";
+    echo "</li>\n</ul>\n<p style=\"margin-left:60px\">" . $string['try'] . ":</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['f5'] . "</li>\n<li>" . $string['RaiseYourHand '] . "</li>\n</ul>\n</body>\n</html>\n";
     exit;
   } else {
 ?>
   <html>
   <head>
-  <title>Exams</title>
+  <title><?php echo $string['exams']; ?></title>
   <script language="JavaScript">
     function enterPassword() {
       var password = prompt("This paper requires a password.","");
@@ -171,8 +174,8 @@ require_once './classes/networkutils.class.php';
   <body style="font-family:Arial,sans-serif">
 <?php
     if ($paper_no > 1) {
-      echo "<h1>Multiple Exams Found</h1>\n";
-      echo "<p><em>Please select the one you are required to take:</em></p>\n";
+      echo "<h1>" . $string['multipleExams'] . "</h1>\n";
+      echo "<p><em>" . $string['selectOne'] . "</em></p>\n";
     }
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
     for ($i=0; $i<$paper_no; $i++) {
@@ -182,18 +185,18 @@ require_once './classes/networkutils.class.php';
       } else {
         echo "<tr><td width=\"66\" style=\"text-align:right\"><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
         echo "<td><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
-        echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">password required</span>';
+        echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
       }
       echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];
       if ($paper_display[$i]['max_screen'] == 1) {
-        echo ' screen, ';
+        echo ' ' . $string['screen'] . ', ';
       } else {
-        echo ' screens, ';
+        echo ' ' . $string['screens'] . ', ';
       }
       if ($paper_display[$i]['bidirectional'] == 1) {
-        echo 'Bidirectional navigation';
+        echo $string['Bidirectional'];
       } else {
-        echo 'Unidirectional navigation';
+        echo $string['Unidirectional'];
       }
       echo ")</span></td></tr>\n";
     }
