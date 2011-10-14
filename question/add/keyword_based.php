@@ -109,6 +109,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
       $old_moduleID = '';
       $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$teams) . "') ORDER BY moduleid, keyword");
       $stmt->execute();
+      $stmt->store_result();
       $stmt->bind_result($moduleID, $keyword, $keywordID);
       while ($stmt->fetch()) {
         if ($old_moduleID != $moduleID) {
