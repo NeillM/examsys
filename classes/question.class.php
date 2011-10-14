@@ -309,7 +309,7 @@ Class Question extends TouchStoneObject {
       // If $id is -1 we're inserting a new record
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
-		$this->last_edited = date ('Y-m-d H:i:s');
+        $this->last_edited = date ('Y-m-d H:i:s');
         $params = array_merge(array('ssssssssssssisisssssisssss'), $this->_data);
         $query = <<< QUERY
 INSERT INTO questions(q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method, 

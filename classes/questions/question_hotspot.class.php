@@ -34,6 +34,7 @@ Class QuestionHOTSPOT extends Question {
   protected $_requires_media = true;
   protected $_requires_correction_intermediate = true;
   protected $_requires_flash = true;
+  public $max_options = 1;
   
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
@@ -46,6 +47,19 @@ Class QuestionHOTSPOT extends Question {
     //    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
   }
 
+  
+  /**
+   * Persist the object to the database
+   * @return boolean Success or failure of the save operation
+   * @throws ValidationException
+   */
+  public function save($clear_checkout = true) {
+    // Make sure 'correct' value is set for option
+    if (count($this->options) > 0) {
+      $this->set_points1($this->points1);
+    }
+    return parent::save($clear_checkout);
+  }
   
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
@@ -135,7 +149,7 @@ Class QuestionHOTSPOT extends Question {
   // ACCESSORS
   
   public function get_points1() {
-    if (count($this->options) > 0) {
+    if (empty($this->points1) and count($this->options) > 0) {
       $option = reset($this->options);
       $this->points1 = $option->get_correct();
     }
@@ -160,15 +174,11 @@ Class QuestionHOTSPOT extends Question {
       }
       $i++;
     }
-    $marks = $i;
 
     $this->set_leadin($leadin);
     if (count($this->options) > 0) {
       $option = reset($this->options);
       $option->set_correct($value);
-      $option->set_marks_correct($marks);
-    } else {
-      $this->options[] = Option::option_factory($this->_mysqli, $this->_user_id, $this, 1, $this->_lang_strings, array('correct' => $value, 'marks' => $marks));
     }
   }
   
