@@ -37,7 +37,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   for ($i=0; $i<$_POST['question_no']; $i++) {
     if ($_POST["question_text$i"] != '') {
       $individual_question = $_POST["question_id$i"];
-      insert_into_options($question_id,$individual_question,'','','','','','','');
+      insert_into_options($question_id,$individual_question,'','','','','','','','','');
     }
   }
 

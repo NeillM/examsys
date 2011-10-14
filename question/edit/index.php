@@ -29,6 +29,12 @@
 // TODO: validation in JS
 // TODO: replace comment OK etc. icons with CSS BG image?
 
+// Keyword based and random questions aren't coming through here
+if (isset($_GET['type']) and ($_GET['type'] == 'random' or $_GET['type'] = 'keyword_based')) {
+  $random_mode = (!isset($_GET['q_id'])) ? 'add' : 'edit';
+  header('Location: ' . '../' . $random_mode . '/' . $_GET['type'] . '.php?' . $_SERVER['QUERY_STRING']);
+}
+
 require '../../include/staff_auth.inc';
 require_once '../../classes/question.class.php';
 require_once '../../classes/logger.class.php';
@@ -82,7 +88,6 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
     $critical_error = $ex->getMessage();
   }
 }
-
 
 // Handle upload of files for question types that require it
 if ($critical_error == '' and $question->requires_media() and (isset($_POST['submit_media']) or isset($_POST['q_media']))) {

@@ -55,7 +55,7 @@ if ($_POST['submit'] == 'Save Changes') {
           }
         }
       }
-      insert_into_options($question_id,$individual_question,'','','','','','','');
+      insert_into_options($question_id,$individual_question,'','','','','','','','','');
     }
   }
 

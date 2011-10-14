@@ -125,7 +125,11 @@ $stmt->close();
   }
 
   function editQuestion() {
-    document.location.href='/question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&qNo=' + document.PapersMenu.questionNo.value + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&calling=paper&scrOfY=' + document.PapersMenu.scrOfY.value;
+    var loc = '/question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&qNo=' + document.PapersMenu.questionNo.value + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&calling=paper&scrOfY=' + document.PapersMenu.scrOfY.value;
+    if (document.PapersMenu.qType.value == 'random' || document.PapersMenu.qType.value == 'keyword_based') {
+      loc += '&type=' + document.PapersMenu.qType.value;
+    }
+    document.location = loc;
   }
 
   function deleteQuestion() {

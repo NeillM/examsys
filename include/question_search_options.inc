@@ -62,7 +62,11 @@ require_once '../classes/searchutils.class.php';
   }
 
   function editQuestion() {
-    document.location.href='../question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
+    var loc = '../question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
+    if (document.PapersMenu.qType.value == 'random' || document.PapersMenu.qType.value == 'keyword_based') {
+      loc += '&type=' + document.PapersMenu.qType.value;
+    }
+    document.location = loc;
   }
 
   function deleteQuestion() {

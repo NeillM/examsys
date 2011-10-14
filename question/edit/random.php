@@ -63,7 +63,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Save Changes') {
     for ($i=0; $i<$_POST['question_no']; $i++) {
       if (isset($_POST["question_text$i"]) and $_POST["question_text$i"] != '') {
         if (!isset($current[$_POST["question_id$i"]])) {  // New question
-          insert_into_options($q_id,$_POST["question_id$i"],'','','','','','','');
+          insert_into_options($q_id,$_POST["question_id$i"],'','','','','','','','','');
 
           $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Edit Question',?,$userID,'',?,NOW(),'Add Question')");
           $result->bind_param('is', $q_id, $_POST["question_id$i"]);

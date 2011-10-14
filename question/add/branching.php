@@ -53,7 +53,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
           }
         }
       }
-      insert_into_options($question_id,$individual_question,'','','','','','','');
+      insert_into_options($question_id,$individual_question,'','','','','','','','','');
     }
   }
 

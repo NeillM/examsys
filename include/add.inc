@@ -56,7 +56,7 @@ function redirect($p_id) {
   exit;   // Stop script execution after the redirect.
 }
 
-function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $status, $option_order) {
+function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $status, $option_order) {
   global $mysqli;
   
   //$theme = htmlspecialchars($theme);
@@ -71,8 +71,8 @@ function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fba
   // Make bloom field safe for MySQL strict mode
   $bloom = ($bloom == '') ? NULL : $bloom;
 
-  if ($result = $mysqli->prepare("INSERT INTO questions VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL,NULL,NULL,NULL,NULL,?,?)")) {
-    $result->bind_param('ssssssssisssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $score_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $status, $option_order);
+  if ($result = $mysqli->prepare("INSERT INTO questions VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NULL,NULL,NULL,NULL,NULL,?,?,NULL)")) {
+    $result->bind_param('ssssssssisssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $status, $option_order);
     $result->execute();
     $result->close();
   } else {
