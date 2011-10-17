@@ -1,5 +1,5 @@
 <?php
-$string['cannotfindexams'] = 'Rogō nie odnalezło żadnego egazminu';
+$string['cannotfindexams'] = 'Rogō nie odnalazło żadnego egzaminu';
 $string['exams'] = 'Egzaminy';
 $string['staffmangscreens'] = 'Ekranów zarządzania personelem';
 $string['note1'] = '<strong>Uwaga:</strong> To jest ekran egzaminów końcowych dla studentów, czy poszukujesz';
