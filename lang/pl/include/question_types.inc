@@ -15,6 +15,6 @@ $string['matrix'] = 'Macierz';
 $string['mcq'] = 'Pytanie wielokrotnego wyboru';
 $string['mrq'] = 'Pytanie z wieloma odpowiedziami';
 $string['rank'] = 'Pytanie na stopniowanie';
-$string['sct'] = 'Test zgodności skryptu';//??
+$string['sct'] = 'Test zgodności ze skryptem';//??
 $string['textbox'] = 'Pytanie półotwarte';
 ?>

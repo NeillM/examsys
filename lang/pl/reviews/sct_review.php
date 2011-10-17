@@ -1,20 +1,21 @@
 <?php
-$string['sctreview'] = 'SCT Review';
-$string['clinicalvignette'] = 'Clinical Vignette';
-$string['newinformation'] = 'New Information';
-$string['note'] = 'NOTE:';
-$string['Hypothesis'] = 'Hypothesis';
-$string['Investigation'] = 'Investigation';
-$string['Prescription'] = 'Prescription';
-$string['Intervention'] = 'Intervention';
-$string['Treatment'] = 'Treatment';
-$string['sct_msg1'] = 'Then this hypothesis becomes:';
-$string['sct_msg2'] = 'Then this investigation becomes:';
-$string['sct_msg3'] = 'Then this prescription becomes:';
-$string['sct_msg4'] = 'Then this intervention becomes:';
-$string['sct_msg5'] = 'Then this treatment becomes:';
-$string['saved_msg'] = 'Your answers and reasons have been saved. You can make further changes or close the browser down to exit.';
-$string['top_msg'] = 'This screen is designed to allow you to answer the following Script Concordance Test questions. Please provide a brief reason why you believe each answer is correct.';
-$string['briefreasonwhy'] = 'Brief reason why?';
-$string['save'] = 'Save';
+//niko
+$string['sctreview'] = 'Recenzja SCT';
+$string['clinicalvignette'] = 'Przypadek kliniczny';
+$string['newinformation'] = 'Nowe informacje';
+$string['note'] = 'Uwaga:';
+$string['Hypothesis'] = 'Hipoteza';
+$string['Investigation'] = 'Badanie';
+$string['Prescription'] = 'Zalecenie';
+$string['Intervention'] = 'Interwencja';
+$string['Treatment'] = 'Terapia';
+$string['sct_msg1'] = 'Wtedy ta hipoteza staje się:';
+$string['sct_msg2'] = 'Wtedy to badanie staje się:';
+$string['sct_msg3'] = 'Wtedy to zalecenie staje się:';
+$string['sct_msg4'] = 'Wtedy ta interwencja staje się:';
+$string['sct_msg5'] = 'Wtedy ta terapia staje się:';
+$string['saved_msg'] = 'Twoje odpowiedzi i powody zostały zapisane. Możesz dokonać poprawek lub zamknąć przeglądarkę aby zakończyć.';
+$string['top_msg'] = 'Ten ekran jest zaprojektowany aby umożliwić ci udzielenie odpowiedzi na pytania testu zgodności ze skryptem. Krótko podaj uzasadnienie twoich odpowiedzi.';
+$string['briefreasonwhy'] = 'Krótkie uzasadnienie?';
+$string['save'] = 'Zachowaj';
 ?>
