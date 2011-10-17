@@ -23,7 +23,7 @@
 */
 
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
-require_once $root . 'config/config.inc';
+require_once $root . 'config/config.inc.php';
 require_once $cfg_web_root . 'classes/formutils.class.php';
 require_once $cfg_web_root . 'classes/passwordutils.class.php';
 
