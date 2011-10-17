@@ -100,7 +100,7 @@ require_once './classes/networkutils.class.php';
   } elseif ($paper_no == 0) {
     echo "<html>\n<head>\n<title>" . $string['exams']. "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
     echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 style=\"margin-left:60px\">" . $string['cannotfindexams'] . "</h1>\n";
+    echo "<h1 style=\"margin-left:60px\">" . $string['cannotfindexams'] . "</h1>\n"; 
 
     if (strpos($userroles,'Staff') !== false) {
       echo "<p style=\"margin-left:60px; color:#C00000\">" . $string['note1'] . " <img src=\"/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/staff/index.php\" style=\"color:blue\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
