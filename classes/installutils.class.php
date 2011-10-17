@@ -750,7 +750,7 @@ Class InstallUtils {
     <table class="topbar"> 
       <tr> 
         <td><div style="font-size:26pt; font-weight:bold; color:black">&nbsp;System Installation</div></td> 
-        <td style="text-align:right; padding-top:4px; padding-right:15px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="logo" border="0" /></td> 
+        <td style="text-align:right; padding-top:4px; padding-right:15px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" /></td> 
       </tr> 
       <tr> 
         <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td> 

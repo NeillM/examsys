@@ -34,7 +34,7 @@ a {color:blue}
 </head>
 <body style="margin:0px; color:black; background-color:white; background-image:url('./background.jpg'); font-size:100%; font-family:Arial,sans-serif">
 
-<div style="position:absolute; top:20px; left:25px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="logo" border="0" /></div>
+<div style="position:absolute; top:20px; left:25px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" /></div>
 
 <div style="position:absolute; top:10px; left:510px"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="Logo" border="0" /></div>
 

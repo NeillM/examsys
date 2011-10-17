@@ -24,10 +24,9 @@
 ?>
 <html>
 <head>
-	<title>TouchStone Export to QTI</title>
+	<title>Export to QTI</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
 	<script type="text/javascript" src="js/mootools-1.2.4.js"></script> 
 	<link rel="stylesheet" type="text/css" href="css/highlight.css" /> 
 	<link rel="stylesheet" type="text/css" href="css/wizard.css" /> 

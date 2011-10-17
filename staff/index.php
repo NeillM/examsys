@@ -141,7 +141,7 @@ require '../include/staff_auth.inc';
 
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
-    <td style="background-color:#F1F5FB; padding-left:20px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="logo" border="0" /></td>
+    <td style="background-color:#F1F5FB; padding-left:20px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" /></td>
     <td style="background-color:#F1F5FB; text-align:right"><?php echo $logo_html; ?>&nbsp;&nbsp;</td>
   </tr>
   <tr>
