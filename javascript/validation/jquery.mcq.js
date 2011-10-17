@@ -22,8 +22,8 @@ $(function() {
     },
     messages: {
       leadin: lang['enterleadin'],
-      option_text1: '<br />'+lang['option_text'],
-      option_text2: '<br />'+lang['option_text']
+      option_text1: '<br />'+lang['enteroption'],
+      option_text2: '<br />'+lang['enteroption']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {

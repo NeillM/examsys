@@ -367,7 +367,7 @@ endif;
 <script type="text/javascript">
 var lang = {
 <?php
-$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'showmore', 'hidemore', 'option_text');
+$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'showmore', 'hidemore', 'enteroption');
 $first = true;
 foreach ($langstrings as $langstring) {
   if (!$first) {
