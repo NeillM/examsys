@@ -1,9 +1,10 @@
 <?php
+$string['cannotfindexams'] = 'Rogō nie odnalezło żadnego egazminu';
 $string['exams'] = 'Egzaminy';
-$string['staffmangscreens'] = 'Ekrany zarządzania personelem';
-$string['note1'] = '<strong>Uwaga:</strong> To jest ekran egzaminów końcowych dla studentów, czy chciałeś';
+$string['staffmangscreens'] = 'Ekranów zarządzania personelem';
+$string['note1'] = '<strong>Uwaga:</strong> To jest ekran egzaminów końcowych dla studentów, czy poszukujesz';
 $string['unknownIp'] = '(nieznany adres)';
-$string['mostLikely'] = 'Przyczyną jest prawdopodobnie konflikt zabezpieczeń pomiędzy:';
+$string['mostLikely'] = 'Przyczyną jest prawdopodobnie niespełnienie wymogów bezpeiczeństwa:';
 $string['IPaddress'] = 'Adresy IP';
 $string['Time/Date'] = 'Czas/Data';
 $string['AcademicYear'] = 'Rok akademicki';
@@ -11,7 +12,7 @@ $string['noyear'] = 'brak roku dla użytkownika!';//no year held for user
 $string['Modules'] = 'Moduły';
 $string['nomodules'] = 'Ostrzeżenie: brak modułów!';
 $string['UserRoles'] = 'Role użytkownika';
-$string['try'] = 'Możesz spróbować';
+$string['try'] = 'Działania do podjęcia';
 $string['f5'] = 'Jeśli nie jest jeszcze mniej niż 15 minut przez egzaminem, odczekaj do tego czasu i naciśnij F5.';
 $string['RaiseYourHand '] = 'Podnieś rękę, aby przywołać kogoś z personelu.';
 $string['staff'] = 'Pracownik';
