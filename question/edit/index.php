@@ -28,7 +28,7 @@
 // TODO: replace comment OK etc. icons with CSS BG image?
 
 // Keyword based and random questions aren't coming through here
-if (isset($_GET['type']) and ($_GET['type'] == 'random' or $_GET['type'] = 'keyword_based')) {
+if (isset($_GET['type']) and ($_GET['type'] == 'random' or $_GET['type'] == 'keyword_based')) {
   $random_mode = (!isset($_GET['q_id'])) ? 'add' : 'edit';
   header('Location: ' . '../' . $random_mode . '/' . $_GET['type'] . '.php?' . $_SERVER['QUERY_STRING']);
 }
