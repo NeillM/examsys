@@ -461,6 +461,7 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
+	    echo self::$db->error . "<br/>";
         self::logWarning(array('013'=>'Database user ' . self::$cfg_db_staff_user . ' could not set permissions'));
       }  
     }
@@ -469,6 +470,7 @@ Class InstallUtils {
     //create touchstone 'database user sysadmin user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
     if (self::$db->errno != 0) {
+	  echo self::$db->error . "<br/>";
       self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sysadmin_user . ' could not be created'));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "'";
@@ -477,6 +479,7 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
+	    echo self::$db->error . "<br/>";
         self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sysadmin_user . ' could not set permissions'));
       }  
     }
@@ -532,6 +535,7 @@ Class InstallUtils {
                                 false, 
                                 true,
                                 NULL,
+								NULL,
                                 self::$db
                              );
     
@@ -547,6 +551,7 @@ Class InstallUtils {
                                 true, 
                                 true,
                                 NULL,
+								NULL,
                                 self::$db
                              );
                           
@@ -806,8 +811,8 @@ define('DIR_SEPARATOR', '/');
   \$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
   \$cfg_db_sysadmin_passwd = '{cfg_db_sysadmin_passwd}';
 // Date formats in MySQL DATE_FORMAT format
-  \$cfg_short_date = '{$cfg_short_date}';
-  \$cfg_long_date_time = '{$cfg_long_date_time}';
+  \$cfg_short_date = '{cfg_short_date}';
+  \$cfg_long_date_time = '{cfg_long_date_time}';
   
 // SMS Imports
   \$cfg_sms_api = '';
@@ -1209,6 +1214,8 @@ QUERY;
           `sms` varchar(255) default NULL,
           `selfenroll` tinyint default NULL,
           `schoolid` int default NULL,
+		  `neg_marking` TINYINT(1) default NULL,
+		  `ebel_grid_template` int,
           PRIMARY KEY  (`id`),
           KEY `guideid` (`moduleid`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1

@@ -39,7 +39,6 @@ Class ModuleUtils {
     if ($stdset == true)    $checklist .= ',stdset';
     if ($mapping == true)   $checklist .= ',mapping';
     $tmp_checklist = substr($checklist,1);
-    
     $result = $db->prepare( "INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" );
     echo $db->error;
     $result->bind_param('ssiissiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template);
