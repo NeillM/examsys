@@ -1112,43 +1112,33 @@ if (!isset($_POST['update'])) {
   }
 
   // 30/09/2011 - Update to the format of Labelling questions
-  $update_needed = true;
-  $result = $mysqli->prepare("SELECT o_id FROM options WHERE correct LIKE '%;label;%'");
+  $result = $mysqli->prepare("SELECT o.o_id, o.correct FROM options o INNER JOIN questions q ON o.o_id=q.q_id WHERE q.q_type='labelling' AND (o.correct NOT LIKE '%single;label%' AND o.correct NOT LIKE '%multiple;label%' AND o.correct NOT LIKE '%single;menu%')");
   $result->execute();
   $result->store_result();
-  $result->bind_result($o_id);
-  if ($result->num_rows > 0) $update_needed = false;
-  $result->close();
-  
-  if ($update_needed == true) {
-    $result = $mysqli->prepare("SELECT o_id, correct FROM options, questions WHERE questions.q_id=options.o_id AND q_type='labelling'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($o_id, $correct);
-    while ($result->fetch()) {
-      $parts = explode(';', $correct);
-      if(isset($parts[0])) {
-        $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
-        if ($parts[7] == 'single') {
-          $new_correct .= 'single;label';
-        } elseif ($parts[7] == 'multiple') {
-          $new_correct .= 'multiple;label';
-        } else {
-          $new_correct .= 'single;menu';
-        }
-        for ($i=8; $i<count($parts); $i++) {
-          $new_correct .= ';' . $parts[$i];
-        }
-        
-        $adjust = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
-        $adjust->bind_param('si', $new_correct, $o_id);
-        $adjust->execute();
-        $adjust->close();
+  $result->bind_result($o_id, $correct);
+  while ($result->fetch()) {
+    $parts = explode(';', $correct);
+    if(count($parts) > 1) {
+      $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
+      if ($parts[7] == 'single') {
+        $new_correct .= 'single;label';
+      } elseif ($parts[7] == 'multiple') {
+        $new_correct .= 'multiple;label';
+      } else {
+        $new_correct .= 'single;menu';
       }
+      for ($i=8; $i<count($parts); $i++) {
+        $new_correct .= ';' . $parts[$i];
+      }
+      
+      $adjust = $mysqli->prepare("UPDATE options SET correct=? WHERE o_id=?");
+      $adjust->bind_param('si', $new_correct, $o_id);
+      $adjust->execute();
+      $adjust->close();
     }
-    $result->close();
-    echo "<li>Updated the format of Labelling questions</li>";
   }
+  if ($result->num_rows > 0) echo "<li>Updated the format of Labelling questions</li>";
+  $result->close();
   
   //ADD new role based MySQL users - 10/10/2011
   $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_sct'");
