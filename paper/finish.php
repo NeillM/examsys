@@ -1967,7 +1967,11 @@ table {font-size:100%}
               if (substr($tmp_exclude,$i,1) == '0') {
                 $x = $tmp_second_split[$label_no-2];
                 $y = $tmp_second_split[$label_no-1] - 25;
-                $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
+                $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'));
+                $tmp_pos = strpos($correct_labels[$x . 'x' . $y], '~');
+                if ($tmp_pos !== false) {
+                  $correct_labels[$x . 'x' . $y] = substr($correct_labels[$x . 'x' . $y], 0, $tmp_pos);
+                }
                 $placeholders++;
               } else {
                 $excluded_no++;
@@ -1977,12 +1981,12 @@ table {font-size:100%}
           }
           
           $paper[$question]['mark'] = 0;
-        
+          
           $tmp_labels = 0;
           $max_col1 = 0;
           $max_col2 = 0;
           $tmp_first_split = explode(';', $paper[$question]['correct'][0]);
-          $tmp_second_split = explode('|', $tmp_first_split[8]);
+          $tmp_second_split = explode('|', $tmp_first_split[11]);
           foreach ($tmp_second_split as $ind_label) {
             $label_parts = explode('$', $ind_label);
             if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
@@ -2008,7 +2012,7 @@ table {font-size:100%}
             for ($a=0; $a<count($user_split2)-3; $a+=4) {
               $x = $user_split2[$a];
               $y = $user_split2[$a+1];
-              if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) $paper[$question]['mark'] += 1;
+              if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               $i++;
             }
           }
