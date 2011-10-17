@@ -535,7 +535,7 @@ QUERY;
   }
   
   /**
-   * Does this question type allow negative parking?  Check all the modules that the question is on
+   * Does this question type allow negative marking?  Check all the modules that the question is on
    * @return boolean
    */
   public function allow_negative_marks($module = '') {
@@ -945,7 +945,7 @@ QUERY;
   
   /**
    * Set the group to which the question belongs
-   * @param string $value
+   * @param array $value
    */
   public function set_teams($value) {
     $this->get_teams();

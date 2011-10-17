@@ -72,6 +72,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
       $question = Question::question_factory($mysqli, $userID, $string, $_GET['type']);
       $question->set_type($_GET['type']);
       $question->set_owner_id($userID);
+      if ($module != '') $question->set_teams(array($module));
     } catch (ClassNotFoundException $ex) {
       $critical_error = $ex->getMessage();
     }
