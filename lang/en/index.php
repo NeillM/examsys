@@ -1,4 +1,5 @@
 <?php
+$string['cannotfindexams'] = 'Rogō cannot find any Exams';
 $string['exams'] = 'Exams';
 $string['staffmangscreens'] = 'Staff management screens';
 $string['note1'] = '<strong>Note:</strong> This is the summative exams screen for students, did you want the';
@@ -17,7 +18,7 @@ $string['RaiseYourHand '] = 'Raise your hand for a member of staff.';
 $string['staff'] = 'Staff';
 $string['student'] = 'Student';
 $string['sysadmin'] = 'Sysadmin';
-$string['admin'] = 'Admin';
+$string['admin'] = 'Sdmin';
 $string['graduate'] = 'Graduate';
 $string['inactive'] = 'Inactive';
 $string['external examiner '] = 'External Examiner ';
