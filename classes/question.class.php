@@ -869,7 +869,7 @@ QUERY;
    */
   public function set_bloom($value) {
     $value_en = $this->_blooms_db[$value];
-    if ($value != $this->status) {
+    if ($value != $this->bloom) {
       $this->set_modified_field('bloom', array_search($this->bloom, $this->_blooms_db));
       $this->bloom = $value_en;
     }
