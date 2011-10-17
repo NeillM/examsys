@@ -649,18 +649,27 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
           $answer_list = explode(',',$blank_details[$i]);
           $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
-          if ($score_method == 'textboxes') {
-            foreach ($answer_list as $individual_answer) {
-              if (isset($_POST[$qid]) and str_replace('&nbsp;',' ',trim($_POST[$qid])) == str_replace('&nbsp;',' ',trim($individual_answer))) $mark += $individual_q_mark;
+          if ($display_method == 'textboxes') {
+            if (isset($_POST[$qid]) and $_POST[$qid] != 'u') {
+              $is_correct = false;
+              foreach ($answer_list as $individual_answer) {
+                if (str_replace('&nbsp;',' ',trim(strtolower($_POST[$qid]))) == str_replace('&nbsp;',' ',trim(strtolower($individual_answer)))) {
+                  $is_correct = true;
+                  break;
+                }
+              }
+              $mark += ($is_correct) ? $individual_q_mark : $marks_incorrect;
             }
           } else {
-            if (isset($_POST[$qid]) and str_replace('&nbsp;',' ',trim($_POST[$qid])) == str_replace('&nbsp;',' ',($answer_list[0]))) $mark += $individual_q_mark;
+            if (isset($_POST[$qid]) and $_POST[$qid] != 'u') {
+              $mark += (str_replace('&nbsp;',' ',trim($_POST[$qid])) == str_replace('&nbsp;',' ',($answer_list[0]))) ? $individual_q_mark : $marks_incorrect;
+            }
           }
         }
         
         // Recalculate if mark per question
         if ($score_method == 'Mark per Question') {
-          $mark = ($mark == $totalpos) ? $marks_correct : 0;
+          $mark = ($mark == $totalpos) ? $marks_correct : $marks_incorrect;
           $totalpos = $marks_correct;
         }
         break;

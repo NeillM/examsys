@@ -1795,7 +1795,7 @@ table {font-size:100%}
                 }
               }
               if ($correct_flag == true) {
-                $paper[$question]['mark'] += $paper[$question]['marks_correct'];;
+                $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
@@ -1809,6 +1809,7 @@ table {font-size:100%}
                     echo ')</strong>';
                   }
                 } else {
+                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                   echo '</span><span style="color:#C00000; font-weight:bold">' . $user_choices[$blank_count] . '</span>';
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                   if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
@@ -1836,6 +1837,9 @@ table {font-size:100%}
                   if ($tmp_display_students_response == '1') echo  '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                 }
               } else {
+                if (isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
+                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                }
                 if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
                   echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                 } else {
@@ -1855,7 +1859,7 @@ table {font-size:100%}
           }
           
           if ($paper[$question]['score_method'] == 'Mark per Question') {
-            $paper[$question]['mark'] = ($paper[$question]['mark'] == ($no_blanks - 1) * $paper[$question]['marks_correct']) ? $paper[$question]['marks_correct'] : 0;
+            $paper[$question]['mark'] = ($paper[$question]['mark'] == ($no_blanks - 1) * $paper[$question]['marks_correct']) ? $paper[$question]['marks_correct'] :  $paper[$question]['marks_incorrect'];
           }
           break;
         case 'hotspot':
