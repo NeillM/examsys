@@ -642,7 +642,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             if (isset($results[1]) and $results[1] != '') {
               $blank_mark[$blank_count] = $results[1];
             } else {
-              $blank_mark[$blank_count] = 1;
+              $blank_mark[$blank_count] = $display_option['marks_correct'];
             }
     
             if ( (isset($blank_user_answers[$blank_count]) and $blank_user_answers[$blank_count] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1) ) {
@@ -672,7 +672,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             if (isset($results[1]) and $results[1] != '') {
               $blank_mark[$blank_count] = $results[1];
             } else {
-              $blank_mark[$blank_count] = 1;
+              $blank_mark[$blank_count] = $display_option['marks_correct'];
             }
             $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
@@ -698,8 +698,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
           echo '</p>';
         }
-        if (count($blank_mark) > 0) {
-          foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
+        if ($question['score_method'] == 'Mark per Option') {
+          if (count($blank_mark) > 0) {
+            foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
+          }
+        } else {
+          $marks = $display_option['marks_correct'];
         }
         break;
       case 'textbox':
