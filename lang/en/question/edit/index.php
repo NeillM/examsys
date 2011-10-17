@@ -205,6 +205,7 @@ $string['newoption'] = 'New Option';
 $string['deletedoption'] = 'Deleted Option';
 $string['never'] = 'never';
 $string['validationerror'] = 'There were problems with your submission. Please review the form and re-try';
+$string['option_text'] = 'Please enter either option text or a media file for this option';
 $string['enterleadin'] = 'Please enter a leadin for the question';
 $string['enteroption'] = 'Please enter either option text or a media file for this option';
 $string['enteroptionshort'] = 'Required';

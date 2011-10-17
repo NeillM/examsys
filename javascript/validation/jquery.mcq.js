@@ -21,9 +21,9 @@ $(function() {
       }
     },
     messages: {
-      leadin: 'Please enter a leadin for the question',
-      option_text1: '<br />Please enter either option text or a media file for this option',
-      option_text2: '<br />Please enter either option text or a media file for this option'
+      leadin: lang['enterleadin'],
+      option_text1: '<br />'+lang['option_text'],
+      option_text2: '<br />'+lang['option_text']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
@@ -38,7 +38,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert('There were problems with your submission. Please review the form and re-try');
+      alert(lang['validationerror']);
     }
   });
 })
