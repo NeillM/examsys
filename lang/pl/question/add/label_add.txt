@@ -1,27 +1,27 @@
-﻿<?php
+<?php
 
-$string['fillcolour'] = 'Fill Colour';
-$string['linecolour'] = 'Line Colour';
-$string['textcolour'] = 'Font Colour';
-$string['textsize'] = 'Font Size';
-$string['lines'] = 'Line Thickness';
-$string['erase'] = 'Erase Label/Line';
-$string['edit'] = 'Move Line';
-$string['line'] = 'Draw Line';
-$string['bobble'] = 'Draw Line';
-$string['arrow'] = 'Draw Arrow';
-$string['single'] = 'Unique Label';
-$string['multiple'] = 'Repeated Label';
-$string['label'] = 'Draggable Label';
-$string['menu'] = 'Drop Down List';
+$string['fillcolour'] = 'Kolor wypełnienia';
+$string['linecolour'] = 'Kolor linii';
+$string['textcolour'] = 'Kolor liter';
+$string['textsize'] = 'Rozmiar liter';
+$string['lines'] = 'Grubość linii';
+$string['erase'] = 'Wymaż etykietę/linię';
+$string['edit'] = 'Przesuń linię';
+$string['line'] = 'Narysuj linię';//?Draw Line
+$string['bobble'] = 'Narysuj linię';//?Draw Line
+$string['arrow'] = 'Narysuja strzałkę';
+$string['single'] = 'Pojedyncza etykieta';
+$string['multiple'] = 'Wielokrotna etykieta';
+$string['label'] = 'Przesuwalna etykieta';
+$string['menu'] = 'Lista wyboru';
 
-$string['themecolours'] = 'Theme Colours';
-$string['standardcolours'] = 'Standard Colours';
+$string['themecolours'] = 'Kolory motywu';
+$string['standardcolours'] = 'Kolory standardowe';
 
-$string['yes'] = 'Yes';
-$string['no'] = 'No';
-$string['warning'] = 'WARNING';
-$string['errormessage'] = 'If you change from repeated to unique labels some of the labels on the image will be deleted.';
-$string['continue'] = 'Do you want to continue?';
+$string['yes'] = 'Tak';
+$string['no'] = 'Nie';
+$string['warning'] = 'Ostrzeżenie';
+$string['errormessage'] = 'Jeśli zmienisz typ etykiety z pojedynczej na wielokrotną Niektóre z etytkiet na ekranie mogą zniknąć.';
+$string['continue'] = 'Czy chcesz kontynuować?';
 
 ?>
