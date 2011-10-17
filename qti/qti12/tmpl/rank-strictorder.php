@@ -13,7 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
 require("header.php");
 ?>	
 
@@ -53,7 +52,7 @@ require("header.php");
 				<conditionvar>
 					<varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>
 				</conditionvar>
-				<setvar action="Add">1</setvar>
+				<setvar action="Add"><?php echo $option->marks_correct; ?></setvar>
 			</respcondition>
 <?php endforeach; ?>	
 
@@ -64,11 +63,11 @@ require("header.php");
 					<varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>
 <?php endforeach; ?>	
 				</conditionvar>
-				<setvar action="Add">0</setvar>
+				<setvar action="Add"><?php echo $option->marks_correct; ?></setvar>
 				<displayfeedback linkrefid="right"/>
 			</respcondition>
 
-			<respcondition title="wrong" >
+			<respcondition title="wrong" continue="Yes">
 				<conditionvar>
 					<or>
 <?php foreach ($question->options as $oid => $option) : ?>
@@ -79,7 +78,7 @@ require("header.php");
 <?php endforeach; ?>	
 					</or>
 				</conditionvar>
-				<setvar action="Add">0</setvar>
+				<setvar action="Add"><?php echo $option->marks_incorrect; ?></setvar>
 				<displayfeedback linkrefid="wrong"/>
 			</respcondition>
 

@@ -40,21 +40,40 @@ require("header.php");
 				<conditionvar>
 					<varequal respident="1"><?php echo $answer ?></varequal>
 				</conditionvar>
-				<setvar action="Set">1</setvar>
+				<setvar action="Set"><?php echo $question->marks_correct ?></setvar>
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 			
-<?php if ($question->tolerance > 0) : ?>
+<?php if ($question->marks_partial != 0) : ?>
 			<respcondition title="Within range" >
 				<conditionvar>
 					<vargte respident="1"><?php echo $answer - $question->tolerance ?></vargte>
 					<varlte respident="1"><?php echo $answer + $question->tolerance ?></varlte>
 				</conditionvar>
-				<setvar action="Set">1</setvar>
+				<setvar action="Set"><?php echo $question->marks_partial ?></setvar>
+				<displayfeedback linkrefid="general"/>
+			</respcondition>
+<?php elseif ($question->tolerance > 0) : ?>
+      <respcondition title="Within range" >
+				<conditionvar>
+					<vargte respident="1"><?php echo $answer - $question->tolerance ?></vargte>
+					<varlte respident="1"><?php echo $answer + $question->tolerance ?></varlte>
+				</conditionvar>
+				<setvar action="Set"><?php echo $question->marks_correct ?></setvar>
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 <?php endif; ?>
 
+			<respcondition title="wrong">
+				<conditionvar>
+					<not>
+            <varequal respident="1"><?php echo $answer ?></varequal>
+          </not>
+				</conditionvar>
+				<setvar action="Set"><?php echo $question->marks_incorrect ?></setvar>
+				<displayfeedback linkrefid="general"/>
+			</respcondition>
+      
 			<!-- force general feedback to output -->
 			<respcondition title="General Feedback">
 				<conditionvar>

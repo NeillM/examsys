@@ -85,7 +85,7 @@ $save_params = new stdClass();
 $save_params->dir = $dir;
 $save_params->base_dir = $base_dir;
 
-$load_params->dir = $dir;
+$load_params->dir = $dir; 
 $load_params->base_dir = $base_dir;
 
 ///////////////////////

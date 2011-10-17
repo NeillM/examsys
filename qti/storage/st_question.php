@@ -36,20 +36,27 @@ class ST_Question {
   var $media_type = '';
 
   var $status;
-  var $marks = 1;
-
+  
   var $author = '';
   var $q_group = '';
 
   var $bloom = '';
   var $keywords = array();
   var $q_option_order = 'display order'; //stem/option randomisation
+  
+  var $display_method = '';
+  
+  var $score_method; //
 }
 
 class STQ_Blank_Option {
   var $display = '';
   var $correct = 0;
-
+  
+  var $marks_correct;
+  var $marks_incorrect;
+  var $marks_partial;
+  
   function __toString() {
     return $this->display."=".($this->correct ? "True" : "False");
   }
@@ -79,7 +86,7 @@ class ST_Question_Calculation extends ST_Question {
   var $formula;
   var $units;
   var $decimals = 0;
-  var $tolerance = 0;
+  var $tolerance = 0; 
   var $feedback;
 }
 
@@ -92,7 +99,11 @@ class STQ_Dic_Options {
   var $media_type;
   var $fb_correct;
   var $fb_incorrect;
-
+  
+  var $marks_correct;
+  var $marks_incorrect;
+  var $marks_partial;
+  
   function __toString() {
     return $this->text."=".($this->iscorrect ? "True" : "False");
   }
@@ -113,7 +124,11 @@ class STQ_Extm_Scenario {
   var $media_type;
   var $feedback;
   var $correctans = array(); // array of Keys for correct answers based on optionlist
-
+  
+  var $marks_correct;
+  var $marks_incorrect;
+  var $marks_partial;
+  
   function __toString() {
     return $this->stem."=".implode("|", $this->correctans);
   }
@@ -122,7 +137,11 @@ class STQ_Extm_Scenario {
 class STQ_Extm_Option {
   var $option;
   var $id;
-
+  
+  var $marks_correct;
+  var $marks_incorrect;
+  var $marks_partial;
+  
   function __toString() {
     return $this->id."=".$this->option;
   }
@@ -169,6 +188,9 @@ class STQ_Labelling_Label {
   var $tag;
   var $left;
   var $top;
+  var $type;
+  var $width;
+  var $height;
 
   function __toString() {
     return $this->tag."=".$this->left.",".$this->top."=".count($this->matches);
@@ -240,7 +262,11 @@ class STQ_Mcq_Option {
   var $media_width = 0;
   var $media_height = 0;
   var $media_type;
-
+  
+  var $marks_correct;
+  var $marks_incorrect;
+  var $marks_partial;
+  
   function __toString() {
     return $this->stem;
   }
@@ -248,7 +274,6 @@ class STQ_Mcq_Option {
 
 class ST_Question_Mcq extends ST_Question {
   var $scenario = '';
-  var $presentation = 0;
   var $correct = 0;
 
   var $options = array(); // array of STQ_Mcq_Option, key as option no
@@ -266,7 +291,11 @@ class STQ_Mrq_Option {
   var $media_type;
   var $fb_correct;
   var $fb_incorrect;
-
+  
+  var $marks_correct;
+  var $marks_incorrect;
+  var $marks_partial;
+  
   function __toString() {
     return $this->stem."=".($this->is_correct ? "True" : "False");
   }
@@ -283,6 +312,11 @@ class ST_Question_Mrq extends ST_Question {
 class STQ_Rank_Options {
   var $stem = '';
   var $order = 9990;
+    
+  var $marks_correct;
+  var $marks_incorrect;
+  var $marks_partial;
+  
   // order - 1-15, or 0 as blank, and 9990 as N/A
 
   function __toString() {

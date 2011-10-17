@@ -24,16 +24,19 @@ require("header.php");
 					<material>
 						<matimage imagtype="image/gif" uri="<?php echo $question->media ?>" x0="0" width="<?php echo $question->media_width ?>" y0="0" height="<?php echo $question->media_height ?>"/>
 					</material>
-<?php $hid = 1; ?>
-<?php foreach ($question->hotspots as $hotspot) : ?>
-<?php if ($hotspot->type == "rectangle") : ?>
-					<response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Rectangle"><?php echo implode(",", $hotspot->coords) ?></response_label>
-<?php elseif ($hotspot->type == "ellipse") : ?>
-<response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Ellipse"><?php echo(implode(",", $hotspot->coords)) ?></response_label>
-<?php else : ?>
-					<qticomment>Hotspot:<?php echo $hotspot->type ?>|<?php echo(implode(",", $hotspot->coords)) ?></qticomment>
-<?php endif; ?>
-<?php $hid++; ?>
+
+<?php foreach($question->hotspots as $hotspot) :?>
+  <?php $hid = 1; ?>
+  <?php foreach ($hotspot as $subspot) : ?>
+  <?php if ($subspot->type == "rectangle") : ?>
+            <response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Rectangle"><?php echo implode(",", $subspot->coords) ?></response_label>
+  <?php elseif ($subspot->type == "ellipse") : ?>
+            <response_label ident="<?php echo $this->ll[$hid] ?>" rarea="Ellipse"><?php echo(implode(",", $subspot->coords)) ?></response_label>
+  <?php else : ?>
+            <qticomment>Hotspot:<?php echo $subspot->type ?>|<?php echo(implode(",", $subspot->coords)) ?></qticomment>
+  <?php endif; ?>
+  <?php $hid++; ?>
+  <?php endforeach; ?>
 <?php endforeach; ?>
 				</render_hotspot>
 			</response_xy>
@@ -53,29 +56,35 @@ require("header.php");
 						</not>
 					</or>
 				</conditionvar>
-				<setvar action="Add">0</setvar>
+				<setvar action="Add"><?php $subspot->marks_incorrect?></setvar>
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 
-<?php $hid = 1; ?>
-<?php foreach ($question->hotspots as $hotspot) : ?>
-<?php if ($hotspot->type != "rectangle" && $hotspot->type != "ellipse") continue; ?>
-			<respcondition>
-				<conditionvar>
-<?php if ($hotspot->type == "rectangle") : ?>
-					<varinside respident="IMAGE" areatype="Rectangle"><?php echo(implode(",", $hotspot->coords)) ?></varinside>
-<?php elseif ($hotspot->type == "ellipse") : ?>
-					<varinside respident="IMAGE" areatype="Ellipse"><?php echo(implode(",", $hotspot->coords)) ?></varinside>
-<?php endif; ?>
-				</conditionvar>
-				<setvar action="Set">1</setvar>
-				<displayfeedback feedbacktype = "Response" linkrefid = "Correct"/>
-			</respcondition>
-<?php $hid++; ?>
+<?php foreach($question->hotspots as $hotspot) :?>
+  <?php foreach ($hotspot as $subspot) : ?>
+  <?php if ($subspot->type != "rectangle" && $subspot->type != "ellipse") continue; ?>
+        <respcondition>
+          <conditionvar>
+  <?php if ($subspot->type == "rectangle") : ?>
+            <varinside respident="IMAGE" areatype="Rectangle"><?php echo(implode(",", $subspot->coords)) ?></varinside>
+  <?php elseif ($subspot->type == "ellipse") : ?>
+            <varinside respident="IMAGE" areatype="Ellipse"><?php echo(implode(",", $subspot->coords)) ?></varinside>
+  <?php endif; ?>
+          </conditionvar>
+          <setvar action="Add"><?php echo $subspot->marks_correct; ?></setvar>
+          <displayfeedback feedbacktype = "Response" linkrefid = "Correct"/>
+        </respcondition>
+  <?php endforeach; ?>
 <?php endforeach; ?>
+    <respcondition>
+      <conditionvar>
+        <other/>
+      </conditionvar>
+      <setvar action="Add"><?php echo $subspot->marks_incorrect; ?></setvar>
+    </respcondition>
 		</resprocessing>
 
-		<!-- only 1 feedback for timedate questions -->
+		<!-- only 1 feedback for Hotspot questions -->
 		<itemfeedback ident="General" view="Candidate">
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $question->feedback ?>]]></mattext>

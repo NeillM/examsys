@@ -38,14 +38,14 @@ require("header.php");
 						</not>
 					</or>
 				</conditionvar>
-				<setvar action="Add">0</setvar>
+				<setvar action="Add"><?php echo $question->marks_incorrect; ?></setvar>
 				<displayfeedback linkrefid="Unscored"/>
 			</respcondition>
 			<respcondition title="Scored" >
 				<conditionvar>
 					<other/>
 				</conditionvar>
-				<setvar action="Set"><?php echo $question->marks ?></setvar>
+				<setvar action="Set"><?php echo $question->marks_correct; ?></setvar>
 				<displayfeedback linkrefid="Scored"/>
 			</respcondition>
 		</resprocessing>

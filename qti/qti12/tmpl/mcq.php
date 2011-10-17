@@ -16,8 +16,8 @@
 
 require("header.php");
 ?>	
-		<qticomment>Display:<?php echo $question->presentation ?></qticomment>
-		
+		<qticomment>Display:<?php echo $question->q_option_order ?></qticomment>
+		<qticomment>Marking:<?php echo $question->score_method ?></qticomment>
 			<?php echo $headertext ?>
 
             <response_lid ident='1'>
@@ -46,7 +46,7 @@ require("header.php");
                 <conditionvar>
                     <varequal respident='1'><?php echo $this->ll[$oid] ?></varequal>
                 </conditionvar>
-                <setvar action='Set'>1</setvar>
+                <setvar action='Set'><?php echo $option->marks_correct;?></setvar>
                 <displayfeedback linkrefid='correct' />
             </respcondition>
 <?php endforeach; ?>	
@@ -54,7 +54,7 @@ require("header.php");
                 <conditionvar>
                     <other/>
                 </conditionvar>
-                <setvar action='Set'>0</setvar>
+                <setvar action='Set'><?php echo $option->marks_incorrect;?></setvar>
                 <displayfeedback linkrefid='incorrect'/>
             </respcondition>
         </resprocessing>

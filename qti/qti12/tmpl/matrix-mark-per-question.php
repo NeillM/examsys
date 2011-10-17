@@ -40,21 +40,24 @@ require("header.php");
 			<outcomes>
 				<decvar/>
 			</outcomes>
+
+<?php foreach ($question->scenarios as $scid => $scenario) : ?>
+			<respcondition title="<?php echo $scid ?>" continue="No">
+				<conditionvar>
+         <not>
+					<varequal respident="<?php echo $scid ?>"><?php echo $this->ll[$scenario->answer] ?></varequal>
+         </not>
+				</conditionvar>
+				<setvar action="Set"><?php echo $option->marks_incorrect; ?></setvar>
+			</respcondition>
+<?php endforeach; ?>
 			
 <?php foreach ($question->scenarios as $scid => $scenario) : ?>
 			<respcondition title="<?php echo $scid ?>" continue="Yes">
 				<conditionvar>
 					<varequal respident="<?php echo $scid ?>"><?php echo $this->ll[$scenario->answer] ?></varequal>
 				</conditionvar>
-				<setvar action="Add"><?php echo $option->marks_correct; ?></setvar>
-			</respcondition>
-      <respcondition title="<?php echo $scid ?>" continue="Yes">
-				<conditionvar>
-         <not>
-					<varequal respident="<?php echo $scid ?>"><?php echo $this->ll[$scenario->answer] ?></varequal>
-         </not>
-				</conditionvar>
-				<setvar action="Add"><?php echo $option->marks_incorrect; ?></setvar>
+				<setvar action="Set"><?php echo $option->marks_correct; ?></setvar>
 			</respcondition>
 <?php endforeach; ?>
 			

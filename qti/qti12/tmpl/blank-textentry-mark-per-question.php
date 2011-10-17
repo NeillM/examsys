@@ -57,6 +57,22 @@ require("header.php");
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 
+<?php $respid = 1; ?>
+<?php foreach ($question->options as & $optset) : ?>
+			<respcondition title="right - <?php echo $respid ?>" continue="No">
+				<conditionvar>
+					<or>
+<?php foreach ($optset as $option) : ?>
+           <not>
+						<varequal respident="1" case="No" index="<?php echo $respid ?>"><?php echo $option->display ?></varequal>
+           </not>
+<?php endforeach; ?>
+					</or>
+				</conditionvar>
+				  <setvar action="set"><?php echo $option->marks_incorrect; ?></setvar>
+			</respcondition>
+<?php $respid++; ?>
+<?php endforeach; ?>
    
 <?php $respid = 1; ?>
 <?php foreach ($question->options as & $optset) : ?>
@@ -68,24 +84,7 @@ require("header.php");
 <?php endforeach; ?>
 					</or>
 				</conditionvar>
-				  <setvar action="Add"><?php echo $option->marks_correct; ?></setvar>
-			</respcondition>
-<?php $respid++; ?>
-<?php endforeach; ?>
-
-<?php $respid = 1; ?>
-<?php foreach ($question->options as & $optset) : ?>
-			<respcondition title="right - <?php echo $respid ?>" continue="Yes">
-				<conditionvar>
-					<or>
-<?php foreach ($optset as $option) : ?>
-           <not>
-						<varequal respident="1" case="No" index="<?php echo $respid ?>"><?php echo $option->display ?></varequal>
-           </not>
-<?php endforeach; ?>
-					</or>
-				</conditionvar>
-				  <setvar action="Add"><?php echo $option->marks_incorrect; ?></setvar>
+				  <setvar action="set"><?php echo $option->marks_correct; ?></setvar>
 			</respcondition>
 <?php $respid++; ?>
 <?php endforeach; ?>

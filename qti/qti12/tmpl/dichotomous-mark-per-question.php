@@ -1,21 +1,4 @@
-<?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
-require("header.php");
-?>
+<?php require("header.php"); ?>
 			<qticomment>Marking:<?php echo $question->score_method ?></qticomment>
 		
 			<?php echo $headertext ?>
@@ -39,13 +22,6 @@ require("header.php");
 							<mattext><?php echo $false ?></mattext>
 						</material>
 					</response_label>	
-<?php if ($hasab) : ?>					
-					<response_label ident="C">
-						<material>
-							<mattext>Abstain</mattext>
-						</material>
-					</response_label>	
-<?php endif; ?>
 				</render_choice>
 			</response_lid>
 <?php endforeach; ?>		
@@ -57,9 +33,8 @@ require("header.php");
 			<outcomes>
 				<decvar/>
 			</outcomes>
-			
 
-			<!-- force general feedback to output --> 
+			<!-- force general feedback to output -->
 			<respcondition title="general checked" continue="Yes">
 				<conditionvar>
 					<varequal respident="1">A</varequal>
@@ -79,41 +54,48 @@ require("header.php");
 			
 			<!-- response conditions. 2 per option with checked and unchecked -->
 <?php foreach ($question->options as $oid => $option) : ?>
-<?php if ($option->iscorrect) {
-    $score = $option->marks_correct;
-  } else {
-    $score = $option->marks_incorrect;
-  }
-?>
-			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True" continue="Yes">
+      <?php //echo "\n\n\n|" . $option->iscorrect . "|\n\n\n"; ?>
+			
+      
+      <?php if($option->iscorrect) : ?>
+      
+      <respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True" continue="Yes">
 				<conditionvar>
 					<varequal respident="<?php echo $oid ?>">A</varequal>
 				</conditionvar>
-				<setvar action='Add'><?php echo $score; ?></setvar>
+        <setvar action='Set'><?php echo $option->marks_correct;?></setvar>  
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True"/>
 			</respcondition>
-<?php if (!$option->iscorrect) {
-    $score = $option->marks_correct;
-  } else {
-    $score = $option->marks_incorrect;
-  }
-?>
+      
+			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False" continue="NO">
+				<conditionvar>
+					<varequal respident="<?php echo $oid ?>">B</varequal>
+				</conditionvar>
+        <setvar action='Set'><?php echo $option->marks_incorrect;?></setvar>  
+				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False"/>
+			</respcondition>
+      
+      <?php else : ?>
+      
+      <respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True" continue="NO">
+				<conditionvar>
+					<varequal respident="<?php echo $oid ?>">A</varequal>
+				</conditionvar>
+        <setvar action='Set'><?php echo $option->marks_incorrect;?></setvar>  
+				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True"/>
+			</respcondition>
+      
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False" continue="Yes">
 				<conditionvar>
 					<varequal respident="<?php echo $oid ?>">B</varequal>
 				</conditionvar>
-				<setvar action='Add'><?php echo $score; ?></setvar>
+        <setvar action='Set'><?php echo $option->marks_correct;?></setvar>  
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False"/>
 			</respcondition>
-			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> Abstain" continue="Yes">
-				<conditionvar>
-					<varequal respident="<?php echo $oid ?>">C</varequal>
-				</conditionvar>
-				<setvar action='Add'>0</setvar>
-				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> Abstain"/>
-			</respcondition>
+      
+      <?php endif ?>
+       
 <?php endforeach; ?>
-		
 		</resprocessing>
 	
 		<!-- feedback items for each item, pick right feedback based on correct or incorrect -->
@@ -142,11 +124,6 @@ require("header.php");
 			</material>
 		</itemfeedback>	
 				
-		<itemfeedback ident='<?php echo $oid ?> <?php echo(for_id($option->text)) ?> Abstain' view='Candidate'>
-			<material>
-				<mattext texttype='text/html'><![CDATA[<?php echo $option->fb_incorrect ?>]]></mattext>
-			</material>
-		</itemfeedback>			
 <?php endforeach; ?>
 
 		<!-- general feedback -->

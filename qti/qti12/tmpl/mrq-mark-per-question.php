@@ -1,22 +1,5 @@
-<?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
-require("header.php");
-?>	
-	
+<?php require("header.php"); ?>	
+		
 			<?php echo $headertext ?>
 
 			<response_lid ident='1' rcardinality='Multiple'>
@@ -40,7 +23,6 @@ require("header.php");
 				<decvar/>
 			</outcomes>
 			
-			
 			<!-- force general feedback to output -->
 			<respcondition title="general checked" continue="Yes">
 				<conditionvar>
@@ -59,19 +41,13 @@ require("header.php");
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 			
-			<!-- response conditions. 2 per option with checked and unchecked -->
+			<!-- response conditions with no score to display feedback -->
 <?php foreach ($question->options as $oid => $option) : ?>
-<?php if ($option->is_correct) {
-    $score = 1;
-  } else {
-    $score = 0;
-  }
-?>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> checked" continue="Yes">
 				<conditionvar>
 					<varequal respident="1"><?php echo $this->ll[$oid] ?></varequal>
 				</conditionvar>
-				<setvar action='Add'><?php echo $score; ?></setvar>
+				<setvar action='Add'>0</setvar>
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> checked"/>
 			</respcondition>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> unchecked" continue="Yes">
@@ -84,11 +60,46 @@ require("header.php");
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> unchecked"/>
 			</respcondition>
 <?php endforeach; ?>	
-		</resprocessing>
-		
-		
-		
-		<!-- feedback items for each item, pick right feedback based on correct or incorrect -->
+      
+			<!-- marking response stuff -->
+			<respcondition title='unanswered' continue="NO" >
+        <conditionvar>
+<?php foreach ($question->options as $oid => $option) : ?>
+					<unanswered respident='1'><?php echo $this->ll[$oid] ?></unanswered>
+<?php endforeach; ?>	
+				</conditionvar>
+				<setvar action='Set' >0</setvar>
+			</respcondition>
+      
+<?php foreach ($question->options as $oid => $option) : ?>
+<?php if ($option->is_correct) : ?>
+     <respcondition title='Wrong <?php echo $oid; ?>' continue="No" >
+        <conditionvar>
+         <not>
+					<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal>
+         </not>
+        </conditionvar>
+				<setvar action='Set' ><?php echo $option->marks_incorrect; ?></setvar>
+			</respcondition>
+<?php endif; ?>
+<?php endforeach; ?>
+				
+			<respcondition title='Right' continue="Yes" >
+        <conditionvar>
+<?php foreach ($question->options as $oid => $option) : ?>
+<?php if ($option->is_correct) : ?>
+					<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal>
+<?php else : ?>
+					<not>
+						<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal> 
+					</not>
+<?php endif; ?>
+<?php endforeach; ?>	
+				</conditionvar>
+				<setvar action='Set' ><?php echo $option->marks_correct; ?></setvar>
+			</respcondition>
+      
+		<!-- feedback items for each item -->
 <?php foreach ($question->options as $oid => $option) : ?>
 <?php if ($option->is_correct) {
     $fb = $option->fb_correct;

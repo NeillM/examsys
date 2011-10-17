@@ -50,26 +50,27 @@ echo $headertext;
 				<decvar/>
 			</outcomes>
 
+      
 <?php foreach ($question->scenarios as $respid => $scn) : ?>
 <?php foreach ($scn->correctans as $aid => $answer) : ?>
-			<respcondition title="Stem <?php echo $respid ?> <?php echo $aid ?>" continue="Yes">
+			<respcondition title="Stem Wrong <?php echo $respid ?> <?php echo $aid ?>" continue="No">
 				<conditionvar>
+         <not>
 					<varequal respident="<?php echo $respid ?>"><?php echo $this->ll[$answer] ?></varequal>
-				</conditionvar>
-				<setvar action="Add"><?php echo $scn->marks_correct; ?></setvar>
+				 </not>
+        </conditionvar>
+				<setvar action="Set"><?php echo $scn->marks_incorrect; ?></setvar>
 			</respcondition>
 <?php endforeach; ?>
 <?php endforeach; ?>
 
 <?php foreach ($question->scenarios as $respid => $scn) : ?>
 <?php foreach ($scn->correctans as $aid => $answer) : ?>
-			<respcondition title="Stem <?php echo $respid ?> <?php echo $aid ?>" continue="Yes">
+			<respcondition title="Stem Right <?php echo $respid ?> <?php echo $aid ?>" continue="No">
 				<conditionvar>
-         <not>
 					<varequal respident="<?php echo $respid ?>"><?php echo $this->ll[$answer] ?></varequal>
-				 </not>
-        </conditionvar>
-				<setvar action="Add"><?php echo $scn->marks_incorrect; ?></setvar>
+				</conditionvar>
+				<setvar action="Set"><?php echo $scn->marks_correct; ?></setvar>
 			</respcondition>
 <?php endforeach; ?>
 <?php endforeach; ?>

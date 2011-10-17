@@ -19,6 +19,7 @@
 		<itemmetadata>
 			<qmd_itemtype><?php echo $type ?></qmd_itemtype>
 			<qmd_status><?php echo $question->status ?></qmd_status>
+			<qmd_score_method><?php echo $question->score_method ?></qmd_score_method>
 			<qmd_toolvendor>Touchstone 4.0</qmd_toolvendor>
 		</itemmetadata>
 		

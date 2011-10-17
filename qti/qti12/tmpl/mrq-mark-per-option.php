@@ -58,40 +58,42 @@ require("header.php");
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
 			
-			
-			<!-- outcomes for each item -->
+			<!-- response conditions with no score to display feedback -->
 <?php foreach ($question->options as $oid => $option) : ?>
-<?php if ($option->is_correct) {
-    $score = 1;
-  } else {
-    $score = -1;
-  }
-?>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> checked" continue="Yes">
 				<conditionvar>
 					<varequal respident="1"><?php echo $this->ll[$oid] ?></varequal>
 				</conditionvar>
-				<setvar action='Add'><?php echo $score ?></setvar>
+				<setvar action='Add'>0</setvar>
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> checked"/>
 			</respcondition>
-<?php if (!$option->is_correct) {
-    $score = 1;
-  } else {
-    $score = -1;
-  }
-?>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> unchecked" continue="Yes">
 				<conditionvar>
 					<not>
 						<varequal respident="1"><?php echo $this->ll[$oid] ?></varequal>
 					</not>
 				</conditionvar>
-				<setvar action='Add'><?php echo $score ?></setvar>
+				<setvar action='Add'>0</setvar>
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> unchecked"/>
 			</respcondition>
 <?php endforeach; ?>	
 
-		</resprocessing>		
+			<!-- marking response stuff -->
+			<respcondition title='right' continue="Yes" >
+				<conditionvar>
+<?php foreach ($question->options as $oid => $option) : ?>
+<?php if ($option->is_correct) : ?>
+					<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal>
+<?php else : ?>
+					<not>
+						<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal>
+					</not>
+<?php endif; ?>
+<?php endforeach; ?>	
+				</conditionvar>
+				<setvar action='Set'><?php echo $option->marks_correct; ?></setvar>
+			</respcondition>
+		</resprocessing>
 		
 		<!-- feedback items for each item -->
 <?php foreach ($question->options as $oid => $option) : ?>

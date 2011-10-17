@@ -28,7 +28,11 @@ require("header.php");
 <?php foreach ($question->labels as $id => $label) : ?>					
 					<response_label ident="<?php echo $this->ll[$id+1] ?>">
 						<material>
-							<mattext><?php echo $label->tag; ?></mattext>
+              <?php if ($label->type == 'text') : ?>
+							  <mattext><?php echo $label->tag; ?></mattext>
+              <?php else : ?>
+                <matimage imagtype="image/gif" uri="<?php echo $label->tag; ?>" width="<?php echo $label->width ?>" height="<?php echo $label->height ?>"/>
+              <?php endif; ?>
 						</material>
 					</response_label>
 <?php endforeach; ?>
@@ -61,7 +65,7 @@ require("header.php");
 				<conditionvar>
 					<varinside respident="<?php echo $this->ll[$id+1] ?>" areatype="Rectangle"><?php echo $label->left ?>,<?php echo $label->top ?> <?php echo $label->left + $question->width ?>,<?php echo($label->top + $question->height) ?></varinside>
 				</conditionvar>
-				<setvar action="Add">1</setvar>
+				<setvar action="Add"><?php echo $question->marks_correct; ?></setvar>
 			</respcondition>
 <?php endforeach; ?>
 		</resprocessing>

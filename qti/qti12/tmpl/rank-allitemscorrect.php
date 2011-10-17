@@ -54,7 +54,7 @@ require("header.php");
 					<varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>
 <?php endforeach; ?>	
 				</conditionvar>
-				<setvar action="Set">1</setvar>
+				<setvar action="Set"><?php echo $option->marks_correct; ?></setvar>
 				<displayfeedback linkrefid="right"/>
 			</respcondition>
 			
@@ -62,7 +62,7 @@ require("header.php");
 					<conditionvar>
 						<other/>
 					</conditionvar>
-				<setvar action="Add">0</setvar>
+				<setvar action="Add"><?php echo $option->marks_incorrect; ?></setvar>
 				<displayfeedback linkrefid="wrong"/>
 			</respcondition>
 			</resprocessing>

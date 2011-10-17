@@ -68,12 +68,7 @@ class IE_qti12_Save extends IE_Main {
           }
           $this->output .= "\t\t</section>\n";
         }
-        // this needs a lot more work on this function
-        /*foreach($data->questions as $question)
-         {
-         $this->OutputQuestion($question);
-         }*/
-
+        
         $this->output .= "\t</assessment>\n";
         $this->output .= sprintf("</questestinterop>\n");
 
@@ -187,7 +182,11 @@ class IE_qti12_Save extends IE_Main {
     } else {
       // export as a Fill in Blanks so QMP imports correctly
       $type = "Fill in Blanks";
-      include "qti12/tmpl/blank-textentry.php";
+      if (strtolower($question->score_method) == "mark per question") {
+        include "qti12/tmpl/blank-textentry-mark-per-question.php";
+      } else {
+        include "qti12/tmpl/blank-textentry.php";
+      }
     }
     $this->output .= $ob->GetContent();
     $ob->Restore();
@@ -240,36 +239,34 @@ class IE_qti12_Save extends IE_Main {
      */
     // generate the marking and text to be used
     $hasab = false;
-    $negmark = 0;
     $true = "True";
     $false = "False";
 
-    if ($question->score_method == "TF_NegativeAbstain") {
+    if ($question->display_method == "TF_NegativeAbstain") {
       $hasab = 1;
-      $negmark = -1;
-    } else if ($question->score_method == "TF_NegativeAbstainHalf") {
-      $hasab = 1;
-      $negmark = -1;
-      $this->AddWarning("Negative half marks not supported with QTI, using negative 1 instead", $question->load_id);
-    } else if ($question->score_method == "TF_Positive") {
+    }  else if ($question->display_method == "TF_Positive") {
       // default
-      } else if ($question->score_method == "YN_NegativeAbstain") {
+    } else if ($question->display_method == "YN_NegativeAbstain") {
       $true = "Yes";
       $false = "No";
       $hasab = 1;
-      $negmark = -1;
-    } else if ($question->score_method == "YN_Positive") {
+    } else if ($question->display_method == "YN_Positive") {
       $true = "Yes";
       $false = "No";
     }
 
     // header stuff
     list($headertext, $title) = $this->MakeQuestionHeader($question);
-    $type = "Dichotomous";
+    $type = "Dichotomous"; 
 
     $ob = new OB();
     $ob->ClearAndSave();
-    include "qti12/tmpl/dichotomous.php";
+    if (strtolower($question->score_method) == "mark per question") {
+      $type = "Dichotomous - All options must be correct";
+      include "qti12/tmpl/dichotomous-mark-per-question.php";
+    } else {
+      include "qti12/tmpl/dichotomous.php";
+    }
     $this->output .= $ob->GetContent();
     $ob->Restore();
 
@@ -289,7 +286,12 @@ class IE_qti12_Save extends IE_Main {
     $type = "Extended Matching";
     $ob = new OB();
     $ob->ClearAndSave();
-    include "qti12/tmpl/extmatch.php";
+    if (strtolower($question->score_method) == "mark per question") {
+      $type = "Ext Match - All options must be correct";
+      include "qti12/tmpl/extmatch-mark-per-question.php";
+    } else {
+      include "qti12/tmpl/extmatch.php";
+    }
     $this->output .= $ob->GetContent();
     $ob->Restore();
 
@@ -370,7 +372,12 @@ class IE_qti12_Save extends IE_Main {
     $type = "Matrix";
     $ob = new OB();
     $ob->ClearAndSave();
-    include "qti12/tmpl/matrix.php";
+    if (strtolower($question->score_method) == "mark per question") {
+      $type = "Matrix - Marks per Question";
+      include "qti12/tmpl/matrix-mark-per-question.php";
+    } else {    
+      include "qti12/tmpl/matrix.php";
+    }
     $this->output .= $ob->GetContent();
     $ob->Restore();
   }
@@ -408,10 +415,12 @@ class IE_qti12_Save extends IE_Main {
 
     // work out how many correct answers we have
     $maxanswers = 0;
+    $negmarking = false; //is it negativly marked
     foreach ($question->options as $option) {
       if ($option->is_correct) $maxanswers++;
+      if ($option->marks_incorrect < 0) $negmarking = true;
     }
-
+    
     // use different template depending on marking type
     // current marking types - allnegative, selectedpositive, allitemscorrect
     // marking type other not currently supported
@@ -423,23 +432,22 @@ class IE_qti12_Save extends IE_Main {
     // with 2 correct answers will result in following
     // 2 correct answers - 4 marks
     // 2 incorrect answers - -4 marks
-    if (strtolower($question->score_method) == "allnegative") {
-      $type = "Multiple Response - 1 Mark per Option (with Negative Marking)";
-      include "qti12/tmpl/mrq-allnegative.php";
+    if (strtolower($question->score_method) == "mark per option" AND $negmarking == true) {
+      $type = "Multiple Response - N Mark per Option (with Negative Marking)";
+      include "qti12/tmpl/mrq-mark-per-option-negative.php";
     }
 
     // multiple marks for question - 1 mark per positive, should only be able to
     // select same no of options as correct answers but not in QMP as its broken
-    if (strtolower($question->score_method) == "selectedpositive") {
-      $type = "Multiple Response - 1 mark per True Option";
-      include "qti12/tmpl/mrq-selectedpositive.php";
+    if (strtolower($question->score_method) == "mark per option" AND $negmarking == false) {
+      $type = "Multiple Response - N Mark per Option (with Negative Marking)";
+      include "qti12/tmpl/mrq-mark-per-option.php";
     }
-
     // results and feedback for 1 mark for all items correcte, should only be able to
     // select same no of options as correct answers but not in QMP as its broken
-    if (strtolower($question->score_method) == "allitemscorrect") {
-      $type = "Multiple Response - All options must be correct (1 mark in total)";
-      include "qti12/tmpl/mrq-allitemscorrect.php";
+    if (strtolower($question->score_method) == "mark per question") {
+      $type = "Multiple Response - All options must be correct";
+      include "qti12/tmpl/mrq-mark-per-question.php";
     }
 
     // other - 1 mark per correct, no maximum number of items, and other box.
@@ -465,7 +473,7 @@ class IE_qti12_Save extends IE_Main {
 
     //build list of options
     $optlist = array();
-    $optlist[0] = "-";
+
     foreach ($question->options as $option) {
       if ($option->order == '') $option->order = 0;
       $optlist[$option->order] = OrderToStr($option->order);
@@ -478,17 +486,17 @@ class IE_qti12_Save extends IE_Main {
     $ob = new OB();
     $ob->ClearAndSave();
 
-    if (strtolower($question->score_method) == "strictorder") {
+    if (strtolower($question->score_method) == "mark per option") {
       $type = "Ranking - Strict Order";
       include "qti12/tmpl/rank-strictorder.php";
     }
-    if (strtolower($question->score_method) == "allitemscorrect") {
+    if (strtolower($question->score_method) == "mark per question") {
       $type = "Ranking - All items correct";
       include "qti12/tmpl/rank-allitemscorrect.php";
     }
-    if (strtolower($question->score_method) == "orderneighbours") {
+    if (strtolower($question->score_method) == "allow partial marks") {
       $type = "Ranking - Strict Order";
-      $this->AddWarning("'Strict order plus half marks for neighbours' is not a supported marking type, using 'Strict order (mark per option)' instead", $question->load_id);
+      $this->AddWarning("'Partial marks for neighbours' is not a supported marking type, using 'Strict order (mark per option)' instead", $question->load_id);
       include "qti12/tmpl/rank-strictorder.php";
     }
     if (strtolower($question->score_method) == "bonusmark") {
