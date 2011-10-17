@@ -625,6 +625,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       case 'blank':
         $blank_details = explode("[blank",$option_text);
         $no_answers = count($blank_details) - 1;
+        $have_answer = false;
        
         $saved_response = '';
         for ($i=1; $i<=$no_answers; $i++) {
@@ -650,7 +651,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $answer_list = explode(',',$blank_details[$i]);
           $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
           if ($display_method == 'textboxes') {
-            if (isset($_POST[$qid]) and $_POST[$qid] != 'u') {
+            if (isset($_POST[$qid]) and $_POST[$qid] != 'u' and $_POST[$qid] != '') {
+              $have_answer = true;
               $is_correct = false;
               foreach ($answer_list as $individual_answer) {
                 if (str_replace('&nbsp;',' ',trim(strtolower($_POST[$qid]))) == str_replace('&nbsp;',' ',trim(strtolower($individual_answer)))) {
@@ -662,6 +664,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             }
           } else {
             if (isset($_POST[$qid]) and $_POST[$qid] != 'u') {
+              $have_answer = true;
               $mark += (str_replace('&nbsp;',' ',trim($_POST[$qid])) == str_replace('&nbsp;',' ',($answer_list[0]))) ? $individual_q_mark : $marks_incorrect;
             }
           }
@@ -669,7 +672,9 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         
         // Recalculate if mark per question
         if ($score_method == 'Mark per Question') {
-          $mark = ($mark == $totalpos) ? $marks_correct : $marks_incorrect;
+          if ($have_answer) {
+            $mark = ($mark == $totalpos) ? $marks_correct : $marks_incorrect;
+          }
           $totalpos = $marks_correct;
         }
         break;
@@ -693,7 +698,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             if ($sub_part{0} == 1) {
               $mark += $marks_correct;
             } else {
-              $mark += $marks_incorrect;
+              if ($saved_response != 'u') $mark += $marks_incorrect;
             }
             $totalpos += $marks_correct;
           }

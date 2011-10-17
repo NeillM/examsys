@@ -1751,6 +1751,8 @@ table {font-size:100%}
           break;
         case 'blank':
           $paper[$question]['mark'] = 0;
+          $have_answer = false;
+          
           if ($paper[$question]['scenario'] != '') {
             echo_content($paper[$question]['scenario']);
             if ($paper[$question]['q_media'] != '') {
@@ -1796,6 +1798,7 @@ table {font-size:100%}
               }
               if ($correct_flag == true) {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                $have_answer = true;
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
@@ -1810,6 +1813,7 @@ table {font-size:100%}
                   }
                 } else {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  $have_answer = true;
                   echo '</span><span style="color:#C00000; font-weight:bold">' . $user_choices[$blank_count] . '</span>';
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                   if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
@@ -1834,11 +1838,13 @@ table {font-size:100%}
               if (isset($user_choices[$blank_count]) and str_replace('&nbsp;',' ',html_entity_decode(trim($answer_list[0]))) == str_replace('&nbsp;',' ',html_entity_decode(trim($user_choices[$blank_count])))) {
                 if (substr($tmp_exclude,$blank_count-1,1) == '0') {
                   $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                  $have_answer = true;
                   if ($tmp_display_students_response == '1') echo  '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                 }
               } else {
                 if (isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  $have_answer = true;
                 }
                 if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
                   echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
@@ -1858,23 +1864,26 @@ table {font-size:100%}
             echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
           
-          if ($paper[$question]['score_method'] == 'Mark per Question') {
+          if ($paper[$question]['score_method'] == 'Mark per Question' and $have_answer) {
             $paper[$question]['mark'] = ($paper[$question]['mark'] == ($no_blanks - 1) * $paper[$question]['marks_correct']) ? $paper[$question]['marks_correct'] :  $paper[$question]['marks_incorrect'];
           }
           break;
         case 'hotspot':
+          $have_answer = false;
           if (!isset($paper[$question]['user_answer'])) {
             reset_feedback($hide_if_unanswered);
           } elseif ($paper[$question]['user_answer'] == 'u') {
             reset_feedback($hide_if_unanswered);
           }
           $paper[$question]['mark'] = 0;
+          $paper[$question]['totalpos'] = 0;
           $all_correct = true;
           if (isset($paper[$question]['user_answer'])) {
             $parts = explode('|',$paper[$question]['user_answer']);
             $i = 0;
             foreach ($parts as $part) {
-              if (substr($tmp_exclude, $i, 1) == '0') {
+              if (substr($tmp_exclude, $i, 1) == '0' and $paper[$question]['user_answer'] != 'u') {
+                $have_answer = true;
                 if (substr($part,0,1) == 1) {
                   $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 } else {
@@ -1890,7 +1899,9 @@ table {font-size:100%}
           }
           
           if ($paper[$question]['score_method'] == 'Mark per Question') {
-            if ($all_correct) {
+            if (!$have_answer) {
+              $paper[$question]['mark'] = 0;
+            } elseif ($all_correct) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
             } else {
               $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
@@ -1912,7 +1923,7 @@ table {font-size:100%}
     <script language="JavaScript">
       function swfLoaded<?php echo $question_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>', '<?php echo $extra; ?>');
+        setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo $tmp_correct; ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>', '<?php echo $extra; ?>');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
