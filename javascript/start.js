@@ -48,7 +48,10 @@ function MRQ(questionid,part_id,options_total,selectable) {
     }
   }
   if (checked_total > selectable) {
-    alert("Too many options selected!\n\nOnly " + selectable + " items can be selected in this question.");
+    //lang['msgselectable1'] = 'Too many options selected!\n\nOnly';
+    //lang['msgselectable2'] = 'items can be selected in this question.';
+	alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+	//alert("Too many options selected!\n\nOnly " + selectable + " items can be selected in this question.");
     document.getElementById("q" + questionid + "_" + part_id).checked = 0;
   }
 }
@@ -68,10 +71,14 @@ function rankCheck(questionid,part_id,options_total,selectable) {
     }
   }
   if (checked_total > selectable) {
-    alert("Too many options selected!\n\nOnly " + selectable + " items can be selected in this question.");
+    alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+	//alert("Too many options selected!\n\nOnly " + selectable + " items can be selected in this question.");
     document.getElementById('q' + questionid + '_' + part_id).value = 0;
   } else if (duplicate == 1) {
-    alert("You have already selected " + current_value + ".\n\nPlease select a different ranking.");
+    //lang['msgselectable3'] = 'You have already selected';
+    //lang['msgselectable4'] = '.\n\nPlease select a different ranking.';
+    alert(lang['msgselectable3'] + ' ' + selectable  + lang['msgselectable4']);
+	//alert("You have already selected " + current_value + ".\n\nPlease select a different ranking.");
     document.getElementById('q' + questionid + '_' + part_id).value = 0;    
   }
 }
@@ -84,7 +91,9 @@ function multimatchingCheck(questionid,options_total,selectable) {
   }
   tmp_count = 0;
   if (checked_total > selectable) {
-    alert("Too many options selected!\n\nOnly " + selectable + " items can be selected in this question.");
+    alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+	//alert("Too many options selected!\n\nOnly " + selectable + " items can be selected in this question.");
+	
     for (i=0; i<options_total; i++) {
       if (document.getElementById(questionid).options[i].selected == 1) {
         tmp_count++;
