@@ -541,6 +541,8 @@ echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 ?>
         
       </div>
+      
+      <div id="bar-spacer">&nbsp;</div>
     </div>
 
     <div id="button-bar">
