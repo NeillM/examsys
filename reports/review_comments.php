@@ -87,6 +87,8 @@
   }
 
   function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $score_method, $labelcolor, $themecolor, $std) {
+    global $language;
+    
     if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
     echo "<tr>\n";
 
@@ -175,16 +177,41 @@
         case 'labelling':
           $tmp_std_array = explode(',',$std);
           $std_part = 0;
+          $tmp_std_array = explode(',',$std);
+          $std_part = 0;
+          $max_col1 = 0;
+          $max_col2 = 0;
+          $tmp_first_split = explode(';', $correct);
+          $tmp_second_split = explode('|', $tmp_first_split[11]);
+          foreach ($tmp_second_split as $ind_label) {
+            $label_parts = explode('$', $ind_label);
+            if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
+              if ($label_parts[0] < 10) {
+                $max_col1 = $label_parts[0];
+              } else {
+                $max_col2 = $label_parts[0];
+              }
+            }
+          }
+          $max_col2-=10;
+          
+          $max_label = max($max_col1, $max_col2);
+
+          $tmp_height = $q_media_height;
+          if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
 ?>
     <div align="center">
     <script language="JavaScript">
-      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="<?php echo $q_media_width + 255; ?>" height="<?php echo $q_media_height; ?>" id="label_answer" align="middle">');
-      write_string('<param name="allowScriptAccess" value="sameDomain" />');
-      write_string('<param name="movie" value="label_analysis.swf" />');
+      function swfLoaded<?php echo $q_no; ?>(message) {
+        var num = message.substring(5,message.length);
+        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '');
+      }
+      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
+      write_string('<param name="allowScriptAccess" value="always" />');
+      write_string('<param name="movie" value="/reports/label_analysis.swf" />');
       write_string('<param name="quality" value="high" />');
       write_string('<param name="bgcolor" value="#ffffff" />');
-      write_string('<param name="FlashVars" value="imageName=<?php echo $q_media; ?>&labels=<?php echo $correct; ?>" />');
-      write_string('<embed src="label_analysis.swf" FlashVars="imageName=<?php echo $q_media; ?>&labels=<?php echo $correct; ?>" quality="high" bgcolor="#ffffff" width="<?php echo $q_media_width + 255; ?>" height="<?php echo $q_media_height; ?>" name="label_answer" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />');
+      write_string('<embed src="/reports/label_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
     </script>
     </div>
@@ -532,7 +559,7 @@ if (isset($_GET['scrOfY'])) {
     }
     if ($q_type == 'labelling') {
       $tmp_first_split = explode(';', $correct);
-      $tmp_second_split = explode('$', $tmp_first_split[8]);
+      $tmp_second_split = explode('$', $tmp_first_split[11]);
       for ($label_no = 4; $label_no <= 43; $label_no += 4) {
         if (substr($tmp_second_split[$label_no],0,1) != '|') {
           $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
