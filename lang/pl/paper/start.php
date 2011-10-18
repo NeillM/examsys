@@ -32,5 +32,9 @@ $string['denied_location'] = 'Dostęp do tego arkusza nie jest dozwolony z aktua
 $string['error_time'] = 'Arkusz, który chcesz zobaczyć dostępny jest tylko pomiędzy %s i %s';
 $string['error_module'] = 'Ten arkusz nie występuje w żadnym module.';
 $string['error_metadata'] = 'Metadane użytkownika nie są zgodne <strong>%s: %s</strong>';
-$string['holddownctrlkey'] = '(Trzymając &lt;CTRL&gt; klikaj myszą aby zaznaczyć/odznaczyć opcje';
+$string['holddownctrlkey'] = '(Trzymając &lt;CTRL&gt; klikaj myszą aby zaznaczyć/odznaczyć opcje)';
+$string['msgselectable1'] = '2Too many options selected!\n\nOnly';
+$string['msgselectable2'] = '2items can be selected in this question.';
+$string['msgselectable3'] = '2You have already selected';
+$string['msgselectable4'] = '2.\n\nPlease select a different ranking.';
 ?>

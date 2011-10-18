@@ -426,6 +426,23 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
   <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script language="JavaScript" src="../javascript/start.js"></script>
+//niko
+<script type="text/javascript">
+var lang = {
+<?php
+$langstrings = array('msgselectable1', 'msgselectable2', 'msgselectable3', 'msgselectable4');
+$first = true;
+foreach ($langstrings as $langstring) {
+  if (!$first) {
+    echo ',';
+  }
+  echo "'{$langstring}':'{$string[$langstring]}'";
+  $first = false;
+}
+?>
+};
+</script>
+//niko
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="javascript">
   window.history.go(1);
