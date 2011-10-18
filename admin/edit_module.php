@@ -202,7 +202,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <?php
     }
     ?>
-    <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" name="fullname" value="<?php echo $fullname; ?>" /></td></tr>
+    <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="fullname" value="<?php echo $fullname; ?>" /></td></tr>
   <?php
     $old_faculty = '';
     echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
