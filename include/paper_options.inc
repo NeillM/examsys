@@ -317,7 +317,7 @@ $stmt->close();
         echo "<tr><td><a href=\"\" onclick=\"lockedPaperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"lockedPaperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
       }
     } else {
-      $max_screen = ($max_screen != 0) ? $max_screen : 0;
+      $max_screen = ($max_screen != '') ? $max_screen : 0;
       echo "<tr><td><a href=\"\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\"><img src=\"/artwork/add_questions_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
       echo "<tr><td><a href=\"\" onclick=\"paperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"paperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
     }
