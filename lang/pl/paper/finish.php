@@ -28,6 +28,7 @@ $string['adjusted'] = '(skorygowany)';
 $string['msg'] = 'Dziękuję za wypełnienie <strong>%s</strong>. Twoje odpowiedzi zostały zanotowane.';//??
 $string['closewindow'] = 'Zamknij okno';
 $string['overallcorrectorder'] = 'Właściwa kolejność całości (Punkt dodatkowy)';
+$string['outof'] = 'z';
 $string['experimentalquestion'] = '0 - Pytanie eksperymentalne';
 $string['unmarked'] = 'niepunktowane';
 ?>
