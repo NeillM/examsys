@@ -279,11 +279,16 @@ td.separated:last-child {
 #tabbed-content {
   height: 100%;
   padding: 85px 10px 0 10px;
-  margin-bottom: 450px;
+  margin-bottom: 0;
 }
 
 #tabbed-content.banner-spaced {
   padding-top: 115px;
+}
+
+#bar-spacer {
+	height: 450px;
+	min-height: 450px;
 }
 
 #button-bar {
