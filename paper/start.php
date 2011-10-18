@@ -426,6 +426,7 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
   <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script language="JavaScript" src="../javascript/start.js"></script>
+
 //niko
 <script type="text/javascript">
 var lang = {
@@ -443,6 +444,7 @@ foreach ($langstrings as $langstring) {
 };
 </script>
 //niko
+
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="javascript">
   window.history.go(1);

@@ -33,8 +33,8 @@ $string['error_time'] = 'Arkusz, który chcesz zobaczyć dostępny jest tylko po
 $string['error_module'] = 'Ten arkusz nie występuje w żadnym module.';
 $string['error_metadata'] = 'Metadane użytkownika nie są zgodne <strong>%s: %s</strong>';
 $string['holddownctrlkey'] = '(Trzymając &lt;CTRL&gt; klikaj myszą aby zaznaczyć/odznaczyć opcje)';
-$string['msgselectable1'] = '2Too many options selected!\n\nOnly';
-$string['msgselectable2'] = '2items can be selected in this question.';
-$string['msgselectable3'] = '2You have already selected';
-$string['msgselectable4'] = '2.\n\nPlease select a different ranking.';
+$string['msgselectable1'] = 'Zaznaczono zbyt dużo opcji!\n\nW tym pytaniu mogą być zaznaczone tylko';
+$string['msgselectable2'] = 'elementy.';
+$string['msgselectable3'] = 'Już zaznaczyłeś';
+$string['msgselectable4'] = '.\n\nWybierz inny ranking.';
 ?>
