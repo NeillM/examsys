@@ -64,6 +64,7 @@ function render_objectives_mapping_form($db, $paper_id, &$string) {
   $html = '';
   
   foreach ($objsByModuleSession as $moduleid => $objsBySession) {
+    $moduleid_forform = str_replace(' ', '_', $moduleid);
     $html .= <<< HTML
         <h2>{$moduleid} {$string['objectives']}</h2>
         
@@ -98,7 +99,7 @@ HTML;
           $checked = '';
         }
         $html .= <<< HTML
-      				<li><input id="objective{$objcount}" name="{$moduleid}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$objectives['content']}</label></li>
+      				<li><input id="objective{$objcount}" name="{$moduleid_forform}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$objectives['content']}</label></li>
 
 HTML;
         $objcount++;
@@ -117,8 +118,8 @@ HTML;
 HTML;
 
     $html .= <<< HTML
-    		<input name="{$moduleid}_session" type="hidden" value="{$session}"/>
-    		<input name="{$moduleid}_old_mappings" type="hidden" value="{$old_mappings}" />
+    		<input name="{$moduleid_forform}_session" type="hidden" value="{$session}"/>
+    		<input name="{$moduleid_forform}_old_mappings" type="hidden" value="{$old_mappings}" />
 
 HTML;
   }
@@ -250,11 +251,12 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
     $sql = array();
 
     foreach ($modules as $moduleid) {
-      if(isset($_POST[$moduleid . '_session'])) {
-        $session = $_POST[$moduleid . '_session'];
-        $old_mappings = $_POST[$moduleid . '_old_mappings'];
-        if(isset($_POST[$moduleid . '_objectives'])) {
-          foreach ($_POST[$moduleid . '_objectives'] as $objective_id) {
+      $moduleid_forform = str_replace(' ', '_', $moduleid);
+      if(isset($_POST[$moduleid_forform . '_session'])) {
+        $session = $_POST[$moduleid_forform . '_session'];
+        $old_mappings = $_POST[$moduleid_forform . '_old_mappings'];
+        if(isset($_POST[$moduleid_forform . '_objectives'])) {
+          foreach ($_POST[$moduleid_forform . '_objectives'] as $objective_id) {
             $sql[] = "INSERT INTO relationships VALUES (NULL, '$moduleid', $paper_id, $question_id, $objective_id, '$session')";
             $new_mappings .= $objective_id . ',';
           }
