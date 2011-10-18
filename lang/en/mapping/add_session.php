@@ -4,7 +4,7 @@ require '../lang/' . $language . '/include/months.inc';
 
 $string['newsession'] = 'New Session';
 $string['title'] = 'Title';
-$string['session'] = '1ession';
+$string['session'] = 'Session';
 $string['date'] = 'Date';
 $string['url'] = 'URL';
 $string['new'] = 'New...';
