@@ -32,4 +32,5 @@ $string['denied_location'] = 'Access to this paper is not permitted from your cu
 $string['error_time'] = 'The paper you are attempting to access is only available between %s and %s';
 $string['error_module'] = 'This paper is not on any module.';
 $string['error_metadata'] = 'User metadata does not match <strong>%s: %s</strong>';
+$string['holddownctrlkey'] = '(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)';
 ?>

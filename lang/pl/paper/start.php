@@ -32,4 +32,5 @@ $string['denied_location'] = 'Dostęp do tego arkusza nie jest dozwolony z aktua
 $string['error_time'] = 'Arkusz, który chcesz zobaczyć dostępny jest tylko pomiędzy %s i %s';
 $string['error_module'] = 'Ten arkusz nie występuje w żadnym module.';
 $string['error_metadata'] = 'Metadane użytkownika nie są zgodne <strong>%s: %s</strong>';
+$string['holddownctrlkey'] = '(Trzymając &lt;CTRL&gt; klikaj myszą aby zaznaczyć/odznaczyć opcje';
 ?>
