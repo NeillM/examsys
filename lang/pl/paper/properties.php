@@ -60,7 +60,7 @@ $string['deadline'] = 'Termin finalizacji:';
 
 // Exam Rubric tab
 $string['rubrictab'] = 'Rubryka egzaminu';
-$string['rubricheading'] = 'Rubryka egzaminu wyświetlana u studenta przed rozpoczęciem egzaminu sumatywnego';
+$string['rubricheading'] = 'Rubryka egzaminu wyświetlana u studenta przed rozpoczęciem egzaminu końcowego';
 
 // Prologue tab
 $string['prologuetab'] = 'Wstęp';
