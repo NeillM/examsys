@@ -27,4 +27,8 @@ $string['yourpercentage'] = 'Your percentage';
 $string['adjusted'] = '(adjusted)';
 $string['msg'] = 'Thank you for completing <strong>%s</strong>. Your responses have been recorded.';
 $string['closewindow'] = 'Close Window';
+$string['overallcorrectorder'] = 'Overall correct order (Bonus Mark)';
+$string['outof'] = 'out of';
+$string['experimentalquestion'] = '0 - Experimental Question';
+$string['unmarked'] = 'unmarked';
 ?>

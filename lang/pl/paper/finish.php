@@ -14,7 +14,7 @@ $string['answersscreen'] = 'Ekran odpowiedzi';
 $string['key'] = 'Klucz:';
 $string['correctanswer'] = 'Prawidłowa odpowiedź';
 $string['incorrectanswer'] = 'Nieprawidłowa odpowiedź';
-$string['boldwords'] = "<strong>Pogrubione</strong> słowa reprezentują prawidłowe odpowiedzi dla każdego pytania (nie odpowiedzi respondentów).";
+$string['boldwords'] = "<strong>Pogrubione</strong> słowa reprezentują prawidłowe odpowiedzi dla każdego pytania (nie są to odpowiedzi respondentów).";
 $string['feedbackinred'] = 'Odzew wyświetlony jest ciemno-czerwonymi italikami';
 $string['note'] = 'Uwaga';//??
 $string['screen'] = 'Ekran';
@@ -27,4 +27,7 @@ $string['yourpercentage'] = 'Twój wynik';//??
 $string['adjusted'] = '(skorygowany)';
 $string['msg'] = 'Dziękuję za wypełnienie <strong>%s</strong>. Twoje odpowiedzi zostały zanotowane.';//??
 $string['closewindow'] = 'Zamknij okno';
+$string['overallcorrectorder'] = 'Właściwa kolejność całości (Punkt dodatkowy)';
+$string['experimentalquestion'] = '0 - Pytanie eksperymentalne';
+$string['unmarked'] = 'niepunktowane';
 ?>

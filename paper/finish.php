@@ -1419,7 +1419,7 @@ table {font-size:100%}
             }
             $html .= '</td>';
             $html .= '<td>&nbsp;<img src="../artwork/' . $img_name . '.gif" width="17" height="16" alt="' . ucwords($img_name) . '" /></td>';
-            $html .= "<td colspan=\"3\">Overall correct order (Bonus Mark)</td>";
+            $html .= "<td colspan=\"3\">" . $string['overallcorrectorder'] ."</td>";
             $html .= '</tr>';
             
             echo $html;
@@ -2132,19 +2132,19 @@ table {font-size:100%}
       if ($display_question_mark == '1' and $paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
         if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
           if ($paper[$question]['status'] == 'Experimental') {
-            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 out of 0 - Experimental Question&nbsp;</span></p>';
+            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' ' . $string['experimentalquestion'] . '&nbsp;</span></p>';
           } elseif ($paper[$question]['totalpos'] == 0) {
             $paper[$question]['mark'] = 0; 
-            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 out of 0&nbsp;</span></p>';
+            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';
           } else {
-            echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['mark'],2) . ' out of ' . $paper[$question]['totalpos'] . '</span></p>';
+            echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
           }
         } elseif ($paper[$question]['q_type'] == 'textbox') {
           // Unmarked textbox questions.
-          echo '<p class="mkpad"><span class="mk">&lt;unmarked&gt; out of ' . $paper[$question]['totalpos'] . '</span></p>';
+          echo '<p class="mkpad"><span class="mk">&lt;' . $string['unmarked'] . '&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
         } else {
           // User has skipped over question.
-          echo '<p class="mkpad"><span class="mk">0 out of ' . $paper[$question]['totalpos'] . '</span></p>';
+          echo '<p class="mkpad"><span class="mk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
         }
       }
       if ($paper[$question]['status'] != 'Experimental') {
@@ -2163,7 +2163,7 @@ table {font-size:100%}
       echo '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
       echo '<tr><td colspan="2" style="margin:0px; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
       if ($marking == 1) {
-        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " out of $total_marks</td><td></td></tr>\n";
+        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
         echo "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(13);\" src=\"/artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" border=\"0\" /></td></tr>\n";
         echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
         echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
@@ -2178,7 +2178,7 @@ table {font-size:100%}
         }
         echo '%</td><td>' . $string['adjusted'] . '</td></tr>';
       } else {
-        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " out of $total_marks</td></tr>\n";
+        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " ' . $string['outof'] . ' $total_marks</td></tr>\n";
         echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
         echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
         if (isset($_GET['percent'])) {
