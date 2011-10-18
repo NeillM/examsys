@@ -2178,7 +2178,7 @@ table {font-size:100%}
         }
         echo '%</td><td>' . $string['adjusted'] . '</td></tr>';
       } else {
-        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " ' . $string['outof'] . ' $total_marks</td></tr>\n";
+        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " " . $string['outof'] . " $total_marks</td></tr>\n";
         echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
         echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
         if (isset($_GET['percent'])) {
