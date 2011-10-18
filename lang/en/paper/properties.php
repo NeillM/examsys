@@ -35,6 +35,11 @@ $string['method'] = 'Method';
 $string['noadjustment'] = 'No Adjustment';
 $string['calculatrrandommark'] = 'Calculate Random Mark';
 $string['stdset'] = 'Std Set';
+$string['ticks_crosses'] = 'Ticks/Crosses';
+$string['question_marks'] = 'Question Marks';
+$string['hideallfeedback'] = 'Hide all feedback if<br />unanswered';
+$string['correctanswerhighlight'] = 'Correct Answer Highlight';
+$string['textfeedback'] = 'Text Feedback';
 
 // Security tab
 $string['securitytab'] = 'Security';

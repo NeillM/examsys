@@ -748,8 +748,8 @@ if ($paper_type != '4' and $paper_type != '5') {
      }
      if ($paper_type != '4') {
      ?>
-     <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($display_students_response == '1') echo ' checked'; ?> />&nbsp;Ticks/Crosses</td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($display_question_mark == '1') echo ' checked'; ?> />&nbsp;Question Marks</td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($hide_if_unanswered == '1') echo ' checked'; ?> />&nbsp;Hide all feedback if<br />unanswered</td></tr>
-     <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($display_correct_answer == '1') echo ' checked'; ?> />&nbsp;Correct Answer Highlight</td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($display_feedback == '1') echo ' checked'; ?> />&nbsp;Text Feedback</td></tr>
+     <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($display_students_response == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($display_question_mark == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($hide_if_unanswered == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
+     <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($display_correct_answer == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($display_feedback == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
      <?php
      }
      echo "</table>\n";
@@ -1222,7 +1222,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     // Available to Month
     //$months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
     for ($i=0; $i<12; $i++) {
-      $trans_month = substr($string[$months[$i]],0,3);
+      $trans_month = mb_substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";

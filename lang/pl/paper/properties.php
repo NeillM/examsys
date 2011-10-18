@@ -35,6 +35,11 @@ $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Brak dopasowania';
 $string['calculatrrandommark'] = "Oblicz liczbę punktów na 'chybił-trafił'";
 $string['stdset'] = 'Zestaw standardowy';
+$string['ticks_crosses'] = '2Ticks/Crosses';
+$string['question_marks'] = '2Question Marks';
+$string['hideallfeedback'] = '2Hide all feedback if<br />unanswered';
+$string['correctanswerhighlight'] = '2Correct Answer Highlight';
+$string['textfeedback'] = '2Text Feedback';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
