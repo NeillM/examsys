@@ -18,8 +18,8 @@ $string['display'] = 'Wyświetlanie';
 $string['windowed'] = 'w oknie';
 $string['fullscreen'] = 'Pełnoekranowo (tylko Internet Explorer)';
 $string['navigation'] = 'Nawigacja';
-$string['bidirectional'] = 'Dwukierunkowe';
-$string['unidirectional'] = 'Jednokierunkowe (liniowe)';
+$string['bidirectional'] = 'dwukierunkowa';
+$string['unidirectional'] = 'jednokierunkowa (liniowa)';
 $string['background'] = 'Tło';
 $string['foreground'] = 'Pierwszy plan';
 $string['theme'] = 'Motyw';
@@ -35,11 +35,11 @@ $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Brak dopasowania';
 $string['calculatrrandommark'] = "Oblicz liczbę punktów na 'chybił-trafił'";
 $string['stdset'] = 'Zestaw standardowy';
-$string['ticks_crosses'] = '2Ticks/Crosses';
-$string['question_marks'] = '2Question Marks';
-$string['hideallfeedback'] = '2Hide all feedback if<br />unanswered';
-$string['correctanswerhighlight'] = '2Correct Answer Highlight';
-$string['textfeedback'] = '2Text Feedback';
+$string['ticks_crosses'] = 'Haczyki/Krzyżyki';
+$string['question_marks'] = 'Punktacja pytania';
+$string['hideallfeedback'] = 'Ukryj odzew<br />jeśli nie odpowiedziano';
+$string['correctanswerhighlight'] = 'Wyróźnienie poprawnej odpowiedzi';
+$string['textfeedback'] = 'Odzew tekstowy';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
