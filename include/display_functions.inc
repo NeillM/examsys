@@ -1033,7 +1033,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_option_no++;
       }
       echo '</select>';
-      if ($answer_no > 1) echo '<div class="mk">(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)</div>';
+      if ($answer_no > 1) echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';
       echo '</div><br /></li>';
     }
     echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" />';
