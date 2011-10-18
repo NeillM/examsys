@@ -21,7 +21,7 @@ $string['change'] = 'Zmień';
 $string['media'] = 'plik medialny';
 $string['questionswf'] = 'Pytanie SWF';
 $string['answerswf'] = 'Odpowiedź SWF';
-$string['leadin'] = 'Wprowadzenie';
+$string['leadin'] = 'Treść pytania';
 $string['leadinmsg'] = '(pytanie)';
 $string['presentation'] = 'Prezentacja';
 $string['includeother'] = 'zawiera pole tekstowe \'inne\' <span class="note">(stosowane w ankietach)</span>';
