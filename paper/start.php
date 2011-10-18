@@ -427,7 +427,6 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 <?php }?>
 <script language="JavaScript" src="../javascript/start.js"></script>
 
-//niko
 <script type="text/javascript">
 var lang = {
 <?php
@@ -443,7 +442,6 @@ foreach ($langstrings as $langstring) {
 ?>
 };
 </script>
-//niko
 
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="javascript">
