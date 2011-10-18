@@ -35,7 +35,7 @@ $spaced = ($index > 1) ? " class=\"spaced-top{$alt}\"" : $alt_c;
 ?>
           <tbody class="option<?php echo $hidden ?>">
             <tr<?php echo $spaced ?>>
-              <th<?php echo $spaced ?>><label for="option_text<?php echo $index ?>">Stem #<?php echo $index ?></label></th>
+              <th<?php echo $spaced ?>><label for="option_text<?php echo $index ?>"><?php echo $string['stem'];?> #<?php echo $index ?></label></th>
               <td<?php echo $spaced ?>>
                 <textarea name="option_text<?php echo $index ?>" id="option_text<?php echo $index ?>" cols="90" rows="2" class="form-med-large"><?php echo $option->get_text() ?></textarea>
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
@@ -69,14 +69,14 @@ $spaced = ($index > 1) ? " class=\"spaced-top{$alt}\"" : $alt_c;
               <td>&nbsp;</td>
             </tr>
             <tr<?php echo $alt_c ?>>
-              <th><label for="option_correct_fback<?php echo $index ?>">Feedback if Correct:</label><br /><span class="note warning-severe">(default feedback)</span></th>
+              <th><label for="option_correct_fback<?php echo $index ?>"><?php echo $string['fbcorrect'];?>:</label><br /><span class="note warning-severe"><?php echo $string['fbcorrectmsg'];?></span></th>
               <td>
                 <textarea cols="85" rows="2" id="option_correct_fback<?php echo $index ?>" name="option_correct_fback<?php echo $index ?>" class="form-med-large"><?php echo $option->get_correct_fback() ?></textarea>
               </td>
               <td>&nbsp;</td>
             </tr>
             <tr<?php echo $alt_c ?>>
-              <th class="spaced-bottom"><label for="option_incorrect_fback<?php echo $index ?>">Feedback if Incorrect:</label><br /><span class="note">(leave blank to use default)</span></th>
+              <th class="spaced-bottom"><label for="option_incorrect_fback<?php echo $index ?>"><?php echo $string['fbincorrect'];?>:</label><br /><span class="note"><?php echo $string['fbincorrectmsg'];?></span></th>
               <td class="spaced-bottom">
                 <textarea cols="85" rows="2" id="option_incorrect_fback<?php echo $index ?>" name="option_incorrect_fback<?php echo $index ?>" class="form-med-large"><?php echo $option->get_incorrect_fback() ?></textarea>
               </td>
