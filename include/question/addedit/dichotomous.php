@@ -58,7 +58,7 @@ require_once 'detail_parts/details_general_feedback.php';
           <thead>
             <tr>
               <th colspan="2">&nbsp;</th>
-              <th class="small align-centre"><strong>Answer</strong></th>
+              <th class="small align-centre"><strong><?php echo $string['answer'] ?></strong></th>
             </tr>
           </thead>
 <?php
