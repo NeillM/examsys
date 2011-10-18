@@ -204,7 +204,7 @@
     <script language="JavaScript">
       function swfLoaded<?php echo $q_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '');
+        setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
@@ -407,6 +407,7 @@ p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
 </style>
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script src="../javascript/ie_fix.js" type="text/javascript"></script>
 <script language="JavaScript">
   function getScrollXY() {

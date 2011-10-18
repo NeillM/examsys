@@ -458,7 +458,7 @@
   }
 
   function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $labelcolor, $themecolor, $std) {
-    global $user_no, $ex_no, $d_no, $d_total, $excluded, $user_total;
+    global $user_no, $ex_no, $d_no, $d_total, $excluded, $user_total, $language;
     if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
     echo "<tr>\n";
     $tmp_std_array = (!empty($std)) ? explode(',',$std) : array();
@@ -662,7 +662,7 @@
     <script language="JavaScript">
       function swfLoaded<?php echo $q_no; ?>(message) {
         var num = message.substring(5,message.length);
-        setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '');
+        setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '');
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
@@ -738,7 +738,7 @@
           <script language="JavaScript">
       			function swfLoaded<?php echo $q_no; ?>(message) {
       				var num = message.substring(5,message.length);
-      				setUpFlash(num, message, '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '<?php echo $coords; ?>','0');
+      				setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '<?php echo $coords; ?>','0');
       			}
       			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 301); ?>" height="<?php echo ($q_media_height + 25); ?>" align="middle">');
       			write_string('<param name="allowScriptAccess" value="always" />');
