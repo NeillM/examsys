@@ -145,7 +145,7 @@ function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_ans
 }
 
 function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
-  global $mysqli, $used_questions;
+  global $mysqli, $used_questions, $string;
   
   $selected_q_id = '';
   if (isset($user_answers[$current_screen])) {
