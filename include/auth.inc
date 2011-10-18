@@ -91,7 +91,7 @@ function ldap_auth($u, $p, &$data){
       }
     }
 
-    if (@ldap_bind( $ldap, $dn, $p)) {
+    if (@ldap_bind( $ldap, $dn, utf8_encode($p))) {
       ldap_unbind( $ldap );
       return true;
     } else {
