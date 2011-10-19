@@ -37,4 +37,5 @@ $string['msgselectable1'] = 'Zaznaczono zbyt dużo opcji!\n\nW tym pytaniu mogą
 $string['msgselectable2'] = 'elementy.';
 $string['msgselectable3'] = 'Już zaznaczyłeś';
 $string['msgselectable4'] = '.\n\nWybierz inny ranking.';
+$string['clinicalvignette'] = 'Przypadek kliniczny';
 ?>
