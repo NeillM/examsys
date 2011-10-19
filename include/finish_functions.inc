@@ -942,12 +942,13 @@
           break;
         case 'sct':
           $paper[$question]['mark'] = 0;
-          echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td colspan=\"3\" style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">Clinical Vignette</td></tr>\n<tr><td colspan=\"2\">" . $paper[$question]['scenario'] . "</td></tr>\n";
+          echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td colspan=\"3\" style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['clinicalvignette'] . "</td></tr>\n<tr><td colspan=\"2\">" . $paper[$question]['scenario'] . "</td></tr>\n";
           if ($paper[$question]['q_media'] != '') echo "<tr><td colspan=\"3\"><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'],$question_no) . "</p></td></tr>\n";
       
           $sct_parts = explode('~',$paper[$question]['leadin']);
           echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-          $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
+          $sct_titles = array(1=>$string['Hypothesis'],2=>$string['Investigation'],3=>$string['Prescription'],4=>$string['Intervention'],5=>$string['Treatment']);
+`		  //$sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
           $sct_intros = array(1=>'diagnosis',2=>'investigation',3=>'prescription',4=>'intervention',5=>'treatment');
           echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$paper[$question]['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
           echo "<tr><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">" . $string['ifyouwerethinking'] . " " . $sct_intros[$paper[$question]['display_method']] . "</span><br />" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">" . $string['andthenyoufind'] . ":</span><br />" . $sct_parts[1] . "</td></tr>\n";
