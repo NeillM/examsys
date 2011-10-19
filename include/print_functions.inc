@@ -130,7 +130,7 @@ function display_options($options,$q_id, $current_theme) {
     echo "<tr><td style=\"width:50%\"><strong>" . $sct_titles[$options[0]['score_method']] . "</strong><br />" . $sct_parts[0] . "</td><td style=\"width:50%\"><strong>" . $string['newinformation'] . "</strong><br />" . $sct_parts[1] . "</td></tr>\n";
     
     echo '<tr><td colspan=\"2\"><strong>';
-	echo $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['display_method']]) . " " . $string['is'] . ":";
+	echo $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['score_method']]) . " " . $string['is'] . ":";
 
     /*
 	niko if ($options[0]['score_method'] == 1) {

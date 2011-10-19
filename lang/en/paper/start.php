@@ -37,6 +37,7 @@ $string['msgselectable1'] = 'Too many options selected!\n\nOnly';
 $string['msgselectable2'] = 'items can be selected in this question.';
 $string['msgselectable3'] = 'You have already selected';
 $string['msgselectable4'] = '.\n\nPlease select a different ranking.';
+$string['newinformation'] = 'New Information';
 $string['clinicalvignette'] = 'Clinical Vignette';
 $string['thenthis'] = 'Then this';
 $string['is'] = 'is';
