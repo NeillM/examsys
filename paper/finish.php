@@ -240,7 +240,7 @@ table {font-size:100%}
     display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqli);
   } else {
     echo '<blockquote>';
-    echo '<p style="font-size:450%;font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank you</p>';
+    echo '<p style="font-size:450%;font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p>';
     echo '<p>' . sprintf($string['msg'], $paper_title) . '</p><br />';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';

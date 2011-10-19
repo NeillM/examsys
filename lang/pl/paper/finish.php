@@ -31,4 +31,12 @@ $string['overallcorrectorder'] = 'Właściwa kolejność całości (Punkt dodatk
 $string['outof'] = 'z';
 $string['experimentalquestion'] = '0 - Pytanie eksperymentalne';
 $string['unmarked'] = 'niepunktowane';
+$string['newinformation'] = '1New Information';
+$string['ifyouwerethinking'] = '1If you were thinking of the following';
+$string['andthenyoufind'] = '1And then you find';
+$string['thenthis'] = '1Then this';
+$string['is'] = '1is';
+$string['experts'] = '1Experts';
+$string['thankyou'] = '1Thank you';
+$string['difficultyofthequestion'] = '1difficulty of the question (i.e. standards set). Roll over for full category title.';
 ?>

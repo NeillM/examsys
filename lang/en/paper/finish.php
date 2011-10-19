@@ -31,4 +31,14 @@ $string['overallcorrectorder'] = 'Overall correct order (Bonus Mark)';
 $string['outof'] = 'out of';
 $string['experimentalquestion'] = '0 - Experimental Question';
 $string['unmarked'] = 'unmarked';
+//$sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
+//$sct_intros = array(1=>'diagnosis',2=>'investigation',3=>'prescription',4=>'intervention',5=>'treatment');
+$string['newinformation'] = '2New Information';
+$string['ifyouwerethinking'] = '2If you were thinking of the following';
+$string['andthenyoufind'] = '2And then you find';
+$string['thenthis'] = '2Then this';
+$string['is'] = '2is';
+$string['experts'] = '2Experts';
+$string['thankyou'] = '2Thank you';
+$string['difficultyofthequestion'] = '2difficulty of the question (i.e. standards set). Roll over for full category title.';
 ?>
