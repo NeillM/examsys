@@ -42,7 +42,10 @@ $string['ifyouwerethinking'] = 'Jeśli myślałeś/łaś co następuje';
 $string['andthenyoufind'] = 'a następnie odkryłeś/łaś';
 $string['thenthis'] = 'Wtedy';
 $string['is'] = 'jest';
+$string['of'] = 'z';
 $string['experts'] = 'Eksperci';
 $string['thankyou'] = 'Dziękuję';
 $string['difficultyofthequestion'] = 'trudność pytania (tj. warunki standardowe). Przewiń do pełnego tytułu kategorii.';
+$string['withatoleranceof'] = 'z tolerancją';
+
 ?>

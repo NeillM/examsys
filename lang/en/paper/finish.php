@@ -42,7 +42,9 @@ $string['ifyouwerethinking'] = 'If you were thinking of the following';
 $string['andthenyoufind'] = 'And then you find';
 $string['thenthis'] = 'Then this';
 $string['is'] = 'is';
+$string['of'] = 'of';
 $string['experts'] = 'Experts';
 $string['thankyou'] = 'Thank you';
 $string['difficultyofthequestion'] = 'difficulty of the question (i.e. standards set). Roll over for full category title.';
+$string['withatoleranceof'] = 'with a tolerance of';
 ?>

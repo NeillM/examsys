@@ -564,7 +564,7 @@
             echo ' ';
           }
                     
-          if ($saved_response_clean <> $tmp_answer[1] and $tmp_mark == $paper[$question]['marks_correct']) echo ' with a tolerance of ' . $score_array[1];
+          if ($saved_response_clean <> $tmp_answer[1] and $tmp_mark == $paper[$question]['marks_correct']) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
           
           if ($tmp_exclude == '1')  echo '</span>';
           echo "</td></tr>\n</table>\n";
@@ -947,7 +947,8 @@
       
           $sct_parts = explode('~',$paper[$question]['leadin']);
           echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-          $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
+          $sct_titles = array(1=>$string['Hypothesis'],2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
+          //$sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
           $sct_intros = array(1=>'diagnosis',2=>'investigation',3=>'prescription',4=>'intervention',5=>'treatment');
           echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$paper[$question]['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
           echo "<tr><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">" . $string['ifyouwerethinking'] . " " . $sct_intros[$paper[$question]['display_method']] . "</span><br />" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">" . $string['andthenyoufind'] . ":</span><br />" . $sct_parts[1] . "</td></tr>\n";
@@ -1013,7 +1014,7 @@
               }
               echo "<td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" checked /></td>";
               if ($paper[$question]['correct'][$tmp_part_id] > 0) {
-                echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;of&nbsp;$reviewers_total</td>";
+                echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;" . $string['of'] . "&nbsp;$reviewers_total</td>";
               } else {
                 echo "<td style=\"text-align:right; color:#808080\">-</td>";
               }
