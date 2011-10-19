@@ -130,7 +130,10 @@ function display_options($options,$q_id, $current_theme) {
     echo "<tr><td style=\"width:50%\"><strong>" . $sct_titles[$options[0]['score_method']] . "</strong><br />" . $sct_parts[0] . "</td><td style=\"width:50%\"><strong>" . $string['newinformation'] . "</strong><br />" . $sct_parts[1] . "</td></tr>\n";
     
     echo '<tr><td colspan=\"2\"><strong>';
-    if ($options[0]['score_method'] == 1) {
+	echo $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['display_method']]) . " " . $string['is'] . ":";
+
+    /*
+	niko if ($options[0]['score_method'] == 1) {
       echo 'Then this hypothesis becomes:';
     } elseif ($options[0]['score_method'] == 2) {
       echo 'Then this investigation becomes:';
@@ -141,6 +144,7 @@ function display_options($options,$q_id, $current_theme) {
     } elseif ($options[0]['score_method'] == 5) {
       echo 'Then this treatment becomes:';
     }
+	*/
     echo '</strong></td></tr>';
   }
   $i = 0;

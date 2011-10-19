@@ -1033,7 +1033,7 @@
               }
               echo "<td></td><td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" /></td>";
               if ($paper[$question]['correct'][$tmp_part_id] > 0) {
-                echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;of&nbsp;$reviewers_total</td>";
+                echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;" . $string['of'] . "&nbsp;$reviewers_total</td>";
               } else {
                 echo "<td style=\"text-align:right; color:#808080\">-</td>";
               }
