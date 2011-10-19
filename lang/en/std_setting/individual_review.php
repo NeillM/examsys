@@ -29,4 +29,5 @@ $string['cannotbeused'] = '<strong>Note:</strong> Ebel method cannot be used to 
 $string['na'] = 'N/A';
 $string['screen'] = 'Screen';
 $string['note'] = 'NOTE:';
+$string['bonusmark'] = 'for correct options, plus bonus mark for fully correct order';
 ?>

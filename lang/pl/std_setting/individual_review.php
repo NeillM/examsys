@@ -29,4 +29,5 @@ $string['cannotbeused'] = '<strong>Uwaga:</strong> Metoda Ebel nie może być st
 $string['na'] = 'Nie dotyczy';//N/A
 $string['screen'] = 'Ekran';
 $string['note'] = 'Uwaga:';
+$string['bonusmark'] = '1for correct options, plus bonus mark for fully correct order';
 ?>
