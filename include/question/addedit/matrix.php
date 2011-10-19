@@ -77,7 +77,7 @@ for ($index = 1; $index <= $question->max_options; $index++):
   }
 ?>
             <td>
-              <label for="option_text<?php echo $index ?>" class="hide">Option <?php echo $index ?></label>
+              <label for="option_text<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?></label>
               <input type="text" id="option_text<?php echo $index ?>" name="option_text<?php echo $index ?>" value="<?php echo $option_text ?>" title="<?php echo $option_text ?>" class="form-minute" />
               <input name="optionid<?php echo $index ?>" value="<?php echo $option_id ?>" type="hidden" />
             </td>
