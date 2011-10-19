@@ -124,10 +124,10 @@ function display_options($options,$q_id, $current_theme) {
     $matching_options = array();
   } elseif ($options[0]['q_type'] == 'sct') {
     $sct_parts = explode('~',$options[0]['leadin']);
-    $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
+    $sct_titles = array(1=>$string['Hypothesis'],2=>$string['Investigation'],3=>$string['Prescription'],4=>$string['Intervention'],5=>$string['Treatment']);
     echo "<tr><td class=\"question_no\">$question_no.&nbsp;</td><td>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-    echo "<tr><td colspan=\"2\"><strong>Clinical Vignette</strong><br />" . $options[0]['scenario'] . "</td></tr>\n";
-    echo "<tr><td style=\"width:50%\"><strong>" . $sct_titles[$options[0]['score_method']] . "</strong><br />" . $sct_parts[0] . "</td><td style=\"width:50%\"><strong>New Information</strong><br />" . $sct_parts[1] . "</td></tr>\n";
+    echo "<tr><td colspan=\"2\"><strong>" . $string['clinicalvignette'] . "</strong><br />" . $options[0]['scenario'] . "</td></tr>\n";
+    echo "<tr><td style=\"width:50%\"><strong>" . $sct_titles[$options[0]['score_method']] . "</strong><br />" . $sct_parts[0] . "</td><td style=\"width:50%\"><strong>" . $string['newinformation'] . "</strong><br />" . $sct_parts[1] . "</td></tr>\n";
     
     echo '<tr><td colspan=\"2\"><strong>';
     if ($options[0]['score_method'] == 1) {
