@@ -1577,7 +1577,7 @@
                   echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                   //echo '</span><span style="color:#C00000; font-weight:bold">' . $user_choices[$blank_count] . '</span>';
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-                  if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
+                  //if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
                 }
 					//if ($tmp_display_correct_answer == '1') {
                     echo '<strong>(';
