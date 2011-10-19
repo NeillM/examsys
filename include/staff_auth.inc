@@ -125,12 +125,8 @@
     }
     
     // Can the user acsess the question?
-    if (isset($_GET['q_id']) or isset($_POST['q_id'])) {
-      if (isset($_GET['q_id'])) {
-        $tmp_q_id = $_GET['q_id'];
-      } else {
-        $tmp_q_id = $_POST['q_id'];
-      }
+    if (isset($_REQUEST['q_id'])) {
+      $tmp_q_id = $_REQUEST['q_id'];
       $result = $mysqli->prepare("SELECT q_group, ownerID, faculty FROM questions LEFT JOIN modules ON q_group=modules.moduleid LEFT JOIN schools ON modules.schoolid=schools.id WHERE q_id=?");
       $result->bind_param('i', $tmp_q_id);
       $result->execute();  
@@ -190,13 +186,9 @@
     } 
 
     //Can the user acsess the question?
-    if (isset($_GET['q_id']) OR isset($_POST['q_id'])) {
+    if (isset($_REQUEST['q_id']) and $_REQUEST['q_id'] != -1) {
       $result = $mysqli->prepare("SELECT q_group, ownerID FROM questions WHERE q_id=?");
-      if (isset($_GET['q_id'])) {
-        $result->bind_param('i',$_GET['q_id']);
-      } else {
-        $result->bind_param('i', $_POST['q_id']);
-      }
+      $result->bind_param('i', $_REQUEST['q_id']);
       $result->execute();  
       $result->bind_result($q_group, $ownerID);
       $result->fetch();
