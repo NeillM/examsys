@@ -19,10 +19,9 @@
         ed.onInit.add(function(ed, evt) {
 
         var dom = ed.dom;
-        var doc = ed.getDoc();
 
-        tinymce.dom.Event.add(doc, 'blur', function(e) {
-            // Do something when the editor window is blured.
+        tinymce.dom.Event.add(dom.getRoot(), 'blur', function(e) {
+          // Do something when the editor window is blured.
           tinyMCE.triggerSave();
           
           if (typeof jQuery != 'undefined') {
