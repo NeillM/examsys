@@ -26,7 +26,6 @@
 */
 
   require '../include/staff_student_auth.inc';
-  require '../include/marking_functions.inc';
   require '../include/calculate_marks.inc';
   require '../include/errors.inc';
   require '../include/mapping.inc';
@@ -48,20 +47,10 @@
       if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
       if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
       if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
-      $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
       
       $log_type = $paper_type;
       $low_bandwidth = 0;
       
-      if (strpos($userroles,'Staff') !== false and isset($_GET['userid']) and $_GET['userid'] != $userID) {
-        // Turn on all feedback if staff and a student exam script is being reviewed.
-        $display_correct_answer = 1;
-        $display_question_mark = 1;
-        $display_students_response = 1;
-        $display_feedback = 1;
-        $hide_if_unanswered = 0;
-      }
-
       if ($userroles == 'Student') {
         if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
@@ -71,68 +60,35 @@
             access_denied($string['specificpassword'], $output_header = false);
           }
         }
+        
+        $display_correct_answer = 1;
+        $display_question_mark = 1;
+        $display_students_response = 1;
+        $display_feedback = 1;
  
-        // Check time security
-        if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-          $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-          access_denied($tmp_string, $output_header = false);
+        // Check if paper can be released date wise
+        $stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(date) FROM feedback_release WHERE paper_id=? AND type='questions'");
+        $stmt->bind_param('i', $paperID);
+        $stmt->execute();
+        $stmt->bind_result($access_date);
+        $stmt->store_result();
+        $stmt->fetch();
+        if ($stmt->num_rows == 0) {
+          access_denied($string['nofeedback'], false);
         }
-        //Check room security
-        if ($labs != '') {
-          $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-          $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
-          $lab_info->execute();
-          $lab_info->bind_result($address, $low_bandwidth);
-          $lab_info->store_result();
-          $lab_info->fetch();
-          if ($lab_info->num_rows == 0) {
-            access_denied($string['denied_location'], false);
-          }
-          $lab_info->close();
-        }
+        $stmt->close();
         
-        // get modules if the user is a student and the paper is not formative
-        if (stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
-           if ($moduleID != '') {
-            $cal_year_sql = '';
-            if($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
-            $module_info = $mysqli->query("SELECT moduleid,attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql");
-            if ($module_info->num_rows == 0) {
-              $tmp_string = sprintf($string['notregistered'], $title, $surname, $username, $moduleID, $calendar_year);
-              access_denied($tmp_string, $output_header = false);
-            } else {
-              $row = $module_info->fetch_array(MYSQLI_ASSOC);
-              if (is_array($row)) {
-                $attempt = $row['attempt'];
-              }
-            }
-            $module_info->close();
-          } else {
-            access_denied($string['error_module'], false);
-          }
+        // Check to see if the student has sat the paper
+        $stmt = $mysqli->prepare("SELECT started FROM log$paper_type WHERE q_paper=? AND userID=?");
+        $stmt->bind_param('ii', $paperID, $userID);
+        $stmt->execute();
+        $stmt->bind_result($sessionid);
+        $stmt->store_result();
+        $stmt->fetch();
+        if ($stmt->num_rows == 0) {
+          access_denied($string['nottaken'], false);
         }
-        if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
-          $paper_type = '_late';
-        }
-        
-        // Check for any metadata security restrictions
-        $metadata_security = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
-        $metadata_security->bind_param('i', $paperID);
-        $metadata_security->execute();
-        $metadata_security->bind_result($security_type, $security_value);
-        $metadata_security->store_result();
-        while ($metadata_security->fetch()) {
-          $check_security = $mysqli->prepare("SELECT users_metadata.id FROM users_metadata, modules WHERE users_metadata.moduleid=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $moduleID) . "') AND userID=? AND type=? AND value=?");
-          $check_security->bind_param('iss', $userID, $security_type, $security_value);
-          $check_security->execute();
-          $check_security->store_result();
-          if ($check_security->num_rows == 0) {
-            $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-            access_denied($tmp_string, false);
-          }
-          $check_security->close();
-        }      
-        $metadata_security->close();
+        $stmt->close();
         
       }
       if (isset($_GET['type'])) $log_type = $_GET['type'];
@@ -177,10 +133,8 @@ table {font-size:100%}
    echo "<script type=\"text/javascript\" src=\"/javascript/jquery-1.6.1.min.js\"></script>";
    echo "<script type=\"text/javascript\" src=\"/tools/mee/mee/js/mee_src.js\"></script>";
   }
-  if (($userroles == 'Student' and $paper_type < 2) or strpos($userroles,'Staff') !== false) {
-    echo "<script src=\"../javascript/ie_fix.js\" type=\"text/javascript\"></script>\n";
-  }
 ?>
+<script language="JavaScript" src="../javascript/ie_fix.js"></script>
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
 <script language="JavaScript">
   window.history.go(1);
@@ -194,22 +148,9 @@ table {font-size:100%}
   }
 </script>
 </head>
-
+<body>
 <?php
-  if (strpos($userroles,'Student') !== false) {
-    echo '<body oncontextmenu="return false;">';
-  } else {
-    echo '<body>';
-  }
-  if (isset($_POST['current_screen'])) {
-    $current_screen = $_POST['current_screen'];
-  } else {
-    $current_screen = 1;
-  }
-  if ($current_screen > 1 and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    // Record answers from the previous screen.
-    record_marks($paperID, $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
-  }
+  $current_screen = 1;
 
   if (isset($_GET['userid'])) {
     $temp_userID = $_GET['userid'];
@@ -218,13 +159,7 @@ table {font-size:100%}
   }
   $old_q_id = 0;
   $old_screen = 0;
-  if (isset($_GET['previous'])) {
-    $sessionid = $_GET['previous'];
-    $log_type = $_GET['log_type'];
-  } else {
-    $sessionid = $_POST['sessionid'];
-  }
-
+  
   echo $top_table_html;
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
   if ($paper_type < 2 or strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false) {
@@ -236,20 +171,8 @@ table {font-size:100%}
   echo $logo_html;
   echo '</table>';
 
-  if ($paper_type == '0' or (($paper_type == '1' or $paper_type == '2' or $paper_type == '5') and (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false))) {
-    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqli);
-  } else {
-    echo '<blockquote>';
-    echo '<p style="font-size:450%;font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">Thank you</p>';
-    echo '<p>' . sprintf($string['msg'], $paper_title) . '</p><br />';
-    if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
-    echo '</blockquote>';
-    if ($paper_type == '2') {
-      echo '<br /><div style="text-align:center;border:1px #C0C0C0 solid;background-color:#E6E6DF;padding:10px;margin-left:100px;margin-right:100px" align="center">' . $leaving_rules . '<br /><br /><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
-    } else {
-      echo '<br /><div align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
-    }
-  }
+  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqli);
+
   echo "</body>\n</html>";
   $mysqli->close();
 ?>

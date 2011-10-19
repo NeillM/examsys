@@ -1235,6 +1235,26 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
+  // 18/10/2011 - Add type to feedback_release.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='feedback_release' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='type'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE feedback_release ADD COLUMN type enum('objectives','questions')");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE feedback_release ADD COLUMN type enum('objectives','questions')</li>\n";
+    ob_flush();
+    flush();
+    
+    $update = $mysqli->prepare("UPDATE feedback_release SET type='objectives'");
+    $update->execute();
+    $update->close();
+  }
+  $result->close();
+
   echo "</ol>\n";
   
   //Close the database
