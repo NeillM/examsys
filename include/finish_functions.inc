@@ -1562,14 +1562,14 @@
                   $correct_flag = true;
                 }
               }
-              if ($correct_flag == true) {
+			  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
+			  if ($correct_flag == true) {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 $have_answer = true;
-                echo "xx<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
                 if ($user_choices[$blank_count] == 'u') {
-                  echo '</span><span style="color:#808080">' . $string['unanswered'] . '</span>';
+                  //echo '</span><span style="color:#808080">' . $string['unanswered'] . '</span>';
                   if ($tmp_display_correct_answer == '1') {
                     echo '<strong>(';
                     foreach ($answer_list as $individual_answer) {
