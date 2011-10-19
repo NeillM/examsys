@@ -1568,13 +1568,14 @@
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
-				  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" />";
                 if ($user_choices[$blank_count] == 'u') {
-                  //echo '</span><span style="color:#808080">' . $string['unanswered'] . '</span>';                 
+				  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" />";
+                  //echo '</span><span style="color:#808080">' . $string['unanswered'] . '</span>';     
                 } else {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                   $have_answer = true;
-                  echo '</span><span style="color:#C00000; font-weight:bold">' . $user_choices[$blank_count] . '</span>';
+                  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
+                  //echo '</span><span style="color:#C00000; font-weight:bold">' . $user_choices[$blank_count] . '</span>';
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                   if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
                 }
@@ -1584,7 +1585,7 @@
                       echo $individual_answer . ', ';
                     }
                     echo ')</strong>';
-                    //}
+                  //}
               }
             } else {
               echo '</span>';
