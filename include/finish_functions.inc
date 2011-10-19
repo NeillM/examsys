@@ -1897,19 +1897,19 @@
       if ($display_question_mark == '1' and $paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
         if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
           if ($paper[$question]['status'] == 'Experimental') {
-            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 " . $string['outof'] . " 0 - Experimental Question&nbsp;</span></p>';
+            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - Experimental Question&nbsp;</span></p>';
           } elseif ($paper[$question]['totalpos'] == 0) {
             $paper[$question]['mark'] = 0; 
-            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 " . $string['outof'] . " 0&nbsp;</span></p>';
+            echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';
           } else {
-            echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['mark'],2) . ' " . $string['outof'] . " ' . $paper[$question]['totalpos'] . '</span></p>';
+            echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
           }
         } elseif ($paper[$question]['q_type'] == 'textbox') {
           // Unmarked textbox questions.
-          echo '<p class="mkpad"><span class="mk">&lt;unmarked&gt; " . $string['outof'] . " ' . $paper[$question]['totalpos'] . '</span></p>';
+          echo '<p class="mkpad"><span class="mk">&lt;unmarked&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
         } else {
           // User has skipped over question.
-          echo '<p class="mkpad"><span class="mk">0 " . $string['outof'] . " ' . $paper[$question]['totalpos'] . '</span></p>';
+          echo '<p class="mkpad"><span class="mk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
         }
       }
       if ($paper[$question]['status'] != 'Experimental') {
