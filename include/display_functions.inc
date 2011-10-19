@@ -328,7 +328,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<p><strong>'.$question['display_method'];
 	  echo $string['thenthis'] . " " . strtolower($sct_titles[$question['display_method']]) . " " . $string['is'] . ":";
 
-      /*niko
+      //*niko
 	  if ($question['score_method'] == 1) {
         echo 'Then this hypothesis becomes:';
       } elseif ($question['score_method'] == 2) {
@@ -340,7 +340,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } elseif ($question['score_method'] == 5) {
         echo 'Then this treatment becomes:';
       }
-	  */
+	  //*/
       echo '</strong></p>';
       
       if (isset($user_answers[$current_screen][$q_id]) AND $user_answers[$current_screen][$q_id] == '0' AND $screen_pre_submitted == 1) {
