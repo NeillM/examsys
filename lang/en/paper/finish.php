@@ -31,6 +31,7 @@ $string['overallcorrectorder'] = 'Overall correct order (Bonus Mark)';
 $string['outof'] = 'out of';
 $string['experimentalquestion'] = '0 - Experimental Question';
 $string['unmarked'] = 'unmarked';
+$string['Diagnosis'] = 'Diagnosis';
 $string['Hypothesis'] = 'Hypothesis';
 $string['Investigation'] = 'Badanie';
 $string['Prescription'] = 'Investigation';
