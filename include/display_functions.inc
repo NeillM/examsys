@@ -325,8 +325,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
       echo "</table>\n";
       
-      echo '<p><strong>'.$question['display_method'];
-	  echo $string['thenthis'] . " " . strtolower($sct_titles[$question['display_method']]) . " " . $string['is'] . ":";
+      echo '<p><strong>';
+	  //echo $string['thenthis'] . " " . strtolower($sct_titles[$question['display_method']]) . " " . $string['is'] . ":";
 
       //*niko
 	  if ($question['score_method'] == 1) {
