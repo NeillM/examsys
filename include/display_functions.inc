@@ -326,7 +326,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "</table>\n";
       
       echo '<p><strong>';
-	  echo $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['display_method']]) . " " . $string['is'] . ":";
+	  echo $string['thenthis'] . " " . strtolower($sct_titles['score_method']) . " " . $string['is'] . ":";
 
       /*niko
 	  if ($question['score_method'] == 1) {
