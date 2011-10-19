@@ -38,4 +38,11 @@ $string['msgselectable2'] = 'elementy.';
 $string['msgselectable3'] = 'Już zaznaczyłeś';
 $string['msgselectable4'] = '.\n\nWybierz inny ranking.';
 $string['clinicalvignette'] = 'Przypadek kliniczny';
+$string['thenthis'] = 'Wtedy';
+$string['is'] = 'jest';
+$string['Hypothesis'] = 'Hipoteza';
+$string['Investigation'] = 'Badanie';
+$string['Prescription'] = 'Zalecenie';
+$string['Intervention'] = 'Interwencja';
+$string['Treatment'] = 'Terapia';
 ?>

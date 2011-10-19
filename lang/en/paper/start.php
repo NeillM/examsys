@@ -38,4 +38,11 @@ $string['msgselectable2'] = 'items can be selected in this question.';
 $string['msgselectable3'] = 'You have already selected';
 $string['msgselectable4'] = '.\n\nPlease select a different ranking.';
 $string['clinicalvignette'] = 'Clinical Vignette';
+$string['thenthis'] = 'Then this';
+$string['is'] = 'is';
+$string['Hypothesis'] = 'Hypothesis';
+$string['Investigation'] = 'Investigation';
+$string['Prescription'] = 'Prescription';
+$string['Intervention'] = 'Intervention';
+$string['Treatment'] = 'Treatment';
 ?>
