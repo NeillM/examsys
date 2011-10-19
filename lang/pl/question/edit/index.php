@@ -27,7 +27,7 @@ $string['presentation'] = 'Prezentacja';
 $string['includeother'] = 'zawiera pole tekstowe \'inne\' <span class="note">(stosowane w ankietach)</span>';
 $string['vertical'] = 'Pionowy układ przycisków opcji';
 $string['verticalother'] = "Pionowy układ przycisków opcji (wraz z polem tekstowym 'inne')";
-$string['horizontal'] = 'Pionowy układ przycisków opcji';
+$string['horizontal'] = 'Poziomy układ przycisków opcji';
 $string['dropdownlist'] = 'Lista rozwijana';
 $string['optionorder'] = 'Kolejność opcji';
 $string['displayorder'] = 'Nie zmieniona';
