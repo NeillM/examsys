@@ -51,11 +51,11 @@ a {color:blue}
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT log_metadata.userID FROM (log$paper_type, log_metadata) WHERE log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND q_paper=? AND log_metadata.started>=? AND log_metadata.started<=? AND student_grade NOT IN ('university lecturer','University Secretary','IT Support','University Admin','Technical Staff')");
+    $result = $mysqli->prepare("SELECT DISTINCT log_metadata.userID FROM (log$paper_type, log_metadata) WHERE log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND q_paper=? AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>=? AND log_metadata.started<=? AND student_grade NOT IN ('university lecturer','University Secretary','IT Support','University Admin','Technical Staff')");
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
     $result->execute();
     $result->bind_result($tmp_userID);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       $candidate_no++;
     }
     $result->close();
@@ -118,6 +118,7 @@ a {color:blue}
       } else {
         $candidates_marked = $candidate_no;
       }
+      
       echo '<tr><td style="text-align:right; vertical-align:top">';
       if ($candidates_marked < $candidate_no) echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" border="0" />';
       echo $question_no . '.</td>';
