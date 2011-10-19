@@ -75,7 +75,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
                   write_string('<param name="quality" value="high" />');
                   write_string('<param name="bgcolor" value="#F1F5FB" />');
                   write_string('<param name="wmode" value="opaque" />');
-                  write_string('<embed src="../add/hotspot_add.swf" quality="high" bgcolor="#F1F5FB" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+                  write_string('<embed src="../add/hotspot_add.swf" quality="high" bgcolor="#F1F5FB" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" wmode="opaque" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                   write_string('</object>');
                 </script>
 <?php

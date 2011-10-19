@@ -88,7 +88,7 @@ if ($media['filename'] != ''):
                   write_string('<param name="quality" value="high" />');
                   write_string('<param name="bgcolor" value="#F1F5FB" />');
                   write_string('<param name="wmode" value="opaque" />');
-                  write_string('<embed src="<?php echo $flash_path ?>" quality="high" bgcolor="#F1F5FB" width="<?php echo ($media['width'] + 222); ?>" height="<?php echo ($plugin_height); ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+                  write_string('<embed src="<?php echo $flash_path ?>" quality="high" bgcolor="#F1F5FB" width="<?php echo ($media['width'] + 222); ?>" height="<?php echo ($plugin_height); ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" wmode="opaque" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                   write_string('</object>');
                 </script>
 <?php
