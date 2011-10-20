@@ -383,7 +383,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
 }
 
 function display_option($firstoption, $q_id, $question_no, &$part_id, $display_option, $std_method, $is_group, &$marks, $exclude, $review_val, &$matching_options, $review_mean, $tmp_reviews, $option_no, &$stdID, &$std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback) {
-  global $string;
+  global $string, $language;
   $qn_excluded = ($exclude == '1');
   
   switch ($firstoption['q_type']) {
@@ -736,7 +736,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
   <script language="JavaScript">
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $firstoption['q_media']; ?>', '<?php echo trim($firstoption['correct']); ?>', '', '1,1,0000000000000');
+      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $firstoption['q_media']; ?>', '<?php echo trim($firstoption['correct']); ?>', '', '1,1,0000000000000');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($firstoption['q_media_width'] + 300); ?>" height="<?php echo ($firstoption['q_media_height'] + 2); ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
