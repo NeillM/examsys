@@ -552,8 +552,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if (isset($rank_answers[$tmp_part_id - 1]) AND $rank_answers[$tmp_part_id - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $total_rank_no) {
           echo ' class="unans"';
         }
-        echo "><td class=\"option\"><select name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" onchange=\"rankCheck(" . $question_no . "," . $tmp_part_id . ",$option_no,$total_rank_no);\">\n";
-
+//        echo "><td class=\"option\"><select name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" onchange=\"rankCheck(" . $question_no . "," . $tmp_part_id . ",$option_no,$total_rank_no);\">\n";
+        echo "><td class=\"option\"><select name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" class=\"rankselect q" . $question_no . "\">\n";
+        
         echo "<option value=\"u\"></option>\n";
         if ($require_na) {
           if (isset($rank_answers[$tmp_part_id - 1]) AND $rank_answers[$tmp_part_id - 1] == '0') {

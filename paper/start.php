@@ -421,8 +421,8 @@ if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;verti
 if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 ?>
 </style>
+<script type="text/javascript" src="/javascript/jquery-1.6.1.min.js"></script>
 <?php if ($latex_needed == 1) {?>
-  <script type="text/javascript" src="/javascript/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script language="JavaScript" src="../javascript/start.js"></script>

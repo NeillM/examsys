@@ -1,3 +1,7 @@
+$(function () {
+  $('.rankselect').change(rankCheck);
+});
+
 function refreshparent() {
   window.opener.location.reload();
 }
@@ -52,29 +56,22 @@ function MRQ(questionid,part_id,options_total,selectable) {
     document.getElementById("q" + questionid + "_" + part_id).checked = 0;
   }
 }
-function rankCheck(questionid,part_id,options_total,selectable) {
-  checked_total = 0;
-  duplicate = 0;
-  current_value = document.getElementById('q' + questionid + '_' + part_id).value;
-  for (i=1; i<=options_total; i++) {
-    currentid = "q" + questionid + "_" + i;
-    if (document.getElementById(currentid).value != 0 && document.getElementById(currentid).value != 'u') {
-      checked_total++;
-    }
-    if (i != part_id && current_value != 0 && current_value != 'u') {
-      if (document.getElementById(currentid).value == current_value) {
-        duplicate = 1;
-      }
-    }
-  }
-  if (checked_total > selectable) {
-    alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
-    document.getElementById('q' + questionid + '_' + part_id).value = 0;
-  } else if (duplicate == 1) {
-    alert(lang['msgselectable3'] + ' ' + selectable  + lang['msgselectable4']);
-    document.getElementById('q' + questionid + '_' + part_id).value = 0;    
+function rankCheck() {
+  var sel = $(this).val();    
+  var classlist =  '.' + $(this).attr('class').replace(' ', '.');
+  var count = 0;
+  var loopSel = '';
+  
+  $(classlist).each(function () {
+    loopSel = $(this).val();
+    if(loopSel != '0' && loopSel != 'u' && loopSel == sel) count++;
+  });
+  if (count > 1) {
+    alert(lang['msgselectable3'] + ' ' + sel  + lang['msgselectable4']);
+    $(this).val('u');
   }
 }
+
 function multimatchingCheck(questionid,options_total,selectable) {
   checked_total = 0;
   for (i=0; i<options_total; i++) {
