@@ -88,6 +88,7 @@ $current_screen = 1;
   li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
   select, input {font-size:100%}
   table {font-size:100%}
+  p {margin-top:0px; padding-top:0px}
   .raised_tbl {background-color:#5582D2; border-left:solid #90C8FF 1px; border-right:solid #003060 1px; border-top:solid #90C8FF 1px; border-bottom: solid #003060 1px}
   .paper {margin-left:0px; font-family:Arial,sans-serif; font-size:180%; color:white; font-weight:bold}
   .question_no {width:40px; text-align:right; vertical-align:top}
