@@ -222,19 +222,23 @@
           $tmp_width = ($q_media_width + 2);
           if ($tmp_width < 375) $tmp_width = 375;
           ?>
-          <div align="center">
-          <script language="JavaScript">
-            write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="hotspot<?php echo $q_no; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo ($q_media_height + 40); ?>" align="middle">');
-            write_string('<param name="allowScriptAccess" value="sameDomain" />');
-            write_string('<param name="movie" value="hotspot_show.swf" />');
-            write_string('<param name="quality" value="high" />');
-            write_string('<param name="bgcolor" value="#ffffff" />');
-            write_string('<param name="FlashVars" value="imageName=<?php echo $q_media; ?>&config=<?php echo $correct; ?>" />');
-            write_string('<embed src="hotspot_show.swf" FlashVars="imageName=<?php echo $q_media; ?>&config=<?php echo $correct; ?>" quality="high" bgcolor="#ffffff" width="<?php echo $tmp_width; ?>" height="<?php echo ($q_media_height + 40); ?>" swLiveConnect=true id="hotspot<?php echo $q_no; ?>" name="hotspot<?php echo $q_no; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-            write_string('</object>');
-          </script>
-          </div>
+              <div>
+              <script language="JavaScript">
+                function swfLoaded<?php echo $question_no; ?>(message) {
+                  var num = message.substring(5,message.length);
+                  setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo $correct; ?>', '', '1,1,0000000000000');
+                }
+                write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" align="middle">');
+                write_string('<param name="allowScriptAccess" value="always" />');
+                write_string('<param name="movie" value="/paper/hotspot_answer.swf" />');
+                write_string('<param name="quality" value="high" />');
+                write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+                write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+                write_string('</object>');
+              </script>
+              </div>
           <?php
+          
           break;
         case 'mcq':
           $i = 0;
@@ -407,7 +411,7 @@ p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
 </style>
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript" src="../javascript/flash_include.js"></script>
+<script src="../javascript/flash_include.js" type="text/javascript"></script>
 <script src="../javascript/ie_fix.js" type="text/javascript"></script>
 <script language="JavaScript">
   function getScrollXY() {
