@@ -63,7 +63,7 @@ require '../include/staff_auth.inc';
       switch($type) {
         //deal with old objs
         case 'obj':
-          if($value == '') {
+          if ($value == '') {
             //delete objs and mappings
             $stmt = $mysqli->prepare("DELETE FROM objectives WHERE obj_id = ? AND moduleID = ? AND identifier = ? AND calendar_year = ?");
             $stmt->bind_param('isss',$objId,$moduleID,$identifier,$_POST['session']);
@@ -176,7 +176,7 @@ require '../include/staff_auth.inc';
         while(ul.childNodes[i].id != liId) {
            i++;
         }
-        if( i > 1 ) {
+        if ( i > 1 ) {
           temp = ul.removeChild(ul.childNodes[i]);
           ul.insertBefore(temp,ul.childNodes[i-1]);
         }
@@ -186,8 +186,8 @@ require '../include/staff_auth.inc';
       function updateButtons() {
         lis = document.getElementsByTagName('li');
         ObjCount = 0;
-        for(var i = 1; i < (lis.length - 1) ; i++ ) {
-          if(lis[i].id != '') {
+        for (var i = 1; i < (lis.length - 1) ; i++ ) {
+          if (lis[i].id != '') {
             ObjCount++;
             if(lis[i - 1].id == '') {
                //disable up
@@ -225,7 +225,7 @@ require '../include/staff_auth.inc';
   }
   echo '<div id="content" class="content" style="font-size:80%">';
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['editsession'] . "</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
+  echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['editsession'] . "</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
   echo "<tr><td colspan=\"4\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
   echo '</table><br />';
 
@@ -233,7 +233,7 @@ require '../include/staff_auth.inc';
   $result = $mysqli->prepare("SELECT sessions.title, source_url, sessions.calendar_year, sessions.occurrence, obj_id, objective FROM sessions LEFT JOIN objectives ON sessions.identifier=objectives.identifier AND sessions.calendar_year =  objectives.calendar_year AND sessions.moduleID = objectives.moduleID WHERE sessions.moduleID = ? and sessions.identifier = ? AND sessions.calendar_year = ? ORDER BY sequence");
 	$result->bind_param('sss', $moduleID, $identifier, $session);
 	$result->execute();
-	$result->bind_result($title,$source_url,$calendar_year,$occurrence,$obj_id,$objective);
+	$result->bind_result($title, $source_url, $calendar_year, $occurrence, $obj_id, $objective);
 	$sess = array();
 	while ($row = $result->fetch()) {
 	  if( !isset($sess['identifier']) ) {
@@ -266,13 +266,31 @@ require '../include/staff_auth.inc';
   list($y,$m,$d) = explode('-', $date);
 
   echo '<tr><td class="field">' . $string['date'] . '</td><td>';
-  if(isset($m)) {
+  
+  // Day
+  if (isset($d)) {
+    $currentday = $d;
+  } else {
+    $currentday   = date('j');
+  }
+  $validfrom = '<select name="day">'."\n";
+  foreach (range(1,31) as $day) {
+    $selected = ($day == $currentday ) ? ' selected="selected"' : '';
+    $day_value = $day;
+    if ($day_value < 10) $day_value = '0' . $day_value;
+    $validfrom .= "<option value=\"$day_value\" $selected>$day_value</option>\n";
+  }
+  $validfrom .= '</select>&nbsp;';
+  echo $validfrom;
+
+  // Month
+  if (isset($m)) {
     $currentmonth = $m;
   } else {
     $currentmonth   = date('m');
   }
   $validfrom = '<select name="month">'."\n";
-  $month_names = array(1=>'january',2=>'february',3=>'march',4=>'april',5=>'may',6=>'june',7=>'july',8=>'august',9=>'september',10=>'october',11=>'november',12=>'december');
+  $month_names = array(1=>'january', 2=>'february', 3=>'march', 4=>'april', 5=>'may', 6=>'june', 7=>'july', 8=>'august', 9=>'september', 10=>'october', 11=>'november', 12=>'december');
   for ($month = 1; $month <= 12; $month++) {
     $selected = ($month == $currentmonth ) ? ' selected="selected"' : '';
     $month_value = $month;
@@ -282,30 +300,7 @@ require '../include/staff_auth.inc';
   $validfrom .= '</select>&nbsp;';
   echo $validfrom;
 
-  if (isset($d)) {
-    $currentday = $d;
-  } else {
-    $currentday   = date('j');
-  }
-  $validfrom = '<select name="day">'."\n";
-  foreach (range(1,31) as $day) {
-    $selected = ($day == $currentday ) ? ' selected="selected"' : '';
-    if ($day == 1 or $day == 21 or $day == 31) {
-      $dispDay = $day . "st";
-    } elseif ($day == 2 or $day == 22) {
-	    $dispDay = $day . "nd";
-	  } elseif ($day == 3 or $day == 23) {
-	    $dispDay = $day . "rd";
-	  } else {
-	    $dispDay = $day . "th";
-    }
-    $day_value = $day;
-    if ($day_value < 10) $day_value = '0' . $day_value;
-    $validfrom .= "<option value=\"$day_value\" $selected>$dispDay</option>\n";
-  }
-  $validfrom .= '</select>&nbsp;';
-  echo $validfrom;
-
+  // Year
   $startyear = ( date('Y') - 1 );
   if (isset($y)) {
     $currentyear = $y;

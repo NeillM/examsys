@@ -35,9 +35,9 @@
 
     $occurrence = $_POST['session_year'] . '-' . $_POST['session_month'] . '-' . $_POST['session_day'] . ' ' . $_POST['session_time'];
 
-    $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL,?,?,?,?,?,?)");
+    $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, ?, ?, ?)");
     $identifier = intVal($identifier);
-    $stmt->bind_param('ssssss',$identifier,$moduleID,$_POST['session_title'],$_POST['url'],$_POST['session'],$occurrence);
+    $stmt->bind_param('ssssss', $identifier, $moduleID, $_POST['session_title'], $_POST['url'], $_POST['session'], $occurrence);
     $stmt->execute();
     $stmt->close();
 
@@ -54,8 +54,8 @@
     $result->close();
     while (isset($_POST["obj_$i"])) {
       if ($_POST["obj_$i"] != 'Type New Objective here...') {
-        $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?,?,?,?,?,?)");
-        $stmt->bind_param('issssi',$obj_id,$_POST["obj_$i"],$moduleID,$identifier,$_POST['session'],$i);
+        $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('issssi', $obj_id, $_POST["obj_$i"], $moduleID, $identifier, $_POST['session'], $i);
         $stmt->execute();
         $stmt->close();
       }
@@ -213,17 +213,9 @@
       } else {
         $currentmonth   = date('m');
       }
-      $validfrom = '<select name="session_month">'."\n";
-      $month_names = array(1=>'january',2=>'february',3=>'march',4=>'april',5=>'may',6=>'june',7=>'july',8=>'august',9=>'september',10=>'october',11=>'november',12=>'december');
-      for ($month = 1; $month <= 12; $month++) {
-        $selected = ($month == $currentmonth ) ? ' selected="selected"' : '';
-        $validfrom .= '<option value="'. $month .'"'. $selected .'>' . substr($string[$month_names[$month]],0,3) . '</option>'."\n";
-      }
-      $validfrom .= '</select>&nbsp;';
-      echo $validfrom;
-
-
-      if(isset($_POST['day'])) {
+      
+      // Day
+      if (isset($_POST['day'])) {
         $currentday = $_POST['day'];
       } else {
         $currentday = date('j');
@@ -231,22 +223,25 @@
       $validfrom = '<select name="session_day">'."\n";
       foreach ( range(1,31) as $day ){
           $selected = ($day == $currentday ) ? ' selected="selected"' : '';
-          if ($day == 1 or $day == 21 or $day == 31) {
-            $dispDay = $day . "st";
-          } elseif ($day == 2 or $day == 22) {
-            $dispDay = $day . "nd";
-          } elseif ($day == 3 or $day == 23) {
-            $dispDay = $day . "rd";
-          } else {
-            $dispDay = $day . "th";
-          }
-          $validfrom .= '<option value="'. $day .'"'. $selected .'>'. $dispDay .'</option>'."\n";
+          if ($day < 10) $day = '0' . $day;
+          $validfrom .= '<option value="'. $day .'"'. $selected .'>' . $day . '</option>'."\n";
       }
       $validfrom .= '</select>&nbsp;';
       echo $validfrom;
 
+      // Month
+      $validfrom = '<select name="session_month">'."\n";
+      $month_names = array(1=>'january', 2=>'february', 3=>'march', 4=>'april', 5=>'may', 6=>'june', 7=>'july', 8=>'august', 9=>'september', 10=>'october', 11=>'november', 12=>'december');
+      for ($month = 1; $month <= 12; $month++) {
+        $selected = ($month == $currentmonth ) ? ' selected="selected"' : '';
+        $validfrom .= '<option value="'. $month .'"'. $selected .'>' . substr($string[$month_names[$month]],0,3) . '</option>'."\n";
+      }
+      $validfrom .= '</select>&nbsp;';
+      echo $validfrom;
+
+      // Year
       $startyear = ( date('Y') - 1 );
-      if(isset($_POST['year'])) {
+      if (isset($_POST['year'])) {
         $currentyear = $_POST['year'];
       } else {
         $currentyear = date('Y');
@@ -260,7 +255,9 @@
       $validfrom .= '</select>';
       echo $validfrom;
 
-      echo "</select>\n<select name=\"session_time\">\n";
+      echo "</select>\n";
+      
+      echo "<select name=\"session_time\">\n";
       
 	    // Available from Hour
 	    $now = date('H') . ':00' . ':00';

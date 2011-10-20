@@ -262,27 +262,6 @@ require_once '../classes/dateutils.class.php';
   echo "<tr><td align=\"right\" valign=\"top\">" . $string['from'] . "&nbsp;</td><td>";
   $date_array = getdate();
 
-  // Available from Month
-  echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
-  $current_month = (date('n') + 1);
-  if ($current_month > 12) $current_month = 1;
-  $months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
-  for ($i=1; $i<=12; $i++) {
-    if ($i < 10) {
-      if ($i == $current_month) {
-        echo "<option value=\"0$i\" selected>" . $months[$i-1] . "</option>\n";
-      } else {
-        echo "<option value=\"0$i\">" . $months[$i-1] . "</option>\n";
-      }
-    } else {
-      if ($i == $current_month) {
-        echo "<option value=\"$i\" selected>" . $months[$i-1] . "</option>\n";
-      } else {
-        echo "<option value=\"$i\">" . $months[$i-1] . "</option>\n";
-      }
-    }    
-  }
-  echo "</select>\n";
   // Available from Day
   $current_day = date('j');
   echo "<select name=\"fday\" onchange=\"dateCopy('fday')\">\n";
@@ -291,17 +270,31 @@ require_once '../classes/dateutils.class.php';
     if ($i < 10) echo '0';
     echo "$i\"";
     if ($i == $current_day) echo ' selected';
-    echo ">$i";
-    if ($i==1 or $i==21 or $i==31) {
-      echo 'st';
-    } elseif ($i==2 or $i==22) {
-      echo 'nd';
-    } elseif ($i==3 or $i==23) {
-      echo 'rd';
+    echo '>';
+    if ($i < 10) echo '0';
+    echo "$i</option>\n";
+  }
+  echo "</select>\n";
+  // Available from Month
+  echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
+  $current_month = (date('n') + 1);
+  if ($current_month > 12) $current_month = 1;
+  $months = array('','january','february','march','april','may','june','july','august','september','october','november','december');
+  for ($i=1; $i<=12; $i++) {
+    $trans_month = mb_substr($string[$months[$i]],0,3);
+    if ($i < 10) {
+      if ($i == $current_month) {
+        echo "<option value=\"0$i\" selected>$trans_month</option>\n";
+      } else {
+        echo "<option value=\"0$i\">$trans_month</option>\n";
+      }
     } else {
-      echo 'th';
-    }
-    echo "</option>\n";
+      if ($i == $current_month) {
+        echo "<option value=\"$i\" selected>$trans_month</option>\n";
+      } else {
+        echo "<option value=\"$i\">$trans_month</option>\n";
+      }
+    }    
   }
   echo "</select>\n";
   // Available from Year
@@ -320,43 +313,37 @@ require_once '../classes/dateutils.class.php';
     echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
   }
   echo "</select>\n</td>";
-  echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td><select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
-  // Available to Month
-  $months = array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
-  for ($i=1; $i<=12; $i++) {
-    if ($i < 10) {
-      if ($i == $current_month) {
-        echo "<option value=\"0$i\" selected>" . $months[$i-1] . "</option>\n";
-      } else {
-        echo "<option value=\"0$i\">" . $months[$i-1] . "</option>\n";
-      }
-    } else {
-      if ($i == $current_month) {
-        echo "<option value=\"$i\" selected>" . $months[$i-1] . "</option>\n";
-      } else {
-        echo "<option value=\"$i\">" . $months[$i-1] . "</option>\n";
-      }
-    }    
-  }
-  echo "</select>\n";
-  // Available to Day
+  echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
+  // Available from Day
+  $current_day = date('j');
   echo "<select name=\"tday\" onchange=\"dateCopy('tday')\">\n";
-  for ($i = 1; $i <= 31; $i++) {
+  for ($i=1; $i<=31; $i++) {
     echo '<option value="';
     if ($i < 10) echo '0';
     echo "$i\"";
     if ($i == $current_day) echo ' selected';
-    echo ">$i";
-    if ($i==1 or $i==21 or $i==31) {
-      echo 'st';
-    } elseif ($i==2 or $i==22) {
-      echo 'nd';
-    } elseif ($i==3 or $i==23) {
-      echo 'rd';
+    echo '>';
+    if ($i < 10) echo '0';
+    echo "$i</option>\n";
+  }
+  echo "</select>\n";
+  // Available to Month
+  echo "<select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
+  for ($i=1; $i<=12; $i++) {
+    $trans_month = mb_substr($string[$months[$i]],0,3);
+    if ($i < 10) {
+      if ($i == $current_month) {
+        echo "<option value=\"0$i\" selected>$trans_month</option>\n";
+      } else {
+        echo "<option value=\"0$i\">$trans_month</option>\n";
+      }
     } else {
-      echo 'th';
-    }
-    echo "</option>\n";
+      if ($i == $current_month) {
+        echo "<option value=\"$i\" selected>$trans_month</option>\n";
+      } else {
+        echo "<option value=\"$i\">$trans_month</option>\n";
+      }
+    }    
   }
   echo "</select>\n";
   // Available to Year

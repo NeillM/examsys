@@ -962,7 +962,27 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_hour = substr($start_date,11,2);
     $split_minute = substr($start_date,14,2);
 
-    // Available from Month
+     // Available from Day
+    echo "<select name=\"fday\" onchange=\"dateCopy('fday')\">\n";
+    for ($i = 1; $i < 32; $i++) {
+      if ($i < 10) {
+        if ($i == $split_day) {
+          echo "<option value=\"0$i\" selected>";
+        } else {
+          echo "<option value=\"0$i\">";
+        }
+      } else {
+        if ($i == $split_day) {
+          echo "<option value=\"$i\" selected>";
+        } else {
+          echo "<option value=\"$i\">";
+        }
+      }
+      if ($i < 10) echo '0';
+      echo "$i</option>\n";
+    }
+    echo "</select>\n";
+   // Available from Month
     echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
     $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
     for ($i=0; $i<12; $i++) {
@@ -979,33 +999,6 @@ if ($paper_type != '4' and $paper_type != '5') {
         } else {
           echo "<option value=\"" . ($i+1) . "\">$trans_month</option>\n";
         }
-      }
-    }
-    echo "</select>\n";
-    // Available from Day
-    echo "<select name=\"fday\" onchange=\"dateCopy('fday')\">\n";
-    for ($i = 1; $i < 32; $i++) {
-      if ($i < 10) {
-        if ($i == $split_day) {
-          echo "<option value=\"0$i\" selected>";
-        } else {
-          echo "<option value=\"0$i\">";
-        }
-      } else {
-        if ($i == $split_day) {
-          echo "<option value=\"$i\" selected>";
-        } else {
-          echo "<option value=\"$i\">";
-        }
-      }
-      if ($i == 1 or $i == 21 or $i == 31) {
-        echo $i . "st</option>\n";
-      } elseif ($i == 2 or $i == 22) {
-        echo $i . "nd</option>\n";
-      } elseif ($i == 3 or $i == 23) {
-        echo $i . "rd</option>\n";
-      } else {
-        echo $i . "th</option>\n";
       }
     }
     echo "</select>\n";
@@ -1037,9 +1030,31 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_hour = substr($end_date,11,2);
     $split_minute = substr($end_date,14,2);
 
-    echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td><select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
-    // Available to Month
+    echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
+    
+     // Available from Day
+    echo "<select name=\"tday\" onchange=\"dateCopy('tday')\">\n";
+    for ($i = 1; $i < 32; $i++) {
+      if ($i < 10) {
+        if ($i == $split_day) {
+          echo "<option value=\"0$i\" selected>";
+        } else {
+          echo "<option value=\"0$i\">";
+        }
+      } else {
+        if ($i == $split_day) {
+          echo "<option value=\"$i\" selected>";
+        } else {
+          echo "<option value=\"$i\">";
+        }
+      }
+      if ($i < 10) echo '0';
+      echo "$i</option>\n";
+    }
+    echo "</select>\n";
 
+    // Available to Month
+    echo "<select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
     for ($i=0; $i<12; $i++) {
       $trans_month = mb_substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
@@ -1057,54 +1072,27 @@ if ($paper_type != '4' and $paper_type != '5') {
       }
     }
     echo "</select>\n";
-    // Available to Day
-    echo "<select name=\"tday\" onchange=\"dateCopy('tday')\">\n";
-    for ($i = 1; $i < 32; $i++) {
-      if ($i < 10) {
-        if ($i == $split_day) {
-          echo "<option value=\"0$i\" selected>";
-        } else {
-           echo "<option value=\"0$i\">";
-         }
-       } else {
-         if ($i == $split_day) {
-           echo "<option value=\"$i\" selected>";
-         } else {
-           echo "<option value=\"$i\">";
-         }
-       }
-       if ($i == 1 or $i == 21 or $i == 31) {
-         echo $i . "st</option>\n";
-       } elseif ($i == 2 or $i == 22) {
-         echo $i . "nd</option>\n";
-       } elseif ($i == 3 or $i == 23) {
-         echo $i . "rd</option>\n";
-       } else {
-         echo $i . "th</option>\n";
-       }
-     }
-     echo "</select>\n";
-     // Available to Year
-     echo "<select name=\"tyear\" onchange=\"dateCopy('tyear')\">\n";
-     for ($i = 2002; $i < (date('Y')+21); $i++) {
-       if ($i == $split_year) {
-         echo "<option value=\"$i\" selected>$i</option>\n";
-       } else {
-         echo "<option value=\"$i\">$i</option>\n";
-       }
-     }
-     echo "</select>&nbsp;<select name=\"ttime\">\n";
-     // Available to Hour
-     $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
-     foreach ($times as $key => $value) {
-       if ($key == $split_hour . $split_minute . '00') {
-         echo "<option value=\"" . $key . "\" selected>" . $value . "</option>\n";
-       } else {
-         echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
-       }
-     }
-     echo "</select>\n</td></tr>\n";
-     echo "</table>\n";
+    // Available to Year
+    echo "<select name=\"tyear\" onchange=\"dateCopy('tyear')\">\n";
+    for ($i = 2002; $i < (date('Y')+21); $i++) {
+      if ($i == $split_year) {
+        echo "<option value=\"$i\" selected>$i</option>\n";
+      } else {
+        echo "<option value=\"$i\">$i</option>\n";
+      }
+    }
+    echo "</select>&nbsp;<select name=\"ttime\">\n";
+    // Available to Hour
+    $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
+    foreach ($times as $key => $value) {
+      if ($key == $split_hour . $split_minute . '00') {
+        echo "<option value=\"" . $key . "\" selected>" . $value . "</option>\n";
+      } else {
+        echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
+      }
+    }
+    echo "</select>\n</td></tr>\n";
+    echo "</table>\n";
 
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
     echo "<tr><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px; width:400px\">&nbsp;" . $string['modules'] . "</td><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;" . $string['restricttolabs'] . "</td></tr>";
@@ -1217,8 +1205,28 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_month = substr($internal_review_deadline,5,2);
     $split_day = substr($internal_review_deadline,8,2);
 
-    echo "<select name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    // Available to Day
+    echo "<select name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    for ($i = 1; $i < 32; $i++) {
+      if ($i < 10) {
+        if ($i == $split_day) {
+          echo "<option value=\"0$i\" selected>";
+        } else {
+          echo "<option value=\"0$i\">";
+        }
+      } else {
+        if ($i == $split_day) {
+          echo "<option value=\"$i\" selected>";
+        } else {
+          echo "<option value=\"$i\">";
+        }
+      }
+      if ($i < 10) echo '0';
+      echo "$i</option>\n";
+    }
+    echo "</select>\n";
     // Available to Month
+    echo "<select name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i=0; $i<12; $i++) {
       $trans_month = mb_substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
@@ -1236,33 +1244,6 @@ if ($paper_type != '4' and $paper_type != '5') {
       }
     }
     echo "</select>\n";
-    // Available to Day
-    echo "<select name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-    for ($i = 1; $i < 32; $i++) {
-      if ($i < 10) {
-        if ($i == $split_day) {
-          echo "<option value=\"0$i\" selected>";
-        } else {
-           echo "<option value=\"0$i\">";
-         }
-       } else {
-         if ($i == $split_day) {
-           echo "<option value=\"$i\" selected>";
-         } else {
-           echo "<option value=\"$i\">";
-         }
-       }
-       if ($i == 1 or $i == 21 or $i == 31) {
-         echo $i . "st</option>\n";
-       } elseif ($i == 2 or $i == 22) {
-         echo $i . "nd</option>\n";
-       } elseif ($i == 3 or $i == 23) {
-         echo $i . "rd</option>\n";
-       } else {
-         echo $i . "th</option>\n";
-       }
-     }
-     echo "</select>\n";
      // Available to Year
      echo "<select name=\"int_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
      if ($split_year < date('Y') and $split_year > 1999) {
@@ -1286,8 +1267,28 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_month = substr($external_review_deadline,5,2);
     $split_day = substr($external_review_deadline,8,2);
 
-    echo "<select name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    // Available to Day
+    echo "<select name=\"ext_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    for ($i = 1; $i < 32; $i++) {
+      if ($i < 10) {
+        if ($i == $split_day) {
+          echo "<option value=\"0$i\" selected>";
+        } else {
+           echo "<option value=\"0$i\">";
+         }
+       } else {
+         if ($i == $split_day) {
+           echo "<option value=\"$i\" selected>";
+         } else {
+           echo "<option value=\"$i\">";
+         }
+       }
+      if ($i < 10) echo '0';
+      echo "$i</option>\n";
+    }
+    echo "</select>\n";
     // Available to Month
+    echo "<select name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i=0; $i<12; $i++) {
       $trans_month = mb_substr($string[$months[$i]],0,3);
       if (($split_month-1) == $i) {
@@ -1305,47 +1306,20 @@ if ($paper_type != '4' and $paper_type != '5') {
       }
     }
     echo "</select>\n";
-    // Available to Day
-    echo "<select name=\"ext_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-    for ($i = 1; $i < 32; $i++) {
-      if ($i < 10) {
-        if ($i == $split_day) {
-          echo "<option value=\"0$i\" selected>";
-        } else {
-           echo "<option value=\"0$i\">";
-         }
-       } else {
-         if ($i == $split_day) {
-           echo "<option value=\"$i\" selected>";
-         } else {
-           echo "<option value=\"$i\">";
-         }
-       }
-       if ($i == 1 or $i == 21 or $i == 31) {
-         echo $i . "st</option>\n";
-       } elseif ($i == 2 or $i == 22) {
-         echo $i . "nd</option>\n";
-       } elseif ($i == 3 or $i == 23) {
-         echo $i . "rd</option>\n";
-       } else {
-         echo $i . "th</option>\n";
-       }
-     }
-     echo "</select>\n";
-     // Available to Year
-     echo "<select name=\"ext_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-     if ($split_year < date('Y') and $split_year > 1999) {
-       $start_year = $split_year;
-     } else {
-       $start_year = date('Y');
-     }
-     for ($i = $start_year; $i < (date('Y')+2); $i++) {
-       if ($i == $split_year) {
-         echo "<option value=\"$i\" selected>$i</option>\n";
-       } else {
-         echo "<option value=\"$i\">$i</option>\n";
-       }
-     }
+    // Available to Year
+    echo "<select name=\"ext_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    if ($split_year < date('Y') and $split_year > 1999) {
+      $start_year = $split_year;
+    } else {
+      $start_year = date('Y');
+    }
+    for ($i = $start_year; $i < (date('Y')+2); $i++) {
+      if ($i == $split_year) {
+        echo "<option value=\"$i\" selected>$i</option>\n";
+      } else {
+        echo "<option value=\"$i\">$i</option>\n";
+      }
+    }
 ?>
 </td></tr>
   <?php

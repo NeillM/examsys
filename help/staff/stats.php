@@ -67,25 +67,6 @@ a:visited.page {color:white}
     $split_year = substr($start_date,0,4);
     $split_month = substr($start_date,4,2);
     $split_day = substr($start_date,6,2);
-    echo "\n<select name=\"startmonth\">\n";
-    // start Month
-    $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
-    for ($i=0; $i<12; $i++) {
-      if (($split_month-1) == $i) {
-        if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
-        } else {
-          echo "<option value=\"" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
-        }
-      } else {
-        if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
-        } else {
-          echo "<option value=\"" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
-        }
-      }
-    }
-    echo "</select>\n";
     // start Day
     echo "<select name=\"startday\">\n";
     for ($i = 1; $i < 32; $i++) {
@@ -102,14 +83,26 @@ a:visited.page {color:white}
           echo "<option value=\"$i\">";
         }
       }
-      if ($i == 1 or $i == 21 or $i == 31) {
-        echo $i . "st</option>\n";
-      } elseif ($i == 2 or $i == 22) {
-        echo $i . "nd</option>\n";
-      } elseif ($i == 3 or $i == 23) {
-        echo $i . "rd</option>\n";
+      if ($i < 10) echo '0';
+      echo "$i</option>\n";
+    }
+    echo "</select>\n";
+    // start Month
+    $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+    echo "\n<select name=\"startmonth\">\n";
+    for ($i=0; $i<12; $i++) {
+      if (($split_month-1) == $i) {
+        if ($i < 9) {
+          echo "<option value=\"0" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+        } else {
+          echo "<option value=\"" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+        }
       } else {
-        echo $i . "th</option>\n";
+        if ($i < 9) {
+          echo "<option value=\"0" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+        } else {
+          echo "<option value=\"" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+        }
       }
     }
     echo "</select>\n";
@@ -128,8 +121,28 @@ a:visited.page {color:white}
     $split_year = substr($end_date,0,4);
     $split_month = substr($end_date,4,2);
     $split_day = substr($end_date,6,2);
-    echo "<select name=\"endmonth\">\n";
+    // end Day
+    echo "<select name=\"endday\">\n";
+    for ($i = 1; $i < 32; $i++) {
+      if ($i < 10) {
+        if ($i == $split_day) {
+          echo "<option value=\"0$i\" selected>";
+        } else {
+          echo "<option value=\"0$i\">";
+        }
+      } else {
+        if ($i == $split_day) {
+          echo "<option value=\"$i\" selected>";
+        } else {
+          echo "<option value=\"$i\">";
+        }
+      }
+      if ($i < 10) echo '0';
+      echo "$i</option>\n";
+    }
+    echo "</select>\n";
     // end Month
+    echo "<select name=\"endmonth\">\n";
     for ($i=0; $i<12; $i++) {
       if (($split_month-1) == $i) {
         if ($i < 9) {
@@ -146,33 +159,6 @@ a:visited.page {color:white}
       }
     }
     echo "</select>\n";
-    // end Day
-    echo "<select name=\"endday\">\n";
-    for ($i = 1; $i < 32; $i++) {
-      if ($i < 10) {
-        if ($i == $split_day) {
-          echo "<option value=\"0$i\" selected>";
-        } else {
-           echo "<option value=\"0$i\">";
-         }
-       } else {
-         if ($i == $split_day) {
-           echo "<option value=\"$i\" selected>";
-         } else {
-           echo "<option value=\"$i\">";
-         }
-       }
-       if ($i == 1 or $i == 21 or $i == 31) {
-         echo $i . "st</option>\n";
-       } elseif ($i == 2 or $i == 22) {
-         echo $i . "nd</option>\n";
-       } elseif ($i == 3 or $i == 23) {
-         echo $i . "rd</option>\n";
-       } else {
-         echo $i . "th</option>\n";
-       }
-     }
-     echo "</select>\n";
      // end Year
      echo "<select name=\"endyear\">\n";
      for ($i = 2005; $i < (date('Y')+2); $i++) {
@@ -219,7 +205,7 @@ a:visited.page {color:white}
   } else {
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:100%; border:1px solid #6B82B2; border-collapse:collapse\">\n";
     echo "<tr style=\"text-align:center; border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\"><td style=\"border-right: 1px solid #6B82B2\">" . $string['searches'] . "</td><td style=\"border-right: 1px solid #6B82B2\">" . $string['term'] . "</td><td>" . $string['results'] . "</td></tr>\n";
-    while ($row = $search_results->fetch()) {
+    while ($search_results->fetch()) {
       if ($hits == 0) {
         echo "<tr style=\"color:#C00000\"><td class=\"num\">" . number_format($no_searches) . "</td><td class=\"txt\">$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
       } else {
@@ -237,7 +223,7 @@ a:visited.page {color:white}
   $tutorial_results->bind_result($hits, $tutorial);
   $total_hits = $tutorial_results->num_rows;
   if ($tutorial_results->num_rows == 0) {
-    echo "<p>" . $string['msg'] . "</p>\n";
+    echo "<p>" . $string['notutorials'] . "</p>\n";
   } else {
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:100%; border:1px solid #6B82B2; border-collapse:collapse\">\n";
     echo "<tr style=\"text-align:center; border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\"><td style=\"border-right: 1px solid #6B82B2\">" . $string['tutorial'] . "</td><td>" . $string['hits'] . "</td></tr>\n";

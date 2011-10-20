@@ -94,11 +94,28 @@
   $end_day = substr($end_date,6,2);
   $end_time = substr($end_date,8,4) . '00';
 
-  $month_names = array('january','february','march','april','may','june','july','august','september','october','november','december');
+  $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
   $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
 
   $date_array = getdate();
 
+  echo "<tr><td>" . $string['startdate'] . "</td><td>";
+  // Start Day
+  echo "<select name=\"start_day\">\n";
+  for ($i=1; $i<=31; $i++) {
+    echo "<option value=\"";
+    if ($i < 10) {
+      echo "0";
+    }
+    if ($i == intval($start_day)) {
+      echo "$i\" selected>";
+    } else {
+      echo "$i\">";
+    }   
+    if ($i < 10) echo '0';
+    echo "$i</option>\n";
+  }
+  echo "</select>\n";
   // Start Month
   if ($start_year > $date_array['year']) {
     $start_year = $date_array['year'];
@@ -116,7 +133,6 @@
     $start_hour = $date_array['hours'];
     $start_min = $date_array['minutes'];
   }
-  echo "<tr><td>" . $string['startdate'] . "</td><td>";
   echo "<select name=\"start_month\">\n";
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($start_month) - 1)) {
@@ -124,30 +140,6 @@
     } else {
       echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
     }
-  }
-  echo "</select>\n";
-  // Start Day
-  echo "<select name=\"start_day\">\n";
-  for ($i=1; $i<=31; $i++) {
-    echo "<option value=\"";
-    if ($i < 10) {
-      echo "0";
-    }
-    if ($i == intval($start_day)) {
-      echo "$i\" selected>$i";
-    } else {
-      echo "$i\">$i";
-    }   
-    if ($i==1 or $i==21 or $i==31) {
-      echo "st";
-    } elseif ($i==2 or $i==22) {
-      echo "nd";
-    } elseif ($i==3 or $i==23) {
-      echo "rd";
-    } else {
-      echo "th";
-    }
-    echo "</option>\n";
   }
   echo "</select>\n";
   // Start Year
@@ -173,6 +165,23 @@
   echo "</select>\n</td></tr>\n";
 
   // ---------------------------------------------------------------------------------
+  echo "<tr><td>" . $string['enddate'] . "</td><td>";
+  // End Day
+  echo "<select name=\"end_day\">\n";
+  for ($i=1; $i<=31; $i++) {
+    echo "<option value=\"";
+    if ($i < 10) {
+      echo "0";
+    }
+    if ($i == intval($end_day)) {
+      echo "$i\" selected>";
+    } else {
+      echo "$i\">";
+    }   
+    if ($i < 10) echo '0';
+    echo "$i</option>\n";
+  }
+  echo "</select>\n";
   // End Month
   if ($end_year > $date_array['year']) {
     $end_year = $date_array['year'];
@@ -199,7 +208,6 @@
       $end_time = $date_array['hours'] . '0000';
     }
   }
-  echo "<tr><td>" . $string['enddate'] . "</td><td>";
   echo "<select name=\"end_month\">\n";
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($end_month) - 1)) {
@@ -207,30 +215,6 @@
     } else {
       echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3) . "</option>\n";
     }
-  }
-  echo "</select>\n";
-  // End Day
-  echo "<select name=\"end_day\">\n";
-  for ($i=1; $i<=31; $i++) {
-    echo "<option value=\"";
-    if ($i < 10) {
-      echo "0";
-    }
-    if ($i == intval($end_day)) {
-      echo "$i\" selected>$i";
-    } else {
-      echo "$i\">$i";
-    }   
-    if ($i==1 or $i==21 or $i==31) {
-      echo "st";
-    } elseif ($i==2 or $i==22) {
-      echo "nd";
-    } elseif ($i==3 or $i==23) {
-      echo "rd";
-    } else {
-      echo "th";
-    }
-    echo "</option>\n";
   }
   echo "</select>\n";
   // End Year
