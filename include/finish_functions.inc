@@ -74,7 +74,7 @@
 	      case 0:
 	        $suffix = 'N/A';
 	        break;
-	        case 1:
+	      case 1:
 	        $suffix .= 'st';
 	        break;
 	      case 2:
@@ -1085,7 +1085,7 @@
           if (isset($paper[$question]['user_answer'])) {
             $rank_answers = explode(',',$paper[$question]['user_answer']);
           } else {
-            $rank_answers = array('','','','','','','','','','','','','','','','','','','','');
+            $rank_answers = array_fill(0, 20, 'u');
           }
           
           // Check to see if the user has answered any options.
