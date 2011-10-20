@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Information Blocks
+ * Class for Info options
  *
  * @author Rob Ingram
  * @version 1.0
@@ -24,13 +24,25 @@
  * @package
  */
 
-Class QuestionINFO extends Question {
+Class OptionINFO extends Option {
+    
+  /**
+   * Is this option blank?
+   * @return boolean
+   */
+  public function is_blank() {
+    return false;
+  }
   
-  protected $_allow_mapping = true;
-  protected $_allow_correction = false;
-  protected $_use_bloom = false;
-  public $max_options = 1;
-  
-  protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
+  /**
+   * Check that the minimum set of fields exist in the given data to create a new option 
+   * @param array $data
+   * @param array $files expects PHP FILES array
+   * @param integer $index option number
+   * @return boolean
+   */
+  public function minimum_fields_exist($data, $files, $index) {
+    return true;
+  }
 }
 

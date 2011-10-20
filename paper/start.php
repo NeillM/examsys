@@ -630,7 +630,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   $q_no = 0;
   //build the questions_array
   $tmp_questions_array = array();
-  while ($row = $question_data->fetch()) {
+  while ($question_data->fetch()) {
     if ($q_no == 0 or $tmp_questions_array[$q_no]['q_id'] != $q_id or $tmp_questions_array[$q_no]['display_pos'] != $display_pos) {
       $q_no++;
       $tmp_questions_array[$q_no]['theme'] = trim($theme);

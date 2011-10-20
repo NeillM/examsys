@@ -34,7 +34,14 @@ require_once 'detail_parts/details_media.php';
 $mandatory_leadin = false;
 $label_leadin = "<label for=\"leadin\">{$string['text']}</label>";
 require_once 'detail_parts/details_leadin.php';
+if (count($question->options) > 0) {
+  $option = reset($question->options);
+  $option_id = $option->id;
+} else {
+  $option_id = -1;
+}
 ?>
 					</tbody>
 				</table>
+        <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
         
