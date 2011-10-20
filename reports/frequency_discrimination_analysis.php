@@ -740,12 +740,12 @@
       				var num = message.substring(5,message.length);
       				setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo trim($correct); ?>', '<?php echo $coords; ?>','0');
       			}
-      			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 301); ?>" height="<?php echo ($q_media_height + 25); ?>" align="middle">');
+      			write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo ($q_media_width + 302); ?>" height="<?php echo ($q_media_height + 25); ?>" align="middle">');
       			write_string('<param name="allowScriptAccess" value="always" />');
       			write_string('<param name="movie" value="/reports/hotspot_analysis.swf" />');
       			write_string('<param name="quality" value="high" />');
       			write_string('<param name="bgcolor" value="#ffffff" />');
-      			write_string('<embed src="/reports/hotspot_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 301); ?>" height="<?php echo ($q_media_height + 25); ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      			write_string('<embed src="/reports/hotspot_analysis.swf" quality="high" bgcolor="#ffffff" width="<?php echo ($q_media_width + 302); ?>" height="<?php echo ($q_media_height + 25); ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       			write_string('</object>');
           </script>
           </div>
