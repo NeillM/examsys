@@ -397,7 +397,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']);
         }
         echo "</td></tr>\n";
-        $marks++;
+        $marks += $display_option['marks_correct'];
         break;
       case 'calculation':
         $vars = array(1=>'A',2=>'B',3=>'C',4=>'D',5=>'E',6=>'F',7=>'G',8=>'H',9=>'I',10=>'J');
@@ -586,11 +586,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $class_type = 'act';
         }
         echo "<td><span class=\"$class_type\" onclick=\"onoff($question_no,$tmp_part_id)\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
-        if ($question['score_method'] == 'Mark per Question') {
-          if ($tmp_part_id == 1) {
-            $marks += $display_option['marks_correct'];
-          }
-        } elseif ($display_option['correct'] != 0) {
+        if ($display_option['correct'] != 0) {
           $marks += $display_option['marks_correct'];
         } elseif ($question['score_method'] == 'Mark per Option') {
           $marks += $display_option['marks_correct'];
@@ -972,6 +968,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer,($part_id+1)) . "\" /></td></tr>\n";
     }
     echo '</table>';
+    if ($question['score_method'] == 'Mark per Question') {
+      $marks = $display_option['marks_correct'];
+    }
   } elseif ($question['q_type'] == 'extmatch') {
     $matching_answers = explode('|', $question['options'][0]['correct']);
 

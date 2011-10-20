@@ -170,13 +170,13 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       if (substr($tmp_exclude,0,1) == '0') {
         $correct++;
         if ($score_method == 'Mark per Option') {
-          $marks += count($option_text);
+          $marks += count($option_text) * $question_marks;
         } elseif ($score_method == 'Mark per Question') {
-          $marks += 1;
+          $marks += $question_marks;
         } elseif ($score_method == 'Allow partial Marks') {
-          $marks += $correct_no;
+          $marks += $correct_no * $question_marks;
         } elseif ($score_method == 'Bonus Mark' and $correct_no > 0) {
-          $marks += $correct_no + 1;
+          $marks += ($correct_no + 1) * $question_marks;
         }
       }
       break;
