@@ -219,7 +219,7 @@
 <?php
           break;
         case 'hotspot':
-          $tmp_width = ($q_media_width + 2);
+          $tmp_width = ($q_media_width + 301);
           if ($tmp_width < 375) $tmp_width = 375;
           $tmp_height = $q_media_height + 30;
           ?>
