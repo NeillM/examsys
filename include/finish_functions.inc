@@ -555,8 +555,9 @@
             echo '<input type="text" style="text-align:right" name="q' . $question . '" size="10" value="' . $tmp_answer[0] . '" />' . $score_array[3];
           }
           if ($tmp_display_correct_answer == '1' and $score_array[2] != 'Formula') {
-            if (is_double($tmp_answer[1])) {
-              echo ' <strong>(' . number_format($tmp_answer[1],$score_array[0], '.', '') . ' ' . $score_array[3] . ')</strong>';
+            if (is_numeric($tmp_answer[1])) {
+              $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
+              echo ' <strong>(' . number_format($tmp_answer[1], $decimals, '.', '') . ' ' . $score_array[3] . ')</strong>';
             } else {
               echo ' <strong>(' . $tmp_answer[1] . ')</strong>';
             }
