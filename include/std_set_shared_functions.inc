@@ -736,7 +736,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
   <script language="JavaScript">
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $firstoption['q_media']; ?>', '<?php echo trim($firstoption['correct']); ?>', '', '0,1,0000000000000');
+      setUpFlash(num, message, '<?php echo $firstoption['q_media']; ?>', '<?php echo trim($firstoption['correct']); ?>', '', '1,1,0000000000000');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($firstoption['q_media_width'] + 300); ?>" height="<?php echo ($firstoption['q_media_height'] + 2); ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
