@@ -233,8 +233,8 @@
                 write_string('<param name="allowScriptAccess" value="always" />');
                 write_string('<param name="movie" value="/paper/hotspot_answer.swf" />');
                 write_string('<param name="quality" value="high" />');
-                write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-                write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+                write_string('<param name="bgcolor" value="white" />');
+                write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo 'white'; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $q_no; ?>" name="flash<?php echo $q_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                 write_string('</object>');
               </script>
               </div>
