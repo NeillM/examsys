@@ -1193,6 +1193,9 @@
             echo $html;
           }
           
+          if ($answered  == false) {
+            echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
+          }
           echo "</table>\n";
           if ($tmp_display_feedback == '1') {
             if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
