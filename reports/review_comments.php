@@ -46,7 +46,7 @@
   }
 
   function displayComments($questionID, $comments_data, $qtype, $qno) {
-    global $incomplete_names, $type, $string;
+    global $incomplete_names, $type, $string, $language;
 
     $html = "<tr><td></td><td><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
     $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQuestion('$qtype',$questionID,$qno)\" style=\"cursor:pointer\" src=\"../artwork/edit_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" border=\"0\" /></td></tr>\n";
