@@ -94,7 +94,7 @@ table {font-size:100%}
 
   echo "<tr style=\"height:4px\"><td colspan=\"5\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
 
-  $result = $mysqli->prepare("SELECT SUM(marks), pass_mark FROM (properties, papers, questions, options) WHERE property_id=? AND properties.property_id=papers.paper AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' GROUP BY paper");
+  $result = $mysqli->prepare("SELECT SUM(marks_correct), pass_mark FROM (properties, papers, questions, options) WHERE property_id=? AND properties.property_id=papers.paper AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' GROUP BY paper");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($paper_total, $pass_mark);
