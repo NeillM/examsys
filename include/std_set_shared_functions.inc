@@ -729,7 +729,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       }
       break;
     case 'hotspot':
-      echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
+      echo '<tr><a name="' . $question_no . '"></a><td class="question_no">hi' . $question_no . '.&nbsp;</td><td>';
 ?>
 
   <div>
