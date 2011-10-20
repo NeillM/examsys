@@ -36,66 +36,65 @@ if (isset($_GET['module'])) {
   $module = $_GET['module'];
 }
 
+// Folder security checks
+if (isset($_GET['folder'])) {
+  $folder = $_GET['folder'];
+} else {
+  $folder = '';
+}
+if ($folder != '') {
+  $tmp_folder = $_GET['folder'];
+  $result = $mysqli->prepare("SELECT ownerID, name, team_name FROM folders WHERE id=?");
+  $result->bind_param('i', $tmp_folder);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($folder_ownerID, $folder_name, $team_name);
+  $result->fetch();
+  $result->close();
 
-  // Folder security checks
-  if (isset($_GET['folder'])) {
-    $folder = $_GET['folder'];
-  } else {
-    $folder = '';
+  if (isset($folder_teams) AND $folder_teams != '' and $module == '') $module = $folder_teams;
+
+  if (substr_count($folder_name,';') > 0) {
+    $last_semicolon = strrpos($folder_name,';');
+    $path = substr($folder_name,0,$last_semicolon);
+    $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
+    $parent_results->bind_param('si', $path, $userID);
+    $parent_results->execute();
+    $parent_results->bind_result($parent_id, $parent_name);
+    $parent_results->fetch();
+    $parent_results->close();
   }
-  if ($folder != '') {
-    $tmp_folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT ownerID, name, team_name FROM folders WHERE id=?");
-    $result->bind_param('i', $tmp_folder);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($folder_ownerID, $folder_name, $team_name);
-    $result->fetch();
-    $result->close();
+}
 
-    if (isset($folder_teams) AND $folder_teams != '' and $module == '') $module = $folder_teams;
+if (isset($_POST['submit']) AND $_POST['submit'] == 'Create') {
+  $folder_results = $mysqli->query("SELECT name FROM folders WHERE id=$folder LIMIT 1");
+  $folder_row = $folder_results->fetch_assoc();
+  $folder_parent = $folder_row['name'];
+  $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
+  $duplicate_name = 0;
+  $folder_details = $mysqli->query("SELECT name FROM folders WHERE ownerID=$userID");
+  while ($folder_row = $folder_details->fetch_assoc()) {
+    if ($folder_row['name'] == $new_folder_name) $duplicate_name = 1;
+  }
+  $folder_details->close();
+  $folder_results->close();
 
-    if (substr_count($folder_name,';') > 0) {
-      $last_semicolon = strrpos($folder_name,';');
-      $path = substr($folder_name,0,$last_semicolon);
-      $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
-      $parent_results->bind_param('si', $path, $userID);
-      $parent_results->execute();
-      $parent_results->bind_result($parent_id, $parent_name);
-      $parent_results->fetch();
-      $parent_results->close();
+  if ($duplicate_name == 0) {
+    if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL,$userID, ?,?,NOW(),'yellow',NULL)")) {
+      $folder_query->bind_param('ss', $new_folder_name, $_GET['newteam']);
+      $folder_query->execute();
+      $folder_query->close();
+    } else {
+      display_error("New Folder Error",$mysqli->error);
     }
   }
+}
 
-  if (isset($_POST['submit']) AND $_POST['submit'] == 'Create') {
-    $folder_results = $mysqli->query("SELECT name FROM folders WHERE id=$folder LIMIT 1");
-    $folder_row = $folder_results->fetch_assoc();
-    $folder_parent = $folder_row['name'];
-    $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
-    $duplicate_name = 0;
-    $folder_details = $mysqli->query("SELECT name FROM folders WHERE ownerID=$userID");
-    while ($folder_row = $folder_details->fetch_assoc()) {
-      if ($folder_row['name'] == $new_folder_name) $duplicate_name = 1;
-    }
-    $folder_details->close();
-    $folder_results->close();
-
-    if ($duplicate_name == 0) {
-      if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL,$userID, ?,?,NOW(),'yellow',NULL)")) {
-        $folder_query->bind_param('ss', $new_folder_name, $_GET['newteam']);
-        $folder_query->execute();
-        $folder_query->close();
-      } else {
-        display_error("New Folder Error",$mysqli->error);
-      }
-    }
-  }
-
-  if ($folder != '') {
-    $folders_array = explode(';',$folder_name);
-    $parts = count($folders_array) - 1;
-    $selfenrol = 0;
-  }
+if ($folder != '') {
+  $folders_array = explode(';',$folder_name);
+  $parts = count($folders_array) - 1;
+  $selfenrol = 0;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html onclick="hideMenus()">
@@ -181,7 +180,7 @@ if ($folder != '') {
   echo $_GET['module'] . ': <span style="font-weight:normal">' . $module_fullname . '</span>';
 }
 echo '</td>';
-echo "<td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input type=\"checkbox\" name=\"showretired\" value=\"on\" onclick=\"updateCookies();\"";
+echo "<td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\" onclick=\"updateCookies();\"";
 if (isset($_COOKIE['showretired']) and $_COOKIE['showretired'] == 'checked') echo ' checked';
 echo " /> " . $string['showretired'] . "</td></tr>\n";
 
@@ -288,8 +287,6 @@ if ($display_papers) {
           echo "<br clear=\"all\" />";
         }
         $sent_clear_all = true;
-        //var_dump($types_array);
-        //exit;
         echo "<table border=\"0\" style=\"margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287\"><tr><td><nobr>" . $string[strtolower($types_array[$paper_type])] . " (" . $paper_types[$paper_type] . ")";
         if ($paper_type == 2) {
           echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" border=\"0\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
@@ -298,14 +295,13 @@ if ($display_papers) {
         echo "<br />\n";
       }
       displayPaperIcon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
-      //displayPaperIcon($row);
       $old_p_type = $paper_type;
       $file_no++;
     }
     $results->close();
   }
 }
-  $mysqli->close();
+$mysqli->close();
 ?>
 </form>
 
