@@ -56,20 +56,20 @@
     $sct_parts = explode('~',$question['leadin']);
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
     $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
-    echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['score_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">New Information</td></tr>\n";
+    echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">New Information</td></tr>\n";
     echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
     echo "</table>\n";
       
     echo '<p><strong>';
-    if ($question['score_method'] == 1) {
+    if ($question['display_method'] == 1) {
       echo 'Then this hypothesis becomes:';
-    } elseif ($question['score_method'] == 2) {
+    } elseif ($question['display_method'] == 2) {
       echo 'Then this investigation becomes:';
-    } elseif ($question['score_method'] == 3) {
+    } elseif ($question['display_method'] == 3) {
       echo 'Then this prescription becomes:';
-    } elseif ($question['score_method'] == 4) {
+    } elseif ($question['display_method'] == 4) {
       echo 'Then this intervention becomes:';
-    } elseif ($question['score_method'] == 5) {
+    } elseif ($question['display_method'] == 5) {
       echo 'Then this treatment becomes:';
     }
     echo '</strong></p>';
@@ -198,11 +198,11 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   $q_no = 0;
   $question_no = 0;
 
-  $stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, score_method, q_media, q_media_width, q_media_height, q_option_order, option_text, id_num FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
+  $stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, display_method, q_media, q_media_width, q_media_height, q_option_order, option_text, id_num FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
   $stmt->bind_param('i',$_GET['paperID']);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $score_method, $q_media, $q_media_width, $q_media_height, $q_option_order, $option_text, $id_num);
+  $stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $display_method, $q_media, $q_media_width, $q_media_height, $q_option_order, $option_text, $id_num);
   while ($stmt->fetch()) {
     if ($old_q_id != $q_id) {
       $q_no++;
@@ -211,7 +211,7 @@ pre {font-family:Arial,sans-serif; font-size:100%}
       $questions_array[$q_no]['leadin'] = trim($leadin);
       $questions_array[$q_no]['notes'] = trim($notes);
       $questions_array[$q_no]['q_id'] = $q_id;
-      $questions_array[$q_no]['score_method'] = $score_method;
+      $questions_array[$q_no]['display_method'] = $display_method;
       $questions_array[$q_no]['q_media'] = $q_media;
       $questions_array[$q_no]['q_media_width'] = $q_media_width;
       $questions_array[$q_no]['q_media_height'] = $q_media_height;
