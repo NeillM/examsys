@@ -56,7 +56,7 @@ require_once './classes/networkutils.class.php';
 
   $paper_no = 0;
   $paper_display = array();
-  $paper_query = $mysqli->query("SELECT paper_type, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, moduleID, calendar_year, password FROM (papers, properties) WHERE papers.paper=properties.property_id AND labs != '' AND (paper_type='1' OR paper_type='2') AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() GROUP BY paper");
+  $paper_query = $mysqli->query("SELECT paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, moduleID, calendar_year, password FROM (papers, properties) WHERE papers.paper=properties.property_id AND labs != '' AND (paper_type='1' OR paper_type='2') AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() GROUP BY paper");
   while ($row = $paper_query->fetch_assoc()) {
     if ($row['labs'] != '') {
       $machineOK = false;
@@ -86,6 +86,7 @@ require_once './classes/networkutils.class.php';
     }
     if ($machineOK == true AND $moduleOK == true) {
       $paper_display[$paper_no]['paper_title'] = $row['paper_title'];
+      $paper_display[$paper_no]['crypt_name'] = $row['crypt_name'];
       $paper_display[$paper_no]['paper_type'] = $row['paper_type'];
       $paper_display[$paper_no]['max_screen'] = $row['max_screen'];
       $paper_display[$paper_no]['bidirectional'] = $row['bidirectional'];
@@ -96,7 +97,7 @@ require_once './classes/networkutils.class.php';
   $paper_query->close();
 
   if ($paper_no == 1 and $paper_display[0]['password'] == '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[0]['paper_title']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?id=" . $paper_display[0]['crypt_name']);
   } elseif ($paper_no == 0) {
     echo "<html>\n<head>\n<title>" . $string['exams']. "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style>\n</head>\n<body>\n";
     echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
@@ -180,11 +181,11 @@ require_once './classes/networkutils.class.php';
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
     for ($i=0; $i<$paper_no; $i++) {
       if ($paper_display[$i]['password'] == '') {
-        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
-        echo "<td><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
+        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
+        echo "<td><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
       } else {
-        echo "<tr><td width=\"66\" style=\"text-align:right\"><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
-        echo "<td><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?paper=" . $paper_display[$i]['paper_title'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
+        echo "<tr><td width=\"66\" style=\"text-align:right\"><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
+        echo "<td><a onclick=\"return enterPassword();\" href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
         echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
       }
       echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];

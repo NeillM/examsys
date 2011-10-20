@@ -43,12 +43,12 @@ $results = $mysqli->prepare("SELECT labs FROM properties WHERE start_date < DATE
 $results->execute();
 $results->store_result();
 $results->bind_result($labs);
-while ($row=$results->fetch()) {
+while ($results->fetch()) {
   $sub_results = $mysqli->prepare("SELECT address FROM ip_addresses WHERE lab IN ($labs)");
   $sub_results->execute();
   $sub_results->store_result();
   $sub_results->bind_result($address);
-  while ($sub_row=$sub_results->fetch()) {
+  while ($sub_results->fetch()) {
     if (NetworkUtils::get_ipaddress() == $address) $ip_match = true;
   }
   $sub_results->close();

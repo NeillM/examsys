@@ -1,4 +1,6 @@
 <?php
+require './lang/' . $language . '/include/common.inc';
+
 $string['guestaccount'] = 'Guest Account';
 $string['allocatedaccount'] = 'Allocated Account';
 $string['username'] = 'Username';
@@ -10,4 +12,5 @@ $string['title'] = 'Title';
 $string['firstname'] = 'First Name';
 $string['surname'] = 'Surname';
 $string['studentid'] = 'Student ID';
+$string['denied_msg'] = 'This page can only be accessed from a university computer within the examination room.';
 ?>
