@@ -729,7 +729,11 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       }
       break;
     case 'hotspot':
-      echo '<tr><td></td><td>';
+      if ($display_option['scenario'] != '') {
+        echo '<tr><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
+      } else {
+        echo '<tr><td></td><td>';
+      }
 ?>
 
   <div>
