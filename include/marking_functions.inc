@@ -276,74 +276,68 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $question_variables = '';
         }
 
-        //if ($saved_response != '') {
-          $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
-          $variable_array = explode(',',$question_variables);
-          $var_no = 1;
-          foreach($variable_array as $individual_variable) {
-            switch ($var_no) {
-              case 1:
-                $A = $individual_variable;
-                break;
-              case 2:
-                $B = $individual_variable;
-                break;
-              case 3:
-                $C = $individual_variable;
-                break;
-              case 4:
-                $D = $individual_variable;
-                break;
-              case 5:
-                $E = $individual_variable;
-                break;
-              case 6:
-                $F = $individual_variable;
-                break;
-              case 7:
-                $G = $individual_variable;
-                break;
-              case 8:
-                $H = $individual_variable;
-                break;
-              case 9:
-                $I = $individual_variable;
-                break;
-              case 10:
-                $J = $individual_variable;
-                break;
-            }
-            $var_no++;
+        $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
+        $variable_array = explode(',',$question_variables);
+        $var_no = 1;
+        foreach($variable_array as $individual_variable) {
+          switch ($var_no) {
+            case 1:
+              $A = $individual_variable;
+              break;
+            case 2:
+              $B = $individual_variable;
+              break;
+            case 3:
+              $C = $individual_variable;
+              break;
+            case 4:
+              $D = $individual_variable;
+              break;
+            case 5:
+              $E = $individual_variable;
+              break;
+            case 6:
+              $F = $individual_variable;
+              break;
+            case 7:
+              $G = $individual_variable;
+              break;
+            case 8:
+              $H = $individual_variable;
+              break;
+            case 9:
+              $I = $individual_variable;
+              break;
+            case 10:
+              $J = $individual_variable;
+              break;
           }
-          $answer_equation = trim($correct);
-          if ($score_array[3] == 'Formula') {
-            // formula answer just do a string comp on the useranswer and the correct one (replace with CAS system later)
-            if ($answer_equation != '') {
-              eval ("\$answer = \"" . $answer_equation . "\";");
-            }
-            if ($saved_response_clean == $answer) {
-              $mark = $marks_correct;
-            }
+          $var_no++;
+        }
+        $answer_equation = trim($correct);
+        if ($score_array[3] == 'Formula') {
+          // formula answer just do a string comp on the useranswer and the correct one (replace with CAS system later)
+          if ($answer_equation != '') {
+            eval ("\$answer = \"" . $answer_equation . "\";");
+          }
+          if ($saved_response_clean == $answer) {
+            $mark = $marks_correct;
+          }
+        } else {
+          if ($answer_equation != '' and $saved_response != '') {
+            echo eval ("\$answer = $answer_equation;");
+            $answer = round($answer, $score_array[0]);
           } else {
-            if ($answer_equation != '' and $saved_response != '') {
-			echo $answer .':'.$answer_equation;
-              echo eval ("\$answer = $answer_equation;");
-              $answer = round($answer, $score_array[0]);
-            } else {
-              $answer = '';
-            }
-            if ($saved_response_clean == $answer) {
-              $mark = $marks_correct;
-            } elseif (abs($saved_response_clean - $answer) <= $score_array[1]) {
-              $mark = $marks_correct;
-            } else {
-              $mark = $marks_incorrect;
-            }
+            $answer = '';
           }
-        //} else {
-        //  $answer = '';
-        //  $mark = 0;
-        //}
+          if ($saved_response_clean == $answer) {
+            $mark = $marks_correct;
+          } elseif (abs($saved_response_clean - $answer) <= $score_array[1]) {
+            $mark = $marks_correct;
+          } else {
+            $mark = $marks_incorrect;
+          }
+        }
         
         $saved_response .= '|' . $answer . '|' . $question_variables;
         $totalpos = $marks_correct;
