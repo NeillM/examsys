@@ -690,6 +690,7 @@
             echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
           }
           echo "</table>\n";
+          if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">&nbsp;{$paper[$question]['correct_fback']}</div>\n";
           break;
         case 'info':
           echo "<tr><td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">";
