@@ -221,19 +221,20 @@
         case 'hotspot':
           $tmp_width = ($q_media_width + 2);
           if ($tmp_width < 375) $tmp_width = 375;
+          $tmp_height = $q_media_height + 30;
           ?>
               <div>
               <script language="JavaScript">
-                function swfLoaded<?php echo $question_no; ?>(message) {
+                function swfLoaded<?php echo $q_no; ?>(message) {
                   var num = message.substring(5,message.length);
                   setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo $correct; ?>', '', '1,1,0000000000000');
                 }
-                write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" align="middle">');
+                write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" align="middle">');
                 write_string('<param name="allowScriptAccess" value="always" />');
                 write_string('<param name="movie" value="/paper/hotspot_answer.swf" />');
                 write_string('<param name="quality" value="high" />');
                 write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-                write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+                write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                 write_string('</object>');
               </script>
               </div>
