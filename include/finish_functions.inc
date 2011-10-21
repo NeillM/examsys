@@ -1792,7 +1792,11 @@
             for ($a=0; $a<count($user_split2)-3; $a+=4) {
               $x = $user_split2[$a];
               $y = $user_split2[$a+1];
-              if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+              if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
+                $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+              } else {
+                $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+              }
               $i++;
             }
           }

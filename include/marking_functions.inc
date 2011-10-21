@@ -757,11 +757,11 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $totalpos += $tmp_second_split[1];
         }
         
-        if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
+        if ($all_items_abstain) {
+          $mark = 0;
+        } elseif ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
           if ($mark == $totalpos) {
             $mark = $marks_correct;
-          } elseif (strlen($saved_response) < 6) {
-            $mark = 0;
           } else {
             $mark = $marks_incorrect;
           }
