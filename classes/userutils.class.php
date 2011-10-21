@@ -79,11 +79,9 @@ Class UserUtils {
     $stmt->store_result();
     $stmt->bind_result($tmp_userID);
     $stmt->fetch();
-    if ($stmt->num_rows == 0) {
-      return false;
-    } else {
-      return $tmp_userID;
-    }
+    $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
+    $stmt->close();
+    return $exists;
   }
 
   /**
@@ -115,6 +113,17 @@ Class UserUtils {
       return false;
     }
     return true;
+  }   
+ 
+  static function isUserOnModule($userID, $module, $session, $db) {
+    $result = $db->prepare("SELECT userID FROM student_modules WHERE userID=? AND moduleid=? AND calendar_year=?");
+    $result->bind_param('iss', $userID, $module, $session);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($tmp_userID);
+    $exists = ($result->num_rows > 0);
+    $result->close();
+    return $exists;
   }   
  
   static function fixcase_callback($word) { 

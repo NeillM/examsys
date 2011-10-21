@@ -70,12 +70,9 @@ if ($fullname == '') {
   display_error('Module ID error', 'Module code ' . $_GET['moduleid'] . ' not found.', false, true);
 }
 
-if ($active == 1 and $selfenroll == 1 and isset($_POST['submit'])) {
-  // Delete any previous records for this user
-  UserUtils::removeUserFromModule($userID,$_GET['moduleid'],$_POST['session'],$mysqli);
-  
+if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils::isUserOnModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
   // Insert new module enrollment
-  UserUtils::addUserToModule($userID,$_GET['moduleid'],$_POST['session'],$mysqli);
+  UserUtils::addUserToModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli);
 }
 
 ?>
