@@ -132,7 +132,8 @@ function add_users_from_file($fileName) {
     }
     
     $invalid_user = false;
-    if (UserUtils::usernameExists($username, $mysqli) === false) {
+    $tmp_userID = UserUtils::usernameExists($username, $mysqli);
+    if ($tmp_userID === false) {
       //add new users
        
       $password = PasswordUtils::gen_password();
