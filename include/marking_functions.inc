@@ -192,9 +192,9 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       } elseif ($old_type == 'mrq') {
         if ($old_score_method == 'Mark per Question') {
           if ($correct_rank) {
-            $mark = 1;
+            $mark = $old_marks_correct;
           } else {
-            $mark = 0;
+            $mark = $old_marks_incorrect;
           }
         } elseif ($old_score_method == 'Mark per Option' and $mrq_options_selected > $totalpos) {
           $mark = 0;
@@ -421,7 +421,11 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
         $saved_response .= $user_response;
         if ($score_method == 'Mark per Option') {
-          if ($user_response == 'y' and $correct == 'y') $mark += $marks_correct;
+          if ($user_response == 'y' and $correct == 'y') {
+            $mark += $marks_correct;
+          } elseif ($user_response == 'n' and $correct == 'y') {
+            $mark += $marks_incorrect;
+          }
         } else {
           if ($user_response == $correct) {
             $mark += $marks_correct;
@@ -432,7 +436,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         if ($score_method == 'Mark per Option') {
           if ($correct == 'y') $totalpos += $marks_correct;
         } elseif ($score_method == 'Mark per Question') {
-          $totalpos = 1;
+          $totalpos = $marks_correct;
           if (($user_response == 'y' and $correct == 'n') or ($user_response == 'n' and $correct == 'y')) {
             $correct_rank = false;
           }
@@ -769,9 +773,9 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   } elseif ($old_type == 'mrq') {
     if ($old_score_method == 'Mark per Question') {
       if ($correct_rank) {
-        $mark = 1;
+        $mark = $marks_correct;
       } else {
-        $mark = 0;
+        $mark = $marks_incorrect;
       }
     } elseif ($old_score_method == 'Mark per Option' and $mrq_options_selected > $totalpos) {
       $mark = 0;
