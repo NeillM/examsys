@@ -1221,6 +1221,8 @@
           break;
         case 'extmatch':
           $paper[$question]['mark'] = 0;
+          $all_correct = true;
+          
           echo_content($paper[$question]['leadin']);
           echo '<ol type="i">';
           $matching_scenarios = array();
@@ -1295,6 +1297,7 @@
               } else {
                 if (substr($tmp_exclude,$section,1) == '0'and $user_answers[$i] != '' and $user_answers[$i] != 'u') {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  $all_correct = false;
                 }
                 if ($tmp_display_students_response == '1' and $user_answers[$i] != '' and $user_answers[$i] != 'u') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />&nbsp;';
               }
@@ -1346,9 +1349,11 @@
                   }
                   echo '<td>';
                   if ($matching_user_option == 1 and substr($tmp_exclude,$section,1) == '0') {
-                    $paper[$question]['mark']++;
+                    $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                   } else {
+                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                    $all_correct = false;
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
                   }
                   echo '&nbsp;</td><td';
@@ -1384,6 +1389,9 @@
             $i++;
           }
           echo "</ol>\n";
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
+            $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] :$paper[$question]['marks_incorrect']; 
+          }
           break;
         case 'matrix':
           $paper[$question]['mark'] = 0;

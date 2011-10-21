@@ -482,19 +482,43 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
                 $saved_response .= '$' . $_POST[$qid][$i];
               }
               
-              for ($x=0; $x<count($correct_answers); $x++) {
-                if ($answer_count == 1) {
-                  if ($_POST[$qid] == $correct_answers[0]) {
-                    $mark += $marks_correct;
-                    $all_items_abstain = false;
-                  } elseif ($_POST[$qid] != 'u') {
-                    $mark += $marks_incorrect;
-                    $all_items_abstain = false;
-                  }
+              
+              if ($answer_count == 1) {
+                if ($_POST[$qid] == $correct_answers[0]) {
+                  $mark += $marks_correct;
+                  $all_items_abstain = false;
+                } elseif ($_POST[$qid] != 'u') {
+                  $mark += $marks_incorrect;
+                  $all_items_abstain = false;
+                }
+              } else {
+                if (in_array($_POST[$qid][$i], $correct_answers)) {
+                  $mark += $marks_correct;
                 } else {
-                  if ($_POST[$qid][$i] == $correct_answers[$x]) $mark += $marks_correct;
+                  $mark += $marks_incorrect;
                 }
               }
+              
+              
+              
+              
+//              for ($x=0; $x<count($correct_answers); $x++) {
+//                if ($answer_count == 1) {
+//                  if ($_POST[$qid] == $correct_answers[0]) {
+//                    $mark += $marks_correct;
+//                    $all_items_abstain = false;
+//                  } elseif ($_POST[$qid] != 'u') {
+//                    $mark += $marks_incorrect;
+//                    $all_items_abstain = false;
+//                  }
+//                } else {
+//                  if ($_POST[$qid][$i] == $correct_answers[$x]) {
+//                    $mark += $marks_correct;
+//                  } else {
+//                    $mark += $marks_incorrect;
+//                  }
+//                }
+//              }
             }
             $totalpos += count($correct_answers) * $marks_correct;
             $option_no++;
