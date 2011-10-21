@@ -29,7 +29,7 @@
   function saveResponseData($optID, $experts, $max_experts) {
     global $mysqli;
     $marks = ($max_experts > 0) ? $experts / $max_experts : 0;
-    $stmt = $mysqli->prepare("UPDATE options SET correct=?, marks=? WHERE id_num=?");
+    $stmt = $mysqli->prepare("UPDATE options SET correct=?, marks_correct=? WHERE id_num=?");
     $stmt->bind_param('sdi', $experts, $marks, $optID);
     $stmt->execute();
     $stmt->close();
