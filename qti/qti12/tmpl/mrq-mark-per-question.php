@@ -1,5 +1,5 @@
-<?php require("header.php"); ?>	
-		
+<?php require("header.php"); ?>
+
 			<?php echo $headertext ?>
 
 			<response_lid ident='1' rcardinality='Multiple'>
@@ -13,16 +13,16 @@
 <?php endif; ?>
 						</material>
 					</response_label>
-<?php endforeach; ?>	
+<?php endforeach; ?>
 				</render_choice>
 			</response_lid>
 		</presentation>
-		
+
 		<resprocessing>
 			<outcomes>
 				<decvar/>
 			</outcomes>
-			
+
 			<!-- force general feedback to output -->
 			<respcondition title="general checked" continue="Yes">
 				<conditionvar>
@@ -40,7 +40,7 @@
 				<setvar action='Add'>0</setvar>
 				<displayfeedback linkrefid="general"/>
 			</respcondition>
-			
+
 			<!-- response conditions with no score to display feedback -->
 <?php foreach ($question->options as $oid => $option) : ?>
 			<respcondition title="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> checked" continue="Yes">
@@ -59,18 +59,18 @@
 				<setvar action='Add'>0</setvar>
 				<displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> unchecked"/>
 			</respcondition>
-<?php endforeach; ?>	
-      
+<?php endforeach; ?>
+
 			<!-- marking response stuff -->
 			<respcondition title='unanswered' continue="NO" >
         <conditionvar>
 <?php foreach ($question->options as $oid => $option) : ?>
 					<unanswered respident='1'><?php echo $this->ll[$oid] ?></unanswered>
-<?php endforeach; ?>	
+<?php endforeach; ?>
 				</conditionvar>
 				<setvar action='Set' >0</setvar>
 			</respcondition>
-      
+
 <?php foreach ($question->options as $oid => $option) : ?>
 <?php if ($option->is_correct) : ?>
      <respcondition title='Wrong <?php echo $oid; ?>' continue="No" >
@@ -83,7 +83,7 @@
 			</respcondition>
 <?php endif; ?>
 <?php endforeach; ?>
-				
+
 			<respcondition title='Right' continue="Yes" >
         <conditionvar>
 <?php foreach ($question->options as $oid => $option) : ?>
@@ -91,14 +91,14 @@
 					<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal>
 <?php else : ?>
 					<not>
-						<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal> 
+						<varequal respident='1'><?php echo $this->ll[$oid] ?></varequal>
 					</not>
 <?php endif; ?>
-<?php endforeach; ?>	
+<?php endforeach; ?>
 				</conditionvar>
 				<setvar action='Set' ><?php echo $option->marks_correct; ?></setvar>
 			</respcondition>
-      
+      </resprocessing>
 		<!-- feedback items for each item -->
 <?php foreach ($question->options as $oid => $option) : ?>
 <?php if ($option->is_correct) {
@@ -111,7 +111,7 @@
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
 			</material>
-		</itemfeedback>			
+		</itemfeedback>
 <?php if (!$option->is_correct) {
     $fb = $option->fb_correct;
   } else {
@@ -122,8 +122,8 @@
 			<material>
 				<mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
 			</material>
-		</itemfeedback>			
-<?php endforeach; ?>	
+		</itemfeedback>
+<?php endforeach; ?>
 
 		<!-- general feedback -->
 		<itemfeedback ident='general' view='Candidate'>

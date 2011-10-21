@@ -607,7 +607,6 @@ class ST_QTI12_Material_Inner {
 
   function GetText() {
     $text = implode("", $this->data)."\n";
-    $text = strip_tags($text);
 
     while (strpos($text, "  ") > 0) $text = str_replace("  ", " ", $text);
 
@@ -807,8 +806,6 @@ class ST_QTI12_Material // <material>
     foreach ($this->chunks as $chunk) {
       $text .= implode("", $chunk->data)."\n";
     }
-
-    $text = strip_tags($text);
 
     while (strpos($text, "  ") > 0) $text = str_replace("  ", " ", $text);
 

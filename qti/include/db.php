@@ -426,7 +426,6 @@ class Database {
     $query .= ") VALUES (";
     $query .= implode(",", $qmarks);
     $query .= ")";
-
     $stmt = $mysqli->prepare($query);
     $params[0] = $stmt;
     call_user_func_array('mysqli_stmt_bind_param', $params);

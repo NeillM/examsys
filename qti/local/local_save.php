@@ -168,6 +168,7 @@ class IE_Local_Save extends IE_Main {
       }
 
       // store question row
+      var_dump($this->q_row);
       $this->db->InsertRow("questions", "q_id", $this->q_row);
       $question->save_id = $this->q_row['q_id'];
 
@@ -245,7 +246,8 @@ class IE_Local_Save extends IE_Main {
 
   function SaveBlank($question) {
     $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['score_method'] = $question->displaymode ;
+    $this->q_row['display_method'] = $question->displaymode ;
+    $this->q_row['score_method'] = 'Mark per Option' ;
 
     $q_text = "";
     foreach ($question->question as $part) {
@@ -276,7 +278,9 @@ class IE_Local_Save extends IE_Main {
     $o_row = $this->db->GetBlankTableRow("options");
 
     $o_row['option_text'] = $q_text;
-    $o_row['marks_correct'] = 0;
+    $o_row['marks_correct'] = $question->marks_correct;
+    $o_row['marks_incorrect'] = $question->marks_incorrect;
+    $o_row['marks_partial'] = $question->marks_partial;
     $this->o_rows[] = $o_row;
 
   }
@@ -284,15 +288,19 @@ class IE_Local_Save extends IE_Main {
   function SaveCalculation($question) {
     $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = $question->feedback;
-    $this->q_row['score_method'] = $question->decimals.",".$question->tolerance.",".$question->units;
-
+                                                           //fullmarks tolorance = 0
+    $this->q_row['display_method'] = $question->decimals.",0,".$question->tolerance.",".$question->units;
+    $this->q_row['score_method'] = $question->score_method;
+    
     foreach ($question->variables as $varid => $variable) {
       $o_row = $this->db->GetBlankTableRow("options");
 
       $o_row['option_text'] = $variable->min.",".$variable->max.",".$variable->inc.",".$variable->dec;
       $o_row['correct'] = $question->formula;
-      $o_row['marks_correct'] = 1;
-
+      $o_row['marks_correct'] = $question->marks_correct;
+      $o_row['marks_incorrect'] = $question->marks_incorrect;
+      $o_row['marks_partial'] = $question->marks_partial;
+      
       // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
       $o_row['o_media'] = $question->media;
       $o_row['o_media_width'] = $question->media_width;
@@ -322,6 +330,7 @@ class IE_Local_Save extends IE_Main {
     $this->q_row['scenario'] = $question->scenario ;
     $this->q_row['correct_fback'] = $question->feedback ;
     $this->q_row['score_method'] = $question->score_method ;
+    $this->q_row['display_method'] = $question->display_method;
 
     foreach ($question->options as $option) {
       $o_row = $this->db->GetBlankTableRow("options");
@@ -332,7 +341,9 @@ class IE_Local_Save extends IE_Main {
 
       $o_row['feedback_right'] = $option->fb_correct;
       $o_row['feedback_wrong'] = $option->fb_incorrect;
-      $o_row['marks_correct'] = 1;
+      $o_row['marks_correct'] = $option->marks_correct;
+      $o_row['marks_incorrect'] = $option->marks_incorrect;
+      $o_row['marks_partial'] = 0;
       $o_row['o_media'] = $option->media ;
       $o_row['o_media_width'] = $option->media_width ;
       $o_row['o_media_height'] = $option->media_height ;
@@ -375,6 +386,8 @@ class IE_Local_Save extends IE_Main {
 
     $this->q_row['scenario'] = $scenario_text;
     $this->q_row['correct_fback'] = $feedback;
+    $this->q_row['score_method'] = 'Mark per Option';
+    $this->q_row['display_method'] = '';
 
     $this->q_row['q_media'] = $media;
     $this->q_row['q_media_width'] = $media_width;
@@ -385,7 +398,9 @@ class IE_Local_Save extends IE_Main {
 
       $o_row['option_text'] = $option->option;
       $o_row['correct'] = $answer_text;
-      $o_row['marks_correct'] = 1;
+      $o_row['marks_correct'] = $question->marks_correct;
+      $o_row['marks_incorrect'] = $question->marks_incorrect;
+      $o_row['marks_partial'] = $question->marks_partial;
 
       $this->o_rows[] = $o_row;
     }
@@ -409,6 +424,7 @@ class IE_Local_Save extends IE_Main {
   function SaveHotspot($question) {
     $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = $question->feedback ;
+    $this->q_row['score_method'] = $question->score_method ;
 
     $hs_text = "";
     foreach ($question->hotspots as $id => $hotspot) {
@@ -427,7 +443,9 @@ class IE_Local_Save extends IE_Main {
 
     // if touchstone->qti->touchstone, then use the raw text from the options table to make 1:1
     if ($question->raw_option) $o_row['correct'] = $question->raw_option;
-    $o_row['marks_correct'] = 1;
+    $o_row['marks_correct'] = $question->marks_correct;
+    $o_row['marks_incorrect'] = $question->marks_incorrect;
+    $o_row['marks_partial'] = $question->marks_partial;
 
     $this->o_rows[] = $o_row;
 
@@ -478,6 +496,7 @@ class IE_Local_Save extends IE_Main {
 
     $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = $question->feedback;
+    $this->q_row['score_method'] = 'Marks per Option';
 
     $lt = $line_thicknesses[(string) $question->line_thickness];
     if ($lt == "") $lt = 1;
@@ -506,7 +525,11 @@ class IE_Local_Save extends IE_Main {
     $o_row = $this->db->GetBlankTableRow("options");
     $o_row['correct'] = $data;
     if ($question->raw_option) $o_row['correct'] = $question->raw_option;
-    $o_row['marks_correct'] = 1;
+    
+    $o_row['marks_correct'] = $question->marks_correct;
+    $o_row['marks_incorrect'] = $question->marks_incorrect;
+    $o_row['marks_partial'] = $question->marks_partial;
+      
     $this->o_rows[] = $o_row;
 
   }
@@ -539,7 +562,9 @@ class IE_Local_Save extends IE_Main {
 
       $o_row['option_text'] = $option;
       $o_row['correct'] = $answer_text;
-      $o_row['marks_correct'] = 1;
+      $o_row['marks_correct'] = $question->marks_correct;
+      $o_row['marks_incorrect'] = $question->marks_incorrect;
+      $o_row['marks_partial'] = $question->marks_partial;
 
       $this->o_rows[] = $o_row;
     }
@@ -548,16 +573,20 @@ class IE_Local_Save extends IE_Main {
   function SaveMcq($question) {
     $this->q_row['scenario'] = $question->scenario ;
     $this->q_row['correct_fback'] = (!empty($question->feedback)) ? $question->feedback : '';
-    //$this->q_row['incorrect_fback'] = $question->fb_incorrect ;
-    $this->q_row['score_method'] = $question->presentation ;
-
+    $this->q_row['q_option_order'] = $question->presentation ;
+    $this->q_row['score_method'] = 'Mark per Question';
+    $this->q_row['display_method'] = 'vertical';
+    
     foreach ($question->options as $option) {
       $o_row = $this->db->GetBlankTableRow("options");
 
       $o_row['option_text'] = $option->stem;
       $o_row['correct'] = $question->correct;
 
-      $o_row['marks_correct'] = 1;
+      $o_row['marks_correct'] = $option->marks_correct;
+      $o_row['marks_incorrect'] = $option->marks_incorrect;
+      $o_row['marks_partial'] = 0;
+      
       $o_row['o_media'] = $option->media;
       $o_row['o_media_width'] = $option->media_width;
       $o_row['o_media_height'] = $option->media_height;
@@ -573,17 +602,19 @@ class IE_Local_Save extends IE_Main {
   function SaveMrq($question) {
     $this->q_row['scenario'] = $question->scenario ;
     $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['score_method'] = $question->score_method ;
+    $this->q_row['q_option_order'] = $question->score_method ;
+    $this->q_row['score_method'] = 'Mark per Option';
 
     foreach ($question->options as $option) {
       $o_row = $this->db->GetBlankTableRow("options");
 
       $o_row['option_text'] = $option->stem;
       $o_row['correct'] = 'n';
-      $o_row['marks_correct'] = 0;
+      $o_row['marks_correct'] = $option->marks_correct;
+      $o_row['marks_incorrect'] = $option->marks_incorrect;
+      $o_row['marks_partial'] = 0;
       if ($option->is_correct) {
         $o_row['correct'] = 'y';
-        $o_row['marks_correct'] = 1;
       }
       $o_row['feedback_right'] = $option->fb_correct;
       $o_row['feedback_wrong'] = $option->fb_incorrect;
@@ -606,7 +637,9 @@ class IE_Local_Save extends IE_Main {
 
       $o_row['option_text'] = $option->stem;
       $o_row['correct'] = $option->order;
-      $o_row['marks_correct'] = 1;
+      $o_row['marks_correct'] = $question->marks_correct;
+      $o_row['marks_incorrect'] = $question->marks_incorrect;
+      $o_row['marks_partial'] = $question->marks_partial;
 
       $this->o_rows[] = $o_row;
     }
@@ -616,25 +649,16 @@ class IE_Local_Save extends IE_Main {
   function SaveTextBox($question) {
     $this->q_row['scenario'] = $question->scenario ;
     $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['score_method'] = $question->columns."x".$question->rows;
+    $this->q_row['display_method'] = $question->columns."x".$question->rows;
+    $this->q_row['score_method'] = 'Mark per Option';
 
     $o_row = $this->db->GetBlankTableRow("options");
 
     $o_row['option_text'] = $question->editor;
     $o_row['correct'] = implode(";", $question->terms);
-    $o_row['marks_correct'] = $question->marks;
-    $this->o_rows[] = $o_row;
-  }
-
-  function SaveTimeDate($question) {
-    $this->q_row['scenario'] = $question->scenario ;
-    $this->q_row['correct_fback'] = $question->feedback ;
-    $this->q_row['score_method'] = sprintf("%d|%d|%d", $question->format, $question->startyear, $question->endyear);
-
-    $o_row = $this->db->GetBlankTableRow("options");
-
-    $o_row['correct'] = $question->correct;
-    $o_row['marks_correct'] = 1;
+    $o_row['marks_correct'] = $question->marks_correct;
+    $o_row['marks_incorrect'] = $question->marks_incorrect;
+    $o_row['marks_partial'] = 0;
     $this->o_rows[] = $o_row;
   }
 
