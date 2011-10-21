@@ -29,6 +29,7 @@ Class QuestionLIKERT extends Question {
   protected $scale_type = '';
   protected $not_applicable = 'false';
   protected $custom_scales = array();
+  public $max_options = 1;
   public $max_stems = 10;
   protected $_allow_mapping = false;
   protected $_allow_correction = false;

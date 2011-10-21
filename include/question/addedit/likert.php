@@ -25,6 +25,12 @@
 $scales = $question->get_scale_types();
 $scale_value = $question->get_scale_type();
 $na_checked = ($question->get_not_applicable() == 'true') ? ' checked="checked"' : '';
+if (count($question->options) > 0) {
+  $option = reset($question->options);
+  $option_id = $option->id;
+} else {
+  $option_id = -1;
+}
 
 ?>
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
@@ -99,5 +105,6 @@ endfor;
             </tr>
 					</tbody>
 				</table>
+        <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
 
 <?php require_once 'detail_parts/details_general_feedback.php' ?>
