@@ -256,7 +256,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $na = false;
       $likert_display = explode('|',$question['display_method']);
       $likert_col_no = substr_count($question['display_method'],'|');
-      if (strtolower($old_likert_label) != strtolower($question['score_method']) or $question['theme'] != '') {
+      if (strtolower($old_likert_label) != strtolower($question['display_method']) or $question['theme'] != '') {
         if ($likert_col_no != $old_likert_cols) echo '</table><table cellpadding="4" cellspacing="0" border="0"><col width="40"><col>';
         if ($likert_display[$likert_col_no] == 'true') {
           $likert_col_no++;
@@ -281,7 +281,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         if ($question['scenario'] != '') echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
       }
-      $old_likert_label = $question['score_method'];
+      $old_likert_label = $question['display_method'];
       $old_likert_cols = $likert_col_no;
       break;
     case 'extmatch':
@@ -434,7 +434,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo '<tr>';
         }
         echo '<td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
-        $scale_size = substr_count($question['score_method'],'|');
+        $scale_size = substr_count($question['display_method'],'|');
         if ($likert_display[$scale_size] == 'true') {
           echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') echo ' checked';
