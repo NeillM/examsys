@@ -150,7 +150,7 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
 <?php
   $current_ip_address = NetworkUtils::get_ipaddress();
 
-  $lab_results = $mysqli->prepare("select lab, name FROM ip_addresses, labs WHERE ip_addresses.lab=labs.id AND address=?");
+  $lab_results = $mysqli->prepare("SELECT lab, name FROM ip_addresses, labs WHERE ip_addresses.lab=labs.id AND address=?");
   $lab_results->bind_param('s', $current_ip_address);
   $lab_results->execute();
   $lab_results->bind_result($lab, $room_name);

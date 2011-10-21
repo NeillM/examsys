@@ -27,7 +27,7 @@
   require_once 'staff_student_auth.inc';
   
   if (strpos($userroles,'Admin') === false AND strpos($userroles,'Invigilator') === false) {
-    Header("WWW-authenticate: basic realm=\"TouchStone\"");
+    Header("WWW-authenticate: basic realm=\"Rogo\"");
     Header("HTTP/1.0 401 Unauthorised");
     echo "<html>\n<head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
     echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";

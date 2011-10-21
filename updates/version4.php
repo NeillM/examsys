@@ -1152,7 +1152,7 @@ if (!isset($_POST['update'])) {
     $cfg_db_sct_password = PasswordUtils::gen_password(16);
         
     $priv_SQL = array();
-    //create touchstone 'database user staff user' and grant permissions
+    //create touchstone 'database user SCT user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_sct_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sct_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_sct_username created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
@@ -1180,6 +1180,66 @@ if (!isset($_POST['update'])) {
     $new_cfg_str[] =  "// SCT db user\n";
     $new_cfg_str[] =  "  \$cfg_db_sct_user = '$cfg_db_sct_username';\n";
     $new_cfg_str[] =  "  \$cfg_db_sct_passwd = '$cfg_db_sct_password';\n";
+    
+    $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+    
+    $cfg = file($touchstone_path . '/config/config.inc.php');
+
+    //add the new config chunk
+    array_splice($cfg, 36, 0, $new_cfg_str);
+    
+    
+    if (file_exists($touchstone_path . '/config/config.inc.php')) {
+      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old1.php');
+    }
+    
+    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    ///////////////////////  update the config file!! //////////////////////////////////////
+    
+  } // END Create SCT user
+  
+  $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_inv'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($tmp_user);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    
+    $cfg_db_inv_username = $cfg_db_database . '_inv';
+    $cfg_db_inv_password = PasswordUtils::gen_password(16);
+        
+    $priv_SQL = array();
+    //create touchstone 'database user SCT user' and grant permissions
+    $mysqli->query("CREATE USER  '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_inv_password . "'");
+    echo "<li>NEW DB USER:: $cfg_db_inv_username created</li>";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".sid TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".ip_addresses TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".labs TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".properties TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".student_notes TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".paper_notes TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "FLUSH PRIVILEGES";
+    
+    foreach ($priv_SQL as $sql) {
+      $mysqli->query($sql);
+      if ($mysqli->errno != 0) {
+        echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
+      }  
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    //  update the config file!!
+    //
+
+    $new_cfg_str = array();
+    $new_cfg_str[] =  "// Invigilator user\n";
+    $new_cfg_str[] =  "  \$cfg_db_inv_user = '$cfg_db_inv_username';\n";
+    $new_cfg_str[] =  "  \$cfg_db_inv_passwd = '$cfg_db_inv_password';\n";
     
     $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     

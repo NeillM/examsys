@@ -53,6 +53,10 @@ Class InstallUtils {
   public static $cfg_db_external_passwd ;
   public static $cfg_db_sysadmin_user;
   public static $cfg_db_sysadmin_passwd;
+  public static $cfg_db_sct_user;
+  public static $cfg_db_sct_passwd;
+  public static $cfg_db_inv_user;
+  public static $cfg_db_inv_passwd;
   
   public static $cfg_db_name;
   public static $db_admin_username;
@@ -296,6 +300,10 @@ Class InstallUtils {
     self::$cfg_db_external_passwd  = PasswordUtils::gen_password() . PasswordUtils::gen_password();
     self::$cfg_db_sysadmin_user = self::$cfg_db_name . '_sys';
     self::$cfg_db_sysadmin_passwd = PasswordUtils::gen_password() . PasswordUtils::gen_password();
+    self::$cfg_db_sct_user = self::$cfg_db_name . '_sct';
+    self::$cfg_db_sct_passwd = PasswordUtils::gen_password() . PasswordUtils::gen_password();
+    self::$cfg_db_inv_user = self::$cfg_db_name . '_inv';
+    self::$cfg_db_inv_passwd = PasswordUtils::gen_password() . PasswordUtils::gen_password();
     
     $priv_SQL = array();
     //create touchstone 'database user authentication user' and grant permissions
@@ -463,6 +471,55 @@ Class InstallUtils {
       if (self::$db->errno != 0) {
 	    echo self::$db->error . "<br/>";
         self::logWarning(array('013'=>'Database user ' . self::$cfg_db_staff_user . ' could not set permissions'));
+      }  
+    }
+    
+    $priv_SQL = array();
+    //create touchstone 'database user SCT user' and grant permissions
+    self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
+    if (self::$db->errno != 0) {
+      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sct_user . ' could not be created'));
+    }
+    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions_metadata TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".options TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_notes TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sct_reviews TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "FLUSH PRIVILEGES";
+    foreach($priv_SQL as $sql) {
+      self::$db->query($sql);
+      if (self::$db->errno != 0) {
+	    echo self::$db->error . "<br/>";
+        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sct_user . ' could not set permissions'));
+      }  
+    }
+    
+    $priv_SQL = array();
+    //create touchstone 'database user Invigilator user' and grant permissions
+    self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
+    if (self::$db->errno != 0) {
+      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_inv_user . ' could not be created'));
+    }
+    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_modules TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sid TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".ip_addresses TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".labs TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".student_notes TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".paper_notes TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "FLUSH PRIVILEGES";
+    foreach($priv_SQL as $sql) {
+      self::$db->query($sql);
+      if (self::$db->errno != 0) {
+	    echo self::$db->error . "<br/>";
+        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_inv_user . ' could not set permissions'));
       }  
     }
     
@@ -810,7 +867,13 @@ define('DIR_SEPARATOR', '/');
 //sysdamin db user
   \$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
   \$cfg_db_sysadmin_passwd = '{cfg_db_sysadmin_passwd}';
-// Date formats in MySQL DATE_FORMAT format
+//sct db user
+  \$cfg_db_sct_user = '{cfg_db_sct_user}';
+  \$cfg_db_sct_passwd = '{cfg_db_sct_passwd}';
+//invigilator db user
+  \$cfg_db_inv_user = '{cfg_db_inv_user}';
+  \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
+  // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
   
@@ -873,6 +936,10 @@ CONFIG;
     $config = str_replace('{cfg_db_external_passwd}',self::$cfg_db_external_passwd,$config);   
     $config = str_replace('{cfg_db_sysadmin_user}',self::$cfg_db_sysadmin_user,$config);
     $config = str_replace('{cfg_db_sysadmin_passwd}',self::$cfg_db_sysadmin_passwd,$config);
+    $config = str_replace('{cfg_db_sct_user}',self::$cfg_db_sct_user,$config);
+    $config = str_replace('{cfg_db_sct_passwd}',self::$cfg_db_sct_passwd,$config);
+    $config = str_replace('{cfg_db_inv_user}',self::$cfg_db_inv_user,$config);
+    $config = str_replace('{cfg_db_inv_passwd}',self::$cfg_db_inv_passwd,$config);
     
     $config = str_replace('{cfg_support_email}',self::$cfg_support_email,$config);
     $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers,$config);

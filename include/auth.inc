@@ -36,7 +36,7 @@ function access_denied($message, $output_header = false) {
   global $mysqli, $string;
   
   if ($output_header == true) {
-    Header("WWW-authenticate: basic realm=\"TouchStone\"");
+    Header("WWW-authenticate: basic realm=\"Rogo\"");
     Header("HTTP/1.0 401 Unauthorised");
   }
   echo "<html>\n<head>\n<title>" . $string['accessdenied'] .  "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#BF0000;font-size:140%}\n</style>\n</head>\n<body>\n";
@@ -122,7 +122,8 @@ function db_auth($u, $p, $db) {
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
   global $cfg_db_student_user, $cfg_db_student_passwd;
   global $cfg_db_external_user, $cfg_db_external_passwd;
-
+  global $cfg_db_inv_user, $cfg_db_inv_passwd;
+  
   if ($u == '') {
     return false;
   }
@@ -172,6 +173,8 @@ function db_auth($u, $p, $db) {
         $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
       } else if (strpos($userroles,'External Examiner') !== false) {
         $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
+      } else if (strpos($userroles,'Invigilator') !== false) {
+        $result = $db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
       } else {
         $result = false;
       }
