@@ -156,8 +156,8 @@ h2 {font-size:140%; color:#f27000}
   
   $offset = 0;
   
+  // Perform replacement on certain strings.
   $tmp_body = str_replace('$support_email', '<a href="mailto:' . $support_email . '">' . $support_email . '</a>', $tmp_body);
-  
   $tmp_body = str_replace('$local_server', $protocol . $_SERVER['HTTP_HOST'], $tmp_body);
   
   if (isset($_GET['highlight'])) {
