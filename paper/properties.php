@@ -224,14 +224,26 @@ if (isset($_POST['Submit'])) {
     $editProperties->execute();
     $editProperties->close();
     
-    // Set the feedback release date.
-    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=?");
-    $editProperties->bind_param('i', $paperID);
+    // Release objectives-based feedback
+    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='objectives'");
+    $editProperties->bind_param('i', $_POST['paperID']);
     $editProperties->execute();
     $editProperties->close();
-    if (isset($_POST['objectives_report'])) {
-      $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL,?,NOW())");
-      $editProperties->bind_param('i', $paperID);
+    if (isset($_POST['objectives_report']) and $_POST['objectives_report'] == 1) {
+      $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'objectives')");
+      $editProperties->bind_param('i', $_POST['paperID']);
+      $editProperties->execute();
+      $editProperties->close();
+    }
+
+    // Release question-based feedback
+    $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='questions'");
+    $editProperties->bind_param('i', $_POST['paperID']);
+    $editProperties->execute();
+    $editProperties->close();
+    if (isset($_POST['questions_report']) and $_POST['questions_report'] == 1) {
+      $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
+      $editProperties->bind_param('i', $_POST['paperID']);
       $editProperties->execute();
       $editProperties->close();
     }
@@ -704,7 +716,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      $folder_details->bind_param('s', $userID);
      $folder_details->execute();
      $folder_details->bind_result($folder_id, $folder_name);
-     while ($row = $folder_details->fetch()) {
+     while ($folder_details->fetch()) {
        $path_parts = substr_count($folder_name,';');
        $folder_array = explode(';',$folder_name);
        $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
@@ -721,25 +733,36 @@ if ($paper_type != '4' and $paper_type != '5') {
      if ($paper_type != '4') echo $string['feedback'] . '&nbsp';
      echo "</td><td colspan=\"3\">";
      if (in_array($paper_type, array('0', '1', '2', '5'))) {
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=?");
+       // Objectives-based Feedback
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='objectives'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
        $feedback_details->bind_result($idfeedback_release);
        $feedback_details->fetch();
        if ($idfeedback_release == '') {
-         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" id=\"objectives_report\" onclick=\"objreportURL()\" />";
+         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" />";
        } else {
-         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" id=\"objectives_report\" onclick=\"objreportURL()\" checked />";
+         echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" checked />";
        }
        $feedback_details->close();
      
-       echo $string['objectivesreport'] . "<br /><span id=\"objreport\"";
+       echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
+     }
+     if (in_array($paper_type, array('1', '2', '5'))) {
+       // Question-based Feedback
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
+       $feedback_details->bind_param('i', $_GET['paperID']);
+       $feedback_details->execute();
+       $feedback_details->bind_result($idfeedback_release);
+       $feedback_details->fetch();
        if ($idfeedback_release == '') {
-         echo ' style="display:none"';
+         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" />";
        } else {
-         echo ' style="display:block"';
+         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" checked />";
        }
-       echo "><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "</a></span>&nbsp;</div>\n";
+       $feedback_details->close();
+     
+       echo $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></div>\n";
      }
      if ($paper_type == '0') {
        echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
@@ -748,6 +771,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      }
      if ($paper_type != '4') {
      ?>
+     <tr><td colspan="4">&nbsp;</td></tr>
      <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($display_students_response == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($display_question_mark == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($hide_if_unanswered == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
      <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($display_correct_answer == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($display_feedback == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
      <?php
@@ -782,28 +806,28 @@ if ($paper_type != '4' and $paper_type != '5') {
        }
        
        echo "<tr>\n";
-       echo "<td align=\"right\">" . $string['background'] ."&nbsp;</td><td><div onclick=\"showPicker('bgcolor',event)\" id=\"span_bgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$bgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"bgcolor\" name=\"bgcolor\" value=\"$bgcolor\" /></td>";
-       echo "<td align=\"right\">" . $string['foreground'] ."&nbsp;</td><td><div onclick=\"showPicker('fgcolor',event)\" id=\"span_fgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$fgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"fgcolor\" name=\"fgcolor\" value=\"$fgcolor\" /></td>";
+       echo "<td align=\"right\">" . $string['background'] . "&nbsp;</td><td><div onclick=\"showPicker('bgcolor',event)\" id=\"span_bgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$bgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"bgcolor\" name=\"bgcolor\" value=\"$bgcolor\" /></td>";
+       echo "<td align=\"right\">" . $string['foreground'] . "&nbsp;</td><td><div onclick=\"showPicker('fgcolor',event)\" id=\"span_fgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$fgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"fgcolor\" name=\"fgcolor\" value=\"$fgcolor\" /></td>";
        echo "</tr>\n";
    
        echo "<tr>\n";
-       echo "<td align=\"right\">" . $string['theme'] ."&nbsp;</td><td><div onclick=\"showPicker('themecolor',event)\" id=\"span_themecolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" /></td>";
-       echo "<td align=\"right\">" . $string['labelsnotes'] ."&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" /></td>";
+       echo "<td align=\"right\">" . $string['theme'] . "&nbsp;</td><td><div onclick=\"showPicker('themecolor',event)\" id=\"span_themecolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" /></td>";
+       echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" /></td>";
        echo "</tr>\n";
 
        if ($calculator == 1) {
-         echo "<tr><td align=\"right\">" . $string['calculator'] ."&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" checked /> " . $string['displaycalculator'] ."</td>";
+         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" checked /> " . $string['displaycalculator'] . "</td>";
        } else {
-         echo "<tr><td align=\"right\">" . $string['calculator'] ."&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" /> " . $string['displaycalculator'] ."</td>";
+         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" /> " . $string['displaycalculator'] . "</td>";
        }
        if ($sound_demo == 1) {
-         echo "<td align=\"right\">" . $string['audio'] ."&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" checked /> " . $string['demosoundclip'] ."</td></tr>\n";
+         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" checked /> " . $string['demosoundclip'] . "</td></tr>\n";
        } else {
-         echo "<td align=\"right\">" . $string['audio'] ."&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" /> " . $string['demosoundclip'] ."</td></tr>\n";
+         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" /> " . $string['demosoundclip'] . "</td></tr>\n";
        }
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
-     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] ."</td></tr>\n";
+     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
        echo "<tr><td align=\"right\" valign=\"top\">Overall&nbsp;Classification&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";

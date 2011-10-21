@@ -30,6 +30,9 @@
   require '../include/errors.inc';
   require '../include/mapping.inc';
   require '../include/finish_functions.inc';
+  require '../include/paper_security.inc';
+  
+  check_var('id', 'GET', true, false);
 
   getSpecialSettings($userID, $mysqli);
     
@@ -50,17 +53,14 @@
       
       $log_type = $paper_type;
       $low_bandwidth = 0;
+      $sessionid = '';
       
       if ($userroles == 'Student') {
         if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
         // Check for additional password on the paper
-        if ($password != '') {
-          if ($password != $_COOKIE['paperpwd']) {
-            access_denied($string['specificpassword'], $output_header = false);
-          }
-        }
-        
+        check_paper_password($password);
+      
         $display_correct_answer = 1;
         $display_question_mark = 1;
         $display_students_response = 1;
@@ -161,13 +161,7 @@ table {font-size:100%}
   $old_screen = 0;
   
   echo $top_table_html;
-  echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-  if ($paper_type < 2 or strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false) {
-    echo '<span style="font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
-    if (isset($_GET['surname'])) echo ' for ' . $_GET['surname'];
-    echo '</span>';
-  }
-  echo '</td>';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div></td>';
   echo $logo_html;
   echo '</table>';
 

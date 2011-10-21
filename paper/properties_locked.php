@@ -68,12 +68,25 @@ if (isset($_POST['Submit'])) {
   $editProperties->execute();
   $editProperties->close();
   
-  $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=?");
+  // Release objectives-based feedback
+  $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='objectives'");
   $editProperties->bind_param('i', $_POST['paperID']);
   $editProperties->execute();
   $editProperties->close();
   if (isset($_POST['objectives_report']) and $_POST['objectives_report'] == 1) {
-    $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL,?,NOW())");
+    $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'objectives')");
+    $editProperties->bind_param('i', $_POST['paperID']);
+    $editProperties->execute();
+    $editProperties->close();
+  }
+
+  // Release question-based feedback
+  $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='questions'");
+  $editProperties->bind_param('i', $_POST['paperID']);
+  $editProperties->execute();
+  $editProperties->close();
+  if (isset($_POST['questions_report']) and $_POST['questions_report'] == 1) {
+    $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
     $editProperties->bind_param('i', $_POST['paperID']);
     $editProperties->execute();
     $editProperties->close();
@@ -108,10 +121,10 @@ if (isset($_POST['Submit'])) {
 } else {
   $option_no = 1;
   
-  $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, paper_title, paper_type, start_date, end_date, timezone, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, moduleID, calendar_year, sound_demo FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, paper_title, paper_type, start_date, end_date, timezone, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, moduleID, calendar_year, sound_demo, crypt_name FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $paper_title, $paper_type, $start_date, $end_date, $timezone, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $moduleID, $calendar_year, $sound_demo);
+  $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $paper_title, $paper_type, $start_date, $end_date, $timezone, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $moduleID, $calendar_year, $sound_demo, $crypt_name);
   $result->fetch();
   $result->close();
 ?>
@@ -149,37 +162,38 @@ if (isset($_POST['Submit'])) {
 <tr><td valign="top" style="background-color:white; border:1px solid #7F9DB9; width:120px">
 
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:120px">
-<tr><td style="background-image:url('../artwork/2007_button_on.png'); height:25px; color:#00156E" valign="middle">&nbsp;General</td></tr>
-<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;Security</td></tr>
-<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;Reviewers</td></tr>
-<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;Exam Rubric</td></tr>
-<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;Prologue</td></tr>
-<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;Postscript</td></tr>
+<tr><td style="background-image:url('../artwork/2007_button_on.png'); height:25px; color:#00156E" valign="middle">&nbsp;<?php echo $string['generaltab']; ?></td></tr>
+<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;<?php echo $string['securitytab']; ?></td></tr>
+<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;<?php echo $string['reviewerstab']; ?></td></tr>
+<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;<?php echo $string['rubrictab']; ?></td></tr>
+<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;<?php echo $string['prologuetab']; ?></td></tr>
+<tr><td style="height:25px; color:#808080" valign="middle">&nbsp;<?php echo $string['postscripttab']; ?></td></tr>
 </table>
 
 </td>
 
 <td style="background-color:white; border:1px solid #7F9DB9" valign="top">
 
-<table id="general" style="height:460px; width:100%; font-size:90%<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo ';display:none'; ?>"cellpadding="0" cellspacing="0" border="0">
-<tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/general_heading_icon.png" width="28" height="31" alt="Icon" align="middle" />&nbsp;&nbsp;Paper name, marking and display options</td></tr>
+<table id="general" style="height:590px; width:100%; font-size:90%<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo ';display:none'; ?>"cellpadding="0" cellspacing="0" border="0">
+<tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/general_heading_icon.png" width="32" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['generalheading']; ?></td></tr>
 <td style="text-align:left; vertical-align:top" colspan="2">
    <?php
      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-     echo "<tr><td colspan=\"4\" style=\"background-color:#DDE7EE; color:#00156E; font-weight:bold; border-bottom: 1px solid #C5C5C5\">&nbsp;Paper Details</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">URL&nbsp;</td><td colspan=\"3\"><a href=\"https://" . $_SERVER['HTTP_HOST'] . "\" target=\"_blank\" style=\"color:blue\">https://" . $_SERVER['HTTP_HOST'] . "</a> (only on exam day)</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">Name&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper\" disabled /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
+     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"https://" . $_SERVER['HTTP_HOST'] . "\" target=\"_blank\" style=\"color:blue\">https://" . $_SERVER['HTTP_HOST'] . "</a> " . $string['onlyonexamday'] . "</td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper\" disabled /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
    ?>
-     <tr><td align="right" valign="top">Type&nbsp;</td><td>
+     <tr><td align="right" valign="top"><?php echo $string['type']; ?>&nbsp;</td><td>
      <select name="paper_type" disabled>
-     <option value="0"<?php if ($paper_type == '0') echo ' selected'; ?> />Formative Self-Assessment</option>
-     <option value="1"<?php if ($paper_type == '1') echo ' selected'; ?> />Progress Test</option>
-     <option value="2"<?php if ($paper_type == '2') echo ' selected'; ?> />Summative Exam</option>
-     <option value="3"<?php if ($paper_type == '3') echo ' selected'; ?> />Survey (Questionnaire)</option>
-     <option value="4"<?php if ($paper_type == '4') echo ' selected'; ?> />OSCE</option>
-     <option value="5"<?php if ($paper_type == '5') echo ' selected'; ?> />Spotter</option>
+     <option value="0"<?php if ($paper_type == '0') echo ' selected'; ?> /><?php echo $string['formative self-assessment']; ?></option>
+     <option value="1"<?php if ($paper_type == '1') echo ' selected'; ?> /><?php echo $string['progress test']; ?></option>
+     <option value="2"<?php if ($paper_type == '2') echo ' selected'; ?> /><?php echo $string['summative exam']; ?></option>
+     <option value="3"<?php if ($paper_type == '3') echo ' selected'; ?> /><?php echo $string['survey']; ?></option>
+     <option value="4"<?php if ($paper_type == '4') echo ' selected'; ?> /><?php echo $string['osce station']; ?></option>
+     <option value="5"<?php if ($paper_type == '5') echo ' selected'; ?> /><?php echo $string['offline paper']; ?></option>
    <?php
-     echo "<td align=\"right\" valign=\"top\">Folder&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\" disabled>\n";
+     echo "<td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\" disabled>\n";
      echo "<option value=\"\"></option>";
      $additional = '';
      
@@ -188,7 +202,7 @@ if (isset($_POST['Submit'])) {
      $team_query->execute();
      $team_query->store_result();
      $team_query->bind_result($team_name);
-     while ($row = $team_query->fetch()) {
+     while ($team_query->fetch()) {
        if ($additional == '') {
          $additional = ' OR team_name IN ("' . $team_name . '"';
        } else {
@@ -204,7 +218,7 @@ if (isset($_POST['Submit'])) {
      $folder_details->bind_param('s', $userID);
      $folder_details->execute();
      $folder_details->bind_result($folder_id, $folder_name);
-     while ($row = $folder_details->fetch()) {
+     while ($folder_details->fetch()) {
        $path_parts = substr_count($folder_name,';');
        $folder_array = explode(';',$folder_name);
        $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
@@ -218,10 +232,11 @@ if (isset($_POST['Submit'])) {
      echo "</select>\n</td></tr>\n";
      
      echo "<tr><td align=\"right\" valign=\"top\">";
-     if ($paper_type != '4') echo 'Feedback&nbsp';
+     if ($paper_type != '4') echo $string['feedback'] .  '&nbsp';
      echo "</td><td colspan=\"3\">";
      if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
-       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=?");
+       // Objectives-based Feedback
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='objectives'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
        $feedback_details->bind_result($idfeedback_release);
@@ -233,7 +248,22 @@ if (isset($_POST['Submit'])) {
        }
        $feedback_details->close();
      
-       echo "Objectives Report<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?paperID=" . $_GET['paperID'] . "</a></div>\n";
+       echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
+     
+       // Question-based Feedback
+       $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
+       $feedback_details->bind_param('i', $_GET['paperID']);
+       $feedback_details->execute();
+       $feedback_details->bind_result($idfeedback_release);
+       $feedback_details->fetch();
+       if ($idfeedback_release == '') {
+         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" />";
+       } else {
+         echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" checked />";
+       }
+       $feedback_details->close();
+     
+       echo $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></div>\n";
      }
      if ($paper_type == '0') {
        echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on">';
@@ -242,8 +272,8 @@ if (isset($_POST['Submit'])) {
      }
      if ($paper_type != '4') {
      ?>
-     <tr><td><input type="checkbox" name="display_students_response" value="1"<?php if ($display_students_response == '1') echo ' checked'; ?> />&nbsp;Ticks/Crosses</td><td><input type="checkbox" name="display_question_mark" value="1"<?php if ($display_question_mark == '1') echo ' checked'; ?> />&nbsp;Question Marks</td></tr>
-     <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($display_correct_answer == '1') echo ' checked'; ?> />&nbsp;Correct Answer Highlight</td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($display_feedback == '1') echo ' checked'; ?> />&nbsp;Text Feedback</td></tr>
+     <tr><td><input type="checkbox" name="display_students_response" value="1"<?php if ($display_students_response == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td><input type="checkbox" name="display_question_mark" value="1"<?php if ($display_question_mark == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td></tr>
+     <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($display_correct_answer == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($display_feedback == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
      </table>
      <?php
      }
@@ -262,84 +292,43 @@ if (isset($_POST['Submit'])) {
        echo '<input type="hidden" name="themecolor" value="' . $themecolor . '" />';
        echo '<input type="hidden" name="labelcolor" value="' . $labelcolor . '" />';
      } else {
-       echo "<tr><td colspan=\"4\" style=\"background-color:#DDE7EE; color:#00156E; font-weight:bold; border-bottom: 1px solid #C5C5C5\">&nbsp;Display Options</td></tr>\n";
+       echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['displayoptions'] ."</td></tr>\n";
+       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
        if ($fullscreen == 0) {
-         echo "<tr><td align=\"right\">Display&nbsp;</td><td><select name=\"fullscreen\" disabled>\n<option value=\"0\" selected>Windowed</option><option value=\"1\">Full Screen (IE only)</option>\n</select></td>";
+         echo "<tr><td align=\"right\">" . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\" disabled>\n<option value=\"0\" selected>" . $string['windowed'] ."</option><option value=\"1\">" . $string['fullscreen'] ."</option>\n</select></td>";
        } else {
-         echo "<tr><td align=\"right\">Display&nbsp;</td><td><select name=\"fullscreen\" disabled>\n<option value=\"0\">Windowed</option><option value=\"1\" selected>Full Screen (IE only)</option>\n</select></td>";
+         echo "<tr><td align=\"right\">" . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\" disabled>\n<option value=\"0\">" . $string['windowed'] ."</option><option value=\"1\" selected>" . $string['fullscreen'] ."</option>\n</select></td>";
        }
        if ($bidirectional == 1) {
-         echo "<td align=\"right\">Navigation&nbsp;</td><td><select name=\"bidirectional\" disabled><option value=\"0\">Unidirectional (Linear)</option><option value=\"1\"selected>Bidirectional</option></select></td></tr>\n";
+         echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\" disabled><option value=\"0\">" . $string['unidirectional'] ."</option><option value=\"1\"selected>" . $string['bidirectional'] ."</option></select></td></tr>\n";
        } else {
-         echo "<td align=\"right\">Navigation&nbsp;</td><td><select name=\"bidirectional\" disabled><option value=\"0\" selected>Unidirectional (Linear)</option><option value=\"1\">Bidirectional</option></select></td></tr>\n";
+         echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\" disabled><option value=\"0\" selected>" . $string['unidirectional'] ."</option><option value=\"1\">" . $string['bidirectional'] ."</option></select></td></tr>\n";
        }
-       echo "<tr><td align=\"right\">Background&nbsp;</td><td>";
-   ?>
- <script language="JavaScript">
-   var oColor1 = new IColorPicker("oColor1");
-   oColor1.onPickColor = new Function("document.getElementById('idColor1').style.backgroundColor=oColor1.color;document.getElementById('bgcolor').value=oColor1.color;");
-   oColor1.customColors = ["#FFFFFF","#000000","#316AC5","#C00000"];
-   oColor1.RENDER();
- </script>
+       
+       echo "<tr>\n";
+       echo "<td align=\"right\">" . $string['background'] . "&nbsp;</td><td><div onclick=\"showPicker('bgcolor',event)\" id=\"span_bgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$bgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"bgcolor\" name=\"bgcolor\" value=\"$bgcolor\" /></td>";
+       echo "<td align=\"right\">" . $string['foreground'] . "&nbsp;</td><td><div onclick=\"showPicker('fgcolor',event)\" id=\"span_fgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$fgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"fgcolor\" name=\"fgcolor\" value=\"$fgcolor\" /></td>";
+       echo "</tr>\n";
+   
+       echo "<tr>\n";
+       echo "<td align=\"right\">" . $string['theme'] . "&nbsp;</td><td><div onclick=\"showPicker('themecolor',event)\" id=\"span_themecolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" /></td>";
+       echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" /></td>";
+       echo "</tr>\n";
 
-<span id="idColor1" style="width:20px;background-color:<?php echo $bgcolor; ?>;border:black 1px solid">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<input type="button" value="Pick" disabled />
-<input type="hidden" value="<?php echo $bgcolor; ?>" name="bgcolor" id="bgcolor" />
-   <?php
-     echo "</td><td align=\"right\">Foreground&nbsp;</td><td>";
-   ?>
- <script language="JavaScript">
-   var oColor2 = new IColorPicker("oColor2");
-   oColor2.onPickColor = new Function("document.getElementById('idColor2').style.backgroundColor=oColor2.color;document.getElementById('fgcolor').value=oColor2.color;");
-   oColor2.customColors = ["#FFFFFF","#000000","#316AC5","#C00000"];
-   oColor2.RENDER();
- </script>
-
-<span id="idColor2" style="width:20px;background-color:<?php echo $fgcolor; ?>;border:black 1px solid">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<input type="button" value="Pick" disabled />
-<input type="hidden" value="<?php echo $fgcolor; ?>" name="fgcolor" id="fgcolor" />
-   <?php
-     echo "</td></tr>\n";
-     echo "<tr><td align=\"right\">Theme&nbsp;</td><td>";
-   ?>
- <script language="JavaScript">
-   var oColor3 = new IColorPicker("oColor3");
-   oColor3.onPickColor = new Function("document.getElementById('idColor3').style.backgroundColor=oColor3.color;document.getElementById('themecolor').value=oColor3.color;");
-   oColor3.customColors = ["#FFFFFF","#000000","#316AC5","#C00000"];
-   oColor3.RENDER();
- </script>
-
-<span id="idColor3" style="width:20px;background-color:<?php echo $themecolor; ?>;border:black 1px solid">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<input type="button" value="Pick" disabled />
-<input type="hidden" value="<?php echo $themecolor; ?>" name="themecolor" id="themecolor" />
-   <?php
-     echo "</td><td align=\"right\">Labels/Notes&nbsp;</td><td>";
-   ?>
- <script language="JavaScript">
-   var oColor4 = new IColorPicker("oColor4");
-   oColor4.onPickColor = new Function("document.getElementById('idColor4').style.backgroundColor=oColor4.color;document.getElementById('labelcolor').value=oColor4.color;");
-   oColor4.customColors = ["#FFFFFF","#000000","#316AC5","#C00000"];
-   oColor4.RENDER();
- </script>
-
-<span id="idColor4" style="width:20px;background-color:<?php echo $labelcolor; ?>;border:black 1px solid">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<input type="button" value="Pick" disabled />
-<input type="hidden" value="<?php echo $labelcolor; ?>" name="labelcolor" id="labelcolor" />
-   <?php
-       echo "</td></tr>\n";
        if ($calculator == 1) {
-         echo "<tr><td align=\"right\">Calculator&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" checked disabled /> display calculator</td>";
+         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" checked disabled /> " . $string['displaycalculator'] ."</td>";
        } else {
-         echo "<tr><td align=\"right\">Calculator&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" disabled /> display calculator</td>";
+         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" disabled /> " . $string['displaycalculator'] ."</td>";
        }
        if ($sound_demo == 1) {
-         echo "<td align=\"right\">Audio&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" checked disabled /> demo sound clip</td></tr>\n";
+         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" checked disabled /> " . $string['demosoundclip'] ."</td></tr>\n";
        } else {
-         echo "<td align=\"right\">Audio&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" disabled /> demo sound clip</td></tr>\n";
+         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" disabled /> " . $string['demosoundclip'] ."</td></tr>\n";
        }
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
-     echo "<tr><td colspan=\"4\" style=\"background-color:#DDE7EE; color:#00156E; font-weight:bold; border-bottom: 1px solid #C5C5C5\">&nbsp;Marking</td></tr>\n";
+     echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
+     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
        echo "<tr><td align=\"right\" valign=\"top\">Overall&nbsp;Classification&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
      ?>
@@ -348,25 +337,13 @@ if (isset($_POST['Submit'])) {
        <option value="4"<?php if ($marking == '4') echo ' selected'; ?> />Fail | Borderline fail | Borderline pass | Pass | Good pass</option>
        <option value="6"<?php if ($marking == '6') echo ' selected'; ?> />Clear FAIL | BORDERLINE | Clear PASS | Honours PASS</option>
   <?php
-    echo "<tr><td colspan=\"4\"><textarea cols=\"80\" rows=\"4\" id=\"osce_marking_guidance\" name=\"osce_marking_guidance\">" . $paper_postscript . "</textarea>";
+    echo "<tr><td colspan=\"4\">" . wysiwyg_editor('oEdit1','osce_marking_guidance',$paper_prologue,684,230);
   ?>
-  <script>
-    var oEdit4 = new InnovaEditor("oEdit4");
-    oEdit4.mode="XHTMLBody";
-    oEdit4.useTagSelector=false;
-    oEdit4.useBR=false;
-    oEdit4.width="100%";
-    oEdit4.height="230px";
-    oEdit4.features=["Cut","Copy","PasteText","|","Undo","|","Bold","Italic","Underline","|","Superscript","Subscript","|","JustifyLeft","JustifyCenter","JustifyRight","|","Numbering","Bullets","|","Table","Characters","|","XHTMLSource"];
-    oEdit4.arrStyle = [["BODY",false,"","background:white; margin:2px; color:black; font-size:90%; font-family:Arial,sans-serif"]];
-    oEdit4.btnStyles = true;
-    oEdit4.REPLACE("osce_marking_guidance");
-  </script>  
 </td></tr>
      <?php
        echo "</select></td></tr>\n";
      } else {
-       echo "<tr><td align=\"right\" valign=\"top\">Pass&nbsp;Mark&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\"";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\"";
        if ($paper_type == '3') echo ' disabled';
        echo '>';
        for ($i=0; $i<=100; $i++) {
@@ -376,10 +353,10 @@ if (isset($_POST['Submit'])) {
            echo "<option value=\"$i\">$i%</option>\n";
          }
        }
-       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">Method&nbsp;</td><td rowspan=\"2\">";
+       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">" . $string['method'] . "&nbsp;</td><td rowspan=\"2\">";
      ?>
-       <input type="radio" id="marking1" name="marking" value="0"<?php if ($marking == '0') echo ' checked'; ?> />No Adjustment<br />
-       <input type="radio" id="marking2" name="marking" value="1"<?php if ($marking == '1') echo ' checked'; ?> />Calculate Random Mark<br />
+       <input type="radio" id="marking1" name="marking" value="0"<?php if ($marking == '0') echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
+       <input type="radio" id="marking2" name="marking" value="1"<?php if ($marking == '1') echo ' checked'; ?> /><?php echo $string['calculatrrandommark']; ?><br />
      <?php
        // Look for any Standard Setting reviews for the paper.
        $std_set_details = $mysqli->prepare("SELECT DISTINCT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, group_review FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY std_set DESC");
@@ -407,7 +384,7 @@ if (isset($_POST['Submit'])) {
        }
      }
      if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
-       echo "<tr><td align=\"right\" valign=\"top\">Distinction</td><td><select name=\"distinction_mark\">";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['distinction'] . "</td><td><select name=\"distinction_mark\">";
        for ($i=0; $i<=100; $i++) {
          if ($i == $distinction_mark) {
            echo "<option value=\"$i\" selected>$i%</option>\n";
@@ -427,7 +404,7 @@ if (isset($_POST['Submit'])) {
 
 </td>
 </tr>
-<tr><td colspan="2" align="right"><input type="submit" style="width:100px" name="Submit" value="OK">&nbsp;<input type="button" name="home" style="width:100px" value="Cancel" onclick="javascript:window.close();" /></td></tr>
+<tr><td colspan="2" align="right"><input type="submit" style="width:100px" name="Submit" value="<?php echo $string['ok']; ?>">&nbsp;<input type="button" name="home" style="width:100px" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></td></tr>
 </table>
 
 <input type="hidden" name="noadd" value="<?php if (isset($_GET['noadd'])) echo $_GET['noadd']; ?>" />

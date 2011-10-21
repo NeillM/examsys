@@ -32,7 +32,8 @@
 require '../include/staff_student_auth.inc';
 require '../include/marking_functions.inc';
 require '../include/errors.inc';
-  
+require '../include/paper_security.inc';
+
 check_var('id', 'GET', true, false);
 
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
@@ -44,80 +45,30 @@ if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_col
 }
 $stmt->close();
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year FROM properties WHERE property_id=?");
-$stmt->bind_param('i', $_GET['id']);
+$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year, password FROM properties WHERE crypt_name=?");
+$stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year);
-while ($row = $stmt->fetch()) {
+$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year, $password);
+while ($stmt->fetch()) {
   $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
   if (strpos($userroles,'Student') !== false) {
+  
     // Check for additional password on the paper
-    if (!empty($password)) {
-      if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
-        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-        echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-        echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">There is a specific password assigned to this paper.</p>\n<p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"OK\" style=\"width:100px\" name=\"ok\" onclick=\"window.close();\"></form></p>\n</body>\n</html>";
-        $mysqli->close();
-        exit;
-      }
-    }
+    check_paper_password($password);
     
     // Check time security
-    if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-      echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:$font,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#4465A2; font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/clock_48.png\" width=\"48\" height=\"48\" /></div>\n";
-      echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-      echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">The paper you are attempting to access is only available between the following times:</p>\n<ul style=\"margin-left:80px\">\n<li>From - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>To - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"OK\" style=\"width:100px\" name=\"ok\" onclick=\"window.close();\"></form></p>\n</body>\n</html>";
-      $mysqli->close();
-      exit;
-    }
+    check_datetime($start_date, $end_date);
+
     //Check room security
-    if ($labs != '') {
-      $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-      $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
-      $lab_info->execute();
-      $lab_info->bind_result($address, $low_bandwidth);
-      $lab_info->store_result();
-      $lab_info->fetch();
-      if ($lab_info->num_rows == 0) {
-        echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%;font-family:$font,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:$font,sans-serif\"><div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-        echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-        echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">Access to this paper is not permitted from your current location.</p>\n</body>\n</html>";
-        exit;
-      }
-      $lab_info->close();
-    } else {
-      // Exit if a summative exam is on no labs.
-      if ($paper_type == '2') exit;
-    }
-    
+    $low_bandwidth = check_labs($paper_type, $labs, $mysqli);
+      
     //get modules if the user is a student and the paper is not formative
-    if (strpos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
-      if ($moduleID != '') {
-        $cal_year_sql = '';
-        if($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
-        $module_info = $mysqli->query("SELECT moduleid,MAX(attempt) as attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql GROUP BY moduleid");
-        if ($module_info->num_rows == 0) {
-          echo "<html>\n<head>\n<title>Access Denied - Title</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-          echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-          echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-          echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">$title $surname ($username) is not registered on <strong>$moduleID</strong> in <strong>$calendar_year</strong>.</p>\n</body>\n</html>";
-          exit;
-        } else {
-          $row = $module_info->fetch_array(MYSQLI_ASSOC);
-          if (is_array($row)) {
-            $attempt = $row['attempt'];
-          }
-        }
-        $module_info->close();
-      } else {
-        echo "<html>\n<head>\n<title>Access Denied - Year</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-        echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-        echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-        echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">This paper is not on any module.</p>\n</body>\n</html>";
-        exit;
-      }
-    }
+    $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
+
+    // Check for any metadata security restrictions
+    check_metadata($property_id, $userID, $moduleID, $mysqli);
+
     if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
       $paper_type = '_late';
     }

@@ -13,6 +13,7 @@ $string['type'] = 'Typ';
 $string['folder'] = 'Folder';
 $string['feedback'] = 'Odzew';
 $string['objectivesreport'] = 'Raport celów';
+$string['questionfeedback'] = 'Question-based Feedback';
 $string['displayoptions'] = 'Opcje wyświetlania';
 $string['display'] = 'Wyświetlanie';
 $string['windowed'] = 'w oknie';

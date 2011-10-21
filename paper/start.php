@@ -29,6 +29,11 @@
 require '../include/staff_student_auth.inc';
 require '../include/display_functions.inc';
 require '../include/media.inc';
+require_once '../include/errors.inc';
+require '../include/paper_security.inc';
+
+check_var('id', 'GET', true, false);
+
 
 function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions;
@@ -63,7 +68,7 @@ function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answer
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
-  while ($row = $question_data->fetch()) {
+  while ($question_data->fetch()) {
     if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
       $question['theme'] = $theme;
       $question['scenario'] = $scenario;
@@ -120,7 +125,7 @@ function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_ans
     $question_data->store_result();
     $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
     $question = array();
-    while ($row = $question_data->fetch()) {
+    while ($question_data->fetch()) {
       if ($question['q_id'] != $q_id or $question['display_pos'] != $display_pos) {
         $question['theme'] = $theme;
         $question['scenario'] = $scenario;
@@ -265,76 +270,23 @@ while ($stmt->fetch()) {
   
     if (stripos($userroles,'Student') !== false) {
 	    // Check for additional password on the paper
-      if ($password != '') {
-        if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
-          access_denied($string['specificpassword'], $output_header = false);
-        }
-      }
+      check_paper_password($password);
 	  
       // Check time security
-      if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-        $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-        access_denied($tmp_string, $output_header = false);
-      }
+      check_datetime($start_date, $end_date);
 	  
       //Check room security
-      if ($labs != '') {
-        $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-        $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
-        $lab_info->execute();
-        $lab_info->bind_result($address, $low_bandwidth);
-        $lab_info->store_result();
-        $lab_info->fetch();
-        if ($lab_info->num_rows == 0) {
-          access_denied($string['denied_location'], $output_header = false);
-        }
-        $lab_info->close();
-      } else {
-        // Exit if a summative exam is on no labs.
-        if ($paper_type == '2') exit;
-      }
-    
+      $low_bandwidth = check_labs($paper_type, $labs, $mysqli);
+      
       // get modules if the user is a student and the paper is not formative
-      if (stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
-        if ($moduleID != '') {
-          $cal_year_sql = '';
-          if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
-          $module_info = $mysqli->query("SELECT moduleid,MAX(attempt) as attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql GROUP BY moduleid");
-          if ($module_info->num_rows == 0) {
-            access_denied("$title $surname ($username) is not registered on <strong>$moduleID</strong> in <strong>$calendar_year</strong>.", $output_header = false);
-          } else {
-            $row = $module_info->fetch_array(MYSQLI_ASSOC);
-            if(is_array($row)) {
-              $attempt = $row['attempt'];
-            }
-          }
-          $module_info->close();
-        } else {
-          access_denied($string['error_module'], $output_header = false);
-        }
-      }
+      $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
+      
+      // Check for any metadata security restrictions
+      check_metadata($property_id, $userID, $moduleID, $mysqli);
+      
       if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
         $paper_type = '_late';
       }
-      
-      // Check for any metadata security restrictions
-      $metadata_security = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
-      $metadata_security->bind_param('i', $property_id);
-      $metadata_security->execute();
-      $metadata_security->bind_result($security_type, $security_value);
-      $metadata_security->store_result();
-      while ($metadata_security->fetch()) {
-        $check_security = $mysqli->prepare("SELECT users_metadata.id FROM users_metadata, modules WHERE users_metadata.moduleid=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $moduleID) . "') AND userID=? AND type=? AND value=?");
-        $check_security->bind_param('iss', $userID, $security_type, $security_value);
-        $check_security->execute();
-        $check_security->store_result();
-        if ($check_security->num_rows == 0) {
-          $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-          access_denied($tmp_string, $output_header = false);
-        }
-        $check_security->close();
-      }      
-      $metadata_security->close();
     }
   }
 }

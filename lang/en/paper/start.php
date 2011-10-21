@@ -46,4 +46,5 @@ $string['Investigation'] = 'Investigation';
 $string['Prescription'] = 'Prescription';
 $string['Intervention'] = 'Intervention';
 $string['Treatment'] = 'Treatment';
+$string['notregistered'] = '%s %s (%s) is not registered on <strong>%s</strong> in <strong>%s</strong>.';
 ?>

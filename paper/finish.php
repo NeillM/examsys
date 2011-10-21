@@ -25,123 +25,75 @@
 * @package
 */
 
-  require '../include/staff_student_auth.inc';
-  require '../include/marking_functions.inc';
-  require '../include/calculate_marks.inc';
-  require '../include/errors.inc';
-  require '../include/mapping.inc';
-  require '../include/finish_functions.inc';
+require '../include/staff_student_auth.inc';
+require '../include/marking_functions.inc';
+require '../include/calculate_marks.inc';
+require '../include/errors.inc';
+require '../include/mapping.inc';
+require '../include/finish_functions.inc';
+require '../include/paper_security.inc';
 
-  getSpecialSettings($userID, $mysqli);
+check_var('id', 'GET', true, false);
+
+getSpecialSettings($userID, $mysqli);
+  
+if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
+  $paper_properties->bind_param('s', $_GET['id']);
+  $paper_properties->execute();
+  $paper_properties->store_result();
+  $paper_properties->bind_result($paperID, $labs, $moduleID, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
+  while ($paper_properties->fetch()) {
+    // If set overwrite the default colours with the current users' special settings
+    if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
+    if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
+    if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
+    if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
+    if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
+    if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
+    if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
+    $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
     
-  if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
-    $paper_properties->bind_param('s', $_GET['id']);
-    $paper_properties->execute();
-    $paper_properties->store_result();
-    $paper_properties->bind_result($paperID, $labs, $moduleID, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
-    while ($paper_properties->fetch()) {
-      // If set overwrite the default colours with the current users' special settings
-      if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-      if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-      if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-      if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-      if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-      if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-      if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
-      $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
-      
-      $log_type = $paper_type;
-      $low_bandwidth = 0;
-      
-      if (strpos($userroles,'Staff') !== false and isset($_GET['userid']) and $_GET['userid'] != $userID) {
-        // Turn on all feedback if staff and a student exam script is being reviewed.
-        $display_correct_answer = 1;
-        $display_question_mark = 1;
-        $display_students_response = 1;
-        $display_feedback = 1;
-        $hide_if_unanswered = 0;
-      }
-
-      if ($userroles == 'Student') {
-        if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
-
-        // Check for additional password on the paper
-        if ($password != '') {
-          if ($password != $_COOKIE['paperpwd']) {
-            access_denied($string['specificpassword'], $output_header = false);
-          }
-        }
- 
-        // Check time security
-        if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-          $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-          access_denied($tmp_string, $output_header = false);
-        }
-        //Check room security
-        if ($labs != '') {
-          $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-          $lab_info->bind_param('s', $_SERVER['REMOTE_ADDR']);
-          $lab_info->execute();
-          $lab_info->bind_result($address, $low_bandwidth);
-          $lab_info->store_result();
-          $lab_info->fetch();
-          if ($lab_info->num_rows == 0) {
-            access_denied($string['denied_location'], false);
-          }
-          $lab_info->close();
-        }
-        
-        // get modules if the user is a student and the paper is not formative
-        if (stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
-           if ($moduleID != '') {
-            $cal_year_sql = '';
-            if($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
-            $module_info = $mysqli->query("SELECT moduleid,attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql");
-            if ($module_info->num_rows == 0) {
-              $tmp_string = sprintf($string['notregistered'], $title, $surname, $username, $moduleID, $calendar_year);
-              access_denied($tmp_string, $output_header = false);
-            } else {
-              $row = $module_info->fetch_array(MYSQLI_ASSOC);
-              if (is_array($row)) {
-                $attempt = $row['attempt'];
-              }
-            }
-            $module_info->close();
-          } else {
-            access_denied($string['error_module'], false);
-          }
-        }
-        if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
-          $paper_type = '_late';
-        }
-        
-        // Check for any metadata security restrictions
-        $metadata_security = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
-        $metadata_security->bind_param('i', $paperID);
-        $metadata_security->execute();
-        $metadata_security->bind_result($security_type, $security_value);
-        $metadata_security->store_result();
-        while ($metadata_security->fetch()) {
-          $check_security = $mysqli->prepare("SELECT users_metadata.id FROM users_metadata, modules WHERE users_metadata.moduleid=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $moduleID) . "') AND userID=? AND type=? AND value=?");
-          $check_security->bind_param('iss', $userID, $security_type, $security_value);
-          $check_security->execute();
-          $check_security->store_result();
-          if ($check_security->num_rows == 0) {
-            $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-            access_denied($tmp_string, false);
-          }
-          $check_security->close();
-        }      
-        $metadata_security->close();
-        
-      }
-      if (isset($_GET['type'])) $log_type = $_GET['type'];
+    $log_type = $paper_type;
+    $low_bandwidth = 0;
+    
+    if (strpos($userroles,'Staff') !== false and isset($_GET['userid']) and $_GET['userid'] != $userID) {
+      // Turn on all feedback if staff and a student exam script is being reviewed.
+      $display_correct_answer = 1;
+      $display_question_mark = 1;
+      $display_students_response = 1;
+      $display_feedback = 1;
+      $hide_if_unanswered = 0;
     }
-    $paper_properties->close();
-  } else {
-    display_error("Properties Query Error", $mysqli->error);
+
+    if ($userroles == 'Student') {
+      if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
+
+      // Check for additional password on the paper
+      check_paper_password($password);
+
+      // Check time security
+      check_datetime($start_date, $end_date);
+      
+      //Check room security
+      $low_bandwidth = check_labs($paper_type, $labs, $mysqli);
+      
+      // get modules if the user is a student and the paper is not formative
+      $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
+      
+      // Check for any metadata security restrictions
+      check_metadata($property_id, $userID, $moduleID, $mysqli);
+      
+      if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
+        $paper_type = '_late';
+      }     
+    }
+    if (isset($_GET['type'])) $log_type = $_GET['type'];
   }
-  require '../config/finish.inc';
+  $paper_properties->close();
+} else {
+  display_error("Properties Query Error", $mysqli->error);
+}
+require '../config/finish.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
