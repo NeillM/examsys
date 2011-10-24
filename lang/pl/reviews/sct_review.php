@@ -15,7 +15,7 @@ $string['sct_msg3'] = 'Wtedy to zalecenie staje się:';
 $string['sct_msg4'] = 'Wtedy ta interwencja staje się:';
 $string['sct_msg5'] = 'Wtedy ta terapia staje się:';
 $string['saved_msg'] = 'Twoje odpowiedzi i powody zostały zapisane. Możesz dokonać poprawek lub zamknąć przeglądarkę aby zakończyć.';
-$string['top_msg'] = 'Ten ekran jest zaprojektowany aby umożliwić ci udzielenie odpowiedzi na pytania testu zgodności ze skryptem. Krótko podaj uzasadnienie twoich odpowiedzi.';
+$string['top_msg'] = 'Ten ekran jest zaprojektowany aby umożliwić ci udzielenie odpowiedzi na pytania testu zgodności ze scenariuszem. Krótko podaj uzasadnienie twoich odpowiedzi.';
 $string['briefreasonwhy'] = 'Krótkie uzasadnienie?';
 $string['save'] = 'Zachowaj';
 ?>
