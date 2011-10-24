@@ -4,5 +4,5 @@ $string['msg'] = 'Próbujesz usunąć pytanie z banku pytań.<br /><br /><strong
 $string['recyclebin'] = 'Kosz';
 $string['delete'] = 'Usuń';
 $string['warning1'] = 'Nie możesz usunąć tego pytania, gdyż używane jest ona w następujących arkuszach:';
-$string['warning2'] = 'Usuń wszyskie wskaźniki do tego pytania zanim usuniesz samo pytania.';
+$string['warning2'] = 'Usuń wszystkie wskaźniki do tego pytania zanim usuniesz samo pytania.';
 ?>

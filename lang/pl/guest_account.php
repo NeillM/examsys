@@ -1,16 +1,16 @@
 <?php
 require './lang/' . $language . '/include/common.inc';
 
-$string['guestaccount'] = 'Guest Account';
-$string['allocatedaccount'] = 'Allocated Account';
-$string['username'] = 'Username';
-$string['password'] = 'Password';
-$string['login'] = 'Log In';
-$string['guestaccountreg'] = 'Guest Account Registration';
+$string['guestaccount'] = 'Konto gościa';
+$string['allocatedaccount'] = 'Konta przydzielone';
+$string['username'] = 'Nazwa użytkownika';
+$string['password'] = 'Hasło';
+$string['login'] = 'Zaloguj się';
+$string['guestaccountreg'] = 'Rejestracja konta gościa';
 $string['ok'] = 'OK';
-$string['title'] = 'Title';
-$string['firstname'] = 'First Name';
-$string['surname'] = 'Surname';
-$string['studentid'] = 'Student ID';
-$string['denied_msg'] = 'This page can only be accessed from a university computer within the examination room.';
+$string['title'] = 'Tytuł';
+$string['firstname'] = 'Imię';
+$string['surname'] = 'Nazwisko';
+$string['studentid'] = 'Numer legitymacji';
+$string['denied_msg'] = 'Ta strona jest dostępna tylko z komputerów uniwersteckich znajdujących się w pomieszczeniu egzaminacyjnym.';
 ?>

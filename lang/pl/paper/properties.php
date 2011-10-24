@@ -39,7 +39,7 @@ $string['stdset'] = 'Zestaw standardowy';
 $string['ticks_crosses'] = 'Haczyki/Krzyżyki';
 $string['question_marks'] = 'Punktacja pytania';
 $string['hideallfeedback'] = 'Ukryj odzew<br />jeśli nie odpowiedziano';
-$string['correctanswerhighlight'] = 'Wyróźnienie poprawnej odpowiedzi';
+$string['correctanswerhighlight'] = 'Wyróżnienie poprawnej odpowiedzi';
 $string['textfeedback'] = 'Odzew tekstowy';
 
 // Security tab
@@ -59,7 +59,7 @@ $string['na'] = 'Nie dotyczy';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';
-$string['reviewersheading'] = 'Zestaw wewnętrznych/zewnętrzynch recenzentów z terminami finalizacji.';
+$string['reviewersheading'] = 'Zestaw wewnętrznych/zewnętrznych recenzentów z terminami finalizacji.';
 $string['internalreviewers'] = 'Wewnętrzni recenzenci';
 $string['externalexaminers'] = 'Zewnętrzni recenzenci';
 $string['deadline'] = 'Termin finalizacji:';

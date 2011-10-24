@@ -12,6 +12,6 @@ $string['borderline pass'] = 'niepewne zaliczenie';
 $string['pass'] = 'zaliczenie';
 $string['good pass'] = 'zdecydowane zaliczenie';
 $string['honours pass'] = 'wyróżniające zaliczenie';
-$string['unsatisfactory'] = 'niesatysfakcjonujacy';
+$string['unsatisfactory'] = 'niesatysfakcjonujący';
 $string['competent'] = 'kompetentny';
 ?>

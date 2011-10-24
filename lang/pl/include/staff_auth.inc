@@ -1,3 +1,3 @@
 <?php
-  $types_array = array('Formatywne samooceny','Testy postepów','Egzaminy końcowe','Ankiety','Stacje OSCE','Arkusze Offline');
+  $types_array = array('Formatywne samooceny','Testy postępów','Egzaminy końcowe','Ankiety','Stacje OSCE','Arkusze offline');
 ?>

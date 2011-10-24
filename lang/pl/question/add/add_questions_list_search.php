@@ -3,7 +3,7 @@ require '../../lang/' . $language . '/include/question_types.inc';
 
 $string['wordphrase'] = 'Słowo/fraza';
 $string['in'] = 'w';
-$string['search'] = 'Wszukiwanie';
+$string['search'] = 'Wyszukiwanie';
 $string['question'] = 'Pytanie';
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
