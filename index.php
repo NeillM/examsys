@@ -162,7 +162,7 @@ require_once './classes/networkutils.class.php';
   <title><?php echo $string['exams']; ?></title>
   <script language="JavaScript">
     function enterPassword() {
-      var password = prompt("This paper requires a password.","");
+      var password = prompt("<?php echo $string['requirespassword'] ?>","");
       if (password == '' || password == null) {
         return false;
       } else {
