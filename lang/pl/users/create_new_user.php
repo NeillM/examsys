@@ -1,7 +1,7 @@
 <?php
 require '../lang/' . $language . '/include/user_search_options.inc';
 
-$string['createnewuser'] = 'Utwórz nowego użytkownika';
+$string['createnewuser'] = 'Zdefiniuj nowego użytkownika';
 $string['getldapdetails'] = 'Uzyskaj szczegóły LDAP';
 $string['lastname'] = 'Nazwisko';
 $string['firstnames'] = 'Imiona';
