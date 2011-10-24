@@ -281,7 +281,7 @@ require_once '../classes/dateutils.class.php';
   if ($current_month > 12) $current_month = 1;
   $months = array('','january','february','march','april','may','june','july','august','september','october','november','december');
   for ($i=1; $i<=12; $i++) {
-    $trans_month = mb_substr($string[$months[$i]],0,3);
+    $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
     if ($i < 10) {
       if ($i == $current_month) {
         echo "<option value=\"0$i\" selected>$trans_month</option>\n";
@@ -330,7 +330,7 @@ require_once '../classes/dateutils.class.php';
   // Available to Month
   echo "<select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
   for ($i=1; $i<=12; $i++) {
-    $trans_month = mb_substr($string[$months[$i]],0,3);
+    $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
     if ($i < 10) {
       if ($i == $current_month) {
         echo "<option value=\"0$i\" selected>$trans_month</option>\n";

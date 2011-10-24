@@ -1009,7 +1009,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
     $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
     for ($i=0; $i<12; $i++) {
-      $trans_month = mb_substr($string[$months[$i]],0,3);
+      $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
@@ -1079,7 +1079,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     // Available to Month
     echo "<select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
     for ($i=0; $i<12; $i++) {
-      $trans_month = mb_substr($string[$months[$i]],0,3);
+      $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
@@ -1251,7 +1251,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     // Available to Month
     echo "<select name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i=0; $i<12; $i++) {
-      $trans_month = mb_substr($string[$months[$i]],0,3);
+      $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
@@ -1313,7 +1313,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     // Available to Month
     echo "<select name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
     for ($i=0; $i<12; $i++) {
-      $trans_month = mb_substr($string[$months[$i]],0,3);
+      $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if (($split_month-1) == $i) {
         if ($i < 9) {
           echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
