@@ -56,6 +56,8 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
     } elseif ($q_type == 'calculation' and $correct_array[0] == '') {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
+    } elseif ($p_type != 3 and $q_type == 'textbox' and $question_marks == 0) {
+      $temp_array[$row_no]['warnings'] = $string['zeromarks'];
     } elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
       $matching_scenarios = explode('|', $scenario);
       $matching_media = explode('|', $q_media);
