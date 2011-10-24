@@ -116,7 +116,7 @@ if (!isset($no_screens)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-	<title>Standards Setting</title>
+	<title><?php echo $string['standardssetting'] . " $cfg_install_type"?></title>
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -147,23 +147,23 @@ if (!isset($no_screens)) {
   <tr><td valign="top">
   <?php
   echo "\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">Home</a>";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">{$string['home']}</a>";
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
   }
-  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">Standards Setting</a></div>";
+  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
   $helpID = 98;
-  echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $paper_title . '</div><div style="position:relative; left:12px; top:-3px; font-size:8pt">Standards Setting: Angoff Method - Group review</div>';
-  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-  echo "<tr style=\"height:4px\"><td colspan=\"2\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
+  echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $paper_title . '</div><div style="position:relative; left:12px; top:-3px; font-size:8pt">' . $string['standardssetting'] . ': ' . $string['angoffmethod'] . ' - ' . $string['groupreview'] . '</div>';
+  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></td></tr>\n";
+  echo "<tr style=\"height:4px\"><td colspan=\"2\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"{$string['line']}\" /></td></tr>\n</table>\n";
 ?>
   <br />
   <div align="center">
   <table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#DFE8FF; border:1px solid #5582D2;">
   <tr>
-  <td style="margin:0px">Use the light blue dropdown lists next to each question to indicate the percentage of <strong>borderline</strong> candidates expected to get each question correct.<br /><br /><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> = reviews differ by more than 10%</td>
+  <td style="margin:0px"><?php echo $string['percentagemsg'] ?><br /><br /><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /><?php echo $string['warningmsg'] ?></td>
   </tr>
   </table>
 <?php
@@ -173,7 +173,7 @@ if(count($rater_names) > count($reviews['user'])) {
   <div align="center" style="margin-top: 12px">
   <table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#DFE8FF; border:1px solid #5582D2;">
   <tr>
-  <td style="background-color: #FFC0C0; margin:0px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <strong>Warning</strong>: One or more of the individual reviews on which this group review is based has changed since the review took place. These reviews are not included in the mean values shown below.</td>
+  <td style="background-color: #FFC0C0; margin:0px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <?php echo $string['changedmsg'] ?></td>
   </tr>
   </table>
   </div>
@@ -200,12 +200,12 @@ $old_screen = 1;
 $question_offset = 1;
 $prologue_show = 1;
 
-$stmt = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, marks, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+$stmt = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
 $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->store_result();
 $num_rows = $stmt->num_rows;
-$stmt->bind_result($screen, $q_type, $q_id, $score_method, $marks, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);  
+$stmt->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);  
 
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
@@ -242,7 +242,7 @@ while($stmt->fetch()) {
       echo '<tr><td class="question_no">&nbsp;</td><td><p class="theme">' . $theme . '</p></td></tr>';
     }
 
-    if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $notes . '</td></tr>';
+    if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="14" height="14" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $notes . '</td></tr>';
 
     if ($scenario != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert') {
       echo '<tr><td class="question_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td valign="top"><p>' . $scenario . '</p>';
@@ -285,7 +285,7 @@ while($stmt->fetch()) {
     $question_no++;
   }
 
-  $options_array[] = array('q_type'=>$q_type, 'score_method'=>$score_method, 'correct'=>$correct, 'scenario'=>$scenario, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks'=>$marks);
+  $options_array[] = array('q_type'=>$q_type, 'score_method'=>$score_method, 'display_method'=>$display_method, 'correct'=>$correct, 'scenario'=>$scenario, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
 }         // End of While loop
 $stmt->close();
 
@@ -306,8 +306,8 @@ echo "<input type=\"hidden\" name=\"method\" value=\"Modified Angoff\" />\n";
 $mysqli->close();
 ?>
 <div align="center">
-<input type="checkbox" name="alterpassmark" value="1" checked /> Update paper pass mark<br />
-<input type="submit" name="submit" value="Save Ratings" style="width:150px" />&nbsp;<input onclick="javascript: history.back()" type="button" name="cancel" value="Cancel" style="width:100px" />
+<input type="checkbox" name="alterpassmark" value="1" checked /> <?php echo $string['updatepassmark'] ?><br />
+<input type="submit" name="submit" value="<?php echo $string['saveratings'] ?>" style="width:150px" />&nbsp;<input onclick="javascript: history.back()" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" style="width:100px" />
 </div>
 <br />
 </form>

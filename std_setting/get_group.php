@@ -42,7 +42,7 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 <html>
 <head>
 
-<title>TouchStone: List Settings</title>
+<title><?php echo $string['selectreviewers'] . " $cfg_install_type"?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style type="text/css">
@@ -91,26 +91,26 @@ while ($row = $result->fetch()) {
 $result->close();
 
 echo "\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">Home</a>";
+echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">{$string['home']}</a>";
 if ($folder != '') {
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
 } elseif (isset($_GET['module']) and $_GET['module'] != '') {
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$_GET['module'].'">'.$_GET['module'].'</a>';
 }
-echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">Standards Setting</a></div>";
+echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
 $helpID = 98;
-echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">Select Reviewers</div>';
-echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['selectreviewers'] . '</div>';
+echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></td></tr>\n";
 echo "</table>\n";
 
 ?>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr>
 	<td style="width:18px; background-color:#F1F5FB">&nbsp;</td>
-	<td style="background-color:#F1F5FB; width:20%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Standard Setter&nbsp;</td>
-	<td style="background-color:#F1F5FB; width:15%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Date&nbsp;</td>
-	<td style="background-color:#F1F5FB; width:8%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Pass Score</td>
-	<td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Method</td>
+	<td style="background-color:#F1F5FB; width:20%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['standardsetter'] ?>&nbsp;</td>
+	<td style="background-color:#F1F5FB; width:15%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['date'] ?>&nbsp;</td>
+	<td style="background-color:#F1F5FB; width:8%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['passscore'] ?></td>
+	<td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['method'] ?></td>
 	<td width="25%" style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp</td>
 </tr>
 <tr style="height:4px"><td valign="top" colspan="6"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
@@ -127,7 +127,7 @@ echo "<table>\n";
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
-<br /><p><input type="submit" name="submit" style="width:100px" value="Review" /></p>
+<br /><p><input type="submit" name="submit" style="width:100px" value="<?php echo $string['review'] ?>" /></p>
 </form>
 </body>
 </html>

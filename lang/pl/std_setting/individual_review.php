@@ -1,5 +1,6 @@
 <?php
-$string['standardssetting'] = 'Ustalanie standardów';
+require '../lang/' . $language . '/std_setting/std_set_shared.php';
+
 $string['modifiedangoffmethod'] = 'Modyfikowana metoda Angoffa';
 $string['ebelmethod'] = 'Metoda Ebla';
 $string['modangoffstep1'] = 'Dla każdego pytania użyj jasnoniebieskiej listy wyboru aby określić <strong>procent graniczny</strong> (kompetencje minimalne) wymagane od kandydatów do zaliczenia odpowiedzi.';
@@ -10,8 +11,6 @@ $string['step3'] = '<strong>Krok 3: Siatka rozróżnienia</strong><br />Dla każ
 $string['gridbelow'] = 'Użyj poniższej siatki'; //rubryki
 $string['top20'] = 'Zastosuj najlepsze 20%';
 $string['donotapply'] = 'Nie dotyczy';
-$string['mark'] = 'punkt';
-$string['marks'] = 'punkty';
 $string['easy'] = 'Łatwe';
 $string['medium'] = 'Średnio trudne';
 $string['hard'] = 'Trudne';
@@ -24,10 +23,8 @@ $string['cutscore'] = 'Próg zdawalności';
 $string['saveexit'] = 'Zapisz i zamknij';
 $string['savecontinue'] = 'Zapisz i kontynuuj';
 $string['savebank'] = 'Zapisz zaszeregowanie w bazie pytań';
-$string['negmarking'] = 'Ujemna punktacja';
 $string['cannotbeused'] = '<strong>Uwaga:</strong> Metoda Ebel nie może być stosowana pytań standardowych.';// standard set textbox questions.';
 $string['na'] = 'Brak';//N/A
 $string['screen'] = 'Ekran';
 $string['note'] = 'Uwaga:';
-$string['bonusmark'] = 'dla prawidłowej opcji, plus 1 punkt dodatkowy za poprawną kolejność';
 ?>

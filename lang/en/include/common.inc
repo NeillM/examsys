@@ -1,6 +1,7 @@
 <?php
 $string['home'] = 'Home';
 $string['help'] = 'Help';
+$string['line'] = 'Line';
 $string['cancel'] = 'Cancel';
 $string['ok'] = 'OK';
 $string['accessdenied'] = 'Access Denied';

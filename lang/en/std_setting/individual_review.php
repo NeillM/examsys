@@ -1,5 +1,6 @@
 <?php
-$string['standardssetting'] = 'Standards Setting';
+require '../lang/' . $language . '/std_setting/std_set_shared.php';
+
 $string['modifiedangoffmethod'] = 'Modified Angoff method';
 $string['ebelmethod'] = 'Ebel method';
 $string['modangoffstep1'] = 'For each question use the light blue dropdown lists to indicate the percentage of <strong>borderline</strong> (minimally competent) candidates expected to get each question correct.';
@@ -9,8 +10,6 @@ $string['step3'] = '<strong>Step 3: Distinction Grid</strong><br />For each cate
 $string['gridbelow'] = 'Use grid below';
 $string['top20'] = 'Use top 20%';
 $string['donotapply'] = 'Do not apply';
-$string['mark'] = 'mark';
-$string['marks'] = 'marks';
 $string['easy'] = 'Easy';
 $string['medium'] = 'Medium';
 $string['hard'] = 'Hard';
@@ -24,10 +23,8 @@ $string['saveexit'] = 'Save &amp; Exit';
 $string['savecontinue'] = 'Save &amp; Continue';
 $string['cancel'] = 'Cancel';
 $string['savebank'] = 'Save ratings into question bank';
-$string['negmarking'] = 'negative marking';
 $string['cannotbeused'] = '<strong>Note:</strong> Ebel method cannot be used to standard set textbox questions.';
 $string['na'] = 'N/A';
 $string['screen'] = 'Screen';
 $string['note'] = 'NOTE:';
-$string['bonusmark'] = 'for correct options, plus bonus mark for fully correct order';
 ?>
