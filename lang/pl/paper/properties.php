@@ -12,8 +12,8 @@ $string['name'] = 'Nazwa';
 $string['type'] = 'Typ';
 $string['folder'] = 'Folder';
 $string['feedback'] = 'Odzew';
-$string['objectivesreport'] = 'Raport celów';
-$string['questionfeedback'] = 'Question-based Feedback';
+$string['objectivesreport'] = 'Odzew dot. celów';
+$string['questionfeedback'] = 'Odzew dot. pytań';
 $string['displayoptions'] = 'Opcje wyświetlania';
 $string['display'] = 'Wyświetlanie';
 $string['windowed'] = 'w oknie';
@@ -55,7 +55,7 @@ $string['availablefrom'] = 'Dostępne od';
 $string['to'] = 'do';
 $string['restricttolabs'] = 'Ogranicz do pracowni';
 $string['restricttometadata'] = 'Ogranicz do metadanych';
-$string['na'] = 'brak';
+$string['na'] = 'brak';//data
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';
