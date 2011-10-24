@@ -81,7 +81,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, ca
       $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
       
       // Check for any metadata security restrictions
-      check_metadata($property_id, $userID, $moduleID, $mysqli);
+      check_metadata($paperID, $userID, $moduleID, $mysqli);
       
       if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
         $paper_type = '_late';
