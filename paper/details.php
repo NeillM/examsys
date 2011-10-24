@@ -916,14 +916,14 @@ if (isset($_GET['change_screen'])) {
         display_error("Paper order Error","Problem with query: $editPaper");
       }
     }
-    //echo fullQuestionType($temp_array[$x]['q_type']) . '</td>';
+
     echo $string[$temp_array[$x]['q_type']] . '</td>';
     if ($paper_type == '3') {
       echo '<td style="text-align:right; vertical-align:top; color:#C0C0C0">n/a</td>';
     } elseif ($paper_type == '4') {
       $temp_array[$x]['score_method'] = str_replace('|',',',$temp_array[$x]['score_method']);
       $temp_array[$x]['score_method'] = str_replace(',false','',$temp_array[$x]['score_method']);
-      echo '<td style="text-align:right; vertical-align:top; color:#808080">' . $temp_array[$x]['score_method'] . '</td>';
+      echo '<td style="text-align:right; vertical-align:top">' . $temp_array[$x]['marks'] . '</td>';
     } elseif ($temp_array[$x]['q_type'] == 'info' or $temp_array[$x]['q_type'] == 'keyword_based') {
       echo '<td>&nbsp;</td>';
     } else {
