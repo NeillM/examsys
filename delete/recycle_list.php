@@ -113,7 +113,7 @@ if (isset($_GET['folder'])) {
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <?php
-echo '<tr><td colspan="4" style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold">' . $string['recyclebin'] . '</div>';
+echo '<tr><td colspan="4" style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold">' . $string['recyclebin'] . '</div>';
 
 $recycle_bin = array();
 

@@ -221,7 +221,7 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
 <table cellpadding="0" cellspacing="0" border="0" width="100%" id="usertable">
 
 <?php
-echo "<tr><td style=\"background-color:#F1F5FB; padding-left:16px\" colspan=\"7\"><div class=\"breadcrumb\" style=\"margin-left:0px\"><a href=\"../index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
+echo "<tr><td style=\"background-color:#F1F5FB; padding-left:16px\" colspan=\"7\"><div class=\"breadcrumb\" style=\"margin-left:0px\"><a href=\"../index.php\">" . $string['home'] . "x</a></div><div onclick=\"qOff()\" style=\"font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
 if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
   echo $_GET['search_surname'];
 } elseif (isset($_GET['team']) and $_GET['team'] != '%') {
