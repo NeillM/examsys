@@ -94,7 +94,7 @@
     $folder_array = explode(';',$folder_row['name']);
     $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
     $display_name = str_replace("'","\'",$display_name);
-    $url = './folder/details.php?folder=' . $folder_row['id'];
+    $url = '/folder/details.php?folder=' . $folder_row['id'];
     $my_folders_array[$display_name] = $url;
   }
   $folder_details->close();
