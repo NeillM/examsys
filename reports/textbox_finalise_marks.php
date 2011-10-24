@@ -74,23 +74,23 @@ if (isset($_POST['submit'])) {
 
   // Get primary marks
   $primary_marks = array();
-  $result = $mysqli->prepare("SELECT student_userID, mark FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=1");
+  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=1");
   $result->bind_param('ii', $paperID, $q_id);
   $result->execute();
-  $result->bind_result($student_userID, $mark);
+  $result->bind_result($answer_id, $mark);
   while ($result->fetch()) {
-    $primary_marks[$student_userID] = $mark;
+    $primary_marks[$answer_id] = $mark;
   }
   $result->close();
 
   // Get secondary marks
   $secondary_marks = array();
-  $result = $mysqli->prepare("SELECT student_userID, mark FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=2");
+  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID=? AND q_id=? AND phase=2");
   $result->bind_param('ii', $paperID, $q_id);
   $result->execute();
-  $result->bind_result($student_userID, $mark);
+  $result->bind_result($answer_id, $mark);
   while ($result->fetch()) {
-    $secondary_marks[$student_userID] = $mark;
+    $secondary_marks[$answer_id] = $mark;
   }
   $result->close();
 
@@ -159,26 +159,26 @@ table {font-size:100%}
   $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer);
   while ($result->fetch()) {
     if (trim($user_answer) != '') {
-      if (isset($secondary_marks[$tmp_userID]) and abs($primary_marks[$tmp_userID] - $secondary_marks[$tmp_userID]) > 1) {
-        echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$tmp_userID] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no);
+      if (isset($secondary_marks[$log_id]) and abs($primary_marks[$log_id] - $secondary_marks[$log_id]) > 1) {
+        echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no);
       } else {
-        if (isset($primary_marks[$tmp_userID])) {
-          echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td>";
+        if (isset($primary_marks[$log_id])) {
+          echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td>";
           $marked_no++;
         } else {
           echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px; background-color:#EEEEEE; color:#800000\">&lt;unmarked&gt;</td>";
         }
-        if (isset($secondary_marks[$tmp_userID])) {
-          echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" /></td>";
+        if (isset($secondary_marks[$log_id])) {
+          echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" /></td>";
         } else {
           echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; width:50px; background-color:#EEEEEE\">&nbsp;</td>";
         }
         echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0\">" . displayMarks($student_no);
       }
     } else {
-      if (!isset($primary_marks[$tmp_userID])) $primary_marks[$tmp_userID] = '';
-      if (!isset($secondary_marks[$tmp_userID])) $secondary_marks[$tmp_userID] = '';
-      echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0; color:#C00000; font-weight:bold\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$tmp_userID] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$tmp_userID] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$tmp_userID] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; background-color:#FFC0C0\">" . displayMarks($student_no);
+      if (!isset($primary_marks[$log_id])) $primary_marks[$log_id] = '';
+      if (!isset($secondary_marks[$log_id])) $secondary_marks[$log_id] = '';
+      echo "<tr><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0; color:#C00000; font-weight:bold\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; background-color:#FFC0C0\">" . displayMarks($student_no);
     }
     echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
     $student_no++;
