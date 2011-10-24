@@ -557,7 +557,7 @@
           }
           $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
           if ($tmp_answer[0] == '') {
-            echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"niko0" . $string['unanswered'] . "\" />" . $score_array[3];
+            echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[3];
           } else {
             echo '<td>';
             if ($tmp_exclude == '1')  echo '<span style="color:red; text-decoration:line-through">';
@@ -711,7 +711,7 @@
             }
           }
           if ($answered  == false) {
-            echo "<tr><td colspan=\"3\" style=\"color:#808080\">niko1" . $string['unanswered'] . "</td></tr>\n";
+            echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
           }
           echo "</table>\n";
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">&nbsp;{$paper[$question]['correct_fback']}</div>\n";
@@ -814,9 +814,9 @@
             }
           }
           if (!isset($paper[$question]['user_answer'])) {
-            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">niko2" . $string['unanswered'] . "</td></tr>\n";
+            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td></tr>\n";
           } elseif ($paper[$question]['user_answer'] == 0) {
-            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">niko3" . $string['unanswered'] . "</td></tr>\n";
+            echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td></tr>\n";
           }
           if ($tmp_display_feedback == '1') {
             if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
@@ -960,7 +960,7 @@
             }
           }
           echo "</table>\n";
-          if (!$answered) echo "<br />\n<div style=\"color:#808080\">niko4" . $string['unanswered'] . "</div>\n";
+          if (!$answered) echo "<br />\n<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
             echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
           }
@@ -1078,7 +1078,7 @@
             }
           }
 
-          if (!isset($paper[$question]['user_answer']) OR $paper[$question]['user_answer'] == 0) echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"3\">niko5" . $string['unanswered'] . "</td></tr>\n";
+          if (!isset($paper[$question]['user_answer']) OR $paper[$question]['user_answer'] == 0) echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"3\">" . $string['unanswered'] . "</td></tr>\n";
           if ($tmp_display_feedback == '1') {
             if ($paper[$question]['correct_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"5\">&nbsp;</td></tr>\n";
@@ -1221,7 +1221,7 @@
           }
           
           if ($answered  == false) {
-            echo "<tr><td colspan=\"3\" style=\"color:#808080\">niko6" . $string['unanswered'] . "</td></tr>\n";
+            echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
           }
           echo "</table>\n";
           if ($tmp_display_feedback == '1') {
@@ -1333,7 +1333,7 @@
               } else {
                 echo "<select name=\"q" . $question. "_" . $std_part . "\" style=\"color:red; text-decoration:line-through; border:1px solid red\">\n";
               }
-              if ($user_answers[$i] == 'u' or $user_answers[$i] == '') echo "<option value=\"\" style=\"color:#808080\">niko7" . $string['unanswered'] . "</option>\n";
+              if ($user_answers[$i] == 'u' or $user_answers[$i] == '') echo "<option value=\"\" style=\"color:#808080\">" . $string['unanswered'] . "</option>\n";
               $tmp_option_no = 1;
               for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {
                 if ($option_order[$option_no]+1 == $user_answers[$i]) {
@@ -1358,6 +1358,7 @@
                     $matching_option = 1;
                   }
                 }
+				echo '***********'.$matching_option;
                 if ($matching_option == 1) {
                   $std_part++;
                   $matching_user_option = 0;
@@ -1609,8 +1610,8 @@
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
                 if ($user_choices[$blank_count] == 'u') {
-				  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"niko8" . $string['unanswered'] .  "\" />";
-                  //echo '</span><span style="color:#808080">niko9' . $string['unanswered'] . '</span>';     
+				  echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" />";
+                  //echo '</span><span style="color:#808080">' . $string['unanswered'] . '</span>';     
                 } else {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                   $have_answer = true;
@@ -1750,9 +1751,9 @@
           }
           
           if (!isset($paper[$question]['user_answer'])){
-            echo "<div style=\"color:#808080\">niko10" . $string['unanswered'] . "</div>\n";
+            echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
           } elseif ($paper[$question]['user_answer'] == 'u') {
-            echo "<div style=\"color:#808080\">niko11" . $string['unanswered'] . "</div>\n";         
+            echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";         
           }
           
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
