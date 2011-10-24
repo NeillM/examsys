@@ -45,10 +45,10 @@ require $cfg_web_root . "lang/$language/include/paper_options.inc";
     // Get the questions on the paper.
     $paper = array();
     $question_no = 0;
-    $result = $mysqli->prepare("SELECT question, marks FROM papers, options WHERE paper=? AND papers.question=options.o_id ORDER BY screen, display_pos");
+    $result = $mysqli->prepare("SELECT question, marks_correct FROM papers, options WHERE paper=? AND papers.question=options.o_id ORDER BY screen, display_pos");
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
-    $result->bind_result($question, $marks);
+    $result->bind_result($question, $marks_correct);
     while ($row = $result->fetch()) {
       $question_no++;
       $paper[$question_no]['id'] = $question;

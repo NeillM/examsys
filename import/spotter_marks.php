@@ -50,14 +50,14 @@
     // Get the questions on the paper.
     $paper = array();
     $question_no = 0;
-    $result = $mysqli->prepare("SELECT question, marks FROM papers, options WHERE paper=? AND papers.question=options.o_id ORDER BY screen, display_pos");
+    $result = $mysqli->prepare("SELECT question, marks_correct FROM papers, options WHERE paper=? AND papers.question=options.o_id ORDER BY screen, display_pos");
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
-    $result->bind_result($question, $marks);
+    $result->bind_result($question, $marks_correct);
     while ($row = $result->fetch()) {
       $question_no++;
       $paper[$question_no]['id'] = $question;
-      $paper[$question_no]['marks'] = $marks;
+      $paper[$question_no]['marks_correct'] = $marks_correct;
     }
     $result->close();
     
@@ -126,7 +126,7 @@
           for ($q=1; $q<=$question_no; $q++) {
             $result = $mysqli->prepare("INSERT INTO log5 VALUES(NULL,?,?,?,?,?,?)");
             $mark = floatval(trim($fields[$q]));
-            $result->bind_param('isiidi', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $mark, $paper[$q]['marks']);
+            $result->bind_param('isiidi', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $mark, $paper[$q]['marks_correct']);
             $result->execute();
             $result->close();
           }
