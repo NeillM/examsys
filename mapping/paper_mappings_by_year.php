@@ -181,9 +181,9 @@ function getPaper($paperID) {
 
 //look for other papers
 $papers[$_GET['paperID']] =  getPaper($_GET['paperID']);
-$sql = "SELECT property_id from properties where moduleID LIKE '%" . $papers[$_GET['paperID']]['moduleID'] . "%' AND paper_title LIKE '%" . $papers[$_GET['paperID']]['moduleID'] . "%' AND property_id != ? AND paper_type = 3 AND paper_title NOT like '%resit%' AND paper_title NOT like '%supplementary%' AND paper_title NOT like '%test%' AND deleted IS NULL AND labs IS NOT NULL AND start_date < DATE_ADD(NOW(), INTERVAL 365 DAY) order by start_date DESC LIMIT 3";
+$sql = "SELECT property_id from properties where moduleID LIKE '%" . $papers[$_GET['paperID']]['moduleID'] . "%' AND paper_title LIKE '%" . $papers[$_GET['paperID']]['moduleID'] . "%' AND property_id != ? AND paper_type = 3 AND paper_title NOT like '%resit%' AND paper_title NOT like '%supplementary%' AND paper_title NOT like '%test%' AND deleted IS NULL AND labs IS NOT NULL AND start_date < ? order by start_date DESC LIMIT 3";
 $papersRes = $mysqli->prepare($sql);
-$papersRes->bind_param('i', $_GET['paperID']);
+$papersRes->bind_param('is', $_GET['paperID'],$start_date);
 $papersRes->execute();
 $papersRes->bind_result($property_id);
 while ($row = $papersRes->fetch()) {
@@ -193,7 +193,7 @@ while ($row = $papersRes->fetch()) {
 $papersRes->close();
 
 if(isset($papers_tmp)) {
-  $papers_tmp = array_reverse($papers_tmp);
+  //$papers_tmp = array_reverse($papers_tmp);
   $i = 0;
   foreach ($papers_tmp as $p_id) {
     $papers[$p_id] = getPaper($p_id);
