@@ -979,8 +979,12 @@
           echo "<tr><td></td><td></td><td></td><td style=\"color:#808080\">" . $string['experts'] . "</td><td></td></tr>\n";
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             $tmp_part_id = $option_order[$part_id];
+            
             if (isset($correct_answer[$tmp_part_id])) {
-              if ($hide_if_unanswered == 0 or ($hide_if_unanswered == '1' and isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != '0' and $display_correct_answer == '1')){
+              $strong_on = '';
+              $strong_off = '';
+              
+              if (($tmp_display_correct_answer == '1' and $hide_if_unanswered == '0') or ($hide_if_unanswered == '1' and isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != '0' and $tmp_display_correct_answer == '1')){
                 $strong_on = '<strong>';
                 $strong_off = '</strong>';
               } else {
@@ -991,6 +995,7 @@
               $strong_on = '';
               $strong_off = '';
             }
+            
             if (isset($paper[$question]['user_answer']) and $tmp_part_id+1 == $paper[$question]['user_answer']) {
               if ($tmp_display_correct_answer == '1') {
                 echo '<td>';
