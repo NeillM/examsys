@@ -1300,7 +1300,7 @@
             $separate_user_answers = explode('$', $user_answers[$i]);
             echo '<table cellpadding="0" cellspacing="1" border="0">';
             $tmp_option_no = 1;
-            
+            $option_answered = 0;
             if (count($separate_answers) == 1) {   // Single answer Extended Matching
               if ($user_answers[$i] == 'u' or $user_answers[$i] == '') {
                 reset_feedback($hide_if_unanswered);
@@ -1350,8 +1350,7 @@
                 }
               }
               echo "</td>\n";
-            } else {                              // Multiple answer Extended Matching
-              $option_answered = 0;
+            } else {                              // Multiple answer Extended Matching     
 			  for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {              
                 $matching_option = 0;
                 foreach ($separate_answers as $single_answer) {
