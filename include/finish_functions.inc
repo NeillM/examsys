@@ -1351,7 +1351,8 @@
               }
               echo "</td>\n";
             } else {                              // Multiple answer Extended Matching
-              for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {              
+              $option_answered = 0;
+			  for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {              
                 $matching_option = 0;
                 foreach ($separate_answers as $single_answer) {
                   if ($single_answer == $option_order[$tmp_option_no-1]+1) {
@@ -1359,6 +1360,7 @@
                   }
                 }
 				//echo '***********'.$matching_option;
+				
                 if ($matching_option == 1) {
                   $std_part++;
                   $matching_user_option = 0;
@@ -1367,13 +1369,15 @@
                       $matching_user_option = 1;
                     }
                   }
+				  $option_answered+=$matching_user_option;
+				
                   echo '<tr>';
                   if ($tmp_display_correct_answer == '1') {
                     echo '<td>'; 
                     if(isset($paper[$question]['std'][$std_part-1])) echo display_std($paper[$question]['std'][$std_part-1]);
                     echo '</td>';
                   } else {
-                    echo '<td>xx</td>';
+                    echo '<td></td>';
                   }
                   echo '<td>';
                   if ($matching_user_option == 1 and substr($tmp_exclude,$section,1) == '0') {
@@ -1394,7 +1398,8 @@
                       $matching_user_option = 1;
                     }
                   }
-                  echo '<tr><td></td><td>';
+                  $option_answered+=$matching_user_option;
+				  echo '<tr><td></td><td>';
                   if ($matching_user_option == 1 and $tmp_display_students_response == '1' and substr($tmp_exclude,$section,1) == '0') {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                   } else {
@@ -1404,9 +1409,10 @@
                   if (substr($tmp_exclude,$section,1) == '1') echo ' style="color:red; text-decoration:line-through"';
                   echo ">" . $paper[$question]['option_text'][$option_order[$option_no]] . "</td></tr>\n";
                 }
-                $tmp_option_no++;
+				$tmp_option_no++;
               }
             }
+			    
             $section = $std_part;
             echo '</table>';
             echo '<br />';
@@ -1417,7 +1423,10 @@
             $i++;
           }
           echo "</ol>\n";
-          if ($paper[$question]['score_method'] == 'Mark per Question') {
+          if ($option_answered=='0') echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
+
+            
+		  if ($paper[$question]['score_method'] == 'Mark per Question') {
             $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] :$paper[$question]['marks_incorrect']; 
           }
           break;
