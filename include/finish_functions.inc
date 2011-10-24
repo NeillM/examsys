@@ -1761,6 +1761,8 @@
           }
           
           $paper[$question]['mark'] = 0;
+          $all_correct = true;
+          $correct_no = 0;
           
           $tmp_labels = 0;
           $max_col1 = 0;
@@ -1794,10 +1796,22 @@
               $y = $user_split2[$a+1];
               if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                $correct_no++;
               } else {
                 $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                $all_correct = false;
               }
               $i++;
+            }
+          }
+          
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
+            if ($correct_no == count($correct_labels)) {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } elseif ($correct_no == 0 and $all_correct == true) {
+              $paper[$question]['mark'] = 0;
+            } else {
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
             }
           }
         
@@ -1808,7 +1822,7 @@
           echo '<div align="center">';
           echo '<script language="JavaScript">';
           if ($tmp_display_correct_answer == '0' or $tmp_display_students_response == '0') {
-          	if(!empty($paper[$question]['user_answer'])) {
+          	if (!empty($paper[$question]['user_answer'])) {
 	            $paper[$question]['user_answer'] = str_replace('"','&#034;',$paper[$question]['user_answer']);
 	            $paper[$question]['user_answer'] = str_replace("'",'&#039;',$paper[$question]['user_answer']);
           	}
