@@ -133,7 +133,7 @@ require_once '../classes/searchutils.class.php';
 <div style="font-size:110%"><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype">
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
-  $qTypes = array('calculation'=>'Calculation','dichotomous'=>'Dichotomous','extmatch'=>'Extended Matching','blank'=>'Fill-in-the-Blank','flash'=>'Flash Interface','hotspot'=>'Image Hotspot','info'=>'Information Block','labelling'=>'Labelling','likert'=>'Likert Scale','matrix'=>'Matrix','mcq'=>'Multiple Choice','mrq'=>'Multiple Response','rank'=>'Ranking','sct'=>'Script Concordance','textbox'=>'Textbox');
+  $qTypes = array('calculation'=>$string['calculation'],'dichotomous'=>$string['dichotomous'],'extmatch'=>$string['extmatch'],'blank'=>$string['blank'],'flash'=>$string['flash'],'hotspot'=>$string['hotspot'],'info'=>$string['info'],'labelling'=>$string['labelling'],'likert'=>$string['likert'],'matrix'=>$string['matrix'],'mcq'=>$string['mcq'],'mrq'=>$string['mrq'],'rank'=>$string['rank'],'sct'=>$string['sct'],'textbox'=>$string['textbox']);
   foreach ($qTypes as $tmp_type=>$tmp_title) {
     if (isset($_POST['searchtype']) and $_POST['searchtype'] == $tmp_type) {
       echo "<option value=\"$tmp_type\" selected>$tmp_title</option>\n";
