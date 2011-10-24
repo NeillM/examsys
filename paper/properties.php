@@ -189,8 +189,7 @@ if (isset($_POST['Submit'])) {
     $tmp_pass_mark = $_POST['pass_mark'];
     if ($tmp_pass_mark == '') $tmp_pass_mark = 40;
 
-    $tmp_distinction_mark = $_POST['distinction_mark'];
-    if ($tmp_distinction_mark == '') $tmp_distinction_mark = 70;
+    $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
 
     if (isset($_POST['calculator'])) {
       $tmp_calculator = 1;
@@ -287,7 +286,7 @@ if (isset($_POST['Submit'])) {
     <meta http-equiv="pragma" content="no-cache" />
     <script language="JavaScript">
       function closeWindow() {
-        <?php
+<?php
           if ($_POST['noadd'] == 'y') {
         ?>
             window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
