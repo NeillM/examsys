@@ -93,15 +93,15 @@ a:visited.page {color:white}
     for ($i=0; $i<12; $i++) {
       if (($split_month-1) == $i) {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         }
       } else {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         }
       }
     }
@@ -146,15 +146,15 @@ a:visited.page {color:white}
     for ($i=0; $i<12; $i++) {
       if (($split_month-1) == $i) {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\" selected>" . substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\" selected>" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         }
       } else {
         if ($i < 9) {
-          echo "<option value=\"0" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"0" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         } else {
-          echo "<option value=\"" . ($i+1) . "\">" . substr($string[$months[$i]],0,3) . "</option>\n";
+          echo "<option value=\"" . ($i+1) . "\">" . mb_substr($string[$months[$i]],0,3,'UTF-8') . "</option>\n";
         }
       }
     }
