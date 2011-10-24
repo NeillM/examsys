@@ -1358,7 +1358,7 @@
                     $matching_option = 1;
                   }
                 }
-				echo '***********'.$matching_option;
+				//echo '***********'.$matching_option;
                 if ($matching_option == 1) {
                   $std_part++;
                   $matching_user_option = 0;
