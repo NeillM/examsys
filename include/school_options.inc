@@ -51,6 +51,6 @@
 </td></tr>
 </table>
 
-<input type="hidden" name="divID" value="" />
+<input type="hidden" id="divID" name="divID" value="" />
 </form>
 </div>

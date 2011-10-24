@@ -36,7 +36,12 @@
 </style>
 
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../javascript/jquery-1.6.1.min.js" type="text/javascript"></script>
 <script language="javascript">
+$(function () {
+  $('body').click(deselSch);
+});
+
   function selSch(divID, evt) {
     tmp_ID = document.myform.divID.value;
     if (tmp_ID != '') {
@@ -56,7 +61,7 @@
     if (tmp_ID != '') {
       document.getElementById(tmp_ID).style.backgroundColor = 'white';
     }
-    document.myform.oldDivID.value = '';
+//    document.myform.oldDivID.value = '';
     document.getElementById('menu1b').style.display = 'none';
     document.getElementById('menu1a').style.display = 'block';
   }
@@ -79,7 +84,7 @@
 </script>
 </head>
 
-<body onclick="deselSch()">
+<body>
 <?php
   require '../include/school_options.inc';
 ?>

@@ -4,6 +4,7 @@ $string['help'] = 'Help';
 $string['line'] = 'Line';
 $string['cancel'] = 'Cancel';
 $string['ok'] = 'OK';
+$string['save'] = 'Save';
 $string['accessdenied'] = 'Access Denied';
 $string['denied_paper'] = 'You are attempting to access a <strong>paper you do not have rights to</strong>!';
 $string['denied_folder'] = 'You are attempting to access a <strong>folder you do not have rights to</strong>!';
