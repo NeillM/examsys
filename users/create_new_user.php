@@ -250,12 +250,14 @@ function ldaplookup() {
 ?>
 <tr><td align="right"><span class="field"><?php echo $string['title']; ?></span></td><td>
 <select id="new_users_title" name="new_users_title" size="1">
-<option value="Dr"><?php echo $string['dr']; ?></option>
-<option value="Mr" selected><?php echo $string['mr']; ?></option>
-<option value="Mrs"><?php echo $string['mrs']; ?></option>
-<option value="Miss"><?php echo $string['miss']; ?></option>
-<option value="Ms"><?php echo $string['ms']; ?></option>
-<option value="Professor"><?php echo $string['professor']; ?></option>
+<?php
+if ($string['mr']!='') echo '<option value="Mr" selected>' . $string['mr'] . '</option>';
+if ($string['mrs']!='') echo '<option value="Mrs">' . $string['mrs'] . '</option>';
+if ($string['miss']!='') echo '<option value="Miss">' . $string['miss'] . '</option>';
+if ($string['ms']!='') echo '<option value="Ms">' . $string['ms'] . '</option>';
+if ($string['dr']!='') echo '<option value="Dr">' . $string['dr'] . '</option>';
+if ($string['professor']!='') echo '<option value="Professor">' . $string['professor'] . '</option>';
+?>
 </select></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input type="text" id="new_surname" name="new_surname" size="40" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" /></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input type="text" id="new_first_names" name="new_first_names" size="40" value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>" /></td></tr>
