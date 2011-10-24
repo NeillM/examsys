@@ -220,12 +220,12 @@ if (isset($_GET['change_screen'])) {
 <script type="text/javascript" src="../javascript/staff_help.js"></script>
 <script type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<script language="JavaScript">
+<script defer language="JavaScript">
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, prev_screen, next_screen, current_screen, menuID, subparts, evt) {
     tmp_ID = document.PapersMenu.oldQuestionID.value;
     if (tmp_ID != '') {
-      document.getElementById('link' + tmp_ID).style.backgroundColor = 'white';
-      document.getElementById('link' + tmp_ID).style.color = 'black';
+      document.getElementById('link' + tmp_ID).style.backgroundColor = '#ffffff';
+      document.getElementById('link' + tmp_ID).style.color = '#000000';
     }
     document.getElementById('menu2a').style.display = 'none';
     if (menuID == 'menu2b') {
@@ -247,8 +247,8 @@ if (isset($_GET['change_screen'])) {
       document.getElementById('promotetext').style.color = '#808080';
       document.getElementById('promoteicon').src = '../artwork/promote_disabled.gif';
     } else {
-      document.getElementById('promotetext').style.color = 'black';
-      document.getElementById('promotetext').style.hover = 'blue';
+      document.getElementById('promotetext').style.color = '#000000';
+      document.getElementById('promotetext').style.hover = '#0000FF';
       document.getElementById('promoteicon').src = '../artwork/promote.gif';
     }
     document.PapersMenu.next_screen.value = next_screen;
@@ -256,8 +256,8 @@ if (isset($_GET['change_screen'])) {
       document.getElementById('demotetext').style.color = '#808080';
       document.getElementById('demoteicon').src = '../artwork/demote_disabled.gif';
     } else {
-      document.getElementById('demotetext').style.color = 'black';
-      document.getElementById('demotetext').style.hover = 'blue';
+      document.getElementById('demotetext').style.color = '#000000';
+      document.getElementById('demotetext').style.hover = '#0000FF';
       document.getElementById('demoteicon').src = '../artwork/demote.gif';
     }
     document.PapersMenu.current_screen.value = current_screen;
@@ -800,7 +800,7 @@ if (isset($_GET['change_screen'])) {
     }
 
     if ($q_highlight == $temp_array[$x]['display_pos']) {
-      echo "<script language=\"JavaScript\">\n";
+      echo "<script defer language=\"JavaScript\">\n";
       echo "document.getElementById('menu2a').style.display = 'none';\n";
       echo "document.getElementById('menu2c').style.display = 'none';\n";
       echo "document.getElementById('menu2b').style.display = 'block';\n";
@@ -815,7 +815,7 @@ if (isset($_GET['change_screen'])) {
         echo "document.getElementById('promotetext').style.color = '#808080';\n";
         echo "document.getElementById('promoteicon').src = '../artwork/promote_disabled.gif';\n";
       } else {
-        echo "document.getElementById('promotetext').style.color = '#black';\n";
+        echo "document.getElementById('promotetext').style.color = '#000000';\n";
         echo "document.getElementById('promoteicon').src = '../artwork/promote.gif';\n";
       }
       echo "document.PapersMenu.next_screen.value = '" . $temp_array[$x + 1]['screen'] . "';\n";
@@ -823,7 +823,7 @@ if (isset($_GET['change_screen'])) {
         echo "document.getElementById('demotetext').style.color = '#808080';\n";
         echo "document.getElementById('demoteicon').src = '../artwork/demote_disabled.gif';\n";
       } else {
-        echo "document.getElementById('demotetext').style.color = '#black';\n";
+        echo "document.getElementById('demotetext').style.color = '#000000';\n";
         echo "document.getElementById('demoteicon').src = '../artwork/demote.gif';\n";
       }
       echo "document.PapersMenu.current_screen.value = '" . $temp_array[$x]['screen'] . "';\n";

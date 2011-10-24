@@ -2,19 +2,19 @@
  div#left-sidebar {position:absolute; top:0; left:0; width:195px; height:100%; padding-right:4px; padding-left:14px; padding-top:4px; padding-bottom:4px; background-color:#DFECFF; border-right: 1px solid #95AEC8; overflow:auto; font-size:75%}
  @media screen {body>div#left-sidebar{position:fixed}}
  * html body{overflow:hidden} 
- * html div#content{height:100px; background-colour:white}
+ * html div#content{height:100px; background-colour:#FFFFFF}
  img {margin:0px; padding:0px;}
  .divider {padding-left:10px; padding-bottom:2px; font-weight:bold}
  .f {float:left; width:375px; padding-left:10px; font-size:90%}
  .file {float:left; width:375px; height:74px; padding-left:12px; font-size:90%}
 
- a:link {color:blue}
- a:visited {color:blue}
- a:hover {color:blue}
+ a:link {color:#0000FF}
+ a:visited {color:#0000FF}
+ a:hover {color:#0000FF}
 
- a.blacklink:link {color:black}
- a.blacklink:visited {color:black}
- a.blacklink:hover {color:black}
+ a.blacklink:link {color:#000000}
+ a.blacklink:visited {color:#000000}
+ a.blacklink:hover {color:#000000}
 
  a.greylink:link {color:#808080}
  a.greylink:visited {color:#808080}
