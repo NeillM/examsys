@@ -1,7 +1,7 @@
 <?php
 require '../../lang/' . $language . '/include/question_types.inc';
 
-$string['byteam'] = 'wg. Zespołu';
+$string['byteam'] = 'wg. zespołu';
 $string['question'] = 'Pytanie';
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';

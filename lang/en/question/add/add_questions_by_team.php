@@ -7,4 +7,5 @@ $string['type'] = 'Type';
 $string['modified'] = 'Modified';
 $string['warningnoleadin'] = 'WARNING: no question lead-in!';
 $string['locked'] = 'Locked';
+$string['warningnoquestion'] = 'No questions found that belong to team';
 ?>
