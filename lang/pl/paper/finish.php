@@ -25,7 +25,7 @@ $string['randommark'] = "Liczba punktów na 'chybił-trafił'";
 $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['yourpercentage'] = 'Twój wynik';//??
 $string['adjusted'] = '(skorygowany)';
-$string['msg'] = 'Dziękuję za wypełnienie <strong>%s</strong>. Twoje odpowiedzi zostały zanotowane.';//??
+$string['msg'] = 'Dziękujemy za wypełnienie <strong>%s</strong>. Twoje odpowiedzi zostały zanotowane.';//??
 $string['closewindow'] = 'Zamknij okno';
 $string['overallcorrectorder'] = 'Właściwa kolejność całości (Punkt dodatkowy)';
 $string['outof'] = 'z';
@@ -49,7 +49,7 @@ $string['thenthis'] = 'Wtedy';
 $string['is'] = 'jest';
 $string['of'] = 'z';
 $string['experts'] = 'Eksperci';
-$string['thankyou'] = 'Dziękuję';
+$string['thankyou'] = 'Dziękujemy';
 $string['difficultyofthequestion'] = 'trudność pytania (tj. warunki standardowe). Przewiń do pełnego tytułu kategorii.';
 $string['withatoleranceof'] = 'z tolerancją';
 

@@ -1,4 +1,4 @@
 <?php
 $string['byteam'] = 'wg. zespołu';
-$string['members'] = 'członkowie';
+$string['members'] = 'członków';
 ?>
