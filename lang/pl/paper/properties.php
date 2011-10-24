@@ -2,6 +2,9 @@
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
+
+$string['propertiestitle'] = 'Właściwości';
+$string['edittitle'] = 'Edytuj';
 // General tab
 $string['generaltab'] = 'Ogólne';
 $string['generalheading'] = 'Nazwa arkusza, punktacja i opcje wyświetlania';
@@ -34,7 +37,7 @@ $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['distinction'] = 'Wyróżnik';
 $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Brak dopasowania';
-$string['calculatrrandommark'] = "Oblicz liczbę punktów na 'chybił-trafił'";
+$string['calculatrrandommark'] = "Policz punkty na 'chybił-trafił'";
 $string['stdset'] = 'Zestaw standardowy';
 $string['ticks_crosses'] = 'Haczyki/Krzyżyki';
 $string['question_marks'] = 'Punktacja pytania';

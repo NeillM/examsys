@@ -282,7 +282,7 @@ if (isset($_POST['Submit'])) {
   ?>
     <html>
     <head>
-    <title>Edit</title>
+    <title><?php echo $string['edittitle']; ?></title>
     <meta http-equiv="pragma" content="no-cache" />
     <script language="JavaScript">
       function closeWindow() {
@@ -315,7 +315,7 @@ if (isset($_POST['Submit'])) {
   ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
     <html>
-    <head><title>Edit</title></head>
+    <head><title><?php echo $string['edittitle']; ?></title></head>
     <body>
     <form>
       <br />Warning paper name already used by another assessment!<br />&nbsp;<div align="center"><input type="button" name="back" value="&lt; Back" onclick="javascript: history.go(-1)" /></div>
@@ -361,7 +361,7 @@ if (isset($_POST['Submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Properties<?php echo " $cfg_install_type"; ?></title>
+  <title><?php echo $string['propertiestitle'] . " $cfg_install_type"; ?></title>
 
   <style>
     body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:0px; font-size:100%}
@@ -890,7 +890,7 @@ if ($paper_type != '4' and $paper_type != '5') {
         $std_set_details->close();
       } else {
         echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"2\" disabled />";
-        echo '<span style="color:#808080">Std Set</span>';
+        echo '<span style="color:#808080">' . $string['stdset'] . '</span>';
       }
     }
     if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {

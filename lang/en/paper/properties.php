@@ -2,6 +2,9 @@
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
+$string['propertiestitle'] = 'Properties';
+$string['edittitle'] = 'Edit';
+
 // General tab
 $string['generaltab'] = 'General';
 $string['generalheading'] = 'Paper name, marking and display options';
