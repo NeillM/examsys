@@ -62,8 +62,8 @@
   // Get the students who are enrolled on the module/session.
   $user_no = 0;
   if (!isset($_GET['absent']) or $_GET['absent'] == 0) {
-    $result = $mysqli->prepare("SELECT DISTINCT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (student_modules, users AS students, users AS examiners, sid, log4_overall) WHERE students.id=log4_overall.userID AND examiners.id=log4_overall.examinerID AND started>=? AND started<=? AND q_paper=? AND student_modules.userID=students.id AND students.id=sid.userID AND moduleid=? ORDER BY students.surname, students.initials");
-    $result->bind_param('ssis', $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $moduleID);
+    $result = $mysqli->prepare("SELECT DISTINCT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (users AS students, users AS examiners, sid, log4_overall) WHERE students.id=log4_overall.userID AND examiners.id=log4_overall.examinerID AND started>=? AND started<=? AND q_paper=? AND students.id=sid.userID ORDER BY students.surname, students.initials");
+    $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
   } else {
     $result = $mysqli->prepare("SELECT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (student_modules, users AS students, sid) LEFT JOIN log4_overall ON students.id=log4_overall.userID AND q_paper=? LEFT JOIN users AS examiners ON log4_overall.examinerID=examiners.id WHERE student_modules.userID=students.id AND students.id=sid.userID AND moduleid=? AND calendar_year=? ORDER BY students.surname, students.initials");
     $result->bind_param('iss', $_GET['paperID'], $moduleID, $calendar_year);
@@ -71,7 +71,7 @@
   $result->execute();
   $result->bind_result($tmp_userID, $gender, $grade, $year, $surname, $initials, $first_names, $title, $student_id, $started, $display_started, $overall_rating, $numeric_score, $examiner_title, $examiner_surname, $examiner_initials);
   $user_results = array();
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $user_results[$user_no]['name'] = $surname . $initials;
     $user_results[$user_no]['display_name'] = $title . ' ' . $surname . ', <span style="color:#808080">' . $first_names . '</span>';
     $user_results[$user_no]['classification'] = $overall_rating;
@@ -121,7 +121,7 @@
   
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] != '') {   // No attendance
-      $classifications[$user_results[$i]['classification']]++;
+      //$classifications[$user_results[$i]['classification']]++;
       $total_score += $user_results[$i]['numeric_score'];
       $completed_no++;
     }

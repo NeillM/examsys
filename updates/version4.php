@@ -30,6 +30,35 @@ require_once '../classes/lang.class.php';
 $version = '4.1';
 
 set_time_limit(0);
+
+function convert_year($old_year) {
+  $new_year = 1;
+  switch ($old_year) {
+    case 'year1':
+      $new_year = 1;
+      break;
+    case 'year2':
+      $new_year = 2;
+      break;
+    case 'year3':
+    case 'cp1':
+      $new_year = 3;
+      break;
+    case 'year4':
+    case 'cp2':
+      $new_year = 4;
+      break;
+    case 'year5':
+    case 'cp3':
+    case 'f1':
+    case 'graduate':
+      $new_year = 5;
+      break;
+    default:
+      $new_year = 1;
+  }
+  return $new_year;
+}
 ?>
 <html>
   <head>
@@ -1315,8 +1344,44 @@ if (!isset($_POST['update'])) {
     $update->close();
   }
   $result->close();
-
   echo "</ol>\n";
+  
+  // 24/02/2011
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log4_overall' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='year'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($column_type == "enum('year1','year2','year3','year4','year5','year6','cp1','cp2','cp3','f1','graduate')") {
+    $adjust = $mysqli->prepare("ALTER TABLE log4_overall ADD COLUMN yearofstudy tinyint");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE log4_overall ADD COLUMN yearofstudy tinyint</div>\n";
+    ob_flush();
+    flush();
+
+    $convert_years = array('year1'=>1,'year2'=>2,'year3'=>3,'year4'=>4,'year5'=>5,'year6'=>6,'cp1'=>3,'cp2'=>4,'cp3'=>5,'f1'=>5,'graduate'=>6);
+    foreach ($convert_years as $old_year=>$new_year) {
+      $adjust = $mysqli->prepare("UPDATE log4_overall SET yearofstudy=$new_year WHERE year='$old_year'");
+      $adjust->execute();
+      $adjust->close();
+    }
+    
+    $adjust = $mysqli->prepare("ALTER TABLE log4_overall DROP COLUMN year");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE log4_overall DROP COLUMN year</div>\n";
+    ob_flush();
+    flush();
+    
+    $adjust = $mysqli->prepare("ALTER TABLE log4_overall CHANGE COLUMN yearofstudy year tinyint");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE log4_overall CHANGE COLUMN yearofstudy year tinyint</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
   
   //Close the database
   $mysqli->close();
