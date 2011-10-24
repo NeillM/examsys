@@ -1,4 +1,7 @@
 <?php
+
+//niko abs
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -33,7 +36,7 @@
   
     function buttonclick(sectionID, scriptName) {
       parent.qlist.iframeurl.location = scriptName;
-      parent.qlist.previewurl.location = 'preview_default.html'
+      parent.qlist.previewurl.location = 'preview_default.php'
       
       document.getElementById('button_unused').style.background='';
       document.getElementById('button_alphabetic').style.background='';

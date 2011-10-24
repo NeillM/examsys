@@ -25,16 +25,16 @@
 ?>
 <html>
 <head>
-<title>TouchStone</title>
+<title>Rogō</title>
 </head>
 <body style="font-family:Arial,sans-serif; margin-top:4px; margin-left:0px; margin-right:4px; margin-bottom:2px; background-color:#DFECFF">
 
 <iframe src ="add_questions_list_unused.php" name="iframeurl" width="100%" height="60%" style="border:1px solid #95AEC8" frameborder="0">
-  <p>Your browser does not support iframes.</p>
+  <p><?php echo $string['browsererr'];?></p>
 </iframe>
 
-<iframe src ="preview_default.html" name="previewurl" width="100%" height="39%" style="border:1px solid #95AEC8" frameborder="0">
-  <p>Your browser does not support iframes.</p>
+<iframe src ="preview_default.php" name="previewurl" width="100%" height="39%" style="border:1px solid #95AEC8" frameborder="0">
+  <p><?php echo $string['browsererr'];?></p>
 </iframe>
 </body>
 </html>

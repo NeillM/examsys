@@ -1,4 +1,7 @@
 <?php
+
+//niko abs
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,7 +35,7 @@
 ?>
 <html>
 <head>
-<title>Questions Bank</title>
+<title><?php echo $string['questionsbank']; ?></title>
 </head>
 
   <frameset rows="*,32" frameborder="0" framespacing="0" border="0">
@@ -43,6 +46,6 @@
     <frame scrolling="no" resizable="no" src="add_random_question_controls.php?q_no=<?php echo $_GET['q_no']; ?>&questionlist=<?php echo $questionlist; ?>&question_no=<?php echo $question_no; ?>" name="controls">
   </frameset>
   <noframes>
-    Sorry, you need frames to use the TouchStone.
+    <?php echo $string['frameserr'];?>
   </noframes>
 </html>

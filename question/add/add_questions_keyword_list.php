@@ -1,4 +1,7 @@
 <?php
+
+//niko abs
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,7 +30,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>by Keywords</title>
+<title><?php echo $string['bykeyword'];?></title>
 <style>
 body {margin:2px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
 h1 {font-size:100%; background-color:#DDE7EE; color:#00156E; font-weight:bold; border-bottom:1px solid #C5C5C5; margin-bottom:0px; padding-bottom:0px}
@@ -63,7 +66,7 @@ a:hover {color:black}
   }
   $stmt->close();
 
-  echo "<table border=\"0\" style=\"padding-top:3px; padding-bottom:2px; width:100%; color:#1E3287; white-space:nowrap\"><tr><td>My Keywords</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  echo "<table border=\"0\" style=\"padding-top:3px; padding-bottom:2px; width:100%; color:#1E3287; white-space:nowrap\"><tr><td>" . $string['mykeywords'] . " </td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=$userID ORDER BY keyword");
   $stmt->execute();
   $stmt->bind_result($keywordID, $keyword);

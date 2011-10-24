@@ -50,7 +50,7 @@
   echo "<form name=\"theform\" method=\"post\" action=\"do_add_questions.php?paper=$paper&display_pos=$display_pos\">\n";
   echo "<input type=\"hidden\" name=\"screen\" value=\"1\" />\n";
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr style=\"background-color: #EBEADB\"><td>&nbsp;</td><td><img src=\"header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Question&nbsp;</td><td><img src=\"header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Type&nbsp;</td><td><img src=\"header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Modified&nbsp;</td></tr>\n";
+  echo "<tr style=\"background-color: #EBEADB\"><td>&nbsp;</td><td><img src=\"header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;xxx Question&nbsp;</td><td><img src=\"header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Type&nbsp;</td><td><img src=\"header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;Modified&nbsp;</td></tr>\n";
   echo "<tr style=\"height: 4px\"><td valign=\"top\" colspan=\"4\"><img src=\"header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
   
   $id = 0;

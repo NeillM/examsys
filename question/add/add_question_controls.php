@@ -1,4 +1,7 @@
 <?php
+
+//niko abs
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +29,7 @@ require '../../include/staff_auth.inc';
 ?>
 <html>
 <head>
-<title>TouchStone</title>
+<title>Rogō</title>
 <script language="JavaScript">
   var selected_q = Array();
 

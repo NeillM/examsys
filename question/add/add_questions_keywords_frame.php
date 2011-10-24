@@ -34,6 +34,6 @@
     <frame scrolling="auto" resizable="no" src="add_questions_by_keyword.php" name="keywordlist">
   </frameset>
   <noframes>
-    Sorry, you need frames to use the TouchStone.
+    <?php echo $string['frameserr'];?>
   </noframes>
 </html>

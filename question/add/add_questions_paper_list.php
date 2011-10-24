@@ -1,4 +1,7 @@
 <?php
+
+//niko abs
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -39,7 +42,7 @@ a:hover {color:black}
 
 <body>
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%">
-<tr style="background-color:#F1F5FB"><td colspan="5"style="font-size:160%; font-weight:bold">&nbsp;by Paper</td></tr>
+<tr style="background-color:#F1F5FB"><td colspan="5"style="font-size:160%; font-weight:bold">&nbsp;xx by Paper</td></tr>
 <tr style="background-color:#F1F5FB"><td>&nbsp;</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Title</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Module</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Owner</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Created</td></tr>
 <tr style="height:4px"><td valign="top" colspan="5"><img src="../../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 <?php

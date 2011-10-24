@@ -1,4 +1,7 @@
 <?php
+
+//niko abs
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,7 +31,7 @@ require '../../include/media.inc';
 ?>
 <html>
 <head>
-<title>TouchStone</title>
+<title>Rogō</title>
 <style>
   body {margin:0px; font-family:Arial,sans-serif; color:black}
   p, td {font-size:80%}
