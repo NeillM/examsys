@@ -1,20 +1,19 @@
 <?php
-$string['resetpassword'] = 'Reset password';
-$string['notokensupplied'] = 'No token supplied';
-$string['emailaddress'] = 'Email address';
-$string['password'] = 'Password';
-$string['passwordconfirm'] = 'Password confirmation';
-$string['emailaddressinvalid'] = 'Please supply a valid email address';
-$string['passwordsnotmatch'] = 'Passwords do not match';
-$string['usernotfound'] = 'User not found';
-$string['incorrectemail'] = 'Incorrect email address supplied';
-$string['databaseupdateerror'] = 'Database error updating password';
-$string['login'] = 'Log in';
-$string['pleaseenterpassword'] = 'Please enter a password';
-$string['pleaseconfirmpassword'] = 'Please confirm your password';
-$string['passwordsnotmatch'] = 'Passwords do not match';
-$string['enternewpassword'] = 'Enter a new password.';
-$string['confirmpassword'] = 'Confirm password';
-$string['reset'] = 'Reset';
-$string['passwordupdated'] = 'Password updated.';
+$string['resetpassword'] = 'Resetowanie hasła';
+$string['notokensupplied'] = 'Nie wystawiono żetonu';
+$string['emailaddress'] = 'Adres Email';
+$string['password'] = 'Hasło';
+$string['passwordconfirm'] = 'Potwierdzenie hasła';
+$string['emailaddressinvalid'] = 'Podaj poprawny adres Email';
+$string['passwordsnotmatch'] = 'Hasła nie są zgodne';
+$string['usernotfound'] = 'Nie znaleziono użytkownika';
+$string['incorrectemail'] = 'Podano niepoprawny adres Email';
+$string['databaseupdateerror'] = 'Błąd bazy danych podczas aktualizacji hasła';
+$string['login'] = 'Zaloguj się';
+$string['pleaseenterpassword'] = 'Wprowadź hasło';
+$string['pleaseconfirmpassword'] = 'Potwierdź hasło';
+$string['enternewpassword'] = 'Wprowadź nowe hasło.';
+$string['confirmpassword'] = 'Potwierdź hasło';
+$string['reset'] = 'Resetuj';
+$string['passwordupdated'] = 'Hasło zaktualizowane.';
 ?>

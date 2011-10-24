@@ -1,19 +1,21 @@
 <?php
-$string['forgottenpassword'] = 'Forgotten Password';
-$string['emailaddress'] = 'Email address';
-$string['emailaddressinvalid'] = 'Please supply a valid email address';
-$string['emailaddressnotfound'] = 'Email address not found';
-$string['passwordreset'] = 'Password Reset';
+
+// niko
+
+$string['forgottenpassword'] = 'Utracone hasło';
+$string['emailaddress'] = 'Adres Email';
+$string['emailaddressinvalid'] = 'Podaj poprawny adres Email';
+$string['emailaddressnotfound'] = 'Brak adresu Email';
+$string['passwordreset'] = 'Resetowanie hasła';
 $string['emailhtml'] = <<< EMAIL_HTML
-<p>Dear %s %s,</p>
-<p>We have received a request to reset your password on Rog&#333;. To complete the request click on the link below:</p>
-<p><a href="https://%s/users/reset_password.php?token=%s">Reset password</a></p>
-<p>If you did not ask for your password to be reset please <a href="mailto:%s">email us</a>. Your existing 
-username and password will still allow you to log in to Rog&#333;.</p>
+<p>Cześć %s %s,</p>
+<p>Otrzymaliśmy życzenie zmiany hasła w Rog&#333;. Aby potwierdzić to życzenie kliknij na poniższy link:</p>
+<p><a href="https://%s/users/reset_password.php?token=%s">Resetowanie hasła</a></p>
+<p>Jeśli nie prosiłeś o resetowanie hasła prosimy abyś do nas o tym <a href="mailto:%s">napisał</a>. Twój dotychczasowy login i hasło będą nadal obowiązywały w Rog&#333;.</p>
 
 EMAIL_HTML;
-$string['couldntsendemail'] = 'Could not send mail to <strong>%s</strong>';
-$string['emailsentmsg'] = 'An email has been sent to <em>%s</em> containing a link that will allow you to reset your password. This link will remain valid for <strong>24 hours</strong>.';
-$string['intromsg'] = 'Enter your email address and we will send you an email allowing you to reset your password.';
-$string['send'] = 'Send';
+$string['couldntsendemail'] = 'Nie można było wysłać Emaila do <strong>%s</strong>';
+$string['emailsentmsg'] = 'Został wysłany Email do <em>%s</em> zawierający link umożliwiający zresetowanie Twojego hasła. Link ten pozostanie aktywny przez <strong>24 godziny</strong>.';
+$string['intromsg'] = 'Podaj swój adres Email, a my wyślemy tam link umożliwiający zresetowanie hasła.';
+$string['send'] = 'Wyślij';
 ?>
