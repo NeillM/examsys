@@ -25,6 +25,7 @@
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 require_once $root . 'config/config.inc.php';
 require_once $cfg_web_root . 'classes/formutils.class.php';
+require_once $root . 'classes/lang.class.php';
 
 $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
 
@@ -33,16 +34,16 @@ $message = '';
 $errors = array();
 $form_util = new FormUtils();
 
-if (isset($_POST['submit']) and $_POST['submit'] == 'Send') {
+if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
   $email = $_POST['email'];
   
   // Process the form submission
-  $errors = $form_util->check_required(array('email' => 'Email address'));
+  $errors = $form_util->check_required(array('email' => $string['emailaddress']));
   
   if(count($errors) == 0) {
   // Check if the supplied value is an email address (avoid an unnecessary DB call)
     if(!$form_util->is_email($email)) {
-      $errors[] = 'Please supply a valid email address';
+      $errors[] = $string['emailaddressinvalid'];
     } else {
       // If it is, look for the user in the database
       $stmt = $mysqli->prepare("SELECT id, title, surname FROM users WHERE email=? ORDER BY id DESC LIMIT 1");
@@ -52,7 +53,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Send') {
       $stmt->bind_result($user_id, $title, $surname);
       $stmt->fetch();
       if ($stmt->num_rows == 0) {
-        $errors[] = 'Email address not found';
+        $errors[] = $string['emailaddressnotfound'];
       } else {
         // If they do exist, create a token and send it to them in an email
         $token = substr(md5(rand(10000000,99999999)), 0, 15);
@@ -81,7 +82,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Send') {
 <!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">
 <html>
 <head>
-<title>Rogō Password Reset</title>
+<title>Rogō {$string['passwordreset']}</title>
 <style>
 body, td, p, div {font-family:Arial,sans-serif; background-color:white; color:#003366; font-size:90%}
 h1 {font-size:140%}
@@ -89,23 +90,23 @@ h2 {font-size:120%}
 </style>
 </head>
 <body>
-<p>Dear $title $surname,</p>
-<p>We have received a request to reset your password on Rogō. To complete the request click on the link below:</p>
-<p><a href="https://{$_SERVER['HTTP_HOST']}/users/reset_password.php?token=$token">Reset password</a></p>
-<p>If you did not ask for your password to be reset please <a href="mailto:$support_email">email us</a>. Your existing 
-username and password will still allow you to log in to Rogō.</p>
+EMAIL;
+
+        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $support_email);
+        
+        $email_body .= <<< EMAIL
 </body>
 </html>
 EMAIL;
 
         $mail_to = $email;
-        $subject = "Rogō Password Reset";
+        $subject = "Rogo {$string['passwordreset']}";
         $headers = "From: " . $support_email . "\n";
-        $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
+        $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
         if(!@mail ($mail_to, $subject, $email_body, $headers)) {
-          $errors[] = "Could not send mail to <strong>" . $email . "</strong>";
+          $errors[] = sprintf($string['couldntsendemail'], $email);
         } else {
-          $message = "An email has been sent to <em>$email</em> containing a link that will allow you to reset your password. This link will remain valid for <strong>24 hours</strong>.";
+          $message = sprintf($string['emailsentmsg'], $email);
         }
       }
       $stmt->close();
@@ -117,7 +118,7 @@ EMAIL;
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>Forgotten Password<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['forgottenpassword']." $cfg_install_type"; ?></title>
 <link rel="stylesheet" href="../css/screen.css" type="text/css" />
 <style>
 body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
@@ -129,7 +130,7 @@ body {background-color:white; color:black; font-family:Arial,sans-serif; font-si
 $(function() {
   $('#forgotten_pw').validate({
 		messages: {
-			email: 'Please enter a valid email address',
+			email: '<?php echo $string['emailaddressinvalid'] ?>'
 		}
   });
 });
@@ -141,11 +142,11 @@ $(function() {
 	<br />
 	<div align="center">
   	<table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">
-    	<tr style="height:70px; width:100%; background-image:url(../artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="../artwork/key_48.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;Forgotten Password</td></tr>
+    	<tr style="height:70px; width:100%; background-image:url(../artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="../artwork/key_48.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;<?php echo $string['forgottenpassword'] ?></td></tr>
 <?php
 if($message == '') {
 ?>
-    	<tr><td colspan="2" style="padding-top:4px; padding-left:6px;">Enter your email address and we will send you an email allowing you to reset your password.</td></tr>
+    	<tr><td colspan="2" style="padding-top:4px; padding-left:6px;"><?php echo $string['intromsg'] ?></td></tr>
     	<tr>
     		<td colspan="2" style="padding-top:4px; padding-left:6px;">
 <?php
@@ -169,12 +170,12 @@ if($message == '') {
     		<td colspan="2">
     			<table border="0" style="width:100%; text-align:left">
     				<tr>
-    					<td class="field" style="width: 180px"><label for="email">Email address</label></td>
+    					<td class="field" style="width: 180px"><label for="email"><?php echo $string['emailaddress'] ?></label></td>
     					<td>
     						<input type="text" id="email" name="email" value="<?php echo $email; ?>" style="width: 280px" class="required email" />
     					</td>
     				</tr>
-    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="Send"  style="width:100px" /></td></tr>
+    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['send'] ?>"  style="width:100px" /></td></tr>
     				<tr><td colspan="2">&nbsp;</td></tr>
     			</table>
     		</td>
