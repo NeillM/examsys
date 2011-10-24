@@ -447,7 +447,7 @@ $current_screen = 1;
   $old_theme = '';
   $old_screen = 1;
   $old_correct_fback = '';
-  $total_marks = 0;
+  $total_marks = 0; //Altered as a globle in display_options !!!
   $std_excluded = 0;
   $prologue_show = 1;
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
@@ -471,7 +471,6 @@ $current_screen = 1;
       if ($old_leadin != '') {
         if ($li_set == 1) echo "</td></tr>\n";
         display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
-
         if ($old_screen != $screen) {
           echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
           echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";

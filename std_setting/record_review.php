@@ -141,13 +141,15 @@
           break;
         case 'dichotomous':
           $qid = 'std' . $question_no . '_' . $question_part;
-          if ($rating == '') {
-            $rating = $_POST["$qid"];
-          } else {
-            $rating .= ',' . $_POST["$qid"];
+          if(isset($_POST["$qid"])) {
+            if ($rating == '') {
+              $rating = $_POST["$qid"];
+            } else {
+              $rating .= ',' . $_POST["$qid"];
+            }
           }
           if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
-          if ($_POST["$qid"] != '') $last_question = $question_no;
+          if (isset($_POST["$qid"]) and $_POST["$qid"] != '') $last_question = $question_no;
           $total_parts++;
           break;
         case 'hotspot':
@@ -215,13 +217,15 @@
 
             for ($part_id=1; $part_id<=$scenarios; $part_id++) {
               $qid = 'std' . $question_no . '_' . $part_id;
-              if ($rating == '') {
-                $rating = $_POST["$qid"];
-              } else {
-                $rating .= ',' . $_POST["$qid"];
+              if(isset($_POST["$qid"])) {
+                if ($rating == '') {
+                  $rating = $_POST["$qid"];
+                } else {
+                  $rating .= ',' . $_POST["$qid"];
+                }
+                if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
+                if ($_POST["$qid"] != '') $last_question = $question_no;
               }
-              if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
-              if ($_POST["$qid"] != '') $last_question = $question_no;
               $total_parts++;
             }
           }
@@ -307,13 +311,15 @@
           $rating = '';
           for ($i=1; $i<=$no_answers; $i++) {
             $qid = 'std' . $question_no . '_' . $i;
-            if ($i == 1) {
-              $rating = $_POST["$qid"];
-            } else {
-              $rating .= ',' . $_POST["$qid"];
+            if(isset($_POST["$qid"])) {
+              if ($i == 1) {
+                $rating = $_POST["$qid"];
+              } else {
+                $rating .= ',' . $_POST["$qid"];
+              }
+              if ($_POST["$qid"] != '') $last_question = $question_no;
+              if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
             }
-            if ($_POST["$qid"] != '') $last_question = $question_no;
-            if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
             $total_parts++;
           }
           break;
@@ -323,13 +329,15 @@
           for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
             if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 200) {
               $qid = 'std' . $question_no . '_' . $question_part;
-              if ($rating == '') {
-                $rating = $_POST["$qid"];
-              } else {
-                $rating .= ',' . $_POST["$qid"];
+              if(isset($_POST["$qid"])) {
+                if ($rating == '') {
+                  $rating = $_POST["$qid"];
+                } else {
+                  $rating .= ',' . $_POST["$qid"];
+                }
+                if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
+                if ($_POST["$qid"] != '') $last_question = $question_no;
               }
-              if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
-              if ($_POST["$qid"] != '') $last_question = $question_no;
               $total_parts++;
               $question_part++;
             }
