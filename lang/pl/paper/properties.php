@@ -55,7 +55,7 @@ $string['availablefrom'] = 'Dostępne od';
 $string['to'] = 'do';
 $string['restricttolabs'] = 'Ogranicz do pracowni';
 $string['restricttometadata'] = 'Ogranicz do metadanych';
-$string['na'] = 'brak';//data
+$string['na'] = 'Brak';//data
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';

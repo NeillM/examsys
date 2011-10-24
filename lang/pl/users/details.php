@@ -66,5 +66,5 @@ $string['dateadded'] = 'Dodana data';
 $string['editteams'] = 'Edytuj zespoły...';
 $string['editmodules'] = 'Edytuj Moduły...';
 $string['system'] = 'System';
-$string['na'] = 'Nie dotyczy'; //brak danych?
+$string['na'] = 'Brak'; //brak danych?
 ?>

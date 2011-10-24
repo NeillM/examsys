@@ -33,7 +33,7 @@ $string['opens'] = 'Otwarcie';
 $string['flush tables'] = 'Tablice opróżnione';
 $string['open tables'] = 'Tablice otwarte';
 $string['queries per second avg'] = 'Średnia kwerend na sekundę';
-$string['na'] = 'Nie dotyczy';
+$string['na'] = 'Brak';
 $string['driveicon'] = 'Ikona dysku';
 $string['freespace'] = '%s wolnych z %s';
 ?>

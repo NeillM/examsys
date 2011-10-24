@@ -13,7 +13,7 @@ $string['phpself'] = '$_SERVER[\'PHP_SELF\']';
 $string['requestmethod'] = '$_SERVER[\'REQUEST_METHOD\']';
 $string['occurranceoferror'] = 'Występowanie błędu';
 $string['datefixed'] = 'Poprawiona data';
-$string['na'] = 'Nie dotyczy';
+$string['na'] = 'Brak';
 $string['close'] = 'Zamknij';
 $string['fixed'] = 'Naprawiono';
 ?>

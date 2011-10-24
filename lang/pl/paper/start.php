@@ -13,7 +13,7 @@ $string['false'] = 'Fałsz';
 $string['yes'] = 'Tak';
 $string['no'] = 'Nie';
 $string['abstain'] = 'Wstrzymany';
-$string['na'] = 'Nie dotyczy'; //N/A
+$string['na'] = 'Brak'; //N/A
 $string['unanswered'] = 'Brak odpowiedzi';
 $string['unansweredquestion'] = '= pytanie bez odpowiedzi';
 $string['negmarking'] = 'ujemna punktacja';
