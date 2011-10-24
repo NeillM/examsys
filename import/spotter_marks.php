@@ -26,6 +26,9 @@
   require '../include/question_types.inc';
   require '../include/errors.inc';
   
+  //include lang files
+  require $cfg_web_root . "lang/$language/include/paper_options.inc"; 
+  
   $summative_lock = 0; 
   
   function marks_from_file($fileName) {

@@ -23,6 +23,8 @@
 */
 
 require '../include/staff_auth.inc';
+//include lang files
+require $cfg_web_root . "lang/$language/include/paper_options.inc"; 
 
   function marks_from_file($fileName) {
     global $mysqli;
