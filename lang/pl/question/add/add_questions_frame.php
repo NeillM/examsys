@@ -1,4 +1,4 @@
 <?php
 $string['questionsbank'] = 'Bank pytań';
-$string['browsererr'] = 'Twoja przeglądarka nie obsługuje ramek.';
+$string['frameserr'] = 'Twoja przeglądarka nie obsługuje ramek.';
 ?>
