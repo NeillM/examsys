@@ -1,6 +1,7 @@
 <?php
 $string['home'] = 'Strona główna';
 $string['help'] = 'Pomoc';
+$string['line'] = 'Linia';
 $string['cancel'] = 'Anuluj';
 $string['ok'] = 'OK';
 $string['accessdenied'] = 'Odmowa dostępu';
