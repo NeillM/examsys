@@ -1,4 +1,6 @@
 <?php
+require '../lang/' . $language . '/question/sct_shared.php';
+
 $string['examscript'] = 'Skrypt egzaminacyjny';
 $string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
 $string['specificpassword'] = 'Do tego arkusza przypisane jest specyficzne hasło.';
@@ -31,24 +33,11 @@ $string['overallcorrectorder'] = 'Właściwa kolejność całości (Punkt dodatk
 $string['outof'] = 'z';
 $string['experimentalquestion'] = '0 - Pytanie eksperymentalne';
 $string['unmarked'] = 'niepunktowane';
-$string['newinformation'] = 'Nowe informacje';
 $string['tdiagnosis'] = 'diagnozie';
 $string['tinvestigation'] = 'badaniu';
 $string['tprescription'] = 'zaleceniu';
 $string['tintervention'] = 'interwencji';
 $string['ttreatment'] = 'terapii';
-$string['Hypothesis'] = 'Hipoteza';
-$string['Investigation'] = 'Badanie';
-$string['Prescription'] = 'Zalecenie';
-$string['Intervention'] = 'Interwencja';
-$string['Treatment'] = 'Terapia';
-$string['clinicalvignette'] = 'Przypadek kliniczny';
-$string['ifyouwerethinking'] = 'Jeśli myślałeś/łaś o';
-$string['andthenyoufind'] = 'a następnie odkryłeś/łaś';
-$string['thenthis'] = 'Wtedy';
-$string['is'] = 'jest';
-$string['of'] = 'z';
-$string['experts'] = 'Eksperci';
 $string['thankyou'] = 'Dziękujemy';
 $string['difficultyofthequestion'] = 'trudność pytania (tj. warunki standardowe). Przewiń do pełnego tytułu kategorii.';
 $string['withatoleranceof'] = 'z tolerancją';

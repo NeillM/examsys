@@ -57,7 +57,7 @@
     
     $sct_parts = explode('~',$question['leadin']);
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-    $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
+    $sct_titles = array(1=>'hypothesis',2=>'investigation',3=>'prescription',4=>'intervention',5=>'treatment');
     echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string[$sct_titles[$question['display_method']]] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
     echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
     echo "</table>\n";

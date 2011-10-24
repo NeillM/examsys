@@ -320,7 +320,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     
       $sct_parts = explode('~',$question['leadin']);
       echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-      $sct_titles = array(1=>$string['Hypothesis'],2=>$string['Investigation'],3=>$string['Prescription'],4=>$string['Intervention'],5=>$string['Treatment']);
+      $sct_titles = array(1=>$string['hypothesis'],2=>$string['investigation'],3=>$string['prescription'],4=>$string['intervention'],5=>$string['treatment']);
        echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
       echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
       echo "</table>\n";

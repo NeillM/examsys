@@ -1,5 +1,6 @@
 <?php
 require '../lang/' . $language . '/include/months.inc';
+require '../lang/' . $language . '/question/sct_shared.php';
 
 $string['survey'] = 'Survey';
 $string['assessment'] = 'Assessment';
@@ -37,14 +38,5 @@ $string['msgselectable1'] = 'Too many options selected!\n\nOnly';
 $string['msgselectable2'] = 'items can be selected in this question.';
 $string['msgselectable3'] = 'You have already selected';
 $string['msgselectable4'] = '.\n\nPlease select a different ranking.';
-$string['newinformation'] = 'New Information';
-$string['clinicalvignette'] = 'Clinical Vignette';
-$string['thenthis'] = 'Then this';
-$string['is'] = 'is';
-$string['Hypothesis'] = 'Hypothesis';
-$string['Investigation'] = 'Investigation';
-$string['Prescription'] = 'Prescription';
-$string['Intervention'] = 'Intervention';
-$string['Treatment'] = 'Treatment';
 $string['notregistered'] = '%s %s (%s) is not registered on <strong>%s</strong> in <strong>%s</strong>.';
 ?>

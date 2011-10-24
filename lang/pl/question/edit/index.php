@@ -2,6 +2,7 @@
 require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
 require '../../lang/' . $language . '/include/question_types.inc';
+require '../../lang/' . $language . '/question/sct_shared.php';
 
 $string['edit'] = 'Edytuj';
 $string['add'] = 'Dodaj';
@@ -143,35 +144,27 @@ $string['cols'] = 'kolumn(y)';
 $string['assessmentdata'] = 'Dane oceny';
 $string['terms'] = 'Terminy';
 $string['termsmsg'] = '(rozdzielone przecinkami)';
-$string['clinicalvignette'] = 'Przypadek kliniczny';//|??
-$string['newinformation'] = 'Nowa informacja';
 $string['this'] = 'To';//??
 $string['becomes'] = 'staje się';
-$string['experts'] = 'Eksperci';
-$string['hypothesis'] = 'Hipoteza';
 $string['veryunlikely'] = 'zdecydowanie niemożliwa';
 $string['unlikely'] = 'niemożliwa';
 $string['neithernorlikely'] = 'niewykluczona';
 $string['morelikely'] = 'możliwa';
 $string['verylikely'] = 'bardzo możliwa';
-$string['investigation'] = 'Nadzór';//medyczne???
 $string['useless'] = 'bezużyteczny';
 $string['lessuseful'] = 'mało użyteczny';
 $string['neithernoruseful'] = 'użyteczność niewykluczone';
 $string['moreuseful'] = 'użyteczny';
 $string['veryuseful'] = 'bardzo użyteczny';
-$string['prescription'] = 'Zalecenie';//medyczne???
 $string['contraindicatedtotally'] = 'całkowicie lub znacząco przeciwwskazane';
 $string['detrimental'] = 'nie użyteczne lub niekorzystne';
 $string['useful'] = 'użyteczne';
 $string['necessary'] = 'absolutnie niezbędne';
-$string['intervention'] = 'Ingerencja';//medyczne???
 $string['contraindicated'] = 'przeciwwskazana';
 $string['lessindicated'] = 'mniej wskazana';
 $string['neithernorindicated'] = 'brak wskazań';
 $string['indicated'] = 'wskazana';
 $string['stronglyindicated'] = 'zdecydowanie wskazana';
-$string['treatment'] = 'Terapia';
 $string['oscescales'] = 'Skale stacji OSCE';
 $string['pointscales'] = '-punktowa skala';
 $string['failpass'] = 'Nie zdany, Graniczny, Zdany';//???

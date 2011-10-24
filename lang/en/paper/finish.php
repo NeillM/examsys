@@ -1,4 +1,6 @@
 <?php
+require '../lang/' . $language . '/question/sct_shared.php';
+
 $string['examscript'] = 'Exam Script';
 $string['error_paper'] = 'The requested paper cannot be found.';
 $string['specificpassword'] = 'There is a specific password assigned to this paper.';
@@ -36,19 +38,6 @@ $string['tinvestigation'] = 'investigation';
 $string['tprescription'] = 'prescription';
 $string['tintervention'] = 'intervention';
 $string['ttreatment'] = 'treatment';
-$string['Hypothesis'] = 'Hypothesis';
-$string['Investigation'] = 'Investigation';
-$string['Prescription'] = 'Prescription';
-$string['Intervention'] = 'Intervention';
-$string['Treatment'] = 'Treatment';
-$string['newinformation'] = 'New Information';
-$string['clinicalvignette'] = 'Clinical Vignette';
-$string['ifyouwerethinking'] = 'If you were thinking of the following';
-$string['andthenyoufind'] = 'And then you find';
-$string['thenthis'] = 'Then this';
-$string['is'] = 'is';
-$string['of'] = 'of';
-$string['experts'] = 'Experts';
 $string['thankyou'] = 'Thank you';
 $string['difficultyofthequestion'] = 'difficulty of the question (i.e. standards set). Roll over for full category title.';
 $string['withatoleranceof'] = 'with a tolerance of';
