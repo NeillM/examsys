@@ -191,8 +191,6 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
       } elseif ($old_type == 'mrq') {
         if ($old_score_method == 'Mark per Question') {
-          var_dump($correct_rank);
-          exit;
           if ($correct_rank) {
             $mark = $old_marks_correct;
           } else {
