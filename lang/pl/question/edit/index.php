@@ -97,6 +97,7 @@ $string['action'] = 'Działanie';
 $string['section'] = 'Sekcja';
 $string['old'] = 'Stare';
 $string['new'] = 'Nowe';
+$string['nochangesrecorded'] = 'Nie zarejestrowano zmian w tym pytaniu';
 $string['reviewerscomments'] = 'Komentarze recenzenta';
 $string['reviewer'] = 'Recenzent';
 $string['internal'] = 'Wewnętrzne';

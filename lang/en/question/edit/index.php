@@ -98,6 +98,7 @@ $string['action'] = 'Action';
 $string['section'] = 'Section';
 $string['old'] = 'Old';
 $string['new'] = 'New';
+$string['nochangesrecorded'] = 'No changes recorded for this question';
 $string['reviewerscomments'] = 'Reviewer\'s comments';
 $string['reviewer'] = 'Reviewer';
 $string['internal'] = 'Internal';
@@ -217,4 +218,5 @@ $string['pleaserank'] = 'Please rank the following &hellip; starting with the &h
 $string['addtobank'] = 'Add to Bank';
 $string['addtobankandpaper'] = 'Add to Bank &amp; Paper';
 $string['na'] = 'N/A';
+
 ?>

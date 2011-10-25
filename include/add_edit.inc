@@ -186,7 +186,7 @@ HTML;
   } else {
     // Shouldn't happen if we're recording question creation as a change
     $html = <<< HTML
-        <p>No changes recorded for this question</p>
+        <p>{$string['nochangesrecorded']}</p>
 
 HTML;
   
