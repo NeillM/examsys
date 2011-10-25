@@ -149,7 +149,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
       
       // Print the options of the previous question
       if ($old_leadin != '') {
-        display_options($options_array, $old_q_id, $old_theme);
+        display_options($options_array, $old_q_id, $old_theme, $string);
       }
       if ($li_set == 1) {
         echo "</td></tr>\n";
@@ -211,7 +211,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   $result->close();
 
   // Print the options for the last question on the screen.
-  display_options($options_array, $old_q_id, $old_theme);
+  display_options($options_array, $old_q_id, $old_theme, $string);
 
   $current_screen++;
   echo "</table>\n";
