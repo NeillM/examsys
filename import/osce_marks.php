@@ -104,16 +104,19 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->close();
 
         echo "<li>$sid -&gt; " . $students[$sid]['username'] . "</li>";
+        
         // Record individual questions.
         $numeric_score = 0;
+        $result = $mysqlidb->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, ?, ?, ?, NULL)");
+
         for ($q=1; $q<=$question_no; $q++) {
-          $result = $mysqlidb->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, ?, ?, ?, NULL)");
+        $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $fields[$q]);
           $fields[$q] = trim($fields[$q]);
-          $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $fields[$q]);
           $result->execute();
-          $result->close();
           $numeric_score += trim($fields[$q]);
         }
+        $result->close();
+          
         // Record overall student/station details.
         $result = $mysqlidb->prepare("SELECT id FROM users WHERE username=? LIMIT 1");
         $fields[$question_no+1] = trim($fields[$question_no+1]);
