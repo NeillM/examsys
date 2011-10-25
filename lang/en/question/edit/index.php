@@ -216,4 +216,5 @@ $string['major'] = 'Major';
 $string['pleaserank'] = 'Please rank the following &hellip; starting with the &hellip; first:';
 $string['addtobank'] = 'Add to Bank';
 $string['addtobankandpaper'] = 'Add to Bank &amp; Paper';
+$string['na'] = 'N/A';
 ?>

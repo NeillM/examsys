@@ -216,4 +216,5 @@ $string['major'] = 'Znaczące';
 $string['pleaserank'] = 'Oceń co następuje &hellip; zaczynając od &hellip; pierwszego:';
 $string['addtobank'] = 'Dodaj do banku';
 $string['addtobankandpaper'] = 'Do banku i arkusza';
+$string['na'] = 'Brak';
 ?>

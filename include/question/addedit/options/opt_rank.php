@@ -24,12 +24,15 @@
 
 $hidden = (($num_options == 0 and $index > 6) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
 //$correct = ($option->get_correct() == $index) ? ' checked="checked"' : '';
-$correct_vals = array('' => '', '0' => 'N/A');
+$correct_vals = array('' => '', '0' => $string['na']);
 for ($i = 1; $i <= 20; $i++) {
-  $postfix = 'th';
-  if ($i == 1) $postfix = 'st';
-  if ($i == 2) $postfix = 'nd';
-  if ($i == 3) $postfix = 'rd';
+  $postfix = '';
+  if ($language == 'en') {
+    $postfix = 'th';
+    if ($i == 1) $postfix = 'st';
+    if ($i == 2) $postfix = 'nd';
+    if ($i == 3) $postfix = 'rd';
+    }
   $correct_vals[$i] = $i . $postfix;
 }
 if ($index %2 == 0) {
