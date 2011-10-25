@@ -1,6 +1,6 @@
 <?php
-$string['qualitativeanalysis'] = 'Qualitative Analysis';
-$string['highlight'] = 'Highlight';
-$string['collapse'] = 'Collapse';
-$string['casesensitive'] = 'Case-sensitive';
+$string['qualitativeanalysis'] = 'Analiza jakościowa';
+$string['highlight'] = 'Podkreślenie';
+$string['collapse'] = 'Załamanie ';
+$string['casesensitive'] = 'Uwzględnienie rozmiaru liter';
 ?>

@@ -1,13 +1,13 @@
 <?php
-$string['quantitativereport'] = 'Quantitative Report';
-$string['respondents'] = 'Respondents';
-$string['unanswered'] = 'Unanswered';
-$string['mean'] = 'Mean';
-$string['na'] = 'N/A';
-$string['screen'] = 'Screen';
-$string['true'] = 'True';
-$string['false'] = 'False';
-$string['yes'] = 'Yes';
-$string['no'] = 'No';
-$string['abstain'] = 'Abstain';
+$string['quantitativereport'] = 'Raport ilościowy';
+$string['respondents'] = 'Respondenci';
+$string['unanswered'] = 'Nie odpowiedziane';
+$string['mean'] = 'Średnia';
+$string['na'] = 'brak';
+$string['screen'] = 'Ekran';
+$string['true'] = 'Prawda';
+$string['false'] = 'Fałsz';
+$string['yes'] = 'Tak';
+$string['no'] = 'Nie';
+$string['abstain'] = 'Wstrzymany';
 ?>

@@ -1,3 +1,3 @@
 <?php
-$string['secondmark'] = 'Second Mark';
+$string['secondmark'] = 'Punktacja wtórna';
 ?>
