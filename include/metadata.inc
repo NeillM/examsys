@@ -187,7 +187,7 @@ META;
       }
       
       $html .= <<< META
-      			</div>
+      			</div></div>
 
 META;
     }
