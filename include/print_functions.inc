@@ -591,22 +591,22 @@ function display_options($options,$q_id, $current_theme, $string) {
       echo "<div style=\"color: #808080; font-size: 80%\">($marks)</div>\n<br />\n";
     } elseif ($marks > 1) {
       if ($options[0]['q_type'] == 'dichotomous' and ($options[0]['display_method'] == 'TF_Negative' or $options[0]['display_method'] == 'TF_NegativeAbstain' or $options[0]['display_method'] == 'YN_Negative' or $options[0]['display_method'] == 'YN_NegativeAbstain')) {
-        echo "<div class=\"no_marks\">($marks, negative marking)</div>\n<br />\n";
+        echo "<div class=\"no_marks\">($marks, " . $string['negativemarking'] . ")</div>\n<br />\n";
       } elseif ($options[0]['q_type'] == 'mrq') {
         if ($options[0]['score_method'] == 'SelectedPositive') {
           echo "<div class=\"no_marks\">($marks)</div>\n<br />\n";
         } else {
-          echo "<div class=\"no_marks\">($marks, all options items marked with negative marking)</div>\n<br />\n";
+          echo "<div class=\"no_marks\">($marks, " . $string['allwithnegative'] . ")</div>\n<br />\n";
         }
       } elseif ($options[0]['q_type'] == 'rank') {
         if ($options[0]['score_method'] == 'BonusMark') {
-          echo "<div class=\"no_marks\">(" . ($marks - 1) . "&nbsp;marks for correct options, plus 1 bonus mark for fully correct order)</div>\n";
+          echo "<div class=\"no_marks\">(" . ($marks - 1) . "&nbsp;" . $string['correctplusbonus'] . ")</div>\n";
         } elseif ($display_option['score_method'] == 'AllItemsCorrect') {
-          echo "<div class=\"no_marks\">($marks, mark)</div>\n<br />\n";
+          echo "<div class=\"no_marks\">($marks, " . $string['mark'] . ")</div>\n<br />\n";
         } elseif ($options[0]['score_method'] == 'OrderNeighbours') {
-          echo "<div class=\"no_marks\">($marks, half marks for neighbours)</div>\n<br />\n";
+          echo "<div class=\"no_marks\">($marks, " . $string['halfmarksneighbours'] . ")</div>\n<br />\n";
         } else {
-          echo "<div class=\"no_marks\">($marks, exact order)</div>\n<br />\n";
+          echo "<div class=\"no_marks\">($marks, " . $string['exactorder'] . ")</div>\n<br />\n";
         }
       } else {
         echo "<div class=\"no_marks\">($marks)</div>\n<br />\n";
