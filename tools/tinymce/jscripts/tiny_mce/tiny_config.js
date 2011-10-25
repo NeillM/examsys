@@ -1,6 +1,7 @@
   tinyMCE.init({ 
     mode : "specific_textareas",
-    editor_selector : "mceEditor",
+    //language : window.navigator.language,
+	editor_selector : "mceEditor",
     theme : "advanced", 
     skin : "default",
     plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras", 
@@ -14,12 +15,11 @@
     // Example content CSS (should be your site CSS) 
     content_css : "/css/editor.css",
     entity_encoding : "named",
-
+	
       setup : function(ed) {
         ed.onInit.add(function(ed, evt) {
 
         var dom = ed.dom;
-
         tinymce.dom.Event.add(dom.getRoot(), 'blur', function(e) {
           // Do something when the editor window is blured.
           tinyMCE.triggerSave();
