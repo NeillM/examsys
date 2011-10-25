@@ -24,30 +24,30 @@
 
 require '../include/staff_auth.inc';
   
-  if (isset($_POST['submit']) and $_POST['submit'] == 'Second Mark') {
-    // Delete any previous remark records
-    $result = $mysqli->prepare("DELETE FROM textbox_remark WHERE paperID=?");
-    $result->bind_param('i', $_POST['paperID']);
-    $result->execute();
-    $result->close();
+if (isset($_POST['submit'])) {
+  // Delete any previous remark records
+  $result = $mysqli->prepare("DELETE FROM textbox_remark WHERE paperID=?");
+  $result->bind_param('i', $_POST['paperID']);
+  $result->execute();
+  $result->close();
 
-    for ($student=1; $student<$_POST['student_no']; $student++) {
-      if (isset($_POST["student$student"]) and $_POST["student$student"] != '') {
-        $result = $mysqli->prepare("INSERT INTO textbox_remark VALUES (NULL,?,?)");
-        $result->bind_param('ii', $_POST['paperID'], $_POST["student$student"]);
-        $result->execute();
-        $result->close();
-      }
+  for ($student=1; $student<$_POST['student_no']; $student++) {
+    if (isset($_POST["student$student"]) and $_POST["student$student"] != '') {
+      $result = $mysqli->prepare("INSERT INTO textbox_remark VALUES (NULL,?,?)");
+      $result->bind_param('ii', $_POST['paperID'], $_POST["student$student"]);
+      $result->execute();
+      $result->close();
     }
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
-  } elseif (isset($_POST['submit']) and $_POST['submit'] == 'Cancel') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
-  } else {
+  }
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+} elseif (isset($_POST['submit']) and $_POST['submit'] == 'Cancel') {
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+} else {
 ?>
 
 <html>
 <head>
-<title>Second Mark Selection</title>
+<title><?php echo $string['secondmark']; ?></title>
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
@@ -84,13 +84,13 @@ table {font-size:100%}
 
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n<tr><td class=\"h\" colspan=\"4\">";
-  echo '<div class="breadcrumb"><a href="../staff/index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:180%; color:black; font-weight:bold">Second Mark Selection</div></td><td class="h" style="width:50%; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:180%; color:black; font-weight:bold">Second Mark Selection</div></td><td class="h" style="width:50%; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="' . $string['help'] . '" border="0" /></a></td></tr>';
 
   echo "<tr style=\"height:4px\"><td colspan=\"5\" valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
 
@@ -107,7 +107,7 @@ table {font-size:100%}
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($total_mark, $username, $recordID, $student_id);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if (round(($total_mark/$paper_total)*100) < $pass_mark) {
       echo "<tr style=\"color:red\"><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\" checked /></td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . round(($total_mark/$paper_total)*100) . "%</td><td>&nbsp;</td></tr>\n";
     } else {
@@ -122,7 +122,7 @@ table {font-size:100%}
 <tr><td colspan="4" style="text-align:center">
 <input type="hidden" name="student_no" value="<?php echo $student_no; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
-<input type="submit" name="submit" value="Second Mark" style="width:120px" />&nbsp;<input type="submit" name="submit" value="Cancel" style="width:120px" />
+<input type="submit" name="submit" value="<?php echo $string['secondmark']; ?>" style="width:120px" />&nbsp;<input type="submit" name="submit" value="<?php echo $string['cancel']; ?>" style="width:120px" />
 </td><td>&nbsp;</td></tr>
 </table>
 <br />

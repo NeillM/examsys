@@ -165,7 +165,7 @@ if ($critical_error == '') {
       redirect();
     }
   } elseif ((isset($_POST['submit']) and ($_POST['submit'] == $string['save'] or $_POST['submit'] == $string['limitedsave'])) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
-    // Save data
+   // Save data
     if ($question->id == -1 or check_fullSave($question->id,$mysqli)) {
       
       $part_names = $question->get_editable_fields();
@@ -198,7 +198,7 @@ if ($critical_error == '') {
       }
       
       $unified_part_names = $question->get_unified_fields();
-      
+            
       for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
         $option = null;
         

@@ -30,7 +30,7 @@
 <tr><td style="margin:4px">
 <tr><td>
 <table cellpadding="3" cellspacing="0" border="0" style="margin-left:6px; font-size:90%">
-<tr><td><a href="../staff/index.php"><img src="../artwork/house.png" width="16" height="16" alt="home" border="0" /></a></td><td class="menuitem"><a href="../staff/index.php"><?php echo $string['home']; ?></a></td></tr>
+<tr><td><a href="../staff/index.php"><img src="../artwork/house.png" width="16" height="16" alt="<?php echo $string['home']; ?>" border="0" /></a></td><td class="menuitem"><a href="../staff/index.php"><?php echo $string['home']; ?></a></td></tr>
 </table>
 
 </td></tr>

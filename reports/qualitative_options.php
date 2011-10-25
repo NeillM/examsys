@@ -29,7 +29,7 @@
      "DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Qualitative Analysis<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['qualitativeanalysis'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
 .heading {background-color:#F1F5FB}
@@ -62,27 +62,27 @@ body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; 
 
   echo "<form name=\"analyse\" method=\"get\" action=\"qualitative_results.php\" target=\"results\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
   echo "<tr><td class=\"heading\">";
-  echo '<div class="breadcrumb"><a href="../staff/index.php" target="_top">Home</a>';
+  echo '<div class="breadcrumb"><a href="../staff/index.php" target="_top">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '" target="_top">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '" target="_top">' . $_GET['module'] . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '" target="_top">' . $paper . '</a></div>';
-  echo "<span style=\"font-size:200%; color:black; font-weight:bold; margin-left:10px\">Qualitative Analysis</span></td>";
+  echo "<span style=\"font-size:200%; color:black; font-weight:bold; margin-left:10px\">" . $string['qualitativeanalysis'] . "</span></td>";
   echo "<td class=\"heading\" valign=\"top\" width=\"250\"><input type=\"text\" name=\"keywords\" size=\"20\" value=\"";
   if (isset($_GET['keywords'])) echo $_GET['keywords']; 
-  echo "\" /><input type=\"submit\" name=\"submit\" value=\"Highlight\" />";
+  echo "\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['highlight'] . "\" />";
   if (isset($_GET['collapse']) and $_GET['collapse'] == '1') {
-    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" checked />&nbsp;Collapse";
+    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" checked />&nbsp;" . $string['collapse'];
   } else {
-    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" />&nbsp;Collapse";
+    echo "<br /><input type=\"checkbox\" name=\"collapse\" value=\"1\" />&nbsp;" . $string['collapse'];
   }
   echo '&nbsp;&nbsp;&nbsp;&nbsp;';
   if (isset($_GET['casesensitive']) and $_GET['casesensitive'] == '1') {
-    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" checked />&nbsp;Case-sensitive";
+    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" checked />&nbsp;" . $string['casesensitive'];
   } else {
-    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" />&nbsp;Case-sensitive";
+    echo "<br /><input type=\"checkbox\" name=\"casesensitive\" value=\"1\" />&nbsp;" . $string['casesensitive'];
   }
   echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . '" />';
   echo '<input type="hidden" name="startdate" value="' . $_GET['startdate'] . '" />';

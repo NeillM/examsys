@@ -26,7 +26,7 @@
   require '../include/media.inc';
 
   function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $candidates) {
-      global $old_likert_scale, $old_score_method, $table_on;
+      global $old_likert_scale, $old_score_method, $old_display_method, $table_on, $string;
       if ($q_type != 'likert' and $q_type != 'textbox' and $table_on == 1) {
         echo "</table>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n"; 
       }
@@ -86,18 +86,11 @@
             }
             echo '</p>';
             break;
-          case 'calculation':
-            echo "<tr><td><strong>Correct</strong></td><td><strong>" . $log[$screen][$q_id][1]['correct'] . "</strong></td></tr>\n";
-            echo "<tr><td>Within tolerance&nbsp;&nbsp;&nbsp;</td><td>" . $log[$screen][$q_id][1]['tolerance'] . "</td></tr>\n";
-            echo "<tr><td>Incorrect</td><td>" . $log[$screen][$q_id][1]['incorrect'] . "</td></tr>\n";
-            if ($log[$screen][$q_id][1]['u'] == '') $log[$screen][$q_id][1]['u'] = 0;
-            echo "<tr><td style=\"color:#808080\">Unanswered</td><td>" . $log[$screen][$q_id][1]['u'] . "</td></tr>\n";
-            break;
           case 'dichotomous':
-            if ($old_score_method == 'YN_Positive' or $old_score_method == 'YN_NegativeAbstain') {
-              echo "<tr><td style=\"font-weight:bold; text-align:center\">Yes</td><td style=\"font-weight:bold; text-align:center\">No</td><td style=\"font-weight:bold; text-align:center\">Abstain</td><td></td></tr>\n";
+            if ($old_display_method == 'YN_Positive' or $old_display_method == 'YN_NegativeAbstain') {
+              echo "<tr><td style=\"font-weight:bold; text-align:center\">" . $string['yes'] . "</td><td style=\"font-weight:bold; text-align:center\">" . $string['no'] . "</td><td style=\"font-weight:bold; text-align:center\">" . $string['abstain'] . "</td><td></td></tr>\n";
             } else {
-              echo "<tr><td style=\"font-weight:bold; text-align:center\">True</td><td style=\"font-weight:bold; text-align:center\">False</td><td style=\"font-weight:bold; text-align:center\">Abstain</td><td></td></tr>\n";
+              echo "<tr><td style=\"font-weight:bold; text-align:center\">" . $string['true'] . "</td><td style=\"font-weight:bold; text-align:center\">" . $string['false'] . "</td><td style=\"font-weight:bold; text-align:center\">" . $string['abstain'] . "</td><td></td></tr>\n";
             }
             $i = 0;
             foreach ($options as $individual_option) {
@@ -156,22 +149,22 @@
             break;
           case 'likert':
             $old_size = substr_count($old_likert_scale,'|');
-            $current_properties = explode('|',$old_score_method);
-            $new_size = substr_count($old_score_method,'|');
+            $current_properties = explode('|',$old_display_method);
+            $new_size = substr_count($old_display_method,'|');
             if ($current_properties[$new_size] == 'true') {
               $na = true;
             } else {
               $na = false;
             }
-            if ($old_likert_scale != $old_score_method  or $table_on == 0 ) {
+            if ($old_likert_scale != $old_display_method  or $table_on == 0 ) {
               if ($table_on == 1) echo "</table>\n";
               echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"margin-left:10px; margin-right:10px\">\n";
               echo '<tr><td></td><td></td>';
-              if ($na == true) echo '<td style="vertical-align:bottom; text-align:center" colspan="2">N/A</td>';
+              if ($na == true) echo '<td style="vertical-align:bottom; text-align:center" colspan="2">' . $string['na'] . '</td>';
               for ($point=1; $point<=$new_size; $point++) {
                 echo "<td style=\"vertical-align:bottom; text-align:center\" colspan=\"2\"><strong>" . $current_properties[$point - 1] . "</strong></td>";
               }
-              echo "<td style=\"vertical-align:bottom; color:#808080\" colspan=\"2\">Unanswered</td><td style=\"vertical-align:bottom\">Mean</td></tr>\n";
+              echo "<td style=\"vertical-align:bottom; color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td><td style=\"vertical-align:bottom\">" . $string['mean'] . "</td></tr>\n";
               $table_on = 1;
             }
             echo "<tr><td class=\"figures\">$q_no.</td><td>$leadin</td>";
@@ -212,7 +205,7 @@
             } else {
               echo "<td class=\"figures\">" . number_format($sub_total/($candidates-$unanswered),1) . "</td></tr>\n";
             }
-            $old_likert_scale = $old_score_method;
+            $old_likert_scale = $old_display_method;
             break;
           case 'hotspot':
             ?>
@@ -231,23 +224,23 @@
             echo "<tr><td class=\"figures\">Correct</td><td>" . $log[$screen][$q_id][1][1] . "</td></tr>\n";
             echo "<tr><td class=\"figures\">Incorrect</td><td>" . $log[$screen][$q_id][1][0] . "</td></tr>\n";
             if ($log[$screen][$q_id][1]['u'] == '') $log[$screen][$q_id][1]['u'] = 0;
-            echo "<tr><td class=\"figures\" style=\"color:#808080\">Unanswered</td><td style=\"color:#808080\">" . $log[$screen][$q_id][1]['u'] . "</td></tr>\n";
+            echo "<tr><td class=\"figures\" style=\"color:#808080\">" . $string['unanswered'] . "</td><td style=\"color:#808080\">" . $log[$screen][$q_id][1]['u'] . "</td></tr>\n";
             break;
           case 'mcq':
             $i = 0;
             foreach ($options as $individual_option) {
               $i++;
               echo "<tr>";
-              if ($log[$screen][$q_id][1][$i] == '') {
+              if (!isset($log[$screen][$q_id][1][$i]) or $log[$screen][$q_id][1][$i] == '') {
                 echo "<td class=\"figures\">0</td><td>(0%)</td><td>$individual_option</td></tr>\n";
               } else {
                 echo "<td class=\"figures\">" . $log[$screen][$q_id][1][$i] . "</td><td>(" . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . "%)</td><td>$individual_option</td></tr>\n";
               }
             }
             if (!isset($log[$screen][$q_id][1]['u'])) {
-              echo "<tr style=\"color:#808080\"><td class=\"figures\">0</td><td>(0%)</td><td>&lt;unanswered&gt;</td></tr>\n";
+              echo "<tr style=\"color:#808080\"><td class=\"figures\">0</td><td>(0%)</td><td>" . $string['unanswered'] . "</td></tr>\n";
             } else {
-              echo "<tr style=\"color:#808080\"><td class=\"figures\">" . $log[$screen][$q_id][1]['u'] . "</td><td>(" . round(($log[$screen][$q_id][1]['u']/$candidates)*100) . "%)</td><td>&lt;unanswered&gt;</td></tr>\n";
+              echo "<tr style=\"color:#808080\"><td class=\"figures\">" . $log[$screen][$q_id][1]['u'] . "</td><td>(" . round(($log[$screen][$q_id][1]['u']/$candidates)*100) . "%)</td><td>" . $string['unanswered'] . "</td></tr>\n";
             }
             break;
           case 'mrq':
@@ -291,12 +284,12 @@
                 echo "</td><td style=\"width:50%\">&nbsp;</td></tr>\n";
               }
               if (isset($reqire_na) and $reqire_na == true) {
-                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i][9990] . "</td><td>(" . number_format(($log[$screen][$q_id][$i][9990]/$candidates)*100,0) . "%)</td><td></td><td>N/A</td><td style=\"width:50%\">&nbsp;</td></tr>";
+                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i][9990] . "</td><td>(" . number_format(($log[$screen][$q_id][$i][9990]/$candidates)*100,0) . "%)</td><td></td><td>" . $string['na'] . "</td><td style=\"width:50%\">&nbsp;</td></tr>";
               }
               if (isset($log[$screen][$q_id][$i]['u'])) {
-                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "</td><td>(" . number_format(($log[$screen][$q_id][$i]['u']/$candidates)*100,0) . "%)</td><td></td><td style=\"color:#808080\">&lt;unanswered&gt;</td><td style=\"width:50%\">&nbsp;</td></tr>";
+                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "</td><td>(" . number_format(($log[$screen][$q_id][$i]['u']/$candidates)*100,0) . "%)</td><td></td><td style=\"color:#808080\">" . $string['unanswered'] . "</td><td style=\"width:50%\">&nbsp;</td></tr>";
               } else {
-                echo "<tr><td class=\"figures\">0</td><td>(0%)</td><td></td><td style=\"color:#808080\">&lt;unanswered&gt;</td><td style=\"width:50%\">&nbsp;</td></tr>";
+                echo "<tr><td class=\"figures\">0</td><td>(0%)</td><td></td><td style=\"color:#808080\">" . $string['unanswered'] . "</td><td style=\"width:50%\">&nbsp;</td></tr>";
               }
               echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
               $i++;
@@ -316,7 +309,7 @@
         foreach ($options as $individual_option) {
           echo "<td>$individual_option</td>";
         }
-        echo "<td style=\"color:#808080\">unanswered</td></tr>\n";
+        echo "<td style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
         for ($i=1; $i<=(substr_count($scenario,'|')+1); $i++) {
           echo "<tr>\n";
           echo "<td>" . $tmp_ext_scenarios[$i-1] . "</td>";
@@ -378,9 +371,9 @@
             $option_no++;
           }
           if ($log[$screen][$q_id][$i]['u'] > 0) {
-            echo "<tr style=\"color:#808080\"><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "&nbsp;(" . round(($log[$screen][$q_id][$i]['u']/$candidates)*100) . "%)</td><td>&lt;unanswered&gt;</td></tr>\n";
+            echo "<tr style=\"color:#808080\"><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "&nbsp;(" . round(($log[$screen][$q_id][$i]['u']/$candidates)*100) . "%)</td><td>" . $string['unanswered'] . "</td></tr>\n";
           } else {
-            echo "<tr style=\"color:#808080\"><td class=\"figures\">0</td><td>&lt;unanswered&gt;</td></tr>\n";
+            echo "<tr style=\"color:#808080\"><td class=\"figures\">0</td><td>" . $string['unanswered'] . "</td></tr>\n";
           }
           echo "</table></p></li>\n";
         }
@@ -394,10 +387,11 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Quantitative Report</title>
+<title><?php echo $string['quantitativereport']; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
 h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#316AC5}
+table {font-size:100%}
 p {margin-right:15px}
 td {vertical-align:top}
 .figures {text-align:right; width:60px}
@@ -678,11 +672,11 @@ td {vertical-align:top}
     $result->close();
   }
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo '<tr><td class="h"><div class="breadcrumb"><a href="../staff/index.php">Home</a>';
+  echo '<tr><td class="h"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if ($folder != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   if (isset($_GET['module']) and $_GET['module'] != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">Quantitative Report</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(33); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['quantitativereport'] . "</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(33); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
   echo '<tr style="height:4px"><td valign="top" colspan="11"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>';
   echo "\n</table>\n";
 
@@ -698,11 +692,11 @@ td {vertical-align:top}
   $options_buffer = array();
   $correct_buffer = array();
   
-  $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, score_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, score_method, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $q_media, $q_media_width, $q_media_height, $correct);
-  while ($row = $result->fetch()) {
+  $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $display_method, $q_media, $q_media_width, $q_media_height, $correct);
+  while ($result->fetch()) {
     // Replace & characters.
     $theme = str_replace('&','&amp;',$theme);
     $scenario = str_replace('&','&amp;',$scenario);
@@ -712,8 +706,8 @@ td {vertical-align:top}
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
       if ($old_q_type == 'likert') {
         $options_buffer['n/a'] = 'n/a';
-        $likert_properties = explode('|',$old_score_method);
-        for ($i=1; $i<=substr_count($old_score_method,'|'); $i++) {
+        $likert_properties = explode('|',$old_display_method);
+        for ($i=1; $i<=substr_count($old_display_method,'|'); $i++) {
           $options_buffer[$i] = $i;
         }
       }
@@ -733,7 +727,7 @@ td {vertical-align:top}
         if (isset($log_array[$old_screen][$old_q_id][1]['n'])) $respondents += $log_array[$old_screen][$old_q_id][1]['n'];
         if (isset($log_array[$old_screen][$old_q_id][1]['u'])) $respondents += $log_array[$old_screen][$old_q_id][1]['u'];
         if (isset($log_array[$old_screen][$old_q_id][1]['other'])) $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
-        echo "<tr><td colspan=\"2\">($respondents Respondents)</td></tr>\n";
+        echo "<tr><td colspan=\"2\">($respondents " . $string['respondents'] . ")</td></tr>\n";
         $display_respondents = 0;
       }
       if ($old_q_type != 'info') {
@@ -748,7 +742,7 @@ td {vertical-align:top}
           }
         if ($screen > 1) {
           echo '<br /><table cellpadding="2" cellspacing="0" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
-          echo "<tr>\n<td colspan=\"2\" style=\"padding-left:20px; vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;$screen</td>\n</tr>\n";
+          echo "<tr>\n<td colspan=\"2\" style=\"padding-left:20px; vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;$screen</td>\n</tr>\n";
         }
       }
       $options_buffer = array();
@@ -778,14 +772,15 @@ td {vertical-align:top}
     $old_q_media_height = $q_media_height;
     $old_correct = $correct;
     $old_score_method = $score_method;
+    $old_display_method = $display_method;
   }
   $result->close();
   
   //$question_no++;
   if ($old_q_type == 'likert') {
     $options_buffer['n/a'] = 'n/a';
-    $likert_properties = explode('|',$old_score_method);
-    for ($i=1; $i<=substr_count($old_score_method,'|'); $i++) {
+    $likert_properties = explode('|',$old_display_method);
+    for ($i=1; $i<=substr_count($old_display_method,'|'); $i++) {
       $options_buffer[$i] = $i;
     }
   }

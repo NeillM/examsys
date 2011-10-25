@@ -709,6 +709,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'textbox':
         $textbox_size = explode('x',$question['display_method']);
+        var_dump($question['display_method']);
         if ($display_option['option_text'] == 'plain') {
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
             echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
