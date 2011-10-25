@@ -59,7 +59,7 @@ function display_options($options,$q_id, $current_theme) {
     }
   } elseif ($options[0]['q_type'] == 'mcq') {
     echo '<blockquote>';
-    if ($options[0]['score_method'] == 'vertical' or $options[0]['display_method'] == 'vertical_other' or $options[0]['display_method'] == 'dropdown') {
+    if ($options[0]['display_method'] == 'vertical' or $options[0]['display_method'] == 'vertical_other' or $options[0]['display_method'] == 'dropdown') {
       echo '<table cellpadding="2" cellspacing="0" border="0">';
     }
   } elseif ($options[0]['q_type'] == 'mrq') {
@@ -271,9 +271,10 @@ function display_options($options,$q_id, $current_theme) {
         echo "<tr><td colspan=\"2\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" />&nbsp;" . $display_option['option_text'] . "</td></tr>\n";
         break;
       case 'blank':
+        $ans = '';
+        $blank_mark = array();
         $display_option['option_text'] = str_replace('&nbsp;',' ',$display_option['option_text']);
         $blank_details = explode('[blank',$display_option['option_text']);
-        
         if ($display_option['display_method'] == 'textboxes') {
           $array_size = count($blank_details);
           $blank_count = 1;
@@ -319,6 +320,8 @@ function display_options($options,$q_id, $current_theme) {
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
             $answer_list = explode(',',$answer_options[0]);
             //shuffle($answer_list);            // Shuffle the answers up.
+            echo "hi";
+            exit;
             for ($i=1; $i<=count($answer_list); $i++) {
               //echo "[" . htmlentities(trim($answer_list[$i-1])) . "] \n";
               echo "[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]";
@@ -456,8 +459,8 @@ function display_options($options,$q_id, $current_theme) {
   }                    // End foreach loop
 
   if ($options[0]['q_type'] == 'mcq') {
-    if ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other' or $options[0]['score_method'] == 'dropdown') {
-      if($options[0]['score_method'] == 'vertical_other') {
+    if ($options[0]['display_method'] == 'vertical' or $options[0]['display_method'] == 'vertical_other' or $options[0]['display_method'] == 'dropdown') {
+      if ($options[0]['display_method'] == 'vertical_other') {
         echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td>Other&nbsp; <input type=\"textbox\" style=\"border: 1px solid black;\" value=\"\" name=\"mcq_other\" /></td></tr>\n";
       }
       echo '</table>';
@@ -545,7 +548,7 @@ function display_options($options,$q_id, $current_theme) {
   } elseif ($options[0]['q_type'] == 'matrix') {
     $part_id = 1;
     if ($matching_media[0] != '') {
-      echo "<p align=\"center\">" . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0]) . "</p>\n";
+      echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0]) . "</p>\n";
     }
     echo "<blockquote>\n";
     echo '<table cellpadding="2" cellspacing="0" border="1">';
@@ -582,7 +585,7 @@ function display_options($options,$q_id, $current_theme) {
     if ($marks == 1) {
       echo "<div style=\"color: #808080; font-size: 80%\">($marks)</div>\n<br />\n";
     } elseif ($marks > 1) {
-      if ($options[0]['q_type'] == 'dichotomous' and ($options[0]['score_method'] == 'TF_Negative' or $options[0]['score_method'] == 'TF_NegativeAbstain' or $options[0]['score_method'] == 'YN_Negative' or $options[0]['score_method'] == 'YN_NegativeAbstain')) {
+      if ($options[0]['q_type'] == 'dichotomous' and ($options[0]['display_method'] == 'TF_Negative' or $options[0]['display_method'] == 'TF_NegativeAbstain' or $options[0]['display_method'] == 'YN_Negative' or $options[0]['display_method'] == 'YN_NegativeAbstain')) {
         echo "<div class=\"no_marks\">($marks, negative marking)</div>\n<br />\n";
       } elseif ($options[0]['q_type'] == 'mrq') {
         if ($options[0]['score_method'] == 'SelectedPositive') {
