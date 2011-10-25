@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
+require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
 function calcPreParse($inputVal, $user_answers, $tmp_vars) {
   global $A, $B, $C, $D, $E, $F, $G, $H;
@@ -144,10 +144,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   $li_set = 0;
   if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
-    echo "</table>\n<br />\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"1\" width=\"100%\" style=\"table-layout:fixed\">\n";
+    echo "</table>\n<br />\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
     echo "<col width=\"40\"><col>\n";
   } elseif ($old_q_type != 'likert' and $question['q_type'] == 'likert') {
-    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"1\">\n";
+    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
   }
 
   if ($question['theme'] != '') echo '<tr><td colspan="2" class="theme">' . $question['theme'] . '</td></tr>';
@@ -326,21 +326,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "</table>\n";
       
       echo '<p><strong>';
-	  echo $string['thenthis'] . " " . strtolower($sct_titles[$question['display_method']]) . " " . $string['is'] . ":";
-
-      /*niko
-	  if ($question['score_method'] == 1) {
-        echo 'Then this hypothesis becomes:';
-      } elseif ($question['score_method'] == 2) {
-        echo 'Then this investigation becomes:';
-      } elseif ($question['score_method'] == 3) {
-        echo 'Then this prescription becomes:';
-      } elseif ($question['score_method'] == 4) {
-        echo 'Then this intervention becomes:';
-      } elseif ($question['score_method'] == 5) {
-        echo 'Then this treatment becomes:';
-      }
-	  */
+      echo $string['thenthis'] . " " . strtolower($sct_titles[$question['display_method']]) . " " . $string['is'] . ":";
       echo '</strong></p>';
       
       if (isset($user_answers[$current_screen][$q_id]) AND $user_answers[$current_screen][$q_id] == '0' AND $screen_pre_submitted == 1) {
@@ -495,7 +481,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" /></td><td>";
           }
         } else {
-          if (isset($user_answers[$current_screen][$q_id]) AND substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
+          if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
             echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" checked /></td><td>";
           } else {
             echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" /></td><td>";
@@ -511,7 +497,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" onclick=\"onoff($question_no,$part_id)\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . '</span>';
         if ($display_option['o_media'] != '') {
           if ($display_option['option_text'] != '') echo '<br />';
-          echo display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']);
+          echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']);
         }
         echo "</td></tr>\n";
         if ($question['score_method'] == 'Mark per Option') {
@@ -709,7 +695,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'textbox':
         $textbox_size = explode('x',$question['display_method']);
-        var_dump($question['display_method']);
         if ($display_option['option_text'] == 'plain') {
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
             echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
@@ -959,7 +944,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo '" />';
     $marks = $display_option['marks_correct'];
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
-    if ($question['score_method'] == 'other') {
+    if ($question['display_method'] == 'other') {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
       $part_id++;
       if ($answer != '' and substr($answer,($part_id - 1),1) == 'y') {

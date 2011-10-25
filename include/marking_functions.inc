@@ -23,7 +23,7 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/networkutils.class.php');
+require_once $cfg_web_root . 'classes/networkutils.class.php';
 
 /**
  * This is function time_to_seconds
@@ -198,7 +198,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           }
         } elseif ($old_score_method == 'Mark per Option' and $mrq_options_selected > $totalpos) {
           $mark = 0;
-        } elseif ($old_score_method == 'other') {
+        }
+        if ($old_display_method == 'other') {
           $question_part++;
           $qid = 'q' . $question_no . '_' . $question_part;
           if (isset($_POST[$qid]) and $_POST[$qid] == 'y') {
@@ -498,27 +499,6 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
                   $mark += $marks_incorrect;
                 }
               }
-              
-              
-              
-              
-//              for ($x=0; $x<count($correct_answers); $x++) {
-//                if ($answer_count == 1) {
-//                  if ($_POST[$qid] == $correct_answers[0]) {
-//                    $mark += $marks_correct;
-//                    $all_items_abstain = false;
-//                  } elseif ($_POST[$qid] != 'u') {
-//                    $mark += $marks_incorrect;
-//                    $all_items_abstain = false;
-//                  }
-//                } else {
-//                  if ($_POST[$qid][$i] == $correct_answers[$x]) {
-//                    $mark += $marks_correct;
-//                  } else {
-//                    $mark += $marks_incorrect;
-//                  }
-//                }
-//              }
             }
             $totalpos += count($correct_answers) * $marks_correct;
             $option_no++;
@@ -803,7 +783,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       }
     } elseif ($old_score_method == 'Mark per Option' and $mrq_options_selected > $totalpos) {
       $mark = 0;
-    } elseif ($old_score_method == 'other') {
+    }
+    if ($old_display_method == 'other') {
       $question_part++;
       $qid = 'q' . $question_no . '_' . $question_part;
       if (isset($_POST[$qid]) and $_POST[$qid] == 'y') {

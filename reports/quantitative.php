@@ -247,8 +247,20 @@
             $i = 0;
             foreach ($options as $individual_option) {
               $i++;
-              if ($log[$screen][$q_id][$i]['y'] == '') $log[$screen][$q_id][$i]['y'] = 0;
+              if (!isset($log[$screen][$q_id][$i]['y']) or $log[$screen][$q_id][$i]['y'] == '') $log[$screen][$q_id][$i]['y'] = 0;
               echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i]['y'] . "</td><td>(" . round(($log[$screen][$q_id][$i]['y']/$candidates)*100) . "%)</td><td>$individual_option</td></tr>\n";
+            }
+            $q_option_no = count($options);
+            $log_option_no = count($log[$screen][$q_id]);
+            
+            if ($log_option_no > $q_option_no) {
+              foreach ($log[$screen][$q_id] as $key=>$value) {
+                if ($key > $q_option_no) {
+                  foreach ($value as $text=>$number) {
+                    echo "<tr><td class=\"figures\">$number</td><td>(" . round(($number/$candidates)*100) . "%)</td><td>$text</td></tr>\n";
+                  }
+                }
+              }
             }
             break;
           case 'rank':
@@ -420,7 +432,7 @@ td {vertical-align:top}
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
     $result->execute();
     $result->bind_result($tmp_userID, $answer_no);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
         $exclude .= ' AND log3.userID!=' . $tmp_userID;
       }
@@ -441,7 +453,8 @@ td {vertical-align:top}
     $result->execute();
   }
   $result->bind_result($tmp_userID, $question_ID, $tmp_answer, $q_type, $screen, $score_method);
-  while ($row = $result->fetch()) {
+  $result->store_result();
+  while ($result->fetch()) {
     $tmp_answer = str_replace('&','&amp;',$tmp_answer);
     switch ($q_type) {
       case 'blank':
@@ -575,7 +588,15 @@ td {vertical-align:top}
         }
         break;
       case 'mrq':
-        for ($i=0; $i<strlen($tmp_answer); $i++) {
+        $result2 = $mysqli->prepare("SELECT COUNT(o_id) AS tmp_option_no FROM options WHERE o_id=?");
+        $result2->bind_param('i', $question_ID);
+        $result2->execute();
+        $result2->bind_result($tmp_option_no);
+        $result2->store_result();
+        $result2->fetch();
+        $result2->close();
+      
+        for ($i=0; $i<$tmp_option_no; $i++) {
           $tmp_individual_answer = substr($tmp_answer, $i, 1);
           if (isset($log_array[$screen][$question_ID][$i+1][$tmp_individual_answer])) {
             $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer]++;
@@ -583,6 +604,17 @@ td {vertical-align:top}
             $log_array[$screen][$question_ID][$i+1][$tmp_individual_answer] = 1;
           }
         }
+        
+        if (strlen($tmp_answer) > $tmp_option_no) {
+          $other = substr($tmp_answer, $tmp_option_no+1);
+          
+          if (isset($log_array[$screen][$question_ID][$i+1][$other])) {
+            $log_array[$screen][$question_ID][$i+1][$other]++;
+          } else {
+            $log_array[$screen][$question_ID][$i+1][$other] = 1;
+          }         
+        }
+        
         break;
       case 'extmatch':
         $tmp_answer_parts = array();
@@ -729,6 +761,10 @@ td {vertical-align:top}
         if (isset($log_array[$old_screen][$old_q_id][1]['other'])) $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
         echo "<tr><td colspan=\"2\">($respondents " . $string['respondents'] . ")</td></tr>\n";
         $display_respondents = 0;
+        
+        if ($respondents == 0) {
+          exit;
+        }
       }
       if ($old_q_type != 'info') {
         displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags($old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
@@ -775,8 +811,7 @@ td {vertical-align:top}
     $old_display_method = $display_method;
   }
   $result->close();
-  
-  //$question_no++;
+
   if ($old_q_type == 'likert') {
     $options_buffer['n/a'] = 'n/a';
     $likert_properties = explode('|',$old_display_method);
