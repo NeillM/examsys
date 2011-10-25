@@ -127,7 +127,7 @@ require_once '../classes/dateutils.class.php';
     echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" border=\"0\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>\n";
   }
 ?>
-<td>&nbsp;</td.
+<td>&nbsp;</td>
 </tr>
 </table>
 </div>
@@ -150,7 +150,7 @@ require_once '../classes/dateutils.class.php';
   }
   
   // Create the new paper.
-  $session =  DateUtils::get_current_academic_year();
+  $session = DateUtils::get_current_academic_year();
   
   if (isset($_POST['folder'])) {
     $folder = $_POST['folder'];
@@ -246,13 +246,15 @@ require_once '../classes/dateutils.class.php';
     $module_details->execute();
     $module_details->bind_result($calendar_year);
     echo "<select name=\"session\">\n";
-    while ($row = $module_details->fetch()) {
+    while ($module_details->fetch()) {
       if ($next_flag == 1) {
         $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
-        echo "<option value=\"$next_session\">$next_session</option>\n";
+        $sel = (DateUtils::get_current_academic_year() == $next_session) ? ' selected="selected"' : '';
+        echo "<option value=\"$next_session\"$sel>$next_session</option>\n";
         $next_flag = 0;
       }
-      echo "<option value=\"$calendar_year\">$calendar_year</option>\n";
+      $sel = (DateUtils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
+      echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
     }
     echo "</select></td></tr>\n";
   } else {
