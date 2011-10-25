@@ -5,6 +5,6 @@ $string['byteam'] = 'wg. zespołu';
 $string['question'] = 'Pytanie';
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
-$string['warningnoleadin'] = 'Ostrzeżenie: brak wprowadzenia do pytania!';//no question lead-in
+$string['warningnoleadin'] = 'Ostrzeżenie: brak sformułowania pytania!';
 $string['locked'] = 'Zablokowane';
 ?>

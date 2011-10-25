@@ -6,7 +6,7 @@ $string['recyclebin'] = 'Kosz';
 $string['recyclebintasks'] = 'Działania dot. kosza';
 $string['restorethisitem'] = 'Odzyskaj ten element';
 $string['name'] = 'Nazwa';
-$string['datedeleted'] = 'Data usunięta';//??
+$string['datedeleted'] = 'Data usunięcia';//??
 $string['type'] = 'Typ';
 $string['folder'] = 'Folder';
 ?>
