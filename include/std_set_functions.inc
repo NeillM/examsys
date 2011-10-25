@@ -178,29 +178,21 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         echo "<td>Other <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"\" /></td></tr>\n";
       }
       echo '</table>';
-      if ($options[0]['q_type'] == 'mrq') {
-        echo "</blockquote>\n";
-        if ($options[0]['score_method'] == 'Mark per Question') {
-          $part_id++;
-          $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-          echo "<div>";
-          echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,1,1), $review_val, $stdID, $std_excluded, $is_group);
-          echo "</div>\n";
-          $marks = $options[0]['marks_correct'];
-        }
-      } elseif ($options[0]['q_type'] == 'rank') {
-        echo "<input type=\"hidden\" id=\"rank" . $question_no . "_options\" name=\"rank" . $question_no . "_options\" value=\"$part_id\" />\n";
-        if ($options[0]['score_method'] == 'Bonus Mark') {
-          $review_val = get_review($options[0]['q_type'], $std_method, $q_id, ($part_id+1), $tmp_reviews, $is_group);
-          echo "<br />\n<div>All items correct: ";
-          echo reviewScale($question_no, ($part_id+1), $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
-          echo "</div>\n";
-          echo "<input type=\"hidden\" id=\"rank" . $question_no . "_correct_no\" name=\"rank" . $question_no . "_correct_no\" value=\"". ($marks-1) . "\" />\n";
-        } elseif ($options[0]['score_method'] == 'Mark per Question') {
-          echo "<input type=\"hidden\" id=\"rank" . $question_no . "_correct_no\" name=\"rank" . $question_no . "_correct_no\" value=\"$part_id\" />\n";
-        } else {
-          echo "<input type=\"hidden\" id=\"rank" . $question_no . "_correct_no\" name=\"rank" . $question_no . "_correct_no\" value=\"$marks\" />\n";
-        }
+      echo "<input type=\"hidden\" id=\"rank" . $question_no . "_options\" name=\"rank" . $question_no . "_options\" value=\"$part_id\" />\n";
+      if ($options[0]['score_method'] == 'Bonus Mark') {
+        $review_val = get_review($options[0]['q_type'], $std_method, $q_id, ($part_id+1), $tmp_reviews, $is_group);
+        echo "<br />\n<div>All items correct: ";
+        echo reviewScale($question_no, ($part_id+1), $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
+        echo "</div>\n";
+        echo "<input type=\"hidden\" id=\"rank" . $question_no . "_correct_no\" name=\"rank" . $question_no . "_correct_no\" value=\"". ($marks-1) . "\" />\n";
+      } elseif ($options[0]['score_method'] == 'Mark per Question') {
+        $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
+        echo "<br />\n<div>";
+        echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
+        echo "</div>\n";
+        echo "<input type=\"hidden\" id=\"rank" . $question_no . "_correct_no\" name=\"rank" . $question_no . "_correct_no\" value=\"$part_id\" />\n";
+      } else {
+        echo "<input type=\"hidden\" id=\"rank" . $question_no . "_correct_no\" name=\"rank" . $question_no . "_correct_no\" value=\"$marks\" />\n";
       }
       break;
     case 'extmatch':

@@ -634,7 +634,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       if ($qn_excluded) echo ' style="color:red; text-decoration:line-through"';
       echo ">" . $display_option['option_text'] . "</td><td>&nbsp;</td>\n";
       
-      if ($display_option['correct'] != 0 or $display_option['score_method'] == 'Mark per Option') {
+      if (($display_option['correct'] != 0 or $display_option['score_method'] == 'Mark per Option') and $display_option['score_method'] != 'Mark per Question') {
         echo "<td>";
         echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, $qn_excluded, $review_val, $stdID, $std_excluded, $is_group);
         echo "</td>\n";

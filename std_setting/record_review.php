@@ -70,7 +70,7 @@
   while ($row = $questions->fetch_assoc()) {
     if ($old_q_id != $row['q_id']) {
       if ($question_no > 0) {
-        if ($old_type == 'rank' and $old_score_method != 'AllItemsCorrect') {
+        if ($old_type == 'rank' and $old_score_method == 'Bonus Mark') {
           $question_part++;
           $qid = 'std' . $question_no . '_' . $question_part;
           if ($rating == '') {
@@ -81,7 +81,7 @@
           if ($_POST["$qid"] != '') $last_question = $question_no;
           if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
           $total_parts++;
-        } elseif ($old_type = 'mrq' and $old_score_method == 'AllItemsCorrect') {
+        } elseif ($old_type == 'mrq' and $old_score_method == 'Mark per Question') {
           $qid = 'std' . $question_no . '_1';
           $rating = $_POST["$qid"];
           if ($_POST["$qid"] != '') $last_question = $question_no;
@@ -180,7 +180,7 @@
             $rating = $_POST[$qid];
           } else {
             $qid = 'std' . $question_no . '_' . $question_part;
-            if ($row['correct'] == 'y' and $row['score_method'] != 'AllItemsCorrect') {
+            if ($row['correct'] == 'y' and $row['score_method'] != 'Mark per Question') {
               if ($question_part == 1) {
                 $rating = $_POST["$qid"];
               } else {
@@ -189,7 +189,7 @@
               if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
               if ($_POST["$qid"] != '') $last_question = $question_no;
               $total_parts++;
-            } elseif ($row['correct'] == 'n' and $row['score_method'] != 'AllItemsCorrect') {
+            } elseif ($row['correct'] == 'n' and $row['score_method'] != 'Mark per Question') {
               if ($question_part == 1) {
                 if (isset($_POST[$qid])) {
                   $rating = $_POST[$qid];
@@ -271,26 +271,21 @@
           }
           break;
         case 'rank':
-          $qid = 'std' . $question_no . '_' . $question_part;
-          if ($row['correct'] < 9990 and $row['score_method'] != 'StrictOrder') {
-            if ($question_part == 1) {
+          if ($row['score_method'] == 'Mark per Question') {
+              $qid = 'std' . $question_no . '_1';
               $rating = $_POST["$qid"];
-            } else {
-              $rating .= ',' . $_POST["$qid"];
-            }
-            if ($_POST["$qid"] != '') $last_question = $question_no;
-            if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
-            $total_parts++;
-          } elseif ($row['score_method'] == 'StrictOrder') {
+          } else {          
+            $qid = 'std' . $question_no . '_' . $question_part;
+            $current_rating = (isset($_POST["$qid"])) ? $_POST["$qid"] : '';
             if ($question_part == 1) {
-              $rating = $_POST["$qid"];
+              $rating = $current_rating;
             } else {
-              $rating .= ',' . $_POST["$qid"];
+              $rating .= ',' . $current_rating;
             }
-            if ($_POST["$qid"] != '') $last_question = $question_no;
-            if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
-            $total_parts++;
+            if ($current_rating != '') $last_question = $question_no;
+            if ($tmp_method == 'Modified Angoff') $total_rating += $current_rating;
           }
+          $total_parts++;
           break;
         case 'textbox':
           for ($mark_part = $row['marks_correct']; $mark_part > 0; $mark_part--) {
@@ -355,7 +350,7 @@
   $questions->close();
 
   $question_part++;
-  if ($old_type == 'rank' and $old_score_method != 'AllItemsCorrect') {
+  if ($old_type == 'rank' and $old_score_method == 'Bonus Mark') {
     $qid = 'std' . $question_no . '_' . $question_part;
     if ($rating == '') {
       $rating = $_POST["$qid"];
@@ -365,9 +360,9 @@
     if ($_POST["$qid"] != '') $last_question = $question_no;
     if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
     $total_parts++;
-  } elseif ($old_type = 'mrq' and $old_score_method == 'AllItemsCorrect') {
+  } elseif ($old_type == 'mrq' and $old_score_method == 'Mark per Question') {
     $qid = 'std' . $question_no . '_1';
-    $rating = $_POST["$pid"];
+    $rating = $_POST["$qid"];
     if ($_POST["$qid"] != '') $last_question = $question_no;
     if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
   }
