@@ -41,17 +41,17 @@ function display_options($options,$q_id, $current_theme) {
   if ($options[0]['q_type'] == 'dichotomous') {
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
     if ($marking < 2) {
-      if (($options[0]['score_method'] == 'TF_NegativeAbstain') or ($options[0]['score_method'] == 'TF_PostiveAbstain')) {
+      if (($options[0]['display_method'] == 'TF_NegativeAbstain') or ($options[0]['display_method'] == 'TF_PostiveAbstain')) {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color: $labelcolor; font-size: 90%\">True</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">False</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Abstain</td><td>&nbsp;</td></tr>\n";
-      } elseif (($options[0]['score_method'] == 'TF_Negative') or ($options[0]['score_method'] == 'TF_Positive')) {
+      } elseif (($options[0]['display_method'] == 'TF_Negative') or ($options[0]['display_method'] == 'TF_Positive')) {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color: $labelcolor; font-size: 90%\">True</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">False</td></tr>\n";
-      } elseif (($options[0]['score_method'] == 'YN_NegativeAbstain') or ($options[0]['score_method'] == 'YN_PostiveAbstain')) {
+      } elseif (($options[0]['display_method'] == 'YN_NegativeAbstain') or ($options[0]['display_method'] == 'YN_PostiveAbstain')) {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color: $labelcolor; font-size: 90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">No</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Abstain</td><td>&nbsp;</td></tr>\n";
       } else {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color: $labelcolor; font-size: 90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">No</td></tr>\n";
       }
     } else {
-      if ($options[0]['score_method'] == 'TF_Positive' or $options[0]['score_method'] == 'TF_Negative' or $options[0]['score_method'] == 'TF_NegativeAbstain') {
+      if ($options[0]['display_method'] == 'TF_Positive' or $options[0]['display_method'] == 'TF_Negative' or $options[0]['display_method'] == 'TF_NegativeAbstain') {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color: $labelcolor; font-size: 90%\">True</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">False</td><td width=\"80\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Confidence</td></tr>\n";
       } else {
         echo "<tr><td align=\"center\" width=\"40\" style=\"color: $labelcolor; font-size: 90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">No</td><td width=\"80\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Confidence</td></tr>\n";
@@ -59,7 +59,7 @@ function display_options($options,$q_id, $current_theme) {
     }
   } elseif ($options[0]['q_type'] == 'mcq') {
     echo '<blockquote>';
-    if ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other' or $options[0]['score_method'] == 'dropdown') {
+    if ($options[0]['score_method'] == 'vertical' or $options[0]['display_method'] == 'vertical_other' or $options[0]['display_method'] == 'dropdown') {
       echo '<table cellpadding="2" cellspacing="0" border="0">';
     }
   } elseif ($options[0]['q_type'] == 'mrq') {
@@ -130,21 +130,7 @@ function display_options($options,$q_id, $current_theme) {
     echo "<tr><td style=\"width:50%\"><strong>" . $sct_titles[$options[0]['score_method']] . "</strong><br />" . $sct_parts[0] . "</td><td style=\"width:50%\"><strong>" . $string['newinformation'] . "</strong><br />" . $sct_parts[1] . "</td></tr>\n";
     
     echo '<tr><td colspan=\"2\"><strong>';
-	echo $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['display_method']]) . " " . $string['is'] . ":";
-
-    /*
-	niko if ($options[0]['score_method'] == 1) {
-      echo 'Then this hypothesis becomes:';
-    } elseif ($options[0]['score_method'] == 2) {
-      echo 'Then this investigation becomes:';
-    } elseif ($options[0]['score_method'] == 3) {
-      echo 'Then this prescription becomes:';
-    } elseif ($options[0]['score_method'] == 4) {
-      echo 'Then this intervention becomes:';
-    } elseif ($options[0]['score_method'] == 5) {
-      echo 'Then this treatment becomes:';
-    }
-	*/
+    echo $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['display_method']]) . " " . $string['is'] . ":";
     echo '</strong></td></tr>';
   }
   $i = 0;
@@ -158,7 +144,7 @@ function display_options($options,$q_id, $current_theme) {
         $tmp_user_answers = array();
         $figures = explode(',',$display_option['option_text']);
         $$var = MathsUtils::gen_random_no(checkVariables($figures[0]), checkVariables($figures[1]), $figures[2], $figures[3]);
-      break;
+        break;
       case 'dichotomous':
         if ($marking == 2) {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
@@ -203,7 +189,7 @@ function display_options($options,$q_id, $current_theme) {
         $marks+=2;
         break;
       case 'mcq':
-        if ($options[0]['score_method'] == 'horizontal') {
+        if ($options[0]['display_method'] == 'horizontal') {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
             echo "<img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" />&nbsp;" . $display_option['option_text'] . "&nbsp;&nbsp;";
           } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
@@ -211,7 +197,7 @@ function display_options($options,$q_id, $current_theme) {
           } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
             echo "<img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" />&nbsp;" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'],"q" . $question_no . "_" . $part_id) . "&nbsp;&nbsp;";
           }
-        } elseif ($options[0]['score_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other' or $options[0]['score_method'] == 'dropdown') {
+        } elseif ($options[0]['display_method'] == 'vertical' or $options[0]['score_method'] == 'vertical_other' or $options[0]['score_method'] == 'dropdown') {
           if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No media
             echo "<tr><td><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"checkbox\" /></td><td><span class=\"active\" onclick=\"dismissItem('$question_no" . "_" . "$part_id')\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . "</span></td></tr>\n";
           } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media

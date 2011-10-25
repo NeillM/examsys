@@ -191,6 +191,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
       } elseif ($old_type == 'mrq') {
         if ($old_score_method == 'Mark per Question') {
+          var_dump($correct_rank);
+          exit;
           if ($correct_rank) {
             $mark = $old_marks_correct;
           } else {
@@ -408,13 +410,13 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
         break;
       case 'mrq':
-        if(isset($_POST["dismiss$question_no"])) {
+        if (isset($_POST["dismiss$question_no"])) {
           $dismiss = $_POST["dismiss$question_no"];
         } else {
           $dismiss = '';
         }
         $qid = 'q' . $question_no . '_' . $question_part;
-        if (isset($_POST[$qid]) AND $_POST[$qid] == 'y') {
+        if (isset($_POST[$qid]) and $_POST[$qid] == 'y') {
           $user_response = 'y';
           $mrq_options_selected++;
         } else {
