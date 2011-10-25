@@ -329,7 +329,7 @@ function display_options($options,$q_id, $current_theme) {
           }
           echo "<blockquote>\n";
         }
-        if ($question['score_method'] == 'Mark per Option') {
+        if ($display_option['score_method'] == 'Mark per Option') {
           if (count($blank_mark) > 0) {
             foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
           }
