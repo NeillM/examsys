@@ -145,7 +145,6 @@ $string['assessmentdata'] = 'Dane oceny';
 $string['terms'] = 'Terminy';
 $string['termsmsg'] = '(rozdzielone przecinkami)';
 $string['this'] = 'To';//??
-$string['becomes'] = 'staje się';
 $string['veryunlikely'] = 'zdecydowanie niemożliwa';
 $string['unlikely'] = 'niemożliwa';
 $string['neithernorlikely'] = 'niewykluczona';

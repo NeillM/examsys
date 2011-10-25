@@ -9,6 +9,7 @@ $string['clinicalvignette'] = 'Przypadek kliniczny';//|??
 $string['ifyouwerethinking'] = 'If you were thinking of the following';
 $string['andthenyoufind'] = 'And then you find';
 $string['thenthis'] = 'Then this';
+$string['becomes'] = 'staje się';
 $string['is'] = 'is';
 $string['of'] = 'of';
 $string['experts'] = 'Eksperci';

@@ -35,13 +35,13 @@
     $stmt->close();
   }
   
-  function display_question($question, &$question_no, $reviews) {
+  function display_question($question, &$question_no, $reviews, &$string) {
     $question_no++;
 
     if ($question['scenario'] != '') {
-      echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">Clinical Vignette</td></tr>\n";
+      echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">{$string['clinicalvignette']}</td></tr>\n";
       echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
-      if ($question['notes'] != '') echo '<p class="note"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
+      if ($question['notes'] != '') echo '<p class="note"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
@@ -55,23 +55,15 @@
     
     $sct_parts = explode('~',$question['leadin']);
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-    $sct_titles = array(1=>'Hypothesis',2=>'Investigation',3=>'Prescription',4=>'Intervention',5=>'Treatment');
-    echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">New Information</td></tr>\n";
+    $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
+    echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">{$string['newinformation']}</td></tr>\n";
     echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
     echo "</table>\n";
       
     echo '<p><strong>';
-    if ($question['display_method'] == 1) {
-      echo 'Then this hypothesis becomes:';
-    } elseif ($question['display_method'] == 2) {
-      echo 'Then this investigation becomes:';
-    } elseif ($question['display_method'] == 3) {
-      echo 'Then this prescription becomes:';
-    } elseif ($question['display_method'] == 4) {
-      echo 'Then this intervention becomes:';
-    } elseif ($question['display_method'] == 5) {
-      echo 'Then this treatment becomes:';
-    }
+    echo $string['thenthis'] . ' ';
+    echo strtolower($sct_titles[$question['display_method']]);
+    echo ' ' . $string['becomes'] . ':';
     echo '</strong></p>';
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
     
@@ -93,7 +85,7 @@
       } else {
         $review_no = 0;
       }
-      echo $review_no . ' out of ' . $no_experts;
+      echo $review_no . ' ' . $string['outof'] . ' ' . $no_experts;
       echo "</td><td>$option_text</td></tr>\n";
       if (isset($_POST['submit'])) {
         saveResponseData($optionID, $review_no, $max_experts);
@@ -101,11 +93,15 @@
     }
     echo "</table>\n</blockquote>\n";
     
-    echo "<span style=\"color:#808080\">Brief reason why?</span><br /><ul>";
-    foreach($reviews[$question['q_id']]['reason'] as $comment) {
-      if (trim($comment) != '') {
-        echo "<li>$comment</li>\n";
+    echo "<span style=\"color:#808080\">{$string['briefreasonwhy']}</span><br /><ul>";
+    if (isset($reviews[$question['q_id']]) and count($reviews[$question['q_id']]['reason']) > 0) {
+      foreach($reviews[$question['q_id']]['reason'] as $comment) {
+        if (trim($comment) != '') {
+          echo "<li>$comment</li>\n";
+        }
       }
+    } else {
+        echo "<li>{$string['nocomments']}</li>\n";
     }
     echo "</ul></td></tr>\n";
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -114,7 +110,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>SCT Responses/Reasons<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['sctresponses'] . " $cfg_install_type"; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <style type="text/css">
@@ -158,7 +154,7 @@ pre {font-family:Arial,sans-serif; font-size:100%}
     $result->fetch();
     $result->close();
   }
-  echo '<div class="breadcrumb"><a href="../staff/index.php">Home</a>';
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -166,8 +162,8 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-  echo '<tr style="height:4px"><td valign="top" colspan="2"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>';
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></td></tr>\n";
+  echo '<tr style="height:4px"><td valign="top" colspan="2"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="' . $string['line'] . '" /></td></tr>';
 
 ?>
 
@@ -226,12 +222,12 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   //display the questions
   foreach($questions_array as &$question) {
     if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    display_question($question, $question_no, $reviewer_data);	
+    display_question($question, $question_no, $reviewer_data, $string);	
   }
 ?>
 </table>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $_GET['paperID']; ?>">
-<div style="text-align:center"><input type="submit" name="submit" value="Save Results to Question Bank" /></div>
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" /></div>
 </form>
 <br />
 </body>

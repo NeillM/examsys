@@ -145,7 +145,6 @@ $string['assessmentdata'] = 'Assessment Data';
 $string['terms'] = 'Terms';
 $string['termsmsg'] = '(separate with semicolons)';
 $string['this'] = 'This';
-$string['becomes'] = 'becomes';
 $string['veryunlikely'] = 'very unlikely';
 $string['unlikely'] = 'unlikely';
 $string['neithernorlikely'] = 'neither likely nor unlikely';
