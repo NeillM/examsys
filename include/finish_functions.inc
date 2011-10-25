@@ -98,7 +98,7 @@
 	        $suffix = 'N/A';
 	        break;
 	      case 1:
-	        $suffix .= 'st';
+	        $suffix .= 'xst';
 	        break;
 	      case 2:
 	        $suffix .= 'nd';
@@ -978,7 +978,7 @@
           echo "<tr><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">" . $string['ifyouwerethinking'] . " " . $sct_intros[$paper[$question]['display_method']] . "</span><br />" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">" . $string['andthenyoufind'] . ":</span><br />" . $sct_parts[1] . "</td></tr>\n";
           echo '</table>';
       
-          echo "\n<p><strong>" . $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['display_method']]) . " " . $string['is'] . ":</strong></p>\n";
+          echo "\n<p><strong>" . $string['thenthis'] . " " . mb_strtolower($sct_titles[$paper[$question]['display_method']], 'UTF-8') . " " . $string['is'] . ":</strong></p>\n";
 
           $max = -1;
           $reviewers_total = 0;

@@ -326,7 +326,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "</table>\n";
       
       echo '<p><strong>';
-      echo $string['thenthis'] . " " . strtolower($sct_titles[$question['display_method']]) . " " . $string['is'] . ":";
+      echo $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
       echo '</strong></p>';
       
       if (isset($user_answers[$current_screen][$q_id]) AND $user_answers[$current_screen][$q_id] == '0' AND $screen_pre_submitted == 1) {
@@ -556,7 +556,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             echo "<option value=\"" . $i . "\">" . $i;
           }
           if ($i == 1) {
-            echo 'st';
+            echo 'xst';
           } elseif ($i == 2) {
             echo 'nd';
           } elseif ($i == 3) {

@@ -22,6 +22,10 @@
 * @package
 */
 
+require '../include/staff_student_auth.inc';
+require '../include/reviews.inc';
+require '../include/errors.inc';
+
 require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
 
 function checkVariables($number) {
@@ -30,7 +34,7 @@ function checkVariables($number) {
   return $new_number;
 }
 
-function display_options($options,$q_id, $current_theme) {
+function display_options($options,$q_id, $current_theme, $string) {
   global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_confidence, $screen_pre_submitted, $bgcolor;
 
   $option_no = count($options);
@@ -124,13 +128,14 @@ function display_options($options,$q_id, $current_theme) {
     $matching_options = array();
   } elseif ($options[0]['q_type'] == 'sct') {
     $sct_parts = explode('~',$options[0]['leadin']);
-    $sct_titles = array(1=>$string['Hypothesis'],2=>$string['Investigation'],3=>$string['Prescription'],4=>$string['Intervention'],5=>$string['Treatment']);
+    $sct_titles = array(1=>$string['hypothesis'],2=>$string['investigation'],3=>$string['prescription'],4=>$string['intervention'],5=>$string['treatment']);
     echo "<tr><td class=\"question_no\">$question_no.&nbsp;</td><td>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
     echo "<tr><td colspan=\"2\"><strong>" . $string['clinicalvignette'] . "</strong><br />" . $options[0]['scenario'] . "</td></tr>\n";
-    echo "<tr><td style=\"width:50%\"><strong>" . $sct_titles[$options[0]['score_method']] . "</strong><br />" . $sct_parts[0] . "</td><td style=\"width:50%\"><strong>" . $string['newinformation'] . "</strong><br />" . $sct_parts[1] . "</td></tr>\n";
+    echo "<tr><td style=\"width:50%\"><strong>" . $sct_titles[$options[0]['display_method']] . "</strong><br />" . $sct_parts[0] . "</td><td style=\"width:50%\"><strong>" . $string['newinformation'] . "</strong><br />" . $sct_parts[1] . "</td></tr>\n";
     
     echo '<tr><td colspan=\"2\"><strong>';
-    echo $string['thenthis'] . " " . strtolower($sct_titles[$paper[$question]['display_method']]) . " " . $string['is'] . ":";
+	echo $string['thenthis'] . " " . mb_strtolower($sct_titles[$options[0]['display_method']], 'UTF-8') . " " . $string['is'] . ":";
+
     echo '</strong></td></tr>';
   }
   $i = 0;
