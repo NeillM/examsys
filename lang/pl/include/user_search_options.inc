@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $string['genmsg'] = 'Szukaj wg. jednego lub wielu poniższych kryteriów';
 $string['name'] = 'Nazwisko';
 $string['username'] = 'Nazwa użytkownika';
