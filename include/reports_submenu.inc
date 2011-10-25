@@ -134,6 +134,7 @@
     $start_min = $date_array['minutes'];
   }
   echo "<select name=\"start_month\">\n";
+
   for ($i=0; $i<12; $i++) {
     if ($i == (intval($start_month) - 1)) {
       echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
