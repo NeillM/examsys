@@ -198,6 +198,21 @@ function changeScreenNo($mysqlidb) {
 if (isset($_GET['change_screen'])) {
   changeScreenNo($mysqli);
 }
+
+function getMSCAA($paperID, $mysqlidb) {
+  $mscaa_metadata = array();
+
+  $result = $mysqlidb->prepare("SELECT questionID FROM questions_metadata, papers WHERE questions_metadata.questionID=papers.question AND paper=? AND value LIKE 'MSC_AA%'");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->bind_result($questionID);
+  while ($result->fetch()) {
+    $mscaa_metadata[$questionID] = '1';
+  }
+  $result->close();
+  
+  return $mscaa_metadata;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onscroll="scrollXY();" onclick="qOff(); hideMenus(); hideAssStatsMenu(event);">
@@ -214,7 +229,7 @@ if (isset($_GET['change_screen'])) {
   .s {padding-left:10px}
   .t {white-space:nowrap; vertical-align:top; padding-left:6px; padding-right:6px; padding-top:3px; padding-bottom:3px}
   .m {text-align:right; vertical-align:top; padding-right:4px;padding-top:3px;padding-bottom:3px}
-  .l {padding-top:3px; padding-bottom:3px}
+  .l {vertical-align:top; padding-top:3px; padding-bottom:3px}
   .errmk {color:red;text-align:right;vertical-align:top}
   .mee {font-size:100%;}
 </style>
@@ -353,6 +368,8 @@ if (isset($_GET['change_screen'])) {
   $result->close();
   
   $paper_owner = $title  . ' ' . $initials . ', ' . $surname;
+  
+  $mscaa_metadata = getMSCAA($paperID, $mysqli);
 
   if (!isset($paper_title)) {
   ?>
@@ -448,7 +465,7 @@ if (isset($_GET['change_screen'])) {
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($q_id, $parts);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $excluded[$q_id] = $parts;
   }
   $result->close();
@@ -556,7 +573,6 @@ if (isset($_GET['change_screen'])) {
       
       $temp_array[$row_no]['leadin'] = preg_replace('/ style="[\w-,:; \']*"/i', '', $temp_array[$row_no]['leadin']);
       
-      //if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
       $temp_array[$row_no]['scenario'] = $scenario;
       $temp_array[$row_no]['p_id'] = $p_id;
       $temp_array[$row_no]['q_id'] = $q_id;
@@ -876,7 +892,11 @@ if (isset($_GET['change_screen'])) {
       if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
       echo '<td style="width:16px; padding-left:2px"><img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" border="0" /></td>';
     } else {
-      echo '<td></td>';
+      if (isset($mscaa_metadata[$temp_array[$x]['q_id']])) {
+        echo '<td style="width:13px"><img src="../artwork/mscaa_logo_tiny.png" width="13" height="18" alt="MSC-AA question" border="0" /></td>';
+      } else {
+        echo '<td></td>';
+      }
     }
 
     if ($temp_array[$x]['q_type'] == 'info') {

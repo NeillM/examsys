@@ -528,7 +528,7 @@ function display_options($options,$q_id, $current_theme, $string) {
   } elseif ($options[0]['q_type'] == 'extmatch') {
     $part_id = 1;
     if ($matching_media[0] != '') {
-      echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0],$question_no) . '</p>';
+      echo '<p align="center">' . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], $question_no) . '</p>';
     }
     echo '<ol type="i">';
     foreach ($matching_scenarios as $single_scenario) {
