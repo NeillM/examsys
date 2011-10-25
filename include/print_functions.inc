@@ -274,7 +274,7 @@ function display_options($options,$q_id, $current_theme) {
         $display_option['option_text'] = str_replace('&nbsp;',' ',$display_option['option_text']);
         $blank_details = explode('[blank',$display_option['option_text']);
         
-        if ($display_option['score_method'] == 'textboxes') {
+        if ($display_option['display_method'] == 'textboxes') {
           $array_size = count($blank_details);
           $blank_count = 1;
           while ($blank_count < $array_size) {
@@ -302,7 +302,7 @@ function display_options($options,$q_id, $current_theme) {
           foreach ($screen_output as $value) {
             $screen_output_all .= $value;
           }
-          echo "<p class=\"stem\">" . $blank_details[0].$screen_output_all . "</p>\n<blockquote>\n";
+          echo "<p class=\"stem\">" . $blank_details[0] . $screen_output_all . "</p>\n<blockquote>\n";
         } else {
           // Dropdown lists.
           $no_blanks = count($blank_details);
@@ -313,14 +313,15 @@ function display_options($options,$q_id, $current_theme) {
             if (isset($results[1]) and $results[1] != '') {
               $blank_mark[$blank_count] = $results[1];
             } else {
-              $blank_mark[$blank_count] = 1;
+              $blank_mark[$blank_count] = $display_option['marks_correct'];
             }
             $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
             $answer_list = explode(',',$answer_options[0]);
-            shuffle($answer_list);            // Shuffle the answers up.
+            //shuffle($answer_list);            // Shuffle the answers up.
             for ($i=1; $i<=count($answer_list); $i++) {
-              echo "[" . htmlentities(trim($answer_list[$i-1])) . "] \n";
+              //echo "[" . htmlentities(trim($answer_list[$i-1])) . "] \n";
+              echo "[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]";
             }
             echo $answer_options[1]; // Bit after the closing [/blank] tag.
             $blank_count++;
@@ -328,9 +329,14 @@ function display_options($options,$q_id, $current_theme) {
           }
           echo "<blockquote>\n";
         }
-        if (count($blank_mark) > 0) {
-          foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
+        if ($question['score_method'] == 'Mark per Option') {
+          if (count($blank_mark) > 0) {
+            foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
+          }
+        } else {
+          $marks = $display_option['marks_correct'];
         }
+
         break;
       case 'textbox':
         $textbox_size = explode('x',$display_option['score_method']);
