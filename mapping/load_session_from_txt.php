@@ -147,7 +147,8 @@ if (isset($_POST['submit'])) {
   $startyear = ( date('Y') - 1 );
   for ($i = 0; $i < 2; $i++) {
     $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
-    echo "<option value=\"$tmp_session\">$tmp_session</option>\n";
+    $sel = ($tmp_session == DateUtils::get_current_academic_year()) ? ' selected="selected"' : ''; 
+    echo "<option value=\"$tmp_session\"$sel>$tmp_session</option>\n";
   }
   echo "</select></td>\n";
 ?>
