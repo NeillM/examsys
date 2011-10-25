@@ -103,13 +103,13 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->execute();
         $result->close();
 
-        echo "<li>$sid -&gt; " . $students[$sid]['username'] . "</li>";
+        echo "<li>$sid -&gt; " . $students[$sid]['username'] . ", $question_no</li>";
         
         // Record individual questions.
         $numeric_score = 0;
         $result = $mysqlidb->prepare("INSERT INTO log4 VALUES(NULL, ?, ?, ?, ?, ?, NULL)");
         for ($q=1; $q<=$question_no; $q++) {
-        $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $fields[$q]);
+          $result->bind_param('isiis', $students[$sid]['id'], $paper_date, $_GET['paperID'], $paper[$q]['id'], $fields[$q]);
           $fields[$q] = trim($fields[$q]);
           $result->execute();
           $numeric_score += trim($fields[$q]);
