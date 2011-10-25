@@ -386,145 +386,164 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
   
   if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
 
-  if ($paper_buffer[$q_id]['q_type'] == 'extmatch' or $paper_buffer[$q_id]['q_type'] == 'matrix') {
-    $paper_answers = explode('|',$paper_buffer[$q_id]['correct'][0]);
-    $user_answers = explode('|',$tmp_user_answer);
-    if (array_key_exists($q_id,$exclude)) {
-      $tmp_exclude = $exclude[$q_id];
-    } else {
-      $tmp_exclude = '0000000000000000000000000000000000000000';
-    }
-    $section = 0;
-    for ($a=0; $a<count($paper_answers); $a++) {
-      if ($paper_answers[$a] != '') {
-        $answers_correct = 0;
-        if ($paper_buffer[$q_id]['q_type'] == 'extmatch') {
-          $sub_paper_answers = explode('$',$paper_answers[$a]);
-          $sub_user_answers = explode('$',$user_answers[$a]);
-          $exclude_on = true;
-          for ($b=0; $b<count($sub_paper_answers); $b++) {
-            if (substr($tmp_exclude,$section,1) == '0') {
-              for ($c=0; $c<count($sub_user_answers); $c++) {
-                if ($sub_paper_answers[$b] == $sub_user_answers[$c]) $answers_correct++;
-              }
-              $exclude_on = false;
-            }
-            $section++;
-          }
-          $tmp_mark += $answers_correct;
-          if ($exclude_on == false) $tmp_user_mark_array[] = $answers_correct;
-        } else {   // Matrix
-          if (substr($tmp_exclude,$a,1) == '0') {
-            if ($paper_answers[$a] == $user_answers[$a]) {
-              $tmp_mark++;
-              $tmp_user_mark_array[] = 1;
-            }  else {
-              $tmp_user_mark_array[] = 0;
-            }
-          }
-        }
-      }
-    }
-  } elseif ($paper_buffer[$q_id]['q_type'] == 'blank') {
-    $user_answers = explode('|',$tmp_user_answer);
-    if (array_key_exists($q_id,$exclude)) {
-      $tmp_exclude = $exclude[$q_id];
-    } else {
-      $tmp_exclude = '0000000000000000000000000000000000000000';
-    }
-    for ($a=0; $a<count($user_answers)-1; $a++) {
-      if (substr($tmp_exclude,$a,1) == '0') {
-        if ($paper_buffer[$q_id]['score_method'] == 'dropdown') {
-          if ($paper_buffer[$q_id]['correct'][$a] == $user_answers[$a+1]) {
-            $tmp_mark++;
-            $tmp_user_mark_array[] = 1;
-          } else {
-            $tmp_user_mark_array[] = 0;
-          }
-        } else {
-          $match = false;
-          if (isset($paper_buffer[$q_id]['correct'][$a])) {
-            if ($user_answers[$a+1] == $paper_buffer[$q_id]['correct'][$a]) {
-              $match = true;
-            }
-          }
-          if ($match == true) {
-            $tmp_mark++;
-            $tmp_user_mark_array[] = 1;
-          } else {
-            $tmp_user_mark_array[] = 0;
-          }
-        }
-      }
-    }
-  } elseif ($paper_buffer[$q_id]['q_type'] == 'dichotomous') {
-    for ($a=0; $a<count($paper_buffer[$q_id]['correct']); $a++) {
+  $multi_part_qns = array('extmatch', 'matrix', 'blank', 'dichotomous', 'labelling');
+  
+  if ($paper_buffer[$q_id]['score_method'] != 'Mark per Question' and in_array($paper_buffer[$q_id]['q_type'], $multi_part_qns)) {
+    if ($paper_buffer[$q_id]['q_type'] == 'extmatch' or $paper_buffer[$q_id]['q_type'] == 'matrix') {
+      $paper_answers = explode('|',$paper_buffer[$q_id]['correct'][0]);
+      $user_answers = explode('|',$tmp_user_answer);
       if (array_key_exists($q_id,$exclude)) {
         $tmp_exclude = $exclude[$q_id];
       } else {
         $tmp_exclude = '0000000000000000000000000000000000000000';
       }
-      if (substr($tmp_exclude,$a,1) == '0') {
-        if ($paper_buffer[$q_id]['correct'][$a] == substr($tmp_user_answer,$a,1)) {
-          $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
-          $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
-        } else {
-          if (substr($tmp_user_answer,$a,1) == 'a' or substr($tmp_user_answer,$a,1) == 'u') {
-            $tmp_mark += 0;
-            $tmp_user_mark_array[] = 0;
-          } else {
-            $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
-            $tmp_user_mark_array[] =$paper_buffer[$q_id]['marks_incorrect'];
+      $section = 0;
+      for ($a=0; $a<count($paper_answers); $a++) {
+        if ($paper_answers[$a] != '') {
+          $answers_correct = 0;
+          $answers_incorrect = 0;
+          if ($paper_buffer[$q_id]['q_type'] == 'extmatch') {
+            $sub_paper_answers = explode('$',$paper_answers[$a]);
+            $sub_user_answers = explode('$',$user_answers[$a]);
+            $exclude_on = true;
+            for ($b=0; $b<count($sub_paper_answers); $b++) {
+              if (substr($tmp_exclude,$section,1) == '0') {
+                for ($c=0; $c<count($sub_user_answers); $c++) {
+                  if ($sub_paper_answers[$b] == $sub_user_answers[$c]) {
+                    $answers_correct++;
+                  } elseif ($sub_user_answers[$c] != 'u') {
+                    $answers_incorrect++;
+                  }
+                }
+                $exclude_on = false;
+              }
+              $section++;
+            }
+            $section_mark =($answers_correct * $paper_buffer[$q_id]['marks_correct']) + ($answers_incorrect * $paper_buffer[$q_id]['marks_incorrect']); 
+            $tmp_mark += $section_mark;
+            if ($exclude_on == false) $tmp_user_mark_array[] = $section_mark;
+          } else {   // Matrix
+            if (substr($tmp_exclude,$a,1) == '0') {
+              if ($paper_answers[$a] == $user_answers[$a]) {
+                $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+                $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
+              } elseif ($user_answers[$a] != 'u') {
+                $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+                $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
+              } else {
+                $tmp_user_mark_array[] = 0;
+              }
+            }
           }
         }
       }
-    }
-  } elseif ($paper_buffer[$q_id]['q_type'] == 'labelling') {
-    if (array_key_exists($q_id,$exclude)) {
-      $tmp_exclude = $exclude[$q_id];
-    } else {
-      $tmp_exclude = '0000000000000000000000000000000000000000';
-    }
-        
-    $correct_labels = array();
-    
-    $tmp_first_split = explode(';', $paper_buffer[$q_id]['correct'][0]);
-    $tmp_second_split = explode('$', $tmp_first_split[11]);
-    $label_count = 0;
-    $placeholders = 0;
-    $i = 0;
-    $excluded_no = 0;
-    for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-      if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
-      if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-        if (substr($tmp_exclude,$i,1) == '0') {
-          $x = $tmp_second_split[$label_no-2];
-          $y = $tmp_second_split[$label_no-1] - 25;
-          $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
-          $placeholders++;
+    } elseif ($paper_buffer[$q_id]['q_type'] == 'blank') {
+      $user_answers = explode('|',$tmp_user_answer);
+      if (array_key_exists($q_id,$exclude)) {
+        $tmp_exclude = $exclude[$q_id];
+      } else {
+        $tmp_exclude = '0000000000000000000000000000000000000000';
+      }
+      for ($a=0; $a<count($user_answers)-1; $a++) {
+        if (substr($tmp_exclude,$a,1) == '0') {
+          if ($paper_buffer[$q_id]['score_method'] == 'dropdown') {
+            if ($paper_buffer[$q_id]['correct'][$a] == $user_answers[$a+1]) {
+                $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+                $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
+            } elseif ($user_answers[$a] != 'u') {
+                $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+                $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
+            } else {
+              $tmp_user_mark_array[] = 0;
+            }
+          } else {
+            $match = false;
+            if (isset($paper_buffer[$q_id]['correct'][$a])) {
+              if ($user_answers[$a+1] == $paper_buffer[$q_id]['correct'][$a]) {
+                $match = true;
+              }
+            }
+            if ($match == true) {
+              $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+              $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
+            } elseif ($user_answers[$a] != 'u' or $user_answers[$a] != '') {
+              $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+              $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
+            } else {
+              $tmp_user_mark_array[] = 0;
+            }
+          }
+        }
+      }
+    } elseif ($paper_buffer[$q_id]['q_type'] == 'dichotomous') {
+      for ($a=0; $a<count($paper_buffer[$q_id]['correct']); $a++) {
+        if (array_key_exists($q_id,$exclude)) {
+          $tmp_exclude = $exclude[$q_id];
         } else {
-          $excluded_no++;
+          $tmp_exclude = '0000000000000000000000000000000000000000';
+        }
+        if (substr($tmp_exclude,$a,1) == '0') {
+          if ($paper_buffer[$q_id]['correct'][$a] == substr($tmp_user_answer,$a,1)) {
+            $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+            $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
+          } else {
+            if (substr($tmp_user_answer,$a,1) == 'a' or substr($tmp_user_answer,$a,1) == 'u') {
+              $tmp_mark += 0;
+              $tmp_user_mark_array[] = 0;
+            } else {
+              $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+              $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
+            }
+          }
+        }
+      }
+    } elseif ($paper_buffer[$q_id]['q_type'] == 'labelling') {
+      if (array_key_exists($q_id,$exclude)) {
+        $tmp_exclude = $exclude[$q_id];
+      } else {
+        $tmp_exclude = '0000000000000000000000000000000000000000';
+      }
+          
+      $correct_labels = array();
+      
+      $tmp_first_split = explode(';', $paper_buffer[$q_id]['correct'][0]);
+      $tmp_second_split = explode('$', $tmp_first_split[11]);
+      $label_count = 0;
+      $placeholders = 0;
+      $i = 0;
+      $excluded_no = 0;
+      for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
+        if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
+        if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+          if (substr($tmp_exclude,$i,1) == '0') {
+            $x = $tmp_second_split[$label_no-2];
+            $y = $tmp_second_split[$label_no-1] - 25;
+            $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
+            $placeholders++;
+          } else {
+            $excluded_no++;
+          }
+          $i++;
+        }
+      }
+   
+      $user_split1 = explode(';',$tmp_user_answer);
+      $user_split2 = explode('$',$user_split1[1]);
+      $i = 0;
+      $correct = 0;
+      for ($a=0; $a<count($user_split2)-3; $a+=4) {
+        $x = $user_split2[$a];
+        $y = $user_split2[$a+1];
+        if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
+          $tmp_mark += 1;
+          $correct += 1;
         }
         $i++;
       }
+      if ($correct_labels > 0) $tmp_user_mark_array[] = $correct;
     }
- 
-    $user_split1 = explode(';',$tmp_user_answer);
-    $user_split2 = explode('$',$user_split1[1]);
-    $i = 0;
-    $correct = 0;
-    for ($a=0; $a<count($user_split2)-3; $a+=4) {
-      $x = $user_split2[$a];
-      $y = $user_split2[$a+1];
-      if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
-        $tmp_mark += 1;
-        $correct += 1;
-      }
-      $i++;
-    }
-    if ($correct_labels > 0) $tmp_user_mark_array[] = $correct;
   } else {
-    // All other question types, simply return the original mark.
+    // Marking per Question, or all other question types, simply return the original mark.
     if (!array_key_exists($q_id, $exclude)) {
       $tmp_mark += $tmp_user_mark;
       $tmp_user_mark_array[] = $tmp_user_mark;
