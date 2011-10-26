@@ -127,7 +127,10 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->fetch();
         $result->close();
         
-        if ($examinerID == '') $examinerID = $userID;
+        if ($examinerID == '') {
+          $examinerID = $userID;
+          var_dump($userID);
+        }
         
         switch ($marking) {
           case '3':
