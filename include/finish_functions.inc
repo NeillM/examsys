@@ -466,7 +466,6 @@
       switch ($paper[$question]['q_type']) {
         case 'calculation':
           $paper[$question]['mark'] = 0;
-          $tmp_mark = 0;
           if (isset($paper[$question]['user_answer'])) {
             $tmp_answer = explode('|', $paper[$question]['user_answer']);
           } else {
@@ -561,18 +560,27 @@
           } else {
             echo '<td>';
             if ($tmp_exclude == '1')  echo '<span style="color:red; text-decoration:line-through">';
+            
+            $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
+            $difference = round(abs($saved_response_clean - $tmp_answer[1]), $decimals);
+
             if ($saved_response_clean == $tmp_answer[1]) {
-              $tmp_mark = $paper[$question]['marks_correct'];
-            } elseif (abs($saved_response_clean - $tmp_answer[1]) <= $score_array[1] and $score_array[2] != 'Formula') {
-              $tmp_mark = $paper[$question]['marks_correct'];
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } elseif ($difference <= $score_array[1] and $score_array[2] != 'Formula') {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } elseif ($difference <= $score_array[2]) {
+              $paper[$question]['mark'] = $paper[$question]['marks_partial'];
             } else {
-              $tmp_mark = $paper[$question]['marks_incorrect'];
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
             }
-            if ($tmp_mark == $paper[$question]['marks_correct']) {
+            if (substr($tmp_exclude,$part_id,1) == '1') {
+              $paper[$question]['mark'] = 0;
+            }
+            if ($paper[$question]['mark'] == $paper[$question]['marks_correct']) {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-              if (substr($tmp_exclude,$part_id,1) == '0') $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } elseif ($paper[$question]['mark'] == $paper[$question]['marks_partial']) {
+              if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" />';
             } else {
-              if (substr($tmp_exclude,$part_id,1) == '0') $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
             }
             echo '<input type="text" style="text-align:right" name="q' . $question . '" size="10" value="' . $tmp_answer[0] . '" />' . $score_array[3];
@@ -580,15 +588,19 @@
           if ($tmp_display_correct_answer == '1' and $score_array[2] != 'Formula') {
             if (is_numeric($tmp_answer[1])) {
               $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
-              echo ' <strong>(' . number_format($tmp_answer[1], $decimals, '.', '') . ' ' . $score_array[3] . ')</strong>';
+              echo ' <strong>(' . number_format($tmp_answer[1], $decimals, '.', '');
+              if ($score_array[3] != '') echo ' ' . $score_array[3];
+              echo ')</strong>';
             } else {
+              var_dump($tmp_answer);
               echo ' <strong>(' . $tmp_answer[1] . ')</strong>';
             }
           } else {
             echo ' ';
           }
                     
-          if ($saved_response_clean <> $tmp_answer[1] and $tmp_mark == $paper[$question]['marks_correct']) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
+          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_correct']) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
+          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_partial']) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[2];
           
           if ($tmp_exclude == '1')  echo '</span>';
           echo "</td></tr>\n</table>\n";

@@ -336,17 +336,23 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             $mark = $marks_correct;
           }
         } else {
-          if ($answer_equation != '' and $saved_response != '') {
+          //if ($answer_equation != '' and $saved_response != '') {
+          if ($answer_equation != '') {
             echo eval ("\$answer = $answer_equation;");
             $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
             $answer = round($answer, $decimals);
           } else {
             $answer = '';
           }
+          
+          $difference = round(abs($saved_response_clean - $answer), $decimals);
+          
           if ($saved_response_clean == $answer) {
             $mark = $marks_correct;
-          } elseif (abs($saved_response_clean - $answer) <= $score_array[1]) {
+          } elseif ($difference <= $score_array[1]) {
             $mark = $marks_correct;
+          } elseif ($difference <= $score_array[2]) {
+            $mark = $marks_partial;
           } else {
             $mark = $marks_incorrect;
           }
