@@ -131,7 +131,6 @@ function marks_from_file($fileName, $mysqlidb) {
         
         if ($examinerID == '') {
           $examinerID = $userID;
-          var_dump($userID);
         }
         
         switch ($marking) {
@@ -161,7 +160,7 @@ function marks_from_file($fileName, $mysqlidb) {
           $feedback = '';
         }
         $result = $mysqlidb->prepare("INSERT INTO log4_overall VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'paper', ?)");
-        $result->bind_param('isisisssi', $students[$sid]['id'], $paper_date, $_GET['paperID'], $overall_rating, $numeric_score, $feedback, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
+        $result->bind_param('isisissii', $students[$sid]['id'], $paper_date, $_GET['paperID'], $overall_rating, $numeric_score, $feedback, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
         $result->execute();
         $result->close();
       } else {
