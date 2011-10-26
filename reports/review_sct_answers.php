@@ -62,7 +62,7 @@
       
     echo '<p><strong>';
     echo $string['thenthis'] . ' ';
-    echo strtolower($sct_titles[$question['display_method']]);
+    echo mb_strtolower($sct_titles[$question['display_method']], 'UTF-8');
     echo ' ' . $string['becomes'] . ':';
     echo '</strong></p>';
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
