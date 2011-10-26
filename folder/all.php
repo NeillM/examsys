@@ -80,7 +80,7 @@
     $results = $mysqli->prepare("SELECT DISTINCT faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID=faculty.id AND schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=$userID ORDER BY faculty.name, school, moduleid");
   }
   $results->execute();
-  $result->bind_result($faculty, $school, $moduleid, $fullname);
+  $results->bind_result($faculty, $school, $moduleid, $fullname);
   while ($results->fetch()) {
     if ($old_faculty != $faculty or $old_school != $school) {
       if ($module_block == true) {
@@ -127,7 +127,7 @@
     $results = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM (schools, admin_access, modules) WHERE schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=$userID ORDER BY moduleid");
   }
   $results->execute();
-  $result->bind_result($moduleid, $fullname);
+  $results->bind_result($moduleid, $fullname);
   while ($results->fetch()) {
     if ($old_letter !== substr($moduleid,0,1)) {
       if ($module_block == true) {
