@@ -375,7 +375,7 @@ $stmt->close();
     if ($paper_type == '4') {
       echo "<tr><td><a href=\"/osce/print.php?paperID=$paperID\"><img src=\"/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/osce/print.php?paperID=$paperID\">" . $string['printhardcopy'] . "</a></td></tr>\n";
     } else {
-      echo "<tr><td><a href=\"/paper/print.php?paperID=$paperID\"><img src=\"/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/paper/print.php?paperID=$paperID\">" . $string['printhardcopy'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"/paper/print.php?id=$crypt_name\"><img src=\"/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"/paper/print.php?id=$crypt_name\">" . $string['printhardcopy'] . "</a></td></tr>\n";
     }
   }
 ?>
