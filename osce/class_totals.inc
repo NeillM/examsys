@@ -62,6 +62,7 @@
   // Get the students who are enrolled on the module/session.
   $user_no = 0;
   if (!isset($_GET['absent']) or $_GET['absent'] == 0) {
+    echo "SELECT DISTINCT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (users AS students, users AS examiners, sid, log4_overall) WHERE students.id=log4_overall.userID AND examiners.id=log4_overall.examinerID AND started>=" . $_GET['startdate'] . " AND started<=" . $_GET['enddate'] . " AND q_paper=" . $_GET['paperID'] . " AND students.id=sid.userID ORDER BY students.surname, students.initials<br />";
     $result = $mysqli->prepare("SELECT DISTINCT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (users AS students, users AS examiners, sid, log4_overall) WHERE students.id=log4_overall.userID AND examiners.id=log4_overall.examinerID AND started>=? AND started<=? AND q_paper=? AND students.id=sid.userID ORDER BY students.surname, students.initials");
     $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
   } else {
