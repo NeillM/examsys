@@ -400,16 +400,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '<td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
         $scale_size = substr_count($question['display_method'],'|');
         if ($likert_display[$scale_size] == 'true') {
-          echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') echo ' checked';
-          echo "/></td>";
+          echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><img src=\"../artwork/print_checkbox.gif\" width=\"25\" height=\"24\" alt=\"\" /></td>";
         }
         for ($i=1; $i<=$scale_size; $i++) {
-          if (isset($user_answers[$current_screen][$q_id]) and $i == $user_answers[$current_screen][$q_id]) {
-            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"$i\" checked /></td>";
-          } else {
-            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"$i\" /></td>";
-          }
+          echo '<td class=\"likert_button\"><img src="../artwork/print_checkbox.gif" width="25" height="24" alt="" /></td>';
         }
         echo "</tr>\n";
         break;
