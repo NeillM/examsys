@@ -40,6 +40,7 @@ $result->execute();
 $result->close();
 
 $mysqli->close();
+exit;
 ?>
 <html>
 <head>
