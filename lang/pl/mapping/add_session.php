@@ -7,11 +7,9 @@ $string['title'] = 'Tytuł';
 $string['session'] = 'Sesja';
 $string['date'] = 'Data';
 $string['url'] = 'URL';
-$string['new'] = 'Nowa...';
+$string['new'] = 'Nowy...';
 $string['save'] = 'Zachowaj';
 $string['manageobjectives'] = 'Zarządzaj celami';
 $string['msg1'] = 'Wpisz nowy cel...';
-$string[''] = '1';
-$string[''] = '1';
-$string[''] = '1';
+$string['msg2'] = 'Podaj niebanalną nazwę dla nowej sesji.';
 ?>

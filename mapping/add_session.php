@@ -53,7 +53,7 @@
     }
     $result->close();
     while (isset($_POST["obj_$i"])) {
-      if ($_POST["obj_$i"] != 'Type New Objective here...') {
+      if ($_POST["obj_$i"] != $string['msg1']) {
         $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param('issssi', $obj_id, $_POST["obj_$i"], $moduleID, $identifier, $_POST['session'], $i);
         $stmt->execute();
@@ -91,7 +91,7 @@
     <script>
         function checkForm() {
           if (document.getElementById('session_title').value == '' || document.getElementById('session_title').value == ' ') {
-            alert("Please enter a meaningful title for your new session.");
+            alert("<?php echo $string['msg2'];?>");
             return false;
           }
         }
@@ -278,7 +278,7 @@
         $id = $i;
         echo "\t<li id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
         echo '<img src="./up_on.png" onclick="promote( \'li_' . $id . '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'li_' . $id . '\' )" />&nbsp';
-        echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"Type New Objective here...\" />";
+        echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"" . $string['msg1'] . "\" />";
         echo "</li>\n";
       }
       echo '<li style="margin:0.5em; margin-left:6em"><input style="width: 80px" type="button" value="' . $string['new'] . '"  onclick="addNew(\'objList\')"></li>';
