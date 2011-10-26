@@ -35,7 +35,7 @@ function checkVariables($number) {
 }
 
 function display_options($options,$q_id, $current_theme, $string) {
-  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_confidence, $screen_pre_submitted, $bgcolor, $notes;
+  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_confidence, $screen_pre_submitted, $bgcolor, $notes, $scenario;
 
   $option_no = count($options);
   $part_id = 0;
@@ -98,8 +98,8 @@ function display_options($options,$q_id, $current_theme, $string) {
       if ($notes != '') {
         echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;$notes</td></tr>\n";
       }
-      if ($current_scenario != '') {
-        echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">$current_scenario</td></tr>\n";
+      if ($scenario != '') {
+        echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">$scenario</td></tr>\n";
         echo '</table><br /><table cellpadding="4" cellspacing="0" border="0">';
       }
       echo '<tr><td></td>';
@@ -112,8 +112,8 @@ function display_options($options,$q_id, $current_theme, $string) {
         echo "<td valign=\"bottom\" style=\"text-align: center; color: $labelcolor; font-size: 80%\">$likert_display[$i]</td>\n";
       }
     } else {
-      if ($current_scenario != '') {
-        echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">$current_scenario</td></tr>\n";
+      if ($scenario != '') {
+        echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">$scenario/td></tr>\n";
       }
     }
     $old_likert_label = $str;
