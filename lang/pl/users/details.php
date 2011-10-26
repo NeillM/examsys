@@ -1,6 +1,7 @@
 <?php
 require '../lang/' . $language . '/include/user_search_options.inc';
-
+ 
+$string['usermanagement'] = 'Zarządzanie użytkownikami';
 $string['status'] = 'Status';
 $string['student'] = 'Student';
 $string['externalexaminer'] = 'Zewnętrzny egzaminator';
@@ -8,10 +9,12 @@ $string['graduate'] = 'Absolwent';
 $string['leftuniversity'] = 'Skreślony'; //???
 $string['suspended'] = 'Zawieszony';
 $string['staff'] = 'Kadra';
+$string['student'] = 'Student';
 $string['externalauth'] = '[zastosowanie zewnętrznej autoryzacji]';
 $string['gender'] = 'Płeć';
 $string['male'] = 'Mężczyzna';
 $string['female'] = 'Kobieta';
+$string['year'] = 'Rok';
 $string['yearofstudy'] = 'Rok studiów';
 $string['course'] = 'Kurs';
 $string['databaseid'] = 'ID bazy danych';
@@ -67,4 +70,16 @@ $string['editteams'] = 'Edytuj zespoły...';
 $string['editmodules'] = 'Edytuj Moduły...';
 $string['system'] = 'System';
 $string['na'] = 'Brak'; //brak danych?
+$string['universitylecturer'] = 'Wykładowca uniwersytecki';
+$string['universitylibrarian'] = 'Bibliotekarz uniwersytecki';
+$string['universityadmin'] = 'Pracownik administracji uniwersyteckiej';
+$string['universitytechnical'] = 'Technik/Informatyk uniwersytecki';
+$string['nhslecturer'] = 'Wykładowca/Konsultant medyczny';
+$string['nhsadmin'] = 'Pracownik administracji medycznej';
+$string['invigilator'] = 'Inspektor nadzoru';
+$string['inactivestaff'] = 'Pracownik nieaktywny';
+$string['sysadmin'] = 'Administrator systemu';
+$string['reset'] = 'Resetuj';
+$string['forcereset'] = 'Wymuś reset';
+$string['classifiedinfo'] = 'informacja zastrzeżona';
 ?>
