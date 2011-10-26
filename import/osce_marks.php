@@ -127,6 +127,8 @@ function marks_from_file($fileName, $mysqlidb) {
         $result->fetch();
         $result->close();
         
+        echo $fields[$question_no+1] . ', ' . $examinerID . '<br />';
+        
         if ($examinerID == '') {
           $examinerID = $userID;
           var_dump($userID);
