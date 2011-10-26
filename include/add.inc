@@ -25,15 +25,17 @@
 require_once 'add_edit.inc';
 
 function displayEditTab() {
+  global $string, $cfg_short_date;
+
   $html = "<div id=\"editortab\" style=\"font-size:100%\">\n";
   $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; width:100%; background-color:#D6DFF7\">\n<tr><td>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:90%; width:252px\">\n<tr>";
-  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_on.gif)\">Editor</td>\n";
+  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_on.gif)\">" . $string['editor'] . "</td>\n";
   if (isset($_GET['paperID']) and $_GET['paperID'] != '') {
-    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">Mapping</td>\n";
+    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">" . $string['mapping'] . "</td>\n";
   } else {
-    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_disabled.gif)\">Mapping</td>\n";
+    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_disabled.gif)\">" . $string['mapping'] . "</td>\n";
   }
-  $html .= "</tr></table>\n</td><td style=\"width:100%; background-color:#DFECFF; text-align:right; font-size:90%\"><strong>Created:</strong>&nbsp;" . date('d/m/Y') . "&nbsp;</td></tr>\n";
+  $html .= "</tr></table>\n</td><td style=\"width:100%; background-color:#DFECFF; text-align:right; font-size:90%\"><strong>" . $string['created'] . "</strong>&nbsp;" . date(str_replace('%','',$cfg_short_date)) . "&nbsp;</td></tr>\n";
   $html .= "<tr><td colspan=\"2\" style=\"background-color:#1E3C7B\">&nbsp;</td></tr>\n</table>\n";
 
   return $html;

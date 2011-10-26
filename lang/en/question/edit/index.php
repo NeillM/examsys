@@ -218,5 +218,7 @@ $string['pleaserank'] = 'Please rank the following &hellip; starting with the &h
 $string['addtobank'] = 'Add to Bank';
 $string['addtobankandpaper'] = 'Add to Bank &amp; Paper';
 $string['na'] = 'N/A';
-
+$string['description'] = 'Description';
+$string['questions'] = 'Questions';
+$string['addquestions'] = 'Add Questions(s)';
 ?>

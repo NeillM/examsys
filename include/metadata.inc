@@ -251,26 +251,26 @@ META;
   }
   
   function echoMetadata($blooms, $questionID, $team, $colspan, $mysqlidb, $bloom_on, $current_status, $disabled) {
-    global $teams, $userID, $userroles, $faculty;
+    global $teams, $userID, $userroles, $faculty, $string;
 
     if ($current_status == '') $current_status = 'Normal';
-    $html = "<tr><td colspan=\"" . ($colspan + 1) . "\"><div class=\"section\">Metadata</div>\n";
+    $html = "<tr><td colspan=\"" . ($colspan + 1) . "\"><div class=\"section\">" . $string['metadata'] . "</div>\n";
     
     // Question Status
-    $html .= "<tr>\n<td class=\"field\">Status</td>\n<td colspan=\"$colspan\">";
+    $html .= "<tr>\n<td class=\"field\">" . $string['status'] . "</td>\n<td colspan=\"$colspan\">";
     $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
     foreach ($status_array as $status) {
       if ($current_status == $status) {
         if ($disabled != '' and $status != 'Normal' and $status != 'Retired') {
-          $html .= '<input type="radio" name="status" value="' . $status . '" checked disabled>&nbsp;<span style="color:#808080">' . $status . '</span>&nbsp;&nbsp;';
+          $html .= '<input type="radio" name="status" value="' . $status . '" checked disabled>&nbsp;<span style="color:#808080">' . $string[strtolower($status)] . '</span>&nbsp;&nbsp;';
         } else {
-          $html .= '<input type="radio" name="status" value="' . $status . '" checked>&nbsp;' . $status . '&nbsp;&nbsp;';
+          $html .= '<input type="radio" name="status" value="' . $status . '" checked>&nbsp;' . $string[strtolower($status)] . '&nbsp;&nbsp;';
         }
       } else {
         if ($disabled != '' and $status != 'Normal' and $status != 'Retired') {
-          $html .= '<input type="radio" name="status" value="' . $status . '" disabled>&nbsp;<span style="color:#808080">' . $status . '</span>&nbsp;&nbsp;';
+          $html .= '<input type="radio" name="status" value="' . $status . '" disabled>&nbsp;<span style="color:#808080">' . $string[strtolower($status)] . '</span>&nbsp;&nbsp;';
         } else {
-          $html .= '<input type="radio" name="status" value="' . $status . '">&nbsp;' . $status . '&nbsp;&nbsp;';
+          $html .= '<input type="radio" name="status" value="' . $status . '">&nbsp;' . $string[strtolower($status)] . '&nbsp;&nbsp;';
         }
       }
     }
@@ -278,20 +278,20 @@ META;
     
     // Bloom's Taxonomy
     if ($bloom_on) {
-      $html .= "<tr>\n<td class=\"field\">Bloom's Taxonomy</td>\n<td colspan=\"$colspan\"><input type=\"hidden\" name=\"old_bloom\" value=\"$blooms\" /><select name=\"bloom\">\n<option value=\"\"></option>\n";
+      $html .= "<tr>\n<td class=\"field\">" . $string['bloomstaxonomy'] . "</td>\n<td colspan=\"$colspan\"><input type=\"hidden\" name=\"old_bloom\" value=\"$blooms\" /><select name=\"bloom\">\n<option value=\"\"></option>\n";
       $bloom_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');
       foreach ($bloom_array as $individual_bloom) {
         if ($individual_bloom == $blooms) {
-          $html .= "<option value=\"$individual_bloom\" selected>$individual_bloom</option>\n";
+          $html .= "<option value=\"$individual_bloom\" selected>" . $string[strtolower($individual_bloom)] . "</option>\n";
         } else {
-          $html .= "<option value=\"$individual_bloom\">$individual_bloom</option>\n";
+          $html .= "<option value=\"$individual_bloom\">" . $string[strtolower($individual_bloom)] . "</option>\n";
         }
       }
       $html .= "</select></td>\n</tr>\n";
     }
     
     $html .= "<tr><td colspan=\"" . ($colspan+1) . "\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"font-size:90%; width:100%\">";
-    $html .= "<tr style=\"font-weight:bold\"><td>Keywords</td><td style=\"padding-left:4px\">Teams</td></tr>";
+    $html .= "<tr style=\"font-weight:bold\"><td>" . $string['keywords'] . "</td><td style=\"padding-left:4px\">" . $string['teams'] . "</td></tr>";
     
     // Keywords
     $question_keywords = array();

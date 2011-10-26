@@ -37,18 +37,20 @@ require_once($cfg_web_root . 'include/mapping.inc');
  * 
  */
 function displayMappingTab($paper_id, $touchstonedb, $created, $modified) {
+  global $string;
+
   ?>
   <table cellpadding="0" cellspacing="0" border="0" id="mappingtab" style="display:none; font-size:90%; background-color:#DFECFF">
   <tr><td>
   <table cellpadding="0" cellspacing="0" border="0" style="width:504px; font-size:90%">
   <tr>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('editortab');">Editor</td>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('changestab');">Changes</td>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('commentstab');">Comments</td>
-    <td style="width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)">Mapping</td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('editortab');"><?php echo $string['editor']; ?></td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('changestab');"><?php echo $string['changes']; ?></td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('commentstab');"><?php echo $string['comments']; ?></td>
+    <td style="width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)"><?php echo $string['mapping']; ?></td>
   </tr>
   </table>
-  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong>Created:</strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Modified:</strong>&nbsp;<?php echo $modified; ?>&nbsp;</td></tr>
+  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong>" . $string['created'] . "</strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;&nbsp;<strong>" . $string['modified'] . "</strong>&nbsp;<?php echo $modified; ?>&nbsp;</td></tr>
 
   <tr>
   <td colspan="5" style="background-color:#1E3C7B">&nbsp;</td>
@@ -75,11 +77,11 @@ function displayMappingTabAdd($paper_id, $touchstonedb, $created) {
   <tr><td>
   <table cellpadding="0" cellspacing="0" border="0" style="width:252px; font-size:90%">
   <tr>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('editortab');">Editor</td>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)" onclick="showTab('mappingtab');">Mapping</td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)" onclick="showTab('editortab');"><?php echo $string['editor']; ?></td>
+    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)" onclick="showTab('mappingtab');"><?php echo $string['mapping']; ?></td>
   </tr></table>
   </td>
-  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong>Created:</strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;</td>
+  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong>" . $string['created'] . "</strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;</td>
   </tr>
   <tr><td colspan="3" style="background-color:#1E3C7B">&nbsp;</td></tr>
 

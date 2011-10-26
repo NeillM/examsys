@@ -61,7 +61,7 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>New Random Question</title>
+<title><?php echo $string['random']; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css">
 <script language="JavaScript">
@@ -95,11 +95,10 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <tr height="70" style="background-color:#DFECFF">
+  <tr height="54" style="background-color:#DFECFF">
     <td width="400">
-      <img style="position:absolute; left:8px; top:2px;" src="../../artwork/edit_question.png" width="64" height="64" alt="Edit Logo" />
-      <span style="position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt">New Question</span>
-      <span style="position:absolute; left:80px; top:40px; font-family:Arial,sans-serif; font-size:12pt; font-weight:bold">(Random Question Block)</span></td>
+      <img style="position:absolute; left:8px; top:2px;" src="../../artwork/edit_question_small.png" width="48" height="48" alt="Edit Logo" />
+      <span style="position:absolute; left:70px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt"><?php echo $string['add'] . ' ' . $string['question'] . ' &ndash; ' . $string['random']; ?></span></td>
       <td style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
   </tr>
 </table>
@@ -109,15 +108,15 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
   <br />
     <table cellpadding="3" cellspacing="0" border="0" align="center">
     <tr>
-      <td class="field">Description</td>
+      <td class="field"><?php echo $string['description']; ?></td>
       <td><input type="text" name="description" size="60" /></div></td>
     </tr>
     <tr>
-      <td class="field">Questions</td>
+      <td class="field"><?php echo $string['questions']; ?></td>
       <td><div id="questionlist" style="width:600px; height:500px; background-color:white; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%"></div></td>
     </tr>
     <tr>
-    <td></td><td><input type="button" name="addquestion" value="Add Question(s)" style="width:150px" onclick="addQuestion();" /><input type="hidden" name="question_no" id="question_no" value="0" /></td>
+    <td></td><td><input type="button" name="addquestion" value="<?php echo $string['addquestions']; ?>" style="width:150px" onclick="addQuestion();" /><input type="hidden" name="question_no" id="question_no" value="0" /></td>
     </tr>
     <?php
       echo echoMetadata('','','',1,$mysqli,false,'','');
@@ -128,9 +127,9 @@ if (isset($_POST['addbank']) or isset($_POST['addpaper'])) {
     <tr>
     <?php
       if (isset($_GET['paperID']) and $_GET['paperID'] != '' and substr($_GET['paperID'],0,5) != 'list:') {
-        echo '<td colspan="2" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank">&nbsp;<input style="width:150px" type="submit" name="addpaper" value="Add to Bank &amp; Paper">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';
+        echo '<td colspan="2" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="' . $string['addtobank'] . '">&nbsp;<input style="width:150px" type="submit" name="addpaper" value="' . $string['addtobankandpaper'] . '">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back()" /></td>';
       } else {
-        echo '<td colspan="2" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="Add to Bank">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="history.back()" /></td>';
+        echo '<td colspan="2" style="text-align:center"><input style="width:150px" type="submit" name="addbank" value="' . $string['addtobank'] . '">&nbsp;&nbsp;&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back()" /></td>';
       }
     ?>
     </tr>

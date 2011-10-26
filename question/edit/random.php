@@ -31,7 +31,7 @@ include_once('../../tools/getid3/getid3.php');
 
 $q_id = $_GET['q_id'];
 
-if (isset($_POST['submit']) and $_POST['submit'] == 'Save Changes') {
+if (isset($_POST['submit']) and $_POST['submit'] == $string['save']) {
   if (check_fullSave($q_id,$mysqli)) {
     $changes = false;
     $part_names = array('description','bloom');
@@ -99,7 +99,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Save Changes') {
     do_limitedSave($q_id, $mysqli, $userID);
   }
   redirect();
-} elseif (isset($_POST['submit']) and $_POST['submit'] == 'Cancel') {
+} elseif (isset($_POST['submit']) and $_POST['submit'] == $string['cancel']) {
   redirect();
 } else {
 ?>
@@ -132,17 +132,17 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Save Changes') {
    <form name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $q_id; ?>" enctype="multipart/form-data">
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <tr height="70" style="background-color:#DFECFF">
+  <tr height="54" style="background-color:#DFECFF">
     <td width="400">
-      <img style="position:absolute; left:8px; top:2px;" src="../../artwork/edit_question.png" width="64" height="64" alt="Edit Logo" />
+      <img style="position:absolute; left:8px; top:2px;" src="../../artwork/edit_question_small.png" width="48" height="48" alt="Edit Logo" />
       <?php
         if (isset($_GET['qNo'])) {
-          echo "<span style=\"position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt\">Edit Question " . $_GET['qNo'] . "</span>\n";
+          echo "<span style=\"position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt\">" . $string['edit'] . " " . $string['question'] . " " . $_GET['qNo'] . " &ndash; " . $string['random'] . "</span>\n";
         } else {
-          echo "<span style=\"position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt\">Edit Question</span>\n";
+          echo "<span style=\"position:absolute; left:80px; top:0px; font-family:'Arial Black',Arial,sans-serif; font-size:24pt\">" . $string['edit'] . " " . $string['question'] . " &ndash; " . $string['random'] . "</span>\n";
         }
       ?>
-      <span style="position:absolute; left:80px; top:40px; font-family:Arial,sans-serif; font-size:12pt; font-weight:bold">(Random Question Block)</span></td>
+      </td>
       <td style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
   </tr>
 </table>
@@ -153,7 +153,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Save Changes') {
     $result->execute();
     $result->store_result();
     $result->bind_result($leadin, $tmp_ownerID, $creation_date, $created, $last_edited, $modified, $option_text, $id_num, $bloom, $q_group, $checkout_time, $checkout_authorID, $locked, $status);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       if ($sub_questions == '') {
         $sub_questions = $option_text;
       } else {
@@ -168,11 +168,11 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Save Changes') {
   <br />
     <table cellpadding="3" cellspacing="0" border="0" align="center">
     <tr>
-      <td class="field">Description</td>
+      <td class="field"><?php echo $string['description']; ?></td>
       <td><input type="text" name="description" size="60" value="<?php echo $leadin; ?>" /><input type="hidden" name="old_description" value="<?php echo $leadin; ?>" /></div></td>
     </tr>
     <tr>
-      <td class="field">Questions</td>
+      <td class="field"><?php echo $string['questions']; ?></td>
       <td><div id="questionlist" style="width:600px; height:500px; background-color:white; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%">
       <?php
         $question_no = 0;
@@ -190,7 +190,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Save Changes') {
       </div><input type="hidden" name="old_questions" value="<?php echo $sub_questions; ?>" /></td>
     </tr>
     <tr>
-    <td></td><td><input type="button" name="addquestion" value="Add Question(s)" style="width:150px" onclick="addQuestion();" /><input type="hidden" name="question_no" id="question_no" value="<?php echo $question_no; ?>" /></td>
+    <td></td><td><input type="button" name="addquestion" value="<?php echo $string['addquestions']; ?>" style="width:150px" onclick="addQuestion();" /><input type="hidden" name="question_no" id="question_no" value="<?php echo $question_no; ?>" /></td>
     </tr>
     <?php
       echo echoMetadata($bloom, $q_id, $q_group, 1, $mysqli, true, $status, $disabled);
