@@ -3,6 +3,7 @@ require '../lang/' . $language . '/include/paper_options.inc';
 require 'shared.inc';
 
 $string['import'] = 'Import';
+$string['import2'] = 'Import';
 $string['importfromqti'] = 'Import from QTI';
 $string['file'] = 'File';
 $string['qtiimporterror'] = 'There has been an error importing your QTI file';

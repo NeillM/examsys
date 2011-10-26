@@ -120,7 +120,7 @@ echo "</table>";
 					</tr>
 					<tr>
 						<td style="text-align:center">
-							<input type="submit" name="submit" value="<?php echo $string['import'] . ' ' . $string['file'] ?>" style="width:100px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" style="width:100px" onclick="javascript:history.back()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="submit" name="submit" value="<?php echo $string['import2'] . ' ' . $string['file'] ?>" style="width:100px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" style="width:100px" onclick="javascript:history.back()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input type="button" name="help" value="<?php echo $string['help'] ?>" style="width:100px" onclick="javascript:launchHelp(224)" />
 						</td>
 					</tr>
