@@ -22,7 +22,7 @@
 * @package
 */
 
-require '../include/admin_auth.inc';
+require '../include/staff_auth.inc';
 require '../include/errors.inc';
   
 check_var('keywordID', 'POST', true, false);
