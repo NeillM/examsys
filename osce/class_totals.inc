@@ -47,9 +47,9 @@
   $paperID = '';
   $sortby = '';
   $ordering = '';
-  if(isset($_GET['paperID'])) $paperID = $_GET['paperID'];
-  if(isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-  if(isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+  if (isset($_GET['paperID'])) $paperID = $_GET['paperID'];
+  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
+  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
 
   // Get the module ID and calendar year of the OSCE station.
   $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year, marking FROM properties WHERE property_id=?");
@@ -94,6 +94,8 @@
     $user_no++;
   }
   $result->close();
+  
+  var_dump($user_results);
   
   $user_results = array_csort($user_results,$sortby,$ordering);
 

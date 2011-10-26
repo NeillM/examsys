@@ -29,7 +29,7 @@
      "DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-  <title>TouchStone: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
+  <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
   <style type="text/css">
   body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
   a.user {color:black}
@@ -185,11 +185,11 @@
   $percent = 100;
   $absent = 0;
   $direction = 'asc';
-  if(isset($_GET['startdate'])) $startdate = $_GET['startdate'];
-  if(isset($_GET['enddate'])) $enddate = $_GET['enddate'];
-  if(isset($_GET['percent'])) $percent = $_GET['percent'];
-  if(isset($_GET['absent'])) $absent = $_GET['absent'];
-  if(isset($_GET['direction'])) $direction = $_GET['direction'];
+  if (isset($_GET['startdate'])) $startdate = $_GET['startdate'];
+  if (isset($_GET['enddate'])) $enddate = $_GET['enddate'];
+  if (isset($_GET['percent'])) $percent = $_GET['percent'];
+  if (isset($_GET['absent'])) $absent = $_GET['absent'];
+  if (isset($_GET['direction'])) $direction = $_GET['direction'];
   
   
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";

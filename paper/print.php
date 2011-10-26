@@ -138,7 +138,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   $result->store_result();
   $result->bind_result($paper_type, $q_type, $q_id, $score_method, $display_method, $marks_correct, $paper_prologue, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
   $li_set = 0;
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($question_no == 0 and $current_screen == 1 and $paper_prologue != '') {
       echo '<p style="text-align: justify">' . $paper_prologue . '</p>';
     }

@@ -113,7 +113,6 @@ function marks_from_file($fileName, $mysqlidb) {
           $fields[$q] = trim($fields[$q]);
           $result->execute();
           $numeric_score += trim($fields[$q]);
-          echo $students[$sid]['id'] . ',' . $paper_date . ',' . $_GET['paperID'] . ',' . $paper[$q]['id'] . ',' . $fields[$q] . '<br />';
         }
         $result->close();
           

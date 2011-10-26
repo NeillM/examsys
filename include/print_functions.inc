@@ -371,7 +371,6 @@ function display_options($options,$q_id, $current_theme, $string) {
             }
           }
         }
-//        echo "</td></tr>\n";
         
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"\" />\n";
         break;
