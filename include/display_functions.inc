@@ -243,7 +243,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         $len_answer = 0;
       }
-      if (isset($answer_parts) AND $answer_parts[0] == str_repeat('n', $len_answer) AND $screen_pre_submitted == 1) {
+      if (isset($answer_parts) and $answer_parts[0] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
         echo '<blockquote class="unans"><table cellpadding="2" cellspacing="0" border="0">';
       } else {
         echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -320,7 +320,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     
       $sct_parts = explode('~',$question['leadin']);
       echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-      $sct_titles = array(1=>$string['hypothesis'],2=>$string['investigation'],3=>$string['prescription'],4=>$string['intervention'],5=>$string['treatment']);
+      $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
        echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
       echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
       echo "</table>\n";
@@ -329,12 +329,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
       echo '</strong></p>';
       
-      if (isset($user_answers[$current_screen][$q_id]) AND $user_answers[$current_screen][$q_id] == '0' AND $screen_pre_submitted == 1) {
+      if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
         echo '<blockquote class="unans"><table cellpadding="2" cellspacing="0" border="0">';
       } else {
         echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
       }
-      
+      $marks = 1;
       break;
   }
 
@@ -386,7 +386,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $marks += $display_option['marks_correct'];
         break;
       case 'calculation':
-        $vars = array(1=>'A',2=>'B',3=>'C',4=>'D',5=>'E',6=>'F',7=>'G',8=>'H',9=>'I',10=>'J');
+        $vars = array(1=>'A', 2=>'B', 3=>'C', 4=>'D', 5=>'E', 6=>'F', 7=>'G', 8=>'H', 9=>'I', 10=>'J');
         $var = $vars[$part_id];
         if (isset($user_answers[$current_screen][$q_id])) {
           $tmp_user_answers = explode('|',$user_answers[$current_screen][$q_id]);		
@@ -593,7 +593,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" onclick=\"onoff($question_no,$tmp_part_id)\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
         echo "</td></tr>\n";
-        if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
         break;
       case 'blank':
         $ans = '';
