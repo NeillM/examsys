@@ -27,7 +27,7 @@
 require_once 'staff_student_auth.inc';
   
   if (strpos($userroles,'SysAdmin') === false) {
-    access_denied('<strong>Access Denied</strong><br />you are attempting to access a system admin only screen.',true);
+    access_denied($string['accessdeniedsysadmin'],true);
   } 
 
   // Get teams.
