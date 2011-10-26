@@ -111,14 +111,14 @@ $stmt->close();
   }
 
   function paperProperties() {
-    notice=window.open("/paper/properties.php?paperID=<?php echo $paperID; ?>","properties","width=832,height=650,left="+(screen.width/2-412)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/paper/properties.php?paperID=<?php echo $paperID; ?>","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
 
   function lockedPaperProperties() {
-    notice=window.open("/paper/properties_locked.php?paperID=<?php echo $paperID; ?>","properties","width=832,height=650,left="+(screen.width/2-412)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("/paper/properties_locked.php?paperID=<?php echo $paperID; ?>","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }

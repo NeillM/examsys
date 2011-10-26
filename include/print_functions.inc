@@ -35,7 +35,7 @@ function checkVariables($number) {
 }
 
 function display_options($options,$q_id, $current_theme, $string) {
-  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_confidence, $screen_pre_submitted, $bgcolor;
+  global $marking, $question_no, $question_offset, $part_id, $labelcolor, $old_likert_label, $users_confidence, $screen_pre_submitted, $bgcolor, $notes;
 
   $option_no = count($options);
   $part_id = 0;
@@ -85,6 +85,7 @@ function display_options($options,$q_id, $current_theme, $string) {
   } elseif ($options[0]['q_type'] == 'calculation') {
     $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
   } elseif ($options[0]['q_type'] == 'likert') {
+    $na = false;
     $str = $options[0]['score_method'];
     $likert_display = explode('|',$str);
     $likert_col_no = substr_count($options[0]['score_method'],'|');
@@ -94,8 +95,8 @@ function display_options($options,$q_id, $current_theme, $string) {
         $likert_col_no++;
         $na = true;
       }
-      if ($current_notes != '') {
-        echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;$current_notes</td></tr>\n";
+      if ($notes != '') {
+        echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;$notes</td></tr>\n";
       }
       if ($current_scenario != '') {
         echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">$current_scenario</td></tr>\n";
