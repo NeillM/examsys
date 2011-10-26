@@ -93,6 +93,11 @@
   $end_month = substr($end_date,4,2);
   $end_day = substr($end_date,6,2);
   $end_time = substr($end_date,8,4) . '00';
+  
+  if ($end_year > date('Y') or ($end_year == date('Y') and $end_month > date('m'))) {
+    $end_day = date('d');
+    $end_month = date('m');
+  }
 
   $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
   $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
