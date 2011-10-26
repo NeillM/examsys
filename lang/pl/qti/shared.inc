@@ -4,5 +4,5 @@ $string['viewdetails'] = 'Ogląd szczegółów';
 $string['debuginformation'] = 'Informacje dot. błędów';
 $string['loadingdebug'] = 'Wyszukiwanie błędów ładowania';
 $string['intermediateformatdebug'] = 'Wyszukiwanie błędów pośrednich';
-$string['savingdebug'] = 'Zapisywanie wyników wyszukiwanie błędów';
+$string['savingdebug'] = 'Zapisywanie wyników wyszukiwania błędów';
 $string['generaldebuginfo'] = 'Ogólne informacje dot. błędów';
