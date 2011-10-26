@@ -217,7 +217,7 @@ $string['pleaserank'] = 'Oceń co następuje &hellip; zaczynając od &hellip; pi
 $string['addtobank'] = 'Dodaj do banku';
 $string['addtobankandpaper'] = 'Do banku i arkusza';
 $string['na'] = 'Brak';
-$string['description'] = 'Description';
-$string['questions'] = 'Questions';
-$string['addquestions'] = 'Add Questions(s)';
+$string['description'] = 'Opis';
+$string['questions'] = 'Pytania';
+$string['addquestions'] = 'Dodaj pytanie(a)';
 ?>

@@ -1,5 +1,5 @@
 <?php
-$string['papername'] = 'Paper Name:';
-$string['note'] = 'Note:';
-$string['studentname'] = 'Student Name:';
+$string['papername'] = 'Nazwa arkusza:';
+$string['note'] = 'Uwaga:';
+$string['studentname'] = 'Imie i nazwisko studenta:';
 ?>
