@@ -27,7 +27,7 @@
   require '../include/staff_auth.inc';
 
   if (isset($_POST['submit'])) {
-    $result = $mysqli->prepare("INSERT INTO student_notes VALUES (NULL,?,?,NOW(),?,?)");
+    $result = $mysqli->prepare("INSERT INTO student_notes VALUES (NULL, ?, ?, NOW(), ?, ?)");
     $result->bind_param('isis', $_POST['tmp_userID'], $_POST['note'], $_POST['paper'], $userID);
     $result->execute();  
     $result->close();
@@ -77,24 +77,26 @@ body {background-color:#FFFFCC; color:black; margin:0px; font-size:90%; font-fam
 <?php
   if (isset($_GET['paperID'])) {
     echo "<input type=\"hidden\" name=\"paper\" value=\"" . $_GET['paperID'] . "\" />\n";
-    echo "Student Name: " . $_GET['display_name'] . "</br />\n";
+    echo $string['studentname'] . " " . $_GET['display_name'] . "</br />\n";
   } else {
-    echo "Paper Name: <select name=\"paper\">\n<option value=\"\"></option>\n";
-    $paper_details = $mysqli->query("SELECT DISTINCT property_id, paper_title FROM properties WHERE paper_type='2' ORDER BY paper_title");
-    while ($row = $paper_details->fetch_assoc()) {
-      echo "<option value=\"" . $row['property_id'] . "\">" . $row['paper_title'] . "</option>\n";
+    echo $string['papername'] . " <select name=\"paper\">\n<option value=\"\"></option>\n";
+    $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_title FROM properties WHERE paper_type='2' AND deleted IS NULL ORDER BY paper_title");
+    $result->execute();
+    $result->bind_result($property_id, $paper_title);
+    while ($result->fetch()) {
+      echo "<option value=\"$property_id\">$paper_title</option>\n";
     }
     echo "</select>\n<br />\n";
-    $paper_details->close();
+    $result->close();
   }
   
-  echo "<br />Note:<br />\n";
+  echo "<br />" . $string['note'] . "<br />\n";
   echo "<textarea name=\"note\" cols=\"60\" rows=\"15\" style=\"font-family:Arial,sans-serif; font-size:110%; background-color:#FFFFCC; width:100%\"></textarea><br />\n";
 ?>
 <br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="Save" />&nbsp;<input style="width:100px" type="button" name="cancel" value="Cancel" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="tmp_userID" value="<?php echo $_GET['userID']; ?>" />
-<input type="hidden" name="calling" value="<?php echo $_GET['calling']; ?>" />
+<input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling']; ?>" />
 </form>
 
 </body>
