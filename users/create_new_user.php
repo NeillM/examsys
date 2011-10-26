@@ -250,13 +250,15 @@ function ldaplookup() {
 ?>
 <tr><td align="right"><span class="field"><?php echo $string['title']; ?></span></td><td>
 <select id="new_users_title" name="new_users_title" size="1">
+
 <?php
-if ($string['mr']!='') echo '<option value="Mr" selected>' . $string['mr'] . '</option>';
-if ($string['mrs']!='') echo '<option value="Mrs">' . $string['mrs'] . '</option>';
-if ($string['miss']!='') echo '<option value="Miss">' . $string['miss'] . '</option>';
-if ($string['ms']!='') echo '<option value="Ms">' . $string['ms'] . '</option>';
-if ($string['dr']!='') echo '<option value="Dr">' . $string['dr'] . '</option>';
-if ($string['professor']!='') echo '<option value="Professor">' . $string['professor'] . '</option>';
+if ($language != 'en') {
+  echo "<option value=\"\"></option>\n";
+}
+$titles = explode(',', $string['title_types']);
+foreach ($titles as $tmp_title) {
+  echo '<option value="$tmp_title" selected>$tmp_title</option>';
+}
 ?>
 </select></td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input type="text" id="new_surname" name="new_surname" size="40" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" /></td></tr>
