@@ -3,6 +3,7 @@ require_once '../lang/' . $language . '/include/status.inc';
 
 $string['question'] = 'Question';
 $string['questionbank'] = 'Question Bank';
+$string['notinteam'] = 'Warning: not in team';
 $string['type'] = 'Type';
 $string['modified'] = 'Modified';
 $string['status'] = 'Status';

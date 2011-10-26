@@ -97,7 +97,7 @@
       if (in_array($team, $teams)) {
         $team_sql = 'q_group="' . $team . '"';
       } else {
-        echo "<tr><td colspan=\"4\">Warning: not in team</td></tr>\n</body>\n</html>\n";
+        echo "<tr><td colspan=\"4\">" . $string['notinteam'] . "</td></tr>\n</body>\n</html>\n";
         exit;
       }
     } else {
