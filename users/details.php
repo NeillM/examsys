@@ -338,11 +338,13 @@ a.access:hover {color:white}
   }
   
   $tmp_name = $tmp_title . ' ' . $tmp_initials . ' ' . $tmp_surname;
-   
-  $user_query = $mysqli->query("SELECT DISTINCT description FROM degrees WHERE degree='$grade'");
-  while ($row = $user_query->fetch_assoc()) {
-    $description = $row['description'];
-  }
+
+  $description = '';
+  $user_query = $mysqli->prepare("SELECT DISTINCT description FROM degrees WHERE degree=? LIMIT 1");
+  $user_query->bind_param('s', $grade);
+  $user_query->execute();
+  $user_query->bind_result($description);
+  $user_query->fetch();
   $user_query->close();
   
   if (strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
