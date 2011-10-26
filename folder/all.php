@@ -79,7 +79,7 @@
   } else {
     $results = $mysqli->query("SELECT DISTINCT faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID=faculty.id AND schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=$userID ORDER BY faculty.name, school, moduleid");
   }
-  while ($row = $results->fetch_assoc()) {
+  while ($results->fetch_assoc()) {
     if ($old_faculty != $row['faculty'] or $old_school != $row['school']) {
       if ($module_block == true) {
         echo "</div>\n";
