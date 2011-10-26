@@ -210,6 +210,17 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             $saved_response .= 'n';
           }
         }
+      } elseif ($old_type == 'dichotomous') {
+        if ($old_score_method == 'Mark per Question') {
+          $totalpos = $old_marks_correct;
+          if ($mark == 0 and $correct_rank) {    // Abstained to all options
+            $mark = 0;
+          } elseif ($correct_rank) {
+            $mark = $old_marks_correct;
+          } else {
+            $mark = $old_marks_incorrect;
+          }
+        }
       }
       if (isset($_POST["order$question_no"])) {
         $option_order = $_POST["order$question_no"];
@@ -357,15 +368,12 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $saved_response .= $user_response;
         }
         if ($user_response == $correct) {
-          $mark++;
-        } else {
-          if (($display_method == 'TF_Negative' or $display_method == 'TF_NegativeAbstain' or $display_method == 'YN_NegativeAbstain') and $user_response != 'a' and $user_response != '') {
-            $mark--;
-          } elseif ($display_method == 'TF_NegativeAbstainHalf' and $user_response != 'a' and $user_response != '') {
-            $mark-=0.5;
-          }
+          $mark += $marks_correct;
+        } elseif ($user_response != '') {
+          $mark += $marks_incorrect;
+          $correct_rank = false;
         }
-        $totalpos++;
+        $totalpos += $marks_correct;
         break;
       case 'likert':
         $qid = 'q' . $question_no . '_' . $question_part;
@@ -793,6 +801,17 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         $saved_response .= $_POST[$qid];
       } else {
         $saved_response .= 'n';
+      }
+    }
+  } elseif ($old_type == 'dichotomous') {
+    if ($old_score_method == 'Mark per Question') {
+      $totalpos = $old_marks_correct;
+      if ($mark == 0 and $correct_rank) {    // Abstained to all options
+        $mark = 0;
+      } elseif ($correct_rank) {
+        $mark = $old_marks_correct;
+      } else {
+        $mark = $old_marks_incorrect;
       }
     }
   }

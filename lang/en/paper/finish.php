@@ -41,4 +41,9 @@ $string['ttreatment'] = 'treatment';
 $string['thankyou'] = 'Thank you';
 $string['difficultyofthequestion'] = 'difficulty of the question (i.e. standards set). Roll over for full category title.';
 $string['withatoleranceof'] = 'with a tolerance of';
+$string['true'] = 'True';
+$string['false'] = 'False';
+$string['yes'] = 'Yes';
+$string['no'] = 'No';
+$string['abstain'] = 'Abstain';
 ?>

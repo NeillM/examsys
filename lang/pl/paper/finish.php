@@ -41,5 +41,10 @@ $string['ttreatment'] = 'terapii';
 $string['thankyou'] = 'Dziękujemy';
 $string['difficultyofthequestion'] = 'trudność pytania (tj. warunki standardowe). Przewiń do pełnego tytułu kategorii.';
 $string['withatoleranceof'] = 'z tolerancją';
+$string['true'] = 'Prawda';
+$string['false'] = 'Fałsz';
+$string['yes'] = 'Tak';
+$string['no'] = 'Nie';
+$string['abstain'] = 'Wstrzymany';
 
 ?>

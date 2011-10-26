@@ -616,17 +616,19 @@
           echo '<table cellpadding="0" cellspacing="1" border="0">';
           
           $abstain = false;
+          $no_correct = 0;
+          $no_incorrect = 0;
           if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf' or $paper[$question]['display_method'] == 'TF_Positive') {
-            echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">True</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">False</td>";
+            echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['false'] . "</td>";
             $true_label = 'T';
             $false_label = 'F';
           } else {
-            echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">Yes</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">No</td>";
+            echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['no'] . "</td>";
             $true_label = 'Y';
             $false_label = 'N';
           }
           if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'YN_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf') {
-            echo "<td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">Abstain</td>";
+            echo "<td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . "</td>";
             $abstain = true;
           }
           echo "</tr>\n";
@@ -645,10 +647,16 @@
             if (isset($paper[$question]['user_answer']) and substr($paper[$question]['user_answer'], $tmp_part_id, 1) != 'u' and substr($paper[$question]['user_answer'], $tmp_part_id, 1) != 'a') {
               if ($paper[$question]['correct'][$tmp_part_id] == substr($paper[$question]['user_answer'], $tmp_part_id, 1)) {
                 if ($tmp_display_students_response == '1') $correct_icon = '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-                if (substr($tmp_exclude,$tmp_part_id,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                if (substr($tmp_exclude,$tmp_part_id,1) == '0') {
+                  $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                  $no_correct++;
+                }
               } else {
                 if ($tmp_display_students_response == '1') $correct_icon = '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-                if (substr($tmp_exclude,$tmp_part_id,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                if (substr($tmp_exclude,$tmp_part_id,1) == '0') {
+                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  $no_incorrect++;
+                }
               }
             }
             
@@ -708,6 +716,17 @@
                   echo "<td class=\"fback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
                 }
               }
+            }
+          }
+
+          
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
+            if ($no_correct == 0 and $no_incorrect == 0) {
+              $paper[$question]['mark'] = 0;
+            } elseif ($no_incorrect > 0) {
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+            } else {
+              $paper[$question]['mark'] = $paper[$question]['marks_correct'];
             }
           }
           if ($answered  == false) {
@@ -1351,14 +1370,13 @@
               }
               echo "</td>\n";
             } else {                              // Multiple answer Extended Matching     
-			  for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {              
+              for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {              
                 $matching_option = 0;
                 foreach ($separate_answers as $single_answer) {
                   if ($single_answer == $option_order[$tmp_option_no-1]+1) {
                     $matching_option = 1;
                   }
                 }
-				//echo '***********'.$matching_option;
 				
                 if ($matching_option == 1) {
                   $std_part++;
@@ -1368,7 +1386,7 @@
                       $matching_user_option = 1;
                     }
                   }
-				  $option_answered+=$matching_user_option;
+                  $option_answered+=$matching_user_option;
 				
                   echo '<tr>';
                   if ($tmp_display_correct_answer == '1') {
@@ -1398,7 +1416,7 @@
                     }
                   }
                   $option_answered+=$matching_user_option;
-				  echo '<tr><td></td><td>';
+                  echo '<tr><td></td><td>';
                   if ($matching_user_option == 1 and $tmp_display_students_response == '1' and substr($tmp_exclude,$section,1) == '0') {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                   } else {
@@ -1408,7 +1426,7 @@
                   if (substr($tmp_exclude,$section,1) == '1') echo ' style="color:red; text-decoration:line-through"';
                   echo ">" . $paper[$question]['option_text'][$option_order[$option_no]] . "</td></tr>\n";
                 }
-				$tmp_option_no++;
+                $tmp_option_no++;
               }
             }
 			    
@@ -1425,7 +1443,7 @@
           if ($option_answered=='0') echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
 
             
-		  if ($paper[$question]['score_method'] == 'Mark per Question') {
+          if ($paper[$question]['score_method'] == 'Mark per Question') {
             $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] :$paper[$question]['marks_incorrect']; 
           }
           break;
