@@ -47,22 +47,13 @@
     
     if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
       $tmp_surname = str_replace("*","%",trim($_GET['search_surname']));
-
-      if (substr_count(strtolower($tmp_surname),'dr ') > 0) $title_sql = " AND title='dr'";
-      $tmp_surname = preg_replace("/(dr )/i","",$tmp_surname);
-      if (substr_count(strtolower($tmp_surname),'mr ') > 0) $title_sql = " AND title='mr'";
-      $tmp_surname = preg_replace("/(mr )/i","",$tmp_surname);
-      if (substr_count(strtolower($tmp_surname),'miss ') > 0) $title_sql = " AND title='miss'";
-      $tmp_surname = preg_replace("/(miss )/i","",$tmp_surname);
-      if (substr_count(strtolower($tmp_surname),'mrs ') > 0) $title_sql = " AND title='mrs'";
-      $tmp_surname = preg_replace("/(mrs )/i","",$tmp_surname);
-      if (substr_count(strtolower($tmp_surname),'miss ') > 0) $title_sql = " AND title='miss'";
-      $tmp_surname = preg_replace("/(miss )/i","",$tmp_surname);
-      if (substr_count(strtolower($tmp_surname),'professor ') > 0) $title_sql = " AND title='professor'";
-      $tmp_surname = preg_replace("/(professor )/i","",$tmp_surname);
-      if (substr_count(strtolower($tmp_surname),'prof ') > 0) $title_sql = " AND title='professor'";
-      $tmp_surname = preg_replace("/(prof )/i","",$tmp_surname);    
-    
+      
+      $tmp_titles = explode(',', $string['title_types']);
+      foreach ($tmp_titles as $tmp_title) {
+        if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) $title_sql = " AND title='$tmp_title'";
+        $tmp_surname = preg_replace("/(" . $tmp_title . " )/i","",$tmp_surname);
+      }
+      
       $sections = preg_split('[,.]',$tmp_surname);
       if (count($sections) > 1) {    // Search for initials.
         if (strlen($sections[0]) < strlen($sections[1])) {
