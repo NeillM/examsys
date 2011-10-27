@@ -1399,6 +1399,22 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
   
+  // 18/10/2011 - Add type to feedback_release.
+  $result = $mysqli->prepare("SELECT * FROM questions WHERE q_type='calculation' AND score_method!='Allow Partial Marks'");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows > 0) {
+    $adjust = $mysqli->prepare("UPDATE questions SET score_method='Allow Partial Marks' WHERE q_type='calculation' AND score_method!='Allow Partial Marks'");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>UPDATE questions SET score_method='Allow Partial Marks' WHERE q_type='calculation' AND score_method!='Allow Partial Marks'</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  echo "</ol>\n";
+  
   //Close the database
   $mysqli->close();
   ob_end_flush();
