@@ -164,11 +164,12 @@ class IE_Local_Save extends IE_Main {
       // if no o_row, create a blank one
       if (count($this->o_rows) == 0) {
         $this->o_row['marks_correct'] = 1;
+        $this->o_row['marks_incorrect'] = 0;
+        $this->o_row['marks_partial'] = 0;
         $this->o_rows[] = $this->o_row;
       }
 
       // store question row
-      var_dump($this->q_row);
       $this->db->InsertRow("questions", "q_id", $this->q_row);
       $question->save_id = $this->q_row['q_id'];
 
@@ -316,7 +317,9 @@ class IE_Local_Save extends IE_Main {
       $o_row['option_text'] = "0,100,1,0";
       $o_row['correct'] = $question->formula;
       $o_row['marks_correct'] = 1;
-
+      $o_row['marks_incorrect'] = 0;
+      $o_row['marks_partial'] = 0;
+      
       // NO IDEA WHY MEDIA IS IN THE OPTIONS TABLE AS WELL AS THE QUESTION!! NOT IN ALL OPTIONS JUST SOME!
       $o_row['o_media'] = $question->media;
       $o_row['o_media_width'] = $question->media_width;

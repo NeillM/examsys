@@ -11,3 +11,4 @@ $string['qtiimported'] = 'Your QTI file has been imported';
 $string['questionproblems'] = 'Some of your questions did not import correctly.';
 $string['hadproblemsimporting'] = '%d out of %d questions had problems importing.';
 $string['importedquestions'] = 'Imported %d question(s).';
+$string['backtopaper'] = 'Back to paper';

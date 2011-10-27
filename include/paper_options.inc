@@ -696,7 +696,7 @@ if ($paper_type == '2') {
   if($summative_lock == 1) {
     makeMenu(array($string['export12']=>"/qti/export.php?dest=qti12&paperID=$paperID"));
   } else {
-    makeMenu(array($string['import']=>"/qti/import.php?paperID=$paperID",$string['export12']=>"/qti/export.php?dest=qti12&paperID=$paperID"));
+    makeMenu(array($string['import']=>"/qti/import.php?paperID=$paperID&module=$module",$string['export12']=>"/qti/export.php?dest=qti12&paperID=$paperID"));
   }
   
   hideMenuScript($menuNo);

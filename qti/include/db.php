@@ -406,7 +406,7 @@ class Database {
     $params[1] = "";
 
     foreach ($row as $field => $value) {
-      if ($field != $pri_key && !empty($value)) {
+      if ($field != $pri_key && $value !== '') {
         $fieldnames[] = $field;
 
         // Params to mysqli_stmt_bind_param now need to be reference

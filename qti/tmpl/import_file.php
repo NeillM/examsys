@@ -115,7 +115,8 @@ echo "</table>";
 					<tr>
 						<td>
 							<strong><?php echo $string['file'] ?></strong>&nbsp;<input type="file" size="40" name="file" id="file" />
-							<input type="hidden" name="paperID" id="paperID" value="<?=$paper?>" />
+							<input type="hidden" name="paperID" id="paperID" value="<?php echo $paper ?>" />
+              <input type="hidden" name="module" id="module" value="<?php echo $module ?>" />
 						</td>
 					</tr>
 					<tr>

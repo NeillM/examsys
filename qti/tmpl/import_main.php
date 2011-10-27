@@ -160,6 +160,10 @@ if (isset($result['load']['errors'][0])) $bad--;
 			</div>
 <?php endif; ?>
 			<br />
+      <div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;&nbsp;
+        <a href="../paper/details.php?paperID=<?php echo $paper ?>&module=<?php echo $module ?>"><?php echo $string['backtopaper'] ?></a>
+      </div>
+      <br />
 		</td>
 	</tr>
 </table>

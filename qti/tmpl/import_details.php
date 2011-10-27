@@ -24,7 +24,7 @@
 ?>
 <html>
 <head>
-	<title>TouchStone Import from QTI</title>
+	<title><?php echo $string['importfromqti'] ?></title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
