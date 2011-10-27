@@ -128,8 +128,8 @@ Class QuestionLIKERT extends Question {
   public function set_all_custom_scales($value) {
     $scale = $this->get_scale_type();
     if ($scale == 'custom') {
-      $this->custom_scales = $value;
-      $this->set_scale_type(implode('|', $value));
+      $this->custom_scales = $this->array_trim($value);
+      $this->set_scale_type(implode('|', $this->custom_scales));
     }
   }
   
@@ -175,5 +175,23 @@ Class QuestionLIKERT extends Question {
     }   
     return false;
   }
-}
 
+  // PRIVATE FUNCTIONS
+  
+  private function array_trim($input) {
+    $adding = false;
+    $input_rev = array_reverse($input);
+    $new_array = array();
+    
+    foreach ($input_rev as $value) {
+      if (!$adding and !empty($value)) {
+        $adding = true;
+      }
+      if ($adding) {
+        array_unshift($new_array, $value);
+      }
+    }
+    return $new_array;
+  }
+}
+?>
