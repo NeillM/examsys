@@ -536,14 +536,19 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $correct_options = explode('|',$correct);
           $matching_scenarios = explode('|', $scenario);
           $option_no = 1;
+          $no_correct = 0;
+          $no_incorrect = 0;
+          $question_parts = 0;
           foreach ($matching_scenarios as $single_scenario) {
             if (trim($single_scenario) != '') {
+              $question_parts++;
               $qid = 'q' . $question_no . '_' . $option_no;
               if (isset($_POST[$qid]) and $_POST[$qid] == $correct_options[$option_no - 1]) {
                 $mark += $marks_correct;
+                $no_correct++;
               } elseif (isset($_POST[$qid]) and $_POST[$qid] != 'u') {
                 $mark += $marks_incorrect;
-                $all_items_abstain = false;
+                $no_incorrect++;
               }
               if ($option_no == 1) {
                 if(isset($_POST[$qid])) {
@@ -562,9 +567,9 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
 
         if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
-          if ($mark == $totalpos) {
+          if ($no_correct == $question_parts) {
             $mark = $marks_correct;
-          } elseif ($all_items_abstain) {
+          } elseif ($no_correct == 0 and $no_incorrect == 0) {
             $mark = 0;
           } else {
             $mark = $marks_incorrect;

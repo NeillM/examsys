@@ -1346,7 +1346,7 @@ if (!isset($_POST['update'])) {
   $result->close();
   echo "</ol>\n";
   
-  // 24/02/2011
+  // 24/10/2011
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log4_overall' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='year'");
   $result->execute();
   $result->store_result();
@@ -1378,6 +1378,22 @@ if (!isset($_POST['update'])) {
     $adjust->execute();
     $adjust->close();
     echo "<div>ALTER TABLE log4_overall CHANGE COLUMN yearofstudy year tinyint</div>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 27/10/2011
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='title'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($column_type == "enum('Dr','Miss','Mr','Mrs','Ms','Professor')") {
+    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN title title varchar(30)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<div>ALTER TABLE users CHANGE COLUMN title title varchar(30)</div>\n";
     ob_flush();
     flush();
   }

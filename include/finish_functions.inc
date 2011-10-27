@@ -1352,7 +1352,7 @@
                 }
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />&nbsp;';
               } else {
-                if (substr($tmp_exclude,$section,1) == '0'and $user_answers[$i] != '' and $user_answers[$i] != 'u') {
+                if (substr($tmp_exclude,$section,1) == '0' and $user_answers[$i] != '' and $user_answers[$i] != 'u') {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                   $all_correct = false;
                 }
@@ -1412,7 +1412,6 @@
                     $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                   } else {
-                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                     $all_correct = false;
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
                   }
@@ -1430,6 +1429,8 @@
                   echo '<tr><td></td><td>';
                   if ($matching_user_option == 1 and $tmp_display_students_response == '1' and substr($tmp_exclude,$section,1) == '0') {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                    $all_correct = false;
                   } else {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
                   }

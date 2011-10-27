@@ -390,6 +390,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
   
   if ($paper_buffer[$q_id]['score_method'] != 'Mark per Question' and in_array($paper_buffer[$q_id]['q_type'], $multi_part_qns)) {
     if ($paper_buffer[$q_id]['q_type'] == 'extmatch' or $paper_buffer[$q_id]['q_type'] == 'matrix') {
+    
       $paper_answers = explode('|',$paper_buffer[$q_id]['correct'][0]);
       $user_answers = explode('|',$tmp_user_answer);
       if (array_key_exists($q_id,$exclude)) {
@@ -402,23 +403,28 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         if ($paper_answers[$a] != '') {
           $answers_correct = 0;
           $answers_incorrect = 0;
+          
           if ($paper_buffer[$q_id]['q_type'] == 'extmatch') {
             $sub_paper_answers = explode('$',$paper_answers[$a]);
             $sub_user_answers = explode('$',$user_answers[$a]);
             $exclude_on = true;
-            for ($b=0; $b<count($sub_paper_answers); $b++) {
-              if (substr($tmp_exclude,$section,1) == '0') {
-                for ($c=0; $c<count($sub_user_answers); $c++) {
-                  if ($sub_paper_answers[$b] == $sub_user_answers[$c]) {
-                    $answers_correct++;
-                  } elseif ($sub_user_answers[$c] != 'u') {
-                    $answers_incorrect++;
-                  }
+            if (substr($tmp_exclude,$section,1) == '0') {
+              for ($c=0; $c<count($sub_user_answers); $c++) {
+                if ($sub_user_answers == 'u') {
+                  $tmp_user_mark_array[] = 0;
+                } elseif (in_array($sub_user_answers[$c], $sub_paper_answers)) {
+                  $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+                  $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
+                } else {
+                  $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+                  $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
                 }
-                $exclude_on = false;
               }
-              $section++;
+            
+              $exclude_on = false;
             }
+            $section++;
+           
             $section_mark =($answers_correct * $paper_buffer[$q_id]['marks_correct']) + ($answers_incorrect * $paper_buffer[$q_id]['marks_incorrect']); 
             $tmp_mark += $section_mark;
             if ($exclude_on == false) $tmp_user_mark_array[] = $section_mark;
@@ -448,11 +454,11 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         if (substr($tmp_exclude,$a,1) == '0') {
           if ($paper_buffer[$q_id]['score_method'] == 'dropdown') {
             if ($paper_buffer[$q_id]['correct'][$a] == $user_answers[$a+1]) {
-                $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
-                $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
+              $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+              $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
             } elseif ($user_answers[$a] != 'u') {
-                $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
-                $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
+              $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+              $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
             } else {
               $tmp_user_mark_array[] = 0;
             }
@@ -488,7 +494,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
             $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
           } else {
             if (substr($tmp_user_answer,$a,1) == 'a' or substr($tmp_user_answer,$a,1) == 'u') {
-              $tmp_mark += 0;
               $tmp_user_mark_array[] = 0;
             } else {
               $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
@@ -535,8 +540,11 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         $x = $user_split2[$a];
         $y = $user_split2[$a+1];
         if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
-          $tmp_mark += 1;
-          $correct += 1;
+          $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+          $correct += $paper_buffer[$q_id]['marks_correct'];
+        } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
+          $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+          $correct += $paper_buffer[$q_id]['marks_incorrect'];
         }
         $i++;
       }
