@@ -31,7 +31,7 @@ function checkloadjscssfile(filename, filetype) {
 }
 
 function findBaseUrl() {
-    $(document.head).children('script').each(function () {
+    $('head').children('script').each(function () {
         var script = this.src;
         var tofind = "/mee_src.js";
         if (script.substr(script.length - tofind.length) == tofind) {
@@ -46,6 +46,6 @@ function findBaseUrl() {
 
 findBaseUrl();
 //uncompressed debug
-//loadjscssfile("js/mee_src_src.js",'js');
+loadjscssfile("js/mee_src_src.js",'js');
 //compressed live
-loadjscssfile("js/mee.js",'js');
+//loadjscssfile("js/mee.js",'js');
