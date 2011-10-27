@@ -86,7 +86,8 @@ h1 {font-size:140%; margin-left:10px}
   $default_dir = '../media/';
   if (!($dp = opendir($default_dir))) die ("Cannot open $default_dir.");
   while ($file = readdir($dp)) {
-    if ($file != '.' and $file != '..' and $file != '.htaccess') {
+    // Ignore hidden files
+    if (substr($file, 0, 1) != '.') {
       $file_array[$file] = 0;
       if (strpos($file,'.flv') !== false) {
         // Set FLV files to used to protect them as they are indirectly referenced by SWF files.
