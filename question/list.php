@@ -130,7 +130,10 @@
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }
   $query_string .= " WHERE $team_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
-  $search_results = $mysqli->query($query_string);
+  $search_results = $mysqli->prepare($query_string);
+  $search_results->execute();
+  $search_results->store_result();
+  $search_results->bind_result($q_id, $title, $initials, $surname, $ownerID, $leadin, $q_type, $q_media, $last_edited, $locked, $status);
 
   echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(" . number_format($search_results->num_rows) . ")</strong>$bank_type</div></td>";
   echo "<td colspan=\"2\" style=\"text-align:right; background-color:#F1F5FB\" nowrap><input type=\"checkbox\" onclick=\"updateCookies();\" name=\"myquestions\" id=\"myquestions\" value=\"on\"";
@@ -144,22 +147,22 @@
   echo "<td style=\"background-color:#F1F5FB\"><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['status'] . "&nbsp;</td></tr>\n";
   echo "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"5\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n";
 
-  while ($row = $search_results->fetch_assoc()) {
+  while ($search_results->fetch()) {
 
-    if ($row['locked'] != '') {
-      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('" . $row['q_id'] . "','line$display_no','" . $string[$row['q_type']] . "','menu2c')\" ondblclick=\"editQ('" . $row['q_id'] . "','" . $row['q_type'] . "'); return false;\">";
+    if ($locked != '') {
+      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('$q_id','line$display_no','$q_type','menu2c')\" ondblclick=\"editQ('$q_id','$q_type'); return false;\">";
       echo "<td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"Question Locked\" /></td>";
     } else {
-      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('" . $row['q_id'] . "','line$display_no','" . $string[$row['q_type']] . "','menu2b')\" ondblclick=\"editQ('" . $row['q_id'] . "','" . $row['q_type'] . "'); return false;\">";
+      echo "<tr id=\"line$display_no\" onmouseover=\"lon('line$display_no')\" onmouseout=\"loff('line$display_no')\" style=\"cursor:pointer\" onclick=\"selQ('$q_id','line$display_no','$q_type','menu2b')\" ondblclick=\"editQ('$q_id','$q_type'); return false;\">";
       echo "<td></td>";
     }
-    $tmp_leadin = $row['leadin'];
+    $tmp_leadin = $leadin;
     if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
-    echo "<td class=\"d\">$tmp_leadin <span class=\"owner\">(" . $row['title'] . " " . $row['initials'] . " " . $row['surname'] . ")</span></td>";
-    echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . $string[$row['q_type']] . "</nobr></td>";
-    echo "<td class=\"d\" onclick=\"qOff()\">" . $row['last_edited'] . "</td>\n";
-    echo "<td class=\"d\" onclick=\"qOff()\">" . $string[strtolower($row['status'])] . "</td></tr>\n";
+    echo "<td class=\"d\">$tmp_leadin <span class=\"owner\">($title $initials $surname)</span></td>";
+    echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . $string[$q_type] . "</nobr></td>";
+    echo "<td class=\"d\" onclick=\"qOff()\">$last_edited</td>\n";
+    echo "<td class=\"d\" onclick=\"qOff()\">" . $string[strtolower($status)] . "</td></tr>\n";
     $display_no++;
   }
   $search_results->close();

@@ -190,10 +190,12 @@
     $modules_array = array();
     $team_sql = implode("','", $teams);
     if ($team_sql != '') $team_sql = "'$team_sql'";
-    $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
-    while ($module_row = $module_details->fetch_assoc()) {
-      $title = $module_row['moduleid'] . ' - ' . str_replace("'","\'",$module_row['fullname']);
-      $url = '/folder/details.php?module=' . $module_row['moduleid'];
+    $module_details = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    $module_details->execute();
+    $module_details->bind_result($moduleid, $fullname);
+    while ($module_details->fetch()) {
+      $title = $moduleid . ' - ' . str_replace("'","\'",$fullname);
+      $url = '/folder/details.php?module=' . $moduleid;
       $modules_array[$title] = $url;
     }
     $module_details->close();

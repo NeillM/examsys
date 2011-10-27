@@ -106,7 +106,7 @@ function redirect() {
 
   if (substr($_POST['paperID'],0,5) == 'list:') {
     $type = substr($_POST['paperID'],5);
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/list.php?keyword=" . $_POST['keyword'] . "&team=" . $_POST['team']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/list.php?type=$type&keyword=" . $_POST['keyword'] . "&team=" . $_POST['team']);
   } elseif ($_POST['calling'] == 'find') {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/question/search.php");
   } elseif ($_POST['calling'] == 'paper') {
