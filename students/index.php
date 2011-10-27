@@ -73,7 +73,7 @@ $sessions_with_papers = array();
 // Get papers for this module - types 0,1,3, valid for this date
 $papers = 0;
 $papers_query = <<< QUERY
-SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year FROM properties p
+SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, crypt_name FROM properties p
 INNER JOIN papers pa ON p.property_id = pa.paper
 WHERE p.paper_type IN ('0','1','3')
 AND p.moduleID LIKE ? AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
@@ -89,7 +89,7 @@ for($i = 0; $i < count($modules); $i++) {
 		$mod_string = '%'.$mod_id.'%';
 	  $stmt->bind_param('ss', $mod_string, $modules[$i]['year']);
 	  $stmt->execute();
-	  $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year);
+	  $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year, $crypt_name);
 	  $stmt->store_result();
 	  while ($stmt->fetch()) {
 	  	// Check if the user is able to access the paper from their current location
@@ -99,7 +99,7 @@ for($i = 0; $i < count($modules); $i++) {
 	  		
 	  		// Don't show if 0 screens
 	  		if ($screens > 0) {
-					$modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens);
+					$modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name);
 					$papers++;
 					
 					if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
@@ -142,12 +142,11 @@ function switchYear(toShow) {
 <body>
 <div id="content" class="content" style="font-size:80%">
 	<table cellpadding="0" cellspacing="0" border="0" width="100%">
-		<tr><td colspan="2" style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>
+		<tr>
+      <td rowspan="2"style="background-color:#F1F5FB"><img style="margin:4px" src="../artwork/rogo_logo.gif" width="137" height="61" alt"Rogo" border="0" /></td>
+      <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
+    </tr>
 	  <tr>
-	    <td colspan="2" style="background-color:#F1F5FB"><div style="font-size:22pt; font-weight:bold">&nbsp;TouchStone<?php echo " $cfg_install_type"; ?></div></td>
-	  </tr>
-	  <tr>
-	    <td style="background-color:#F1F5FB"><div style="position:relative; left:12px; top:-3px; font-size:8pt; padding-bottom: 20px;">Assessment Management System</div></td>
 	    <td style="background-color:#F1F5FB; text-align:right; vertical-align: bottom">
 <?php
 $default_session = '';
@@ -169,9 +168,9 @@ if($papers > 0) {
 	foreach($modules as $module) {
 	  $mod_id = $module['id'];
 		if (!empty($module['papers']))	{
-			if($module['year'] != $last_session) {
+			if ($module['year'] != $last_session) {
 				$visibility = 'style="display: none"';
-				if($module['year'] == $default_session) {
+				if ($module['year'] == $default_session) {
 					$visibility = '';
 				}
 				if($last_session != '') {
@@ -180,7 +179,7 @@ if($papers > 0) {
 <?php
 				}
 ?>
-		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility ?>>
+		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility; ?>>
 <?php
 				$last_session = $module['year'];
 			}
@@ -195,10 +194,10 @@ if($papers > 0) {
 			  	<table cellpadding="0" cellspacing="0" border="0">
 			  		<tr>
 			  			<td style="width:60px" align="center">
-								<a href="../user_index.php?paper=<?php echo urlencode($paper['title']) ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo(displayIcon($paper['type'],$paper['title'],'','','','')) ?></a>
+								<a href="../user_index.php?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo(displayIcon($paper['type'],$paper['title'],'','','','')); ?></a>
 							</td>
 	    				<td>
-	    					<a href="../user_index.php?paper=<?php echo urlencode($paper['title']) ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])) ?></a><br />
+	    					<a href="../user_index.php?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a><br />
 	    					<span style="color:#808080">
 	    						<?php echo($paper['screens']." screen".$screen_plural)?><br />
 	    						<?php echo(date('d/m/Y h:i', strtotime($paper['start']))." to ".date('d/m/Y h:i', strtotime($paper['end']))) ?>
