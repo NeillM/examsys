@@ -1120,6 +1120,7 @@
         case 'rank':
           $paper[$question]['mark'] = 0;
           $paper[$question]['totalpos'] = 0;
+          $all_correct = true;
           
           foreach ($paper[$question]['correct'] as $tmp_correct) {
             if ($paper[$question]['score_method'] != 'Bonus Mark' or $tmp_correct != 0) {
@@ -1191,6 +1192,7 @@
               		if ($rank_answers[$tmp_part_id-1] == $paper[$question]['correct'][$tmp_part_id-1] or ($paper[$question]['score_method'] == 'Bonus Mark' and $rank_answers[$tmp_part_id-1] > 0 and $paper[$question]['correct'][$tmp_part_id-1] > 0)) {
 	                  echo '&nbsp;<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                     $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                    if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
 	                } else {
 	                  echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                     if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
@@ -1229,7 +1231,7 @@
         
           if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_students_response == '1') {
             $img_name = 'cross';
-            if (isset ($paper[$question]['mark']) and $paper[$question]['mark'] == ($paper[$question]['totalpos'] - $paper[$question]['marks_correct'])) {
+            if ($all_correct) {
               $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               $img_name = 'tick';
             }
