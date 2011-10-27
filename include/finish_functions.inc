@@ -90,26 +90,25 @@
     return $html;
   }
 
-  function ordinal_suffix($number) {
-    $suffix = $number;
-    if($number !== '') {
-	    switch($number) {
-	      case 0:
-	        $suffix = 'N/A';
-	        break;
-	      case 1:
-	        $suffix .= 'xst';
-	        break;
-	      case 2:
-	        $suffix .= 'nd';
-	        break;
-	      case 3:
-	        $suffix .= 'rd';
-	        break;
-	      default:
-	        $suffix .= 'th';
-	        break;
-	    }
+  function ordinal_suffix($number, $language='en') {
+    $suffix = ($number === 0) ? 'N/A' : $number;
+    if ($language == 'en') {
+      if($number !== '') {
+  	    switch($number) {
+  	      case 1:
+  	        $suffix .= 'st';
+  	        break;
+  	      case 2:
+  	        $suffix .= 'nd';
+  	        break;
+  	      case 3:
+  	        $suffix .= 'rd';
+  	        break;
+  	      default:
+  	        $suffix .= 'th';
+  	        break;
+  	    }
+      }
     }
     return $suffix;
   }
@@ -1209,14 +1208,14 @@
             if ($rank_answers[$tmp_part_id-1] == 'u') echo "<option value=\"\" style=\"color:#808080\"></option>\n";
             for ($a=0; $a<=count($paper[$question]['correct']); $a++) {
             	if ($rank_answers[$tmp_part_id-1] != 'u' and $a == $rank_answers[$tmp_part_id-1]) {
-                echo "<option value=\"" . $a . "\" selected>" . ordinal_suffix($a) . "</option>\n";
+                echo "<option value=\"" . $a . "\" selected>" . ordinal_suffix($a, $language) . "</option>\n";
               } else {
-                echo "<option value=\"" . $a . "\">" . ordinal_suffix($a) . "</option>\n";;
+                echo "<option value=\"" . $a . "\">" . ordinal_suffix($a, $language) . "</option>\n";;
               }
             }
             echo '</select></td>';
             if ($tmp_display_correct_answer == '1') {
-              echo "<td style=\"font-weight:bold; vertical-align:top\">&nbsp;" . ordinal_suffix($paper[$question]['correct'][$tmp_part_id-1]) . "</td>";
+              echo "<td style=\"font-weight:bold; vertical-align:top\">&nbsp;" . ordinal_suffix($paper[$question]['correct'][$tmp_part_id-1], $language) . "</td>";
             } else {
               echo "</td></td>";
             }

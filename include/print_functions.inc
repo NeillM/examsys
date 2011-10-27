@@ -500,14 +500,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           } else {
             echo "<option value=\"" . $i . "\">" . $i;
           }
-          if ($i == 1) {
-            echo 'xst';
-          } elseif ($i == 2) {
-            echo 'nd';
-          } elseif ($i == 3) {
-            echo 'rd';
-          } else {
-            echo 'th';
+          if ($language == 'en') {
+            if ($i == 1) {
+              echo 'st';
+            } elseif ($i == 2) {
+              echo 'nd';
+            } elseif ($i == 3) {
+              echo 'rd';
+            } else {
+              echo 'th';
+            }
           }
           echo '</option>';
         }
