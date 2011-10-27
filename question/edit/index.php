@@ -397,7 +397,7 @@ foreach ($langstrings as $langstring) {
 if ($critical_error == '') {
   $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
   // TODO: format dates for locale
-  $creation_date = strftime($cfg_short_date, $question->get_created('timestamp'));
+  $creation_date = ($mode == 'edit') ? strftime($cfg_short_date, $question->get_created('timestamp')) : $string['now'];
   $modified_date = ($question->get_last_edited('timestamp')) ? strftime($cfg_short_date, $question->get_last_edited('timestamp')) : $string['never'];
 ?>
     <div class="tab-bar">

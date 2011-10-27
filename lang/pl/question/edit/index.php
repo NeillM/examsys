@@ -200,6 +200,7 @@ $string['optionfbcorrect'] = $string['optionno'] . ' - odzew poprawny';
 $string['optionfbincorrect'] = $string['optionno'] . ' - odzew niepoprawny';
 $string['newoption'] = 'Nowa opcja';
 $string['deletedoption'] = 'Opcja usunięta';
+$string['now'] = 'now';
 $string['never'] = 'nigdy';
 $string['validationerror'] = 'Wystąpił problem podczas wysyłania. Przejrzyj formularz i spróbuj ponownie';
 $string['enterleadin'] = 'Sformułuj pytanie';

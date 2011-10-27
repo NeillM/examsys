@@ -201,6 +201,7 @@ $string['optionfbcorrect'] = $string['optionno'] . ' Correct Feedback';
 $string['optionfbincorrect'] = $string['optionno'] . ' Inorrect Feedback';
 $string['newoption'] = 'New Option';
 $string['deletedoption'] = 'Deleted Option';
+$string['now'] = 'now';
 $string['never'] = 'never';
 $string['validationerror'] = 'There were problems with your submission. Please review the form and re-try';
 $string['enterleadin'] = 'Please enter a leadin for the question';
