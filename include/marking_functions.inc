@@ -616,11 +616,6 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         } elseif ($correct != 0 or $score_method == 'Mark per Option') {
           $totalpos += $marks_correct;
         }
-//        if ($correct != 0 and $score_method != 'Mark per Question') {
-//          $totalpos = $marks_correct;
-//        } elseif ($score_method == 'Mark per Option') {
-//          $totalpos++;
-//        }
         break;
       case 'sct':
         if (isset($_POST["dismiss$question_no"])) {
