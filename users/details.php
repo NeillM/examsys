@@ -364,7 +364,7 @@ a.access:hover {color:white}
       $row_no = 9;
       echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
     }
-    $title_array = array('Dr','Mr','Mrs','Miss','Ms','Professor');
+    $title_array = explode(',', $string['title_types']);
     echo '<select name="title">';
     foreach ($title_array as $individual_title) {
       if ($individual_title == $tmp_title) {

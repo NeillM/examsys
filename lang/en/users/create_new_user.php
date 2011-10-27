@@ -1,5 +1,6 @@
 <?php
 require '../lang/' . $language . '/include/user_search_options.inc';
+require '../lang/' . $language . '/include/titles.inc';
 
 $string['createnewuser'] = 'Create New User';
 $string['getldapdetails'] = 'Get LDAP details';
@@ -35,5 +36,4 @@ $string['reqcourse'] = "Please enter a Type/Course for the user.";
 $string['requsername'] = "Please enter a Username for the user.";
 $string['usernamechars'] = "A username cannot contain an underscore character.";
 $string['reqpassword'] = "Please enter a default Password for the user.";
-$string['title_types'] = "Mr,Mrs,Miss,Ms,Dr,Professor";
 ?>

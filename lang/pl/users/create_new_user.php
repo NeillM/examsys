@@ -1,5 +1,6 @@
 <?php
 require '../lang/' . $language . '/include/user_search_options.inc';
+require '../lang/' . $language . '/include/titles.inc';
 
 $string['createnewuser'] = 'Zdefiniuj nowego użytkownika';
 $string['getldapdetails'] = 'Uzyskaj szczegóły LDAP';
@@ -35,5 +36,4 @@ $string['reqcourse'] = "Wprowadź typ/kurs dla użytkownika.";
 $string['requsername'] = "Wprowadź nazwę użytkownika.";
 $string['usernamechars'] = "Nazwa użytkownika nie może zawierać podkreślnika.";
 $string['reqpassword'] = "Wprowadź domyślne hasło dla użytkownika.";
-$string['title_types'] = "Pani,Pan,Mgr,Dr,Prof.";
 ?>
