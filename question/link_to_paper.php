@@ -116,7 +116,21 @@ td {font-size:80%}
     }
   }
   $result->close();
-  echo "<tr><td>&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"-new-assessment-paper-\"><input type=\"text\" size=\"40\" name=\"new_paper\" value=\"" . $string['newassessmentpaper'] . "\" /></td></tr>\n</table>\n</div>\n";
+  //echo "<tr><td>&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"-new-assessment-paper-\"><input type=\"text\" size=\"40\" name=\"new_paper\" value=\"" . $string['newassessmentpaper'] . "\" /></td></tr>\n</table>\n</div>\n";
+  
+  
+  echo "<tr><td>&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"-new-assessment-paper-\"><input type=\"text\" size=\"40\" name=\"new_paper\" value=\"" . $string['newassessmentpaper'] . "\" />&nbsp;<select name=\"new_module\" style=\"width:220px\">";
+  $result = $mysqli->prepare("SELECT moduleid, fullname FROM teams, modules WHERE teams.name=modules.moduleid AND memberID=?");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->bind_result($moduleid, $fullname);
+  while ($result->fetch()) {
+    echo "<option value=\"$moduleid\">$moduleid: $fullname</option>";
+  }
+  $result->close();
+  echo "</select></td></tr>\n</table>\n</div>";
+  
+  
   echo "<div style=\"text-align:center; padding-top:4px;\"><input type=\"submit\" style=\"width:120px\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" />&nbsp;&nbsp;<input type=\"button\" style=\"width:120px\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>
@@ -152,11 +166,18 @@ td {font-size:80%}
         
     $tmp_paper_title = $_POST['new_paper'];
     
-    // Create the new paper.
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20030101090000','20250101090000','Europe/London','0','','','white','black','#316AC5','#C00000','0',1,'0',40,70,?,'','','',0,'',NULL,NULL,NOW(),0,0,'1','1','1','1','0',NULL,?,'',NULL,NULL,'0',0,'',NULL)");
-    $result->bind_param('sis', $tmp_paper_title, $userID, $session);
+     // Create the new paper.
+    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20100101090000','20250101090000','Europe/London',1,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,'','','',1,'',NULL,NULL,?,0,0,'1','1','1','1','0',?,?,'',NULL,NULL,'0',0,'',NULL,NULL)");
+    $result->bind_param('sssis', $tmp_paper_title, $userID, $created, $_POST['new_module'], $session);
     $result->execute();  
     $property_id = $mysqli->insert_id;
+    $result->close();
+    
+    $hash = $property_id . $created . $userID;   // Generate the encrypted name of the paper.
+
+    $result = $mysqli->prepare("UPDATE properties SET deleted=NULL, crypt_name=? WHERE property_id=? LIMIT 1");
+    $result->bind_param('si', $hash, $property_id);
+    $result->execute();  
     $result->close();
 
     $display_pos = 1;

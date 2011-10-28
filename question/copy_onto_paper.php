@@ -177,12 +177,6 @@ td {font-size:80%}
     $result->execute();  
     $result->close();
   
-    //$result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20030101090000','20250101090000','Europe/London','0','','','white','black','#316AC5','#C00000','0',1,'0',40,70,?,'','','',0,'',NULL,NULL,NOW(),0,0,'1','1','1','1','0',?,?,'',NULL,NULL,'0',0,'')");
-    //$result->bind_param('siss', $tmp_paper_title, $userID, $_POST['new_module'], $session);
-    //$result->execute();
-    //$property_id = $mysqli->insert_id;
-    //$result->close();
-
     $display_pos = 1;
     $screen = 1;
   } else {

@@ -23,23 +23,6 @@
 */
 ?>
 
-<script language="JavaScript">
-  function illegalChar(codeID) {
-    if (codeID == 38) {
-      alert("Character '&' illegal - please use alternative characters in title.");
-    } else if (codeID == 63) {
-      alert("Character '?' illegal - please use alternative characters in title.");
-    } else if (codeID == 64) {
-      alert("Character '@' illegal - please use alternative characters in title.");
-    } else if (codeID == 94) {
-      alert("Character '^' illegal - please use alternative characters in title.");
-    } else if (codeID == 126) {
-      alert("Character '~' illegal - please use alternative characters in title.");
-    }
-    event.returnValue = false;
-  }
-</script>
-
 <div style="z-index:20; display:none; background-color:white; position:fixed; left:190px; top:150px; box-shadow: 2px 2px 2px #808080" id="copy_submenu" onclick="showCopyMenu(event);">
 <form method="post" action="copy.php">
 
@@ -50,7 +33,7 @@
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <td style="text-align:right"><?php echo $string['copyname']; ?></td>
-<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $paper_title; ?>" size="65" onkeypress="if (event.keyCode == 38 || event.keyCode == 63 || event.keyCode == 64 || event.keyCode == 94 || event.keyCode == 126)  illegalChar(event.keyCode);" />
+<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $paper_title; ?>" size="65" />
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $module; ?>" />
 <input type="hidden" name="folder" value="<?php echo $folder; ?>" />

@@ -71,15 +71,6 @@ require '../include/staff_auth.inc';
       alert("<?php echo $string['msg2']; ?>");
       return false;
     }
-    
-    paperTitle = document.theform.paper_name.value;
-    for (a=0; a<paperTitle.length; a++) {
-      char = paperTitle.substr(a,1);
-      if (char == '&' || char == '#' || char == '@' || char == '?' || char == '^' || char == '~') {
-        alert('<?php echo $string['msg3']; ?>');
-        return false;
-      }
-    }
   }
 </script>
 </head>

@@ -7,5 +7,4 @@ $string['name'] = 'Nazwa';
 $string['next'] = 'Dalej >';
 $string['msg1'] = 'Wybierz typ arkusza jaki chcesz utworzyć.';
 $string['msg2'] = 'Podaj unikalną nazwę arkusza, który tworzysz.';
-$string['msg3'] = "Nazwa arkusza nie może zawierać żadnego z następujących znaków:\\r      &  #  @  ?  ^  ~";
 ?>
