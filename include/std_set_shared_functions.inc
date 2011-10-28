@@ -614,14 +614,16 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         } else {
           echo "<option value=\"" . $i . "\">" . $i;
         }
-        if ($i == 1) {
-          echo 'st';
-        } elseif ($i == 2) {
-          echo 'nd';
-        } elseif ($i == 3) {
-          echo 'rd';
-        } else {
-          echo 'th';
+        if ($language == 'en') {
+          if ($i == 1) {
+            echo 'st';
+          } elseif ($i == 2) {
+            echo 'nd';
+          } elseif ($i == 3) {
+            echo 'rd';
+          } else {
+            echo 'th';
+          }
         }
         echo '</option>';
       }
