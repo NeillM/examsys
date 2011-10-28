@@ -193,25 +193,31 @@
     $end_year = $date_array['year'];
     $end_month = $date_array['mon'];
     $end_day = $date_array['mday'];
-    if ($date_array['hours'] < 10) {
-      $end_time = '0' . $date_array['hours'] . '0000';
+    $target_hours = $date_array['hours'];
+    if ($target_hours < 23) $target_hours++;
+    if ($target_hours < 10) {
+      $end_time = '0' . $target_hours . '0000';
     } else {
-      $end_time = $date_array['hours'] . '0000';
+      $end_time = $target_hours . '0000';
     }
   } elseif ($end_month > $date_array['mon'] and $end_year == $date_array['year']) {
     $end_month = $date_array['mon'];
     $end_day = $date_array['mday'];
-    if ($date_array['hours'] < 10) {
-      $end_time = '0' . $date_array['hours'] . '0000';
+    $target_hours = $date_array['hours'];
+    if ($target_hours < 23) $target_hours++;
+    if ($target_hours < 10) {
+      $end_time = '0' . $target_hours . '0000';
     } else {
-      $end_time = $date_array['hours'] . '0000';
+      $end_time = $target_hours . '0000';
     }
   } elseif ($end_day > $date_array['mday'] and $end_month == $date_array['mon'] and $end_year == $date_array['year']) {
     $end_day = $date_array['mday'];
-    if ($date_array['hours'] < 10) {
-      $end_time = '0' . $date_array['hours'] . '0000';
+    $target_hours = $date_array['hours'];
+    if ($target_hours < 23) $target_hours++;
+    if ($target_hours < 10) {
+      $end_time = '0' . $target_hours . '0000';
     } else {
-      $end_time = $date_array['hours'] . '0000';
+      $end_time = $target_hours . '0000';
     }
   }
   echo "<select name=\"end_month\">\n";
