@@ -639,7 +639,7 @@ class IE_Local_Save extends IE_Main {
       $o_row = $this->db->GetBlankTableRow("options");
 
       $o_row['option_text'] = $option->stem;
-      $o_row['correct'] = $option->order;
+      $o_row['correct'] = intval($option->order);
       $o_row['marks_correct'] = $question->marks_correct;
       $o_row['marks_incorrect'] = $question->marks_incorrect;
       $o_row['marks_partial'] = $question->marks_partial;
