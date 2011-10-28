@@ -410,7 +410,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
             $exclude_on = true;
             if (substr($tmp_exclude,$section,1) == '0') {
               for ($c=0; $c<count($sub_user_answers); $c++) {
-                if ($sub_user_answers == 'u') {
+                if ($sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
                   $tmp_user_mark_array[] = 0;
                 } elseif (in_array($sub_user_answers[$c], $sub_paper_answers)) {
                   $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
@@ -433,7 +433,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
               if ($paper_answers[$a] == $user_answers[$a]) {
                 $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
                 $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
-              } elseif ($user_answers[$a] != 'u') {
+              } elseif ($user_answers[$a] != 'u' and $user_answers[$a] != '') {
                 $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
                 $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
               } else {
@@ -456,7 +456,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
             if ($paper_buffer[$q_id]['correct'][$a] == $user_answers[$a+1]) {
               $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
               $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
-            } elseif ($user_answers[$a] != 'u') {
+            } elseif ($user_answers[$a+1] != 'u' and $user_answers[$a+1] != '') {
               $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
               $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
             } else {
@@ -472,7 +472,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
             if ($match == true) {
               $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
               $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_correct'];
-            } elseif ($user_answers[$a] != 'u' or $user_answers[$a] != '') {
+            } elseif ($user_answers[$a+1] != 'u' and $user_answers[$a+1] != '') {
               $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
               $tmp_user_mark_array[] = $paper_buffer[$q_id]['marks_incorrect'];
             } else {

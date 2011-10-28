@@ -1394,6 +1394,7 @@
                   $std_part++;
                   $matching_user_option = 0;
                   foreach ($separate_user_answers as $single_user_answer) {
+                    if ($single_user_answer != '' and $single_user_answer != 'u') $unanswered = false;
                     if ($single_user_answer == $option_order[$tmp_option_no-1]+1) {
                       $matching_user_option = 1;
                     }
@@ -1453,10 +1454,10 @@
             $i++;
           }
           echo "</ol>\n";
-          if ($option_answered=='0') echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
-
-            
-          if ($paper[$question]['score_method'] == 'Mark per Question') {
+          if ($option_answered=='0') {
+            echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
+            $paper[$question]['mark'] = 0;
+          } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
             $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] :$paper[$question]['marks_incorrect']; 
           }
           break;
