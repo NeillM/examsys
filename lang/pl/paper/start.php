@@ -18,7 +18,7 @@ $string['na'] = 'Brak';
 $string['unanswered'] = 'Brak odpowiedzi';
 $string['unansweredquestion'] = '= pytanie bez odpowiedzi';
 $string['negmarking'] = 'ujemna punktacja';
-$string['bonusmark'] = 'dla prawidłowej opcji, plus 1 punkt dodatkowy za poprawną kolejność';
+$string['bonusmark'] = 'dla prawidłowej opcji, plus %d punkt%s dodatkowy za poprawną kolejność';
 $string['calculator'] = 'Kalkulator';
 $string['finishnote'] = '<strong>Uwaga:</strong> Należy wypełnić wszystkie odpowiedzi przed wybraniem &#145;Zakończ&#146; - powrót nie jest możliwy.';
 $string['gobackpink'] = 'Po powrocie, pytania, na które nie udzielono odpowiedzi będą podświetlone na różowo.';

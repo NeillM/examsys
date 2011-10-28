@@ -391,7 +391,11 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         echo $string['marks'];
       }
       if ($neg_marking) echo ', ' . $string['negmarking'];
-      if ($options[0]['score_method'] == 'Bonus Mark') echo ' ' . $string['bonusmark'];  // Used on ranking questions
+      if ($options[0]['score_method'] == 'Bonus Mark') {
+        $plural = ($options[0]['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
+        echo ' ' . sprintf($string['bonusmark'], $options[0]['marks_correct'], $plural);  // Used on ranking questions
+        $marks += $options[0]['marks_correct'];
+      }
       echo ")</div>\n<br /></td></tr>\n";
     //}
     $total_marks += $marks;

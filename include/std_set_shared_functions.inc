@@ -603,10 +603,6 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       $matching_options[] = $display_option['option_text'];
       break;
     case 'rank':
-      if ($part_id == 1 and $display_option['score_method'] == 'Bonus Mark') {
-        $marks += $display_option['marks_correct'];  // Add one mark at start in case all options are answered correctly
-      }
-
       echo "<tr><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\">\n";
       echo "<option value=\"u\"></option>\n";
       if ($require_na) {
