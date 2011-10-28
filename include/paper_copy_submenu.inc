@@ -45,7 +45,7 @@
 
 <table cellpadding="1" cellspacing="1" border="0" style="background-color:white; border:1px solid #C0C0C0; font-size:90%">
 <tr>
-<td colspan="5" style="background-color:#F2B100; height:5px"> </td>
+<td colspan="5" style="background-color:#F2B100; height:5px; padding:0px"> </td>
 </tr>
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>

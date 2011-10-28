@@ -74,7 +74,7 @@
 <div style="z-index:20; display:none; background-color:white; position:fixed; left:190px; top:60px; box-shadow: 2px 2px 2px #808080" id="stats_menu" onclick="showAssStatsMenu(event);">
 <table border="0" cellpadding="3" cellspacing="1" style="width:490px; border:1px solid #C0C0C0; font-size:80%">
 <tr>
-<td style="background-color:#F2B100; height:5px"></td>
+<td style="background-color:#F2B100; height:5px; padding:0px"></td>
 </tr>
 <tr>
 <td align="left">
