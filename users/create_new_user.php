@@ -257,7 +257,7 @@ if ($language != 'en') {
 }
 $titles = explode(',', $string['title_types']);
 foreach ($titles as $tmp_title) {
-  echo '<option value="$tmp_title" selected>$tmp_title</option>';
+  echo "<option value=\"$tmp_title\" selected>$tmp_title</option>";
 }
 ?>
 </select></td></tr>
