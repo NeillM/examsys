@@ -22,10 +22,7 @@
 * @package
 */
 
-  require '../include/staff_student_auth.inc';
-  //if (strpos($userroles,'Staff') === false and strpos($userroles,'External Examiner') === false) {
-  //  access_denied('<strong>Login Failure</strong><br />sorry access denied.',true);
-  //}
+  require '../include/staff_auth.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -37,20 +34,20 @@ p {line-height:150%}
 </style>
 <title><?php echo $string['externalexaminerarea']; ?></title>
 <script language="JavaScript">
-  function startPaper(paperID,fullsc) {
+  function startPaper(paperID, fullsc) {
     var winwidth = screen.width-80;
     var winheight = screen.height-80;
     if (fullsc == 0) {
-      window.open("start.php?paperID="+paperID+"","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("start.php?id="+paperID+"","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     } else {
-      window.open("start.php?paperID="+paperID+"","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("start.php?id="+paperID+"","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
   }
 
   function launchHelp() {
     var winheight = screen.height-100;
     var winwidth = screen.width-100;
-    notice = window.open("../student_help/index.php","help","width=" + winwidth + ",height="+winheight+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
+    notice = window.open("../help/student/index.php","help","width=" + winwidth + ",height="+winheight+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
     notice.moveTo(10,10);
     if (window.focus) {
       notice.focus();
@@ -63,7 +60,7 @@ p {line-height:150%}
 
 <table cellspacing="0" cellpadding="0" border="0" style="width:100%; background-color:#F1F5FB">
 <tr>
-<td><div style="padding-left:15px"><img src="../artwork/rogo_logo.gif" width="130" height="51" alt="logo" border="0" /></div><div style="padding-left:15px; font-size:90%; font-weight:bold"><?php echo $string['externalexamineraccess']; ?> (<?php echo $title . ' ' . $initials . ' ' . $surname; ?>)</div></td>
+<td><div style="padding-left:15px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" style="margin-top:2px" /></div><div style="padding-left:15px; font-size:90%; font-weight:bold"><?php echo $string['externalexamineraccess']; ?> (<?php echo $title . ' ' . $initials . ' ' . $surname; ?>)</div></td>
 <td align="right"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="The University of Nottingham" border="0" /></td>
 </tr>
 <tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
@@ -76,10 +73,10 @@ p {line-height:150%}
 <p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,'$cfg_short_date') AS display_deadline FROM (properties, papers) WHERE deleted IS NULL AND DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() AND properties.property_id=papers.paper AND externals LIKE '%$userID%' GROUP BY paper");
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,'$cfg_short_date') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() AND properties.property_id=papers.paper AND externals LIKE '%$userID%' GROUP BY paper");
   $result->execute();
   $result->store_result();
-  $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $display_deadline);
+  $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $display_deadline, $crypt_name);
   while ($result->fetch()) {
     $reviewed = '';
     $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'$cfg_long_date_time') AS started FROM review_comments WHERE reviewer=$userID and q_paper=?");
@@ -90,8 +87,8 @@ p {line-height:150%}
     $log_results->fetch();
     $log_results->close();
     $restartdate = '';
-    echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$property_id',$fullscreen); return false;\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" border=\"0\" /></a></td>\n";
-    echo "  <td><a href=\"#\" onclick=\"startPaper('$property_id',$fullscreen); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
+    echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$crypt_name',$fullscreen); return false;\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" border=\"0\" /></a></td>\n";
+    echo "  <td><a href=\"#\" onclick=\"startPaper('$crypt_name',$fullscreen); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if (date("Ymd") > $external_review_deadline) {
       printf($string['expired'], $cfg_company);
     } else {
@@ -121,7 +118,7 @@ p {line-height:150%}
   echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"mailto:$support_email\">$support_email</a><br /><span style=\"color:#808080\">Help and support for external examiners reviewing papers in Rogō.</span></td></tr>\n";
   
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" border=\"0\" /></a></td>\n</td><td><span style=\"color:#808080\">Rogō $ts_version is an open source e-assessment system developed by the University of Nottingham.<br />For further details about Rogo please see the project website:</a> <a href=\"https://suivarro.nottingham.ac.uk/trac/rogo/\">suivarro.nottingham.ac.uk/trac/rogo/</a></td></tr>\n";
+  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" border=\"0\" /></a></td>\n</td><td><span style=\"color:#808080\">Rogō $ts_version is an open source e-assessment system lead by Information Services at the University of Nottingham.<br />For further details about Rogo please see the project website:</a> <a href=\"https://suivarro.nottingham.ac.uk/trac/rogo/\">suivarro.nottingham.ac.uk/trac/rogo/</a></td></tr>\n";
   $mysqli->close();
 ?>
 

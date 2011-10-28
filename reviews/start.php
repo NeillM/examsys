@@ -22,19 +22,17 @@
 * @package
 */
 
-require '../include/staff_student_auth.inc';
+require '../include/staff_auth.inc';
 require 'display_functions.inc';
 require '../include/reviews.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
 require '../config/start.inc';
 
-if (strpos($userroles,'Staff') === false and strpos($userroles,'External Examiner') === false) {
-  access_denied('Sorry access denied.', $output_header = false);
-}
+check_var('id', 'GET', true, false);
 
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
-  $stmt->bind_param('i',$userID);
+  $stmt->bind_param('i', $userID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
@@ -53,7 +51,7 @@ if (isset($_GET['no_screens'])) {
 }
 
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
-  $stmt->bind_param('i',$userID);
+  $stmt->bind_param('i', $userID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
@@ -63,11 +61,11 @@ $stmt->close();
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND property_id=? AND papers.question=questions.q_id ORDER BY screen");
-$stmt->bind_param('i', $_GET['paperID']);
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+$stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password);
 while ($stmt->fetch()) {
   $no_screens = $screen;
   $original_paper_type = $paper_type;
@@ -101,6 +99,7 @@ $stmt->close();
 
 // Extract the posted variables.
 $restart = 0;
+$current_screen = 1;
 if (isset($_POST['sessionid'])) {
   if (isset($_POST['next'])) {
     $current_screen = $_POST['current_screen'];
@@ -111,10 +110,9 @@ if (isset($_POST['sessionid'])) {
   }
   $sessionid = $_POST['sessionid'];
 } else {
-  $current_screen = 1;
   if (($paper_type == '1' or $paper_type == '2' or $paper_type == '3') and !isset($_GET['mode'])) {  //Mode is used for staff preview.
     $stmt = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started FROM log$paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
-    $stmt->bind_param('ii', $_GET['paperID'], $userID);
+    $stmt->bind_param('ii', $property_id, $userID);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($sessionid);
@@ -172,29 +170,15 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 .matrix {border:1px solid #808080; border-collapse:collapse}
 .matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:lower-roman}
+textarea {font-size:100%}
 </style>
-<?php if ($latex_needed == 1) {?>
-<script src="../javascript/MathJaxConfig.js"> 
-  MathJax.Hub.Config({
-    showProcessingMessages: false,
-	menuSettings: {zoom:"none"},
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-	preRemoveClass: "MathJax_Preview",
-    tex2jax: {
-	    showProcessingMessages: false,
-	    inlineMath: [["[tex]","[/tex]"],["[tex]","[/tex]"]],
-		preview: "none"
-	},
-	"HTML-CSS": { scale: <?php echo ($textsize + 30); ?>,
-	              showMathMenu: false,
-	              availableFonts: ["TeX"] 
-				}
-  });
-</script>
-<?php }?>
+
 <script src="start.js" type="text/javascript"></script>
 <script language="JavaScript" src="../javascript/flash_include.js"></script>
+<script type="text/javascript" src="/javascript/jquery-1.6.1.min.js"></script>
+<?php if ($latex_needed == 1) {?>
+<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+<?php }?>
 <script language="JavaScript" type="text/javascript">
   window.history.go(1);
 <?php
@@ -214,7 +198,7 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 ?>
   function jumpScreen() {
     document.questions.button_pressed.value='previous';
-    document.questions.action="start.php?paperID=<?php echo $_GET['paperID']; ?>";
+    document.questions.action="start.php?id=<?php echo $_GET['id']; ?>";
     document.questions.submit();
   }
 <?php
@@ -225,9 +209,9 @@ word-wrap: break-word; /* Internet Explorer 5.5+ */
 <body onload="refreshparent(); StartClock()" onunload="KillClock()">
 <?php
 if ($current_screen < $no_screens) {
-  echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'];
+  echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'];
 } else {
-  echo "<form method=\"post\" name=\"questions\" action=\"finish.php?paperID=" . $_GET['paperID'];
+  echo "<form method=\"post\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'];
 }
 echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear navigation mode.
 ?>
@@ -235,7 +219,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   <tr><td valign="top">
   <?php
   if (isset($_POST['old_screen']) and $_POST['old_screen'] != '' and time() <= $review_deadline) {  
-    record_comments($_GET['paperID'],$_POST['old_screen'],$mysqli,$_POST,$userID,$review_type);
+    record_comments($property_id, $_POST['old_screen'], $mysqli, $_POST, $userID, $review_type);
   }
 
   echo $top_table_html;
@@ -274,7 +258,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $screen_pre_submitted = 0;
   $reviews_array = array();
   $result = $mysqli->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen=? AND reviewer=$userID");
-  $result->bind_param('ii', $_GET['paperID'], $current_screen);
+  $result->bind_param('ii', $property_id, $current_screen);
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);
@@ -296,7 +280,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $previous_q_type = '';
 
   $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
-  $question_data->bind_param('ii', $_GET['paperID'], $current_screen);
+  $question_data->bind_param('ii', $property_id, $current_screen);
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
@@ -322,7 +306,6 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
       $questions_array[$q_no]['q_media_height'] = $q_media_height;
       $questions_array[$q_no]['q_option_order'] = $q_option_order;
       $questions_array[$q_no]['dismiss'] = '';
-      //$questions_array[$q_no]['correct_fback'] = $correct_fback;
     }
     $questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
@@ -350,18 +333,10 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
   echo "<input type=\"hidden\" name=\"button_pressed\" value=\"\" />\n";
 
-  if ($current_screen > $no_screens) {
-    echo "<br />\n<div class=\"notes\" style=\"text-align:center; font-size:90%\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong> Please complete all questions before clicking &#145;Finish&#146;, you will not be able to go back.";
-    if ($bidirectional == 1) echo "<br />When you go back unanswered questions will be highlighted in pink.";
-    echo "</div>\n<br >\n";
-  } elseif ($bidirectional == 0) {
-    echo "<br />\n<div class=\"notes\" style=\"text-align:center; font-size:90%\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong> Please complete all questions before clicking &#145;Screen $current_screen &#146;, you will not be able to go back.</div>\n<br >\n";
-  }
-
   echo $bottom_html;
   echo '<input type="text" style="background-color:transparent; text-align:center; font-size:80%; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
   if ($bidirectional == 1 and $no_screens > 1) {
-    if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='start.php?paperID=" . $_GET['paperID'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; Screen " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
+    if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='start.php?id=" . $_GET['id'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; Screen " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
     if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
       echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";
       for ($i=1; $i<=$no_screens; $i++) {
@@ -375,9 +350,9 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
     }
   }
   if ($current_screen > $no_screens) {
-    echo "<input type=\"submit\" style=\"width:120px; font-weight:bold\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"Finish\" />&nbsp;\n";
+    echo "<input type=\"submit\" style=\"width:120px; font-weight:bold\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;\n";
   } else {
-    echo "<input type=\"submit\" style=\"width:120px\" name=\"next\" value=\"Screen $current_screen &gt;\" />&nbsp;\n";
+    echo "<input type=\"submit\" style=\"width:120px\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;\n";
   }
   echo '</td></tr></table>';
   $mysqli->close();

@@ -13,6 +13,6 @@ $string['copyrightmsg'] = 'Questions held within Rogō are protected by UK copyr
 $string['helpandsupport'] = 'Help and Support';
 $string['onlinesupportsystem'] = 'Online support system for students';
 $string['email'] = 'Email';
-$string['deadline'] = '1Deadline:';
+$string['deadline'] = 'Deadline:';
 $string['notset'] = '&lt;not set&gt;';
 ?>

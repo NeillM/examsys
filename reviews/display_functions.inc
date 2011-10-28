@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once realpath(dirname(__FILE__).DIR_SEPARATOR.'../classes/mathsutils.class.php');
+require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
 function checkVariables($number) {
   global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
@@ -31,7 +31,7 @@ function checkVariables($number) {
 }
 
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset) {
-  global $external_review_deadline, $reviews_array, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss;
+  global $external_review_deadline, $reviews_array, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $string, $language;
 
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
@@ -100,7 +100,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
       if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
       echo "</td><td>";
-      if ($question['notes'] != '') echo '<p class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
+      if ($question['notes'] != '') echo '<p class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
@@ -120,7 +120,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '</td><td>';
       }
       $li_set = 1;
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $question['notes'] . '</p>';
       if ($question['q_type'] != 'hotspot') echo $question['leadin'];
     }
   }
@@ -145,11 +145,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     case 'dichotomous':
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
       if (substr($question['score_method'],0,2) == 'TF') {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">True</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">False</td>";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['false'] . "</td>";
       } else {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">No</td>";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['no'] . "</td>";
       }
-      if (strpos($question['score_method'],'Abstain') !== false) echo "<td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">Abstain</td><td>&nbsp;</td>";
+      if (strpos($question['score_method'],'Abstain') !== false) echo "<td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . "</td><td>&nbsp;</td>";
       echo "</tr>\n";
       break;
     case 'mcq':
@@ -163,7 +163,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
     case 'mrq':
       $mrq_correct = 0;
-      if ($question['score_method'] == 'AllItemsCorrect') {
+      if ($question['score_method'] == 'Mark per Question') {
         $mrq_correct = $option_no;
       } else {
         for ($i=0; $i<$option_no; $i++) {
@@ -186,14 +186,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $na = true;
         }
         if ($question['notes'] != '') {
-          echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
+          echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"" . $string['note'] . "\" />&nbsp;<strong>" . $string['note'] . "</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
         }
         if ($question['scenario'] != '') {
           echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
         }
         echo '<tr><td></td><td></td>';
         if ($na == true) {
-          echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">N/A</td>";
+          echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">" . $string['na'] . "</td>";
         }
         echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[0]</td>";
         $temp_end = substr_count($question['score_method'],'|') - 1;
@@ -218,18 +218,18 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
     case 'sct':
       if ($question['scenario'] != '') {
-        echo "<tr><td class=\"q_no\">" . ($question_no + $question_offset) . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">Clinical Vignette</td></tr>\n";
+        echo "<tr><td class=\"q_no\">" . ($question_no + $question_offset) . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">" . $string['clinicalvignette'] . "</td></tr>\n";
         echo '<tr><td style="vertical-align:top; text-align:right">';
-        if ($calculator == 1) echo '<a href="#" onclick="openCalculator(); return false;"><img src="/artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
+        if ($calculator == 1) echo '<a href="#" onclick="openCalculator(); return false;"><img src="/artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" border="0" /></a>';
         echo "</td><td>";
-        if ($question['notes'] != '') echo '<p class="notes"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>NOTE:</strong>&nbsp;' . $question['notes'] . '</p>';
+        if ($question['notes'] != '') echo '<p class="notes"><img src="/artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $question['notes'] . '</p>';
         echo $question['scenario'] . "<br />\n<br />";
         $li_set = 1;
       }
       if ($question['q_media'] != '') {
         if ($li_set == 0) {
           echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-          if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="/artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
+          if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="/artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" border="0" /></a>';
           echo '</td><td>';
         }
         echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
@@ -237,18 +237,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
     
       $sct_parts = explode('~',$question['leadin']);
+      $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
       echo '<table cellpadding="2" cellspacing="0" border="0">';
-      echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">Hypothesis</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">New Information</td></tr>\n";
-      echo "<tr><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">If you were thinking of the following diagnosis</span><br />" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\"><span style=\"color:#808080\">And then you find:</span><br />" . $sct_parts[1] . "</td></tr>\n";
+      echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_parts[1] . "</td></tr>\n";
       echo '</table>';
       
-      if ($question['score_method'] == 1) {
-        echo "\n<p>Then this hypothesis becomes:</p>\n";
-      } elseif ($question['score_method'] == 2) {
-        echo "\n<p>Then this investigation becomes:</p>\n";
-      } elseif ($question['score_method'] == 3) {
-        echo "\n<p>Then this treatment becomes:</p>\n";
-      }
+      echo '<p><strong>';
+      echo $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
+      echo '</strong></p>';
       
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
       break;
@@ -259,7 +255,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $part_id++;
     switch ($question['q_type']) {
       case 'dichotomous':
-        if (($question['score_method'] == 'TF_NegativeAbstain') or ($question['score_method'] == 'TF_NegativeAbstainHalf') or ($question['score_method'] == 'TF_PostiveAbstain') or ($question['score_method'] == "YN_NegativeAbstain")) {
+        if (($question['display_method'] == 'TF_NegativeAbstain') or ($question['display_method'] == 'TF_NegativeAbstainHalf') or ($question['display_method'] == 'TF_PostiveAbstain') or ($question['display_method'] == "YN_NegativeAbstain")) {
           $abstain = true;
         } else {
           $abstain = false;
@@ -280,10 +276,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($display_option['option_text'] != '') echo $display_option['option_text'];
         if ($display_option['o_media'] != '') {
           if ($display_option['option_text'] != '') echo '<br />';
-          echo display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']);
+          echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']);
         }
         echo "</td></tr>\n";
-        $marks++;
+        if ($question['score_method'] == 'Mark per Question') {
+          $marks = $display_option['marks_correct'];
+        } else {
+          $marks += $display_option['marks_correct'];
+        }
         break;
       case 'calculation':
         $figures = explode(',',$display_option['option_text']);
@@ -424,14 +424,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           if ($question['options'][$i]['correct'] == 9990) $require_na = true;         
         }
            
-        if ($part_id == 1 and $question['score_method'] == 'BonusMark') {
-          $marks++;  // Add one mark at start in case all options are answered correctly
+        if ($part_id == 1 and $question['score_method'] == 'Bonus Mark') {
+          $marks += $display_option['marks_correct'];  // Add one mark at start in case all options are answered correctly
         }
         
         echo "<tr><td class=\"option\"><select name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" onchange=\"rankCheck(" . $question_no . "," . $part_id . ",$option_no,$total_rank_no);\">\n";
         echo $question . "<option value=\"9999\"></option>\n";
         if ($require_na) {
-          echo $question . "<option value=\"9990\">N/A</option>\n";
+          echo $question . "<option value=\"9990\">" . $string['na'] . "</option>\n";
         }
         for ($i=1; $i<=$total_rank_no; $i++) {
           if ($i == $question['options'][$part_id-1]['correct']) {
@@ -439,14 +439,16 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           } else {
             echo "<option value=\"" . $i . "\">" . $i;
           }
-          if ($i == 1) {
-            echo 'st';
-          } elseif ($i == 2) {
-            echo 'nd';
-          } elseif ($i == 3) {
-            echo 'rd';
-          } else {
-            echo 'th';
+          if ($language == 'en') {
+            if ($i == 1) {
+              echo 'st';
+            } elseif ($i == 2) {
+              echo 'nd';
+            } elseif ($i == 3) {
+              echo 'rd';
+            } else {
+              echo 'th';
+            }
           }
           echo '</option>';
         }
@@ -547,7 +549,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo '</p>';
         }
         if (count($blank_mark) > 0) {
-          foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
+          if ($question['score_method'] == 'Mark per Question') {
+            $marks = $display_option['marks_correct'];
+          } else {
+            foreach ($blank_mark as $individual_mark) {
+              $marks += $display_option['marks_correct'];
+            }
+          }
         }
         break;
       case 'textbox':
@@ -560,22 +568,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
         } else {
           include_once('wysiwyg_editor.inc');
-          echo "<p><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\"></textarea></p>\n";
-          echo "<script>\n";
-          echo "var oEdit$question_no = new InnovaEditor(\"oEdit$question_no\");\n";
-          echo "oEdit$question_no.mode=\"XHTMLBody\";\n";
-          echo "oEdit$question_no.useTagSelector=false;\n";
-          echo "oEdit$question_no.useBR=false;\n";
-          echo "oEdit$question_no.width=\"" . ($textbox_size[0] * 7). "px\";\n";
-          echo "oEdit$question_no.height=\"" . ($textbox_size[1] * 28) . "px\";\n";
-          echo "oEdit$question_no.features=[\"StyleAndFormatting\",\"TextFormatting\",\"ListFormatting\",\"BoxFormatting\",\"ParagraphFormatting\",\"CssText\",\"|\",\"Cut\",\"Copy\",\"PasteText\",\"|\",\"Undo\",\"|\",\"Bold\",\"Italic\",\"Underline\",\"|\",\"Superscript\",\"Subscript\",\"|\",\"JustifyLeft\",\"JustifyCenter\",\"JustifyRight\",\"|\",\"Numbering\",\"Bullets\",\"|\",\"Table\",\"Characters\"];\n";
-          echo "oEdit$question_no.arrStyle = [[\"BODY\",false,\"\",\"background:white; margin:2px; color:black; font-size:90%; font-family:Arial\"]];\n";
-          echo "oEdit$question_no.btnStyles = true;\n";
-          echo "oEdit$question_no.REPLACE(\"q$question_no\");\n</script>\n";
+          echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . ($textbox_size[0] * 7) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
         }
         
         echo "</blockquote>\n";
-        echo "<pre style=\"font-family:Arial,sans-serif; font-style:italic; color:$labelcolor\"><strong>Model Answer:</strong><br />" . $question['correct_fback'] . "</pre>\n";
+        echo "<pre style=\"font-family:Arial,sans-serif; font-style:italic; color:$labelcolor\"><strong>" . $string['modelanswer'] . "</strong><br />" . $question['correct_fback'] . "</pre>\n";
         $marks += $display_option['marks'];
         break;
       case 'hotspot':
@@ -600,7 +597,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
           write_string('</object>');
         </script>
-        <br /><span class="mk">(Select a tab firstly then single click with the mouse to record your answer. Single click again if you need to change that answer.)</span>
         </div><br />
         <?php
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"u\" />\n";
@@ -616,7 +612,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $max_col1 = 0;
         $max_col2 = 0;
         $tmp_first_split = explode(";", $question['options'][0]['correct']);
-        $tmp_second_split = explode('|', $tmp_first_split[8]);
+        $tmp_second_split = explode('|', $tmp_first_split[11]);
         foreach ($tmp_second_split as $ind_label) {
           $label_parts = explode('$', $ind_label);
           if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
@@ -720,10 +716,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     } else {
       echo "<tr><td></td><td>";
       echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 1px solid #C0C000; background-color:#FFFFC0; width:700px\">\n";
-      echo "<tr><td colspan=\"4\"><strong>Information:</strong> (not visible to candidates)</td></tr>";
-      echo "<tr><td colspan=\"4\" style=\"text-align:justify\">This is a Calculation type question. Variables are calculated at run-time and will vary for different candidates. The answer, however, is based on a single formula. Candidates will not see <strong>\$A</strong>, etc they will only see the randomly generated figures.</td></tr>";
+      echo "<tr><td colspan=\"4\">" . $string['notvisible'] . "</td></tr>";
+      echo "<tr><td colspan=\"4\" style=\"text-align:justify\">" . $string['reviewermsg'] . "</td></tr>";
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>";
-      echo "<tr style=\"font-weight:bold\"><td style=\"width:80px; border-bottom: 1px solid #C0C000\">Variable</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">Generated</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">Min</td><td style=\"width:460px; border-bottom: 1px solid #C0C000\">Max</td></tr>\n";
+      echo "<tr style=\"font-weight:bold\"><td style=\"width:80px; border-bottom: 1px solid #C0C000\">Variable</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['generated'] . "</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['min'] . "</td><td style=\"width:460px; border-bottom: 1px solid #C0C000\">" . $string['max'] . "</td></tr>\n";
       if (isset($A)) echo "<tr><td>\$A</td><td>$A</td><td>$A_min</td><td>$A_max</td></tr>\n";
       if (isset($B)) echo "<tr><td>\$B</td><td>$B</td><td>$B_min</td><td>$B_max</td></tr>\n";
       if (isset($C)) echo "<tr><td>\$C</td><td>$C</td><td>$C_min</td><td>$C_max</td></tr>\n";
@@ -739,7 +735,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "</td></tr>\n";
     
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-      if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
+      if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" border="0" /></a>';
       echo '</td><td>';
     }
     
@@ -820,7 +816,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_option_no++;
       }
       echo '</select>';
-      if ($answer_no > 1) echo '<div class="mk">(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)</div>';      
+      if ($answer_no > 1) echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';      
       echo '</div><br /></li>';
     }
     echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" />';
@@ -830,10 +826,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   } elseif ($question['q_type'] == 'matrix') {
     $part_id = 1;
     if ($matching_media[0] != '') {
-      echo "<p align=\"center\">" . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0]) . "</p>\n";
+      echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0]) . "</p>\n";
     }
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="1" class="matrix">';
-    //echo '<table cellpadding="2" cellspacing="0" border="1">'; 
     echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
     foreach ($matching_options as $single_option) {
       echo '<td>' . $single_option . '</td>';
@@ -858,7 +853,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
     }    
     echo '</table>';
-    $marks = $part_id - 1;
+    if ($question['score_method'] == 'Mark per Question') {
+      $marks = $display_option['marks_correct'];
+    } else {
+      $marks = ($part_id - 1) * $display_option['marks_correct'];
+    }
   } elseif ($question['q_type'] == 'sct') {
     echo '</table>';
   }
@@ -869,10 +868,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($marks == 0) {
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     } else {
-      echo "<div class=\"mk\">($marks mark";
-      if ($marks <> 1) echo 's';
-      if ($neg_marking) echo ', negative marking';
-      if ($question['score_method'] == 'Bonus Mark') echo ' for correct options, plus 1 bonus mark for fully correct order';  // Used on ranking questions
+      echo "<div class=\"mk\">($marks ";
+      if ($marks == 1) {
+        echo $string['mark'];
+      } else {
+        echo $string['marks'];
+      }
+      if ($neg_marking) echo ', ' . $string['negmarking'];
+      if ($question['score_method'] == 'Bonus Mark') echo ' ' . $string['bonusmark'];  // Used on ranking questions
       echo ")</div>\n<br /></td></tr>\n";
     }
   } else {
@@ -883,17 +886,17 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo "<tr><td></td><td>";
       
     echo "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:900px; font-size:100%\">";
-    echo "<tr><td style=\"width:360px; font-weight:bold\">Q" . ($question_no + $question_offset) . " Comments</td>";
+    echo "<tr><td style=\"width:360px; font-weight:bold\">" . sprintf($string['qcomments'], ($question_no + $question_offset)) . "</td>";
     if (isset($reviews_array[$q_id]['category'])) {
       if ($reviews_array[$q_id]['category'] == 1) {
-        echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" checked />&nbsp;Question OK</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;Minor/some problems</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;Major/many problems</td></tr>\n";
+        echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" checked />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
       } elseif ($reviews_array[$q_id]['category'] == 2) {
-        echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" />&nbsp;Question OK</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" checked />&nbsp;Minor/some problems</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;Major/many problems</td></tr>\n";
+        echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" checked />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
       } else {
-        echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" />&nbsp;Question OK</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;Minor/some problems</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" checked />&nbsp;Major/many problems</td></tr>\n";
+        echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" checked />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
       }
     } else {
-      echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" checked />&nbsp;Question OK</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;Minor/some problems</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;Major/many problems</td></tr>\n";
+      echo "<td style=\"background-color:#C0FFC0; color:#004000; background-image:url('../artwork/ok_background.png'); background-repeat:repeat-x; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" checked />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFFFC0; background-image:url('../artwork/minor_background.png'); background-repeat:repeat-x; color:#404000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FFC0C0; background-image:url('../artwork/major_background.png'); background-repeat:repeat-x; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
     }
     echo "<tr><td colspan=\"4\"><textarea cols=\"80\" rows=\"3\" style=\"font-family:Arial,sans-serif; width:898px\" name=\"extcomments$question_no\">";
     if (isset($reviews_array[$q_id]['comment'])) echo $reviews_array[$q_id]['comment']; 

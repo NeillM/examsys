@@ -22,17 +22,11 @@
 * @package
 */
 
-require '../include/staff_student_auth.inc';
+require '../include/staff_auth.inc';
 require '../include/reviews.inc';
 require '../include/errors.inc';
 
-if (strpos($userroles,'Staff') === false and strpos($userroles,'External Examiner') === false) {
-  Header("WWW-authenticate: basic realm=\"TouchStone\"");
-  Header("HTTP/1.0 401 Unauthorised");
-  echo "<html>\n<head>\n<title>Access Denied</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:100%; color:#BF0000\">\n<table cellpadding=\"10\" cellspacing=\"0\" border=\"0\" style=\"width:400px\">\n<tr><td style=\"width:36px\"><img src=\"/artwork/access_denied.png\" width=\"61\" height=\"64\" alt=\"!\" /></td><td><strong>Login Failure</strong><br />sorry access denied</td></tr>\n</table>\n</body></html>";
-  $mysqli->close();
-  exit;
-}
+check_var('id', 'GET', true, false);
 
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
   $stmt->bind_param('i',$userID);
@@ -44,11 +38,11 @@ if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_col
 $stmt->close();
   
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT paper_title, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, DATE_FORMAT(external_review_deadline,\"%Y%m%d\") AS external_review_deadline, DATE_FORMAT(internal_review_deadline,\"%Y%m%d\") AS internal_review_deadline FROM properties WHERE property_id=?");
-$stmt->bind_param('i', $_GET['paperID']);
+$stmt = $mysqli->prepare("SELECT property_id, paper_title, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, DATE_FORMAT(external_review_deadline,\"%Y%m%d\") AS external_review_deadline, DATE_FORMAT(internal_review_deadline,\"%Y%m%d\") AS internal_review_deadline FROM properties WHERE crypt_name=?");
+$stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($paper_title, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $external_review_deadline, $internal_review_deadline);
+$stmt->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $external_review_deadline, $internal_review_deadline);
 $stmt->fetch();
 $stmt->close();
 
@@ -69,7 +63,7 @@ if ($userroles == 'External Examiner') {
 ?>
 <html>
 <head>
-<title>TouchStone</title>
+<title>Rogō</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
@@ -96,17 +90,16 @@ if ($userroles == 'External Examiner') {
 <body oncontextmenu="return false;" onload="refreshparent()">
 <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; border-bottom:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
-  echo '<tr><td class="raised_tbl"><div class="paper">' . $paper_title . '</div></td><td align="center" class="raised_tbl" width="50"><img src="../artwork/uni_logo.png" width="170" height="47" alt="University Logo" border="0" /></td></tr>';
+  echo '<tr><td class="raised_tbl"><div class="paper">' . $paper_title . '</div></td><td align="center" class="raised_tbl" width="50"><img src="../artwork/uni_logo.png" width="160" height="67" alt="University Logo" border="0" /></td></tr>';
   echo '</table>';
   
   if ($_POST['old_screen'] != '' and date("Ymd") <= $external_review_deadline) {  
-    record_comments($_GET['paperID'],$_POST['old_screen'],$mysqli,$_POST,$userID,$review_type);
+    record_comments($property_id, $_POST['old_screen'], $mysqli, $_POST, $userID, $review_type);
   } else {
     echo "Deadline = $external_review_deadline";
   }
-  
-  echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>Thank you for reviewing <strong>' . $paper_title . '</strong>. Your comments have been recorded.</p><br />';
-  echo '</blockquote><br /><div style="text-align:center; border: 1px black solid; padding:10px; margin-left:100px; margin-right:100px" align="center"><input type="button" name="close" value="&nbsp;Close Window&nbsp;" onclick="window.close();" /></div>';
+  echo '<blockquote><br />';
+  echo '<div style="text-align:center; border: 1px black solid; padding:10px; margin-left:100px; margin-right:100px" align="center"><input type="button" name="close" value="&nbsp;Close Window&nbsp;" onclick="window.close();" /></div>';
 
   $mysqli->close();
 ?>
