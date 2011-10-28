@@ -155,6 +155,7 @@ function clickMEEiFrame(frame) {
                     var src = $(this).attr('src');
                     var data = src.substr(src.indexOf('?'));
                     var data = data.substr(1);
+                    var data = unescape(data);
                     var data = $.parseJSON(data);
 
                     $(this).removeClass('mee_iframe');
