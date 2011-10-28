@@ -457,8 +457,8 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log1 TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log2 TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log3 TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log4 TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log4_overall TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".log4 TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".log4_overall TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log5 TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_late TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -470,7 +470,7 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
-	    echo self::$db->error . "<br/>";
+	    echo self::$db->error . "<br />";
         self::logWarning(array('013'=>'Database user ' . self::$cfg_db_staff_user . ' could not set permissions'));
       }  
     }
@@ -494,7 +494,7 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
-	    echo self::$db->error . "<br/>";
+	    echo self::$db->error . "<br />";
         self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sct_user . ' could not set permissions'));
       }  
     }
@@ -519,7 +519,7 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
-	    echo self::$db->error . "<br/>";
+	    echo self::$db->error . "<br />";
         self::logWarning(array('013'=>'Database user ' . self::$cfg_db_inv_user . ' could not set permissions'));
       }  
     }
@@ -537,7 +537,7 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
-	    echo self::$db->error . "<br/>";
+	    echo self::$db->error . "<br />";
         self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sysadmin_user . ' could not set permissions'));
       }  
     }
@@ -1008,6 +1008,7 @@ QUERY;
           `idfeedback_release` int(11) NOT NULL auto_increment,
           `paper_id` smallint(5) default NULL,
           `date` datetime NOT NULL,
+          `type` enum('objectives','questions') default NULL,
           PRIMARY KEY  (`idfeedback_release`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
 QUERY;
@@ -1251,9 +1252,9 @@ QUERY;
           `numeric_score` int(11) default NULL,
           `feedback` text,
           `student_grade` char(25) default NULL,
-          `year` enum('year1','year2','year3','year4','year5','year6','cp1','cp2','cp3','f1','graduate') default NULL,
           `examinerID` mediumint(8) unsigned default NULL,
           `osce_type` enum('electronic','paper') default NULL,
+          `year` tinyint(4) default NULL,
           PRIMARY KEY  (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
 QUERY;
@@ -1389,10 +1390,12 @@ QUERY;
           `latex_needed` tinyint(4) default '0',
           `password` char(20) default NULL,
           `retired` datetime,
+          `crypt_name` varchar(32) default NULL,
           PRIMARY KEY  (`property_id`),
           KEY `paper_title` (`paper_title`),
           KEY `paper_owner` (`paper_ownerID`),
-          KEY `question_type` (`paper_type`)
+          KEY `question_type` (`paper_type`),
+          KEY `crypt_name_idx` (`crypt_name`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
 QUERY;
 
@@ -1743,7 +1746,7 @@ QUERY;
           `grade` char(30) default NULL,
           `surname` char(35) default NULL,
           `initials` char(10) default NULL,
-          `title` enum('Dr','Miss','Mr','Mrs','Ms','Professor') default NULL,
+          `title` varchar(30) default NULL,
           `username` char(15) default NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
