@@ -476,6 +476,7 @@ class IE_qti12_Save extends IE_Main {
 
     foreach ($question->options as $option) {
       if ($option->order == '') $option->order = 0;
+      $option->order = intVal($option->order);
       $optlist[$option->order] = OrderToStr($option->order);
     }
     $optlist[9990] = "N/A";
