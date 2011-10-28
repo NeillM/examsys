@@ -376,6 +376,13 @@
         }
         $log_array[$qID]['totalpos'] += $totalpos;
         break;
+      case 'likert':
+        if (isset($log_array[$qID][1][$answer])) {
+          $log_array[$qID][1][$answer]++;
+        } else {
+          $log_array[$qID][1][$answer] = 1;
+        }
+        break;
     }
   }
 
@@ -553,7 +560,6 @@
           }
           break;
         case 'calculation':
-          
           if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
           
           echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
@@ -777,6 +783,24 @@
             echo "><strong>$label</strong></td></tr>\n";
           }
           break;
+        case 'likert':
+          $scale = explode('|', $display_method);
+          echo "<tr>\n";
+          for ($i=0; $i<count($scale)-1; $i++) {
+            echo "<td>" . $scale[$i] . "</td>";
+          }
+          echo "</tr>\n";
+          echo "<tr>\n";
+          for ($i=1; $i<count($scale); $i++) {
+            if (isset($freq_log[$q_id][1][$i])) {
+              $t = number_format(($freq_log[$q_id][1][$i]/$user_total)*100,0);
+            } else {
+              $t = 0;
+            }
+            echo "<td style=\"text-align:center\">t=" . $t . "%</td>";
+          }
+          echo "</tr>\n";
+          break;
         case 'mcq':
           if (isset($excluded[$q_id])) {
             $tmp_exclude = $excluded[$q_id];
@@ -867,7 +891,11 @@
               echo ">$individual_option</td></tr>\n";
             }
           }
-          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
+          if ($top_log[$q_id]['totalpos'] == 0 or $bottom_log[$q_id]['totalpos'] == 0) {
+            $d = 0;
+          } else {
+            $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
+          }
           echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
           echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>\n";
           break;
@@ -1032,15 +1060,37 @@
       echo "<tr><td colspan=\"2\"><strong>Top Group:</strong></td><td colspan=\"2\"><strong>Bottom Group:</strong></td></tr>\n";
       echo "<tr><td colspan=\"2\">(mean word count = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(mean word count = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
       for ($i=0; $i<40; $i++) {
-        echo "<tr><td>" . $top_words[$i]['used'] . "</td><td>" . $top_words[$i]['word'] . "</td><td>" . $bottom_words[$i]['used'] . "</td><td>" . $bottom_words[$i]['word'] . "</td></tr>";
+        if (isset($top_words[$i]['word']) or isset($bottom_words[$i]['word'])) {
+          echo "<tr>";
+          if (isset($top_words[$i]['word'])) {
+            echo "<td>" . $top_words[$i]['used'] . "</td><td>" . $top_words[$i]['word'] . "</td>";
+          } else {
+            echo "<td></td><td></td>";
+          }
+          if (isset($bottom_words[$i]['word'])) {
+            echo "<td>" . $bottom_words[$i]['used'] . "</td><td>" . $bottom_words[$i]['word'] . "</td>";
+          } else {
+            echo "<td></td><td></td>";
+          }
+          echo "</tr>";
+        }
       }
-          
-      $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
+      
+      if ($top_log[$q_id]['totalpos'] == 0 or $bottom_log[$q_id]['totalpos'] == 0) {
+        $d = 0;
+      } else {
+        $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
+      }
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
       if (isset($freq_log[$q_id]['unmarked']) and $freq_log[$q_id]['unmarked'] > 0) {
         echo "<tr><td>p=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" /></td><td>d=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" /></td><td colspan=\"2\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;" . $freq_log[$q_id]['unmarked'] . " unmarked scripts</td></tr>\n";
       } else {
-        echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"3\">" . dStats($d)  . "</td></tr>\n";
+        if ($freq_log[$q_id]['totalpos'] == 0) {
+          $p = 0;
+        } else {
+          $p = $freq_log[$q_id]['mark'] / $freq_log[$q_id]['totalpos'];
+        }
+        echo "<tr><td>" . pStats($p) . "</td><td colspan=\"3\">" . dStats($d)  . "</td></tr>\n";
       }
       echo "</table></td></tr>\n";
     } elseif ($q_type == 'matrix') {
@@ -1480,7 +1530,7 @@ p {margin-left:0px; margin-right:0px}
     $result->execute();
     $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $display_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
     $result->store_result();
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       if ($display_header == true) {
         echo '<tr><td class="h">';
         echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';

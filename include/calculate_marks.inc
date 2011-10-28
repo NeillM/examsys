@@ -106,8 +106,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'likert':
-      $parts = explode('|',$display_method);
-      $marks = $parts[count($parts) - 2];
+      $marks = 0;
       break;
     case 'mcq':
       if (substr($tmp_exclude,0,1) == '0') $marks += $question_marks;
