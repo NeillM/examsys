@@ -33,7 +33,7 @@
 <title>Rogō<?php echo " $cfg_install_type"; ?></title>
 <style>
 body {font-family:Arial,sans-serif}
-h1 {font-size:140%}
+h1 {font-size:150%; color:#C00000}
 </style>
 </head>
 <body>
