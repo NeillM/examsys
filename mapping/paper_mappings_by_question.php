@@ -214,7 +214,7 @@
           echo '<tr><td colspan="3" style="height:10px"></td></tr>';
           echo '<tr><td></td><td colspan="3" class="divider">Screen ' . ($old_screen + $missing) . '</td></tr>';
           echo '<tr><td colspan="3" style="height:5px"><img src="../artwork/divider_bar.gif" width="290" height="1" /></td></tr>';
-          echo '<tr><td colspan="3" style="background-color:#FFC0C0; padding:5px"><strong>Warning:</strong> there are no questions on this screen.<br />This will produce an error if the paper is tested!</td></tr>';
+          echo '<tr><td colspan="3" style="background-color:#FFC0C0; padding:5px"><strong>" . $string['warning'] . ":</strong> " . $string['noquestiononscreen'] . "</td></tr>';
         }
       }
       echo "<tr><td colspan=\"4\" style=\"padding-left:4px\"><table border=\"0\" style=\"padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['screen'] . " " . $temp_array[$x]['screen'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
@@ -267,7 +267,7 @@
     $sessiontitle = '';
     if(count($objByModule) > 0) {
       if(isset($objByModule['none_of_the_above']['mapped']) AND $objByModule['none_of_the_above']['mapped'] == 1) {
-        echo "<ul class=\"$class\" style=\"list-style-type:none; margin-left:10px; padding:0px\">\n<li style=\"padding-left:10px; color:red; background-image:url(../artwork/small_warning_16.png); background-repeat:no-repeat\"><strong>Warning:</strong> This question does not map to the module!</li></ul>\n";
+        echo "<ul class=\"$class\" style=\"list-style-type:none; margin-left:10px; padding:0px\">\n<li style=\"padding-left:10px; color:red; background-image:url(../artwork/small_warning_16.png); background-repeat:no-repeat\"><strong>" . $string['warning'] . ":</strong> " . $string['questiononnotmap'] . "</li></ul>\n";
       } else {
         echo "<ul class=\"$class\" style=\"list-style-type:disc; margin-left:20px; margin-top:5px\">\n";
         foreach($objByModule as $module => $mappings) {
