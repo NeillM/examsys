@@ -187,7 +187,7 @@
     unset($objsBySession['none_of_the_above']);
     foreach($objsBySession as $module => $sessions ) {
       if (count($objsBySession) > 1) {
-        echo "<tr><td colspan=\"3\"><h1>$module Objectives</h1></td></tr>";
+        echo "<tr><td colspan=\"3\"><h1>$module " . $string['objectives'] . "</h1></td></tr>";
       }
       foreach($sessions as $identifier => $sessionData) {
         if ($ul_start) {
