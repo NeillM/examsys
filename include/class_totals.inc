@@ -994,6 +994,8 @@ if ($log_query->num_rows > 0) {
       }
     }
     
+    var_dump($user_results);
+    
     
     /*
     // Remove additional users from array who do not match passed metadata settings.
