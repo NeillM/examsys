@@ -193,7 +193,7 @@ function check_MSCAA($q_id, $dblink) {
 }
 
 function check_lock_status($checkout_author, $checkout_time, &$disabled, $dblink, $questionID) {
-  global $userID;
+  global $userID, $string;
   
   // Check for lockout.
   $current_time = time();
