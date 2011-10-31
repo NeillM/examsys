@@ -994,9 +994,6 @@ if ($log_query->num_rows > 0) {
       }
     }
     
-    var_dump($user_results);
-    
-    
     /*
     // Remove additional users from array who do not match passed metadata settings.
     $meta_parts = explode('=',$_GET['meta1']);
@@ -1046,7 +1043,7 @@ if ($log_query->num_rows > 0) {
     $user_results = array_csort($user_results, $tmp_sort, $ordering);
   }
 }
-
+    var_dump($user_results);
 if (substr($marking,0,1) == '2') {
   get_ss_pass($ss_pass, $ss_hon);
 
