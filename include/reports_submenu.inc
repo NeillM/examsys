@@ -138,6 +138,7 @@
     $start_hour = $date_array['hours'];
     $start_min = $date_array['minutes'];
   }
+  
   echo "<select name=\"start_month\">\n";
 
   for ($i=0; $i<12; $i++) {

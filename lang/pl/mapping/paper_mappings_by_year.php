@@ -1,6 +1,6 @@
 <?php
 require '../lang/' . $language . '/include/paper_options.inc'; 
-require '../lang/' . $language . '/include/months.inc';
+require_once '../lang/' . $language . '/include/months.inc';
 
 $string['start'] = 'Start';
 $string['owner'] = 'Właściciel';
