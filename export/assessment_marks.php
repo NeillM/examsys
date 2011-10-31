@@ -77,7 +77,20 @@
       } else {
         echo '"' . $individual['gender'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
       }
-      foreach ($individual['mark_array'] as $individual_mark) echo ",$individual_mark";
+      foreach ($paper_buffer as $q_id => $question) {
+        if (isset($individual['mark_array'][$q_id])) {
+          if (is_array($individual['mark_array'][$q_id])) {
+            foreach ($individual['mark_array'][$q_id] as $tmp_mark) {
+              echo ',' . $tmp_mark;
+            }
+          } else {
+            echo ',' . $individual['mark_array'][$q_id];
+          }
+        } else {
+          echo ',0';
+        }
+      }
+      //foreach ($individual['mark_array'] as $individual_mark) echo ",$individual_mark";
       echo "\n";
     }
     $row_written++;

@@ -591,7 +591,6 @@
               if ($score_array[3] != '') echo ' ' . $score_array[3];
               echo ')</strong>';
             } else {
-              var_dump($tmp_answer);
               echo ' <strong>(' . $tmp_answer[1] . ')</strong>';
             }
           } else {
@@ -1364,7 +1363,11 @@
               } else {
                 echo "<select name=\"q" . $question. "_" . $std_part . "\" style=\"color:red; text-decoration:line-through; border:1px solid red\">\n";
               }
-              if ($user_answers[$i] == 'u' or $user_answers[$i] == '') echo "<option value=\"\" style=\"color:#808080\">" . $string['unanswered'] . "</option>\n";
+              if ($user_answers[$i] == 'u' or $user_answers[$i] == '') {
+                echo "<option value=\"\" style=\"color:#808080\">" . $string['unanswered'] . "</option>\n";
+              } else {
+                $option_answered = 1;
+              }
               $tmp_option_no = 1;
               for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {
                 if ($option_order[$option_no]+1 == $user_answers[$i]) {
@@ -1399,7 +1402,7 @@
                       $matching_user_option = 1;
                     }
                   }
-                  $option_answered+=$matching_user_option;
+                  $option_answered += $matching_user_option;
 				
                   echo '<tr>';
                   if ($tmp_display_correct_answer == '1') {
@@ -1427,7 +1430,7 @@
                       $matching_user_option = 1;
                     }
                   }
-                  $option_answered+=$matching_user_option;
+                  $option_answered += $matching_user_option;
                   echo '<tr><td></td><td>';
                   if ($matching_user_option == 1 and $tmp_display_students_response == '1' and substr($tmp_exclude,$section,1) == '0') {
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
@@ -1454,7 +1457,7 @@
             $i++;
           }
           echo "</ol>\n";
-          if ($option_answered=='0') {
+          if ($option_answered == 0) {
             echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
             $paper[$question]['mark'] = 0;
           } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
