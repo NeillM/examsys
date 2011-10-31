@@ -74,16 +74,16 @@ if (isset($_POST['submit']) and $unique_degree == true) {
   <script language="JavaScript">
   function checkForm() {
     if (edit_degree.degree.value == "") {
-      alert ("Please enter a code for the degree.");
+      alert ("<?php echo $string['degreeentercode'];?>");
       return false;
     }
     if (edit_degree.description.value == "") {
-      alert ("Please enter a title for the degree.");
+      alert ("<?php echo $string['degreeentertitle'];?>");
       return false;
     }
   }
   function codeWarning() {
-    alert("The degree code <?php echo $tmp_degree; ?> is already in use. Please enter an alternative code.");
+    alert("<?php echo sprintf($string['degreecodeinuse'],$tmp_degree); ?>");
   }
   </script>
   </head>
