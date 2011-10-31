@@ -89,6 +89,8 @@ $string['comments'] = 'Comments';
 $string['mapping'] = 'Mapping';
 $string['limitedsave'] = 'Limited Save';
 $string['save'] = 'Save Changes';
+$string['questionlocked'] = 'This question is currently locked for editing by';
+$string['isinreadonly'] = 'It is now in read only mode.';
 $string['correct'] = 'Correct';
 $string['mscaamsg'] = '<strong>MSC-AA Question</strong> This question has been imported from the MSC-AA and cannot be modified.';
 $string['lockedmsg'] = '<strong>Question Locked</strong> This question is now locked and cannot be modified. <a href="#" class="help-link" rel="161">Click for more details.</a>';

@@ -209,7 +209,7 @@ function check_lock_status($checkout_author, $checkout_time, &$disabled, $dblink
         display_error("Lock Select Error", $editor->error);
       }
       echo "<script language=\"JavaScript\">\n";
-      echo "  alert('This question is currently locked for editing by $title $initials $surname. It is now in read only mode.')";
+      echo "  alert('" . $string['questionlocked'] . " $title $initials $surname. " . $string['isinreadonly'] . "')";
       echo "</script>\n";
       $disabled = ' disabled';
     } else {
