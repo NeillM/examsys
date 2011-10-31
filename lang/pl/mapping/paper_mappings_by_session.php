@@ -4,7 +4,7 @@ require '../lang/' . $language . '/paper/details.php';
 $string['start'] = 'Start';
 $string['owner'] = 'Właściciel';
 $string['question'] = 'Pytanie';
-$string['objectives'] = 'Objectives';
+$string['objectives'] = 'Cele';
 $string['type'] = 'Typ';
 $string['marks'] = 'Punkty';
 $string['modified'] = 'Zmodyfikowano';
