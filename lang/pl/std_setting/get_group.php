@@ -1,6 +1,6 @@
 <?php
 $string['selectreviewers'] = 'Wybierz recenzentów';
-$string['standardsetter'] = 'Ustawiacz standardowy';//??
+$string['standardsetter'] = 'Ustawiacz standardów';//??
 $string['date'] = 'Data';
 $string['passscore'] = 'Wynik zaliczający';//??
 $string['method'] = 'Metoda';
