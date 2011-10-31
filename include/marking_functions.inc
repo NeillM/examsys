@@ -145,6 +145,10 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   $old_score_method = '';
   $old_display_method = '';
   $correct_rank = true;
+  
+  $no_correct = 0;
+  $no_incorrect = 0;
+  
   $question_no = 0;
   $q_type = '';
   $question_part = 0;
@@ -213,12 +217,12 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       } elseif ($old_type == 'dichotomous') {
         if ($old_score_method == 'Mark per Question') {
           $totalpos = $old_marks_correct;
-          if ($mark == 0 and $correct_rank) {    // Abstained to all options
+          if ($no_correct == 0 and $no_incorrect == 0) {    // Abstained to all options
             $mark = 0;
-          } elseif ($correct_rank) {
-            $mark = $old_marks_correct;
-          } else {
+          } elseif ($no_incorrect > 0) {
             $mark = $old_marks_incorrect;
+          } else {
+            $mark = $old_marks_correct;
           }
         }
       }
@@ -253,6 +257,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       $old_marks_partial = $marks_partial;
 
       $correct_rank = true;
+      $no_correct = 0;
+      $no_incorrect = 0;
       $mrq_options_selected = 0;
       $mark = 0;
       $totalpos = 0;
@@ -375,9 +381,10 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
         if ($user_response == $correct) {
           $mark += $marks_correct;
+          $no_correct++;
         } elseif ($user_response != '') {
           $mark += $marks_incorrect;
-          $correct_rank = false;
+          $no_incorrect++;
         }
         $totalpos += $marks_correct;
         break;
