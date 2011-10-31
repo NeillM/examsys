@@ -9,7 +9,7 @@ $string['editproperties'] = 'Edytuj właściwości';
 $string['reports'] = 'Raporty';
 $string['mappedobjectives'] = 'Cele odwzorowane';
 $string['importmarks'] = 'Importuj punkty';//??
-$string['standardssetting'] = 'Ustalanie standardów';
+$string['standardssetting'] = 'Wyznaczanie standardu';
 $string['importoscemarks'] = 'Importuj punkty OSCE';
 $string['copypaper'] = 'Kopiuj arkusz';
 $string['deletepaper'] = 'Usuń arkusz';
@@ -39,7 +39,7 @@ $string['computerlabs'] = 'Pracownie komputerowe';
 $string['peerreviewed'] = 'Zrecenzowano wewnętrznie';
 $string['peerreviewes'] = 'Recenzje wewnętrznie';
 $string['externalreviews'] = 'Recenzje zewnętrzne';
-$string['standardsset'] = 'Ustawienia standardów';
+$string['standardsset'] = 'Standard wyznaczony';
 $string['mapping'] = 'Odwzorowanie';
 
 $string['questionbanktasks'] = 'Działania dot. banku pytań';

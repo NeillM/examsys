@@ -1,5 +1,5 @@
 <?php
-$string['standardssetting'] = 'Ustalanie standardów';
+$string['standardssetting'] = 'Wyznaczanie standardu';
 $string['mark'] = 'punkt';
 $string['marks'] = 'punkty/ów';
 $string['negmarking'] = 'Ujemna punktacja';
