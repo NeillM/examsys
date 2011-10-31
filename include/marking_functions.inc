@@ -219,10 +219,10 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $totalpos = $old_marks_correct;
           if ($no_correct == 0 and $no_incorrect == 0) {    // Abstained to all options
             $mark = 0;
-          } elseif ($no_incorrect > 0) {
-            $mark = $old_marks_incorrect;
-          } else {
+          } elseif ($no_correct == strlen($saved_response)) {
             $mark = $old_marks_correct;
+          } else {
+            $mark = $old_marks_incorrect;
           }
         }
       }
@@ -823,9 +823,9 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   } elseif ($old_type == 'dichotomous') {
     if ($old_score_method == 'Mark per Question') {
       $totalpos = $old_marks_correct;
-      if ($mark == 0 and $correct_rank) {    // Abstained to all options
+      if ($no_correct == 0 and $no_incorrect == 0) {    // Abstained to all options
         $mark = 0;
-      } elseif ($correct_rank) {
+      } elseif ($no_correct == strlen($saved_response)) {
         $mark = $old_marks_correct;
       } else {
         $mark = $old_marks_incorrect;

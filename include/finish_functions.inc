@@ -734,10 +734,10 @@
           if ($paper[$question]['score_method'] == 'Mark per Question') {
             if ($no_correct == 0 and $no_incorrect == 0) {
               $paper[$question]['mark'] = 0;
-            } elseif ($no_incorrect > 0) {
-              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
-            } else {
+            } elseif ($no_correct == $no_options) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
+            } else {
+              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
             }
           }
           if ($answered  == false) {
