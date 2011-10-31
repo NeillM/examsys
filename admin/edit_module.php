@@ -146,11 +146,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <script language="JavaScript">
     function checkForm() {
       if (myform.moduleid.value == "") {
-        alert ("Please enter an Identifier for the module.");
+        alert ("<?php echo $string['entermoduleidentifier']; ?>");
         return false;
       }
       if (myform.fullname.value == "") {
-        alert ("Please enter a title for the module.");
+        alert ("<?php echo $string['entermoduletitle']; ?>");
         return false;
       }
     }
@@ -167,7 +167,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if ($unique_moduleid == false) {
   ?>
   function moduleWarning() {
-    alert("The module ID <?php echo $tmp_moduleid; ?> is already in use. Please enter an alternative ID.");
+    alert("<?php echo sprintf($string['moduleidinuse'], $tmp_moduleid); ?>");
   }
   <?php
   }
@@ -255,7 +255,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
   echo '</select></td></tr>';
   ?>
-    <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select name="vle_api"><option value="">&lt;No lookup&gt;</option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>>Networked Learning Environment (NLE)</option></select></td></tr>
+    <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option><option value="NLE"<?php if ($vle_api == 'NLE') echo ' selected'; ?>><?php echo $string['nle']; ?></option></select></td></tr>
     <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
     <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($active == 1) echo ' checked'; ?> /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($selfenroll == 1) echo ' checked'; ?> /></td></tr>

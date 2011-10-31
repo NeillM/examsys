@@ -8,7 +8,7 @@ $string['save'] = 'Zachowaj';
 $string['createcourse'] = 'Utwórz nowy kurs';
 $string['editcourse'] = 'Edytuj kurs';
 $string['deletecourse'] = 'Usuń kurs'; 
-$string['degreeentercode'] = '1Please enter a code for the degree.';
-$string['degreeentertitle'] = '1Please enter a title for the degree.';
-$string['degreecodeinuse'] = '1The degree code %s is already in use. Please enter an alternative code.';
+$string['degreeentercode'] = 'Wprowadź kod dla stopnia.';
+$string['degreeentertitle'] = 'Wprowadź tytuł dla stopnia.';
+$string['degreecodeinuse'] = 'Kod stopnia %s jest już używany. Wprowadź inny kod.';
 ?>
