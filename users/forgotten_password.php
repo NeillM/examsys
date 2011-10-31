@@ -161,11 +161,11 @@ if($message == '') {
     }
 ?>
     			</ul>
-				</td>
-			</tr>
 <?php
   }
 ?>
+        </td>
+      </tr>
     	<tr>
     		<td colspan="2">
     			<table border="0" style="width:100%; text-align:left">
