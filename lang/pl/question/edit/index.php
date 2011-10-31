@@ -137,7 +137,7 @@ $string['correctanswersmsg'] = '(Zastosuj kliknięcie z &lt;CTRL&gt;<br />by zaz
 $string['onlinehelp'] = 'Pomoc online';
 $string['blankinstructionsddl'] = 'Aby utworzyć puste pole umieść znaczniki [blank] oraz [/blank] przed i po opcji, którą chcesz dodać.<br />Zawsze umieszczaj poprawną odpowiedź jako <strong>pierwszą</strong> opcję, po której umieść dystraktory (kolejność wszystkich opcji jest losowana automatycznie.<br />np. Bolesław <span class="blank-tag">[blank]</span>Chrobry,Krzywousty,Wstydliwy,Pobożny<span class="blank-tag">[/blank]</span> był pierwszym koronowanym władcą Polski;';
 $string['blankinstructionstextboxes'] = 'Aby utworzyć puste pole umieść znaczniki [blank] oraz [/blank] przed i po opcji, którą chcesz dodać.<br />Pomiędzy znacznikami [blank] dodaj odpowiedź poprawną i wszystkie odpowiedzi alternatywne, które brzmią prawdopodobnie (rozdzielone przecinkami).<br />np. Londyn jest stolicą <span class="blank-tag">[blank]</span>Anglii,Wielkiej Brytanii,Zjednoczonego Królestwa,UK,GB<span class="blank-tag">[/blank]</span>?';
-$string['dropdownlists'] = 'Lista wyboru (losowana kolejność)';
+$string['dropdownlists'] = 'Lista wyboru (kolejność losowa)';
 $string['textboxes'] = 'Puste pole tekstowe';
 $string['rows'] = 'wiersze(y)';
 $string['cols'] = 'kolumn(y)';

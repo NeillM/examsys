@@ -11,4 +11,4 @@ $string['qtiimported'] = 'Zaimportowano plik QTI';
 $string['questionproblems'] = 'Niektóre z pytań nie zostały zaimportowane poprawnie.';
 $string['hadproblemsimporting'] = 'Błąd importowania %d z %d pytań.';
 $string['importedquestions'] = 'Zaimportowano %d pytań.';
-$string['backtopaper'] = 'Back to paper';
+$string['backtopaper'] = 'Powrót do arkusza';
