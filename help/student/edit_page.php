@@ -105,7 +105,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     
     function checkForm() {
       if (document.add_form.title.value == "" || document.add_form.title.value == " ") {
-        alert ("Please enter a title for this help page.");
+        alert ('<?php echo $string['entertitle']; ?>');
         return false;
       }
     }
@@ -150,7 +150,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
       $editor->fetch();
       $editor->close();
       echo "<script language=\"JavaScript\">\n";
-      echo "  alert('This page is currently locked for editing by $title $initials $surname. It is now in read only mode.')";
+      echo "  alert('" . $string['entertitle'] . " $title $initials $surname. " . $string['isinreadonly'] . "')";
       echo "</script>\n";
       $checkout_authorID = $page_checkout_authorID;
       $disabled = ' disabled';
@@ -167,7 +167,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   }
 ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID; ?>" />
-  <div style="text-align:center; padding-top:8px"><input style="font-family:Arial,sans-serif; width:120px" type="submit" name="save_changes" value="Save"<?php echo $disabled; ?> />&nbsp;&nbsp;<input style="font-family:Arial,sans-serif; width:120px" type="submit" name="cancel" value="Cancel" /></div>
+  <div style="text-align:center; padding-top:8px"><input style="font-family:Arial,sans-serif; width:120px" type="submit" name="save_changes" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> />&nbsp;&nbsp;<input style="font-family:Arial,sans-serif; width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
   <input type="hidden" name="edit_id" value="<?php echo $edit_id; ?>" /><input type="hidden" name="original_id" value="<?php echo $_GET['id']; ?>" />
 </form>
 </body>
