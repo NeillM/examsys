@@ -74,7 +74,7 @@
   }
 
   function editNLESession(calendar_year) {
-    alert(<?php echo $string['thisisnle']; ?>);
+    alert("<?php echo $string['thisisnle']; ?>");
   }
   
   function highlight(lineID) {
