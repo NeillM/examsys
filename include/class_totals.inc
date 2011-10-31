@@ -863,6 +863,7 @@ $stmt->close();
     
 $warnings = array('deleted_qns' => array());
 if ($log_query->num_rows > 0) {
+  echo "hi";
   while ($log_query->fetch()) {
     if (isset($_GET['repmodule']) AND $_GET['repmodule'] != '' AND $user_modules[$tmp_userID]['moduleid'] != $_GET['repmodule']) {
 	    continue; //this user is not on the module set in repmodule so dont put them in the array
