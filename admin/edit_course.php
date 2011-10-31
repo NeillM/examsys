@@ -25,6 +25,8 @@
 require '../include/sysadmin_auth.inc';
 
 $unique_degree = true;
+$tmp_degree = '';
+
 if (isset($_POST['submit']) and $_POST['degree'] != $_POST['old_degree']) {
   // Check for unique degree name
   $tmp_degree = trim($_POST['degree']);
@@ -64,7 +66,7 @@ if (isset($_POST['submit']) and $unique_degree == true) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-  <title>Edit Degree</title>
+  <title>Edit Course</title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
     input, textarea {font-family:Arial,sans-serif; color:black}
