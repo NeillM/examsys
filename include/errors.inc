@@ -21,6 +21,10 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
+
+require '/lang/' . $language . '/include/errors.inc';
+
+
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true) {
   // $error_title - heading which is displayed
   // $error_description - discription of the error together with any information that the user can
@@ -31,7 +35,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
   global $mysqli, $support_email, $string;
   
   if ($headers == false) {
-    echo "<html>\n<head>\n<title>Error</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black\">\n";
+    echo "<html>\n<head>\n<title>" . $string['error'] . "</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black\">\n";
   }
 ?>
 <table border="0" cellpadding="5" cellspacing="0" style="font-size:100%">
@@ -50,29 +54,29 @@ function display_error($error_title, $error_description, $headers = true, $stop_
 }
 
 function uploadError($errCode) {
-  $engDescription = 'Error - ';
+  $engDescription = $string['uploaderrormsg0'];
   
   switch ($errCode) {
     case 0:
-      $engDescription = 'No problem, the file is uploaded.';
+      $engDescription = $string['uploaderrormsg1'];
       break;
     case 1:
-      $engDescription = 'The uploaded file was bigger then  upload_max_filesize in php.ini.';
+      $engDescription = $string['uploaderrormsg2'];
       break;
     case 2:
-      $engDescription = 'The uploaded file was bigger then MAX_FILE_SIZE in html-form.';
+      $engDescription = $string['uploaderrormsg3'];
       break;
     case 3:
-      $engDescription = 'File partialy uploaded.';
+      $engDescription = $string['uploaderrormsg4'];
       break;
     case 4:
-      $engDescription = 'No file was uploaded.';
+      $engDescription = $string['uploaderrormsg5'];
       break;
     case 6:
-      $engDescription = 'No temp directory.';
+      $engDescription = $string['uploaderrormsg6'];
       break;
     default:
-      $engDescription = 'Unknown problem.';
+      $engDescription = $string['uploaderrormsg7'];
       break;
   }
   
