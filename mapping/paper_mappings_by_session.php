@@ -80,7 +80,7 @@
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($paper_title, $moduleID, $session, $start_date, $end_date, $paper_type);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:80%\">\n";
     echo '<tr><td style="background-color:#F1F5FB">';
     echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -101,7 +101,7 @@
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $parts);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $excluded[$q_id] = $parts;
   }
   $result->close();
@@ -116,12 +116,11 @@
   $result->bind_param('ii', $paperID, $paperID);
   $result->execute();
   $result->bind_result($random_mark, $total_mark, $q_group, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $row_no++;
     $temp_array[$q_id]['screen'] = $screen;
     $temp_array[$q_id]['q_type'] = $q_type;
     $temp_array[$q_id]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin))));
-    if (strlen($temp_array[$q_id]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$q_id]['leadin'],0,160) . "...";
     $temp_array[$q_id]['p_id'] = $p_id;
     $temp_array[$q_id]['q_id'] = $q_id;
     $temp_array[$q_id]['display_last_edited'] = $display_last_edited;
@@ -142,22 +141,22 @@
   }
   $result->close();
 
+  ?>
+  <table cellpadding="0" cellspacing="0" border="0" style="font-size:80%; background-color:white; width:100%">
+  <tr><td style="background-color:#F1F5FB">
+  <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%; width:378px; background-color:#F1F5FB">
+  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)"><?php echo $string['bysession']; ?></td>
+  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
+  <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
+  </table>
+  </td><td style="width:100%; background-color:#F1F5FB; text-align:right">&nbsp;</td>
+  </tr>
+  <tr><td colspan="4" style="background-color:#1E3C7B">&nbsp;</td></tr>
+  <?php
   $questionID_list = substr($questionID_list,0,-1);
   $total_random_mark = 0;
   $total_marks = 0;
   if ($row_no > 0) {
-    ?>
-    <table cellpadding="0" cellspacing="0" border="0" style="font-size:80%; background-color:white; width:100%">
-    <tr><td style="background-color:#F1F5FB">
-    <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%; width:378px; background-color:#F1F5FB">
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)"><?php echo $string['bysession']; ?></td>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
-    <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
-    </table>
-    </td><td style="width:100%; background-color:#F1F5FB; text-align:right">&nbsp;</td>
-    </tr>
-    <tr><td colspan="4" style="background-color:#1E3C7B">&nbsp;</td></tr>
-    <?php
       $year_in_title = false;
       $tmp_match = '';
       if (preg_match( '/\d\d\d\d.\d\d\d\d/' , $paper_title , $matches) == 1) {
