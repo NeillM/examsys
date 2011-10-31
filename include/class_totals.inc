@@ -805,7 +805,6 @@ if ($paper_type == '0') {
   $log_query = $mysqli->prepare("(SELECT log0.q_id, 0 AS paper_type, grade, screen, duration, log0.started AS order_started, user_answer, DATE_FORMAT(log0.started,'%d/%m/%Y %H:%i') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log0.userID, mark, totalpos, status, attempt FROM (log0, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log0.q_paper=log_metadata.paperID AND log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_id=questions.q_id AND roles LIKE '%Student%' AND q_paper=? AND users.id=log0.userID AND grade LIKE ? AND (users.roles LIKE '%Student%' OR users.roles='graduate') AND log0.started>=? AND log0.started<=?) UNION ALL (SELECT log1.q_id, 1 AS paper_type, grade, screen, duration, log1.started AS order_started, user_answer, DATE_FORMAT(log1.started,'%d/%m/%Y %H:%i') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log1.userID, mark, totalpos, status, attempt FROM (log1, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log1.q_paper=log_metadata.paperID AND log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_id=questions.q_id AND q_paper=? AND users.id=log1.userID AND grade LIKE ? AND (users.roles='Student' OR users.roles='graduate') AND log1.started>=? AND log1.started<=?) ORDER BY username, order_started, screen");
   $log_query->bind_param('isssisss', $_GET['paperID'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate'], $_GET['paperID'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '2') {
-  echo "SELECT log2.q_id, 2 AS paper_type, grade, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started,'%d/%m/%Y %H:%i') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log2.userID, mark, totalpos, status, attempt FROM (log2, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=" . $_GET['paperID'] . " AND users.id=log2.userID AND grade LIKE '" . $_GET['repdegree'] . "' AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=" . $_GET['startdate'] . " AND log2.started<=" . $_GET['enddate'] . " ORDER BY username, log2.started, screen";
   $log_query = $mysqli->prepare("SELECT log2.q_id, 2 AS paper_type, grade, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started,'%d/%m/%Y %H:%i') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log2.userID, mark, totalpos, status, attempt FROM (log2, log_metadata, questions, users) LEFT JOIN sid ON users.id=sid.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=? AND users.id=log2.userID AND grade LIKE ? AND (users.roles='Student' OR users.roles='graduate') AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=? AND log2.started<=? ORDER BY username, log2.started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repdegree'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '5') {
@@ -911,14 +910,8 @@ if ($log_query->num_rows > 0) {
       $tmp_array['duration'] = $user_duration;
       $tmp_array['paper_type'] = $paper_type;
     }
-    //if (!empty($paper_buffer[$q_id])) {
-	    getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array);
-    //} elseif ($q_type != 'random') {
-    //  echo $q_id . '=' . $mark;
-    //	if (!in_array($q_id, $warnings['deleted_qns'])) {
-	    	//$warnings['deleted_qns'][] = $q_id;
-    //	}
-    //}
+    getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array);
+
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {
       $tmp_array['questions']++;
@@ -1009,8 +1002,6 @@ if ($log_query->num_rows > 0) {
     }
     */
     
-    
-  
     // Sort the arrays
     sort($median);
     if (isset($_GET['sortby'])) {
@@ -1044,7 +1035,7 @@ if ($log_query->num_rows > 0) {
     $user_results = array_csort($user_results, $tmp_sort, $ordering);
   }
 }
-    var_dump($user_results);
+
 if (substr($marking,0,1) == '2') {
   get_ss_pass($ss_pass, $ss_hon);
 
