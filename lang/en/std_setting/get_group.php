@@ -1,8 +1,9 @@
 <?php
-$string['selectreviewers'] = '1Select Reviewers';
-$string['standardsetter'] = '1Standard Setter';
-$string['date'] = '1Date';
-$string['passscore'] = '1Pass Score';
-$string['method'] = '1Method';
-$string['review'] = '1Review';
+$string['selectreviewers'] = 'Select Reviewers';
+$string['standardssetting'] = 'Standards Setting';
+$string['standardsetter'] = 'Standard Setter';
+$string['date'] = 'Date';
+$string['passscore'] = 'Pass Score';
+$string['method'] = 'Method';
+$string['review'] = 'Review';
 ?>

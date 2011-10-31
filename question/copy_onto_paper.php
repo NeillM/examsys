@@ -104,7 +104,7 @@ td {font-size:80%}
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if (($paper_type == '2' or $paper_type == '4') and date("Y-m-d H:i:s") > $end_date) {
       //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } elseif ($start_date < date("Y-m-d H:i:s") and $end_date > date("Y-m-d H:i:s")) {
@@ -119,7 +119,7 @@ td {font-size:80%}
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($moduleid, $fullname);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     echo "<option value=\"$moduleid\">$moduleid: $fullname</option>";
   }
   $result->close();
