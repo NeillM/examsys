@@ -17,4 +17,5 @@ $string['msg4'] = 'Brak lat do kopiowania';
 $string['msg5'] = 'Kopiuj cele z';
 $string['msg6'] = 'Kopiuj cele do';
 $string['copy'] = 'Kopiuj';
+$string['thisisnle'] = 'To jest moduł NLE. Aby zmienić dla niego cele sesji należy edytować NLE.';
 ?>

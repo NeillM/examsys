@@ -33,7 +33,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onclick="hideSessCopyMenu(event);">
 <head>
-<title>TouchStone: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
+<title>Rogō: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style>
 .obj_no {text-align:right; padding-right:6px}
@@ -74,7 +74,7 @@
   }
 
   function editNLESession(calendar_year) {
-    alert("This is an NLE-based module. To change its session objectives you must edit the NLE.");
+    alert(<?php echo $string['thisisnle']; ?>);
   }
   
   function highlight(lineID) {
