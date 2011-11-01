@@ -55,11 +55,11 @@ if ($parent != '') {
   $result->close();
 }
 if (strpos($userroles,'SysAdmin') !== false) {
-  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW() WHERE id=?");
+  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id=?");
 } else {
-  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW() WHERE id=? AND ownerID=$userID");
+  $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id=? AND ownerID=$userID");
 }
-$result->bind_param("i", $_POST['folderID']);
+$result->bind_param('i', $_POST['folderID']);
 $result->execute();
 $result->close();
 
