@@ -535,8 +535,9 @@ function getMSCAA($paperID, $mysqlidb) {
     }
 
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
-      if($old_display_pos != -1) {
+      if ($old_display_pos != -1) {
         $temp_array[$row_no2]['options'] = $options;
+        $tmp_array[$row_no2]['o_media'] = $old_o_media;
       }
       $options = 0;
       if ($old_q_type == 'random') {
@@ -650,7 +651,7 @@ function getMSCAA($paperID, $mysqlidb) {
     $old_q_media_width = $q_media_width;
     $old_q_media_height = $q_media_height;
     $old_option_text[] = $option_text;
-    $old_o_media[] = $o_media;
+    if (trim($o_media != '')) $old_o_media[] = $o_media;
     $old_marks = $marks_correct;
     if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
@@ -658,6 +659,7 @@ function getMSCAA($paperID, $mysqlidb) {
   
   if ($row_no > 0) {
     $temp_array[$row_no]['options'] = $options;
+    $temp_array[$row_no]['o_media'] = $old_o_media;
     if ($old_q_type == 'random') {
       $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
       if ($temp_array[$row_no2]['status'] != 'Experimental') {
@@ -787,11 +789,7 @@ function getMSCAA($paperID, $mysqlidb) {
   $marks_incorrect_error = false;
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
-    if($temp_array[$x]['options'] == 0) {
-      var_dump($temp_array[$x]['o_media']);
-      exit;
-      $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
-    }
+    if ($temp_array[$x]['options'] == 0 and count($temp_array[$x]['o_media']) == 0) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
     if ($temp_array[$x]['status'] == 'Incomplete') $paper_warnings['Incomplete'][] = $question_number + 1;
     if ($temp_array[$x]['status'] == 'Beta') $paper_warnings['Beta'][] = $question_number + 1;
     if ($temp_array[$x]['status'] == 'Retired') $paper_warnings['Retired'][] = $question_number + 1;
