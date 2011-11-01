@@ -72,7 +72,7 @@ $mysqli->close();
   function closeWindow() {
     <?php
     if ($parent == '') {
-      echo "window.opener.location.href = '../index.php'\n";
+      echo "window.opener.location.href = '../staff/index.php'\n";
     } else {
       echo "window.opener.location.href = '../folder.php?folder=$parentID'\n";
     }
@@ -86,7 +86,7 @@ $mysqli->close();
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/assessment_bin.gif" width="32" height="32" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td><p><?php echo $string['msg']; ?><p>
 
