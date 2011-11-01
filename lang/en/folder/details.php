@@ -33,4 +33,5 @@ $string['people'] = 'People';
 $string['mins'] = 'mins';
 $string['type'] = 'Type';
 $string['author'] = 'Author';
+$string['create'] = 'Create';
 ?>
