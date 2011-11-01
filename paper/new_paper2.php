@@ -144,7 +144,7 @@ require_once '../classes/dateutils.class.php';
 } else {
   $paper_types = array('formative'=>0,'progress'=>1,'summative'=>2,'survey'=>3,'osce'=>4,'offline'=>5);
   if ($_POST['paper_type'] == 'summative') {
-    $default_rubric = 'This is a closed-book examination and students may <em>not</em> refer to any other source (including dictionaries) or person in taking this paper. No electronic equipment, other than the examination computer, may be used.';
+    $default_rubric = $string['msg6'];
   } else {
     $default_rubric = '';
   }
