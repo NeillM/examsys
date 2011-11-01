@@ -80,9 +80,8 @@ Class InstallUtils {
     
   
   static function displayForm() {
-    global $string;
+    global $string,$language;
     
-    var_dump($string);
     ?>
     <script>
       $(document).ready(function(){
@@ -98,81 +97,84 @@ Class InstallUtils {
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       
       <table class="header"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="company_name">Company Name:</label> <input type="text" value="" name="company_name" class="required" minlength="2" /> </div>
+        <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" value="" name="company_name" class="required" minlength="2" /> </div>
 
       
-      <table class="header"><tr><td><nobr>Database Admin User</nobr></td><td class="line"><hr /></td></tr></table> 
-        <div>The installer need the username and password of a MySQL admin user to create the database and required tables. This username is not saved to the server and is only used by this install script.</div>
+      <table class="header"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
+        <div><?php echo $string['needusername']; ?></div>
         <br />
-        <div><label for="mysql_admin_user">DB Username:</label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
-        <div><label for="mysql_admin_pass">DB Password:</label> <input type="password" value="" name="mysql_admin_pass"/></div>
+        <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
+        <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass"/></div>
       
-      <table class="header"><tr><td><nobr>Database Setup</nobr></td><td class="line"><hr /></td></tr></table>
+      <table class="header"><tr><td><nobr><?php echo $string['databasesetup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
-        <div><label for="mysql_db_host">Database host:</label> <input type="text" value="127.0.0.1" name="mysql_db_host" class="required" /> </div>
-        <div><label for="mysql_db_port">Database port:</label> <input type="text" value="3306" name="mysql_db_port" class="required" /> </div>
-        <div><label for="mysql_db_name">Database Name:</label> <input type="text" value="" name="mysql_db_name" class="required" minlength="3" /> </div>
+        <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" name="mysql_db_host" class="required" /> </div>
+        <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" name="mysql_db_port" class="required" /> </div>
+        <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="" name="mysql_db_name" class="required" minlength="3" /> </div>
       
-      <table class="header"><tr><td><nobr>TouchStone Database user</nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="mysql_touchstone_username">Username</label> <input type="text" value="" name="mysql_touchstone_username" class="required" minlength="3"/></div>
-        <div><label for="mysql_touchstone_passwd">Password:</label> <input type="password" value="" name="mysql_touchstone_passwd" class="required" minlength="8" /></div>
+      <table class="header"><tr><td><nobr><?php echo $string['databaseuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="mysql_touchstone_username"><?php echo $string['rdbusername']; ?></label> <input type="text" value="" name="mysql_touchstone_username" class="required" minlength="3"/></div>
+        <div><label for="mysql_touchstone_passwd"><?php echo $string['rdbpassword']; ?></label> <input type="password" value="" name="mysql_touchstone_passwd" class="required" minlength="8" /></div>
       
-      <table class="header"><tr><td><nobr>Time/Date formats</nobr></td><td class="line"><hr /></td></tr></table> 
-        <div>Time and date formats are in <a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format" target="_blank">MySQL DATE_FORMAT</a> style.</div>
+      <table class="header"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
+        <div><?php echo sprintf($string['tdformatsare'],'<a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format" target="_blank">MySQL DATE_FORMAT</a>'); ?></div>
         <br />
-        <div><label for="cfg_short_date">Date:</label> <input type="text" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
-        <div><label for="cfg_long_date_time">Date/Time:</label> <input type="text"  name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_short_date"><?php echo $string['date']; ?></label> <input type="text" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
+        <div><label for="cfg_long_date_time"><?php echo $string['datetime']; ?></label> <input type="text"  name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
 
-        <table class="header"><tr><td><nobr>TouchStone LDAP configuration</nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="useLdap">Use LDAP:</label><input id="useLdap" name="useLdap" type="checkbox" /></div>
+        <table class="header"><tr><td><nobr><?php echo $string['ldapconfiguration']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
         <div id="ldapOptions" style="display:none;">
           <br/>
-          <div><label for="ldap_server">LDAP server:</label> <input type="text" value="" name="ldap_server" /> </div>
-          <div><label for="ldap_search_dn">Search dn:</label> <input type="text" value="" name="ldap_search_dn" /> </div>
-          <div><label for="ldap_bind_rdn">bind username:</label> <input type="text" value="" name="ldap_bind_rdn" /> </div>
-          <div><label for="ldap_bind_password">bind password:</label> <input type="password" value="" name="ldap_bind_password" /> </div>
+          <div><label for="ldap_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" name="ldap_server" /> </div>
+          <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" name="ldap_search_dn" /> </div>
+          <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" name="ldap_bind_rdn" /> </div>
+          <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" name="ldap_bind_password" /> </div>
         </div>
       
-      <table class="header"><tr><td><nobr>TouchStone SysAdmin User</nobr></td><td class="line"><hr /></td></tr></table>
-        <div>An initial SysAdmin user accont is required to log in and create further normal staff accounts and generally administer the system.</div>
+      <table class="header"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><?php echo $string['initialsysadmin']; ?></div>
         <br />
-        <div><label for="SysAdmin_title">Title:</label> 
+        <div><label for="SysAdmin_title"><?php echo $string['title']; ?></label> 
           <select name="SysAdmin_title" class="required">
-            <option value=""></option>
-            <option value="Dr">Dr</option>
-            <option value="Mr">Mr</option>
-            <option value="Mrs">Mrs</option>
-            <option value="Miss">Miss</option>
-            <option value="Ms">Ms</option>
-            <option value="Professor">Professor</option>
+		<?php
+		  if ($language != 'en') {
+		    echo "<option value=\"\"></option>\n";
+		  }
+		  $titles = explode(',', $string['title_types']);
+		  foreach ($titles as $tmp_title) {
+		    echo "<option value=\"$tmp_title\" selected>$tmp_title</option>";
+		  }
+		  ?>
           </select>
         </div>
-        <div><label for="SysAdmin_first">First Name:</label> <input type="text" value="" name="SysAdmin_first" class="required" /> </div>
-        <div><label for="SysAdmin_last">Surname:</label> <input type="text" value="" name="SysAdmin_last" class="required" minlength="3" /> </div>
-        <div><label for="SysAdmin_email">Email Address:</label> <input type="text" value="" name="SysAdmin_email" class="required email" /></div>
-        <div><label for="SysAdmin_username">username:</label> <input type="text" value="" name="SysAdmin_username" class="required" minlength="3"/></div>
-        <div><label for="SysAdmin_password">password:</label> <input type="password" value="" name="SysAdmin_password" class="required" minlength="8" /></div>
+        <div><label for="SysAdmin_first"><?php echo $string['firstname']; ?></label> <input type="text" value="" name="SysAdmin_first" class="required" /> </div>
+        <div><label for="SysAdmin_last"><?php echo $string['surname']; ?></label> <input type="text" value="" name="SysAdmin_last" class="required" minlength="3" /> </div>
+        <div><label for="SysAdmin_email"><?php echo $string['emailaddress']; ?></label> <input type="text" value="" name="SysAdmin_email" class="required email" /></div>
+        <div><label for="SysAdmin_username"><?php echo $string['username']; ?></label> <input type="text" value="" name="SysAdmin_username" class="required" minlength="3"/></div>
+        <div><label for="SysAdmin_password"><?php echo $string['password']; ?></label> <input type="password" value="" name="SysAdmin_password" class="required" minlength="8" /></div>
       
-      <table class="header"><tr><td><nobr>TouchStone Help Database</nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="loadHelp">Load Help:</label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked"/></div>
+      <table class="header"><tr><td><nobr><?php echo $string['helpdb']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked"/></div>
       
-      <table class="header"><tr><td><nobr>Support Email</nobr></td><td class="line"><hr /></td></tr></table>
+      <table class="header"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
-        <div><label for="">Support Email:</label> <input type="text" value="" name="support_email" class="" class="email"/> </div>
+        <div><label for=""><?php echo $string['supportemail']; ?></label> <input type="text" value="" name="support_email" class="" class="email"/> </div>
       
-      <table class="header"><tr><td><nobr>Emergency Support Numbers</nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="emergency_support1">Name:</label> <input type="text" value="" name="emergency_support1" class="" /> Number: <input type="text" value="" name="emergency_support_number1" class="" /></div>
-        <div><label for="emergency_support2">Name:</label> <input type="text" value="" name="emergency_support2" class="" /> Number: <input type="text" value="" name="emergency_support_number2" class="" /></div>
-        <div><label for="emergency_support3">Name:</label> <input type="text" value="" name="emergency_support3" class="" /> Number: <input type="text" value="" name="emergency_support_number3" class="" /></div>
+      <table class="header"><tr><td><nobr><?php echo $string['supportnumbers']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="emergency_support1"><?php echo $string['name']; ?></label> <input type="text" value="" name="emergency_support1" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number1" class="" /></div>
+        <div><label for="emergency_support2"><?php echo $string['name']; ?></label> <input type="text" value="" name="emergency_support2" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number2" class="" /></div>
+        <div><label for="emergency_support3"><?php echo $string['name']; ?></label> <input type="text" value="" name="emergency_support3" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number3" class="" /></div>
         
-      <div class="submit"> <input type="submit" name="install" value="Install Touchstone" /> </div>
+      <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" /> </div>
     </form>
     <?php
   }
   
   static function  processForm() {
+    global $string;
     self::$cfg_company = $_POST['company_name'];
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
@@ -237,6 +239,7 @@ Class InstallUtils {
   *
   */
   static function loadHelp() {
+    global $string;
     $staff_help = './staff_help.sql';
     $student_help = './student_help.sql';
     
@@ -248,10 +251,10 @@ Class InstallUtils {
       self::$db->query("TRUNCATE staff_help");
       self::$db->query($query);
       if (self::$db->errno != 0) {
-        self::logWarning(array('501' => "could not load staff_hlep.sql, could not install staff help" . self::$db->error )); 
+        self::logWarning(array('501' => $string['logwarning1'] . self::$db->error )); 
       }
     } else {
-      self::logWarning(array('502'=>'cannot find staff_hlep.sql, could not install staff help'));
+      self::logWarning(array('502'=>  $string['logwarning2']));
     }
     
     if (file_exists($student_help)) {
@@ -259,10 +262,10 @@ Class InstallUtils {
       self::$db->query("TRUNCATE student_help");
       self::$db->query($query);
       if (self::$db->errno != 0) {
-        self::logWarning(array('503' => "could not load student_help.sql, could not install student help " . self::$db->error )); 
+        self::logWarning(array('503' =>  $string['logwarning3'] . self::$db->error )); 
       }
     } else {
-      self::logWarning(array('504'=>'cannot find student_help.sql, could not install student help'));
+      self::logWarning(array('504'=> $string['logwarning4']));
     }
     
   }
@@ -272,18 +275,18 @@ Class InstallUtils {
   *
   */
   static function createDatabase($dbname) {
-    
+    global $string;
     $res = self::$db->prepare("SHOW DATABASES LIKE '$dbname'");
     $res->execute();
     $res->store_result();
     if ($res->num_rows > 0) {
-      self::displayError(array('010' => "The database name '$dbname' is in use please use a different one")); 
+      self::displayError(array('010' => $string['displayerror1']."The database name '$dbname' is in use please use a different one")); 
     }
     $res->close();
   
     self::$db->query("CREATE DATABASE $dbname"); //have to use query here oldvers of php throw an error 
     if (self::$db->errno != 0) {
-      self::displayError(array('011' => "The database '$dbname' could not be created please check the admin users permissions")); 
+      self::displayError(array('011' => $string['displayerror2'])); 
     }
     
     //select the newly created database
@@ -294,7 +297,7 @@ Class InstallUtils {
     while ($sql = $tables->next()) {
       $res = self::$db->query($sql);
       if (self::$db->errno != 0) {
-        self::displayError(array('012' => "could not create table. " . self::$db->error . "</br> $sql")); 
+        self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "</br> $sql")); 
       }
     }
     
@@ -317,7 +320,7 @@ Class InstallUtils {
     if (self::$db->errno != 0) {
       echo "CREATE USER  '" . self::$cfg_db_username . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'" . '<br/>';
       echo self::$db->error . '<br/>';
-      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_username . ' could not be created'));
+      self::logWarning(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated']));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $dbname . ".users TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
@@ -337,7 +340,7 @@ Class InstallUtils {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
         echo self::$db->error;
-        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_username . ' could not set permissions'));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_username . $string['wnotpermission']));
       }  
     }
     
@@ -346,7 +349,7 @@ Class InstallUtils {
     self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
     if (self::$db->errno != 0) {
       echo self::$db->error;
-      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_student_user . ' could not be created'));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotcreated']));
     }
    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_help TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
@@ -388,7 +391,7 @@ Class InstallUtils {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
         echo self::$db->error;
-        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_student_user . ' could not set permissions'));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotpermission']));
       }  
     }
     
@@ -396,7 +399,7 @@ Class InstallUtils {
     //create touchstone 'database user external user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_external_user . ' could not be created'));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotcreated']));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
@@ -420,7 +423,7 @@ Class InstallUtils {
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
-        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_external_user . ' could not set permissions'));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotpermission']));
       }  
     }
     
@@ -428,7 +431,7 @@ Class InstallUtils {
     //create touchstone 'database user staff user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_staff_user . ' could not be created'));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotcreated']));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".* TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -478,7 +481,7 @@ Class InstallUtils {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
 	    echo self::$db->error . "<br />";
-        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_staff_user . ' could not set permissions'));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotpermission']));
       }  
     }
     
@@ -486,7 +489,7 @@ Class InstallUtils {
     //create touchstone 'database user SCT user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sct_user . ' could not be created'));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotcreated']));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_db_host . "'";
@@ -502,7 +505,7 @@ Class InstallUtils {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
 	    echo self::$db->error . "<br />";
-        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sct_user . ' could not set permissions'));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotpermission']));
       }  
     }
     
@@ -510,7 +513,7 @@ Class InstallUtils {
     //create touchstone 'database user Invigilator user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_inv_user . ' could not be created'));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotcreated']));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_modules TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_db_host . "'";
@@ -527,7 +530,7 @@ Class InstallUtils {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
 	    echo self::$db->error . "<br />";
-        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_inv_user . ' could not set permissions'));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotpermission']));
       }  
     }
     
@@ -536,7 +539,7 @@ Class InstallUtils {
     self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
     if (self::$db->errno != 0) {
 	  echo self::$db->error . "<br/>";
-      self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sysadmin_user . ' could not be created'));
+      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotcreated']));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $dbname . ".* TO '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_db_host . "'";
@@ -545,7 +548,7 @@ Class InstallUtils {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
 	    echo self::$db->error . "<br />";
-        self::logWarning(array('013'=>'Database user ' . self::$cfg_db_sysadmin_user . ' could not set permissions'));
+        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission']));
       }  
     }
     
@@ -623,7 +626,7 @@ Class InstallUtils {
     //FLUSH PRIVILEGES
     self::$db->query("FLUSH PRIVILEGES");
     if (self::$db->errno != 0) {
-      self::logWarning(array('014'=>'Unable to FLUSH PRIVILEGES'));
+      self::logWarning(array('014'=> $string['logwarning20']));
     }  
   }
   
@@ -632,11 +635,12 @@ Class InstallUtils {
   *
   */
   static function configFile() {
+  global $string;
     $touchstone_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      $errors['90'] = "<p>Rogō has already been installed! remove/rename $touchstone_path/config/config.inc.php to run set up again.</p>";
-      $errors['90'] .= "<p>or go to the <a href=\"/staff\">staff interfaces</a></p>";
+	  $errors['90'] =  "<p>".sprintf($string['errors1'],$touchstone_path."/config/config.inc.php")."</p>";
+      $errors['90'] .= "<p>".sprintf($string['errors2'],"<a href=\"/staff\">")."</a></p>";
     }
   }
   
@@ -645,6 +649,7 @@ Class InstallUtils {
   *
   */
   static function configFileIsWriteable() {
+    global $string;
     $touchstone_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
@@ -660,27 +665,28 @@ Class InstallUtils {
   *
   */
   static function checkDirPermissions() {
+    global $string;
     self::$touchstone_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     //tmp
     if (!is_writable('/tmp')) {
-      $errors['100'] = "Rogō requires /tmp to exist and be writeable to the webserver";
+      $errors['100'] = $string['errors3'];
     }
     //media
     if (!is_writable(self::$touchstone_path . '/media')) {
-      $errors['102'] = "Rogō requires " . self::$touchstone_path . "/media to exist and be writeable to the webserver";
+      $errors['102'] = sprintf($string['errors4'], self::$touchstone_path);
     }    
     //qti imports
     if (!is_writable(self::$touchstone_path . '/qti/imports')) {
-      $errors['103'] = "Rogō requires " . self::$touchstone_path . "/qti/imports to exist and be writeable to the webserver";
+      $errors['103'] = sprintf($string['errors5'], self::$touchstone_path);
     }
     //qti exports
     if (!is_writable(self::$touchstone_path . '/qti/exports')) {
-      $errors['104'] = "Rogō requires " . self::$touchstone_path . "/qti/exports to exist and be writeable to the webserver";
+      $errors['104'] = sprintf($string['errors6'], self::$touchstone_path);
     }
     //temp
     if (!is_writable(self::$touchstone_path . '/temp')) {
-      $errors['105'] = "Rogō requires " . self::$touchstone_path . "/temp to exist and be writeable to the webserver";
+      $errors['105'] = sprintf($string['errors7'], self::$touchstone_path);
     }
     if (count($errors) > 0) {
       self::displayError($errors);  
@@ -693,28 +699,29 @@ Class InstallUtils {
   *
   */
   static function checkSoftware() {
-    $errors = array();
+    global $string;
+	$errors = array();
     //apache
     $apache = explode('/',$_SERVER['SERVER_SOFTWARE']);
     $apache_min_ver = '2.0';
     if ( isset($apache[0]) and isset($apache[1]) ) {
       if ($apache[0] != 'Apache') {
-        $errors['200'] = "Rogō requires Apache version $apache_min_ver" . $apache[1];
+        $errors['200'] = $string['errors8'].$apache[1];
       }
       $ver = explode(' ',$apache[1]);
       if (isset($ver[0]) and $ver[0] < $apache_min_ver) {
-        $errors['201'] = "Rogō requires Apache version $apache_min_ver or above you have " . $ver[0];
+        $errors['201'] = $string['errors9']. $ver[0];
       }
     }
     
     //php
     $php_min_ver = '5.0';
     if (phpversion() < $php_min_ver) {
-      $errors['202'] = "Rogō requires PHP version $php_min_ver or above";
+      $errors['202'] = $string['errors10'];
     }
     $phpModules = get_loaded_extensions();
     if ( !in_array('mysqli',$phpModules) ) {
-      $errors['203'] = "Rogō requires the PHP mysqli moduel to function please install or activate it.";
+      $errors['203'] = $string['errors11'];
     }
     
     if (count($errors) > 0) {
@@ -727,8 +734,9 @@ Class InstallUtils {
   *
   */
   static function checkHTTPS() {
-    if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
-      self::displayError(array(100=>'TouchStone can only be accessed through https. Plese update you apache config.'));
+    global $string;
+	if ($_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
+      self::displayError(array(100=> $string['errors12']));
       return false;
     }
     return true;
@@ -739,10 +747,11 @@ Class InstallUtils {
   *
   */
   static function displayError($error = '') {
-    echo "<div class=\"error\">\n";
+    global $string;
+	echo "<div class=\"error\">\n";
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
-        echo "\t<div>Error $errCode:: $message</div>\n";
+        echo "\t<div>".$string['errors13']." $errCode:: $message</div>\n";
       }
     }
     echo "</div>\n";
@@ -767,12 +776,13 @@ Class InstallUtils {
   *
   */
   static function displayWarnings() {
+    global $string;
     
     if (is_array(self::$warnings)) {
-      echo "<h2>The folowing warnings were generated</h2>";
+      echo "<h2>". $string['errors14']."</h2>";
       echo "<div class=\"warning\">\n";
       foreach(self::$warnings as $message) {
-        echo "\t<div>Warning $message</div>\n";
+        echo "\t<div>".$string['errors15']." $message</div>\n";
       }
       echo "</div>\n";
     }
@@ -784,6 +794,7 @@ Class InstallUtils {
   *
   */
   static function displayHeader() {
+  global $string;
     ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
@@ -814,7 +825,7 @@ Class InstallUtils {
     <body>
     <table class="topbar"> 
       <tr> 
-        <td><div style="font-size:26pt; font-weight:bold; color:black">&nbsp;System Installation</div></td> 
+        <td><div style="font-size:26pt; font-weight:bold; color:black">&nbsp;<?php echo $string['systeminstallation']; ?></div></td> 
         <td style="text-align:right; padding-top:4px; padding-right:15px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" /></td> 
       </tr> 
       <tr> 
