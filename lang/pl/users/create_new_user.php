@@ -36,4 +36,5 @@ $string['reqcourse'] = "Wprowadź typ/kurs dla użytkownika.";
 $string['requsername'] = "Wprowadź nazwę użytkownika.";
 $string['usernamechars'] = "Nazwa użytkownika nie może zawierać podkreślnika.";
 $string['reqpassword'] = "Wprowadź domyślne hasło dla użytkownika.";
+$string['usernameinuse'] = 'Nazwa użykownika \'%s\' jest już wykorzystywana. Wybierz inną.';
 ?>

@@ -36,4 +36,5 @@ $string['reqcourse'] = "Please enter a Type/Course for the user.";
 $string['requsername'] = "Please enter a Username for the user.";
 $string['usernamechars'] = "A username cannot contain an underscore character.";
 $string['reqpassword'] = "Please enter a default Password for the user.";
+$string['usernameinuse'] = 'The username \'%s\' is already in use. Please enter a different one.';
 ?>
