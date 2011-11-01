@@ -9,5 +9,5 @@ $string['lineno'] = 'Nr. linii';
 $string['user'] = 'Użytkownik';
 $string['userid'] = 'Id. użytkownika';
 $string['showfixed'] = 'Pokaż błędy usunięte';
-$string['displaydetails'] = 'Wyświetl detale';
+$string['displaydetails'] = 'Wyświetl szczegóły';
 ?>
