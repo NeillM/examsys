@@ -85,6 +85,7 @@ function uploadError($errCode) {
 }
 
 function check_var($var_name, $method, $mandatory, $headers, $type = '') {
+  global $string;
   // $var_name - name of the variable to check
   // $method - $_GET or $_POST
   // $mandatory - if true then exit if the variable does not exist
