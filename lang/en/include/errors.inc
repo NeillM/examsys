@@ -8,4 +8,7 @@ $string['uploaderrormsg4'] = 'File partialy uploaded.';
 $string['uploaderrormsg5'] = 'No file was uploaded.';
 $string['uploaderrormsg6'] = 'No temp directory.';
 $string['uploaderrormsg7'] = 'Unknown problem.';
+$string['fatalerrormsg0'] = 'Fatal Error';
+$string['fatalerrormsg1'] = 'A mandatory GET variable is missing.';
+$string['fatalerrormsg2'] = 'A mandatory POST variable is missing.';
 ?>

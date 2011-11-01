@@ -8,4 +8,7 @@ $string['uploaderrormsg4'] = 'Plik częściowo załadowany.';
 $string['uploaderrormsg5'] = 'Nie załadowano pliku.';
 $string['uploaderrormsg6'] = 'Brak tymczasowego katalogu.';
 $string['uploaderrormsg7'] = 'Nieznany problem.';
+$string['fatalerrormsg0'] = 'Błąd krytyczny';
+$string['fatalerrormsg1'] = 'Brak wymaganej zmiennej GET.';
+$string['fatalerrormsg2'] = 'Brak wymaganej zmiennej POST.';
 ?>
