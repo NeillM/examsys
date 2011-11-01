@@ -22,6 +22,7 @@
 * @package
 */
 
+$path = $_SERVER['DOCUMENT_ROOT'];
 require $path . '/lang/' . $language . '/include/errors.inc';
 
 
