@@ -115,6 +115,7 @@ $stmt->close();
     if (window.focus) {
       notice.focus();
     }
+    return false;
   }
 
   function lockedPaperProperties() {
@@ -122,6 +123,7 @@ $stmt->close();
     if (window.focus) {
       notice.focus();
     }
+    return false;
   }
 
   function editQuestion() {
@@ -311,15 +313,15 @@ $stmt->close();
     if ($summative_lock == 1) {
       if (strpos($userroles,'SysAdmin') !== false) {
         echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-        echo "<tr><td><a href=\"\" onclick=\"paperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"paperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
       } else {
         echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-        echo "<tr><td><a href=\"\" onclick=\"lockedPaperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"lockedPaperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
+        echo "<tr><td><a href=\"\" onclick=\"return lockedPaperProperties();\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return lockedPaperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
       }
     } else {
       $max_screen = ($max_screen != '') ? $max_screen : 0;
       echo "<tr><td><a href=\"\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\"><img src=\"/artwork/add_questions_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-      echo "<tr><td><a href=\"\" onclick=\"paperProperties(); return false;\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"paperProperties(); return false;\">" . $string['editproperties'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
     }
     if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
       if ($p_id_count == 0) {
