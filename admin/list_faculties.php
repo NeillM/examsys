@@ -56,7 +56,6 @@
     if (tmp_ID != '') {
       document.getElementById(tmp_ID).style.backgroundColor = 'white';
     }
-    document.myform.oldDivID.value = '';
     document.getElementById('menu1b').style.display = 'none';
     document.getElementById('menu1a').style.display = 'block';
   }
