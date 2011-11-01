@@ -44,7 +44,7 @@ function findDecisionQ($question_array,$sourceID) {
   return $source_question_no;
 }
 
-function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $correct_array, $status) {
+function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status) {
   global $string;
 
   if (!isset($tmp_excluded) and ($status == 'Normal' or $status == 'Experimental' or $status == 'Beta')) {
@@ -489,7 +489,8 @@ function getMSCAA($paperID, $mysqlidb) {
   $old_q_id = 0;
   $old_q_type  = '';
   $old_marks  = 0;
-  $old_option_text = '';
+  $old_option_text = array();
+  $old_o_media = array();
   $old_correct  = '';
   $old_display_method = '';
   $old_score_method  = '';
@@ -503,11 +504,11 @@ function getMSCAA($paperID, $mysqlidb) {
   $neg_marking = false;
   
   // Get the questions (if any).
-  $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
+  $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
+  $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
   $temp_array = array();
   while ($result->fetch()) {
     // latex check [tex]
@@ -559,9 +560,10 @@ function getMSCAA($paperID, $mysqlidb) {
       if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
-      if ($row_no2 > 0 and $paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_correct, $temp_array[$row_no2]['status']);
+      if ($row_no2 > 0 and $paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
       $old_correct = array();
       $old_option_text = array();
+      $old_o_media = array();
       $old_marks = 0;
       $row_no2++;
 
@@ -648,6 +650,7 @@ function getMSCAA($paperID, $mysqlidb) {
     $old_q_media_width = $q_media_width;
     $old_q_media_height = $q_media_height;
     $old_option_text[] = $option_text;
+    $old_o_media[] = $o_media;
     $old_marks = $marks_correct;
     if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
@@ -671,7 +674,7 @@ function getMSCAA($paperID, $mysqlidb) {
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_correct, $temp_array[$row_no2]['status']);
+    if ($paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
 
     if (($total_random_mark != $old_random_mark or $total_marks != $old_total_marks or $latex != $latex_needed) and $paper_type != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark=?, total_mark=?, latex_needed=? WHERE property_id=?");
@@ -784,7 +787,11 @@ function getMSCAA($paperID, $mysqlidb) {
   $marks_incorrect_error = false;
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
-    if($temp_array[$x]['options'] == 0) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
+    if($temp_array[$x]['options'] == 0) {
+      var_dump($temp_array[$x]['o_media']);
+      exit;
+      $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
+    }
     if ($temp_array[$x]['status'] == 'Incomplete') $paper_warnings['Incomplete'][] = $question_number + 1;
     if ($temp_array[$x]['status'] == 'Beta') $paper_warnings['Beta'][] = $question_number + 1;
     if ($temp_array[$x]['status'] == 'Retired') $paper_warnings['Retired'][] = $question_number + 1;

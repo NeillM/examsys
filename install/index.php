@@ -30,11 +30,11 @@ if ( false ) {
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
   <head>
-    <title>Error: PHP is Missing</title>
+    <title><?php echo $string['phpmissing']; ?></title>
   </head>
   <body>
-    <h2>Error: PHP Missing</h2>
-    <p>Rogō requires that your web server is running PHP. Your server does not have PHP installed, or PHP is turned off.</p>
+    <h2><?php echo $string['phpmissing']; ?></h2>
+    <p><?php echo $string['topmsg']; ?></p>
   </body>
   </html>
   <?php

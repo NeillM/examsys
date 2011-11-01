@@ -23,10 +23,13 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
+define('DIR_SEPARATOR', '/');
+$cfg_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/userutils.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/moduleutils.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/schoolutils.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/lang.class.php';
 
 Class InstallUtils {
 	
@@ -77,6 +80,9 @@ Class InstallUtils {
     
   
   static function displayForm() {
+    global $string;
+    
+    var_dump($string);
     ?>
     <script>
       $(document).ready(function(){
@@ -91,7 +97,7 @@ Class InstallUtils {
     </script> 
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       
-      <table class="header"><tr><td><nobr>Company</nobr></td><td class="line"><hr /></td></tr></table>
+      <table class="header"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="company_name">Company Name:</label> <input type="text" value="" name="company_name" class="required" minlength="2" /> </div>
 
       
