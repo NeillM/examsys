@@ -214,7 +214,7 @@
           echo '<tr><td colspan="3" style="height:10px"></td></tr>';
           echo '<tr><td></td><td colspan="3" class="divider">Screen ' . ($old_screen + $missing) . '</td></tr>';
           echo '<tr><td colspan="3" style="height:5px"><img src="../artwork/divider_bar.gif" width="290" height="1" /></td></tr>';
-          echo '<tr><td colspan="3" style="background-color:#FFC0C0; padding:5px"><strong>" . $string['warning'] . ":</strong> " . $string['noquestiononscreen'] . "</td></tr>';
+          echo '<tr><td colspan="3" style="background-color:#FFC0C0; padding:5px"><strong>' . $string['warning'] . ':</strong> ' . $string['noquestiononscreen'] . '</td></tr>';
         }
       }
       echo "<tr><td colspan=\"4\" style=\"padding-left:4px\"><table border=\"0\" style=\"padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['screen'] . " " . $temp_array[$x]['screen'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
