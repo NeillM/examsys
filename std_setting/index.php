@@ -70,7 +70,7 @@
 <html>
 <head>
 
-<title>TouchStone: List Settings<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['listsettings'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <script src="../javascript/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
@@ -139,7 +139,7 @@ $results = $mysqli->query("SELECT paper_title, total_mark FROM properties WHERE 
 while ($row = $results->fetch_assoc()) {
   $reviews_html .= <<< PAGEHEADING
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID={$_GET['paperID']}&folder={$_GET['folder']}&module={$_GET['module']}">{$row['paper_title']}</a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">Standards Setting</div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>
+  <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php">{$string['home']}</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID={$_GET['paperID']}&folder={$_GET['folder']}&module={$_GET['module']}">{$row['paper_title']}</a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">{$string['standardssetting']}</div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>
 </table>\n\n
 PAGEHEADING;
 
@@ -147,13 +147,13 @@ PAGEHEADING;
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
   	<td style="width:18px; background-color:#F1F5FB">&nbsp;</td>
-  	<td style="background-color:#F1F5FB; width:18%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Standard Setter&nbsp;</td>
-  	<td style="background-color:#F1F5FB; width:13%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Date&nbsp;</td>
-  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Pass Score</td>
-  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Distinction</td>
-  	<td style="background-color:#F1F5FB; width:12%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Review Marks</td>
-  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Paper Total</td>
-  	<td style="background-color:#F1F5FB; width:14%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Method</td>
+  	<td style="background-color:#F1F5FB; width:18%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['standardsetter']}&nbsp;</td>
+  	<td style="background-color:#F1F5FB; width:13%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['date']}&nbsp;</td>
+  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['passscore']}</td>
+  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['distinction']}</td>
+  	<td style="background-color:#F1F5FB; width:12%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['reviewmarks']}</td>
+  	<td style="background-color:#F1F5FB; width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['papertotal']}</td>
+  	<td style="background-color:#F1F5FB; width:14%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['method']}</td>
   	<td width="25%" style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp</td>
  </tr>
  <tr style="height:4px"><td valign="top" colspan="9"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>

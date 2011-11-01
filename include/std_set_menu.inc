@@ -34,9 +34,7 @@
   }
   function editReview() {
     var methodType = '';
-    if (document.StdSetMenu.method.value == 'Angoff (Yes/No)') {
-      methodType = 'angoff_yes_no';
-    } else if (document.StdSetMenu.method.value == 'Modified Angoff') {
+    if (document.StdSetMenu.method.value == 'Modified Angoff') {
       methodType = 'modified_angoff';
     } else {
       methodType = 'ebel';
@@ -52,12 +50,12 @@
 
 <form name="StdSetMenu" action="">
 <table cellpadding="0" cellspacing="0" border="0" width="185" style="font-size:100%">
-<tr><td style="font-weight:bold">Individual Rating</td></tr>
+<tr><td style="font-weight:bold"><?php echo $string['individualrating']; ?></td></tr>
 <tr><td style="margin:4px">
 <table cellpadding="3" cellspacing="0" border="0" id="menu1" style="margin-left:7px; font-size:90%">
-<tr><td width="16"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(97); return false;">About Standards Setting</a></td></tr>
-<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Angoff Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>">Create new Modified Angoff</a></td></tr>
-<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Ebel Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>">Create new Ebel method</a></td></tr>
+<tr><td width="16"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(97); return false;"><?php echo $string['aboutstandardssetting']; ?></a></td></tr>
+<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Angoff Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createmodifiedangoff']; ?></a></td></tr>
+<tr><td><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><img src="../artwork/std_set_icon_16.gif" width="16" height="16" alt="Ebel Method" border="0" /></a></td><td class="menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>"><?php echo $string['createebelmethod']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>
@@ -66,24 +64,24 @@
 <br />
 
 <table cellpadding="0" cellspacing="0" border="0" width="185" style="font-size:100%">
-<tr><td style="font-weight:bold">Current Rating</td></tr>
+<tr><td style="font-weight:bold"><?php echo $string['currentrating']; ?></td></tr>
 <tr><td style="margin:4px">
 <table cellpadding="0" cellspacing="0" border="0" id="menu2" style="font-size:90%">
 <tr><td>
 
 <table style="font-size:100%; margin-left:7px; display:block" cellpadding="3" cellspacing="0" border="0" id="menu2a">
-<tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem">Edit Rating</td></tr>
-<tr><td><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem">Delete</td></tr>
+<tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem"><?php echo $string['editrating']; ?></td></tr>
+<tr><td><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem"><?php echo $string['delete']; ?></td></tr>
 </table>
 
 <table style="font-size:100%; margin-left:7px; display:none" cellpadding="3" cellspacing="0" border="0" id="menu2b">
-<tr><td><a id="edit" onclick="editReview(); return false;" href="#"><img src="../artwork/edit.png" width="16" height="16" alt="Arrow" border="0" /></a></td><td class="menuitem"><a id="edit" onclick="editReview(); return false;" href="#">Edit Rating</a></td></tr>
-<tr><td><a id="delete" href="#" onclick="deleteReview(); return false;"><img src="../artwork/red_cross.png" width="16" height="16" alt="Arrow" border="0" /></a></td><td class="menuitem"><a id="delete" href="#" onclick="deleteReview(); return false;">Delete</a></td></tr>
+<tr><td><a id="edit" onclick="editReview(); return false;" href="#"><img src="../artwork/edit.png" width="16" height="16" alt="Arrow" border="0" /></a></td><td class="menuitem"><a id="edit" onclick="editReview(); return false;" href="#"><?php echo $string['editrating']; ?></a></td></tr>
+<tr><td><a id="delete" href="#" onclick="deleteReview(); return false;"><img src="../artwork/red_cross.png" width="16" height="16" alt="Arrow" border="0" /></a></td><td class="menuitem"><a id="delete" href="#" onclick="deleteReview(); return false;"><?php echo $string['delete']; ?></a></td></tr>
 </table>
 
 <table style="font-size:100%; margin-left:7px; display:none" cellpadding="3" cellspacing="0" border="0" id="menu2c">
-<tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem">Edit Rating</td></tr>
-<tr><td><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem">Delete</td></tr>
+<tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem"><?php echo $string['editrating']; ?></td></tr>
+<tr><td><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Arrow" /></td><td class="greymenuitem"><?php echo $string['delete']; ?></td></tr>
 </table>
 
 </td></tr>
@@ -96,15 +94,15 @@
 <br />
 
 <table cellpadding="0" cellspacing="0" border="0" width="185" style="font-size:100%">
-<tr><td style="font-weight:bold">Group Rating</td></tr>
+<tr><td style="font-weight:bold"><?php echo $string['grouprating']; ?></td></tr>
 <tr><td style="margin:4px">
 <table cellpadding="3" cellspacing="0" border="0" id="menu3" style="margin-left:7px; font-size:90%">
 <?php 
 if(isset($no_reviews) and $no_reviews > 1) {
 ?>
-<tr><td><a href="get_group.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&method=modified_angoff"><img src="../artwork/small_users_icon.png" width="16" height="16" alt="Angoff Method" border="0" /></a></td><td class="menuitem"><a href="get_group.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&method=modified_angoff">Modified Angoff</a></td></tr>
+<tr><td><a href="get_group.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&method=modified_angoff"><img src="../artwork/small_users_icon.png" width="16" height="16" alt="Angoff Method" border="0" /></a></td><td class="menuitem"><a href="get_group.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&method=modified_angoff"><?php echo $string['modifiedangoff']; ?></a></td></tr>
 <?php } else { ?>
-<tr><td><img src="../artwork/small_users_icon_grey.png" width="16" height="16" alt="Angoff Method" border="0" /></td><td class="greymenuitem">Modified Angoff</td></tr>
+<tr><td><img src="../artwork/small_users_icon_grey.png" width="16" height="16" alt="Angoff Method" border="0" /></td><td class="greymenuitem"><?php echo $string['modifiedangoff']; ?></td></tr>
 <?php }?>
 </table>
 </td></tr>
