@@ -1,6 +1,6 @@
 <?php
-$string['confirmreviewdelete'] = 'Confirm Review Delete';
-$string['confirmmsg'] = 'Are you sure you wish to delete this review made on <strong>%s</strong>?';
-$string['deletereview'] = 'Delete Review';
-$string['recyclebin'] = 'Recycle Bin';
+$string['confirmreviewdelete'] = 'Potwierdź usunięcie recenzji';
+$string['confirmmsg'] = 'Czy na pewno usunąż recenzję odnośnie <strong>%s</strong>?';
+$string['deletereview'] = 'Usuń recenzję';
+$string['recyclebin'] = 'Kosz';
 ?>
