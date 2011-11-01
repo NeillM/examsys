@@ -855,7 +855,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       $marks += $display_option['marks_correct'];
       break;
     case 'sct':
-      if ($part_id == 1) echo "<div style=\"color:#C00000\"><strong>Note:</strong>" . $string['notpossibletostandard'] . "</div>\n";
+      if ($part_id == 1) echo "<div style=\"color:#C00000\">" . $string['note'] . " " . $string['notpossibletostandard'] . "</div>\n";
   }                  // End switch
 }
 

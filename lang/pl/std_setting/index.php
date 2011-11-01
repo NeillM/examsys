@@ -17,5 +17,4 @@ $string['modifiedangoff'] = 'Modyfikowana metoda Angoffa';
 $string['individualrating'] = 'Indywidualne zaszeregowanie';
 $string['currentrating'] = 'Aktualne zaszeregowanie';
 $string['grouprating'] = 'Grupowe zaszeregowanie';
-$string['notpossibletostandard'] = 'Nie jest możliwe wyznaczenie standardu dla testów zgodności scenariusza.';
 ?>

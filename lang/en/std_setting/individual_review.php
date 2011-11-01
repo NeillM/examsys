@@ -27,4 +27,6 @@ $string['cannotbeused'] = '<strong>Note:</strong> Ebel method cannot be used to 
 $string['na'] = 'N/A';
 $string['screen'] = 'Screen';
 $string['note'] = 'NOTE:';
+$string['notpossibletostandard'] = 'It is not possible to standard set Script Concordance questions.';
+
 ?>

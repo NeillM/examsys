@@ -26,4 +26,6 @@ $string['cannotbeused'] = '<strong>Uwaga:</strong> Metoda Ebel nie może być st
 $string['na'] = 'Brak';
 $string['screen'] = 'Ekran';
 $string['note'] = 'Uwaga:';
+$string['notpossibletostandard'] = 'Nie jest możliwe wyznaczenie standardu dla testów zgodności scenariusza.';
+
 ?>

@@ -17,5 +17,4 @@ $string['modifiedangoff'] = 'Modified Angoff';
 $string['individualrating'] = 'Individual Rating';
 $string['currentrating'] = 'Current Rating';
 $string['grouprating'] = 'Group Rating';
-$string['notpossibletostandard'] = 'It is not possible to standard set Script Concordance questions.';
 ?>
