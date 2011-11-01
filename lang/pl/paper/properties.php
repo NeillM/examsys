@@ -5,6 +5,19 @@ require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['propertiestitle'] = 'Właściwości';
 $string['edittitle'] = 'Edytuj';
+$string['warning'] = 'Ostrzeżenie: nazwa arkusza jest już wykorzystywana w innym teście!';
+$string['availablefromyear'] = 'Zaplanowany rok \'od\' jest późniejszy niż rok \'do\' co jest nielogiczne!';
+$string['availablefrommonth'] = 'Zaplanowany miesiąc \'od\' jest późniejszy niż miesiąc \'do\' co jest nielogiczne!';
+$string['availablefromday'] = 'Zaplanowany dzień \'od\' jest późniejszy niż dzień \'do\' co jest nielogiczne!';
+$string['msg1'] = 'Nie wybrano modułu. Arkusz musi być przypisany do co najmniej jednego modułu.';
+$string['msg2'] = 'Data ropoczęcia i zakończenia egzaminu końcowego musi być ta sama (zakładka \'Prawa dostępu\').';
+$string['msg3'] = 'Czas trwania egzaminu końcowego musi być określony.\nPowinien to być normalny czas trwania z wyłączeniem czasu dodatkowego dla osób studentów z dysleksją.';
+$string['msg4'] = 'Rok akademicki dla egzaminu końcowego musi być określony (zakładka \'Prawa dostępu\').';
+$string['msg5'] = 'OSCE muszą być przypisane do co najmniej jednego modułu.';
+$string['msg6'] = 'Wybrano egzaminatorów zewnętrznych, jednak nie określono terminu finalizacji.';
+$string['msg7'] = 'Proszę podać nazwę arkusza.';
+$string['msg8'] = 'Proszę podać nazwę arkusza. To jest egzamin typu "closed-book", w czasie którego <em>niedozwolone jest</em> korzystanie ze środków i źródeł pomocniczych (także słowników) ani pomocy osób drugich. Niedozwolone jest też używanie urządzeń elektronicznych z wyjątkiem komputera egzaminacyjnego.';
+
 // General tab
 $string['generaltab'] = 'Ogólne';
 $string['generalheading'] = 'Nazwa arkusza, punktacja i opcje prezentacji';
@@ -64,7 +77,7 @@ $string['na'] = 'Brak';//data
 $string['reviewerstab'] = 'Recenzenci';
 $string['reviewersheading'] = 'Zestaw wewnętrznych/zewnętrznych recenzentów z terminami finalizacji.';
 $string['internalreviewers'] = 'Wewnętrzni recenzenci';
-$string['externalexaminers'] = 'Zewnętrzni recenzenci';
+$string['externalexaminers'] = 'Zewnętrzni egzaminatorzy';
 $string['deadline'] = 'Termin finalizacji:';
 
 // Exam Rubric tab

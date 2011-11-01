@@ -4,6 +4,18 @@ require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['propertiestitle'] = 'Properties';
 $string['edittitle'] = 'Edit';
+$string['warning'] = 'Warning paper name already used by another assessment!';
+$string['availablefromyear'] = 'The available from year is greater than the available to year - this is illogical!';
+$string['availablefrommonth'] = 'The available from month is greater than the available to month - this is illogical!';
+$string['availablefromday'] = 'The available from day is greater than the available to day - this is illogical!';
+$string['msg1'] = 'There are no modules selected. Papers must be assigned to at least one module.';
+$string['msg2'] = 'Summative paper start and end dates must be on the same day (\'Access Rights\' tab).';
+$string['msg3'] = 'You must specify a duration for Summative exams.\nThis should be normal duration excluding any extra time for dyslexic students.';
+$string['msg4'] = 'You must specify an academic year for Summative exams (\'Access Rights\' tab).';
+$string['msg5'] = 'OSCEs must be assigned to at least one module.';
+$string['msg6'] = 'You have set some external examiners but not specified a deadline.';
+$string['msg7'] = 'Please enter a name for the Paper.';
+$string['msg8'] = 'Please enter a name for the Paper. This is a closed-book examination and students may <em>not</em> refer to any other source (including dictionaries) or person in taking this paper. Calculators and other electronic equipment, except the examination computer, are not permitted.';
 
 // General tab
 $string['generaltab'] = 'General';

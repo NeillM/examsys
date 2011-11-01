@@ -318,7 +318,7 @@ if (isset($_POST['Submit'])) {
     <head><title><?php echo $string['edittitle']; ?></title></head>
     <body>
     <form>
-      <br />Warning paper name already used by another assessment!<br />&nbsp;<div align="center"><input type="button" name="back" value="&lt; Back" onclick="javascript: history.go(-1)" /></div>
+      <br /><?php echo $string['warning']; ?><br />&nbsp;<div align="center"><input type="button" name="back" value="&lt; Back" onclick="javascript: history.go(-1)" /></div>
     </form>
   <?php
   }
@@ -408,25 +408,16 @@ if (isset($_POST['Submit'])) {
     
     function checkForm() {
       if (edit_form.fyear.value > edit_form.tyear.value) {
-        alert ("The available from year is greater than the available to year - this is illogical!");
+        alert ("<?php echo $string['availablefromyear']; ?>");
         return false;
       } else if (edit_form.fyear.value == edit_form.tyear.value && edit_form.fmonth.value > edit_form.tmonth.value) {
-        alert ("The available from month is greater than the available to month - this is illogical!");
+        alert ("<?php echo $string['availablefrommonth']; ?>");
         return false;
       } else if (edit_form.fyear.value == edit_form.tyear.value && edit_form.fmonth.value == edit_form.tmonth.value && edit_form.fday.value > edit_form.tday.value) {
-        alert ("The available from day is greater than the available to day - this is illogical!");
+        alert ("<?php echo $string['availablefromday']; ?>");
         return false;
       }
       
-      paperTitle = edit_form.paper.value;
-      for (a=0; a<paperTitle.length; a++) {
-        char = paperTitle.substr(a,1);
-        if (char == '&' || char == '#' || char == '@' || char == '?' || char == '^' || char == '~') {
-          alert('A paper name cannot contain any of the following characters:\r      &  #  @  ?  ^  ~');
-          return false;
-        }
-      }
-    
       var module_no = document.getElementById('module_no').value;
       var moduleList = '';
       for (var i = 0; i < module_no; i++) {
@@ -440,23 +431,23 @@ if (isset($_POST['Submit'])) {
         }
       }
       if (moduleList == '') {
-        alert ("There are no modules selected. Papers must be assigned to at least one module.");
+        alert ("<?php echo $string['msg1']; ?>");
         return false;
       }
 
       if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '2') {
         if (edit_form.fday.value != edit_form.tday.value || edit_form.fmonth.value != edit_form.tmonth.value || edit_form.fyear.value != edit_form.tyear.value) {
-          alert ("Summative paper start and end dates must be on the same day ('Access Rights' tab).");
+          alert ("<?php echo $string['msg2']; ?>");
           return false;
         }
         
         if (document.edit_form.exam_duration.options[document.edit_form.exam_duration.selectedIndex].value == 'NULL') {
-          alert ("You must specify a duration for Summative exams.\nThis should be normal duration excluding any extra time for dyslexic students.");
+          alert ("<?php echo $string['msg3']; ?>");
           return false;
         }
         
         if (document.edit_form.calendar_year.options[document.edit_form.calendar_year.selectedIndex].value == '') {
-          alert ("You must specify an academic year for Summative exams ('Access Rights' tab).");
+          alert ("<?php echo $string['msg4']; ?>");
           return false;
         }
       }
@@ -476,7 +467,7 @@ if (isset($_POST['Submit'])) {
           }
         }
         if (moduleList == '') {
-          alert ("OSCEs must be assigned to at least one module.");
+          alert ("<?php echo $string['msg5']; ?>");
           return false;
         }
       }
@@ -490,13 +481,13 @@ if (isset($_POST['Submit'])) {
       }
       if (external_set == true) {
         if (document.edit_form.ext_tmonth.options[document.edit_form.ext_tmonth.selectedIndex].value == '') {
-          alert("You have set some external examiners but not specified a deadline.");
+          alert("<?php echo $string['msg6']; ?>");
           return false;
         } else if (document.edit_form.ext_tday.options[document.edit_form.ext_tday.selectedIndex].value == '') {
-          alert("You have set some external examiners but not specified a deadline.");
+          alert("<?php echo $string['msg6']; ?>");
           return false;
         } else if (document.edit_form.ext_tyear.options[document.edit_form.ext_tyear.selectedIndex].value == '') {
-          alert("You have set some external examiners but not specified a deadline.");
+          alert("<?php echo $string['msg6']; ?>");
           return false;
         }        
       }
@@ -510,19 +501,19 @@ if (isset($_POST['Submit'])) {
       }
       if (internal_set == true) {
         if (document.edit_form.int_tmonth.options[document.edit_form.int_tmonth.selectedIndex].value == '') {
-          alert("You have set some internal reviewers but not specified a deadline.");
+          alert("<?php echo $string['msg6']; ?>");
           return false;
         } else if (document.edit_form.int_tday.options[document.edit_form.int_tday.selectedIndex].value == '') {
-          alert("You have set some internal reviewers but not specified a deadline.");
+          alert("<?php echo $string['msg6']; ?>");
           return false;
         } else if (document.edit_form.int_tyear.options[document.edit_form.int_tyear.selectedIndex].value == '') {
-          alert("You have set some internal reviewers but not specified a deadline.");
+          alert("<?php echo $string['msg6']; ?>");
           return false;
         }        
       }
      
       if (edit_form.paper.value == '') {
-        alert ("Please enter a name for the Paper.");
+        alert ("<?php echo $string['msg7']; ?>");
         return false;
       }    
     }
@@ -549,7 +540,7 @@ if (isset($_POST['Submit'])) {
         document.edit_form.tmonth.value = document.edit_form.fmonth.options[document.edit_form.fmonth.selectedIndex].value;
         document.edit_form.tyear.value = document.edit_form.fyear.options[document.edit_form.fyear.selectedIndex].value;
         if (document.getElementById('rubric_text').value == '') {
-          oEdit3.loadHTML("This is a closed-book examination and students may <em>not</em> refer to any other source (including dictionaries) or person in taking this paper. Calculators and other electronic equipment, except the examination computer, are not permitted.");
+          oEdit3.loadHTML("<?php echo $string['msg8']; ?>");
         }
       }
     }
