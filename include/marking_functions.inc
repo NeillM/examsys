@@ -338,11 +338,10 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           if ($answer_equation != '') {
             eval ("\$answer = \"" . $answer_equation . "\";");
           }
-          if ($saved_response_clean == $answer) {
+          if ($saved_response_clean === $answer and $saved_response_clean != '') {
             $mark = $marks_correct;
-          }
+          }          
         } else {
-          //if ($answer_equation != '' and $saved_response != '') {
           if ($answer_equation != '') {
             echo eval ("\$answer = $answer_equation;");
             $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
@@ -353,11 +352,11 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           
           $difference = round(abs($saved_response_clean - $answer), $decimals);
           
-          if ($saved_response_clean == $answer) {
+          if ($saved_response_clean === $answer and $saved_response_clean != '') {
             $mark = $marks_correct;
-          } elseif ($difference <= $score_array[1]) {
+          } elseif ($difference <= $score_array[1] and $score_array[1] > 0) {
             $mark = $marks_correct;
-          } elseif ($difference <= $score_array[2]) {
+          } elseif ($difference <= $score_array[2] and $score_array[2] > 0) {
             $mark = $marks_partial;
           } else {
             $mark = $marks_incorrect;

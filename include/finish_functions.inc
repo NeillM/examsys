@@ -577,7 +577,7 @@
             }
             if ($paper[$question]['mark'] == $paper[$question]['marks_correct']) {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-            } elseif ($paper[$question]['mark'] > 0 and $paper[$question]['mark'] == $paper[$question]['marks_partial']) {
+            } elseif ($score_array[2] > 0 and $paper[$question]['mark'] == $paper[$question]['marks_partial']) {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" />';
             } else {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
@@ -597,8 +597,8 @@
             echo ' ';
           }
                     
-          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_correct']) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
-          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_partial']) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[2];
+          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_correct'] and $score_array[1] > 0) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[1];
+          if ($saved_response_clean <> $tmp_answer[1] and $paper[$question]['mark'] == $paper[$question]['marks_partial'] and $score_array[2] > 0) echo ' ' . $string['withatoleranceof'] . ' ' . $score_array[2];
           
           if ($tmp_exclude == '1')  echo '</span>';
           echo "</td></tr>\n</table>\n";
@@ -621,7 +621,7 @@
         
           $paper[$question]['mark'] = 0;
           if (!empty($paper[$question]['scenario'])) echo_content($paper[$question]['scenario']);
-          if (!empty($paper[$question]['q_media'])) echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
+          if (!empty($paper[$question]['q_media'])) echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question) . "</p>\n";
           echo_content($paper[$question]['leadin']);
           echo '<table cellpadding="0" cellspacing="1" border="0">';
           

@@ -386,7 +386,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
   
   if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
 
-  $multi_part_qns = array('extmatch', 'matrix', 'blank', 'dichotomous', 'labelling');
+  $multi_part_qns = array('extmatch', 'matrix', 'blank', 'dichotomous', 'labelling', 'hotspot');
   
   if ($paper_buffer[$q_id]['score_method'] != 'Mark per Question' and in_array($paper_buffer[$q_id]['q_type'], $multi_part_qns)) {
     if ($paper_buffer[$q_id]['q_type'] == 'extmatch' or $paper_buffer[$q_id]['q_type'] == 'matrix') {
@@ -504,6 +504,24 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           }
         }
       }
+    } elseif ($paper_buffer[$q_id]['q_type'] == 'hotspot') {
+      if (array_key_exists($q_id,$exclude)) {
+        $tmp_exclude = $exclude[$q_id];
+      } else {
+        $tmp_exclude = '0000000000000000000000000000000000000000';
+      }
+      $question_parts = explode('|', $paper_buffer[$q_id]['correct'][0]);
+      $user_answers = explode('|', $tmp_user_answer);
+      
+      for ($i=0; $i<count($question_parts); $i++) {
+        if (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '1') {
+          $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_correct'];
+        } elseif (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '0') {
+          $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_incorrect'];
+        } else {
+          $tmp_user_mark_array[$q_id][] = 0;
+        }
+      }
     } elseif ($paper_buffer[$q_id]['q_type'] == 'labelling') {
       if (array_key_exists($q_id,$exclude)) {
         $tmp_exclude = $exclude[$q_id];
@@ -544,13 +562,31 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
         if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
           $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
           $correct += $paper_buffer[$q_id]['marks_correct'];
+          $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_correct'];
         } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
           $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
           $correct += $paper_buffer[$q_id]['marks_incorrect'];
+          $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_incorrect'];
+        } else {
+          $tmp_user_mark_array[$q_id][] = 0;
         }
         $i++;
       }
-      if ($correct_labels > 0) $tmp_user_mark_array[$q_id][] = $correct;
+      
+      // If the user has not answered the question pad out with zero marks.
+      if (isset($tmp_user_mark_array[$q_id])) {
+        $user_answer_no = count($tmp_user_mark_array[$q_id]);
+      } else {
+        $user_answer_no = 0;
+      }
+      if ($user_answer_no < count($correct_labels)) {
+        for ($i=$user_answer_no; $i<count($correct_labels); $i++) {
+          $tmp_user_mark_array[$q_id][] = 0;
+        }
+      }
+      
+      $paper_buffer[$q_id]['correct_labels'] = $correct_labels;
+      //if ($correct_labels > 0) $tmp_user_mark_array[$q_id][] = $correct;
     }
   } else {
     // Marking per Question, or all other question types, simply return the original mark.
