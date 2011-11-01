@@ -74,6 +74,13 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
     document.getElementById("lab_name").value = '';
     document.getElementById("lab_name").style.color = 'black';    
   }
+  
+  function checkForm() {
+    if (document.getElementById('addresses').value == '') {
+      alert('Cannot create lab as there are no IP Addresses listed.');
+      return false;
+    }
+  }
 </script>
 </head>
 
@@ -82,7 +89,7 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
   require '../include/lab_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return checkForm()">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a> - <a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['createnewlab']; ?></div></td></tr>
 <tr><td style="height: 3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
@@ -90,7 +97,7 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
 <br />
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin-left:10px; margin-right:10px">
 <tr><td style="vertical-align:top; width:200px"><div><strong><?php echo $string['ipaddresses']; ?></strong></div>
-<textarea cols="20" rows="28" style="width:200px; height:590px" name="addresses"></textarea></td><td style="width:50px"></td><td style="vertical-align:top">
+<textarea cols="20" rows="28" style="width:200px; height:590px" name="addresses" id="addresses"></textarea></td><td style="width:50px"></td><td style="vertical-align:top">
 
 <div><strong><?php echo $string['name']; ?></strong></div>
 <div><input type="text" size="40" name="lab_name" value="" /></div>

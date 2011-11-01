@@ -253,7 +253,7 @@ if (isset($_POST['Submit'])) {
     $result->execute();
     $result->store_result();
     $result->bind_result($q_id);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       $editPaper = $mysqli->prepare("UPDATE questions SET q_group=? WHERE q_id=?");
       $editPaper->bind_param('si',$first_module, $q_id);
       $editPaper->execute();
@@ -361,7 +361,7 @@ if (isset($_POST['Submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><?php echo $string['propertiestitle'] . " $cfg_install_type"; ?></title>
+  <title><?php echo $string['propertiestitle'] . ' ' . $cfg_install_type; ?></title>
 
   <style>
     body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:0px; font-size:100%}
