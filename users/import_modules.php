@@ -30,7 +30,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-  <title>Rogō: Import Modules<?php echo " $cfg_install_type"; ?></title>
+  <title><?php echo $string['impmodtitle'] . " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
     body {font-family:Arial,sans-serif; background-color:white; colour:black}
@@ -51,19 +51,19 @@
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/" . $userID . "_cohort_update.csv"))  {
-        echo 'Problem - ';
+        echo $string['problem'];
         if ($_FILES['csvfile']['error'] == "0") {
-          echo("Value 0: No problem, the file is uploaded.");
+          echo($string['problem']);
         } elseif ($_FILES['csvfile']['error'] == "1") {
-          echo("Value 1: The uploaded file was bigger then  upload_max_filesize in php.ini.");
+          echo($string['problem']);
         } elseif ($_FILES['csvfile']['error'] == "2") {
-          echo("Value 2: The uploaded file was bigger then MAX_FILE_SIZE in html-form.");
+          echo($string['problem']);
         } elseif ($_FILES['csvfile']['error'] == "3") {
-          echo("Value 3: File partialy uploaded.");
+          echo($string['problem']);
         } elseif ($_FILES['csvfile']['error'] == "4") {
-          echo("Value 4: No file was uploaded.");
+          echo($string['problem']);
         } else {
-          echo("Other problem: " . $_FILES['csvfile']['error']);
+          echo($string['problem'] . $_FILES['csvfile']['error']);
         }
         exit;
       } else {
