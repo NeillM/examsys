@@ -22,7 +22,7 @@
 * @package
 */
 
-require './lang/' . $language . '/include/errors.inc';
+require '../lang/' . $language . '/include/errors.inc';
 
 
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true) {
