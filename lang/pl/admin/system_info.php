@@ -6,6 +6,7 @@ $string['records'] = 'Rekordy';
 $string['updated'] = 'Zaktualizowane';
 $string['engine'] = 'Mechanizm';
 $string['version'] = 'Wersja';
+$string['application'] = 'Aplikacja Rogō';
 $string['webroot'] = 'Ścieżka';
 $string['database'] = 'Baza danych';
 $string['authentication'] = 'Autoryzacja';

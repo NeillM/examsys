@@ -5,6 +5,7 @@ $string['table'] = 'Table';
 $string['records'] = 'Records';
 $string['updated'] = 'Updated';
 $string['engine'] = 'Engine';
+$string['application'] = 'Rogō application';
 $string['version'] = 'Version';
 $string['webroot'] = 'Web Root';
 $string['database'] = 'Database';
