@@ -575,10 +575,16 @@ function getMSCAA($paperID, $mysqlidb) {
       $temp_array[$row_no]['theme'] = $theme;
       $temp_array[$row_no]['screen'] = $screen;
       $temp_array[$row_no]['q_type'] = $q_type;
-      
-      $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin,"<div>,<span>"))));
-      $temp_array[$row_no]['leadin'] = preg_replace('/ style="[\w-,:; \']*"/i', '', $temp_array[$row_no]['leadin']);
-      if (strpos($temp_array[$row_no]['leadin'],'class="mee"') === false and strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
+      $temp_array[$row_no]['leadin'] = $leadin;
+      if (strpos($temp_array[$row_no]['leadin'],'class="mee"') === false) {
+        $temp_array[$row_no]['leadin'] = strip_tags($temp_array[$row_no]['leadin']);                                     // No equation, strip all tags
+        if (strlen($temp_array[$row_no]['leadin']) > 160) {
+          $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
+        }
+      } else {
+        $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($temp_array[$row_no]['leadin'],"<div>,<span>"))));
+        $temp_array[$row_no]['leadin'] = preg_replace('/ style="[\w-,:; \']*"/i', '', $temp_array[$row_no]['leadin']);   // Equation present, strip some formatting
+      }
       
       $temp_array[$row_no]['scenario'] = $scenario;
       $temp_array[$row_no]['p_id'] = $p_id;
