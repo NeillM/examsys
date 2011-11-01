@@ -115,6 +115,7 @@ $stmt->close();
     if (window.focus) {
       notice.focus();
     }
+    this.event.returnValue = false;
     return false;
   }
 
@@ -123,6 +124,7 @@ $stmt->close();
     if (window.focus) {
       notice.focus();
     }
+    this.event.returnValue = false;
     return false;
   }
 
