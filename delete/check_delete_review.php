@@ -23,16 +23,21 @@
 */
 
 require '../include/staff_auth.inc';
+require '../include/errors.inc';
 
-  $mysqli->close();
-  
-  function niceDate($tmp_date) {
-    return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);
-  }
+check_var('setterID', 'GET', true, false);
+check_var('dateID', 'GET', true, false);
+check_var('paperID', 'GET', true, false);
+
+$mysqli->close();
+
+function niceDate($tmp_date) {
+  return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);
+}
 ?>
 <html>
 <head>
-<title>Confirm Review Delete</title>
+<title><?php echo $string['confirmreviewdelete']; ?></title>
 
 <style>
 body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:80%; text-align:justifed}
@@ -43,17 +48,17 @@ body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-s
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/assessment_bin.png" width="32" height="37" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" width="32" height="37" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
-<td><p>Are you sure you wish to delete this review made on <strong><?php echo niceDate($_GET['dateID']); ?></strong>?</p>
+<td><p><?php printf($string['confirmmsg'], niceDate($_GET['dateID'])); ?></p>
 
 <div style="text-align: right">
 <form action="do_delete_review.php" method="post">
 <input type="hidden" name="setterID" value="<?php echo $_GET['setterID']; ?>" />
 <input type="hidden" name="dateID" value="<?php echo $_GET['dateID']; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
-<input type="submit" name="submit" value="Delete Review" />&nbsp;
-<input type="button" name="cancel" value=" Cancel " onclick="javascript:window.close();" />
+<input type="submit" name="submit" value="<?php echo $string['deletereview']; ?>" />&nbsp;
+<input type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
 </form>
 </div>
 </td></tr>
