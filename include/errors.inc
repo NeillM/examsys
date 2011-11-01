@@ -22,9 +22,7 @@
 * @package
 */
 
-$path = $_SERVER['DOCUMENT_ROOT'];
-require $path . '/lang/' . $language . '/include/errors.inc';
-
+require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
 
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true) {
   // $error_title - heading which is displayed
