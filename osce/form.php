@@ -102,7 +102,7 @@
       if (time() < $start_date or time() > $end_date) {
         echo "<html><head>\n<title>Access Denied</title>\n<style>\nbody {font-size:120%;font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#4465A2;font-size:140%}\n</style></head>\n<body style=\"font-family:Arial,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"/artwork/clock_48.png\" width=\"48\" height=\"48\" /></div>\n";
         echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-        echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">The paper you are attempting to access is only available between the following times:</p>\n<ul style=\"margin-left:80px\">\n<li>From - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>To - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"&lt; Back\" style=\"width:100px\" name=\"back\" onclick=\"history.back();\"></form></p>\n</body>\n</html>";
+        echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">" . $string['paperavailable'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>From - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>To - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"&lt; Back\" style=\"width:100px\" name=\"back\" onclick=\"history.back();\"></form></p>\n</body>\n</html>";
         $mysqli->close();
         exit;
       }
