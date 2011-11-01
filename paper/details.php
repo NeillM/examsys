@@ -511,20 +511,19 @@ function getMSCAA($paperID, $mysqlidb) {
   $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
   $temp_array = array();
   while ($result->fetch()) {
-    // latex check [tex]
+
     if ($latex == 0) {
+      // latex check [tex]
       if (strpos($leadin,'[tex]') !== false or strpos($scenario,'[tex]') !== false or strpos($option_text,'[tex]') !== false or strpos($score_method,'[tex]') !== false or strpos($correct_fback,'[tex]') !== false or strpos($feedback_right,'[tex]') !== false) {
         $latex = 1;
       }
-    }
-    // latex check $$
-    if ($latex == 0) {
+    
+      // latex check $$
       if (strpos($leadin,'$$') !== false or strpos($scenario,'$$') !== false or strpos($option_text,'$$') !== false or strpos($score_method,'$$') !== false or strpos($correct_fback,'$$') !== false or strpos($feedback_right,'$$') !== false) {
         $latex = 1;
       }
-    }
-    // latex check class="mee"
-    if ($latex == 0) {
+    
+      // latex check class="mee"
       if (strpos($leadin,'class="mee"') !== false or strpos($scenario,'class="mee"') !== false or strpos($option_text,'class="mee"') !== false or strpos($score_method,'class="mee"') !== false or strpos($correct_fback,'class="mee"') !== false or strpos($feedback_right,'class="mee"') !== false) {
         $latex = 1;
       }
@@ -537,7 +536,11 @@ function getMSCAA($paperID, $mysqlidb) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
       if ($old_display_pos != -1) {
         $temp_array[$row_no2]['options'] = $options;
-        $tmp_array[$row_no2]['o_media'] = $old_o_media;
+        if (empty($old_o_media)) {
+          $temp_array[$row_no2]['o_media'] = array();
+        } else {
+          $temp_array[$row_no2]['o_media'] = $old_o_media;
+        }
       }
       $options = 0;
       if ($old_q_type == 'random') {
