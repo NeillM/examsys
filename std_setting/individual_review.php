@@ -313,6 +313,7 @@ $current_screen = 1;
     document.questions.hi2.value = HI + ' <?php echo $string['marks']; ?>';
     document.questions.hn2.value = HN + ' <?php echo $string['marks']; ?>';
 
+    var paper_marks = document.getElementById('total_marks').value;
     var cut_marks = 0;
     cut_marks += EE * document.questions.EE.value * 100;
     cut_marks += EI * document.questions.EI.value * 100;
@@ -324,8 +325,8 @@ $current_screen = 1;
     cut_marks += HI * document.questions.HI.value * 100;
     cut_marks += HN * document.questions.HN.value * 100;
     var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
-    var cut_score = (cut_marks / total_marks) * 100;
-    document.questions.cut_score.value = '<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
+    var cut_score = (cut_marks / paper_marks) * 100;
+    document.questions.cut_score.value = '<?php echo $string['papermarks']; ?>=' + paper_marks + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
 
     cut_marks = 0;
     cut_marks += EE * document.questions.EE2.value * 100;
@@ -338,7 +339,7 @@ $current_screen = 1;
     cut_marks += HI * document.questions.HI2.value * 100;
     cut_marks += HN * document.questions.HN2.value * 100;
     var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
-    var cut_score = (cut_marks / total_marks) * 100;
+    var cut_score = (cut_marks / paper_marks) * 100;
     document.questions.cut_score2.value = '<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
   }
 <?php
@@ -465,7 +466,6 @@ $current_screen = 1;
 
     if ($question_no == 0) echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     if ($old_q_id != $q_id) {          // New Question
-      $question_no++;
       // Print the options of the previous question
       $li_set = 0;
       if ($old_leadin != '') {
@@ -478,6 +478,7 @@ $current_screen = 1;
           echo '</table></td></tr>';
         }
       }
+      $question_no++;
       if (($old_q_type == 'likert' and $q_type != 'likert') or ($old_q_type != 'likert' and $q_type == 'likert')) echo "</table>\n<br />\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
       if ($theme != '') {
@@ -534,7 +535,6 @@ $current_screen = 1;
   $result->close();
 
   // Print the options for the last question on the screen.
-  $question_no++;
   display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
 
   echo '</td></tr></table></td></tr>';

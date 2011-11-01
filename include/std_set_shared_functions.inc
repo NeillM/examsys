@@ -17,6 +17,7 @@
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   $reviews = array();
   
+  // TODO: make prepared query
   if ($mode == 'index') {
     $reviews_query = $mysqli->query("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=$paperID ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
   } else {
@@ -225,6 +226,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
   $stems = 0;
   $correct_no = 0;
   $old_score_method = '';
+  // TODO: make prepared query
   $question_data = $mysqli->query("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text FROM (papers, questions, options) WHERE papers.paper=".$paper_id." AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
   while ($row = $question_data->fetch_assoc()) {
     if ($old_q_id != $row['q_id'] and $old_q_id != 0) {
@@ -232,7 +234,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
         if (isset($exclude[$old_q_id]) and strpos($exclude[$old_q_id], '1') !== false) {
           $marks_array[$old_q_id][$partID] = 0;
         } else {
-          $marks_array[$old_q_id][$partID] = 1;
+          $marks_array[$old_q_id][$partID] = $row['marks_correct'];
         }
       }
       $stems = 0;
@@ -314,7 +316,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
         break;
       case 'mcq':
         if (substr($exclude[$old_q_id], $partID, 1) == '0') {
-          if ($row['correct'] == $partID) {
+          if ($row['correct'] == $partID + 1) {
             $marks_array[$old_q_id][0] = $row['marks_correct'];
           } 
           $partID++;
@@ -863,7 +865,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
   
   // Process the passed values for group reviews
   if ($is_group) {
-    $review_string = (!empty($value['string'])) ? $value['string'] : '';
+    $review_string = ($value['string'] === 0 or !empty($value['string'])) ? $value['string'] : '';
     $mean = (isset($value['raw_mean'])) ? $value['raw_mean'] : 0;
     $valid = (isset($value['valid'])) ? $value['valid'] : false;
     $tmp_value = (isset($value['mean'])) ? $value['mean'] : 0;
@@ -890,17 +892,14 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     $fgcolor = 'black';
   }
 
-  $qID = $q_no - 1;
+  $qID = $q_no;
   if ($part_no != '') $qID .= '_' . $part_no;
   switch ($method) {
     case 'modified_angoff':
-      $html = "<select name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>";
+      $html = "<select name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>\n";
       for ($i=0; $i<=100; $i+=5) {
-        if ($valid and $value == $i) {
-          $html .= "<option value=\"$i\" selected=\"selected\">$i%</option>\n";
-        } else {
-          $html .= "<option value=\"$i\">$i%</option>\n";
-        }
+        $sel = ($valid and $value !== '' and $value == $i) ? ' selected="selected"' : '';
+        +$html .= "<option value=\"$i\"$sel>$i%</option>\n";
       }
       $html .=  "</select>\n";
       $html .= $review_string;
@@ -918,7 +917,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
       $html .= "</select>\n";
       break;
   }
-  $html .= "<input type=\"hidden\" id=\"std" . $stdID . "_marks\" value=\"$marks\" />\n";
+  $html .= "<input type=\"hidden\" name=\"std" . $stdID . "_marks\" id=\"std" . $stdID . "_marks\" value=\"$marks\" />\n";
   $stdID++;
   return $html;
 }
