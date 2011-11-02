@@ -50,7 +50,7 @@ function displayMappingTab($paper_id, $touchstonedb, $created, $modified) {
     <td style="width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)"><?php echo $string['mapping']; ?></td>
   </tr>
   </table>
-  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong>" . $string['created'] . "</strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;&nbsp;<strong>" . $string['modified'] . "</strong>&nbsp;<?php echo $modified; ?>&nbsp;</td></tr>
+  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong><?php echo $string['created']; ?></strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $string['modified']; ?></strong>&nbsp;<?php echo $modified; ?>&nbsp;</td></tr>
 
   <tr>
   <td colspan="5" style="background-color:#1E3C7B">&nbsp;</td>
@@ -72,6 +72,7 @@ function displayMappingTab($paper_id, $touchstonedb, $created, $modified) {
  * 
  */
 function displayMappingTabAdd($paper_id, $touchstonedb, $created) {
+  global $string;	
   ?>
   <table cellpadding="0" cellspacing="0" border="0" id="mappingtab" style="display:none; font-size:90%; background-color:#DFECFF">
   <tr><td>
@@ -81,7 +82,7 @@ function displayMappingTabAdd($paper_id, $touchstonedb, $created) {
     <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)" onclick="showTab('mappingtab');"><?php echo $string['mapping']; ?></td>
   </tr></table>
   </td>
-  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong>" . $string['created'] . "</strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;</td>
+  <td style="width:100%; background-color:#DFECFF; text-align:right"><strong><?php echo $string['created']; ?></strong>&nbsp;<?php echo $created; ?>&nbsp;&nbsp;&nbsp;</td>
   </tr>
   <tr><td colspan="3" style="background-color:#1E3C7B">&nbsp;</td></tr>
 
@@ -92,8 +93,8 @@ function displayMappingTabAdd($paper_id, $touchstonedb, $created) {
     echo displayObjectivesMappingForm($paper_id, $touchstonedb);
   } else {
     echo "<div>";
-    echo "<h2 style=\"color:#316AC5; font-weight:bold\">Mapping Disabled</h2>";
-    echo "<p>This quistion is Not on a paper and hence can not be mapped</p>";
+    echo "<h2 style=\"color:#316AC5; font-weight:bold\">" . $string['mappingdisabled'] . "</h2>";
+    echo "<p>" . $string['questionnotonpaper'] . "</p>";
     echo "</div>";
   }
   echo "</td></tr>\n</table>";
