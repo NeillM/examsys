@@ -12,6 +12,7 @@ $string['importmarks'] = 'Importuj punkty';//??
 $string['standardssetting'] = 'Wyznaczanie standardu';
 $string['importoscemarks'] = 'Importuj punkty OSCE';
 $string['copypaper'] = 'Kopiuj arkusz';
+$string['linktopaper'] = 'Powiąż z arkuszem';
 $string['deletepaper'] = 'Usuń arkusz';
 $string['retirepaper'] = 'Wycofaj arkusz';
 $string['printhardcopy'] = 'Wydrukuj';

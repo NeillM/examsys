@@ -22,6 +22,7 @@ $string['currentquestiontasks'] = 'Current Question Tasks';
 $string['editquestion'] = 'Edit Question';
 $string['information'] = 'Information';
 $string['copyontopaperx'] = 'Copy onto Paper X...';
+$string['linktopaper'] = 'Link to paper';
 $string['moveup'] = 'Move up';
 $string['movedown'] = 'Move down';
 $string['changescreenno'] = 'Change Screen No.';

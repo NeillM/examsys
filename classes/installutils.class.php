@@ -23,8 +23,6 @@
 * @copyright Copyright (c) 2011 The University of Nottingham
 * @package
 */
-define('DIR_SEPARATOR', '/');
-$cfg_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/userutils.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/moduleutils.class.php';

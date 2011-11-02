@@ -1032,7 +1032,6 @@ if (!isset($_POST['update'])) {
     $update_o_t->bind_param('i', $questionID);
     $update_o_t->execute();
     $update_o_t->close();
-    echo "<li>UPDATE options SET correct='t', marks_correct=1, marks_incorrect=-1 WHERE o_id={$questionID} AND correct='y'</li>\n";
     ob_flush();
     flush();
     
@@ -1040,7 +1039,6 @@ if (!isset($_POST['update'])) {
     $update_o_f->bind_param('i', $questionID);
     $update_o_f->execute();
     $update_o_f->close();
-    echo "<li>UPDATE options SET correct='f', marks_correct=1, marks_incorrect=-1 WHERE o_id={$questionID} AND correct='n'</li>\n";
     ob_flush();
     flush();
     
@@ -1048,7 +1046,6 @@ if (!isset($_POST['update'])) {
     $update_q->bind_param('i', $questionID);
     $update_q->execute();
     $update_q->close();
-    echo "<li>UPDATE questions SET q_type='dichotomous', display_method='TF_Positive', score_method='Mark per Option' WHERE q_id={$questionID}</li>\n";
     ob_flush();
     flush();
   }
@@ -1058,7 +1055,6 @@ if (!isset($_POST['update'])) {
   $adjust = $mysqli->prepare("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND marks_correct IS NULL OR marks_correct=0");
   $adjust->execute();
   $adjust->close();
-  echo "<li>UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND marks_correct IS NULL OR marks_correct=0</li>\n";
   ob_flush();
   flush();
   
@@ -1077,7 +1073,6 @@ if (!isset($_POST['update'])) {
       $update_q->bind_param('si', $new_method, $questionID);
       $update_q->execute();
       $update_q->close();
-      //echo "<li>UPDATE questions SET display_method='{$new_method}' WHERE q_id={$questionID}</li>\n";
       ob_flush();
       flush();
     }
@@ -1093,7 +1088,6 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'");
     $adjust->execute();
     $adjust->close();
-    echo "<li>UPDATE questions SET q_type='textbox', display_method='40x1' WHERE q_type='timedate'</li>\n";
     ob_flush();
     flush();
   }

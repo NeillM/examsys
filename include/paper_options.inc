@@ -203,6 +203,14 @@ $stmt->close();
     }
   }
 
+  function linkToPaper() {
+    notice=window.open("../question/link_to_paper.php?q_id=" + document.PapersMenu.questionID.value + "","linktopaper","width=500,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250,screen.height/2-250);
+    if (window.focus) {
+      notice.focus();
+    }
+  }
+  
   function questionInfo() {
     notice=window.open("/question/info.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=500,height=500,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-250,screen.height/2-250);
@@ -399,6 +407,7 @@ $stmt->close();
 <tr><td><img src="/artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
 <tr><td><img src="/artwork/information_icon_grey.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
 <tr><td><img src="/artwork/copy_icon_grey.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="greymenuitem"><?php echo $string['copyontopaperx']; ?></td></tr>
+<tr><td><img src="../artwork/link_grey.png" width="16" height="16" alt="Link 2 Paper" /></td><td class="greymenuitem"><?php echo $string['linktopaper']; ?></td></tr>
 <tr><td><img src="/artwork/promote_disabled.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="greymenuitem"><?php echo $string['moveup']; ?></td></tr>
 <tr><td><img src="/artwork/demote_disabled.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="greymenuitem"><?php echo $string['movedown']; ?></td></tr>
 <tr><td><img src="/artwork/screen_icon_grey.png" width="16" height="16" alt="<?php echo $string['changescreenno']; ?>" /></td><td class="greymenuitem"><?php echo $string['changescreenno']; ?></td></tr>
@@ -409,6 +418,7 @@ $stmt->close();
 <tr><td><img style="cursor:hand" onclick="editQuestion(); return false;" src="/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td><img style="cursor:hand" onclick="questionInfo(); return false;" src="/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td><img style="cursor:hand" onclick="copyToPaper(); return false;" src="/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="linkToPaper(); return false;" src="/artwork/link.png" width="16" height="16" alt="Link 2 Paper" border="0" /></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaper']; ?></a></td></tr>
 <tr><td><img style="cursor:hand" onclick="promote(); return false;" id="promoteicon" src="/artwork/promote.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="menuitem"><a id="promotetext" onclick="promote(); return false;"><?php echo $string['moveup']; ?></a></td></tr>
 <tr><td><img style="cursor:hand" onclick="demote(); return false;" id="demoteicon" src="/artwork/demote.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="menuitem"><a id="demotetext" onclick="demote(); return false;"><?php echo $string['movedown']; ?></a></td></tr>
 <?php
@@ -425,6 +435,7 @@ if ($paper_type == '4') {
 <tr><td><img style="cursor:hand" onclick="editQuestion(); return false;" src="/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td><img style="cursor:hand" onclick="questionInfo(); return false;" src="/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td><img style="cursor:hand" onclick="copyToPaper(); return false;" src="/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
+<tr><td><img style="cursor:hand" onclick="linkToPaper(); return false;" src="/artwork/link.png" width="16" height="16" alt="Link 2 Paper" border="0" /></td><td class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><?php echo $string['linktopaper']; ?></a></td></tr>
 <tr><td><img src="/artwork/promote_disabled.gif" width="16" height="16" alt="<?php echo $string['moveup']; ?>" /></td><td class="greymenuitem"><?php echo $string['moveup']; ?></td></tr>
 <tr><td><img src="/artwork/demote_disabled.gif" width="16" height="16" alt="<?php echo $string['movedown']; ?>" /></td><td class="greymenuitem"><?php echo $string['movedown']; ?></td></tr>
 <tr><td><img src="/artwork/screen_icon_grey.png" width="16" height="16" alt="<?php echo $string['changescreenno']; ?>" /></td><td class="greymenuitem"><?php echo $string['changescreenno']; ?></td></tr>
