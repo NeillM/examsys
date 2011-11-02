@@ -128,7 +128,6 @@ if ($critical_error == '') {
     if ($question->requires_correction_intermediate() and (!isset($_POST['corrected']) or $_POST['corrected'] != 'OK')) {
       $show_correction_intermediate = true;
     } else {
-      // TODO: check how this generalises to all question types
       $unified_part_names = $question->get_unified_fields();
       $save_individual = in_array('correct', array_keys($unified_part_names));
       

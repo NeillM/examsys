@@ -55,8 +55,15 @@ Class OptionEXTMATCH extends Option {
   }
   
   public function set_correct($value=-1) {
+    $stems = $this->_question->get_all_stems();
+    $media = $this->_question->get_all_medias();
     $tmp = array();
-    foreach ($this->all_corrects as $correct) {
+    for ($i = 0; $i < count($this->all_corrects); $i++) {
+      // Don't save correct answer if the option is empty
+      if ($stems[$i] == '' and $media[$i] == '') {
+        $this->all_corrects[$i] = '';
+      }
+      $correct = $this->all_corrects[$i];
       $tmp[] = (is_array($correct)) ? implode('$', $correct) : '';
     }
     $this->correct = implode('|', $tmp);
