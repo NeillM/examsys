@@ -110,7 +110,7 @@ function randomDetails($questionID) {
         $random_questions[$question_no]['status'] = $old_status;
         $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
         $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+        $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         $old_correct = array();
         $old_option_text = array();
         $question_no++;
@@ -142,7 +142,7 @@ function randomDetails($questionID) {
     $random_questions[$question_no]['status'] = $old_status;
     $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
     $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-    $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+    $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
   }
   $result->close();
 
@@ -558,7 +558,7 @@ function getMSCAA($paperID, $mysqlidb) {
         $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
         if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-          $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+          $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
       }
       if ($row_no2 > 0 and $temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];
@@ -679,7 +679,7 @@ function getMSCAA($paperID, $mysqlidb) {
       $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $excluded[$old_q_id], $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
       if ($temp_array[$row_no2]['status'] != 'Experimental') {
         $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-        $total_random_mark += qRandomMarks($old_q_type, $excluded[$old_q_id], $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+        $total_random_mark += qRandomMarks($old_q_type, $excluded[$old_q_id], $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
     }
     if ($temp_array[$row_no2]['status'] != 'Experimental') $total_marks += $temp_array[$row_no2]['marks'];

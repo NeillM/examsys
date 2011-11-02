@@ -200,7 +200,7 @@
             $tmp_exclude = '';
           }
           $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
-          $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+          $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
         $correct_no = 0;
         $old_marks_correct = 0;
@@ -264,7 +264,7 @@
       $tmp_excluded = '';
     }
     $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
-    $total_random_mark += qRandomMarks($old_q_type, $tmp_excluded, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+    $total_random_mark += qRandomMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
     
     // Parse for random questions.
     for ($i=1; $i<=$q_no; $i++) {
@@ -358,7 +358,7 @@
         }
         $paper[$i]['totalpos'] = qMarks($q_type, $tmp_excluded, $marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method);
         //if ($paper[$i]['status'] != 'Experimental') $total_marks += $paper[$i]['totalpos'];
-        $total_random_mark += qRandomMarks($q_type, $tmp_excluded, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method, $q_media_width, $q_media_height);
+        $total_random_mark += qRandomMarks($q_type, $tmp_excluded, $old_marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method, $q_media_width, $q_media_height);
       }
     }
 
