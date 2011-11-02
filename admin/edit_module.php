@@ -215,9 +215,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         echo "<optgroup label=\"$faculty\">\n";
       }
       if ($school == $list_school) {
-        echo "<option value=\"$id\" selected>$school</option>\n";
+        echo "<option value=\"$id\" selected>$list_school</option>\n";
       } else {
-        echo "<option value=\"$id\">$school</option>\n";
+        echo "<option value=\"$id\">$list_school</option>\n";
       }
       $old_faculty = $faculty;
     }
