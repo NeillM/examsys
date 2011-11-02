@@ -1,6 +1,6 @@
 <?php
-$string['deleteebelgrid'] = 'Delete Ebel Grid Template';
-$string['recyclebin'] = 'Recycle Bin';
-$string['msg1'] = "Are you sure you wish to delete Ebel grid template called '%s'?";
-$string['delete'] = 'Delete';
+$string['deleteebelgrid'] = 'Usuń szablon siatki metody Ebel';
+$string['recyclebin'] = 'Kosz';
+$string['msg1'] = "Czy na pewno usunąć szablon siatki metody Ebel o nazwie '%s'?";
+$string['delete'] = 'Usuń';
 ?>

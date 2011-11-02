@@ -12,3 +12,6 @@ $string['questionproblems'] = 'Some of your questions did not import correctly.'
 $string['hadproblemsimporting'] = '%d out of %d questions had problems importing.';
 $string['importedquestions'] = 'Imported %d question(s).';
 $string['backtopaper'] = 'Back to paper';
+$string['errmsg1'] = 'This export type is not supported';
+$string['errmsg2'] = 'This import type is not supported';
+?>

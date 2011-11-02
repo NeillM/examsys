@@ -18,6 +18,6 @@ $string['itsupport'] = 'Wsparcie IT';
 $string['plagarism'] = 'Plagiatorstwo';
 $string['ipaddresses'] = 'Adresy IP';
 $string['save'] = 'Zachowaj';
-$string['badaddressesmsg'] = 'The following IP addresses were invalid and not added to the lab: %s. Other addresses were saved. Niko';
-$string['backtolabs'] = 'Back to labs list Niko';
+$string['badaddressesmsg'] = 'Następujące adresy IP są niepoprawne i nie zostały dodane do pracowni: %s. Inne adresy zostały zapisane';
+$string['backtolabs'] = 'Powrót do listy pracowni';
 ?>
