@@ -1058,7 +1058,7 @@ if (!isset($_POST['update'])) {
   $adjust = $mysqli->prepare("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND marks_correct IS NULL OR marks_correct=0");
   $adjust->execute();
   $adjust->close();
-  //echo "<li>ALTER TABLE modules ADD COLUMN ebel_grid_template int</li>\n";
+  echo "<li>UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND marks_correct IS NULL OR marks_correct=0</li>\n";
   ob_flush();
   flush();
   
@@ -1077,7 +1077,7 @@ if (!isset($_POST['update'])) {
       $update_q->bind_param('si', $new_method, $questionID);
       $update_q->execute();
       $update_q->close();
-      echo "<li>UPDATE questions SET display_method='{$new_method}' WHERE q_id={$questionID}</li>\n";
+      //echo "<li>UPDATE questions SET display_method='{$new_method}' WHERE q_id={$questionID}</li>\n";
       ob_flush();
       flush();
     }
@@ -1136,7 +1136,7 @@ if (!isset($_POST['update'])) {
       $adjust = $mysqli->prepare($q);
       $adjust->execute();
       $adjust->close();
-      echo "<div>Replacing [tex] " . htmlspecialchars($q) . "</div>";
+      //echo "<div>Replacing [tex] " . htmlspecialchars($q) . "</div>";
       ob_flush();
       flush();
     }
@@ -1357,7 +1357,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE log4_overall ADD COLUMN yearofstudy tinyint");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE log4_overall ADD COLUMN yearofstudy tinyint</div>\n";
+    echo "<li>ALTER TABLE log4_overall ADD COLUMN yearofstudy tinyint</li>\n";
     ob_flush();
     flush();
 
@@ -1371,14 +1371,14 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE log4_overall DROP COLUMN year");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE log4_overall DROP COLUMN year</div>\n";
+    echo "<li>ALTER TABLE log4_overall DROP COLUMN year</li>\n";
     ob_flush();
     flush();
     
     $adjust = $mysqli->prepare("ALTER TABLE log4_overall CHANGE COLUMN yearofstudy year tinyint");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE log4_overall CHANGE COLUMN yearofstudy year tinyint</div>\n";
+    echo "<li>ALTER TABLE log4_overall CHANGE COLUMN yearofstudy year tinyint</li>\n";
     ob_flush();
     flush();
   }
@@ -1394,7 +1394,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN title title varchar(30)");
     $adjust->execute();
     $adjust->close();
-    echo "<div>ALTER TABLE users CHANGE COLUMN title title varchar(30)</div>\n";
+    echo "<li>ALTER TABLE users CHANGE COLUMN title title varchar(30)</li>\n";
     ob_flush();
     flush();
   }
@@ -1414,6 +1414,19 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
+  
+  // 02/11/2011 - Set the modules who do not have negative marking.
+  $result = $mysqli->prepare("UPDATE modules SET neg_marking=0 WHERE vle_api='NLE'");
+  $result->execute();
+  $result->close();
+  echo "<li>UPDATE modules SET neg_marking=0 WHERE vle_api='NLE'</li>\n";
+  
+  // 02/11/2011 - Clear the sys_error table for the new version.
+  $result = $mysqli->prepare("TRUNCATE sys_errors");
+  $result->execute();
+  $result->close();
+  echo "<li>TRUNCATE sys_errors</li>\n";
+
   echo "</ol>\n";
   
   //Close the database
