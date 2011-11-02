@@ -368,9 +368,9 @@ a.access:hover {color:white}
     echo '<select name="title">';
     foreach ($title_array as $individual_title) {
       if ($individual_title == $tmp_title) {
-        echo '<option value="' . $individual_title . '" selected>' . $string[strtolower($individual_title)] . '</option>';
+        echo '<option value="' . $individual_title . '" selected>' . $individual_title . '</option>';
       } else {
-        echo '<option value="' . $individual_title . '">' . $string[strtolower($individual_title)] . '</option>';
+        echo '<option value="' . $individual_title . '">' . $individual_title . '</option>';
       }
     }
     echo "</select>&nbsp;<input type=\"text\" name=\"first_names\" size=\"20\" value=\"$tmp_first_names\" />&nbsp;<input type=\"text\" size=\"15\" name=\"surname\" value=\"$tmp_surname\" /></td><td style=\"text-align:right\"><input type=\"submit\" name=\"update\" value=\"" . $string['update'] . "\" /></td></td></tr>\n";
