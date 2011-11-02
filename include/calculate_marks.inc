@@ -310,9 +310,15 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
       if ($score_method == 'Mark per Question') $random_mark = $prob * $marks_correct;
       break;
     case 'sct':
-      if (substr($tmp_exclude,0,1) == '0') {
-        $random_mark += 1 / count($option_text);
+      $max_correct = 0;
+      foreach($correct as $tmp_correct) {
+        if ($tmp_correct > $max_correct) $max_correct = $tmp_correct;
       }
+      $tmp_total = 0;
+      foreach($correct as $tmp_correct) {
+        $tmp_total += $tmp_correct / $max_correct;
+      }
+      $random_mark += $tmp_total / count($correct);
       break;
     case 'rank':
       $correct_no = 0;

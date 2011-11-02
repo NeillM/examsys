@@ -82,6 +82,11 @@
         echo '"' . $individual['gender'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
       }
       foreach ($paper_buffer as $q_id => $question) {
+        if (array_key_exists($q_id,$excluded)) {
+          $tmp_exclude = $excluded[$q_id];
+        } else {
+          $tmp_exclude = '0000000000000000000000000000000000000000';
+        }
         if (isset($individual['mark_array'][$q_id])) {
           if (is_array($individual['mark_array'][$q_id])) {
             foreach ($individual['mark_array'][$q_id] as $tmp_mark) {
@@ -91,7 +96,7 @@
             echo "," . $individual['mark_array'][$q_id];
           }
         } else {
-          echo ",0";
+          if (substr($tmp_exclude,0,1) == '0') echo ",0";
         }
       }
       echo "\n";

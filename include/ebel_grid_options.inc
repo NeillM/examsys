@@ -27,6 +27,14 @@
   function editTemplate() {
     document.location.href='/admin/edit_ebel_grid.php?id=' + document.getElementById('divID').value;
   }
+  
+  function deleteTemplate() {
+    notice=window.open("../delete/check_delete_ebel_template.php?gridID=" + document.getElementById('divID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    if (window.focus) {
+      notice.focus();
+    }
+  }
 </script>
 
 <div id="left-sidebar" class="sidebar">
@@ -39,11 +47,13 @@
 <table style="display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
 <tr><td><a href="" onclick="addFaculty(); return false;"><img src="../artwork/grid_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="add_ebel_grid.php"><?php echo $string['createnewgrid']; ?></a></td></tr>
 <tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editgrid']; ?></td></tr>
+<tr><td><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deletegrid']; ?></td></tr>
 </table>
 
 <table style="display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
 <tr><td><a href="" onclick="addTemplate(); return false;"><img src="../artwork/grid_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="add_ebel_grid.php"><?php echo $string['createnewgrid']; ?></a></td></tr>
 <tr><td><img onclick="editTemplate()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editTemplate(); return false;"><?php echo $string['editgrid']; ?></a></td></tr>
+<tr><td><img onclick="deleteTemplate()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteTemplate(); return false;"><?php echo $string['deletegrid']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>

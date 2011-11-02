@@ -66,8 +66,8 @@ function convert_year($old_year) {
     <style type="text/css">
       html {padding:0em; margin:0em; width:100%}
       body {padding:0em; margin:0em; width:100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black}
-      h1 {font-size:140%; color:#003163}
-      h2 {font-size:120%; color:#003163}
+      h1 {font-size:140%; color:#001979}
+      h2 {font-size:120%; color:#001979}
       .error {color:red; font-weight:bold}
       .warning {float:none; color:red; padding-left: .5em; vertical-align:top}
       label {float:left; width:7.5em; padding-left:0em; text-align:left}
@@ -89,7 +89,7 @@ function convert_year($old_year) {
   <body>
   <table class="topbar"> 
     <tr> 
-      <td><div style="font-size:26pt; font-weight:bold">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:56px; top:-8px; font-size:10pt">version 4.x to 4.1</div></td> 
+      <td><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:56px; top:-8px; font-size:10pt; color:#001979">version 4.x to 4.1</div></td> 
       <td style="text-align:right; padding-top:10px; padding-right:10px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
     </tr> 
     <tr> 
