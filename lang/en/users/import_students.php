@@ -11,4 +11,15 @@ $string['loading'] = 'Loading...';
 $string['followingerrors'] = 'No users added due to the following errors:';
 $string['usersadded'] = 'users added';
 $string['usersupdated'] = 'existing users updated';
+$string['missingcolumn'] = 'Missing \'%s\' Colum from import please add it.';
+$string['finished'] = 'Finished';
+$string['loadstudents'] = 'Rogō: Load Students';
+
+$string['emailmsg1'] = 'Create new user account';
+$string['emailmsg2'] = 'Dear $title $surname,';
+$string['emailmsg3'] = 'A new account has been created to access the online assessment and survey system TouchStone. Your personal authentication details are the same as your university log in details.';
+$string['emailmsg4'] = 'Note:';
+$string['emailmsg5'] = 'Never share your university username/password with anyone.';
+$string['emailmsg6'] = 'Cheating in summative examinations is an academic offence and will not be tolerated.';
+$string['emailmsg7'] = 'Could not send mail to <strong>$user_email</strong>.';
 ?>

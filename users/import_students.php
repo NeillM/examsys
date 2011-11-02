@@ -34,11 +34,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rogō: Load Students<?php echo " $cfg_install_type"; ?></title>
+<title><?php echo $string['loadstudents'] . " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <script language="JavaScript">
   function updateMsg() {
-    document.getElementById('msg').innerHTML = 'Finished';
+    document.getElementById('msg').innerHTML = '<?php echo $string['finished']; ?>';
   }
 </script>
 <script type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
