@@ -919,6 +919,22 @@ if (!isset($_POST['update'])) {
     echo "<li>CREATE TABLE ebel_grid_templates (id INT NOT NULL PRIMARY_KEY AUTO INCREMENT, EE tinyint, EI tinyint, EN tinyint, ME tinyint, MI tinyint, MN tinyint, HE tinyint, HI tinyint, HN tinyint, EE2 tinyint, EI2 tinyint, EN2 tinyint, ME2 tinyint, MI2 tinyint, MN2 tinyint, HE2 tinyint, HI2 tinyint, HN2 tinyint, name varchar(255))</li>\n";
     ob_flush();
     flush();
+    
+    if (strpos(strtolower($_SERVER['HTTP_HOST']), 'nottingham.ac.uk') !== false) {
+      $sql = array();
+      $sql[] = "INSERT INTO `ebel_grid_templates` (id,EE,EI,EN,ME,MI,MN,HE,HI,HN,EE2,EI2,EN2,ME2,MI2,MN2,HE2,HI2,HN2,name) VALUES (1,65,60,55,60,55,50,55,50,45,0,0,0,0,0,0,0,0,0,'BMedSci')";
+      $sql[] = "INSERT INTO `ebel_grid_templates` (id,EE,EI,EN,ME,MI,MN,HE,HI,HN,EE2,EI2,EN2,ME2,MI2,MN2,HE2,HI2,HN2,name) VALUES (2,80,60,55,55,50,35,45,35,30,0,0,0,0,0,0,0,0,0,'BMBS')";
+      $sql[] = "UPDATE modules SET ebel_grid_template=1 WHERE vle_api = 'NLE'";
+      $sql[] = "UPDATE modules SET ebel_grid_template=2 WHERE moduleid IN ('A13CLP','A14CHH','A14DOO','A14HCE','A14ONG','A14PSY','A14ACE')";
+      
+      foreach ($sql as $q) {
+        $adjust = $mysqli->prepare($q);
+        $adjust->execute();
+        $adjust->close();
+      }
+      echo "<li>Populating ebel_grid_templates with Nottingham data.";
+    }
+
   }
   $result->close();
 
@@ -1339,7 +1355,6 @@ if (!isset($_POST['update'])) {
     $update->close();
   }
   $result->close();
-  echo "</ol>\n";
   
   // 24/10/2011
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log4_overall' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='year'");
@@ -1421,6 +1436,8 @@ if (!isset($_POST['update'])) {
   $result->close();
   echo "<li>TRUNCATE sys_errors</li>\n";
 
+  
+  // End ------------------------------------------------------------------
   echo "</ol>\n";
   
   //Close the database
