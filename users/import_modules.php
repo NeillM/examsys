@@ -38,6 +38,17 @@
     h1 {font-size:120%; font-weight:bold}
     img { border-style:none; border-width:0px)
   </style>
+<script type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../javascript/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(function () { $('#import_form').validate(); });
+</script>
+<style type="text/css">
+label.error {
+display: block;
+color: #f00;
+}
+</style>
   </head>
 
   <body>
@@ -197,8 +208,8 @@
 <div><?php echo $string['msg2']; ?></div>
 <br />
 <div align="center">
-<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
-<p><input type="file" size="50" name="csvfile" /></p>
+<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+<p><input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
 <p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
