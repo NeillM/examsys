@@ -26,6 +26,7 @@
   require '../include/errors.inc';
   require '../config/campuses.inc';
   
+  $bad_addresses = array();
   if (isset($_POST['submit'])) {
     // Insert into Lab table.
     $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL,?,?,?,?,?,?,?)");
@@ -47,17 +48,21 @@
     $addresses = explode('<br />',nl2br($_POST['addresses']));
     foreach ($addresses as $individual_address) {
       $ip_address = trim($individual_address);
-      if($ip_address != '') {
-        $hostname = gethostbyaddr($ip_address);
-        $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
-        $result->bind_param('issi', $labID, $ip_address, $hostname, $_POST['low_bandwidth']);
-        $result->execute();  
-        $result->close();
+      if (preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $ip_address)) {
+        if($ip_address != '') {
+          $hostname = gethostbyaddr($ip_address);
+          $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
+          $result->bind_param('issi', $labID, $ip_address, $hostname, $_POST['low_bandwidth']);
+          $result->execute();  
+          $result->close();
+        }
+      } else {
+        $bad_addresses[] = $ip_address;
       }
     }
     
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_labs.php");
-  } else {
+    if (count($bad_addresses) == 0) header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_labs.php");
+  }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -93,6 +98,25 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a> - <a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['createnewlab']; ?></div></td></tr>
 <tr><td style="height: 3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+<?php
+if (count($bad_addresses) > 0) {
+?>
+<tr><td style="color: #f00; font-weight: bold;">
+<?php
+  $address_list = '';
+  foreach ($bad_addresses as $bad) {
+    $address_list .= $bad . ', ';
+  }
+  $address_list = rtrim($address_list, ', ');
+  printf($string['badaddressesmsg'], $address_list);
+?>
+<br /><br /><a href="./list_labs.php"><?php echo $string['backtolabs'] ?></a></td></tr>
+</table>
+</body>
+</html>
+<?php
+} else {
+?>
 </table>
 <br />
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin-left:10px; margin-right:10px">
