@@ -980,48 +980,31 @@
           echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'sct':
-          echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $excluded[$q_id], count($options), 1) . "</td></tr>\n";
+          $tmp_exclude = (isset($excluded[$q_id])) ? $excluded[$q_id] : '';
+          echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $tmp_exclude, count($options), 1, 1) . "</td></tr>\n";
           $i = 0;
           foreach ($options as $individual_option) {
             $i++;
+            $tmp_correct_no = (isset($freq_log[$q_id][1][$i])) ? $freq_log[$q_id][1][$i] : 0;
+            $tmp_top_no = (isset($top_log[$q_id][1][$i])) ? $top_log[$q_id][1][$i] : 0;
+            $tmp_bottom_no = (isset($bottom_log[$q_id][1][$i])) ? $bottom_log[$q_id][1][$i] : 0;
             if ($correct == $i) {
-              $tmp_correct_no = $freq_log[$q_id][1][$i];
-              echo "<tr style=\"font-weight:bold\"><td>t=" . number_format(($freq_log[$q_id][1][$i]/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1][$i]/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1][$i]/$candidate_no)*100,0) . "%</td><td>$std</td>";
+              echo "<tr style=\"font-weight:bold\"><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td>$std</td>";
             } else {
-              echo "<tr><td class=\"grey\">t=" . number_format(($freq_log[$q_id][1][$i]/$user_total)*100,0) . "%</td><td class=\"grey\">u=" . number_format(($top_log[$q_id][1][$i]/$candidate_no)*100,0) . "%</td><td class=\"grey\">l=" . number_format(($bottom_log[$q_id][1][$i]/$candidate_no)*100,0) . "%</td><td></td>";
+              echo "<tr><td class=\"grey\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td class=\"grey\">u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td class=\"grey\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td></td>";
             }
             echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
-            if ($excluded[$q_id] == '1') echo ' style="color:red; text-decoration:line-through"';
+            if ($tmp_exclude == '1') echo ' style="color:red; text-decoration:line-through"';
             echo ">$individual_option</td></tr>\n";
           }
           echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
-          echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
-          break;
-        case 'timedate':
-          echo "<p id=\"q_" . ($ex_no + 1) . "_1\"";
-          if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' style="color:red; text-decoration:line-through"';
-          if (isset($excluded[$q_id])) {
-            $tmp_exclude = $excluded[$q_id];
+          if ($top_log[$q_id]['totalpos'] > 0 and $bottom_log[$q_id]['totalpos'] > 0) {
+            $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
           } else {
-            $tmp_exclude = '';
+            $d = 0;
           }
-          echo ">" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "&nbsp;<strong>$std</strong>&nbsp;" . strip_tags($leadin) . "</p>\n";
-
-          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
-
-          $std_val = (isset($tmp_std_array[0])) ? $tmp_std_array[0] : '';
-          foreach ($freq_log[$q_id]['answers'] as $response) {
-            $tmp_correct_no = (isset($freq_log[$q_id][$response])) ? $freq_log[$q_id][$response] : 0;
-            $tmp_top_no = (isset($top_log[$q_id][$response])) ? $top_log[$q_id][$response] : 0;
-            $tmp_bottom_no = (isset($bottom_log[$q_id][$response])) ? $bottom_log[$q_id][$response] : 0;
-            if($response == $correct) {
-              echo "<tr><td><strong>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</strong></td><td><strong>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</strong></td><td><strong>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</strong></td><td style=\"font-weight:bold\">" . $std_val . "</td><td style=\"font-weight:bold\">$response</td></tr>\n";
-            } else {
-              echo "<tr><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td>" . $std_val . "</td><td>$response</td></tr>\n";
-            }
-          }
-          echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
+          $tmp_pstat = ($freq_log[$q_id]['totalpos'] > 0) ? pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos']) : 'p=' . 0;
+          echo "<tr><td>" . $tmp_pstat . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
           break;
       }
       if ($q_type != 'info' and $q_type != 'blank') echo "</table></p>\n";
