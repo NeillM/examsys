@@ -799,7 +799,7 @@ if (!isset($_POST['update'])) {
     echo "<li>ALTER TABLE options CHANGE COLUMN marks marks_correct float</li>\n";
     ob_flush();
     flush();
-    
+
     $adjust = $mysqli->prepare("ALTER TABLE options ADD COLUMN marks_incorrect float");
     $adjust->execute();
     $adjust->close();
@@ -1068,7 +1068,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 20/09/2011 - set marks for fill-in-the-blank question tyoe
-  $adjust = $mysqli->prepare("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND marks_correct IS NULL OR marks_correct=0");
+  $adjust = $mysqli->prepare("UPDATE options SET marks_correct=1, marks_incorrect=0 WHERE o_id IN (SELECT q_id FROM questions WHERE q_type='blank') AND (marks_correct IS NULL OR marks_correct=0)");
   $adjust->execute();
   $adjust->close();
   ob_flush();
