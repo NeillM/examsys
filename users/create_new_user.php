@@ -218,7 +218,6 @@ function checkForm() {
 }
 
 function ldaplookup() {
-global $string;
   notice=window.open("ldaplookup.php","ldap","width=650,height=250,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
   notice.moveTo(screen.width/2-325,screen.height/2-125);
   if (window.focus) {
@@ -258,7 +257,7 @@ if ($language != 'en') {
 }
 $titles = explode(',', $string['title_types']);
 foreach ($titles as $tmp_title) {
-  echo "<option value=\"$tmp_title\" selected>$tmp_title</option>";
+  echo "<option value=\"$tmp_title\">$tmp_title</option>";
 }
 ?>
 </select></td></tr>
