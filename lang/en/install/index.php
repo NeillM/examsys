@@ -1,6 +1,5 @@
 <?php
-$string['phpmissing'] = 'Error: PHP is Missing';
-$string['topmsg'] = 'Rogo requires that your web server is running PHP. Your server does not have PHP installed, or PHP is turned off.';
+
 $string['company'] = 'Company';
 $string['companyname'] = 'Company Name:';
 $string['databaseadminuser'] = 'Database Admin User'; 
@@ -25,7 +24,7 @@ $string['searchdn'] = 'Search dn:';
 $string['bindusername'] = 'bind username:';
 $string['bindpassword'] = 'bind password:';
 $string['sysadminuser'] = 'Rogō SysAdmin User';
-$string['initialsysadmin'] = 'An initial SysAdmin user accont is required to log in and create further normal staff accounts and generally administer the system.';
+$string['initialsysadmin'] = 'An initial SysAdmin user account is required to log in and create further normal staff accounts and generally administer the system.';
 $string['title'] = 'Title:';
 $string['title_types'] = "Mr,Mrs,Miss,Ms,Dr,Professor";
 $string['firstname'] = 'First Name:';
@@ -47,7 +46,7 @@ $string['logwarning2'] = 'cannot find staff_hlep.sql, could not install staff he
 $string['logwarning3'] = 'could not load student_help.sql, could not install student help';
 $string['logwarning4'] = 'cannot find student_help.sql, could not install student help';
 $string['displayerror1'] = 'The database name \'%s\' is in use please use a different one';
-$string['displayerror2'] = '3The database \'%s\' could not be created please check the admin users permissions';
+$string['displayerror2'] = 'The database \'%s\' could not be created please check the admin users permissions';
 $string['displayerror3'] = 'could not create table.';
 $string['wdatabaseuser'] = 'Database user ';
 $string['wnotcreated'] = ' could not be created';
@@ -63,10 +62,11 @@ $string['errors7'] = 'Rogo requires %s/temp to exist and be writeable to the web
 $string['errors8'] = 'Rogo requires Apache version $apache_min_ver';
 $string['errors9'] = 'Rogo requires Apache version $apache_min_ver or above you have';
 $string['errors10'] = 'Rogo requires PHP version $php_min_ver or above';
-$string['errors11'] = 'Rogo requires the PHP mysqli moduel to function please install or activate it.';
-$string['errors12'] = 'Rogō can only be accessed through https. Plese update you apache config.';
+$string['errors11'] = 'Rogo requires the PHP mysqli module to function please install or activate it.';
+$string['errors12'] = 'Rogō can only be accessed through https. Please update you apache config.';
 $string['errors13'] = 'Error';
-$string['errors14'] = 'The folowing warnings were generated';
+$string['errors14'] = 'The following warnings were generated';
 $string['errors15'] = 'Warning';
+$string['installscript'] = 'Rogō Install script';
 $string['systeminstallation'] = 'System Installation'; 
 ?>
