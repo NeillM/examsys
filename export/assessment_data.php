@@ -36,7 +36,7 @@
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($q_id, $parts);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $excluded[$q_id] = $parts;
   }
   $result->close();
@@ -52,7 +52,7 @@
   $result->bind_param('i',$_GET['paperID']);
   $result->execute();
   $result->bind_result($paper_title, $q_id, $q_type, $paper_type, $screen, $correct, $option_text, $score_method);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($old_q_id != $q_id and $old_q_id != -1) {
       $part = 0;
       $paper_buffer[$question_no]['ID'] = $old_q_id;
@@ -113,7 +113,7 @@
   //  $result->bind_param('iss',$_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
   //  $result->execute();
   //  $result->bind_result($tmp_userID, $answer_no);
-  //  while ($row = $result->fetch()) {
+  //  while ($result->fetch()) {
   //    if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
   //      $exclude .= ' AND log.userID != ' . $tmp_userID;
   //    }
@@ -135,7 +135,7 @@
   $result->store_result();
   $user_no = round(($result->num_rows/100)*$_GET['percent']);
   $student_no = 0;
-  while ($row = $result->fetch() and $student_no < $user_no) {
+  while ($result->fetch() and $student_no < $user_no) {
     if ($student_list == '') {
       $student_list = $tmp_userID;
     } else {
@@ -161,7 +161,7 @@
   $result->execute();
   $result->bind_result($student_id, $username, $userID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $q_type, $screen);
   $old_username = '';
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($old_username != $username or $old_started != $started) {
       $rowID++;
     }
@@ -301,7 +301,23 @@
           case 'calculation':
             echo ',' . $paper_buffer[$i]['correct'] . ',';
             break;
+          case 'sct':
+            if (!isset($excluded[$tmp_question_ID])) {
+              $correct = '';
+              $parts = explode(',', $paper_buffer[$i]['correct']);
+              $max_correct = 0;
+              for ($partID=1; $partID<count($parts); $partID++) {
+                if ($parts[$partID] > $max_correct) {
+                  $max_correct = $parts[$partID];
+                  $correct = $partID;
+                }            
+              }
+              echo ',' . $correct;
+            }
+            break;
           default:
+            var_dump($paper_buffer[$i]['correct']);
+            exit;
             if (!isset($excluded[$tmp_question_ID])) echo $paper_buffer[$i]['correct'];
             break;
         }
