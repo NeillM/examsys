@@ -988,7 +988,18 @@
             $tmp_correct_no = (isset($freq_log[$q_id][1][$i])) ? $freq_log[$q_id][1][$i] : 0;
             $tmp_top_no = (isset($top_log[$q_id][1][$i])) ? $top_log[$q_id][1][$i] : 0;
             $tmp_bottom_no = (isset($bottom_log[$q_id][1][$i])) ? $bottom_log[$q_id][1][$i] : 0;
-            if ($correct == $i) {
+            
+            $max_correct = 0;
+            $answer_no = 1;
+            foreach ($correct_buf as $tmp_correct) {
+              if ($tmp_correct > $max_correct) {
+                $max_correct = $tmp_correct;
+                $correct_anwer_no = $answer_no;
+              }
+              $answer_no++;
+            }
+
+            if ($correct_anwer_no  == $i) {
               echo "<tr style=\"font-weight:bold\"><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td>$std</td>";
             } else {
               echo "<tr><td class=\"grey\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td class=\"grey\">u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td class=\"grey\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td></td>";
