@@ -82,7 +82,7 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
   
   function checkForm() {
     if (document.getElementById('addresses').value == '') {
-      alert('Cannot create lab as there are no IP Addresses listed.');
+      alert('<?php echo $string['noipaddresses']; ?>');
       return false;
     }
   }
