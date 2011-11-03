@@ -396,8 +396,8 @@ foreach ($langstrings as $langstring) {
 if ($critical_error == '') {
   $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
   // TODO: format dates for locale
-  $creation_date = ($mode == 'Edit') ? strftime($cfg_short_date, $question->get_created('timestamp')) : $string['now'];
-  $modified_date = ($question->get_last_edited('timestamp')) ? strftime($cfg_short_date, $question->get_last_edited('timestamp')) : $string['never'];
+  $creation_date = ($mode == 'Edit') ? strftime($cfg_short_date, $question->get_created('timestamp')) : strftime($cfg_short_date, time());
+  $modified_date = ($question->get_last_edited('timestamp')) ? strftime($cfg_short_date, $question->get_last_edited('timestamp')) : $string['na'];
 ?>
     <div class="tab-bar">
       <div class="tab-holder">
@@ -456,9 +456,9 @@ if($critical_error != '') {
   } else {
     $query_string .= '?type=' . $question->get_type();;
   }
-  $query_string .= ($q_no != '') ? '&q_no=' . $q_no : '';
-  $query_string .= ($paper_id != -1) ? '&paperID=' . $paper_id : '';
-  $query_string .= ($module != '') ? '&module=' . $module : '';
+  $query_string .= ($q_no != '') ? '&amp;q_no=' . $q_no : '';
+  $query_string .= ($paper_id != -1) ? '&amp;paperID=' . $paper_id : '';
+  $query_string .= ($module != '') ? '&amp;module=' . $module : '';
 
 ?>
 	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput">

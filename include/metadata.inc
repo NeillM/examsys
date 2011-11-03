@@ -146,8 +146,9 @@ META;
             $checked = ' checked="checked"';
             $on = ' on';
           }
+          $enc_keyword = htmlentities($keyword['keyword']);
           $html .= <<< META
-      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$keyword['keyword']}</label></li>
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
 
 META;
           $i++;
@@ -172,8 +173,9 @@ META;
             $checked = ' checked="checked"';
             $on = ' on';
           }
+          $enc_keyword = htmlentities($keyword['keyword']);
           $html .= <<< META
-      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$keyword['keyword']}</label></li>
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
           
 META;
           $i++;
@@ -187,7 +189,7 @@ META;
       }
       
       $html .= <<< META
-      			</div></div>
+      			</div>
 
 META;
     }
@@ -230,8 +232,9 @@ HEADING;
         $disabled_mod = ' disabled="disabled"';
       }
       
+      $enc_name = htmlentities($fullname);
       $html .= <<< META
-                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_name}" type="checkbox"{$checked}{$disabled_mod} /> {$team_name}: {$fullname}</label></li>
+                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_name}" type="checkbox"{$checked}{$disabled_mod} /> {$team_name}: {$enc_name}</label></li>
 
 META;
 
