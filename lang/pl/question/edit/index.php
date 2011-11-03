@@ -112,6 +112,7 @@ $string['readactioned'] = 'Przeczytano - podjęto działania';
 $string['nocomments'] = 'Brak komentarzy';
 $string['commentsmsg'] = 'Nie zanotowano komentarzy dla tego pytania.';
 $string['objectives'] = 'Cele';
+$string['noobjectives'] = 'Nie odwzorowano żadnych celów';
 $string['noneabove'] = 'Żaden z powyższych';
 $string['noneabovemsg'] = 'Odznacz tu jeśli aktualne pytanie nie spełnia żadnego z powyższych celów %s.'; 
 $string['mandatory'] = 'Wypełnienie tego pola jest <strong>wymagane</strong>.';

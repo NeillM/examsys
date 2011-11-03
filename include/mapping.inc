@@ -1,4 +1,4 @@
-<?php
+  <?php
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -90,19 +90,25 @@ HTML;
             <ul class="hide">
 
 HTML;
-      
-      foreach ($class['objectives'] as $objectives) {
-        if ($objectives['mapped'] != 0) {
-          $checked = ' checked="checked"';
-          $old_mappings .= $objectives['id'] . ',';
-        } else {
-          $checked = '';
+      if (isset($class['objectives'])) {
+        foreach ($class['objectives'] as $objectives) {
+          if ($objectives['mapped'] != 0) {
+            $checked = ' checked="checked"';
+            $old_mappings .= $objectives['id'] . ',';
+          } else {
+            $checked = '';
+          }
+          $html .= <<< HTML
+        				<li><input id="objective{$objcount}" name="{$moduleid_forform}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$objectives['content']}</label></li>
+  
+HTML;
+          $objcount++;
         }
+      } else {
         $html .= <<< HTML
-      				<li><input id="objective{$objcount}" name="{$moduleid_forform}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$objectives['content']}</label></li>
+            		<li>{$string['noobjectives']}</li>
 
 HTML;
-        $objcount++;
       }
         
       $html .= <<< HTML
