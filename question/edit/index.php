@@ -496,7 +496,7 @@ if (count($errors) > 0) {
 <?php
 }
 ?>
-        <div id="question-holder">
+        <div id="question-holder" class="clearfix">
           <div class="form">
             <h2><?php echo $string['question'] ?></h2>
           </div>
@@ -540,8 +540,6 @@ echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 ?>
         
       </div>
-      
-      <div id="bar-spacer">&nbsp;</div>
     </div>
 
     <div id="button-bar">
