@@ -38,6 +38,7 @@
   $dstats = array('highest'=>0,'high'=>0,'intermediate'=>0,'low'=>0);
 
   function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
+    $sortarr = array();
     foreach ($marray as $row) {
       $sortarr[] = $row[$column];
     }
@@ -1034,20 +1035,24 @@
       $ordering = 'ASC';
           
       $top_words = array();
-      $i = 0;
-      foreach ($top_log[$q_id]['words'] as $word=>$used) {
-        $top_words[$i]['word'] = $word;
-        $top_words[$i]['used'] = $used;
-        $i++;
+      if (isset($top_log[$q_id]['words'])) {
+        $i = 0;
+        foreach ($top_log[$q_id]['words'] as $word=>$used) {
+          $top_words[$i]['word'] = $word;
+          $top_words[$i]['used'] = $used;
+          $i++;
+        }
       }
       $top_words = array_csort($top_words,$sortby,$ordering);
           
       $bottom_words = array();
-      $i = 0;
-      foreach ($bottom_log[$q_id]['words'] as $word=>$used) {
-        $bottom_words[$i]['word'] = $word;
-        $bottom_words[$i]['used'] = $used;
-        $i++;
+      if (isset($bottom_log[$q_id]['words'])) {
+        $i = 0;
+        foreach ($bottom_log[$q_id]['words'] as $word=>$used) {
+          $bottom_words[$i]['word'] = $word;
+          $bottom_words[$i]['used'] = $used;
+          $i++;
+        }
       }
       $bottom_words = array_csort($bottom_words,$sortby,$ordering);
           
