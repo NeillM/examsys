@@ -34,6 +34,6 @@ $string['mins'] = 'min.';
 $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['create'] = 'Utwórz';
-$string['modulenotfound'] = '1Module not Found';  // Niko
-$string['modulenotfoundmsg'] = "1Unable to find module with code <strong>%s</strong>."; //Niko
+$string['modulenotfound'] = 'Nie odnaleziony modułu';  
+$string['modulenotfoundmsg'] = "Nie było możliwe odnalezienie modułu z kodem <strong>%s</strong>.";
 ?>
