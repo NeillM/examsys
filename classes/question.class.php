@@ -368,6 +368,25 @@ QUERY;
     return $success;
   }
   
+  public function clear_checkout() {
+    $success = false;
+    
+    $this->checkout_author_id = null;
+    $this->checkout_time = null;
+    
+    $u_query = <<< QUERY
+UPDATE questions
+SET checkout_time = ?, checkout_authorID = ?
+WHERE q_id = ?
+QUERY;
+    $result = $this->_mysqli->prepare($u_query);
+    $result->bind_param('sii', $this->checkout_time, $this->checkout_author_id, $this->id);
+    $success = $result->execute();
+    $result->close();
+    
+    return $success;
+  }
+  
   /**
    * Check out the question for editing
    * @param int $user_id ID of the user who is currently editing the question

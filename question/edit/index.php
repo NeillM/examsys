@@ -311,6 +311,7 @@ if ($critical_error == '') {
     
     if (count($errors) == 0) redirect();
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
+    $question->clear_checkout();
     redirect();
   }
 
