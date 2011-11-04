@@ -132,7 +132,7 @@
  ?>
   <html>
   <head>
-  <title>Exam Feedback</title>
+  <title><?php echo $string['examfeedback']; ?> = '';Exam Feedback</title>
   <style style="text/css">
     body {font-family:Arial,sans-serif; font-size:90%; color:black; background-color:white; margin:10px; background-image:url(../artwork/grey_bar.png); background-repeat:repeat-x}
     td {font-size:100%}
