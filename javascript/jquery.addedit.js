@@ -90,7 +90,7 @@ function variableLink(event) {
 function updateExtMatchOptions() {
   var index = $(this).attr('rel');
   var raw_text = $(this).val();
-  var text = String.fromCharCode(parseInt(index) + 64) + '. ' + raw_text;
+  var text = parseInt(index) + '. ' + raw_text;
   var opt_text = '';
 
   if(index != undefined) {
@@ -99,7 +99,7 @@ function updateExtMatchOptions() {
       if (index > options.length) {
         if (raw_text != '') {
           for (i = options.length + 1; i <= index; i++) {
-            opt_text = (i == index) ? text : String.fromCharCode(i + 64) + '.';
+            opt_text = (i == index) ? text : i + '.';
             $(this).append('<option value="' + i + '">' + opt_text + '</option>');
           }
         }

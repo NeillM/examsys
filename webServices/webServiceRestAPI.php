@@ -27,7 +27,7 @@ require_once $root . 'config/config.inc';
 require_once $root . 'classes/userutils.class.php';
 require './restAPI.class';
 
-Class TouchStoneRestAPI extends restAPI {
+Class webServiceRestAPI extends restAPI {
 
   var $db;
   private $qtypes = array(
@@ -323,7 +323,7 @@ Class TouchStoneRestAPI extends restAPI {
 
 }
 
-$mysqli = new mysqli($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
+//$mysqli = new mysqli($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
 $rest = new TouchStoneRestAPI($mysqli);
 $rest->processRequest();
 ?>

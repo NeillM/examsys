@@ -1194,7 +1194,7 @@
           echo excludeButton($ex_no, $q_id, str_repeat('0', $total_scenarios), 1, $total_scenarios);
         }
       }
-      echo "<ol type=\"i\">";
+      echo "<ol class=\"extmatch\">";
       if ($tmp_media_array[0] != '') {
         echo "<p align=\"center\">" . display_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0]) . "</p>\n";
       }
@@ -1338,6 +1338,7 @@ p {margin-left:0px; margin-right:0px}
 .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
 </style>
 
 <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>

@@ -1281,7 +1281,7 @@
           $all_correct = true;
           
           echo_content($paper[$question]['leadin']);
-          echo '<ol type="i">';
+          echo '<ol class="extmatch">';
           $matching_scenarios = array();
           $matching_scenarios = explode('|', $paper[$question]['scenario']);
           if (isset($paper[$question]['user_answer'])) {
@@ -1459,7 +1459,7 @@
           echo "</ol>\n";
           if ($option_answered == 0) {
             echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
-            $paper[$question]['mark'] = 0;
+            //$paper[$question]['mark'] = 0;
           } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
             $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] :$paper[$question]['marks_incorrect']; 
           }
@@ -1639,7 +1639,7 @@
             $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
             $answer_list = array();
             $answer_list = explode(',',$answer_options[0]);
-            if ($paper[$question]['display_method'] == 'textboxes') {
+            if ($paper[$question]['display_method'] == 'textboxes') {             // Textboxes
               $correct_flag = false;
               foreach ($answer_list as $individual_answer) {
                 if (trim(strtolower($individual_answer)) == trim(strtolower($user_choices[$blank_count]))) {
@@ -1670,7 +1670,7 @@
                   echo ')</strong>';
                 }
               }
-            } else {
+            } else {                                                                // Dropdown menus
               echo '</span>';
               if ($tmp_display_correct_answer == '1') {
                 if (isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
