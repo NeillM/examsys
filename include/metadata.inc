@@ -112,7 +112,7 @@ META;
     $html .= <<< META
           <div class="form">
             <div id="keyword-select" class="select-area">
-            <h3>{$string['keywords']}</h3>
+            	<h3>{$string['keywords']}</h3>
               <div id="q-keywords" class="select-group">
 
 META;
@@ -183,12 +183,12 @@ META;
         
         $html .= <<< META
           			</ul>
-              </div>
 
 META;
       }
       
       $html .= <<< META
+              </div>
       			</div>
 
 META;
