@@ -47,7 +47,7 @@ $current_media = array('filename' => $all_media['filenames'][0], 'width' => $all
 // Work out how many 'questions' to show
 $visible_questions = 0;
 for ($i = 0; $i < $question->max_stems; $i++) {
-  if ((isset($stems[$i]) and $stems[$i] != '') or (isset($all_media['filenames'][$i]) and $all_media['filenames'][$i] != '')) $visible_questions = $i + 1;
+  if ((isset($stems[$i]) and $stems[$i] != '') or (isset($all_media['filenames'][$i + 1]) and $all_media['filenames'][$i + 1] != '')) $visible_questions = $i + 1;
 }
 ?>
 <script type="text/javascript">
