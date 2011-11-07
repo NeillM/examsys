@@ -224,4 +224,6 @@ $string['na'] = 'Brak';
 $string['description'] = 'Opis';
 $string['questions'] = 'Pytania';
 $string['addquestions'] = 'Dodaj pytanie(a)';
+$string['questionbasedon'] = 'Question based on';
+$string['keywordwarning'] = 'Warning no keywords found, cannot create question.'
 ?>

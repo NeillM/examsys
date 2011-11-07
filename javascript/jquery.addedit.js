@@ -41,6 +41,8 @@ $(function () {
   $('#addbank').click(checkMapping);
   
   $('#media-labels-link').click(function() { $('#media-label-upload').slideToggle(); return false;})
+  
+  $('#addquestion').click(addQuestion);
 });
 
 function changeTab() {
@@ -174,3 +176,22 @@ function checkMapping() {
   
   return true;
 }
+
+function addQuestion() {
+  winH = screen.height - 80
+  winW = screen.width - 80
+  notice=window.open("../add/add_random_questions_frame.php?q_no=1&questionlist=questionlist&question_no=question_no","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+  if (window.focus) {
+    notice.focus();
+  }
+}
+
+function addQuestionsToList(questions) {
+  var current_qns = $('#questionlist li');
+  var num_options = current_qns.length + 1;
+  
+  for (i = 0; i < questions.length; i++) {
+    $('#questionlist').append('<li><label for="option_text' + (num_options + i) + '" class="fullwidth"><input id="option_text' + (num_options + i) + '" name="option_text' + (num_options + i) + '" value="' + questions[i][0] + '" type="checkbox" checked="checked" /> ' + questions[i][1] + '</label><input name="optionid' + (num_options + i) + '" value="-1" type="hidden" /></li>');
+  }
+}
+

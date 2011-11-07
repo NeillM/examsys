@@ -219,7 +219,7 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
     $question['display_pos'] = $q_no;
     $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
     $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
-    $question['options'][] = array();
+    $question['options'] = array();
   }
   $questions[] = $question;
 }
