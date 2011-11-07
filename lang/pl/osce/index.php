@@ -1,6 +1,6 @@
 <?php
-$string['exams'] = 'Exams';  // Niko
-$string['cannotfind'] = 'Rogo cannot find any OSCE Stations';
-$string['multiplestations'] = 'Multiple OSCE Stations Found';
-$string['pleaseselect'] = 'Please select the one you wish to examine:';
+$string['exams'] = 'Egzaminy'; 
+$string['cannotfind'] = 'Rogō nie może odnaleźć żadnych stacji OSCE';
+$string['multiplestations'] = 'Znaleziono wielokrotne stacje OSCE';
+$string['pleaseselect'] = 'Wskaż tę, którą chcesz przeanalizować:';
 ?>
