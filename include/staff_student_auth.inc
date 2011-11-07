@@ -107,6 +107,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
         if ($cfg_use_ldap == true and  ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true and strpos($_SERVER['PHP_SELF'],'self_enrol.php') !== FALSE ) {
           //we have a valid LDAP account - we are in the self enrol script allow execution to continue
           //continue
+          $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);   // Swap to staff user for appropriate database permissions
         } else {
           $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n<li>" . $string['pressf5'] . "</li>";
           if ($db_errors != '') {
