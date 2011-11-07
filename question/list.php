@@ -53,7 +53,7 @@
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>TouchStone: <?php echo $string['questionbank'] . " $cfg_install_type"; ?></title>
+<title>Rogo: <?php echo $string['questionbank'] . " $cfg_install_type"; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style style="text/css">

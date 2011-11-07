@@ -32,7 +32,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/lang.class.php';
 Class InstallUtils {
 	
   public static $db;
-  public static $touchstone_path;
+  public static $rogo_path;
   
   public static $warnings;
 
@@ -634,10 +634,10 @@ Class InstallUtils {
   */
   static function configFile() {
   global $string;
-    $touchstone_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
-    if (file_exists($touchstone_path . '/config/config.inc.php')) {
-	  $errors['90'] =  "<p>".sprintf($string['errors1'],$touchstone_path."/config/config.inc.php")."</p>";
+    if (file_exists($rogo_path . '/config/config.inc.php')) {
+	  $errors['90'] =  "<p>".sprintf($string['errors1'],$rogo_path."/config/config.inc.php")."</p>";
       $errors['90'] .= "<p>".sprintf($string['errors2'],"<a href=\"/staff\">")."</a></p>";
     }
   }
@@ -648,10 +648,10 @@ Class InstallUtils {
   */
   static function configFileIsWriteable() {
     global $string;
-    $touchstone_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
-    $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
-    if (is_writable($touchstone_path . '/config/config.inc.php')) {
+    if (is_writable($rogo_path . '/config/config.inc.php')) {
       return true;
     } else {
       return false;
@@ -664,27 +664,27 @@ Class InstallUtils {
   */
   static function checkDirPermissions() {
     global $string;
-    self::$touchstone_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     //tmp
     if (!is_writable('/tmp')) {
       $errors['100'] = $string['errors3'];
     }
     //media
-    if (!is_writable(self::$touchstone_path . '/media')) {
-      $errors['102'] = sprintf($string['errors4'], self::$touchstone_path);
+    if (!is_writable(self::$rogo_path . '/media')) {
+      $errors['102'] = sprintf($string['errors4'], self::$rogo_path);
     }    
     //qti imports
-    if (!is_writable(self::$touchstone_path . '/qti/imports')) {
-      $errors['103'] = sprintf($string['errors5'], self::$touchstone_path);
+    if (!is_writable(self::$rogo_path . '/qti/imports')) {
+      $errors['103'] = sprintf($string['errors5'], self::$rogo_path);
     }
     //qti exports
-    if (!is_writable(self::$touchstone_path . '/qti/exports')) {
-      $errors['104'] = sprintf($string['errors6'], self::$touchstone_path);
+    if (!is_writable(self::$rogo_path . '/qti/exports')) {
+      $errors['104'] = sprintf($string['errors6'], self::$rogo_path);
     }
     //temp
-    if (!is_writable(self::$touchstone_path . '/temp')) {
-      $errors['105'] = sprintf($string['errors7'], self::$touchstone_path);
+    if (!is_writable(self::$rogo_path . '/temp')) {
+      $errors['105'] = sprintf($string['errors7'], self::$rogo_path);
     }
     if (count($errors) > 0) {
       self::displayError($errors);  
@@ -972,11 +972,11 @@ CONFIG;
     
     $config = str_replace('{SERVER_NAME}',$_SERVER['HTTP_HOST'],$config);
     
-    if (file_exists(self::$touchstone_path . '/config/config.inc.php')) {
-      rename(self::$touchstone_path . '/config/config.inc.php', self::$touchstone_path . '/config/config.inc.old.php');
+    if (file_exists(self::$rogo_path . '/config/config.inc.php')) {
+      rename(self::$rogo_path . '/config/config.inc.php', self::$rogo_path . '/config/config.inc.old.php');
     }
     
-    if (file_put_contents(self::$touchstone_path . '/config/config.inc.php', $config) === false) {
+    if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === false) {
       self::displayError(array(300=>'Could not write config file !'));
     }
   }    

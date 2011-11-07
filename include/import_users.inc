@@ -176,7 +176,7 @@ function add_users_from_file($fileName) {
 
 function send_welcome_email($title, $surname, $username, $password, $user_email) {
 global $string;
-  $subject = "New TouchStone account";
+  $subject = "New Rogo account";
   $headers = "From: $support_email\n";
   $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
   $message = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">

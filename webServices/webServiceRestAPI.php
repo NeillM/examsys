@@ -165,12 +165,12 @@ Class webServiceRestAPI extends restAPI {
     $papers = array();
 
     $moduleID = '%' . $moduleID . '%';
-    $sql = "SELECT student_modules.moduleID, paper_id, date, UNIX_TIMESTAMP(date) AS is_live, paper_type, paper_title, start_date, end_date, properties.calendar_year FROM feedback_release LEFT JOIN properties ON feedback_release.paper_id = properties.property_id LEFT JOIN student_modules ON properties.moduleID LIKE CONCAT('%',student_modules.moduleID,'%') AND properties.calendar_year = student_modules.calendar_year WHERE userID=? AND properties.moduleID LIKE '$moduleID'";
+    $sql = "SELECT student_modules.moduleID, paper_id, date, UNIX_TIMESTAMP(date) AS is_live, paper_type, paper_title, start_date, end_date, properties.calendar_year, crypt_name FROM feedback_release LEFT JOIN properties ON feedback_release.paper_id = properties.property_id LEFT JOIN student_modules ON properties.moduleID LIKE CONCAT('%',student_modules.moduleID,'%') AND properties.calendar_year = student_modules.calendar_year WHERE userID=? AND properties.moduleID LIKE '$moduleID'";
     $res = $this->db->prepare($sql);
     $res->bind_param('i', $tmp_userID);
     $res->execute();
     $res->store_result();
-    $res->bind_result($moduleID, $paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year);
+    $res->bind_result($moduleID, $paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year, $crypt_name);
     while ($res->fetch()) {
 
       if ($is_live < time()) {
@@ -185,7 +185,7 @@ Class webServiceRestAPI extends restAPI {
           $log->close();
           continue;
         } else {
-          $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/mapping/user_feedback.php?paperID=' .  $paperID . '&userID=' . $tmp_userID;
+          $papers[$paper_no]['feedback_url'] = 'https://' . $_SERVER['SERVER_NAME'] . '/mapping/user_feedback.php?id=' .  $crypt_name . '&userID=' . $tmp_userID;
           $log->close();
         }
       } else {
@@ -267,7 +267,7 @@ Class webServiceRestAPI extends restAPI {
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
         $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/user_index.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . '/user_index.php?id=' . $crypt_name;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;
@@ -324,6 +324,6 @@ Class webServiceRestAPI extends restAPI {
 }
 
 //$mysqli = new mysqli($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
-$rest = new TouchStoneRestAPI($mysqli);
+$rest = new webServiceRestAPI($mysqli);
 $rest->processRequest();
 ?>

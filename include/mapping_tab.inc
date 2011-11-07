@@ -16,7 +16,7 @@
 
 /**
 * 
-* Set of mapping functions used to map touchstone questions to session objectives. These functions 
+* Set of mapping functions used to map questions to session objectives. These functions 
 * are used by the question editing and adding scripts to display the mapping tab.
 * 
 * @author Anthony Brown
@@ -31,12 +31,12 @@ require_once($cfg_web_root . 'include/mapping.inc');
  * This is function displayMappingTab it displays mapping tab on edit pages
  *
  * @param mixed $paper_id 
- * @param mixed $touchstonedb a mysqli object
+ * @param mixed $rogodb a mysqli object
  * @param mixed $created date the question was created
  * @param mixed $modified date the question was last modified
  * 
  */
-function displayMappingTab($paper_id, $touchstonedb, $created, $modified) {
+function displayMappingTab($paper_id, $rogodb, $created, $modified) {
   global $string;
 
   ?>
@@ -59,7 +59,7 @@ function displayMappingTab($paper_id, $touchstonedb, $created, $modified) {
   <tr>
   <td colspan="5" style="padding:15px; background-color:white">
 <?php
-  echo displayObjectivesMappingForm($paper_id, $touchstonedb);
+  echo displayObjectivesMappingForm($paper_id, $rogodb);
   echo "</td></tr>\n</table>";
 }
 
@@ -67,11 +67,11 @@ function displayMappingTab($paper_id, $touchstonedb, $created, $modified) {
  * This is function displayMappingTabAdd it displays mapping tab on add pages
  *
  * @param mixed $paper_id 
- * @param mixed $touchstonedb a mysqli object
+ * @param mixed $rogodb a mysqli object
  * @param mixed $created date the question was created
  * 
  */
-function displayMappingTabAdd($paper_id, $touchstonedb, $created) {
+function displayMappingTabAdd($paper_id, $rogodb, $created) {
   global $string;	
   ?>
   <table cellpadding="0" cellspacing="0" border="0" id="mappingtab" style="display:none; font-size:90%; background-color:#DFECFF">
@@ -90,7 +90,7 @@ function displayMappingTabAdd($paper_id, $touchstonedb, $created) {
   <td colspan="3" style="padding-top:15px; padding-left:15px; padding-right:15px; background-color:#F1F5FB">
 <?php
   if($paper_id != '') {
-    echo displayObjectivesMappingForm($paper_id, $touchstonedb);
+    echo displayObjectivesMappingForm($paper_id, $rogodb);
   } else {
     echo "<div>";
     echo "<h2 style=\"color:#316AC5; font-weight:bold\">" . $string['mappingdisabled'] . "</h2>";
