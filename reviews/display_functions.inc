@@ -559,12 +559,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'textbox':
-        $textbox_size = explode('x',$question['score_method']);
+        $textbox_size = explode('x',$question['display_method']);
         if ($display_option['option_text'] == 'plain') {
           if ($textbox_size[1] == 1) {
-            echo "<blockquote><input style=\"font-family:Arial,sans-serif\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"\" />";
+            echo "<blockquote><input style=\"font-family:Arial,sans-serif\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $question['correct_fback'] . "\" />";
           } else {
-            echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\"></textarea>";
+            echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $question['correct_fback'] . "</textarea>";
           }
         } else {
           include_once('wysiwyg_editor.inc');
@@ -572,8 +572,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         
         echo "</blockquote>\n";
-        echo "<pre style=\"font-family:Arial,sans-serif; font-style:italic; color:$labelcolor\"><strong>" . $string['modelanswer'] . "</strong><br />" . $question['correct_fback'] . "</pre>\n";
-        $marks += $display_option['marks'];
+        $marks += $display_option['marks_correct'];
         break;
       case 'hotspot':
         echo "<div align=\"left\">";
@@ -587,7 +586,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         <script language="JavaScript">
           function swfLoaded<?php echo $question_no; ?>(message) {
             var num = message.substring(5,message.length);
-            setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '', '1,1,0000000000000000000000000000000000000000');
+            setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo $tmp_correct; ?>', '', '1,1,0000000000000000000000000000000000000000');
           }
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="always" />');
@@ -608,6 +607,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'labelling':
+        $tmp_answer = '';
+        $labels_correct = 0;
         $tmp_labels = 0;
         $max_col1 = 0;
         $max_col2 = 0;
@@ -617,7 +618,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $label_parts = explode('$', $ind_label);
           if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
             $tmp_labels++;
-            if ($label_parts[2] > 219) $marks += $display_option['marks_correct'];
+            if ($label_parts[2] > 219) {
+              $marks += $display_option['marks_correct'];
+              $tmp_answer .= $label_parts[2] . '$' . ($label_parts[3] - 25) . '$' . $label_parts[4] . '$t$';
+              $labels_correct++;
+            }
             if ($label_parts[0] < 10) {
               $max_col1 = $label_parts[0];
             } else {
@@ -627,6 +632,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         $max_col2-=10;
         $max_label = max($max_col1, $max_col2);
+        $tmp_answer = $labels_correct . '$' . $labels_correct . ';' . $tmp_answer;
 
         if ($question['score_method'] == 'Mark per Question') {
           $marks = $display_option['marks_correct'];
@@ -640,14 +646,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   <script language="JavaScript">
     function swfLoaded<?php echo $question_no; ?>(message) {
       var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $question['q_media']; ?>', '<?php echo trim($question['options'][0]['correct']); ?>', '','');
+      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $question['q_media']; ?>', '<?php echo trim($question['options'][0]['correct']); ?>', '<?php echo $tmp_answer; ?>','');
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="/paper/label_answer.swf" />');
+    write_string('<param name="movie" value="/paper/label_question.swf" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-    write_string('<embed src="/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
   </script>
 
