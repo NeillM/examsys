@@ -115,7 +115,7 @@ body {background-color:white; color:black; font-family:Arial,sans-serif; font-si
   if (isset($_POST['submit'])) {
     echo '<tr><td colspan="2"><strong>' . $string['enrolmentcompleted'] . '</strong></td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';
-    echo '<tr><td colspan="2"><a href="/"><img src="/artwork/link.png" width="16" height="16" alt=">" border="0" /></a>&nbsp;<strong><a href="/" style="color:blue">' . $string['icanaccess'] . '</a></strong></td></tr>';
+    echo '<tr><td colspan="2"><a href="/"><img src="/artwork/link.png" width="16" height="16" alt=">" border="0" /></a>&nbsp;<strong><a href="/students/" style="color:blue">' . $string['icanaccess'] . '</a></strong></td></tr>';
   } else {
     echo '<tr><td colspan="2">' . sprintf($string['iwouldliketo'], $title, $surname) . '</td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';
