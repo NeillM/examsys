@@ -40,6 +40,7 @@ Class InstallUtils {
   public static $cfg_company;
   public static $cfg_short_date;
   public static $cfg_long_date_time;
+  public static $cfg_timezone;
 
   //database config options
   public static $cfg_db_host;
@@ -110,7 +111,7 @@ Class InstallUtils {
         <br />
         <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" name="mysql_db_host" class="required" /> </div>
         <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" name="mysql_db_port" class="required" /> </div>
-        <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="" name="mysql_db_name" class="required" minlength="3" /> </div>
+        <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" name="mysql_db_name" class="required" minlength="3" /> </div>
       
       <table class="header"><tr><td><nobr><?php echo $string['databaseuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="mysql_touchstone_username"><?php echo $string['rdbusername']; ?></label> <input type="text" value="" name="mysql_touchstone_username" class="required" minlength="3"/></div>
@@ -971,9 +972,9 @@ CONFIG;
     $config = str_replace('{cfg_support_email}',self::$cfg_support_email,$config);
     $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers,$config);
     
-    $config = str_replace('{$cfg_short_date}',self::$cfg_short_date,$config);
-    $config = str_replace('{$cfg_long_date_time}',self::$cfg_long_date_time,$config);
-    $config = str_replace('{$cfg_timezone}',self::$cfg_timezone,$config);
+    $config = str_replace('{cfg_short_date}',self::$cfg_short_date,$config);
+    $config = str_replace('{cfg_long_date_time}',self::$cfg_long_date_time,$config);
+    $config = str_replace('{cfg_timezone}',self::$cfg_timezone,$config);
     
     $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);
