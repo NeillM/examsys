@@ -1495,11 +1495,10 @@
           echo "</tr>\n";
           $row_no = 0;
           $part_id = 0;
-          $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
           foreach ($matching_scenarios as $single_scenario) {
             if (trim($single_scenario) != '') {
               echo "<tr>\n";
-              echo '<td align="right">' . $numerals[$row_no] . '.</td>';
+              echo '<td align="right">' . chr(64 + $part_id) . '.</td>';
               if (isset($paper[$question]['std'][$row_no]) and display_std($paper[$question]['std'][$row_no]) != '') echo '<td>' . display_std($paper[$question]['std'][$row_no]) . '</td>';
               echo '<td';
               if (substr($tmp_exclude,$row_no,1) == '1') echo ' style="color:red; text-decoration:line-through"';

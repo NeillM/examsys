@@ -69,12 +69,12 @@ $stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prolog
 while ($stmt->fetch()) {
   $no_screens = $screen;
   $original_paper_type = $paper_type;
-  if ($q_type != 'info') {
+//  if ($q_type != 'info') {
     if (!isset($screen_data[$no_screens])) { 
       $screen_data[$no_screens] = 1;
     } else {
       $screen_data[$no_screens]++;
-    }
+//    }
   } 
   // If set overwrite the default colours with the current users' special settings
   if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;

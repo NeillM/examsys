@@ -352,7 +352,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'mcq':
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          if ($part_id == $question['options'][0]['correct']) {
+          if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
             echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" checked /></td><td>";
           } else {
             echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td>";
@@ -364,7 +364,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }          
           echo "</td></tr>\n";
         } elseif ($question['display_method'] == 'horizontal') {
-          if ($part_id == $question['options'][0]['correct']) {
+          if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
             echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" checked />";
           } else {
             echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" />";
@@ -373,13 +373,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']);
           echo '&nbsp;&nbsp;';
         } else {
-          if ($part_id == $question['options'][0]['correct']) {
+          if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
             echo "<option value=\"" . $part_id . "\" selected>" . $display_option['option_text'] . "</option>\n";
           } else {
             echo "<option value=\"" . $part_id . "\">" . $display_option['option_text'] . "</option>\n";
           }
         }
-        if ($part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
+        if ($question['option_order'][$part_id - 1] == $display_option['correct'] - 1) $marks = $display_option['marks_correct'];
         break;
       case 'mrq':
         if ($paper_type == 3) {
@@ -806,18 +806,18 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
       }
       
-      $tmp_option_no = 1;
-      foreach ($matching_options as $single_option) {
+      $tmp_option_no = 0;
+      for ($option_no=0; $option_no<count($matching_options); $option_no++) {
         $tmp_answer_match = false;
         foreach ($sub_answers as $separate_tmp_answer) {
-          if ($separate_tmp_answer == $tmp_option_no) {
+          if ($separate_tmp_answer == ($question['option_order'][$tmp_option_no]+1)) {
             $tmp_answer_match = true;
           }
         }
         if ($tmp_answer_match == true) {
-          echo "<option value=\"$tmp_option_no\" selected>$single_option</option>\n";
+          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\" selected>" . $matching_options[$option_no] . "</option>\n";
         } else {
-          echo "<option value=\"$tmp_option_no\">$single_option</option>\n";
+          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\">" . $matching_options[$option_no] . "</option>\n";
         }
         $tmp_option_no++;
       }
@@ -840,24 +840,24 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<td>' . $single_option . '</td>';
     }
     echo "<tr>\n";
-    $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
     foreach ($matching_scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
         echo "<tr>\n";
-        echo '<td align="right">' . $numerals[$part_id - 1] . '.</td><td>' . $single_scenario . '</td>';
-        $answer_no = 1;
+        echo '<td align="right">' . chr(64 + $part_id) . '.</td><td>' . $single_scenario . '</td>';
+        $col_no = 1;
         foreach ($matching_options as $single_option) {
-          if ($matching_answers[$part_id-1] == $answer_no) {
-            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $answer_no . '" checked /></div></td>';
+          $tmp_col_no = $question['option_order'][$col_no - 1] + 1;
+          if (isset($matching_answers[$part_id-1]) and $matching_answers[$part_id-1] == $tmp_col_no) {
+            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_col_no . '" checked /></div></td>';
           } else {
-            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $answer_no . '" /></div></td>';
+            echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_col_no . '" /></div></td>';
           }
-          $answer_no++;
+          $col_no++;
         }
         echo "</tr>\n";
         $part_id++;
       }
-    }    
+    }
     echo '</table>';
     if ($question['score_method'] == 'Mark per Question') {
       $marks = $display_option['marks_correct'];
@@ -881,7 +881,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo $string['marks'];
       }
       if ($neg_marking) echo ', ' . $string['negmarking'];
-      if ($question['score_method'] == 'Bonus Mark') echo ' ' . $string['bonusmark'];  // Used on ranking questions
+      if ($question['score_method'] == 'Bonus Mark') {
+        $plural = ($display_option['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
+        echo ' ' . sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
+      }
       echo ")</div>\n<br /></td></tr>\n";
     }
   } else {
