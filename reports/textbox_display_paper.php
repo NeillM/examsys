@@ -158,6 +158,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
       
       if ($q_type == 'info') {
         echo "<tr style=\"background-color:$tmp_color\"><td>";
+        $li_set = 0;
       } elseif ($q_type != 'info' and $li_set == 0) {
         $q_no++;
         echo "<tr style=\"background-color:$tmp_color\"><td class=\"question_no\">";
