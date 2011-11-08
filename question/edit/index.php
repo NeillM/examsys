@@ -180,7 +180,6 @@ if ($critical_error == '') {
       $question->set_leadin(clearMSOtags($question->get_leadin()));
    
 
-      // TODO: check usage of old getTeams function - USED IN LIMITED SAVE FUNCTION
       if (isset($_POST['teams'])) {
         $question->set_teams($_POST['teams']);
       }
@@ -285,12 +284,10 @@ if ($critical_error == '') {
             insert_into_papers($paper_id, $question->id);
           }
             	    
-          // TODO: check usage of old saveKeywords function - USED IN LIMITED SAVE FUNCTION
           save_keywords($question, $userID, true, $mysqli, $string);
       
-    	    // TODO: check usage of old save_external_responses function - USED IN LIMITED SAVE FUNCTION
     	    if(isset($_POST['comment_ids']) and isset($_POST['actions']) and isset($_POST['responses'])) {
-    	      save_external_responses_new($mysqli, $question, $_POST['comment_ids'], $_POST['actions'], $_POST['responses'], $paper_id);
+    	      save_external_responses($mysqli, $question, $_POST['comment_ids'], $_POST['actions'], $_POST['responses'], $paper_id);
     	    }
     	    
     	    if (isset($_POST['objective_modules'])) {
@@ -498,7 +495,6 @@ if ($question->get_type() != '') require_once '../../include/question/addedit/' 
           </div>
         
 <?php
-// TODO: check usage of old echoMetadata function - USED IN KEYWORD BASED, RANDOM AND BRANCHING
 echo render_metadata($mysqli, $question, $question->use_bloom(), $module, $disabled, $string);
 ?>
         </div>
@@ -507,7 +503,6 @@ echo render_metadata($mysqli, $question, $question->use_bloom(), $module, $disab
       <div id="changes" class="tab-area">
 <?php
 $changes = $question->get_changes();
-// TODO: remove 'changes_tab.inc'? - USED IN KEYWORD BASED AND RANDOM
 echo render_changes($changes, $string);
 ?>
       </div>
@@ -515,14 +510,12 @@ echo render_changes($changes, $string);
       <div id="comments" class="tab-area">
 <?php
 $comments = $question->get_comments($paper_id);
-// TODO: remove 'comments_tab.inc'? - USED IN KEYWORD BASED AND RANDOM
 echo render_comments($comments, $string);
 ?>
       </div>
 
       <div id="mapping" class="tab-area">
 <?php
-// TODO: remove 'mapping_tab.inc'? - USED IN KEYWORD BASED, RANDOM AND BRANCHING
 echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 ?>
         
@@ -531,8 +524,7 @@ echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 
     <div id="button-bar">
 <?php
-// TODO: check old save_buttons function - USED IN KEYWORD BASED, RANDOM AND BRANCHING
-echo save_buttons_new($mode, $disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id, $string);
+echo save_buttons($mode, $disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id, $string);
 ?>
       <input type="hidden" name="q_id" value="<?php echo $question->id ?>" />
       <input name="checkout_author" value="<?php echo $userID ?>" type="hidden" />
