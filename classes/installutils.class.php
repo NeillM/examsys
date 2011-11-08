@@ -28,6 +28,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/userutils.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/moduleutils.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/schoolutils.class.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/lang.class.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . 'lang/' . $language . '/include/timezones.inc';
 
 Class InstallUtils {
 	
@@ -78,7 +79,7 @@ Class InstallUtils {
     
   
   static function displayForm() {
-    global $string,$language;
+    global $string, $language, $timezone_array;
     
     ?>
     <script>
@@ -120,6 +121,17 @@ Class InstallUtils {
         <br />
         <div><label for="cfg_short_date"><?php echo $string['date']; ?></label> <input type="text" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
         <div><label for="cfg_long_date_time"><?php echo $string['datetime']; ?></label> <input type="text"  name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select name="cfg_timezone">
+        <?php
+          foreach ($timezone_array as $individual_zone => $display_zone) {
+            if ($individual_zone == 'Europe/London') {
+              echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
+            } else {
+              echo "<option value=\"$individual_zone\">$display_zone</option>";
+            }
+          }
+        ?>
+        </select></div>
 
         <table class="header"><tr><td><nobr><?php echo $string['ldapconfiguration']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
@@ -188,6 +200,7 @@ Class InstallUtils {
     
     self::$cfg_short_date = $_POST['cfg_short_date'];
     self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
+    self::$cfg_timezone = $_POST['cfg_timezone'];
      
     //LDAP
     self::$cfg_ldap_server = $_POST['ldap_server'];
@@ -683,15 +696,10 @@ Class InstallUtils {
     if (!is_writable(self::$rogo_path . '/qti/exports')) {
       $errors['104'] = sprintf($string['errors6'], self::$rogo_path);
     }
-    //temp
-    if (!is_writable(self::$rogo_path . '/temp')) {
-      $errors['105'] = sprintf($string['errors7'], self::$rogo_path);
-    }
     if (count($errors) > 0) {
       self::displayError($errors);  
     }
   }
-  
   
   /**
   * Check for installed software versions PHP, Apache 
@@ -804,7 +812,7 @@ Class InstallUtils {
         body { padding: 0em; margin: 0em; width: 100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black }
         .error { float: none; color: red; padding-left: .5em; vertical-align: top; }
         .warning { float: none; color: red; padding-left: .5em; vertical-align: top; }
-        label { float:left; width:7.5em; padding-left:0em; text-align:left;}
+        label { float:left; width:8.5em; padding-left:0em; text-align:right; padding-right:6px}
         p { clear: both; }
         .submit { margin-left: 42%; padding-top:2em; }
         table {border:none;}
@@ -894,7 +902,7 @@ define('DIR_SEPARATOR', '/');
   // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
-  \$cfg_timezone = 'Europe/London';
+  \$cfg_timezone = '{cfg_timezone}';
   
 // SMS Imports
   \$cfg_sms_api = '';
@@ -965,6 +973,7 @@ CONFIG;
     
     $config = str_replace('{$cfg_short_date}',self::$cfg_short_date,$config);
     $config = str_replace('{$cfg_long_date_time}',self::$cfg_long_date_time,$config);
+    $config = str_replace('{$cfg_timezone}',self::$cfg_timezone,$config);
     
     $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);
