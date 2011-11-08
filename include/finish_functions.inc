@@ -55,9 +55,9 @@
     }
   }
 
-  function init_feedback() {
+  function init_feedback(&$strong_on, &$strong_off) {
     // Reset feedback back to defaults.
-    global $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $strong_on, $strong_off, $display_correct_answer, $display_students_response, $display_feedback;
+    global $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $display_correct_answer, $display_students_response, $display_feedback;
   
     $tmp_display_correct_answer = $display_correct_answer;
     $tmp_display_students_response = $display_students_response;
@@ -418,7 +418,7 @@
     for ($question=1; $question<=$q_no; $question++) {
       $display_no++;
       
-      init_feedback();
+      init_feedback($strong_on, $strong_off);
 
       if ($old_screen < $paper[$question]['screen']) {
         echo '</table><br /><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
@@ -1335,7 +1335,7 @@
               if ($user_answers[$i] == 'u' or $user_answers[$i] == '') {
                 reset_feedback($hide_if_unanswered);
               } else {
-                init_feedback();
+                init_feedback($strong_on, $strong_off);
               }
               $std_part++;
               if ($tmp_display_correct_answer == '1') {
