@@ -191,7 +191,7 @@ echo "<html>\n<head>\n<title>$paper_title</title>\n";
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
 
   echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%; border-top:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
-  echo '<tr><td style="color:white; font-size:80%; width:250px">&nbsp;&#169; 2011, The University of Nottingham</td><td style="color:white; width:75px; text-align:center">';
+  echo '<tr><td style="color:white; font-size:80%; width:250px">&nbsp;&#169; 2011, ' . $cfg_company . '</td><td style="color:white; width:75px; text-align:center">';
   echo '<input type="text" style="background-color:transparent; text-align:center; font-size:80%; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
   echo '</td></tr></table>';
   $mysqli->close();
