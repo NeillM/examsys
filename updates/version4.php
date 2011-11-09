@@ -1359,7 +1359,7 @@ if (!isset($_POST['update'])) {
   $result->close();
   
   // 24/10/2011
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log4_overall' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='year'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log4_overall' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='year'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -1396,7 +1396,7 @@ if (!isset($_POST['update'])) {
   $result->close();
   
   // 27/10/2011
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='touchstone' AND COLUMN_NAME='title'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='title'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -1437,6 +1437,38 @@ if (!isset($_POST['update'])) {
   $result->execute();
   $result->close();
   echo "<li>TRUNCATE sys_errors</li>\n";
+
+  // 09/11/2011
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='labs' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='campus'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($column_type == "enum('University Park','Jubilee','King''s Meadow','Derby','Malaysia','Ningbo','Sutton Bonington','Other')") {
+    $adjust = $mysqli->prepare("ALTER TABLE labs CHANGE COLUMN campus campus varchar(255)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE labs CHANGE COLUMN campus campus varchar(255)</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 09/11/2011
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sms_imports' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='import_type'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($column_type == "enum('manual','SATURN UK','SATURN Malaysia','SATURN China','ARC')") {
+    $adjust = $mysqli->prepare("ALTER TABLE sms_imports CHANGE COLUMN import_type import_type varchar(255)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE sms_imports CHANGE COLUMN import_type import_type varchar(255)</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
 
   
   // End ------------------------------------------------------------------
