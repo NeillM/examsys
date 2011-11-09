@@ -1161,7 +1161,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($o_id, $correct);
   while ($result->fetch()) {
     $parts = explode(';', $correct);
-    if(count($parts) > 1) {
+    if (count($parts) > 1) {
       $new_correct = $parts[0] . ';' . $parts[1] . ';' . $parts[2] . ';' . $parts[3] . ';' . $parts[4] . ';' . $parts[5] . ';' . $parts[6] . ';0;0;';
       if ($parts[7] == 'single') {
         $new_correct .= 'single;label';
@@ -1430,7 +1430,6 @@ if (!isset($_POST['update'])) {
   $result = $mysqli->prepare("UPDATE modules SET neg_marking=0 WHERE vle_api='NLE'");
   $result->execute();
   $result->close();
-  echo "<li>UPDATE modules SET neg_marking=0 WHERE vle_api='NLE'</li>\n";
   
   // 02/11/2011 - Clear the sys_error table for the new version.
   $result = $mysqli->prepare("TRUNCATE sys_errors");
