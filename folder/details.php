@@ -245,6 +245,7 @@ if ($selfenrol == 1) {
 
 // Get any sub-folders first.
 if ($folder != '') {
+  $tmp_string = '';
   if (count($teams) > 0) {
     $tmp_string = " OR team_name IN ('" . implode("','",$teams) . "')";
   }
