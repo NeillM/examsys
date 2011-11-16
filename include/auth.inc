@@ -42,7 +42,7 @@ function access_denied($message, $output_header = false) {
   echo "<html>\n<head>\n<title>" . $string['accessdenied'] .  "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#BF0000;font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 style=\"margin-left:60px\">" . $string['accessdenied'] . "</h1>\n";
-  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">$message</p>\n</body>\n</html>"; 
+  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0; height:1px; border:0px\" />\n<p style=\"margin-left:60px\">$message</p>\n</body>\n</html>"; 
   
   $mysqli->close();
   exit;
@@ -167,10 +167,10 @@ function db_auth($u, $p, $db) {
       //select the aproprate database user
       if (strpos($userroles,'SysAdmin') !== false) {
         $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
+      } else if (strpos($userroles,'Staff') !== false or strpos($userroles,'Admin') !== false) {           // Process staff first to get higher priority than students
+        $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
       } else if (strpos($userroles,'Student') !== false) {
         $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-      } else if (strpos($userroles,'Staff') !== false or strpos($userroles,'Admin') !== false) {
-        $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
       } else if (strpos($userroles,'External Examiner') !== false) {
         $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
       } else if (strpos($userroles,'Invigilator') !== false) {
@@ -236,7 +236,7 @@ function gen_password() {
 
 function getUserTeams($userID, $db) {
   $teams = array();
-
+  
   $result = $db->prepare("SELECT name FROM teams WHERE memberID=? AND name IS NOT NULL ORDER BY name");
   $result->bind_param('i', $userID);
   $result->execute();

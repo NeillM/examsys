@@ -207,7 +207,7 @@ if ($textsize > 120) {
 <table cellpadding="3" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto;font-size:100%;border-top:1px solid #5582D2;border-left:1px solid #5582D2;border-right:1px solid #5582D2;background-color:white;width:<?php echo $table_width; ?>%">
 <tr>
 <?php
-  $icon_types = array('formative.png','progress.png','summative.png','survey.png');
+  $icon_types = array('formative.png', 'progress.png', 'summative.png', 'survey.png');
   echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0"><tr><td style="vertical-align:top; width:54px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
   echo "</td><td><span style=\"font-size:80%\">Rogō $ts_version</span><br />\n";
   echo "<span style=\"font-size:20pt; font-weight:bold; font-family:Arial,sans-serif\">$paper_title</span></td>\n</tr></table></td></tr>";
@@ -258,12 +258,6 @@ if ($textsize > 120) {
     echo "<param name=\"FlashVars\" value=\"mp3=/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
     echo "</object></td></tr>\n";  
   }
-  
-  if ($test_type == 0) {
-    $log_info = $mysqli->query("SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 WHERE q_paper=$property_id AND userID=$userID GROUP BY started DESC, screen UNION SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 WHERE q_paper=$property_id AND userID=$userID GROUP BY started DESC, screen");
-  } else {
-    $log_info = $mysqli->query("SELECT MAX(screen) AS screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, $test_type AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log$test_type WHERE q_paper=$property_id AND userID=$userID GROUP BY started DESC");
-  }
 
   echo '<tr><td style="text-align:center" colspan="4"><br />';
   if ($test_type == 2) echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
@@ -278,22 +272,32 @@ if ($textsize > 120) {
     if ($switch_info->num_rows > 0) echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='../index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
     $switch_info->close();
   }
+  
+  $display_date = '';
+  
+  if ($test_type == 0) {
+    $log_info = $mysqli->prepare("SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 WHERE q_paper=$property_id AND userID=$userID GROUP BY started DESC, screen UNION SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 WHERE q_paper=$property_id AND userID=$userID GROUP BY started DESC, screen");
+  } else {
+    $log_info = $mysqli->prepare("SELECT MAX(screen) AS screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, $test_type AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log$test_type WHERE q_paper=$property_id AND userID=$userID GROUP BY started DESC");
+  }
+  $log_info->execute();
+  $log_info->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+  $log_info->store_result();
   if (strpos($userroles,'Staff') !== false or strpos($userroles,'QABME') !== false or strpos($userroles,'SysAdmin') !== false) {
     if (time() < $paper_start or time() > $paper_end) {
       echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" onclick=\"\" disabled />\n";
-      echo '<br /><div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
+      echo '<br />' . time() . '&gt;' . $paper_end . '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
     } else {
       echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
     }
   } else {
     if ($test_type > 0 and $log_info->num_rows > 0) {
-      $row = $log_info->fetch_assoc();
       if ($navigation == 1) {
         if (time() < $paper_end) {
           echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
         }
       } elseif ($navigation == 0) {
-        if ($paper_screens > $row['screen']) {
+        if ($paper_screens > $log_max_screen) {
           echo " <input type=\"button\" id=\"start\" style=\"width:" . $button_width . "px; font-weight:bold\" onclick=\"startPaper();\" value=\"" . $string['restart'] . "\" name=\"restart\" id=\"start\" />";
         }
       } else {
@@ -311,7 +315,6 @@ if ($textsize > 120) {
   }
   echo '<br />&nbsp;';
   
-  $display_date = '';
   if ($test_type != 2) {
     // Display previous attempts
     $old_started = '';
@@ -320,18 +323,18 @@ if ($textsize > 120) {
     $mark_total = 0;
     $adj_percent = 0;
     if ($log_info->num_rows > 0) {
-      while ($row = $log_info->fetch_assoc()) {
+      while ($log_info->fetch()) {
         if ($temp_no == 0) {
-          $old_started = $row['started'];
+          $old_started = $log_started;
           echo '<hr style="background-color:#5582D2; color:#5582D2; height:1px; width:80%; border:0" />';
           echo '<table cellpadding="0" cellspacing="0" border="0" align="center">';
           echo '<tr><td colspan="4" style="text-align:center"><strong>' . $string['previouscompletions'] . '</strong></td></tr>';
-          if ($row['screen'] > $old_screen) $old_screen = $row['screen'];
+          if ($log_max_screen > $old_screen) $old_screen = $log_max_screen;
         }
-        if ($old_started != $row['started'] and $old_started != '') {
+        if ($old_started != $log_started and $old_started != '') {
           $old_screen = 0;
           if ($test_type == 0) {
-            displayPrevTake($mark_total,$adj_percent,$total_random_mark,$marking,$display_date,$paper_type);
+            displayPrevTake($mark_total, $adj_percent, $total_random_mark, $marking, $display_date, $paper_type);
           } else {
             if ($low_bandwidth == 0) {
               echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<span style=\"color:#808080\">$display_date</span></td><td>&nbsp;</td></tr>\n";
@@ -341,18 +344,18 @@ if ($textsize > 120) {
           }
           $mark_total = 0;
         }
-        $old_started = $row['started'];
+        $old_started = $log_started;
         $temp_no++;
-        if ($row['screen'] > $old_screen) $old_screen++;
-        $mark_total += $row['mark'];
-        $display_date = $row['temp_date'];
-        $rerun_date = $row['started'];
-        $paper_type = $row['paper_type'];
+        if ($log_max_screen > $old_screen) $old_screen++;
+        $mark_total += $log_mark;
+        $display_date = $log_temp_date;
+        $rerun_date = $log_started;
+        $paper_type = $log_paper_type;
       }
       $log_info->close();
 
       if ($test_type == 0) {
-        displayPrevTake($mark_total,$adj_percent,$total_random_mark,$marking,$display_date,$paper_type);
+        displayPrevTake($mark_total, $adj_percent, $total_random_mark, $marking, $display_date, $paper_type);
       } else {
         if ($low_bandwidth == 0) {
           echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<span style=\"color:#808080\">$display_date";

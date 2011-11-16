@@ -93,9 +93,9 @@ th {background-color:#F1F5FB; font-weight:normal; text-align:left}
 
 <?php
   if (isset($_COOKIE['showfixed']) and $_COOKIE['showfixed'] == 'checked') {
-    $sql = 'SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,\'%d/%m/%y&nbsp;%H:%i\'), errtype, errstr, errfile, errline, users.id FROM sys_errors, users WHERE users.id=sys_errors.userID ORDER BY occurred DESC LIMIT 1000';
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'$cfg_long_date_time'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID ORDER BY occurred DESC LIMIT 1000";
   } else {
-    $sql = 'SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,\'%d/%m/%y&nbsp;%H:%i\'), errtype, errstr, errfile, errline, users.id FROM sys_errors, users WHERE users.id=sys_errors.userID AND fixed IS NULL ORDER BY occurred DESC LIMIT 1000';
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'$cfg_long_date_time'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID WHERE fixed IS NULL ORDER BY occurred DESC LIMIT 1000";
   }
 
   $result = $mysqli->prepare($sql);
@@ -104,9 +104,15 @@ th {background-color:#F1F5FB; font-weight:normal; text-align:left}
   $result->bind_result($fixed, $errorID, $title, $initials, $surname, $occurred, $errtype, $errstr, $errfile, $errline, $tmp_userID);
   while ($result->fetch()) {
     if ($fixed == '') {
-      echo "<tr onclick=\"selErr($errorID)\" onmouseover=\"lon($errorID)\" onmouseout=\"loff($errorID)\" id=\"link$errorID\"><td class=\"err\">$occurred</td><td class=\"err\">$errtype</td><td class=\"err\">$errstr</td><td class=\"err\">$errfile</td><td class=\"errl\">$errline</td><td class=\"err\">$title&nbsp;$initials&nbsp;$surname</td><td class=\"err\">$tmp_userID</td></tr>\n";
+      echo "<tr onclick=\"selErr($errorID)\" onmouseover=\"lon($errorID)\" onmouseout=\"loff($errorID)\" id=\"link$errorID\"><td class=\"err\"><nobr>$occurred<nobr></td><td class=\"err\">$errtype</td><td class=\"err\">$errstr</td><td class=\"err\">$errfile</td><td class=\"errl\">$errline</td><td class=\"err\">$title&nbsp;$initials&nbsp;$surname</td><td class=\"err\">$tmp_userID</td></tr>\n";
     } else {
-      echo "<tr onclick=\"selErr($errorID)\" onmouseover=\"lon($errorID)\" onmouseout=\"loff($errorID)\" id=\"link$errorID\" style=\"color:#808080\"><td class=\"err\">$occurred</td><td class=\"err\">$errtype</td><td class=\"err\">$errstr</td><td class=\"err\">$errfile</td><td class=\"errl\">$errline</td><td class=\"err\">$title&nbsp;$initials&nbsp;$surname</td><td class=\"err\">$tmp_userID</td></tr>\n";
+      echo "<tr onclick=\"selErr($errorID)\" onmouseover=\"lon($errorID)\" onmouseout=\"loff($errorID)\" id=\"link$errorID\" style=\"color:#808080\"><td class=\"err\"><nobr>$occurred</nobr></td><td class=\"err\">$errtype</td><td class=\"err\">$errstr</td><td class=\"err\">$errfile</td><td class=\"errl\">$errline</td><td class=\"err\">";
+      if ($surname == '') {
+        echo '<span class="grey">unauthenticated</span>';
+      } else {
+        echo "$title&nbsp;$initials&nbsp;$surname";
+      }
+      echo "</td><td class=\"err\">$tmp_userID</td></tr>\n";
     }
   }
 ?>

@@ -33,7 +33,7 @@
 
 <h1>Renaming Photos</h1>
 <?php
-  $d = dir("./new_photos/");
+  $d = dir("/tmp/new_photos/");
   while (false !== ($filename = $d->read())) {
     if ($filename != '.' and $filename != '..') {
       $query_string = "SELECT username FROM users, sid WHERE sid.userID=users.id AND student_id='" . str_replace('.jpg','',$filename) . "'";
@@ -41,8 +41,8 @@
       if ($results->num_rows == 1) {
         $row = $results->fetch_assoc();
         echo $filename . " = " . $row['username'] . "<br />\n";
-        if (!rename($cfg_web_root . "users/new_photos/$filename", $cfg_web_root . "users/new_photos/" . $row['username'] . '.jpg')) {
-          echo "Fail - \"" . $cfg_web_root . "users/new_photos/$filename\", \"/users/new_photos/" . $row['username'] . '.jpg<br />';
+        if (!rename("/tmp/new_photos/$filename", $cfg_web_root . "users/new_photos/" . $row['username'] . '.jpg')) {
+          echo "Fail - \"/tmp/new_photos/$filename\", \"/users/new_photos/" . $row['username'] . '.jpg<br />';
         }
       } else {
         echo "<span style=\"color:red\">" . $query_string ."</span><br />\n";
