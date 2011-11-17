@@ -178,7 +178,7 @@ function db_auth($u, $p, $db) {
       } else {
         $result = false;
       }
-            
+
       if ($result === false) {
         $db_errors = '<strong>' . $string['nodatabaseconnection'] . '</strong>';
         return false;

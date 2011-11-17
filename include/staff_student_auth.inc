@@ -48,6 +48,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
     exit;
   }
 
+
   if (!isset($_SERVER['PHP_AUTH_USER'])) {
     $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
     if ($cfg_use_ldap == true) $message .= "<li>" . $string['tsonldap'] . "</li>\n";
@@ -65,7 +66,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
     if (db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'],$mysqli) == false) {
       //try LDAP
       if ($cfg_use_ldap == true and $db_errors != '<strong>' . $string['notsaccount'] . '</strong>') {
-        $ldap_user_data = Array();
+        $ldap_user_data = array();
         if (ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true) {
           //Ad Account OK
           $encpw_details = encpw($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
@@ -77,15 +78,15 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
             $stmt->close();
 
             $message = $string['notsaccount'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>Please contact <a href=\"mailto:$support_email\">$support_email</a> if you believe you should have access.</li>\n";
-             if ($_SERVER['PHP_SELF'] == '/index.php') {
+            if ($_SERVER['PHP_SELF'] == '/index.php') {
               $message .= $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
             }
             $message .= "</ul>";
+
             access_denied($message, true);
           }
           $stmt->close();
           db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, $ldap_user_data);
-          
         } else {
           //Ad Account NOT OK
           $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
