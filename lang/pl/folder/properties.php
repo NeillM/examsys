@@ -1,12 +1,11 @@
 <?php
-$string['folderproperties'] = 'Folder Properties';
-$string['foldername'] = 'Folder Name';
-$string['colour'] = 'Colour';
-$string['owner'] = 'Owner';
-$string['created'] = 'Created';
-$string['teams'] = 'Teams(s)';
-$string['nameused'] = 'Warning folder name already used!';
-$string['back'] = '&lt; Back';
-$string['enteraname'] = 'Please enter a name for the Folder.';  // Niko
-$string['nameinuse'] = 'Folder name already in use. Please use an alternative name.';
+$string['folderproperties'] = 'Właściwości folderu';
+$string['foldername'] = 'Nazwa folderu';
+$string['colour'] = 'Kolor';
+$string['owner'] = 'Właściciel';
+$string['created'] = 'Utworzony';
+$string['teams'] = 'Zespół/zespoły';
+$string['nameused'] = 'Ostrzeżenie! ta nazwa folderu jest już używana!';
+$string['enteraname'] = 'Podaj nazwę folderu.';  
+$string['nameinuse'] = 'Ta nazwa folderu jest już używana. Użyj innej nazwy.';
 ?>
