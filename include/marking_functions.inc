@@ -89,7 +89,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
     }
     if ($q_type == 'random' or $q_type == 'branching' or $q_type == 'keyword_based') {
       if ($q_type == 'random' or $q_type == 'keyword_based') {
-        $selected_q_id[] = $_POST['q' . $tmp_question_no . '_randomID'];
+        $selected_q_id[] = (isset($_POST['q' . $tmp_question_no . '_randomID'])) ? $_POST['q' . $tmp_question_no . '_randomID'] : 0;
       } else {
   	    if (isset($_POST['q' . $q_id . '_' . $branch_no . '_branchID'])) {
 	        // the user went down branch $branch_no so saw the questions stored in option option_text
@@ -110,7 +110,11 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           while ($random_data->fetch()) {
             $paper_array[] = array('q_id'=>$new_q_id,'scenario'=>$scenario,'q_type'=>$q_type,'option_text'=>$option_text,'q_media'=>$q_media,'correct'=>$correct,'display_method'=>$display_method,'score_method'=>$score_method,'marks_correct'=>$marks_correct,'marks_incorrect'=>$marks_incorrect,'marks_partial'=>$marks_partial,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
           }
+          if ($random_data->num_rows == 0) {
+            $paper_array[] = array('q_id'=>0,'scenario'=>'','q_type'=>'','option_text'=>'','q_media'=>'','correct'=>'','display_method'=>'','score_method'=>'','marks_correct'=>0,'marks_incorrect'=>0,'marks_partial'=>0,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
+          }
           $random_data->close();
+          
         }
 	      $selected_q_id = array();
         $random_on = true;
