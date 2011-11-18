@@ -552,7 +552,16 @@
                 $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$blank_count+1,$blank_options);
                 $d_no++;
                 $d_total += $d;
-                echo '<strong>' . $blank_options . ' </strong>' . pStats($freq_log[$q_id][$blank_count+1][$blank_options]/$user_total) . ', ' . dStats($d) . ' t=' . number_format(($freq_log[$q_id][$blank_count+1][$blank_options]/$user_total)*100,0) . '%, u=' . number_format(($top_log[$q_id][$blank_count+1][$blank_options]/$candidate_no)*100,0) . '%, l=' . number_format(($bottom_log[$q_id][$blank_count+1][$blank_options]/$candidate_no)*100,0) . '%';
+                if (isset($freq_log[$q_id][$blank_count+1][$blank_options])) {
+                  $tmp_correct_p = pStats($freq_log[$q_id][$blank_count+1][$blank_options]/$user_total);
+                  $tmp_correct_no = $freq_log[$q_id][$blank_count+1][$blank_options];
+                } else {
+                  $tmp_correct_p = 0;
+                  $tmp_correct_no = 0;
+                }
+                $tmp_top_no = (isset($top_log[$q_id][$blank_count+1][$blank_options])) ? $top_log[$q_id][$blank_count+1][$blank_options] : 0;
+                $tmp_bottom_no = (isset($bottom_log[$q_id][$blank_count+1][$blank_options])) ? $bottom_log[$q_id][$blank_count+1][$blank_options] : 0;
+                echo '<strong>' . $blank_options . ' </strong>' . $tmp_correct_p . ', ' . dStats($d) . ' t=' . number_format(($tmp_correct_no/$user_total)*100,0) . '%, u=' . number_format(($tmp_top_no/$candidate_no)*100,0) . '%, l=' . number_format(($tmp_bottom_no/$candidate_no)*100,0) . '%';
               }
 
               echo '</span>' . $remainder;
