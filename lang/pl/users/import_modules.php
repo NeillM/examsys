@@ -1,14 +1,14 @@
 <?php
 require '../lang/' . $language . '/include/user_search_options.inc';
 
-$string['impmodtitle'] = '1Rogo: Import Modules';
-$string['problem'] = '1Problem - ';
-$string['problemv0'] = '1Value 0: No problem, the file is uploaded.';
-$string['problemv1'] = '1Value 1: The uploaded file was bigger then  upload_max_filesize in php.ini.';
-$string['problemv2'] = '1Value 2: The uploaded file was bigger then MAX_FILE_SIZE in html-form.';
-$string['problemv3'] = '1Value 3: File partialy uploaded.';
-$string['problemv4'] = '1Value 4: No file was uploaded.';
-$string['problemvx'] = '1Other problem: ';
+$string['impmodtitle'] = 'Rogō: Import modułów';
+$string['problem'] = 'Problem - ';
+$string['problemv0'] = 'wartość 0: Brak problemu, plik załadowano.';
+$string['problemv1'] = 'wartość 1: Załadowany plik miał większy rozmiar niż przewidziano w upload_max_filesize w php.ini.';
+$string['problemv2'] = 'wartość 2: Załadowany plik miał większy rozmiar niż przewidziano w MAX_FILE_SIZE w html-form.';
+$string['problemv3'] = 'wartość 3: Plik częściowo załadowany.';
+$string['problemv4'] = 'wartość 4: Nie załadowano pliku.';
+$string['problemvx'] = 'Inny problem: ';
 
 $string['sendwelcomeemail'] = 'Wyślij do użytkownika list powitalny';
 $string['importmodules'] = 'Importuj moduły';
