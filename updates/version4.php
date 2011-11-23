@@ -589,7 +589,8 @@ if (!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".textbox_remark TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".track_changes TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".temp_users TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";  
-    
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".sessions TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+
     $mysqli->query("CREATE USER  '" . $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sysadmin_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_sysadmin_user created</li>";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $cfg_db_database . ".* TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
