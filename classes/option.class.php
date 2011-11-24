@@ -507,7 +507,7 @@ QUERY;
         try {
           $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings, $data);
         } catch (Exception $ex) {
-          throw new ClassNotFoundException(sprintf($this->_lang_strings['noclasserror'], $classname));
+          throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
         }
     } else {
       try {
@@ -517,7 +517,7 @@ QUERY;
           $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings);
         }
       } catch (Exception $ex) {
-        throw new ClassNotFoundException(sprintf($this->_lang_strings['noclasserror'], $classname));
+        throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
       }
     }
     
