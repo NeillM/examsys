@@ -839,7 +839,13 @@
             }
             echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
             if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
-            echo ">$individual_option</td></tr>\n";
+            echo ">";
+            if ($individual_option != '') echo "$individual_option\n";
+            if (is_array($o_media[$i - 1])) {
+              echo '<br />';
+              echo display_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2]);
+            }
+            echo "</td></tr>\n";
           }
           echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
           echo "<tr><td>" . pStats($tmp_correct_no/$user_total) . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>\n";
