@@ -34,6 +34,31 @@ check_var('paperID', 'GET', true, false);
 
 $paperID = $_GET['paperID'];
 
+  $result = $mysqli->prepare("SELECT paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $surname, $tmp_module, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed);
+  $result->fetch();
+  $result->close();
+  
+  // Check out team security
+  if (strpos($userroles,'SysAdmin') === false) {
+    $team_match = false;
+    $paper_teams = explode(',', $moduleID);
+    
+    foreach ($teams as $team) {
+      foreach ($paper_teams as $paper_team) {
+        if ($team == $paper_team) {
+          $team_match = true;
+        }
+      }
+    }
+    
+    if (!$team_match) {
+      access_denied($string['denied_paper'], false);
+    }
+  }
+
 function findDecisionQ($question_array,$sourceID) {
   $source_question_no = 0;
   $tmp_q_no = 0;
@@ -360,15 +385,7 @@ function getMSCAA($paperID, $mysqlidb) {
 <body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?>>
 
 <?php
-  $result = $mysqli->prepare("SELECT paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $surname, $tmp_module, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed);
-  $result->fetch();
-  $result->close();
-  
   $paper_owner = $title  . ' ' . $initials . ', ' . $surname;
-  
   $mscaa_metadata = getMSCAA($paperID, $mysqli);
 
   if (!isset($paper_title)) {
