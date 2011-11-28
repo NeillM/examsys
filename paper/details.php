@@ -43,18 +43,18 @@ $paperID = $_GET['paperID'];
   
   // Check out team security
   if (strpos($userroles,'SysAdmin') === false) {
-    $team_match = false;
+    $on_team = false;
     $paper_teams = explode(',', $moduleID);
     
     foreach ($teams as $team) {
       foreach ($paper_teams as $paper_team) {
         if ($team == $paper_team) {
-          $team_match = true;
+          $on_team = true;
         }
       }
     }
     
-    if (!$team_match) {
+    if ($on_team == false and strpos($moduleID,'SYSTEM') === false) {
       access_denied($string['denied_paper'], false);
     }
   }

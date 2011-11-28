@@ -83,7 +83,7 @@
         $result->close();
         
         // Override access for the system training module.
-        if ($on_team == false and strpos($moduleID,'SYSTEM') === false) {
+        if ($on_team == false and strpos($moduleID, 'SYSTEM') === false) {
           $failed_paper = true;
         }
       }
@@ -116,9 +116,9 @@
         }
         $result->close();
       }
-        
-      // Override access for the system training module.
-      if ($on_team == false and strpos($_GET['module'],'SYSTEM') === false) {
+      
+       // Override access for the system training module.
+      if ($on_team == false and strpos($_GET['module'], 'SYSTEM') === false) {
         $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
         access_denied($message, false);
       }
@@ -132,7 +132,7 @@
       $result->execute();  
       $result->bind_result($q_group, $ownerID);
       while ($result->fetch()) {
-        if ($ownerID != $userID AND !in_array($q_group,$teams) AND !in_array('SYSTEM', $paper_modules)) {   //allow acsess to the SYSTEM module for training!
+        if ($ownerID != $userID and !in_array($q_group, $teams) and strpos($q_group, 'SYSTEM') === false) {
           $result->close();
           access_denied($string['denied_question'], false);
         } 
