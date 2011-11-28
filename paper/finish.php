@@ -65,7 +65,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, ca
       $hide_if_unanswered = 0;
     }
 
-    if ($userroles == 'Student') {
+    if (strpos($userroles,'Student') !== false) {
       if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
       // Check for additional password on the paper
@@ -188,8 +188,19 @@ table {font-size:100%}
   echo '</td>';
   echo $logo_html;
   echo '</table>';
-
-  if ($paper_type == '0' or (($paper_type == '1' or $paper_type == '2' or $paper_type == '5') and (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false))) {
+  
+  $show_feedback = false;
+  if ($paper_type == '0') {
+    $show_feedback = true;
+  } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
+    if (strpos($userroles,'Student') !== false) {
+      $show_feedback = false;
+    } elseif (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false) {
+      $show_feedback = true;
+    }
+  }
+  
+  if ($show_feedback) {
     display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqli);
   } else {
     echo '<blockquote>';

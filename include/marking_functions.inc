@@ -135,6 +135,8 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   } else {
     if ($screen_no == 1) {       // Write log_metadata first on screen 1 only
       $tmp_ip_address = NetworkUtils::get_ipaddress();
+      
+      
       $save_answers = $dblink->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
       $save_answers->bind_param('iisssii', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
       $save_answers->execute();

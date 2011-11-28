@@ -50,14 +50,24 @@
   
     $html = "<tr><td colspan=\"" . ($col_span - 1) . "\" style=\"background-color:#F1F5FB\">";
     $html .= '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr>';
-    $tab_array = array('Log','Modules','Notes','Accessibility');
-    if (strpos($user_roles,'Admin') !== false and strpos($user_roles,'SysAdmin') === false) {
-      $tab_array = array('Log','Teams','Admin','Notes','Accessibility');
-    } elseif (strpos($user_roles,'Staff') !== false) {
-      $tab_array = array('Log','Teams','Notes','Accessibility');
-    } else {
-      $tab_array = array('Log','Modules','Notes','Accessibility','Metadata');
+    
+    $tab_array = array('Log');
+     
+    if (stripos($user_roles,'Staff') !== false) {
+      $tab_array[] = 'Teams';
     }
+
+    if (stripos($user_roles,'Admin') !== false and stripos($user_roles,'SysAdmin') === false) {
+      $tab_array[] = 'Admin';
+    }
+
+    if (stripos($user_roles,'Student') !== false) {
+      $tab_array[] = 'Modules';
+      $tab_array[] = 'Notes';
+      $tab_array[] = 'Accessibility';
+      $tab_array[] = 'Metadata';
+    }
+        
     foreach($tab_array as $individual_tab) {
       if ($individual_tab == $current_tab) {
         $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
@@ -119,18 +129,6 @@
     //Update 'users' table.
     $tmp_roles = $_POST['roles'];
     $grade = $_POST['grade'];
-    if ($grade == 'University Lecturer' or $grade == 'University Secretary' or $grade == 'University Librarian' or $grade == 'University Admin' or $grade == 'Technical Staff' or $grade == 'NHS Lecturer' or $grade == 'NHS Secretary' or $grade == 'NHS Admin' or $grade == 'NHS Librarian' or $grade == 'NHS IT' or $grade == 'Staff External Guest') {
-      $tmp_roles = 'Staff';
-      if (isset($_POST['sysadmin'])) {
-        $tmp_roles .= ',SysAdmin';
-      }
-      if (isset($_POST['admin'])) {
-        $tmp_roles .= ',Admin';
-      }
-    } elseif ($grade == 'Staff External Examiner') {
-      $tmp_roles = 'External Examiner';
-    }
-    if ($grade == 'inactive') $tmp_roles = 'inactive';
 
     $tmp_first_names = $_POST['first_names'];
     $tmp_surname = $_POST['surname'];
@@ -408,13 +406,16 @@ a.access:hover {color:white}
       // Student editing
       echo "<tr><td>&nbsp;" . $string['course'] . "</td><td><select name=\"grade\" style=\"width:300px\">";
       $found = 0;
-      $degree_details = $mysqli->query("SELECT DISTINCT degree, description FROM degrees ORDER BY degree");
-      while ($degree_row = $degree_details->fetch_assoc()) {
-        if ($degree_row['degree'] == $grade) {
+      
+      $degree_details = $mysqli->prepare("SELECT DISTINCT degree, description FROM degrees ORDER BY degree");
+      $degree_details->execute();
+      $degree_details->bind_result($degree, $description);
+      while ($degree_details->fetch()) {
+        if ($degree == $grade) {
           $found = 1;
-          echo "<option value=\"" . $degree_row['degree'] . "\" selected>" . $degree_row['degree'] . ": " . $degree_row['description'] . "</option>\n";
+          echo "<option value=\"$degree\" selected>$degree: $description</option>\n";
         } else {
-          echo "<option value=\"" . $degree_row['degree'] . "\">" . $degree_row['degree'] . ": " . $degree_row['description'] . "</option>\n";
+          echo "<option value=\"$degree\">$degree: $description</option>\n";
         }
       }
       if ($found == 0) echo "<option value=\"" . $grade . "\" selected>" . $grade . ": &lt;unknown degree&gt;</option>\n";
@@ -428,16 +429,7 @@ a.access:hover {color:white}
           echo "<option value=\"$i\">Year $i</option>";
         }
       }
-      echo "</select></td><td>&nbsp;" . $string['status'] . "</td><td colspan=\"2\"><select name=\"roles\">";
-      $roles_array = array('External Examiner'=>'ExternalExaminers','graduate'=>'Graduate','left'=>'LeftUniversity','suspended'=>'Suspended','Staff'=>'Staff','Student'=>'Student');
-      foreach ($roles_array as $key => $value) {
-        if ($key == $tmp_roles) {
-          echo "<option value=\"$key\" selected>" . $string[strtolower($value)] . "</option>";
-        } else {
-          echo "<option value=\"$key\">" . $string[strtolower($value)] . "</option>";
-        }
-      }
-      echo "</select></td></tr>\n";
+      echo "</select></td>";
     } else {
       // Staff editing
       echo "<tr><td>&nbsp;" . $string['type'] . "<input type=\"hidden\" name=\"year\" value=\"$tmp_year\" /></td><td>";
@@ -454,27 +446,43 @@ a.access:hover {color:white}
       <option value="inactive"<?php if ($tmp_roles == 'inactive') echo ' selected'; ?>><?php echo $string['inactivestaff'] ?></option>
       <option value="left"<?php if ($tmp_grade == 'left') echo ' selected'; ?>><?php echo $string['leftuniversity'] ?></option>
       <?php
-      echo "</select>\n&nbsp;";
-      if (strpos($userroles,'SysAdmin') !== false) {
-        if (strpos($tmp_roles,'SysAdmin') !== false) {
-          echo "<input type=\"checkbox\" name=\"sysadmin\" value=\"1\" checked />" . $string['sysadmin'];
-        } else {
-          echo "<input type=\"checkbox\" name=\"sysadmin\" value=\"1\" />" . $string['sysadmin'];
-        }
-      } else {
-        // Do not allow lower levels of permission to change their account to SysAdmin
-      }
-      
-      if (strpos($tmp_roles,'Admin') !== false and strpos($tmp_roles,'SysAdmin') === false) {
-        echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"admin\" value=\"1\" checked />" . $string['admin'];
-      } else {
-        echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"admin\" value=\"1\" />" . $string['admin'];
-      }      
-      
-      echo "<input type=\"hidden\" name=\"roles\" value=\"$tmp_roles\" /></td>\n";
-      
-      echo "<td colspan=\"3\">&nbsp;</td></tr>\n";
+      echo "</select>\n";      
     }
+    echo "<td>&nbsp;" . $string['status'] . "</td><td colspan=\"2\"><select name=\"roles\">";
+    $old_optgroup = '';
+
+    $roles_array = array('#Staff', 'Staff');
+    if (strpos($userroles,'SysAdmin') !== false) {
+      $roles_array[] = 'Staff,Admin';
+      $roles_array[] = 'Staff,SysAdmin';
+    } elseif (strpos($userroles,'Admin') !== false) {
+      $roles_array[] = 'Staff,Admin';
+    }
+    $roles_array[] = 'Staff,Student';
+    $roles_array[] = 'External Examiner';
+    $roles_array[] = '#Students';
+    $roles_array[] = 'Student';
+    $roles_array[] = 'Graduate';
+    $roles_array[] = 'Left';
+    $roles_array[] = 'Suspended';
+    
+    foreach ($roles_array as $value) {
+      if (substr($value,0,1) == '#') {
+        if ($old_optgroup != '') echo "</optgroup>\n";
+        echo "<optgroup label=\"" . substr($value,1) . "\">\n";
+        $old_optgroup = $value;
+      } else {
+        $display_val = str_replace(' ', '', $value);
+        $display_val = str_replace(',', '', $display_val);
+        $display_val = $string[strtolower($display_val)];
+        if ($value == $tmp_roles) {
+          echo "<option value=\"$value\" selected>$display_val</option>";
+        } else {
+          echo "<option value=\"$value\">$display_val</option>";
+        }
+      }
+    }
+    echo "</optgroup>\n</select></td></tr>\n";
 
     if (strpos($userroles,'SysAdmin') !== false ) {
       echo "<tr><td>&nbsp;" . $string['username'] . "&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"username\" value=\"$username\" /></td><td>&nbsp;" . $string['password'] . "</td><td colspan=\"2\">";
