@@ -258,9 +258,9 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         echo '</select>';
         if ($answer_no == 1) {
           echo '&nbsp;';
-          $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $part_id, $tmp_reviews, $is_group);
+          $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $rating_part + 1, $tmp_reviews, $is_group);
           if ($options[0]['score_method'] == 'Mark per Option') {
-            echo reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,($part_id - 1),1), $review_val, $stdID, $std_excluded, $is_group);
+            echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,($part_id - 1),1), $review_val, $stdID, $std_excluded, $is_group);
           }
           echo '</div></li>';
           $rating_part++;
@@ -271,7 +271,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
             $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $rating_part + 1, $tmp_reviews, $is_group);
             echo '<div>';
             if ($options[0]['score_method'] == 'Mark per Option') {
-              echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
+              echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,($part_id - 1),1), $review_val, $stdID, $std_excluded, $is_group);
             }
             echo '</div>';
             $rating_part++;

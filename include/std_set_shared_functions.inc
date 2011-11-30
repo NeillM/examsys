@@ -122,6 +122,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
         $partID = 0;
   
         if ($reviews_row['rating'] != '') {
+          echo $reviews_row['rating'] . '<br />';
           $rating_array = explode(',',$reviews_row['rating']);
           foreach ($rating_array as $individual_rating) {
             if (isset($marks_array[$questionID][$partID]) and $individual_rating != '') {
@@ -200,7 +201,9 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
       $distinction_score = round($distinction_score,1);
     }
-    if($old_group_review == 'No') $no_reviews++;
+    if ($old_group_review == 'No') $no_reviews++;
+    var_dump($ebel_marks);
+    //exit;
     $reviews[] = array(
     	'group_review' => $old_group_review,
     	'review_total' => $review_total, 
@@ -926,7 +929,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
 function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group = false) {
   $current_review = '';
   
-  if(!$is_group or isset($prev_reviews[$q_id])) {
+  if (!$is_group or isset($prev_reviews[$q_id])) {
     switch ($method) {
       case 'modified_angoff':
         if (isset($prev_reviews[$q_id]) and $prev_reviews[$q_id] != '') {

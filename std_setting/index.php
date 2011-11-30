@@ -24,6 +24,7 @@
 
   require '../include/staff_auth.inc';
   require '../include/std_set_shared_functions.inc';
+  
   $paperID = $_GET['paperID'];
 
   function displayReview($review) {
@@ -135,11 +136,14 @@ var groupReview;
 $reviews_html = '';
 $total_marks = 0;
 
-$results = $mysqli->query("SELECT paper_title, total_mark FROM properties WHERE property_id=$paperID LIMIT 1");
-while ($row = $results->fetch_assoc()) {
+$results = $mysqli->prepare("SELECT paper_title, total_mark FROM properties WHERE property_id=? LIMIT 1");
+$results->bind_param('i', $paperID);
+$results->execute();
+$results->bind_result($paper_title, $total_mark);
+while ($results->fetch()) {
   $reviews_html .= <<< PAGEHEADING
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php">{$string['home']}</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID={$_GET['paperID']}&folder={$_GET['folder']}&module={$_GET['module']}">{$row['paper_title']}</a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">{$string['standardssetting']}</div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>
+  <tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php">{$string['home']}</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID={$_GET['paperID']}&folder={$_GET['folder']}&module={$_GET['module']}">{$paper_title}</a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">{$string['standardssetting']}</div></td><td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td></tr>
 </table>\n\n
 PAGEHEADING;
 
@@ -158,14 +162,16 @@ PAGEHEADING;
  </tr>
  <tr style="height:4px"><td valign="top" colspan="9"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 TABLEHEADER;
-  $total_marks = $row['total_mark'];
+  $total_marks = $total_mark;
 }
 $results->close();
 
 $no_reviews = 0;
 $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
 
-foreach($reviews as $review) {
+var_dump($reviews);
+
+foreach ($reviews as $review) {
   $reviews_html .= displayReview($review);
 }
 require '../include/std_set_menu.inc';
