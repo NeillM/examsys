@@ -113,7 +113,7 @@ var groupReview;
 
   function highlight(lineID) {
     if (lineID != document.StdSetMenu.oldReviewID.value) {
-      document.getElementById('review' + lineID).style.backgroundColor = '#ECE9D8';
+      document.getElementById('review' + lineID).style.backgroundColor = '#EEEEEE';
     }
   }
 
@@ -168,8 +168,6 @@ $results->close();
 
 $no_reviews = 0;
 $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
-
-var_dump($reviews);
 
 foreach ($reviews as $review) {
   $reviews_html .= displayReview($review);

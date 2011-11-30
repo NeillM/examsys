@@ -41,7 +41,7 @@
       document.getElementById(tmp_ID).style.backgroundColor = 'white';
       document.getElementById(tmp_ID).style.color = 'black';
     }
-    document.getElementById(labNo).style.backgroundColor = '#316AC5';
+    document.getElementById(labNo).style.backgroundColor = '#EEEEEE';
     document.getElementById(labNo).style.color = 'white';
 
     document.getElementById('menu1a').style.display = 'none';

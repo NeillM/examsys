@@ -122,7 +122,6 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
         $partID = 0;
   
         if ($reviews_row['rating'] != '') {
-          echo $reviews_row['rating'] . '<br />';
           $rating_array = explode(',',$reviews_row['rating']);
           foreach ($rating_array as $individual_rating) {
             if (isset($marks_array[$questionID][$partID]) and $individual_rating != '') {
@@ -202,8 +201,6 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $distinction_score = round($distinction_score,1);
     }
     if ($old_group_review == 'No') $no_reviews++;
-    var_dump($ebel_marks);
-    //exit;
     $reviews[] = array(
     	'group_review' => $old_group_review,
     	'review_total' => $review_total, 
@@ -779,7 +776,6 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"u\" />\n";
       break;
     case 'labelling':
-      //var_dump($display_option);
       $tmp_first_split = explode(';', $firstoption['correct']);
       $tmp_second_split = explode('$', $tmp_first_split[11]);
       $tmp_height = $firstoption['q_media_height'];
