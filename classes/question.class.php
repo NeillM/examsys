@@ -1208,11 +1208,11 @@ QUERY;
    * @param int $id
    * @return bool True or false depending on success or failure of the delete operation
    */
-  public static function delete($id) {
+  public static function delete($id, $mysqli) {
     // TODO: Track changes
     $success = false;
     
-    return Question::update_deletion_status($id, date ("Y-m-d H:i:s"));
+    return Question::update_deletion_status($id, date ("Y-m-d H:i:s"), $mysqli);
   }
   
   /**
@@ -1223,7 +1223,7 @@ QUERY;
   public static function restore($id) {
     $success = false;
     
-    return Question::update_deletion_status($id, null);
+    return Question::update_deletion_status($id, null, $mysqli);
   }
   
   /**
@@ -1408,7 +1408,7 @@ QUERY;
    * @param int $id
    * @return bool True or false depending on success or failure of the operation
    */
-  private static function update_deletion_status($id, $status) {
+  private static function update_deletion_status($id, $status, $mysqli) {
     $success = false;
     
     $d_query = <<< QUERY
@@ -1416,7 +1416,7 @@ UPDATE questions
 SET deleted = ?
 WHERE q_id = ?
 QUERY;
-    $result = $this->_mysqli->prepare($d_query);
+    $result = $mysqli->prepare($d_query);
     $result->bind_param('i', $status, $id);
     $success = $result->execute();
     $result->close();
