@@ -665,14 +665,15 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         $saved_response = '';
         for ($i=1; $i<=$no_answers; $i++) {
           $qid = 'q' . $question_no . '_' . $i;
-          if(isset($_POST[$qid])) {
+          if (isset($_POST[$qid])) {
             if ($_POST[$qid] == '') {
               $saved_response .= '|u';
             } else {
               $saved_response .= '|' . $_POST[$qid];
             }
           }
-          if (preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$i],$mark_matches)) {
+          
+          if (preg_match("|mark=\"([0-9]{1,3})\"|", $blank_details[$i], $mark_matches)) {
             $totalpos += $mark_matches[1];
             $individual_q_mark = $mark_matches[1];
           } else {
@@ -684,6 +685,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
           $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
           $answer_list = explode(',',$blank_details[$i]);
+
           $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
           if ($display_method == 'textboxes') {
             if (isset($_POST[$qid]) and $_POST[$qid] != 'u' and $_POST[$qid] != '') {
