@@ -1470,6 +1470,22 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
+  // 02/12/2011
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='properties' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='paper_type'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($column_type == "enum('0','1','2','3','4','5')") {
+    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN paper_type paper_type enum('0','1','2','3','4','5','6')");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE properties CHANGE COLUMN paper_type paper_type enum('0','1','2','3','4','5','6')</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
   
   // End ------------------------------------------------------------------
   echo "</ol>\n";

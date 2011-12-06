@@ -256,7 +256,7 @@ function getMSCAA($paperID, $mysqlidb) {
   .m {text-align:right; vertical-align:top; padding-right:4px;padding-top:3px;padding-bottom:3px}
   .l {vertical-align:top; padding-top:3px; padding-bottom:3px}
   .errmk {color:red;text-align:right;vertical-align:top}
-  .mee {font-size:100%;}
+  .mee {font-size:120%;}
 </style>
 
 <script type="text/javascript" src="../javascript/staff_help.js"></script>
