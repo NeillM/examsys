@@ -303,6 +303,19 @@ if ($critical_error == '') {
               setcookie("likert_scale_custom", implode('|', $question->get_all_custom_scales()), time()+31536000);
             }
           }
+
+          // Save a default team if defined
+          if ($mode == 'Add') {
+            $team_for_cookie = '';
+            if ($module != '') {
+              $team_for_cookie = $module;
+            } else {
+              $teams = $question->get_teams();
+              if (is_array($teams) and count($teams) > 0) $team_for_cookie = $teams[0];
+            }
+            $time = ($team_for_cookie != '') ? time()+31536000 : 1;
+            setcookie("default_team", $team_for_cookie, $time);
+          }
     	  }
     	} catch (ValidationException $vex) {
     	  $errors[] = $vex->getMessage();
@@ -502,9 +515,16 @@ if ($question->get_type() != '') require_once '../../include/question/addedit/' 
           <div class="form">
             <h2><?php echo $string['metadata'] ?></h2>
           </div>
-        
+
 <?php
-echo render_metadata($mysqli, $question, $question->use_bloom(), $module, $disabled, $string);
+$default_team = '';
+if (count($question->get_teams()) > 0) {
+  $teams = $question->get_teams();
+  $default_team = $teams[0];
+} elseif (isset($_COOKIE['default_team'])) {
+  $default_team = $_COOKIE['default_team'];
+}
+echo render_metadata($mysqli, $question, $question->use_bloom(), $default_team, $disabled, $string);
 ?>
         </div>
       </div>
