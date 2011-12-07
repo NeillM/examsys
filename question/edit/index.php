@@ -294,6 +294,15 @@ if ($critical_error == '') {
     	      // Write out curriculum mapping.
     	      save_objective_mappings($mysqli, $_POST['objective_modules'], $paper_id, $question->id);
     	    }
+
+          // For likert, save the scale to a cookie to ease creation of multiple questions with same scale
+          if ($mode == 'Add' and $question->get_type() == 'likert') {
+            $scale_type = $question->get_scale_type();
+            setcookie("likert_format", $scale_type, time()+31536000);
+            if ($scale_type == 'custom') {
+              setcookie("likert_scale_custom", implode('|', $question->get_all_custom_scales()), time()+31536000);
+            }
+          }
     	  }
     	} catch (ValidationException $vex) {
     	  $errors[] = $vex->getMessage();
