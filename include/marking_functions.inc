@@ -56,16 +56,6 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   $screen_no =  $_POST['old_screen'];
   $extra_duration = $_POST['previous_duration'];
 
-  $log_ids = array();
-  $log_check = $dblink->prepare("SELECT id, q_id FROM log$paper_type WHERE userID=? AND q_paper=? AND screen=? AND started=?");
-  $log_check->bind_param('siis', $userid, $paper_id, $screen_no, $_POST['sessionid']);
-  $log_check->execute();
-  $log_check->bind_result($tmp_id, $tmp_q_id);
-  while ($log_check->fetch()) {
-    $log_ids[$tmp_q_id] = $tmp_id;
-  }
-  $log_check->close();
-
   // Load the structure of the paper into a local array.
   $paper_array = array();
   $tmp_question_no = 0;
@@ -128,6 +118,16 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   }
   $questions->close();
   
+  $log_ids = array();
+  $log_check = $dblink->prepare("SELECT id, q_id FROM log$paper_type WHERE userID=? AND q_paper=? AND screen=? AND started=?");
+  $log_check->bind_param('siis', $userid, $paper_id, $screen_no, $_POST['sessionid']);
+  $log_check->execute();
+  $log_check->bind_result($tmp_id, $tmp_q_id);
+  while ($log_check->fetch()) {
+    $log_ids[$tmp_q_id] = $tmp_id;
+  }
+  $log_check->close();
+
   // Set up new insert query ready.
   if (count($log_ids) > 0) {
     $save_answers = $dblink->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
@@ -137,10 +137,10 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       $tmp_ip_address = NetworkUtils::get_ipaddress();
       
       
-      $save_answers = $dblink->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
-      $save_answers->bind_param('iisssii', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
-      $save_answers->execute();
-      $save_answers->close();
+      $save_metadata = $dblink->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+      $save_metadata->bind_param('iisssii', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
+      $save_metadata->execute();
+      $save_metadata->close();
     }
     $save_answers = $dblink->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
     $save_answers->bind_param('isiidisiiss', $userid, $_POST['sessionid'], $paper_id, $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order);
