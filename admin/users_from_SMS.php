@@ -98,95 +98,108 @@
         $sms->YearofStudy = trim($sms->YearofStudy);
     
         $lookup_username = trim($sms->Username);
-        if (isset($current_users[$lookup_username]['delete'])) {
-          $current_users[$lookup_username]['delete'] = 0;   // Mark as being legitimate
+
+        // Make sure we have a proper username - it can sometimes be blank in SATURN data
+        if ($lookup_username == '' and $sms->Email != '') {
+          // Try to extract from email address
+          $un_parts = explode('@', $sms->Email);
+          $lookup_username = $un_parts[0];
+          echo 'Extracted username from email: ' . $lookup_username . '<br />';
+        }
+
+        if ($lookup_username != '') {
+          if (isset($current_users[$lookup_username]['delete'])) {
+            $current_users[$lookup_username]['delete'] = 0;   // Mark as being legitimate
+          } else {
+            // Student missing from Rogo module
+            $student_data = $mysqli->prepare("SELECT id, yearofstudy, initials, grade, title, surname, first_names, roles FROM users WHERE username=? LIMIT 1");            // Do they have a Rogo user record?
+            $student_data->bind_param('s', $sms->Username);
+            $student_data->execute();
+            $student_data->store_result();
+            $student_data->bind_result($tmp_userID, $tmp_yearofstudy, $tmp_initials, $tmp_grade, $tmp_title, $tmp_surname, $tmp_first_names, $tmp_roles);
+            $student_data->fetch();
+            if ($student_data->num_rows == 0) {
+              // Going to have to create a whole new account for the user
+              $names = explode(' ',$sms->Forename);
+              $initials = '';
+              foreach ($names as $tmp_name) {
+                $initials .= substr($tmp_name,0,1);
+              }
+
+              $result = $mysqli->prepare("INSERT INTO users VALUES ('',?,?,?,?,?,?,'Student',NULL,?,?,NULL,0,?)");
+              $result->bind_param('ssssssssi', $sms->CourseCode, $sms->Surname, $initials, $sms->Title, $sms->Username, $sms->Email, $sms->Forename, $sms->Gender, $sms->YearofStudy);
+              $result->execute();
+              $result->close();
+
+              $tmp_userID = $mysqli->insert_id;    // Get the new Rogo userID
+
+              $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
+              $result->bind_param('si', trim($sms->StudentID), $tmp_userID);
+              $result->execute();
+              $result->close();
+
+              $current_users[$lookup_username]['userID'] = $tmp_userID;
+              $current_users[$lookup_username]['grade'] = $sms->CourseCode;
+              $current_users[$lookup_username]['title'] = $sms->Title;
+              $current_users[$lookup_username]['surname'] = $sms->Surname;
+              $current_users[$lookup_username]['first_names'] = $tmp_first_names;
+              $current_users[$lookup_username]['initials'] = $initials;
+              $current_users[$lookup_username]['roles'] = 'Student';
+              $current_users[$lookup_username]['year'] = $sms->YearofStudy;
+              $current_users[$lookup_username]['delete'] = 0;
+            } else {
+              $current_users[$lookup_username]['userID'] = $tmp_userID;
+              $current_users[$lookup_username]['grade'] = $tmp_grade;
+              $current_users[$lookup_username]['title'] = $tmp_title;
+              $current_users[$lookup_username]['surname'] = $tmp_surname;
+              $current_users[$lookup_username]['first_names'] = $tmp_first_names;
+              $current_users[$lookup_username]['initials'] = $tmp_initials;
+              $current_users[$lookup_username]['roles'] = $tmp_roles;
+              $current_users[$lookup_username]['year'] = $tmp_yearofstudy;
+              $current_users[$lookup_username]['delete'] = 0;
+            }
+            // Add student onto the module
+            $result = $mysqli->prepare("INSERT INTO student_modules VALUES (NULL, ?, ?, ?, 1, 1)");
+            $result->bind_param('iss', $tmp_userID, $module, $session);
+            $result->execute();
+            $result->close();
+            $enrolements++;
+            if ($enrolement_details == '') {
+              $enrolement_details = $sms->Username;
+            } else {
+              $enrolement_details .= ',' . $sms->Username;
+            }
+
+            $student_data->close();
+          }
+
+          // Check to see if any details of the user account need updating.
+          switch ($sms->ReasonForLeaving) {
+            case 'Successfully completed course':
+              $new_roles = 'graduate';
+              break;
+            case 'Not Applicable':
+              $new_roles = 'Student';
+              break;
+            case 'W/D (other)':
+            case 'W/D (financial reasons)':
+              $new_roles = 'left';
+              break;
+          }
+
+          $names = explode(' ',$sms->Forename);
+          $tmp_initials = '';
+          foreach ($names as $tmp_name) {
+            $tmp_initials .= substr($tmp_name,0,1);
+          }
+          if ($current_users[$lookup_username]['year'] != $sms->YearofStudy or $tmp_initials != $current_users[$lookup_username]['initials'] or $current_users[$lookup_username]['grade'] != $sms->CourseCode or $current_users[$lookup_username]['title'] != $sms->Title or $current_users[$lookup_username]['surname'] != $sms->Surname  or $current_users[$lookup_username]['first_names'] != $sms->Forename or $current_users[$lookup_username]['roles'] != $new_roles) {
+            $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, roles=?, grade=?, title=?, surname=?, first_names=?, initials=? WHERE username=?");
+            $result->bind_param('isssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Username);
+            $result->execute();
+            $result->close();
+          }
         } else {
-          // Student missing from Rogo module
-          $student_data = $mysqli->prepare("SELECT id, yearofstudy, initials, grade, title, surname, first_names, roles FROM users WHERE username=? LIMIT 1");            // Do they have a Rogo user record?
-          $student_data->bind_param('s', $sms->Username);
-          $student_data->execute();
-          $student_data->store_result();
-          $student_data->bind_result($tmp_userID, $tmp_yearofstudy, $tmp_initials, $tmp_grade, $tmp_title, $tmp_surname, $tmp_first_names, $tmp_roles);
-          $student_data->fetch();
-          if ($student_data->num_rows == 0) {
-            // Going to have to create a whole new account for the user
-            $names = explode(' ',$sms->Forename);
-            $initials = '';
-            foreach ($names as $tmp_name) {
-              $initials .= substr($tmp_name,0,1);
-            }          
-          
-            $result = $mysqli->prepare("INSERT INTO users VALUES ('',?,?,?,?,?,?,'Student',NULL,?,?,NULL,0,?)");
-            $result->bind_param('ssssssssi', $sms->CourseCode, $sms->Surname, $initials, $sms->Title, $sms->Username, $sms->Email, $sms->Forename, $sms->Gender, $sms->YearofStudy);
-            $result->execute();
-            $result->close();
-        
-            $tmp_userID = $mysqli->insert_id;    // Get the new Rogo userID
-
-            $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
-            $result->bind_param('si', trim($sms->StudentID), $tmp_userID);
-            $result->execute();
-            $result->close();
-
-            $current_users[$lookup_username]['userID'] = $tmp_userID;
-            $current_users[$lookup_username]['grade'] = $sms->CourseCode;
-            $current_users[$lookup_username]['title'] = $sms->Title;
-            $current_users[$lookup_username]['surname'] = $sms->Surname;
-            $current_users[$lookup_username]['first_names'] = $tmp_first_names;
-            $current_users[$lookup_username]['initials'] = $initials;
-            $current_users[$lookup_username]['roles'] = 'Student';
-            $current_users[$lookup_username]['year'] = $sms->YearofStudy;
-            $current_users[$lookup_username]['delete'] = 0;
-          } else {
-            $current_users[$lookup_username]['userID'] = $tmp_userID;
-            $current_users[$lookup_username]['grade'] = $tmp_grade;
-            $current_users[$lookup_username]['title'] = $tmp_title;
-            $current_users[$lookup_username]['surname'] = $tmp_surname;
-            $current_users[$lookup_username]['first_names'] = $tmp_first_names;
-            $current_users[$lookup_username]['initials'] = $tmp_initials;
-            $current_users[$lookup_username]['roles'] = $tmp_roles;
-            $current_users[$lookup_username]['year'] = $tmp_yearofstudy;
-            $current_users[$lookup_username]['delete'] = 0;
-          }
-          // Add student onto the module
-          $result = $mysqli->prepare("INSERT INTO student_modules VALUES (NULL, ?, ?, ?, 1, 1)");
-          $result->bind_param('iss', $tmp_userID, $module, $session);
-          $result->execute();
-          $result->close();
-          $enrolements++;
-          if ($enrolement_details == '') {
-            $enrolement_details = $sms->Username;
-          } else {
-            $enrolement_details .= ',' . $sms->Username;
-          }
-
-          $student_data->close();
-        }
-      
-        // Check to see if any details of the user account need updating.
-        switch ($sms->ReasonForLeaving) {
-          case 'Successfully completed course':
-            $new_roles = 'graduate';
-            break;
-          case 'Not Applicable':
-            $new_roles = 'Student';
-            break;
-          case 'W/D (other)':
-          case 'W/D (financial reasons)':
-            $new_roles = 'left';
-            break;
-        }
-      
-        $names = explode(' ',$sms->Forename);
-        $tmp_initials = '';
-        foreach ($names as $tmp_name) {
-          $tmp_initials .= substr($tmp_name,0,1);
-        }
-        if ($current_users[$lookup_username]['year'] != $sms->YearofStudy or $tmp_initials != $current_users[$lookup_username]['initials'] or $current_users[$lookup_username]['grade'] != $sms->CourseCode or $current_users[$lookup_username]['title'] != $sms->Title or $current_users[$lookup_username]['surname'] != $sms->Surname  or $current_users[$lookup_username]['first_names'] != $sms->Forename or $current_users[$lookup_username]['roles'] != $new_roles) {
-          $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, roles=?, grade=?, title=?, surname=?, first_names=?, initials=? WHERE username=?");
-          $result->bind_param('isssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Username);
-          $result->execute();
-          $result->close();
+          echo 'ERROR: unable to establish username for ' . $sms->Forename . ' ' . $sms->Surname . ' (' . $sms->Email . ')<br />';
         }
       }
     }
