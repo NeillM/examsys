@@ -145,8 +145,8 @@ if (trim($paper_prologue) != '') {
 }
   
 // Get the other users in the same group.
-$result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? AND value=?");
-$result->bind_param('isss', $moduleID, $calendar_year, $type, $group);
+$result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? AND value=? AND userID!=? ORDER BY surname, initials");
+$result->bind_param('isssi', $moduleID, $calendar_year, $type, $group, $_GET['userID']);
 $result->execute();
 $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
 while ($result->fetch()) {

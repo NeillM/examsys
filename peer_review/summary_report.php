@@ -314,7 +314,7 @@ foreach ($user_data as $studentID => $student) {
         echo '<td class="num">&nbsp;</td>';
       }
     }
-    echo '<td class="num">' . round($mean_total / $heading_no, 2) . '</td>';
+    echo '<td class="num">' . padDecimals($mean_total / $heading_no, 2) . '</td>';
     echo "<td class=\"num\">&nbsp;</td></tr>\n";
   }
 ?>
