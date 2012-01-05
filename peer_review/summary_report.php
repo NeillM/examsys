@@ -23,97 +23,12 @@
 */
 
 require '../include/staff_auth.inc';
+
 require_once '../include/errors.inc';
 
 check_var('paperID', 'GET', true, false);
 
-function padDecimals($number, $rounding) {
-  $number = round($number, $rounding);
-  
-  $parts = explode('.', $number);
-  
-  $integer = $parts[0];
-  if (isset($parts[1])) {
-    $decimals = $parts[1];
-  } else {
-    $decimals = '';
-  }
-  
-  $dec_len = strlen($decimals);
-  
-  for ($i=$dec_len; $i<$rounding; $i++) {
-    $decimals .= '0';
-  }
-
-  return $integer . '.' . $decimals;
-}
-
-// Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, modules.id, properties.moduleID, calendar_year, rubric, marking, calendar_year FROM properties, modules WHERE properties.moduleID=modules.moduleid AND property_id=?");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($property_id, $paper_title, $moduleID, $moduleID_text, $calendar_year, $type, $marking, $calendar_year);
-$result->fetch();
-$result->close();
-
-// Get questions on the paper
-$questions = array();
-$result = $mysqli->prepare("SELECT question, leadin, display_method FROM (papers, questions) WHERE papers.question=questions.q_id AND paper=? ORDER BY display_pos");
-$result->bind_param('i', $property_id);
-$result->execute();
-$result->bind_result($questionID, $leadin, $display_method);
-while ($result->fetch()) {
-  $heading_no = substr_count($display_method, '|');
-  $questions[$questionID]['leadin'] = $leadin;
-  $questions[$questionID]['scale'] = $display_method;
-}
-$result->close();
-
-// Load basic user information
-$user_data = array();
-$result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? ORDER BY surname, initials");
-$result->bind_param('iss', $moduleID, $calendar_year, $type);
-$result->execute();
-$result->bind_result($userID, $group, $surname, $first_names, $title, $student_id);
-while ($result->fetch()) {
-  $user_data[$userID]['group'] = $group;
-  $user_data[$userID]['surname'] = $surname;
-  $user_data[$userID]['first_names'] = $first_names;
-  $user_data[$userID]['title'] = $title;
-  $user_data[$userID]['student_id'] = $student_id;
-  $user_data[$userID]['userID'] = $userID;
-}
-$result->close();
-
-// Load results from Log6
-$reviewers = array();
-$result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE paperID=? ORDER BY started");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($reviewerID, $peerID, $q_id, $rating);
-while ($result->fetch()) {
-  $user_data[$peerID]['data'][$q_id][$reviewerID] = $rating;
-  $reviewers[$reviewerID] = $reviewerID;
-}
-$result->close();
-
-// Parse the data calculating means
-foreach ($user_data as $studentID => $student) {
-  if (isset($student['data'])) {
-    foreach ($student['data'] as $questionID => $question_data) {
-      $review_no = 0;
-      $review_total = 0;
-      foreach ($question_data as $individual_question) {
-        if ($individual_question != '') {
-          $review_no++;
-          $review_total += $individual_question;
-        }
-      }
-      $user_data[$studentID]['review_no'] = $review_no;
-      $user_data[$studentID]['means'][$questionID] = $review_total / $review_no;
-    }
-  }
-}
+require 'summary_report.inc';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
