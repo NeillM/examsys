@@ -82,7 +82,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 ?>
 
-<script language="JavaScript" src="/javascript/sidebar.js"></script>
+<script language="JavaScript" src="/js/sidebar.js"></script>
 <script language="JavaScript">
   function startPaper(fullsc) {
     <?php

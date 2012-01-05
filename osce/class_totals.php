@@ -39,7 +39,7 @@
   .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
   .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
   .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer} </style>
-  <script src="../javascript/staff_help.js" type="text/javascript"></script>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
     var ie  = document.all
     var ns6 = document.getElementById&&!document.all

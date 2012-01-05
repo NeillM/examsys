@@ -35,8 +35,8 @@
 .no {text-align:right; padding-right:10px}
 </style>
 
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
-<script src="../javascript/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
+<script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
 <script language="javascript">
 $(function () {
   $('body').click(deselSch);

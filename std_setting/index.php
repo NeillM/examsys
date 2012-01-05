@@ -73,7 +73,7 @@
 
 <title><?php echo $string['listsettings'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
 var groupReview;
 

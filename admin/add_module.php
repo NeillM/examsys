@@ -170,7 +170,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
-  <script src="../javascript/staff_help.js" type="text/javascript"></script>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
     function checkForm() {
       if (myform.moduleid.value == "") {

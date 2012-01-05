@@ -123,8 +123,8 @@ if ($folder != '') {
 <title>Rogō<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
-<script src="../javascript/sidebar.js" type="text/javascript"></script>
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/sidebar.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript">
   function addQuestion(qType) {
     top.location.href='../question/edit/?type=' + qType + 'folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>';

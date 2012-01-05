@@ -60,8 +60,8 @@ function getImages($html) {
 h1 {font-size:140%; margin-left:10px}
 </style>
 
-<script language="JavaScript" src="../javascript/staff_help.js"></script>
-<script language="JavaScript" src="../javascript/sidebar.js"></script>
+<script language="JavaScript" src="../js/staff_help.js"></script>
+<script language="JavaScript" src="../js/sidebar.js"></script>
 </head>
 
 <body>

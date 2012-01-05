@@ -26,7 +26,7 @@
 
   require $cfg_web_root . 'include/sidebar_menu.inc';
 ?>
-<script src="/javascript/sidebar.js" type="text/javascript"></script>
+<script src="/js/sidebar.js" type="text/javascript"></script>
 <script language="JavaScript">
   function updateCookies() {
     if (document.getElementById('myquestions').checked == 1) {

@@ -30,7 +30,7 @@
 <head>
 <title>Clear Guest Users</title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<script language="JavaScript" src="../javascript/staff_help.js"></script>
+<script language="JavaScript" src="../js/staff_help.js"></script>
 <style>
 .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
 .l {border-bottom:1px solid #EEEEEE}

@@ -87,7 +87,7 @@
       .field {text-align:right; font-weight:bold}
       .note {width:90%}
     </style>
-    <script src="../javascript/staff_help.js" type="text/javascript"></script>
+    <script src="../js/staff_help.js" type="text/javascript"></script>
     <script>
         function checkForm() {
           if (document.getElementById('session_title').value == '' || document.getElementById('session_title').value == ' ') {

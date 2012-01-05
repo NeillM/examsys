@@ -50,7 +50,7 @@
   ul {margin-top:0px; margin-bottom:0px}
   li {padding-left:8px}
 </style>
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body onclick="hideMenus()">

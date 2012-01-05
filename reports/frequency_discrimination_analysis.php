@@ -1362,10 +1362,10 @@ td p:first-child {margin-top:0}
 .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
 </style>
 
-<script src="../javascript/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
-<script src="../javascript/ie_fix.js" type="text/javascript"></script>
-<script language="JavaScript" src="../javascript/flash_include.js"></script>
+<script src="../js/ie_fix.js" type="text/javascript"></script>
+<script language="JavaScript" src="../js/flash_include.js"></script>
 <script language="JavaScript">
   function toggle(qID, parts, marks) {
     for (i=1; i<=parts; i++) {

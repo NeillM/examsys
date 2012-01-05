@@ -50,7 +50,7 @@ body {font-family:Arial,sans-serif; font-size:90%; color:black; padding:0;margin
 table {font-size:100%}
 .heading {background-color:#EBEADB; color:black}
 </style>
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body>

@@ -43,7 +43,7 @@ a.user:hover {color:white; background-color:#000080}
 .field {text-align:right; padding-right:10px}
 </style>
 <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
   var ie  = document.all;
   var ns6 = document.getElementById&&!document.all;

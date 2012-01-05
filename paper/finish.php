@@ -127,14 +127,14 @@ table {font-size:100%}
 </style>
 <?php
   if ($latex_needed == 1) {
-   echo "<script type=\"text/javascript\" src=\"/javascript/jquery-1.6.1.min.js\"></script>";
+   echo "<script type=\"text/javascript\" src=\"/js/jquery-1.6.1.min.js\"></script>";
    echo "<script type=\"text/javascript\" src=\"/tools/mee/mee/js/mee_src.js\"></script>";
   }
   if (($userroles == 'Student' and $paper_type < 2) or strpos($userroles,'Staff') !== false) {
-    echo "<script src=\"../javascript/ie_fix.js\" type=\"text/javascript\"></script>\n";
+    echo "<script src=\"../js/ie_fix.js\" type=\"text/javascript\"></script>\n";
   }
 ?>
-<script language="JavaScript" src="../javascript/flash_include.js"></script>
+<script language="JavaScript" src="../js/flash_include.js"></script>
 <script language="JavaScript">
   window.history.go(1);
 

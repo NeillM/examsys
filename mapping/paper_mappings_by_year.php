@@ -121,7 +121,7 @@ function getPaper($paperID) {
   td.obj {border:1px solid #c0c0c0}
   table {border-collapse:collapse}
 </style>
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body onclick="hideMenus()">

@@ -77,7 +77,7 @@ if ($userroles == 'External Examiner') {
   .paper {margin-left:0px; font-family:Arial,sans-serif; font-size:180%; color:white; font-weight:bold}
 </style>
 
-<script src="../javascript/ie_fix.js" type="text/javascript"></script>
+<script src="../js/ie_fix.js" type="text/javascript"></script>
 <script language="JavaScript" type="text/javascript">
   window.history.go(1);
 

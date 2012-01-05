@@ -35,7 +35,7 @@
 .no {text-align:right; padding-right:10px}
 </style>
 
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="javascript">
   function selFac(divID, evt) {
     tmp_ID = document.myform.divID.value;

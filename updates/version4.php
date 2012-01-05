@@ -83,8 +83,8 @@ function convert_year($old_year) {
       form {padding:1em}
       form div {padding-left:2em}
     </style>
-    <script language="text/javascript" type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
-    <script language="text/javascript" type="text/javascript" src="../javascript/jquery.validate.min.js"></script>
+    <script language="text/javascript" type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script language="text/javascript" type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
   <table class="topbar"> 

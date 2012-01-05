@@ -35,8 +35,8 @@ check_var('paperID', 'GET', true, false);
 <html>
 <head>
 <title>SCT Review</title>
-<script type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../javascript/jquery.validate.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery.validate.min.js"></script>
 <script language="JavaScript">
   $(document).ready(function(){
     $("#myform").validate();

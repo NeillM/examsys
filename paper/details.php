@@ -259,8 +259,8 @@ function getMSCAA($paperID, $mysqlidb) {
   .mee {font-size:120%;}
 </style>
 
-<script type="text/javascript" src="../javascript/staff_help.js"></script>
-<script type="text/javascript" src="../javascript/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/staff_help.js"></script>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <script defer language="JavaScript">
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, prev_screen, next_screen, current_screen, menuID, subparts, evt) {

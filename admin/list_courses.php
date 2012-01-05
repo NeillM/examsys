@@ -32,7 +32,7 @@
 <style>
 .l {cursor:pointer}
 </style>
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="javascript">
   function selDeg(divID, evt) {
     tmp_ID = document.myform.oldID.value;

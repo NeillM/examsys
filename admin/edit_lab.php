@@ -64,7 +64,7 @@
 <style>
 input, textarea {font-family:Arial,sans-serif; line-height:140%}
 </style>
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body>

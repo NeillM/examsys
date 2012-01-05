@@ -54,7 +54,7 @@
 <html>
 <head>
 <title>Rogō: <?php echo $string['calendar'] . ' ' . $cfg_install_type; ?></title>
-<script language="JavaScript" src="../javascript/sidebar.js"></script>
+<script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
   function go() {
     box = document.forms[0].navi;

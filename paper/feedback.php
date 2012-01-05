@@ -130,12 +130,12 @@ table {font-size:100%}
 </style>
 <?php
   if ($latex_needed == 1) {
-   echo "<script type=\"text/javascript\" src=\"/javascript/jquery-1.6.1.min.js\"></script>";
+   echo "<script type=\"text/javascript\" src=\"/js/jquery-1.6.1.min.js\"></script>";
    echo "<script type=\"text/javascript\" src=\"/tools/mee/mee/js/mee_src.js\"></script>";
   }
 ?>
-<script language="JavaScript" src="../javascript/ie_fix.js"></script>
-<script language="JavaScript" src="../javascript/flash_include.js"></script>
+<script language="JavaScript" src="../js/ie_fix.js"></script>
+<script language="JavaScript" src="../js/flash_include.js"></script>
 <script language="JavaScript">
   window.history.go(1);
 

@@ -116,7 +116,7 @@
 <html>
 <head>
 <title><?php echo $string['sctreview']; ?></title>
-<script language="JavaScript" src="../javascript/jquery-1.6.1.min.js"></script>
+<script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
 <?php
   if (isset($_POST['submit'])) {
 ?>

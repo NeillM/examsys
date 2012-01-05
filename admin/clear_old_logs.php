@@ -33,8 +33,8 @@
 <head>
 <title><?php echo $string['clearoldlogs']; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<script language="JavaScript" src="../javascript/staff_help.js"></script>
-<script language="JavaScript" src="../javascript/sidebar.js"></script>
+<script language="JavaScript" src="../js/staff_help.js"></script>
+<script language="JavaScript" src="../js/sidebar.js"></script>
 </head>
 
 <body>

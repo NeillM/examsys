@@ -33,7 +33,7 @@
 <style>
 .n {text-align:right}
 </style>
-<script src="../javascript/staff_help.js" type="text/javascript"></script>
+<script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript">
   function jumpTo() {
     document.location = 'summative_stats.php?year=' + document.getElementById('year').value;
