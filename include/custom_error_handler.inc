@@ -61,6 +61,8 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
       return true;
     } elseif (strpos($errstr,'ldap_bind()') !== false) {
       return true;
+    } elseif (strpos($errstr,'ldap_search()') !== false) {
+      return true;
     } elseif (strpos($errstr,'simplexml_load_string()') !== false) {
       //QTI imports with invalid XML cause lots of warnings in the error logs. Filter them out.
       return false;  
