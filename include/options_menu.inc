@@ -78,7 +78,7 @@
 </td></tr>
 </table>
 
-<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%"><a style="color:blue" href="#" onclick="displayCredits(); return false;">Rogō <?php echo $ts_version; ?> - &copy; 2011</a></div>
+<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%"><a style="color:blue" href="#" onclick="displayCredits(); return false;">Rogō <?php echo $ts_version; ?> - &copy; 2012</a></div>
 </div>
 
 <?php
