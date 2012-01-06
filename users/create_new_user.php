@@ -28,7 +28,7 @@
   require '../include/mb_string.inc.php';
 
   function my_ucwords($s) {
-    $s = preg_replace_callback("/(\b[\w|']+\b)/su", 'fixcase_callback', $s);
+    $s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", 'fixcase_callback', $s);
     return $s;         
   } 
     
