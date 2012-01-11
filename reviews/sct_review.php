@@ -28,9 +28,10 @@
   require '../include/media.inc';
   require '../include/errors.inc';
   require '../include/sct_review.inc';
-  
+  require_once $cfg_web_root . 'classes/dbutils.class.php';
+
   // Connect to the database as the SCT user.
-  $mysqli = new $dbclass($cfg_db_host, $cfg_db_sct_user, $cfg_db_sct_passwd, $cfg_db_database);
+  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sct_user, $cfg_db_sct_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
 
   // Check for key parameters
   check_var('paperID', 'POST', true, false);

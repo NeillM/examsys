@@ -24,6 +24,7 @@
 
 $root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . '/';
 require_once $root . 'config/config.inc.php';
+require_once $cfg_web_root . 'classes/dbutils.class.php';
 
 set_error_handler("customErrorHandler");
 
@@ -74,7 +75,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
       // Query may fail if we try to insert while another statement is open.
       // Since we don't have a handle on the original statement, close the DB link and create another
       $mysqli->close();
-      $mysqli = new $dbclass($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database);
+      $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
       
       $paperID = NULL;
       if (isset($_GET['paperID'])) {

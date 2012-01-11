@@ -26,6 +26,7 @@ require_once '../config/config.inc.php';
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
+require_once $cfg_web_root . 'classes/dbutils.class.php';
 
 $version = '4.1';
 
@@ -138,8 +139,8 @@ if (!isset($_POST['update'])) {
 
 } else {
   
-  $mysqli = new $dbclass($cfg_db_host, $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database);
-  
+  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database, $cfg_db_charset, $dbclass);
+
   if ($mysqli->connect_error) {
     echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
     echo "</body>";

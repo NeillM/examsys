@@ -24,11 +24,13 @@
 * @package
 */
 
-require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/userutils.class.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/moduleutils.class.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/schoolutils.class.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . 'classes/lang.class.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . 'lang/' . $language . '/include/timezones.inc';
+if (!defined('DIR_SEPARATOR')) define('DIR_SEPARATOR', '/');
+$tmp_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
+require_once $tmp_web_root . 'classes/userutils.class.php';
+require_once $tmp_web_root . 'classes/moduleutils.class.php';
+require_once $tmp_web_root . 'classes/schoolutils.class.php';
+require_once $tmp_web_root . 'classes/lang.class.php';
+require_once $tmp_web_root . 'lang/' . $language . '/include/timezones.inc';
 
 Class InstallUtils {
 	
@@ -47,7 +49,8 @@ Class InstallUtils {
   public static $cfg_db_port;
   public static $cfg_db_username;
   public static $cfg_db_password;
-  
+  public static $cfg_db_charset;
+
   public static $cfg_db_student_user;
   public static $cfg_db_student_passwd;
   public static $cfg_db_staff_user;
@@ -97,32 +100,33 @@ Class InstallUtils {
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       
       <table class="header"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" value="" name="company_name" class="required" minlength="2" /> </div>
+        <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" value="" id="company_name" name="company_name" class="required" minlength="2" /> </div>
 
       
       <table class="header"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
         <div><?php echo $string['needusername']; ?></div>
         <br />
-        <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
-        <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass"/></div>
+        <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" /> </div>
+        <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass"/></div>
       
       <table class="header"><tr><td><nobr><?php echo $string['databasesetup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
-        <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" name="mysql_db_host" class="required" /> </div>
-        <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" name="mysql_db_port" class="required" /> </div>
-        <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" name="mysql_db_name" class="required" minlength="3" /> </div>
-      
+        <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" /> </div>
+        <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" /> </div>
+      <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /> </div>
+      <div><label for="mysql_db_charset"><?php echo $string['databasecharset']; ?></label> <select id="mysql_db_charset" name="mysql_db_charset"><option value="latin1">latin1</option><option value="utf8">UTF-8</option></select> </div>
+
       <table class="header"><tr><td><nobr><?php echo $string['databaseuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="mysql_touchstone_username"><?php echo $string['rdbusername']; ?></label> <input type="text" value="" name="mysql_database_username" class="required" minlength="3"/></div>
-        <div><label for="mysql_touchstone_passwd"><?php echo $string['rdbpassword']; ?></label> <input type="password" value="" name="mysql_database_passwd" class="required" minlength="8" /></div>
+        <div><label for="mysql_database_username"><?php echo $string['rdbusername']; ?></label> <input type="text" value="" id="mysql_database_username" name="mysql_database_username" class="required" minlength="3"/></div>
+        <div><label for="mysql_database_passwd"><?php echo $string['rdbpassword']; ?></label> <input type="password" value="" id="mysql_database_passwd" name="mysql_database_passwd" class="required" minlength="8" /></div>
       
       <table class="header"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
         <div><?php echo sprintf($string['tdformatsare'],'<a href="http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format" target="_blank">MySQL DATE_FORMAT</a>'); ?></div>
         <br />
-        <div><label for="cfg_short_date"><?php echo $string['date']; ?></label> <input type="text" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
-        <div><label for="cfg_long_date_time"><?php echo $string['datetime']; ?></label> <input type="text"  name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
-        <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select name="cfg_timezone">
+        <div><label for="cfg_short_date"><?php echo $string['date']; ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
+        <div><label for="cfg_long_date_time"><?php echo $string['datetime']; ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select id="cfg_timezone" name="cfg_timezone">
         <?php
           foreach ($timezone_array as $individual_zone => $display_zone) {
             if ($individual_zone == 'Europe/London') {
@@ -138,17 +142,17 @@ Class InstallUtils {
         <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
         <div id="ldapOptions" style="display:none;">
           <br/>
-          <div><label for="ldap_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" name="ldap_server" /> </div>
-          <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" name="ldap_search_dn" /> </div>
-          <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" name="ldap_bind_rdn" /> </div>
-          <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" name="ldap_bind_password" /> </div>
+          <div><label for="ldap_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" id="ldap_server" name="ldap_server" /> </div>
+          <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" /> </div>
+          <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" /> </div>
+          <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" /> </div>
         </div>
       
       <table class="header"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><?php echo $string['initialsysadmin']; ?></div>
         <br />
         <div><label for="SysAdmin_title"><?php echo $string['title']; ?></label> 
-          <select name="SysAdmin_title" class="required">
+          <select id="SysAdmin_title" name="SysAdmin_title" class="required">
 		<?php
 		  if ($language != 'en') {
 		    echo "<option value=\"\"></option>\n";
@@ -160,11 +164,11 @@ Class InstallUtils {
 		  ?>
           </select>
         </div>
-        <div><label for="SysAdmin_first"><?php echo $string['firstname']; ?></label> <input type="text" value="" name="SysAdmin_first" class="required" /> </div>
-        <div><label for="SysAdmin_last"><?php echo $string['surname']; ?></label> <input type="text" value="" name="SysAdmin_last" class="required" minlength="3" /> </div>
-        <div><label for="SysAdmin_email"><?php echo $string['emailaddress']; ?></label> <input type="text" value="" name="SysAdmin_email" class="required email" /></div>
-        <div><label for="SysAdmin_username"><?php echo $string['username']; ?></label> <input type="text" value="" name="SysAdmin_username" class="required" minlength="3"/></div>
-        <div><label for="SysAdmin_password"><?php echo $string['password']; ?></label> <input type="password" value="" name="SysAdmin_password" class="required" minlength="8" /></div>
+        <div><label for="SysAdmin_first"><?php echo $string['firstname']; ?></label> <input type="text" value="" name="SysAdmin_first" id="SysAdmin_first" class="required" /> </div>
+        <div><label for="SysAdmin_last"><?php echo $string['surname']; ?></label> <input type="text" value="" id="SysAdmin_last" name="SysAdmin_last" class="required" minlength="3" /> </div>
+        <div><label for="SysAdmin_email"><?php echo $string['emailaddress']; ?></label> <input type="text" value="" id="SysAdmin_email" name="SysAdmin_email" class="required email" /></div>
+        <div><label for="SysAdmin_username"><?php echo $string['username']; ?></label> <input type="text" value="" id="SysAdmin_username" name="SysAdmin_username" class="required" minlength="3"/></div>
+        <div><label for="SysAdmin_password"><?php echo $string['password']; ?></label> <input type="password" value="" id="SysAdmin_password" name="SysAdmin_password" class="required" minlength="8" /></div>
       
       <table class="header"><tr><td><nobr><?php echo $string['helpdb']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked"/></div>
@@ -172,12 +176,12 @@ Class InstallUtils {
       <table class="header"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
-        <div><label for=""><?php echo $string['supportemail']; ?></label> <input type="text" value="" name="support_email" class="" class="email"/> </div>
+        <div><label for="support_email"><?php echo $string['supportemail']; ?></label> <input type="text" value="" id="support_email" name="support_email" class="" class="email"/> </div>
       
       <table class="header"><tr><td><nobr><?php echo $string['supportnumbers']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="emergency_support1"><?php echo $string['name']; ?></label> <input type="text" value="" name="emergency_support1" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number1" class="" /></div>
-        <div><label for="emergency_support2"><?php echo $string['name']; ?></label> <input type="text" value="" name="emergency_support2" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number2" class="" /></div>
-        <div><label for="emergency_support3"><?php echo $string['name']; ?></label> <input type="text" value="" name="emergency_support3" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number3" class="" /></div>
+        <div><label for="emergency_support1"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support1" name="emergency_support1" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number1" class="" /></div>
+        <div><label for="emergency_support2"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support2" name="emergency_support2" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number2" class="" /></div>
+        <div><label for="emergency_support3"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support3" name="emergency_support3" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number3" class="" /></div>
         
       <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" /> </div>
     </form>
@@ -189,6 +193,7 @@ Class InstallUtils {
     self::$cfg_company = $_POST['company_name'];
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
+    self::$cfg_db_charset = $_POST['mysql_db_charset'];
     self::$cfg_db_port = $_POST['mysql_db_port'];
     self::$cfg_db_name = $_POST['mysql_db_name'];
     self::$db_admin_username = $_POST['mysql_admin_user'];
@@ -219,17 +224,20 @@ Class InstallUtils {
     self::$emergency_support_numbers = 'array(';
     for ($i = 1; $i<=3; $i++) {
       if ($_POST["emergency_support$i"] != '') {
-        self::$emergency_support_numbers .= "'" . $_POST["emergency_support$i"] . "'=>'" . $_POST["emergency_support_number$i"] . "'";
+        self::$emergency_support_numbers .= "'" . $_POST["emergency_support$i"] . "'=>'" . $_POST["emergency_support_number$i"] . "', ";
       }
     }
+    self::$emergency_support_numbers = rtrim(self::$emergency_support_numbers, ', ');
     self::$emergency_support_numbers .= ')';
 
     //CREATE and populate DB
     self::$db = new mysqli(self::$cfg_db_host , self::$db_admin_username, self::$db_admin_passwd,'',self::$cfg_db_port);
+
     if (mysqli_connect_error()) {
       self::displayError(array('001' => mysqli_connect_error()));  
     }
-    self::createDatabase(self::$cfg_db_name);
+    self::$db->set_charset(self::$cfg_db_charset);
+    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
     
     //LOAD help if requested
     if (isset($_POST['loadHelp'])) {
@@ -286,7 +294,7 @@ Class InstallUtils {
   * create the database and users if they do not exist
   *
   */
-  static function createDatabase($dbname) {
+  static function createDatabase($dbname, $dbcharset) {
     global $string;
     $res = self::$db->prepare("SHOW DATABASES LIKE '$dbname'");
     $res->execute();
@@ -295,8 +303,16 @@ Class InstallUtils {
       self::displayError(array('010' => $string['displayerror1']."The database name '$dbname' is in use please use a different one")); 
     }
     $res->close();
-  
-    self::$db->query("CREATE DATABASE $dbname"); //have to use query here oldvers of php throw an error 
+
+    switch ($dbcharset) {
+      case 'utf8':
+        $collation = 'utf8_general_ci';
+        break;
+      default:
+        $collation = 'latin1_swedish_ci';
+    }
+
+    self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $collation"); //have to use query here oldvers of php throw an error
     if (self::$db->errno != 0) {
       self::displayError(array('011' => $string['displayerror2'])); 
     }
@@ -305,7 +321,7 @@ Class InstallUtils {
     self::$db->change_user(self::$db_admin_username, self::$db_admin_passwd,self::$cfg_db_name);
     
     //create tables
-    $tables = new databaseTables();
+    $tables = new databaseTables($dbcharset);
     while ($sql = $tables->next()) {
       $res = self::$db->query($sql);
       if (self::$db->errno != 0) {
@@ -883,7 +899,8 @@ define('DIR_SEPARATOR', '/');
   \$cfg_db_passwd   = '{cfg_db_passwd}';
   \$cfg_db_database = '{cfg_db_database}';
   \$cfg_db_host 	   = '{cfg_db_host}';
-//student db user 
+  \$cfg_db_charset 	   = '{cfg_db_charset}';
+//student db user
   \$cfg_db_student_user = '{cfg_db_student_user}';
   \$cfg_db_student_passwd = '{cfg_db_student_passwd}';
 //staff db user
@@ -952,6 +969,7 @@ CONFIG;
     $config = str_replace('{SysAdmin_username}','USERNMAE_FOR_DEBUG',$config);
     $config = str_replace('{cfg_db_host}',self::$cfg_db_host,$config);
     $config = str_replace('{cfg_db_port}',self::$cfg_db_port,$config);
+    $config = str_replace('{cfg_db_charset}',self::$cfg_db_charset,$config);
     $config = str_replace('{cfg_company}',self::$cfg_company,$config);
     
     $config = str_replace('{cfg_db_database}',self::$cfg_db_name,$config);
@@ -1000,7 +1018,7 @@ class databaseTables {
 
   public static $tableList = array();
   
-  function __construct() {
+  function __construct($charset) {
    $this->tableList['degrees'] = <<<QUERY
           CREATE TABLE `degrees` (
           `id` int(11) NOT NULL auto_increment,
@@ -1009,7 +1027,7 @@ class databaseTables {
           `description` varchar(255) default NULL,
           PRIMARY KEY  (`id`),
           KEY `degree` (`degree`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['ebel'] = <<<QUERY
@@ -1021,7 +1039,7 @@ QUERY;
             `percentage` float default NULL,
             PRIMARY KEY  (`id`),
             KEY `SETTER_AND_DATE` (`setterID`,`date_set`)
-          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['faculty'] = <<<QUERY
@@ -1029,7 +1047,7 @@ QUERY;
             `id` int(11) NOT NULL auto_increment,
             `name` varchar(80) default NULL,
             PRIMARY KEY  (`id`)
-          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['feedback_release'] = <<<QUERY
@@ -1039,7 +1057,7 @@ QUERY;
           `date` datetime NOT NULL,
           `type` enum('objectives','questions') default NULL,
           PRIMARY KEY  (`idfeedback_release`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['folders'] = <<<QUERY
@@ -1052,7 +1070,7 @@ QUERY;
           `color` enum('yellow','red','green','blue') default NULL,
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['help_log'] = <<<QUERY
@@ -1063,7 +1081,7 @@ QUERY;
           `accessed` datetime default NULL,
           `pageID` int(11) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['help_searches'] = <<<QUERY
@@ -1075,7 +1093,7 @@ QUERY;
           `searchstring` text,
           `hits` int(11) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['help_tutorial_log'] = <<<QUERY
@@ -1086,7 +1104,7 @@ QUERY;
           `accessed` datetime default NULL,
           `tutorial` varchar(255) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['ip_addresses'] = <<<QUERY
@@ -1098,7 +1116,7 @@ QUERY;
           `low_bandwidth` tinyint(4) default '0',
           PRIMARY KEY  (`id`),
           KEY `lab` (`lab`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['keywords_question'] = <<<QUERY
@@ -1106,7 +1124,7 @@ QUERY;
           `q_id` int(11) default NULL,
           `keywordID` int(11) default NULL,
           KEY `q_id` (`q_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['keywords_user'] = <<<QUERY
@@ -1117,7 +1135,7 @@ QUERY;
           `keyword_type` enum('personal','team') default NULL,
           PRIMARY KEY  (`id`),
           KEY `username` (`userID`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['labs'] = <<<QUERY
@@ -1131,7 +1149,7 @@ QUERY;
           `it_support` text,
           `plagarism` text,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log_late'] = <<<QUERY
@@ -1152,7 +1170,7 @@ QUERY;
             PRIMARY KEY  (`id`),
             KEY `q_paper` (`q_paper`),
             KEY `username` (`userID`)
-          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log_metadata'] = <<<QUERY
@@ -1167,7 +1185,7 @@ QUERY;
           `attempt` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log0'] = <<<QUERY
@@ -1189,7 +1207,7 @@ QUERY;
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
           KEY `started` (`started`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log1'] = <<<QUERY
@@ -1211,7 +1229,7 @@ QUERY;
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
           KEY `started` (`started`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log2'] = <<<QUERY
@@ -1233,7 +1251,7 @@ QUERY;
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
           KEY `started` (`started`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=5140579 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=5140579 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log3'] = <<<QUERY
@@ -1255,7 +1273,7 @@ QUERY;
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
           KEY `started` (`started`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log4'] = <<<QUERY
@@ -1268,7 +1286,7 @@ QUERY;
           `rating` text,
           `q_parts` varchar(50) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log4_overall'] = <<<QUERY
@@ -1285,7 +1303,7 @@ QUERY;
           `osce_type` enum('electronic','paper') default NULL,
           `year` tinyint(4) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['log5'] = <<<QUERY
@@ -1298,7 +1316,7 @@ QUERY;
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0  DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['modules'] = <<<QUERY
@@ -1316,7 +1334,7 @@ QUERY;
 		  `ebel_grid_template` int,
           PRIMARY KEY  (`id`),
           KEY `guideid` (`moduleid`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['objectives'] = <<<QUERY
@@ -1328,7 +1346,7 @@ QUERY;
           `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL,
           `sequence` int(11) default NULL,
           PRIMARY KEY  (`obj_id`,`moduleID`,`calendar_year`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['options'] = <<<QUERY
@@ -1345,7 +1363,7 @@ QUERY;
           `marks` float default NULL,
           PRIMARY KEY  (`id_num`),
           KEY `o_id` (`o_id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['paper_notes'] = <<<QUERY
@@ -1357,7 +1375,7 @@ QUERY;
           `note_authorID` mediumint(9) default NULL,
           `note_workstation` varchar(15) default NULL,
           PRIMARY KEY  (`note_id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['papers'] = <<<QUERY
@@ -1372,7 +1390,7 @@ QUERY;
           KEY `question_idx` (`question`),
           KEY `screen` (`screen`),
           KEY `paper_2` (`paper`,`display_pos`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['properties'] = <<<QUERY
@@ -1425,7 +1443,7 @@ QUERY;
           KEY `paper_owner` (`paper_ownerID`),
           KEY `question_type` (`paper_type`),
           KEY `crypt_name_idx` (`crypt_name`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['paper_metadata_security'] = <<<QUERY
@@ -1435,7 +1453,7 @@ QUERY;
           `name` varchar(255), 
           `value` varchar(255),
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
 
@@ -1449,7 +1467,7 @@ QUERY;
           `date` datetime default NULL,
           `reason` text,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['questions'] = <<<QUERY
@@ -1481,7 +1499,7 @@ QUERY;
           `status` enum('Normal','Retired','Incomplete','Experimental','Beta') default NULL,
           `q_option_order` enum('display order','alphabetic','random') default NULL,
           PRIMARY KEY  (`q_id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
 $this->tableList['questions_metadata'] = <<<QUERY
@@ -1491,7 +1509,7 @@ $this->tableList['questions_metadata'] = <<<QUERY
         `type` varchar(255), 
         `value` varchar(255),
         PRIMARY KEY  (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+       ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['recent_papers'] = <<<QUERY
@@ -1500,7 +1518,7 @@ QUERY;
           `paperID` mediumint(9) NOT NULL default '0',
           `accessed` datetime default NULL,
           PRIMARY KEY  (`userID`,`paperID`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['relationships'] = <<<QUERY
@@ -1515,7 +1533,7 @@ QUERY;
           KEY `module_id_idx` (`module_id`),
           KEY `paper_id_idx` (`paper_id`),
           KEY `calendar_year` (`calendar_year`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['review_comments'] = <<<QUERY
@@ -1534,7 +1552,7 @@ QUERY;
           `duration` mediumint(9) default NULL,
           `screen` tinyint(4) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['schools'] = <<<QUERY
@@ -1544,7 +1562,7 @@ QUERY;
           `school` char(255) default NULL,
           PRIMARY KEY  (`id`),
           KEY `faculty` (`faculty`(1))
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['sct_reviews'] = <<<QUERY
@@ -1557,7 +1575,7 @@ QUERY;
           `answer` tinyint(4) default NULL,
           `reason` text,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['sessions'] = <<<QUERY
@@ -1571,7 +1589,7 @@ QUERY;
           `occurrence` datetime default NULL,
           PRIMARY KEY  (`identifier`,`moduleID`,`calendar_year`),
           KEY `sess_id` (`sess_id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['sid'] = <<<QUERY
@@ -1579,7 +1597,7 @@ QUERY;
           `student_id` char(15) default NULL,
           `userID` mediumint(8) unsigned NOT NULL default '0',
           PRIMARY KEY  (`userID`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['sms_imports'] = <<<QUERY
@@ -1593,7 +1611,7 @@ QUERY;
           `deletion_details` text,
           `import_type` varchar(25) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['special_needs'] = <<<QUERY
@@ -1609,7 +1627,7 @@ QUERY;
           `labelcolor` varchar(20) default NULL,
           `font` varchar(50) default NULL,
           PRIMARY KEY  (`special_id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['staff_help'] = <<<QUERY
@@ -1625,7 +1643,7 @@ QUERY;
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['standards_setting'] = <<<QUERY
@@ -1640,7 +1658,7 @@ QUERY;
           `group_review` text,
           PRIMARY KEY  (`id`),
           KEY `paperID` (`paperID`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['student_help'] = <<<QUERY
@@ -1655,7 +1673,7 @@ QUERY;
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['student_modules'] = <<<QUERY
@@ -1667,7 +1685,7 @@ QUERY;
           `attempt` tinyint(4) default NULL,
           `auto_update` tinyint(4) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['student_notes'] = <<<QUERY
@@ -1679,7 +1697,7 @@ QUERY;
           `paper_id` smallint(5) unsigned NOT NULL default '0',
           `note_authorID` mediumint(8) unsigned default NULL,
           PRIMARY KEY  (`note_id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['sys_errors'] = <<<QUERY
@@ -1698,7 +1716,7 @@ QUERY;
           `paperID` int,
           `post_data` text,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['teams'] = <<<QUERY
@@ -1710,7 +1728,7 @@ QUERY;
           `type` enum('System','Custom') default NULL,
           PRIMARY KEY  (`groupID`),
           KEY `name` (`name`(20))
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['temp_users'] = <<<QUERY
@@ -1723,7 +1741,7 @@ QUERY;
           `assigned_account` char(10) default NULL,
           `reserved` datetime default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['textbox_marking'] = <<<QUERY
@@ -1742,7 +1760,7 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `paperID` (`paperID`),
           KEY `q_id` (`q_id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['textbox_remark'] = <<<QUERY
@@ -1751,7 +1769,7 @@ QUERY;
           `paperID` int(11) default NULL,
           `userID` mediumint(8) unsigned default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['track_changes'] = <<<QUERY
@@ -1766,7 +1784,7 @@ QUERY;
           `part` text,
           PRIMARY KEY  (`id`),
           KEY `typeID` (`typeID`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=159021 DEFAULT CHARSET=latin1
+        ) ENGINE=MyISAM AUTO_INCREMENT=159021 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['users'] = <<<QUERY
@@ -1787,7 +1805,7 @@ QUERY;
           `yearofstudy` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
           KEY `username_index` (`username`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['admin_access'] = <<<QUERY
@@ -1796,7 +1814,7 @@ QUERY;
         `userID` int(11) DEFAULT NULL,
         `schools_id` int(11) DEFAULT NULL,
         PRIMARY KEY (`adminID`)
-      ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1
+      ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['password_tokens'] = <<<QUERY
@@ -1806,7 +1824,7 @@ QUERY;
         `token` char(16) NOT NULL,
         `time` datetime NOT NULL,
         PRIMARY KEY  (`id`)
-      ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+      ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['users_metadata'] = <<<QUERY
@@ -1818,7 +1836,7 @@ QUERY;
         `value` varchar(255) default NULL,
         `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
         PRIMARY KEY  (`id`)
-      ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+      ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
 QUERY;
 
   }

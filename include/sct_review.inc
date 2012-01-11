@@ -22,7 +22,8 @@
 * @package
 */
 
-  $mysqli = new $dbclass($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
+  require_once $cfg_web_root . 'classes/dbutils.class.php';
+  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
   
   if (isset($_GET['paperID'])) {
     $paperID = $_GET['paperID'];
