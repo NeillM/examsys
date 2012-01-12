@@ -1019,8 +1019,17 @@ class databaseTables {
   public static $tableList = array();
   
   function __construct($charset) {
+    $this->tableList['admin_access'] = <<<QUERY
+      CREATE TABLE `admin_access` (
+        `adminID` int(11) NOT NULL auto_increment,
+        `userID` int(11) default NULL,
+        `schools_id` int(11) default NULL,
+        PRIMARY KEY  (`adminID`)
+      ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
    $this->tableList['degrees'] = <<<QUERY
-          CREATE TABLE `degrees` (
+        CREATE TABLE `degrees` (
           `id` int(11) NOT NULL auto_increment,
           `school` varchar(255) default NULL,
           `degree` varchar(255) default NULL,
@@ -1042,6 +1051,32 @@ QUERY;
           ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['ebel_grid_templates'] = <<<QUERY
+          CREATE TABLE `ebel_grid_templates` (
+            `id` int(11) NOT NULL auto_increment,
+            `EE` tinyint(4) default NULL,
+            `EI` tinyint(4) default NULL,
+            `EN` tinyint(4) default NULL,
+            `ME` tinyint(4) default NULL,
+            `MI` tinyint(4) default NULL,
+            `MN` tinyint(4) default NULL,
+            `HE` tinyint(4) default NULL,
+            `HI` tinyint(4) default NULL,
+            `HN` tinyint(4) default NULL,
+            `EE2` tinyint(4) default NULL,
+            `EI2` tinyint(4) default NULL,
+            `EN2` tinyint(4) default NULL,
+            `ME2` tinyint(4) default NULL,
+            `MI2` tinyint(4) default NULL,
+            `MN2` tinyint(4) default NULL,
+            `HE2` tinyint(4) default NULL,
+            `HI2` tinyint(4) default NULL,
+            `HN2` tinyint(4) default NULL,
+            `name` varchar(255) default NULL,
+            PRIMARY KEY  (`id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['faculty'] = <<<QUERY
           CREATE TABLE `faculty` (
             `id` int(11) NOT NULL auto_increment,
@@ -1051,7 +1086,7 @@ QUERY;
 QUERY;
 
     $this->tableList['feedback_release'] = <<<QUERY
-         CREATE TABLE `feedback_release` (
+        CREATE TABLE `feedback_release` (
           `idfeedback_release` int(11) NOT NULL auto_increment,
           `paper_id` smallint(5) default NULL,
           `date` datetime NOT NULL,
@@ -1152,42 +1187,6 @@ QUERY;
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log_late'] = <<<QUERY
-          CREATE TABLE `log_late` (
-            `id` int(8) NOT NULL auto_increment,
-            `userID` mediumint(8) unsigned default NULL,
-            `started` datetime NOT NULL default '0000-00-00 00:00:00',
-            `q_paper` smallint(5) unsigned NOT NULL default '0',
-            `q_id` int(4) NOT NULL default '0',
-            `mark` float default NULL,
-            `totalpos` tinyint(4) default NULL,
-            `user_answer` text,
-            `screen` tinyint(3) unsigned default NULL,
-            `duration` mediumint(9) default NULL,
-            `updated` datetime default NULL,
-            `dismiss` char(20) default NULL,
-            `option_order` varchar(255) default NULL,
-            PRIMARY KEY  (`id`),
-            KEY `q_paper` (`q_paper`),
-            KEY `username` (`userID`)
-          ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
-QUERY;
-
-    $this->tableList['log_metadata'] = <<<QUERY
-        CREATE TABLE `log_metadata` (
-          `id` int(11) NOT NULL auto_increment,
-          `userID` mediumint(9) default NULL,
-          `paperID` smallint(6) default NULL,
-          `started` datetime default NULL,
-          `ipaddress` char(15) default NULL,
-          `student_grade` char(25) default NULL,
-          `year` tinyint(4) default NULL,
-          `attempt` tinyint(4) default NULL,
-          PRIMARY KEY  (`id`),
-          KEY `userID` (`userID`,`paperID`,`started`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
-QUERY;
-
     $this->tableList['log0'] = <<<QUERY
         CREATE TABLE `log0` (
           `id` int(8) NOT NULL auto_increment,
@@ -1251,7 +1250,7 @@ QUERY;
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
           KEY `started` (`started`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=5140579 DEFAULT CHARSET={$charset} PACK_KEYS=1
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
     $this->tableList['log3'] = <<<QUERY
@@ -1319,6 +1318,55 @@ QUERY;
         ) ENGINE=MyISAM AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['log6'] = <<<QUERY
+        CREATE TABLE `log6` (
+          `id` int(11) NOT NULL auto_increment,
+          `paperID` smallint(6) default NULL,
+          `reviewerID` mediumint(9) default NULL,
+          `peerID` mediumint(9) default NULL,
+          `started` datetime default NULL,
+          `q_id` int(11) default NULL,
+          `rating` tinyint(4) default NULL,
+          PRIMARY KEY  (`id`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['log_late'] = <<<QUERY
+        CREATE TABLE `log_late` (
+          `id` int(8) NOT NULL auto_increment,
+          `userID` mediumint(8) unsigned default NULL,
+          `started` datetime NOT NULL default '0000-00-00 00:00:00',
+          `q_paper` smallint(5) unsigned NOT NULL default '0',
+          `q_id` int(4) NOT NULL default '0',
+          `mark` float default NULL,
+          `totalpos` tinyint(4) default NULL,
+          `user_answer` text,
+          `screen` tinyint(3) unsigned default NULL,
+          `duration` mediumint(9) default NULL,
+          `updated` datetime default NULL,
+          `dismiss` char(20) default NULL,
+          `option_order` varchar(255) default NULL,
+          PRIMARY KEY  (`id`),
+          KEY `q_paper` (`q_paper`),
+          KEY `username` (`userID`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+QUERY;
+
+    $this->tableList['log_metadata'] = <<<QUERY
+        CREATE TABLE `log_metadata` (
+          `id` int(11) NOT NULL auto_increment,
+          `userID` mediumint(9) default NULL,
+          `paperID` smallint(6) default NULL,
+          `started` datetime default NULL,
+          `ipaddress` char(15) default NULL,
+          `student_grade` char(25) default NULL,
+          `year` tinyint(4) default NULL,
+          `attempt` tinyint(4) default NULL,
+          PRIMARY KEY  (`id`),
+          KEY `userID` (`userID`,`paperID`,`started`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['modules'] = <<<QUERY
         CREATE TABLE `modules` (
           `id` int(11) NOT NULL auto_increment,
@@ -1328,10 +1376,10 @@ QUERY;
           `vle_api` varchar(255) default NULL,
           `checklist` varchar(255) default NULL,
           `sms` varchar(255) default NULL,
-          `selfenroll` tinyint default NULL,
-          `schoolid` int default NULL,
-		  `neg_marking` TINYINT(1) default NULL,
-		  `ebel_grid_template` int,
+          `selfenroll` tinyint(4) default NULL,
+          `schoolid` int(11) default NULL,
+          `neg_marking` tinyint(1) default NULL,
+          `ebel_grid_template` int(11) default NULL,
           PRIMARY KEY  (`id`),
           KEY `guideid` (`moduleid`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
@@ -1343,7 +1391,7 @@ QUERY;
           `objective` text NOT NULL,
           `moduleID` char(25) NOT NULL,
           `identifier` bigint(20) unsigned NOT NULL,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL,
+          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16') NOT NULL,
           `sequence` int(11) default NULL,
           PRIMARY KEY  (`obj_id`,`moduleID`,`calendar_year`)
         ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
@@ -1360,10 +1408,22 @@ QUERY;
           `feedback_wrong` text,
           `correct` text,
           `id_num` int(11) NOT NULL auto_increment,
-          `marks` float default NULL,
+          `marks_correct` float default NULL,
+          `marks_incorrect` float default NULL,
+          `marks_partial` float default NULL,
           PRIMARY KEY  (`id_num`),
           KEY `o_id` (`o_id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
+QUERY;
+
+    $this->tableList['paper_metadata_security'] = <<<QUERY
+        CREATE TABLE `paper_metadata_security` (
+          `id` int(11) NOT NULL auto_increment,
+          `paperID` int(11) default NULL,
+          `name` varchar(255) default NULL,
+          `value` varchar(255) default NULL,
+          PRIMARY KEY  (`id`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['paper_notes'] = <<<QUERY
@@ -1382,7 +1442,7 @@ QUERY;
         CREATE TABLE `papers` (
           `p_id` int(4) NOT NULL auto_increment,
           `paper` smallint(5) unsigned NOT NULL default '0',
-          `question` smallint(4) unsigned NOT NULL default '0',
+          `question` int(4) unsigned NOT NULL default '0',
           `screen` tinyint(2) unsigned NOT NULL default '0',
           `display_pos` smallint(5) unsigned default NULL,
           PRIMARY KEY  (`p_id`),
@@ -1393,6 +1453,16 @@ QUERY;
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
+    $this->tableList['password_tokens'] = <<<QUERY
+        CREATE TABLE `password_tokens` (
+          `id` int(11) NOT NULL auto_increment,
+          `user_id` int(11) NOT NULL,
+          `token` char(16) NOT NULL,
+          `time` datetime NOT NULL,
+          PRIMARY KEY  (`id`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['properties'] = <<<QUERY
         CREATE TABLE `properties` (
           `property_id` smallint(5) unsigned NOT NULL auto_increment,
@@ -1400,7 +1470,7 @@ QUERY;
           `start_date` datetime default NULL,
           `end_date` datetime default NULL,
           `timezone` varchar(255) default NULL,
-          `paper_type` enum('0','1','2','3','4','5') default NULL,
+          `paper_type` enum('0','1','2','3','4','5','6') default NULL,
           `paper_prologue` text,
           `paper_postscript` text,
           `bgcolor` varchar(20) default NULL,
@@ -1429,30 +1499,20 @@ QUERY;
           `display_feedback` enum('0','1') default NULL,
           `hide_if_unanswered` enum('0','1') default NULL,
           `moduleID` text,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL,
+          `calendar_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
           `internal_reviewers` text,
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default NULL,
           `latex_needed` tinyint(4) default '0',
           `password` char(20) default NULL,
-          `retired` datetime,
+          `retired` datetime default NULL,
           `crypt_name` varchar(32) default NULL,
           PRIMARY KEY  (`property_id`),
           KEY `paper_title` (`paper_title`),
           KEY `paper_owner` (`paper_ownerID`),
           KEY `question_type` (`paper_type`),
           KEY `crypt_name_idx` (`crypt_name`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
-QUERY;
-
-    $this->tableList['paper_metadata_security'] = <<<QUERY
-        CREATE TABLE `paper_metadata_security` (
-          `id` INT NOT NULL AUTO_INCREMENT, 
-          `paperID` int, 
-          `name` varchar(255), 
-          `value` varchar(255),
-          PRIMARY KEY  (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1504,13 +1564,13 @@ QUERY;
 QUERY;
 
 $this->tableList['questions_metadata'] = <<<QUERY
-      CREATE TABLE `questions_metadata` (
-        `id` INT NOT NULL AUTO_INCREMENT, 
-        `questionID` int, 
-        `type` varchar(255), 
-        `value` varchar(255),
-        PRIMARY KEY  (`id`)
-       ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        CREATE TABLE `questions_metadata` (
+          `id` int(11) NOT NULL auto_increment,
+          `questionID` int(11) default NULL,
+          `type` varchar(255) default NULL,
+          `value` varchar(255) default NULL,
+          PRIMARY KEY  (`id`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['recent_papers'] = <<<QUERY
@@ -1529,7 +1589,7 @@ QUERY;
           `paper_id` int(11) NOT NULL,
           `question_id` int(11) NOT NULL,
           `obj_id` int(11) NOT NULL,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL,
+          `calendar_year` enum('2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL,
           PRIMARY KEY  (`rel_id`),
           KEY `module_id_idx` (`module_id`),
           KEY `paper_id_idx` (`paper_id`),
@@ -1559,10 +1619,9 @@ QUERY;
     $this->tableList['schools'] = <<<QUERY
         CREATE TABLE `schools` (
           `id` int(11) NOT NULL auto_increment,
-          `faculty` varchar(80) default NULL,
           `school` char(255) default NULL,
-          PRIMARY KEY  (`id`),
-          KEY `faculty` (`faculty`(1))
+          `facultyID` int(11) default NULL,
+          PRIMARY KEY  (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1610,7 +1669,7 @@ QUERY;
           `enrolement_details` text,
           `deletions` int(11) default NULL,
           `deletion_details` text,
-          `import_type` varchar(25) default NULL,
+          `import_type` varchar(255) default NULL,
           PRIMARY KEY  (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1682,7 +1741,7 @@ QUERY;
           `id` int(11) NOT NULL auto_increment,
           `userID` mediumint(8) unsigned default NULL,
           `moduleid` char(15) NOT NULL,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL,
+          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
           `attempt` tinyint(4) default NULL,
           `auto_update` tinyint(4) default NULL,
           PRIMARY KEY  (`id`)
@@ -1714,7 +1773,7 @@ QUERY;
           `php_self` text,
           `query_string` text,
           `request_method` enum('GET','HEAD','POST','PUT','DELETE') default NULL,
-          `paperID` int,
+          `paperID` int(11) default NULL,
           `post_data` text,
           PRIMARY KEY  (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -1785,7 +1844,7 @@ QUERY;
           `part` text,
           PRIMARY KEY  (`id`),
           KEY `typeID` (`typeID`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=159021 DEFAULT CHARSET={$charset}
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['users'] = <<<QUERY
@@ -1800,7 +1859,7 @@ QUERY;
           `roles` char(40) default NULL,
           `id` smallint(6) NOT NULL auto_increment,
           `first_names` char(60) default NULL,
-          `gender` enum('Male','Female','') default NULL,
+          `gender` enum('Male','Female') default NULL,
           `last_login` datetime default NULL,
           `special_needs` tinyint(4) default '0',
           `yearofstudy` tinyint(4) default NULL,
@@ -1809,35 +1868,16 @@ QUERY;
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
-    $this->tableList['admin_access'] = <<<QUERY
-      CREATE TABLE `admin_access` (
-        `adminID` int(11) NOT NULL AUTO_INCREMENT,
-        `userID` int(11) DEFAULT NULL,
-        `schools_id` int(11) DEFAULT NULL,
-        PRIMARY KEY (`adminID`)
-      ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET={$charset}
-QUERY;
-
-    $this->tableList['password_tokens'] = <<<QUERY
-      CREATE TABLE `password_tokens` (
-        `id` int(11) NOT NULL auto_increment,
-        `user_id` int(11) NOT NULL,
-        `token` char(16) NOT NULL,
-        `time` datetime NOT NULL,
-        PRIMARY KEY  (`id`)
-      ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
-QUERY;
-
     $this->tableList['users_metadata'] = <<<QUERY
-      CREATE TABLE `users_metadata` (
-        `id` int(11) NOT NULL auto_increment,
-        `userID` int(11) default NULL,
-        `moduleID` int(11) default NULL,
-        `type` varchar(255) default NULL,
-        `value` varchar(255) default NULL,
-        `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
-        PRIMARY KEY  (`id`)
-      ) ENGINE=MyISAM DEFAULT CHARSET={$charset}
+        CREATE TABLE `users_metadata` (
+          `id` int(11) NOT NULL auto_increment,
+          `userID` int(11) default NULL,
+          `moduleID` int(11) default NULL,
+          `type` varchar(255) default NULL,
+          `value` varchar(255) default NULL,
+          `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
+          PRIMARY KEY  (`id`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
   }
