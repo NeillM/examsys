@@ -129,7 +129,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   require '../classes/smsutils.class.php';
 
   $SMS = SMSutils::GetSmsUtils();
-  $cfg_sms_sources =  $SMS->getModuleSources();
+  $cfg_sms_sources = ($SMS !== false) ? $SMS->getModuleSources() : array();
    
 ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -246,7 +246,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     
   echo '<tr><td class="field">' . $string['smsapi'] . '</td><td><select name="sms_api">';
-  foreach ($cfg_sms_sources as $key=>$value) {
+    echo '<option value="">' . $string['nolookup'] . '</option>';
+    foreach ($cfg_sms_sources as $key=>$value) {
     if ($sms == $value) {
       echo "<option value=\"$value\" selected>$key</option>\n";
     } else {
