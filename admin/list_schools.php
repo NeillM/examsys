@@ -23,6 +23,13 @@
 */
 
   require '../include/sysadmin_auth.inc';
+
+// Check if we have any faculties
+$result = $mysqli->prepare("SELECT COUNT(id) FROM faculty");
+$result->execute();
+$result->bind_result($faculties);
+$result->fetch();
+$result->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -101,7 +108,9 @@ $(function () {
 <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modules']; ?>&nbsp;</td></tr>
 <tr><td colspan="3" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 <?php
-$old_faculty = '';
+
+if ($faculties > 0) {
+  $old_faculty = '';
 $id = 0;
 
 $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id GROUP BY school ORDER BY faculty.name, school");
@@ -122,6 +131,11 @@ while ($result->fetch()) {
 }
 $result->close();
 $mysqli->close();
+} else {
+  echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+  echo "<tr><td colspan=\"4\">{$string['musthavefaculty']}</td></tr>\n";
+}
+
 ?>
 </table>
 </div>

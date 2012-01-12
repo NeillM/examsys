@@ -25,12 +25,12 @@
 */
 
 
-Class SchoolUtils {
+Class FacultyUtils {
  
-  static function addSchool($facultyID, $school, $db) {
+  static function addFaculty($faculty, $db) {
    
-    $result = $db->prepare("INSERT INTO schools VALUES (NULL, ?,?)");
-    $result->bind_param('si', $school, $facultyID);
+    $result = $db->prepare("INSERT INTO faculty VALUES (NULL, ?)");
+    $result->bind_param('s', $faculty);
     $result->execute();
     $result->close();
     if($db->errno != 0) {
@@ -39,19 +39,4 @@ Class SchoolUtils {
     
     return $db->insert_id;
   }  
-  
-  static function getAdminSchools($admin_userid, $db) {
-    $school_list = array();
-    
-    $stmt = $db->prepare("SELECT schools_id FROM admin_access WHERE userID=?");
-    $stmt->bind_param('i', $admin_userid);
-    $stmt->execute();
-    $stmt->bind_result($school);
-    while ($stmt->fetch()) {
-      $school_list[] = $school;
-    }
-    $stmt->close();
-  
-    return $school_list;
-  }
 }

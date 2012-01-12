@@ -29,6 +29,7 @@ $tmp_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SER
 require_once $tmp_web_root . 'classes/userutils.class.php';
 require_once $tmp_web_root . 'classes/moduleutils.class.php';
 require_once $tmp_web_root . 'classes/schoolutils.class.php';
+require_once $tmp_web_root . 'classes/facultyutils.class.php';
 require_once $tmp_web_root . 'classes/lang.class.php';
 require_once $tmp_web_root . 'lang/' . $language . '/include/timezones.inc';
 
@@ -615,11 +616,15 @@ Class InstallUtils {
      }
      
      //add traing school
-     $scoolID = SchoolUtils::addSchool(  'Administrative and Support Units',
-                                         'Training',
-                                         self::$db
-                                      );
-     
+    $facultyID = FacultyUtils::addFaculty('Administrative and Support Units',
+                                        self::$db
+                                     );
+
+    $scoolID = SchoolUtils::addSchool(  $facultyID,
+                                        'Training',
+                                        self::$db
+                                     );
+
      //create special modules
      ModuleUtils::addModules(  'TRAIN', 
                                 'Training Module', 

@@ -37,7 +37,17 @@
 <tr><td>
 
 <table style="display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
-<tr><td><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
+<?php
+if ($faculties > 0):
+?>
+  <tr><td><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
+<?php
+else:
+?>
+  <tr><td><img src="../artwork/school_icon_16_grey.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['createschool']; ?></td></tr>
+<?php
+endif;
+?>
 <tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['editschool']; ?></td></tr>
 </table>
 

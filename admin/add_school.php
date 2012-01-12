@@ -35,6 +35,17 @@ if (isset($_POST['submit'])) {
 
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_schools.php");
 } else {
+  $faculties = 0;
+  $faculty_list = array();
+  $result = $mysqli->prepare("SELECT id, name FROM faculty ORDER BY name");
+  $result->execute();
+  $result->bind_result($facultyID, $name);
+  while ($result->fetch()) {
+    $faculty_list[] = array($facultyID, $name);
+    $faculties++;
+  }
+  $result->close();
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html>
@@ -77,15 +88,10 @@ if (isset($_POST['submit'])) {
     <table cellpadding="0" cellspacing="2" border="0">
     <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" name="school" id="school" value="<?php echo $string['prompt']; ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['faculty']; ?></td><td><select name="facultyID">
-    <option value=""></option>
     <?php
-      $result = $mysqli->prepare("SELECT id, name FROM faculty ORDER BY name");
-      $result->execute();
-      $result->bind_result($facultyID, $name);
-      while ($result->fetch()) {
-        echo "<option value=\"$facultyID\">$name</option>\n";
+      foreach ($faculty_list as $faculty) {
+        echo "<option value=\"{$faculty[0]}\">{$faculty[1]}</option>\n";
       }
-      $result->close();
     ?>
     </select></td></tr>
     </table>
