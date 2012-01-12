@@ -1479,7 +1479,7 @@ QUERY;
           `leadin` text,
           `correct_fback` text,
           `incorrect_fback` text,
-          `score_method` text,
+          `display_method` text,
           `notes` text,
           `ownerID` mediumint(9) default NULL,
           `q_media` text,
@@ -1498,6 +1498,7 @@ QUERY;
           `std` varchar(100) default NULL,
           `status` enum('Normal','Retired','Incomplete','Experimental','Beta') default NULL,
           `q_option_order` enum('display order','alphabetic','random') default NULL,
+          `score_method` enum('Mark per Question','Mark per Option','Allow partial Marks','Bonus Mark') default NULL,
           PRIMARY KEY  (`q_id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
