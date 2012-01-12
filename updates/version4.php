@@ -1499,6 +1499,23 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   
+  // 08/09/2011 - Add auth_user column to sys_errors
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='auth_user'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE sys_errors ADD COLUMN auth_user VARCHAR(45) DEFAULT NULL AFTER userID");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE sys_errors ADD COLUMN auth_user VARCHAR(45) DEFAULT NULL AFTER userID</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   
