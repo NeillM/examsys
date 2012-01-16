@@ -1036,14 +1036,15 @@ class databaseTables {
       ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-   $this->tableList['degrees'] = <<<QUERY
-        CREATE TABLE `degrees` (
+   $this->tableList['courses'] = <<<QUERY
+        CREATE TABLE `courses` (
           `id` int(11) NOT NULL auto_increment,
           `school` varchar(255) default NULL,
-          `degree` varchar(255) default NULL,
+          `name` varchar(255) default NULL,
           `description` varchar(255) default NULL,
+          `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
-          KEY `degree` (`degree`)
+          KEY `degree` (`name`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1089,6 +1090,7 @@ QUERY;
           CREATE TABLE `faculty` (
             `id` int(11) NOT NULL auto_increment,
             `name` varchar(80) default NULL,
+            `deleted` datetime default NULL,
             PRIMARY KEY  (`id`)
           ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
