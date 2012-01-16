@@ -30,6 +30,8 @@
   require '../include/media.inc';
   require '../include/errors.inc';
   
+  check_var('paperID', 'GET', true, false);
+  
   $stop_words = array('-'=>'-','a'=>'a','about'=>'about','above'=>'above','across'=>'across','after'=>'after','again'=>'again','against'=>'against','all'=>'all','almost'=>'almost','alone'=>'alone','along'=>'along','already'=>'already','also'=>'also','although'=>'although','always'=>'always','among'=>'among','an'=>'an','and'=>'and','another'=>'another','any'=>'any','anybody'=>'anybody','anyone'=>'anyone','anything'=>'anything','anywhere'=>'anywhere','are'=>'are','area'=>'area','areas'=>'areas','around'=>'around','as'=>'as','ask'=>'ask','asked'=>'asked','asking'=>'asking','asks'=>'asks','at'=>'at','away'=>'away','b'=>'b','back'=>'back','backed'=>'backed','backing'=>'backing','backs'=>'backs','be'=>'be','became'=>'became','because'=>'because','become'=>'become','becomes'=>'becomes','been'=>'been','before'=>'before','began'=>'began','behind'=>'behind','being'=>'being','beings'=>'beings','best'=>'best','better'=>'better','between'=>'between','big'=>'big','both'=>'both','but'=>'but','by'=>'by','c'=>'c','came'=>'came','can'=>'can','cannot'=>'cannot','case'=>'case','cases'=>'cases','certain'=>'certain','certainly'=>'certainly','clear'=>'clear','clearly'=>'clearly','come'=>'come','could'=>'could','d'=>'d','did'=>'did','differ'=>'differ','different'=>'different','differently'=>'differently','do'=>'do','does'=>'does','done'=>'done','down'=>'down','downed'=>'downed','downing'=>'downing','downs'=>'downs','during'=>'during','e'=>'e','each'=>'each','early'=>'early','either'=>'either','end'=>'end','ended'=>'ended','ending'=>'ending','ends'=>'ends','enough'=>'enough','even'=>'even','evenly'=>'evenly','ever'=>'ever','every'=>'every','everybody'=>'everybody','everyone'=>'everyone','everything'=>'everything','everywhere'=>'everywhere','f'=>'f','face'=>'face','faces'=>'faces','fact'=>'fact','facts'=>'facts','far'=>'far','felt'=>'felt','few'=>'few','find'=>'find','finds'=>'finds','first'=>'first','for'=>'for','four'=>'four','from'=>'from','full'=>'full','fully'=>'fully','further'=>'further','furthered'=>'furthered','furthering'=>'furthering','furthers'=>'furthers','g'=>'g','gave'=>'gave','general'=>'general','generally'=>'generally','get'=>'get','gets'=>'gets','give'=>'give','given'=>'given','gives'=>'gives','go'=>'go','going'=>'going','good'=>'good','goods'=>'goods','got'=>'got','great'=>'great','greater'=>'greater','greatest'=>'greatest','group'=>'group','grouped'=>'grouped','grouping'=>'grouping','groups'=>'groups','h'=>'h','had'=>'had','has'=>'has','have'=>'have','having'=>'having','he'=>'he','her'=>'her','here'=>'here','herself'=>'herself','high'=>'high','higher'=>'higher','highest'=>'highest','him'=>'him','himself'=>'himself','his'=>'his','how'=>'how','however'=>'however','i'=>'i','if'=>'if','important'=>'important','in'=>'in','interest'=>'interest','interested'=>'interested','interesting'=>'interesting','interests'=>'interests','into'=>'into','is'=>'is','it'=>'it','its'=>'its','itself'=>'itself','j'=>'j','just'=>'just','k'=>'k','keep'=>'keep','keeps'=>'keeps','kind'=>'kind','knew'=>'knew','know'=>'know','known'=>'known','knows'=>'knows','l'=>'l','large'=>'large','largely'=>'largely','last'=>'last','later'=>'later','latest'=>'latest','least'=>'least','less'=>'less','let'=>'let','lets'=>'lets','like'=>'like','likely'=>'likely','long'=>'long','longer'=>'longer','longest'=>'longest','m'=>'m','made'=>'made','make'=>'make','making'=>'making','man'=>'man','many'=>'many','may'=>'may','me'=>'me','member'=>'member','members'=>'members','men'=>'men','might'=>'might','more'=>'more','most'=>'most','mostly'=>'mostly','mr'=>'mr','mrs'=>'mrs','much'=>'much','must'=>'must','my'=>'my','myself'=>'myself','n'=>'n','necessary'=>'necessary','need'=>'need','needed'=>'needed','needing'=>'needing','needs'=>'needs','never'=>'never','new'=>'new','newer'=>'newer','newest'=>'newest','next'=>'next','no'=>'no','nobody'=>'nobody','non'=>'non','noone'=>'noone','not'=>'not','nothing'=>'nothing','now'=>'now','nowhere'=>'nowhere','number'=>'number','numbers'=>'numbers','of'=>'o','of'=>'of','off'=>'off','often'=>'often','old'=>'old','older'=>'older','oldest'=>'oldest','on'=>'on','once'=>'once','one'=>'one','only'=>'only','open'=>'open','opened'=>'opened','opening'=>'opening','opens'=>'opens','or'=>'or','order'=>'order','ordered'=>'ordered','ordering'=>'ordering','orders'=>'orders','other'=>'other','others'=>'others','our'=>'our','out'=>'out','over'=>'over','p'=>'p','part'=>'part','parted'=>'parted','parting'=>'parting','parts'=>'parts','per'=>'per','perhaps'=>'perhaps','place'=>'place','places'=>'places','point'=>'point','pointed'=>'pointed','pointing'=>'pointing','points'=>'points','possible'=>'possible','present'=>'present','presented'=>'presented','presenting'=>'presenting','presents'=>'presents','problem'=>'problem','problems'=>'problems','put'=>'put','puts'=>'puts','q'=>'q','quite'=>'quite','r'=>'r','rather'=>'rather','really'=>'really','right'=>'right','room'=>'room','rooms'=>'rooms','s'=>'s','said'=>'said','same'=>'same','saw'=>'saw','say'=>'say','says'=>'says','second'=>'second','seconds'=>'seconds','see'=>'see','seem'=>'seem','seemed'=>'seemed','seeming'=>'seeming','seems'=>'seems','sees'=>'sees','several'=>'several','shall'=>'shall','she'=>'she','should'=>'should','show'=>'show','showed'=>'showed','showing'=>'showing','shows'=>'shows','side'=>'side','sides'=>'sides','since'=>'since','small'=>'small','smaller'=>'smaller','smallest'=>'smallest','so'=>'so','some'=>'some','somebody'=>'somebody','someone'=>'someone','something'=>'something','somewhere'=>'somewhere','state'=>'state','states'=>'states','still'=>'still','such'=>'such','sure'=>'sure','t'=>'t','take'=>'take','taken'=>'taken','than'=>'than','that'=>'that','the'=>'the','their'=>'their','them'=>'them','then'=>'then','there'=>'there','therefore'=>'therefore','these'=>'these','they'=>'they','thing'=>'thing','things'=>'things','think'=>'think','thinks'=>'thinks','this'=>'this','those'=>'those','though'=>'though','thought'=>'thought','thoughts'=>'thoughts','three'=>'three','through'=>'through','thus'=>'thus','to'=>'to','today'=>'today','together'=>'together','too'=>'too','took'=>'took','toward'=>'toward','turn'=>'turn','turned'=>'turned','turning'=>'turning','turns'=>'turns','two'=>'two','u'=>'u','under'=>'under','until'=>'until','up'=>'up','upon'=>'upon','us'=>'us','use'=>'use','used'=>'used','uses'=>'uses','v'=>'v','very'=>'very','w'=>'w','want'=>'want','wanted'=>'wanted','wanting'=>'wanting','wants'=>'wants','was'=>'was','way'=>'way','ways'=>'ways','we'=>'we','well'=>'well','wells'=>'wells','went'=>'went','were'=>'were','what'=>'what','when'=>'when','where'=>'where','whether'=>'whether','which'=>'which','while'=>'while','who'=>'who','whole'=>'whole','whose'=>'whose','why'=>'why','will'=>'will','with'=>'with','within'=>'within','without'=>'without','work'=>'work','worked'=>'worked','working'=>'working','works'=>'works','would'=>'would','x'=>'x','y'=>'y','year'=>'year','years'=>'years','yet'=>'yet','you'=>'you','young'=>'young','younger'=>'younger','youngest'=>'youngest','your'=>'your','yours'=>'yours','z'=>'z');
 
   $cohort_percent = $_GET['percent'];
@@ -116,15 +118,26 @@
     return $html;
   }
   
-  function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i, $key) {
-    $top_ratio = 0;
-    $bottem_ratio = 0;
-    if (isset($top_log_q_id[$i][$key])) {
-      $top_ratio = $top_log_q_id[$i][$key]/$no_students;
+  function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i, $keys) {
+    global $q_id;
+    
+    $top_key_value = 0;
+    $bottom_key_value = 0;
+    
+    if (!is_array($keys)) $keys = array($keys);
+    
+    foreach($keys as $key) {  
+      if (isset($top_log_q_id[$i][$key])) {
+        $top_key_value += $top_log_q_id[$i][$key];
+      }
+      if (isset($bottom_log_q_id[$i][$key])) {
+        $bottom_key_value += $bottom_log_q_id[$i][$key];
+      }
     }
-    if (isset($bottom_log_q_id[$i][$key])) {
-      $bottem_ratio = $bottom_log_q_id[$i][$key]/$no_students;
-    }
+    
+    $top_ratio = $top_key_value / $no_students;
+    $bottem_ratio = $bottom_key_value / $no_students;
+    
     return number_format($top_ratio - $bottem_ratio,2);
   }
 
@@ -135,7 +148,7 @@
     if (!isset($log_array[$qID]['totalpos'])) $log_array[$qID]['totalpos'] = 0;
 
     switch ($q_type) {
-      case 'blank':
+      case 'blank':      
         $tmp_answer_parts = array();
         $tmp_answer_parts = explode('|',$answer);
         $i = 0;
@@ -523,7 +536,7 @@
               echo $std_html;
               
               echo '<span id="q_' . ($ex_no) . '_1" style="border:1px solid #6593CF; background-color:#EBF3FF"';
-              if (isset($excluded[$q_id]) and substr($excluded[$q_id],$blank_count-1,1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
+              if (isset($excluded[$q_id]) and substr($excluded[$q_id], $blank_count-1,1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
               echo '>';
               
               if ($display_method == 'dropdown') {
@@ -533,7 +546,7 @@
                   $individual_blank_option = trim($individual_blank_option);
                   if (!isset($log[$q_id][$blank_count+1][$individual_blank_option])) $log[$q_id][$blank_count+1][$individual_blank_option] = 0;
                   if ($i == 0) {
-                    $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$blank_count+1,$individual_blank_option);
+                    $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $blank_count+1, $individual_blank_option);
                     $d_no++;
                     $d_total += $d;
                     $tmp_correct_no = (isset($freq_log[$q_id][$blank_count+1][$individual_blank_option])) ? $freq_log[$q_id][$blank_count+1][$individual_blank_option] : 0;
@@ -545,7 +558,7 @@
                 }
               } else {
                 // Correct answer.
-                $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$blank_count+1,$blank_options);
+                $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $blank_count+1, $blank_options);
                 $d_no++;
                 $d_total += $d;
                 if (isset($freq_log[$q_id][$blank_count+1][$blank_options])) {
@@ -557,13 +570,48 @@
                 }
                 $tmp_top_no = (isset($top_log[$q_id][$blank_count+1][$blank_options])) ? $top_log[$q_id][$blank_count+1][$blank_options] : 0;
                 $tmp_bottom_no = (isset($bottom_log[$q_id][$blank_count+1][$blank_options])) ? $bottom_log[$q_id][$blank_count+1][$blank_options] : 0;
-                echo '<strong>' . $blank_options . ' </strong>' . $tmp_correct_p . ', ' . dStats($d) . ' t=' . number_format(($tmp_correct_no/$user_total)*100,0) . '%, u=' . number_format(($tmp_top_no/$candidate_no)*100,0) . '%, l=' . number_format(($tmp_bottom_no/$candidate_no)*100,0) . '%';
+                echo $blank_count . '.<strong>' . $blank_options . ' </strong>' . $tmp_correct_p . ', ' . dStats($d) . ' t=' . number_format(($tmp_correct_no/$user_total)*100,0) . '%, u=' . number_format(($tmp_top_no/$candidate_no)*100,0) . '%, l=' . number_format(($tmp_bottom_no/$candidate_no)*100,0) . '%';
               }
 
               echo '</span>' . $remainder;
             }
             $blank_count++;
           }
+          
+          echo "<table>\n";
+          for ($i=1; $i<count($blank_details); $i++) {
+            $end_start_tag = strpos($blank_details[$i],']');
+            $start_end_tag = strpos($blank_details[$i],'[/blank]');
+            $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
+
+            $blank_options = explode(',', $blank_options);
+            
+            //var_dump($blank_options);
+            //exit;
+            
+            $tmp_correct_no = 0;
+            foreach ($blank_options as $blank_option) {
+              if (isset($freq_log[$q_id][$i+1][$blank_option])) {
+                $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_option];
+              }
+            }
+            $t = number_format(($tmp_correct_no/$user_total)*100,0);
+                       
+            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_options);
+            $d_no++;
+            $d_total += $d;
+            $html = '';
+            echo "<tr><td>$i.</td><td>d=$d</td><td>t=$t%</td><td>";
+            foreach ($blank_options as $blank_option) {
+              if ($html == '') {
+                $html = $blank_option;
+              } else {
+                $html .= ', ' . $blank_option;
+              }
+            }
+            echo "$html</td><td><a href=\"#\" onclick=\"return manCorrect($q_id, $i)\">Correct</a></td></tr>";
+          }
+          echo "</table>\n";
           break;
         case 'calculation':
           if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
@@ -1362,10 +1410,10 @@ td p:first-child {margin-top:0}
 .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
 </style>
 
-<script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
-<script src="../js/ie_fix.js" type="text/javascript"></script>
-<script language="JavaScript" src="../js/flash_include.js"></script>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+<script type="text/javascript" src="../js/ie_fix.js"></script>
+<script type="text/javascript" src="../js/flash_include.js"></script>
 <script language="JavaScript">
   function toggle(qID, parts, marks) {
     for (i=1; i<=parts; i++) {
@@ -1390,6 +1438,12 @@ td p:first-child {margin-top:0}
       $('#status_' + qID).val(new_value);
       $('#button_' + qID).attr('src', '../artwork/exclude_on.gif');
     }
+  }
+  
+  function manCorrect(q_id, part_no) {
+    window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>","remark","width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    
+    return false;
   }
 </script>
 </head>

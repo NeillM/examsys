@@ -467,11 +467,12 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
             }
           } else {
             $match = false;
-            if (isset($paper_buffer[$q_id]['correct'][$a])) {
-              if ($user_answers[$a+1] == $paper_buffer[$q_id]['correct'][$a]) {
+            foreach ($paper_buffer[$q_id]['correct'][$a] as $correct_alternative) {
+              if (trim($user_answers[$a+1]) == trim($correct_alternative)) {
                 $match = true;
               }
             }
+            
             if ($match == true) {
               $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
               $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_correct'];
@@ -744,7 +745,10 @@ while ($result->fetch()) {
             $paper_buffer[$question_id]['correct'][$i-1][] = html_entity_decode(trim($individual_answer));
           }
         } else {
-          $paper_buffer[$question_id]['correct'][] = html_entity_decode(trim($answer_list[0]));
+          //$paper_buffer[$question_id]['correct'][$i-1] = html_entity_decode(trim($answer_list[0]));
+          foreach ($answer_list as $tmp_answer) {
+            $paper_buffer[$question_id]['correct'][$i-1][] = html_entity_decode(trim($tmp_answer));
+          }
         }
       }
     } else {

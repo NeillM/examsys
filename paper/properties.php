@@ -725,6 +725,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "</td><td colspan=\"3\">";
      if (in_array($paper_type, array('0', '1', '2', '5'))) {
        // Objectives-based Feedback
+       $idfeedback_release = '';
        $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='objectives'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
@@ -741,6 +742,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      }
      if (in_array($paper_type, array('1', '2', '5'))) {
        // Question-based Feedback
+       $idfeedback_release = '';
        $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
