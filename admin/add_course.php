@@ -45,7 +45,7 @@ if (isset($_POST['submit']) and $unique_degree == true) {
   $tmp_degree = trim($_POST['degree']);
   $tmp_description = trim($_POST['description']);
   
-  $result = $mysqli->prepare("INSERT INTO degrees VALUES (NULL,?,?,?)");
+  $result = $mysqli->prepare("INSERT INTO degrees VALUES (NULL, ?, ?, ?, NULL)");
   $result->bind_param('sss', $tmp_school, $tmp_degree, $tmp_description);
   $result->execute();  
   $result->close();

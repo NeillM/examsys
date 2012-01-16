@@ -22,13 +22,14 @@
 * @package
 */
 
+
 require_once '../config/config.inc.php';
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$version = '4.1';
+$version = '4.1.1';
 
 set_time_limit(0);
 
@@ -90,7 +91,7 @@ function convert_year($old_year) {
   <body>
   <table class="topbar"> 
     <tr> 
-      <td><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:56px; top:-8px; font-size:10pt; color:#001979">version 4.x to 4.1</div></td> 
+      <td><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:48px; top:-6px; font-size:10pt; color:#001979">version 4.x to <?php echo $version; ?></div></td> 
       <td style="text-align:right; padding-top:10px; padding-right:10px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
     </tr> 
     <tr> 
@@ -138,6 +139,9 @@ if (!isset($_POST['update'])) {
   <?php
 
 } else {
+  if (!isset($cfg_db_charset)) {
+    $cfg_db_charset = 'latin1';
+  }
   
   $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database, $cfg_db_charset, $dbclass);
 
@@ -224,7 +228,7 @@ if (!isset($_POST['update'])) {
   $group_reviews->execute();
   $group_reviews->store_result();
   $group_reviews->bind_result($paperID);
-  while($group_reviews->fetch()) {
+  while ($group_reviews->fetch()) {
     $group_list = '';
     // Get a list of other ANGOFF reviews for the paper
     $individual_reviews = $mysqli->prepare("SELECT DISTINCT setterID, std_set FROM standards_setting WHERE paperID = ? AND method = 'Modified Angoff' AND group_review = 'No'");
@@ -232,7 +236,7 @@ if (!isset($_POST['update'])) {
     $individual_reviews->execute();
     $individual_reviews->store_result();
     $individual_reviews->bind_result($setterID, $std_set);
-    while($individual_reviews->fetch()) {
+    while ($individual_reviews->fetch()) {
       // Add to list of user IDs/dates <user_id>,<date>;<user_id>,<date>
       $group_list .= $setterID . ',' . str_replace(array(' ', '-', ':'), '', $std_set) . ';';
     }
@@ -240,7 +244,7 @@ if (!isset($_POST['update'])) {
     $group_list = rtrim($group_list, ';');
     
     // Update the group review setting group field to name/date string
-    if($group_list != ''){
+    if ($group_list != ''){
       $update = $mysqli->prepare("UPDATE standards_setting SET group_review = ? WHERE paperID = ? AND method = 'Modified Angoff' AND group_review = 'Yes'");
       $update->bind_param('si', $group_list, $paperID);
       $update->execute();
@@ -306,7 +310,6 @@ if (!isset($_POST['update'])) {
     echo "<li>ALTER TABLE modules DROP COLUMN school</li>\n";
   }
   
-
   // 04/07/2011 - Drop 'Faculty' column from users.
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='faculty'");
   $result->execute();
@@ -452,7 +455,6 @@ if (!isset($_POST['update'])) {
   $result->bind_result($tmp_user);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    
     $cfg_db_username = $cfg_db_database . '_auth';
     $cfg_db_password = PasswordUtils::gen_password(16);
     $cfg_db_student_user = $cfg_db_database . '_stu';
@@ -465,7 +467,7 @@ if (!isset($_POST['update'])) {
     $cfg_db_sysadmin_passwd = PasswordUtils::gen_password(16);
     
     $priv_SQL = array();
-    //create touchstone 'database user authentication user' and grant permissions
+    //create 'database user authentication user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_username created</li>";
     $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
@@ -483,7 +485,7 @@ if (!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";    
     
     
-    //create touchstone 'database user student user' and grant permissions
+    //create 'database user student user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_student_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_student_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_student_user created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
@@ -522,7 +524,7 @@ if (!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";    
     $priv_SQL[] = "FLUSH PRIVILEGES";
  
-    //create touchstone 'database user external user' and grant permissions
+    //create 'database user external user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_external_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_external_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_external_user created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
@@ -544,7 +546,7 @@ if (!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT INSERT ON " . $cfg_db_database . ".sys_errors TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";  
     $priv_SQL[] = "FLUSH PRIVILEGES";
     
-    //create touchstone 'database user staff user' and grant permissions
+    //create 'database user staff user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_staff_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_staff_user created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".* TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
@@ -624,9 +626,7 @@ if (!isset($_POST['update'])) {
     $new_cfg_str[] =  "  \$cfg_db_sysadmin_user = '$cfg_db_sysadmin_user';\n";
     $new_cfg_str[] =  "  \$cfg_db_sysadmin_passwd = '$cfg_db_sysadmin_passwd';\n";
     
-    $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
-    
-    $cfg = file($touchstone_path . '/config/config.inc.php');
+    $cfg = file($cfg_web_root . 'config/config.inc.php');
 
     //remove refrances to old vars
     $cfg_new = array();
@@ -646,13 +646,12 @@ if (!isset($_POST['update'])) {
         
     //add the new config chunk
     array_splice($cfg_new,18,0,$new_cfg_str);
-    
-    
-    if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old1.php');
+        
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root. 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
     
-    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -664,15 +663,14 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] =  "  \$cfg_short_date = '%m/%d/%y';\n";
   $new_cfg_str[] =  "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
   $new_cfg_str[] =  "  \$cfg_timezone = 'Europe/London';\n";
-  $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
-  $cfg = file($touchstone_path . '/config/config.inc.php');
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
   if (!in_array("// Date formats in MySQL DATE_FORMAT format\n", $cfg)) {
     array_splice($cfg,36,0,$new_cfg_str);
-    if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old2.php');
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old2.php');
     }
     
-    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<div>Added date and time formats to config file.</div>\n";
@@ -683,8 +681,7 @@ if (!isset($_POST['update'])) {
   // 05/09/2011 - Add company name config file.
   $new_cfg_str = array();
   $new_cfg_str[] =  "\$cfg_company = 'The University of Nottingham';\n";
-  $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
-  $cfg = file($touchstone_path . '/config/config.inc.php');
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'cfg_company') !== false) {
@@ -694,11 +691,11 @@ if (!isset($_POST['update'])) {
   
   if (!$found) {
     array_splice($cfg,16,0,$new_cfg_str);
-    if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old3.php');
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
     
-    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added company name config file.</li>\n";
@@ -1196,7 +1193,7 @@ if (!isset($_POST['update'])) {
     $cfg_db_sct_password = PasswordUtils::gen_password(16);
         
     $priv_SQL = array();
-    //create touchstone 'database user SCT user' and grant permissions
+    //create 'database user SCT user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_sct_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_sct_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_sct_username created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '". $cfg_db_sct_username . "'@'". $cfg_db_host . "'";
@@ -1225,19 +1222,17 @@ if (!isset($_POST['update'])) {
     $new_cfg_str[] =  "  \$cfg_db_sct_user = '$cfg_db_sct_username';\n";
     $new_cfg_str[] =  "  \$cfg_db_sct_passwd = '$cfg_db_sct_password';\n";
     
-    $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
-    
-    $cfg = file($touchstone_path . '/config/config.inc.php');
+    $cfg = file($cfg_web_root . 'config/config.inc.php');
 
     //add the new config chunk
     array_splice($cfg, 36, 0, $new_cfg_str);
     
     
-    if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old1.php');
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
     
-    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -1255,7 +1250,7 @@ if (!isset($_POST['update'])) {
     $cfg_db_inv_password = PasswordUtils::gen_password(16);
         
     $priv_SQL = array();
-    //create touchstone 'database user SCT user' and grant permissions
+    //create 'database user SCT user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_inv_password . "'");
     echo "<li>NEW DB USER:: $cfg_db_inv_username created</li>";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_modules TO '". $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
@@ -1285,19 +1280,17 @@ if (!isset($_POST['update'])) {
     $new_cfg_str[] =  "  \$cfg_db_inv_user = '$cfg_db_inv_username';\n";
     $new_cfg_str[] =  "  \$cfg_db_inv_passwd = '$cfg_db_inv_password';\n";
     
-    $touchstone_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
-    
-    $cfg = file($touchstone_path . '/config/config.inc.php');
+    $cfg = file($cfg_web_root . 'config/config.inc.php');
 
     //add the new config chunk
     array_splice($cfg, 36, 0, $new_cfg_str);
     
     
-    if (file_exists($touchstone_path . '/config/config.inc.php')) {
-      rename($touchstone_path . '/config/config.inc.php', $touchstone_path . '/config/config.inc.old1.php');
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
     
-    if (file_put_contents($touchstone_path . '/config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -1486,18 +1479,15 @@ if (!isset($_POST['update'])) {
     $adjust->execute();
     $adjust->close();
     echo "<li>ALTER TABLE properties CHANGE COLUMN paper_type paper_type enum('0','1','2','3','4','5','6')</li>\n";
-    
-    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-    $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
-    
-    
   }
-    $sql = "GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-    $mysqli->query($sql);
-    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+    
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log6 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
   $result->close();
-
   
   // 08/09/2011 - Add auth_user column to sys_errors
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sys_errors' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='auth_user'");
@@ -1514,6 +1504,81 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
+
+  // 13/01/2012 - Add deleted column to Faculty table
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='faculty' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE faculty ADD COLUMN deleted datetime");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE faculty ADD COLUMN deleted datetime</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 13/01/2012 - Add deleted column to Degrees table
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE degrees ADD COLUMN deleted datetime");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE degrees ADD COLUMN deleted datetime</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 13/01/2012 - Add new character set to configuration file.
+  $new_cfg_str[] =  "  \$cfg_db_charset = 'latin1';\n";
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+
+  //remove refrances to old vars
+  $cfg_new = array();
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_db_charset') !== false) {
+      $found = true;
+    }
+    $cfg_new[] = $line;
+  }
+  
+  if (!$found) {
+    //add the new config chunk
+    array_splice($cfg_new,25,0,$new_cfg_str);
+        
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
+    }
+    
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added database charset.</li>\n";
+  }
+  
+  // 13/01/2012 - Update the version number
+  $cfg_new = array();
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  foreach ($cfg as $line) {
+    if (strpos($line,'ts_version') !== false) {
+      $cfg_new[] = "\$ts_version = '$version';\n";
+    } else {
+      $cfg_new[] = $line;
+    }
+  }
+  
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+  }
 
 
   // End ------------------------------------------------------------------
