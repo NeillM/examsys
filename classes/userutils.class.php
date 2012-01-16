@@ -28,7 +28,7 @@ require_once ($_SERVER['DOCUMENT_ROOT'] . 'classes/passwordutils.class.php');
 
 Class UserUtils {
 
-  static function createUser($username, $password, $title, $forname, $surname, $email, $degree, $gender, $year, $role, $sid, $db) {
+  static function createUser($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db) {
     
     if (!self::usernameExists($username, $db) and $username != '' and stristr('ps_',$username) === false) {
       $initial = explode(' ',$forname);
@@ -48,7 +48,7 @@ Class UserUtils {
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?)");
       $password = PasswordUtils::encpw($username, $password);
-      $result->bind_param('ssssssssssi', $password, $degree, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
+      $result->bind_param('ssssssssssi', $password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
       $userID = $db->insert_id;
