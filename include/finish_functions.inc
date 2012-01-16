@@ -151,7 +151,7 @@
     if ($paper_type == '2' and (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false)) {
       if (!isset($_GET['userid'])) {
         $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
-        echo '<blockquote><p style="font-size:450%; font-family:Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p><p>' . $tmp_string . '</p>';
+        echo '<blockquote><p style="font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p><p>' . $tmp_string . '</p>';
         //echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
         if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
         echo '</blockquote>';
@@ -1754,27 +1754,28 @@
           $paper[$question]['mark'] = 0;
           $paper[$question]['totalpos'] = 0;
           $all_correct = true;
+          $parts = explode('|',$paper[$question]['correct'][0]);
           if (isset($paper[$question]['user_answer'])) {
-            $parts = explode('|',$paper[$question]['user_answer']);
-            $i = 0;
-            foreach ($parts as $part) {
+            $ua_parts = explode('|',$paper[$question]['user_answer']);
+          }
+          for ($i = 0; $i < count($parts); $i++) {
+            if (isset($paper[$question]['user_answer'])) {
               if (substr($tmp_exclude, $i, 1) == '0' and $paper[$question]['user_answer'] != 'u') {
                 $have_answer = true;
-                if (substr($part,0,1) == 1) {
+                if (substr($ua_parts[$i], 0, 1) == 1) {
                   $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 } else {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                   $all_correct = false;
                 }
               }
-              if ($paper[$question]['score_method'] == 'Mark per Option') {
-                $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
-              }
-              $i++;
-            }            
+            }
+            if ($paper[$question]['score_method'] == 'Mark per Option' and substr($tmp_exclude, $i, 1) == '0') {
+              $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
+            }
           }
-          
-          if ($paper[$question]['score_method'] == 'Mark per Question') {
+
+          if ($paper[$question]['score_method'] == 'Mark per Question' and substr($tmp_exclude, 0, 1) == '0') {
             if (!$have_answer) {
               $paper[$question]['mark'] = 0;
             } elseif ($all_correct) {
