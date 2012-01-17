@@ -81,6 +81,28 @@ Class UserUtils {
     $stmt->fetch();
     $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
     $stmt->close();
+    
+    return $exists;
+  }
+
+  /**
+   * Check if Student ID exists and if so return ID.
+   *
+   * @param string $sid Student ID
+   * @param object $db mysqli database connection
+   * @return mixed user ID if exists, otherwise false
+   *
+   */
+  static function studentidExists($sid, $db) {
+    $stmt = $db->prepare("SELECT userID FROM sid WHERE student_id=?");
+    $stmt->bind_param('s', $sid);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($tmp_userID);
+    $stmt->fetch();
+    $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
+    $stmt->close();
+    
     return $exists;
   }
 
@@ -93,9 +115,9 @@ Class UserUtils {
    * @return bool return true if successful.
    *
    */
-  static function addUserToModule($userID, $module, $session, $db) {
-    $result = $db->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, 1, 0)");
-    $result->bind_param('iss', $userID, $module, $session);
+  static function addUserToModule($userID, $module, $attempt, $session, $db) {
+    $result = $db->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, ?, 0)");
+    $result->bind_param('issi', $userID, $module, $session, $attempt);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -123,6 +145,7 @@ Class UserUtils {
     $result->bind_result($tmp_userID);
     $exists = ($result->num_rows > 0);
     $result->close();
+    
     return $exists;
   }   
  

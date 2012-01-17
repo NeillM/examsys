@@ -47,10 +47,7 @@
 $(function () { $('#import_form').validate(); });
 </script>
 <style type="text/css">
-label.error {
-display: block;
-color: #f00;
-}
+label.error {display:block; color:#f00}
 </style>
 </head>
 
