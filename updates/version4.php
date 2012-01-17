@@ -1580,6 +1580,28 @@ if (!isset($_POST['update'])) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
 
+  // 16/01/2012 - Rename Degrees table to Courses table
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+    $adjust = $mysqli->prepare("RENAME TABLE degrees TO courses");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>RENAME TABLE degrees TO courses</li>\n";
+    ob_flush();
+    flush();
+
+    $adjust = $mysqli->prepare("ALTER TABLE courses CHANGE COLUMN degree name varchar(255)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE courses CHANGE COLUMN degree name varchar(255)</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
