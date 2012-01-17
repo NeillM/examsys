@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
 } else {
   $faculties = 0;
   $faculty_list = array();
-  $result = $mysqli->prepare("SELECT id, name FROM faculty ORDER BY name");
+  $result = $mysqli->prepare("SELECT id, name FROM faculty WHERE deleted IS NULL ORDER BY name");
   $result->execute();
   $result->bind_result($facultyID, $name);
   while ($result->fetch()) {
