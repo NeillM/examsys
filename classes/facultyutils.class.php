@@ -29,7 +29,7 @@ Class FacultyUtils {
  
   static function addFaculty($faculty, $db) {
    
-    $result = $db->prepare("INSERT INTO faculty VALUES (NULL, ?)");
+    $result = $db->prepare("INSERT INTO faculty(name) VALUES(?)");
     $result->bind_param('s', $faculty);
     $result->execute();
     $result->close();

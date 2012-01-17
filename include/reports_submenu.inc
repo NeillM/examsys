@@ -260,7 +260,7 @@
   
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repdegree\" style=\"width:375px\">\n";
   echo "<option value=\"%\">" . $string['anycourse'] . "</option>\n";
-  $result = $mysqli->prepare("SELECT DISTINCT student_grade, description FROM log_metadata, degrees WHERE log_metadata.student_grade=degrees.degree AND paperID=? ORDER BY student_grade");
+  $result = $mysqli->prepare("SELECT DISTINCT student_grade, description FROM log_metadata, courses WHERE log_metadata.student_grade=courses.name AND paperID=? ORDER BY student_grade");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($student_grade, $description);
