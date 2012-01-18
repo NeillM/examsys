@@ -268,7 +268,6 @@
         } else {
           echo "<ul class=\"$class\" style=\"list-style-type:disc; margin-left:20px; margin-top:5px\">\n";
           foreach ($objByModule as $module => $mappings) {
-            var_dump($mappings);
             foreach ($mappings as $id => $mappingData) {
               if( $mappingData['session']['class_code'] != '') {
                 $sessiondata = $mappingData['session']['class_code'];
