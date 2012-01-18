@@ -1263,7 +1263,6 @@
           if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_students_response == '1') {
             $img_name = 'cross';
             if ($all_correct) {
-              var_dump($all_correct);
               $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               $img_name = 'tick';
             }
