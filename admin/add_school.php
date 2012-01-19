@@ -23,15 +23,13 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require_once '../classes/schoolutils.class.php';
 
 if (isset($_POST['submit'])) {
   $school = trim($_POST['school']);
   $facultyID = trim($_POST['facultyID']);
   
-  $result = $mysqli->prepare("INSERT INTO schools VALUES (NULL, ?, ?)");
-  $result->bind_param('si', $school, $facultyID);
-  $result->execute();
-  $result->close();
+  $insert_id = SchoolUtils::addSchool($facultyID, $school, $mysqli);
 
   header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/admin/list_schools.php");
 } else {

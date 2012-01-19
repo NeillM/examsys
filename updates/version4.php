@@ -29,7 +29,7 @@ require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$version = '4.1.1';
+$version = '4.2';
 
 set_time_limit(0);
 
@@ -1528,12 +1528,19 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $adjust = $mysqli->prepare("ALTER TABLE degrees ADD COLUMN deleted datetime");
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>ALTER TABLE degrees ADD COLUMN deleted datetime</li>\n";
-    ob_flush();
-    flush();
+    $result2 = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees'");    // Check to see if Degrees exists, more recently renamed Courses.
+    $result2->execute();
+    $result2->store_result();
+    $result2->bind_result($table_name);
+    $result2->fetch();
+    if ($result2->num_rows() > 0) {
+      $adjust = $mysqli->prepare("ALTER TABLE degrees ADD COLUMN deleted datetime");
+      $adjust->execute();
+      $adjust->close();
+      echo "<li>ALTER TABLE degrees ADD COLUMN deleted datetime</li>\n";
+      ob_flush();
+      flush();
+    }
   }
   $result->close();
 
@@ -1565,21 +1572,6 @@ if (!isset($_POST['update'])) {
     echo "<li>Added database charset.</li>\n";
   }
   
-  // 13/01/2012 - Update the version number
-  $cfg_new = array();
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
-  foreach ($cfg as $line) {
-    if (strpos($line,'ts_version') !== false) {
-      $cfg_new[] = "\$ts_version = '$version';\n";
-    } else {
-      $cfg_new[] = $line;
-    }
-  }
-  
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
-    echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
-  }
-
   // 16/01/2012 - Rename Degrees table to Courses table
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees'");
   $result->execute();
@@ -1602,6 +1594,37 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
+
+  // 19/01/2012 - Add deleted column to Schools table
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='schools' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("ALTER TABLE schools ADD COLUMN deleted datetime");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE schools ADD COLUMN deleted datetime</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 19/01/2012 - Update the version number
+  $cfg_new = array();
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  foreach ($cfg as $line) {
+    if (strpos($line,'ts_version') !== false) {
+      $cfg_new[] = "\$ts_version = '$version';\n";
+    } else {
+      $cfg_new[] = $line;
+    }
+  }
+  
+  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+  }
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
