@@ -360,9 +360,9 @@ a.user:hover {color:white; background-color:#000080}
   $result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names FROM log_late, users WHERE log_late.userID=users.id AND q_paper=? AND started>? ORDER BY surname, initials");
   $result->bind_param('is', $paperID, $startdate);
   $result->execute();
-  $result->bind_result($userID, $title, $surname, $first_names);
+  $result->bind_result($tmp_userID, $title, $surname, $first_names);
   while ($row = $result->fetch()) {
-    $log_late[$userID] = $title . ' ' .  $surname . ', ' . $first_names;
+    $log_late[$tmp_userID] = $title . ' ' .  $surname . ', ' . $first_names;
   }
   $result->close();
   
@@ -446,11 +446,11 @@ a.user:hover {color:white; background-color:#000080}
     }
   }
   if ($temp_user_no > 0) {
-    echo "<tr><td style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"10\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">&nbsp;&nbsp;" . $string['temporaryaccountswarning'] . " <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">" . $string['moredetails'] . "</a></td></tr>\n";
+    echo "<tr><td style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"$cols\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">&nbsp;&nbsp;" . $string['temporaryaccountswarning'] . " <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">" . $string['moredetails'] . "</a></td></tr>\n";
   }
 
   if (count($log_late) > 0) {
-    echo "<tr><td style=\"width:40px; height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" width=\"28\" height=\"28\" style=\"position:relative; left:0px; top:2px;\" alt=\"Warning\" />&nbsp;&nbsp;</td><td colspan=\"10\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">" . $string['latesubmissions'] . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>): ";
+    echo "<tr><td style=\"width:40px; height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" width=\"28\" height=\"28\" style=\"position:relative; left:0px; top:2px;\" alt=\"Warning\" />&nbsp;&nbsp;</td><td colspan=\"$cols\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">" . $string['latesubmissions'] . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>): ";
     $html = '';
     foreach ($log_late as $student_userID => $student_name) {
       if ($html == '') {
@@ -461,9 +461,9 @@ a.user:hover {color:white; background-color:#000080}
     }
     echo "$html.</td></tr>\n";
   }
-
+  
   $xmean_total = 0;
-  $scatter_file = fopen('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_scatter.dat', 'w');              // Scatter plot data
+  $scatter_file = fopen('/tmp/' . $userID. '_scatter.dat', 'w');              // Scatter plot data
   $absent_no = 0;
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['visible'] == 1) {
@@ -643,7 +643,7 @@ a.user:hover {color:white; background-color:#000080}
   }
   fclose($scatter_file);
   
-  $distribution_file = fopen('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_distribution.dat', 'w');         // Distribution data
+  $distribution_file = fopen('/tmp/' . $userID . '_distribution.dat', 'w');         // Distribution data
   fwrite($distribution_file,serialize($distribution) . "\n");
   fclose($distribution_file);
 
