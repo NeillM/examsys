@@ -81,7 +81,7 @@
       <html>
       <body>
       <script language="JavaScript">
-        window.top.location = "/reports/textbox_select_q.php?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark&repcourse=%";
+        window.top.location = "textbox_select_q.php?paperID=<?php echo $paperID; ?>&q_id=<?php echo $_GET['q_id']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&ws=<?php echo $ws; ?>&phase=<?php echo $phase; ?>&action=mark&repcourse=%";
       </script>
       </body>
       </html>

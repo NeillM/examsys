@@ -337,7 +337,7 @@ if (isset($_POST['Submit'])) {
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . "/peer_review/form.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . "/peer_review/form.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/peer_review/form.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/peer_review/form.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper_title\" /><input type=\"hidden\" name=\"original_paper_title\" value=\"$paper_title\"><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td colspan=\"3\" valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
      echo "<option value=\"\"></option>";

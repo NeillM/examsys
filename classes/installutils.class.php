@@ -24,14 +24,12 @@
 * @package
 */
 
-if (!defined('DIR_SEPARATOR')) define('DIR_SEPARATOR', '/');
-$tmp_web_root = (substr($_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? $_SERVER['DOCUMENT_ROOT'] : $_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
-require_once $tmp_web_root . 'classes/userutils.class.php';
-require_once $tmp_web_root . 'classes/moduleutils.class.php';
-require_once $tmp_web_root . 'classes/schoolutils.class.php';
-require_once $tmp_web_root . 'classes/facultyutils.class.php';
-require_once $tmp_web_root . 'classes/lang.class.php';
-require_once $tmp_web_root . 'lang/' . $language . '/include/timezones.inc';
+require_once $cfg_web_root . 'classes/userutils.class.php';
+require_once $cfg_web_root . 'classes/moduleutils.class.php';
+require_once $cfg_web_root . 'classes/schoolutils.class.php';
+require_once $cfg_web_root . 'classes/facultyutils.class.php';
+require_once $cfg_web_root . 'classes/lang.class.php';
+require_once $cfg_web_root . 'lang/' . $language . '/include/timezones.inc';
 
 Class InstallUtils {
 	
@@ -68,7 +66,7 @@ Class InstallUtils {
   public static $cfg_db_name;
   public static $db_admin_username;
   public static $db_admin_passwd;
-  
+
   public static $ts_version = '4.1';
   public static $support_email;
   public static $cfg_SysAdmin_username;
@@ -893,10 +891,14 @@ Class InstallUtils {
 * @package
 */
 
+if (empty(\$root)) \$root = str_replace('/config', '/', str_replace('\\\\', '/', dirname(__FILE__)));
+require \$root . '/include/path_functions.inc.php';
+
 \$ts_version = '{ts_version}';
 define('TOUCHSTONE', 'true');
 define('DIR_SEPARATOR', '/');
-\$cfg_web_root = (substr(\$_SERVER['DOCUMENT_ROOT'], -1) == DIR_SEPARATOR) ? \$_SERVER['DOCUMENT_ROOT'] : \$_SERVER['DOCUMENT_ROOT'] . DIR_SEPARATOR;
+\$cfg_web_root = get_root_path() . '/';
+\$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');
 \$protocol = 'https://';
 \$cfg_company = '{cfg_company}';
 
@@ -946,14 +948,31 @@ define('DIR_SEPARATOR', '/');
 // This will allow you to change the password of any users that do not match against those domains (e.g. external examiners)
   \$cfg_institutional_domains = array('nottingham.ac.uk');
   
+// Root path for JS
+  \$cfg_js_root = <<< SCRIPT
+<script type="text/javascript">
+  if (typeof cfgRootPath == 'undefined') {
+    var cfgRootPath = '\$cfg_root_path';
+  }
+</script>
+SCRIPT;
+
 //Editor
   \$cfg_editor_name = 'tinymce';
-  \$cfg_editor_javascript = "<script language=\"JavaScript\" src=\"/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n<script language=\"JavaScript\" src=\"/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
+  \$cfg_editor_javascript = <<< SCRIPT
+\$cfg_js_root
+<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
+SCRIPT;
 
-//Server specific configuration basaed on hostname.
+//Server specific configuration based on hostname.
 switch (strtolower(\$_SERVER['HTTP_HOST'])) {
-  case '{SERVER_NAME}':
+  case 'rogo.local':
+    \$cfg_install_type = ' (local)';
+    break;
+  default:
     \$cfg_install_type = '';
+    error_reporting(0);
     break;
 }
 

@@ -446,7 +446,7 @@
       }
     }
         
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . "/paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+    header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
   }
 
   function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {

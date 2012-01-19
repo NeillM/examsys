@@ -22,8 +22,13 @@
 * @package
 */
 
-
 require_once '../config/config.inc.php';
+
+// Override $cfg_web_root in case we're in a subdirectory
+require_once '../include/path_functions.inc.php';
+$cfg_web_root = get_root_path() . '/';
+$cfg_root_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root);
+
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
@@ -1528,7 +1533,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $result2 = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees'");    // Check to see if Degrees exists, more recently renamed Courses.
+    $result2 = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees' AND TABLE_SCHEMA='$cfg_db_database'");    // Check to see if Degrees exists, more recently renamed Courses.
     $result2->execute();
     $result2->store_result();
     $result2->bind_result($table_name);
@@ -1573,7 +1578,7 @@ if (!isset($_POST['update'])) {
   }
   
   // 16/01/2012 - Rename Degrees table to Courses table
-  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees'");
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='degrees' AND TABLE_SCHEMA='$cfg_db_database'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -1625,6 +1630,173 @@ if (!isset($_POST['update'])) {
   if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
+
+
+  // 19/01/2012 - Add root path functions to config file.
+  $new_cfg_str = array();
+  $new_cfg_str[] = "if (empty(\$root)) \$root = str_replace('/config', '/', str_replace('\\\\', '/', dirname(__FILE__)));\n";
+  $new_cfg_str[] = "require \$root . '/include/path_functions.inc.php';\n\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'dirname(__FILE__)') !== false) {
+      $found = true;
+    }
+  }
+
+  if (!$found) {
+    array_splice($cfg,11,0,$new_cfg_str);
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added root path functions to config file.</li>\n";
+    ob_flush();
+    flush();
+  }
+
+  // 19/01/2012 - Add URL root to config file.
+  $new_cfg_str = array();
+  $new_cfg_str[] = "\$cfg_web_root = get_root_path() . '/';\n";
+  $new_cfg_str[] = "\$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_root_path') !== false) {
+      $found = true;
+    }
+  }
+
+  if (!$found) {
+    $index = 0;
+    foreach ($cfg as $line) {
+      if (strpos($line,'cfg_web_root =') !== false) {
+        $found = true;
+        break;
+      }
+      $index++;
+    }
+
+    if ($found) {
+      unset($cfg[$index]);
+      $cfg = array_values($cfg);
+      array_splice($cfg, $index, 0, $new_cfg_str);
+    } else {
+      array_splice($cfg, 17, 0, $new_cfg_str);
+    }
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old5.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added URL root to config file.</li>\n";
+    ob_flush();
+    flush();
+  }
+
+
+  // 19/01/2012 - Add root path for JavaScript to config file.
+  $new_cfg_str = array();
+  $new_cfg_str[] = "// Root path for JS\n";
+  $new_cfg_str[] = "\$cfg_js_root = <<< SCRIPT\n";
+  $new_cfg_str[] = "<script type=\"text/javascript\">\n";
+  $new_cfg_str[] = "if (typeof cfgRootPath == 'undefined') {\n";
+  $new_cfg_str[] = "var cfgRootPath = '\$cfg_root_path';\n";
+  $new_cfg_str[] = "}\n";
+  $new_cfg_str[] = "</script>\n";
+  $new_cfg_str[] = "SCRIPT;\n\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'Root path for JS') !== false) {
+      $found = true;
+    }
+  }
+
+  if (!$found) {
+    array_splice($cfg, 77, 0, $new_cfg_str);
+
+    // And change the editor JS include
+    $new_cfg_str = array();
+    $new_cfg_str[] = "\$cfg_editor_javascript = <<< SCRIPT\n";
+    $new_cfg_str[] = "\$cfg_js_root\n";
+    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
+    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
+    $new_cfg_str[] = "SCRIPT;\n";
+
+    $index = 0;
+    foreach ($cfg as $line) {
+      if (strpos($line,'cfg_editor_javascript =') !== false) {
+        $found = true;
+        break;
+      }
+      $index++;
+    }
+
+    if ($found) {
+      unset($cfg[$index]);
+      $cfg = array_values($cfg);
+      array_splice($cfg, $index, 0, $new_cfg_str);
+    } else {
+      array_splice($cfg, 87, 0, $new_cfg_str);
+    }
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old6.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added root path for JavaScript to config file.</li>\n";
+    ob_flush();
+    flush();
+  }
+
+  // 19/01/2012 - Add default install type to config file.
+  $new_cfg_str = array();
+  $new_cfg_str[] = "  default:\n";
+  $new_cfg_str[] = "    \$cfg_install_type = '';\n";
+  $new_cfg_str[] = "    error_reporting(0);\n";
+  $new_cfg_str[] = "    break;\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  $last_break = 0;
+  $index = 0;
+  foreach ($cfg as $line) {
+    if (strpos($line,'default:') !== false) {
+      $found = true;
+    }
+    if (strpos($line,'break;') !== false) {
+      $last_break = $index;
+    }
+    $index++;
+  }
+
+  if (!$found) {
+    array_splice($cfg, $last_break+1, 0, $new_cfg_str);
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old7.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added default install type to config file.</li>\n";
+    ob_flush();
+    flush();
+  }
+
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

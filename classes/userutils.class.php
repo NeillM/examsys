@@ -24,7 +24,7 @@
 * @package
 */
 
-require_once ($_SERVER['DOCUMENT_ROOT'] . 'classes/passwordutils.class.php');
+require_once ($cfg_web_root . 'classes/passwordutils.class.php');
 
 Class UserUtils {
 

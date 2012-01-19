@@ -73,6 +73,7 @@ function echoButtons($year) {
 <html>
 <head>
 <title>Rogō: <?php echo $string['calendar'] . ' ' . $cfg_install_type; ?></title>
+<?php echo $cfg_js_root ?>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
   function go() {

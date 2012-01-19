@@ -30,7 +30,7 @@
   }
   
   set_time_limit(0);
-  $path = str_replace('/admin/users_from_SMS.php','',$_SERVER['SCRIPT_NAME']);
+  $path = str_replace('/admin', '', str_replace('\\', '/', dirname(__FILE__)));
   if ($path == '') {
     $path = $_SERVER['DOCUMENT_ROOT'];
   }

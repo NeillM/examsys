@@ -73,6 +73,7 @@
   }
 
   function display_media($filename, $width, $height) {
+    global $cfg_root_path;
     if (strtolower(substr($filename, -4)) == '.gif' or strtolower(substr($filename, -4)) == '.jpg' or strtolower(substr($filename, -4)) == 'jpeg' or strtolower(substr($filename, -4)) == '.png') {
       $html = "<img src=\"../media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" />";
     } elseif (strtolower(substr($filename, -4)) == '.mp3') {
@@ -80,7 +81,7 @@
       $html = "<object type=\"application/x-shockwave-flash\" data=\"player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
       $html .= "<param name=\"wmode\" value=\"transparent\" />\n";
       $html .= "<param name=\"movie\" value=\"player_mp3_maxi.swf\" />\n";
-      $html .= "<param name=\"FlashVars\" value=\"mp3=/media/$filename&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
+      $html .= "<param name=\"FlashVars\" value=\"mp3={$cfg_root_path}/media/$filename&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
       $html .= "</object>\n";  
     } elseif (strtolower(substr($filename, -4)) == '.doc' or strtolower(substr($filename, -4)) == '.ppt' or strtolower(substr($filename, -4)) == '.xls' or strtolower(substr($filename, -4)) == '.pdf') {
       $html = "<iframe src=\"../media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
@@ -135,7 +136,7 @@
   }
 
   function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqlidb) {
-    global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark;
+    global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $cfg_root_path;
     
     $strong_on = '';
     $strong_off = '';
@@ -1809,10 +1810,10 @@
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
-      write_string('<param name="movie" value="/paper/hotspot_answer.swf" />');
+      write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/paper/hotspot_answer.swf" />');
       write_string('<param name="quality" value="high" />');
       write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-      write_string('<embed src="/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('<embed src="<?php echo $cfg_root_path ?>/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
     </script>
     </div>
@@ -1937,10 +1938,10 @@
       }
       write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
       write_string('<param name="allowScriptAccess" value="always" />');
-      write_string('<param name="movie" value="/paper/label_question.swf" />');
+      write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/paper/label_question.swf" />');
       write_string('<param name="quality" value="high" />');
       write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-      write_string('<embed src="/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('<embed src="<?php echo $cfg_root_path ?>/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
 <?php
   } else {
@@ -1968,10 +1969,10 @@
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="/paper/label_answer.swf" />');
+    write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/paper/label_answer.swf" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-    write_string('<embed src="/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="<?php echo $cfg_root_path ?>/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
 <?php
   }

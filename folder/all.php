@@ -38,6 +38,7 @@
 </style>
 
 <script src="../js/staff_help.js" type="text/javascript"></script>
+<?php echo $cfg_js_root ?>
 <script src="../js/sidebar.js" type="text/javascript"></script>
 <script language="JavaScript">
   function displayCredits(){
