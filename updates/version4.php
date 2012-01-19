@@ -669,7 +669,14 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] =  "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
   $new_cfg_str[] =  "  \$cfg_timezone = 'Europe/London';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
-  if (!in_array("// Date formats in MySQL DATE_FORMAT format\n", $cfg)) {
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'Date formats in MySQL DATE_FORMAT') !== false) {
+      $found = true;
+    }
+  }
+
+  if (!$found) {
     array_splice($cfg,36,0,$new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old2.php');
@@ -1723,7 +1730,21 @@ if (!isset($_POST['update'])) {
   }
 
   if (!$found) {
-    array_splice($cfg, 77, 0, $new_cfg_str);
+    $index = 0;
+    foreach ($cfg as $line) {
+      if (strpos($line,'//Editor') !== false) {
+        $found = true;
+        break;
+      }
+      $index++;
+    }
+
+    if ($found) {
+      array_splice($cfg, $index, 0, $new_cfg_str);
+    } else {
+      $cfg[] = "\n";
+      $cfg = array_merge($cfg, $new_cfg_str);
+    }
 
     // And change the editor JS include
     $new_cfg_str = array();
@@ -1747,7 +1768,8 @@ if (!isset($_POST['update'])) {
       $cfg = array_values($cfg);
       array_splice($cfg, $index, 0, $new_cfg_str);
     } else {
-      array_splice($cfg, 87, 0, $new_cfg_str);
+      $cfg[] = "\n";
+      array_merge($cfg, $new_cfg_str);
     }
 
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
