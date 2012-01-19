@@ -29,11 +29,11 @@ Class SchoolUtils {
  
   static function addSchool($facultyID, $school, $db) {
    
-    $result = $db->prepare("INSERT INTO schools VALUES (NULL, ?,?)");
+    $result = $db->prepare("INSERT INTO schools VALUES (NULL, ?, ?)");
     $result->bind_param('si', $school, $facultyID);
     $result->execute();
     $result->close();
-    if($db->errno != 0) {
+    if ($db->errno != 0) {
       return false;
     }
     

@@ -30,7 +30,8 @@ Abstract Class SmsUtils {
     global $cfg_sms_api;
     
     require_once ($_SERVER['DOCUMENT_ROOT'] . '/config/config.inc.php');
-    if(isset($cfg_sms_api) and $cfg_sms_api != '') {
+    
+    if (isset($cfg_sms_api) and $cfg_sms_api != '') {
       require_once ($_SERVER['DOCUMENT_ROOT'] . "/apis/" . $cfg_sms_api . ".class.php");
       return new $cfg_sms_api();
     }

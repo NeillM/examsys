@@ -30,8 +30,8 @@ require_once '../classes/userutils.class.php';
 
 $SMS = SMSutils::GetSmsUtils();
 $cfg_sms_sources = array();
-if(is_object($SMS)) {
- $cfg_sms_sources =  $SMS->getModuleSources();
+if (is_object($SMS)) {
+  $cfg_sms_sources =  $SMS->getModuleSources();
 }
   
 $unique_moduleid = true;

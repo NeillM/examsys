@@ -50,7 +50,8 @@ $session = DateUtils::get_current_academic_year();
 <tr><td>
 
 <table style="display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
-<tr><td><a href="add_module.php" target="body"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="<?php echo $string['createmodule']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_module.php"><?php echo $string['createmodule']; ?></a></td></tr>
+<tr><td><a href="add_module.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="<?php echo $string['createmodule']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_module.php"><?php echo $string['createmodule']; ?></a></td></tr>
+<tr><td><a href="add_module.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="bulk_import_modules.php">Bulk Module Import</a></td></tr>
 <tr><td><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editmodule']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['editmodule']; ?></td></tr>
 <tr><td><img src="../artwork/link_grey.png" width="16" height="16" alt="<?php echo $string['modulefolder']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['modulefolder']; ?></td></tr>
 <tr><td><img src="../artwork/link_grey.png" width="16" height="16" alt="<?php echo $string['studentcohort']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</td></tr>
