@@ -1765,6 +1765,15 @@ if (!isset($_POST['update'])) {
 
     if ($found) {
       unset($cfg[$index]);
+
+      // Editor JS string was sometimes split over multiple lines. Check and remove if this is the case
+      if (substr(trim($cfg[$index+2]), 0, 2) == '";') {
+        unset($cfg[$index+2]);
+      }
+      if (substr(trim($cfg[$index+1]), 0, 16) == '<script language') {
+        unset($cfg[$index+1]);
+      }
+
       $cfg = array_values($cfg);
       array_splice($cfg, $index, 0, $new_cfg_str);
     } else {
