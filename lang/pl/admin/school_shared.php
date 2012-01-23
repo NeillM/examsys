@@ -1,9 +1,9 @@
 <?php
 $string['createschool'] = 'Utwórz nową katedrę';
 $string['editschool'] = 'Edytuj katedrę';
-$string['deleteschool'] = 'Delete School';  // Niko
+$string['deleteschool'] = 'Usuń katedrę'; 
 $string['administrativetools'] = 'Narzędzia administracyjne';
-$string['schools'] = 'Katedry';//??
+$string['schools'] = 'Katedry';
 $string['school'] = 'Katedra';
 $string['faculty'] = 'Wydział';
 $string['prompt'] = 'Katedra';
