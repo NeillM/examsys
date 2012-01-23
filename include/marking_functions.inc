@@ -303,7 +303,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
         $variable_array = explode(',',$question_variables);
         $var_no = 1;
-        foreach($variable_array as $individual_variable) {
+        foreach ($variable_array as $individual_variable) {
           switch ($var_no) {
             case 1:
               $A = $individual_variable;
@@ -715,7 +715,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         } else {
           $saved_response = '';
         }
-        $mark = 'NULL';
+        $mark = NULL;
         $totalpos += $marks_correct;
         break;
       case 'hotspot':

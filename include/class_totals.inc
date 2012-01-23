@@ -464,9 +464,11 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
             }
           } else {
             $match = false;
-            foreach ($paper_buffer[$q_id]['correct'][$a] as $correct_alternative) {
-              if (trim($user_answers[$a+1]) == trim($correct_alternative)) {
-                $match = true;
+            if (isset($paper_buffer[$q_id]['correct'][$a])) {
+              foreach ($paper_buffer[$q_id]['correct'][$a] as $correct_alternative) {
+                if (trim($user_answers[$a+1]) == trim($correct_alternative)) {
+                  $match = true;
+                }
               }
             }
             
@@ -799,10 +801,10 @@ $cohort_size = 0;
 if ($_GET['absent'] == 1) {
   // Get students in the cohort.
   $student_cohort = array();
-  $result = $mysqli->prepare("SELECT users.id, users.username, title, surname, first_names, initials, student_id, grade, moduleid FROM (student_modules, users, sid) WHERE student_modules.userID=sid.userID AND student_modules.userID=users.id AND users.roles LIKE '%Student%' AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') AND calendar_year=?");
+  $result = $mysqli->prepare("SELECT users.id, users.username, title, surname, first_names, initials, student_id, grade, moduleid, gender FROM (student_modules, users, sid) WHERE student_modules.userID=sid.userID AND student_modules.userID=users.id AND users.roles LIKE '%Student%' AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') AND calendar_year=?");
   $result->bind_param('s', $calendar_year);
   $result->execute();
-  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid);
+  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
   while ($result->fetch()) {
     $student_cohort[$cohort_size]['username'] = $tmp_username;
     $student_cohort[$cohort_size]['tmp_userID'] = $tmp_userID;
@@ -814,6 +816,7 @@ if ($_GET['absent'] == 1) {
     $student_cohort[$cohort_size]['student_id'] = demo_replace_number($student_id, $demo);
     $student_cohort[$cohort_size]['grade'] = $grade;
     $student_cohort[$cohort_size]['module'] = $moduleid;
+    $student_cohort[$cohort_size]['gender'] = $gender;
     $student_cohort[$cohort_size]['taken'] = 0;
     $cohort_size++;
   }
@@ -1022,12 +1025,12 @@ if ($log_query->num_rows > 0) {
           $user_results[$user_no]['initials'] = $student_cohort[$i]['initials'];
           $user_results[$user_no]['first_names'] = $student_cohort[$i]['first_names'];
           $user_results[$user_no]['student_id'] = $student_cohort[$i]['student_id'];
-          $user_results[$user_no]['gender'] = $tmp['gender'];
+          $user_results[$user_no]['gender'] = $student_cohort[$i]['gender'];
           $user_results[$user_no]['ipaddress'] = '';
           $user_results[$user_no]['duration'] = 0;
           $user_results[$user_no]['questions'] = '';
           $user_results[$user_no]['paper_type'] = '';
-          $user_results[$user_no]['room'] = $tmp['room'];
+          $user_results[$user_no]['room'] = '';
           $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
           $user_no++;
         }

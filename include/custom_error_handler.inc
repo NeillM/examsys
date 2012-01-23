@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/dbutils.class.php';
 set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline) {
-  global $mysqli, $userID, $debug_pagestart, $dbclass, $cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database;
+  global $mysqli, $userID, $debug_pagestart, $dbclass, $cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset;
   
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them
@@ -69,7 +69,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
   }
 
   if ($error_type != 'Notice') {  // Record errors that are not notices.
-    if (is_object($mysqli)) {
+    if (is_object($mysqli)) {    
       // Query may fail if we try to insert while another statement is open.
       // Since we don't have a handle on the original statement, close the DB link and create another
       $mysqli->close();
