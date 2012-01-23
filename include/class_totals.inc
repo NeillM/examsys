@@ -511,16 +511,18 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       }
       $question_parts = explode('|', $paper_buffer[$q_id]['correct'][0]);
       $user_answers = explode('|', $tmp_user_answer);
-      
+
       for ($i=0; $i<count($question_parts); $i++) {
-        if (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '1') {
-          $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
-          $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_correct'];
-        } elseif (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '0') {
-          $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
-          $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_incorrect'];
-        } else {
-          $tmp_user_mark_array[$q_id][] = 0;
+        if (substr($tmp_exclude, $i, 1) == '0') {
+          if (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '1') {
+            $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
+            $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_correct'];
+          } elseif (isset($user_answers[$i]) and substr($user_answers[$i],0,1) == '0') {
+            $tmp_mark += $paper_buffer[$q_id]['marks_incorrect'];
+            $tmp_user_mark_array[$q_id][] = $paper_buffer[$q_id]['marks_incorrect'];
+          } else {
+            $tmp_user_mark_array[$q_id][] = 0;
+          }
         }
       }
     } elseif ($paper_buffer[$q_id]['q_type'] == 'labelling') {
