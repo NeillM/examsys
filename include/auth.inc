@@ -33,7 +33,7 @@
  *
  */
 function access_denied($message, $output_header = false) {
-  global $mysqli, $string;
+  global $mysqli, $string, $cfg_root_path;
   
   if ($output_header == true) {
     Header("WWW-authenticate: basic realm=\"Rogo\"");
