@@ -515,8 +515,8 @@
             }
           }
 
-          $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$options[0]);
-          $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|","",$options[0]);
+          $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|", "", $options[0]);
+          $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|", "", $options[0]);
 
           $blank_count = 0;
           echo $blank_details[0];
@@ -531,16 +531,11 @@
               } else {
                 $tmp_exclude = '';
               }
-              $std_html = (isset($tmp_std_array[$blank_count-1])) ? '<span class="std">' . $tmp_std_array[$blank_count-1] . '</span>' : '';
-              if ($score_method == 'Mark per Option') echo ' ' . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1);
-              echo $std_html;
               
-              echo '<span id="q_' . ($ex_no) . '_1" style="border:1px solid #6593CF; background-color:#EBF3FF"';
-              if (isset($excluded[$q_id]) and substr($excluded[$q_id], $blank_count-1,1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
-              echo '>';
+              echo '<span style="border:1px solid #6593CF; background-color:#EBF3FF">';
               
               if ($display_method == 'dropdown') {
-                $options_array = explode(',',$blank_options);
+                $options_array = explode(',', $blank_options);
                 $i = 0;
                 foreach ($options_array as $individual_blank_option) {
                   $individual_blank_option = trim($individual_blank_option);
@@ -570,7 +565,8 @@
                 }
                 $tmp_top_no = (isset($top_log[$q_id][$blank_count+1][$blank_options])) ? $top_log[$q_id][$blank_count+1][$blank_options] : 0;
                 $tmp_bottom_no = (isset($bottom_log[$q_id][$blank_count+1][$blank_options])) ? $bottom_log[$q_id][$blank_count+1][$blank_options] : 0;
-                echo $blank_count . '.<strong>' . $blank_options . ' </strong>' . $tmp_correct_p . ', ' . dStats($d) . ' t=' . number_format(($tmp_correct_no/$user_total)*100,0) . '%, u=' . number_format(($tmp_top_no/$candidate_no)*100,0) . '%, l=' . number_format(($tmp_bottom_no/$candidate_no)*100,0) . '%';
+                $tmp_parts = explode(',', $blank_options);
+                echo chr($blank_count+64) . ' . <strong>' . $tmp_parts[0] . ' </strong>';
               }
 
               echo '</span>' . $remainder;
@@ -578,7 +574,7 @@
             $blank_count++;
           }
           
-          echo "<table>\n";
+          echo "<table cellspacing=\"0\" cellpadding=\"4\" border=\"0\" style=\"margin-left:20px\">\n";
           for ($i=1; $i<count($blank_details); $i++) {
             $end_start_tag = strpos($blank_details[$i],']');
             $start_end_tag = strpos($blank_details[$i],'[/blank]');
@@ -586,22 +582,45 @@
 
             $blank_options = explode(',', $blank_options);
             
-            //var_dump($blank_options);
-            //exit;
-            
             $tmp_correct_no = 0;
+            $tmp_top_no = 0;
+            $tmp_bottom_no = 0;
             foreach ($blank_options as $blank_option) {
               if (isset($freq_log[$q_id][$i+1][$blank_option])) {
                 $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_option];
               }
+              if (isset($top_log[$q_id][$i+1][$blank_option])) {
+                $tmp_top_no += $top_log[$q_id][$i+1][$blank_option];
+              }
+              if (isset($bottom_log[$q_id][$i+1][$blank_option])) {
+                $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_option];
+              }
             }
             $t = number_format(($tmp_correct_no/$user_total)*100,0);
-                       
+            
             $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_options);
             $d_no++;
             $d_total += $d;
             $html = '';
-            echo "<tr><td>$i.</td><td>d=$d</td><td>t=$t%</td><td>";
+            
+            $u = number_format(($tmp_top_no/$candidate_no)*100,0);
+            $l = number_format(($tmp_bottom_no/$candidate_no)*100,0);
+            
+            echo "<tr><td>" . chr($i+64) . ".</td>";
+            if ($score_method == 'Mark per Option') {
+              if (isset($excluded[$q_id])) {
+                echo '<td>' . excludeButton($ex_no, $q_id, substr($excluded[$q_id], $i-1,1), 1, 1) . '</td>';
+              } else {
+                echo '<td>' . excludeButton($ex_no, $q_id, 0, 1, 1) . '</td>';
+              }
+            }
+            echo "<td>" . pStats($tmp_correct_no/$user_total) . "</td><td>" . dStats($d) . "</td><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td>";
+            if (isset($tmp_std_array[$blank_count-1])) {
+              echo '<td class="std">' . $tmp_std_array[$blank_count-1] . '</td>';
+            }
+            echo "<td id=\"q_" . ($ex_no) . "_1\"";
+            if (isset($excluded[$q_id]) and substr($excluded[$q_id], $i-1,1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
+            echo ">";
             foreach ($blank_options as $blank_option) {
               if ($html == '') {
                 $html = $blank_option;
@@ -609,7 +628,11 @@
                 $html .= ', ' . $blank_option;
               }
             }
-            echo "$html</td><td><a href=\"#\" onclick=\"return manCorrect($q_id, $i)\">Correct</a></td></tr>";
+            echo "$html</td>";
+            if ($display_method == 'textboxes') {
+              echo "<td><a href=\"#\" onclick=\"return manCorrect($q_id, $i)\">Correct</a></td>";
+            }
+            echo "</tr>";
           }
           echo "</table>\n";
           break;
@@ -1441,7 +1464,7 @@ td p:first-child {margin-top:0}
   }
   
   function manCorrect(q_id, part_no) {
-    window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>","remark","width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
     
     return false;
   }

@@ -49,6 +49,8 @@ a.user:hover {color:white; background-color:#000080}
 .padl {padding-left:6px}
 .exclude {color:red; text-decoration:line-through}
 .nonattend {background-color:#FFC0C0}
+.dist {color:#008000}
+.fail {color:red}
 </style>
 <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 <script src="../js/staff_help.js" type="text/javascript"></script>
@@ -478,7 +480,6 @@ a.user:hover {color:white; background-color:#000080}
       }
       if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
         $bg_color = '#FFC0C0';
-        //$line_color = '#EBEADB';
         echo "<tr class=\"nonattend\"><td>&nbsp;</td>";
         echo "<td style=\"padding:1px\">&nbsp;<a class=\"user\" href=\"../users/details.php?username=" . $user_results[$i]['username'] . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></a>";
         if ($user_results[$i]['student_id'] == '') {
@@ -498,11 +499,9 @@ a.user:hover {color:white; background-color:#000080}
         if ($user_results[$i]['questions'] < $question_no) {
           fwrite($scatter_file,"0\n");
           fwrite($scatter_file,"0\n");
-          //$line_color = 'red';
           $class = 'redln';
           echo ' style="padding:1px"';
         } else {
-          //$line_color = '#EEEEEE';
           $class = 'greyln';
           echo ' style="padding:1px"';
           $total_time += $user_results[$i]['duration'];
@@ -576,21 +575,21 @@ a.user:hover {color:white; background-color:#000080}
           $ordered = '';
         }
         if ($user_results[$i]['adj_percent'] < $pass_mark) {
-          echo "<td align=\"right\" class=\"mk $class$ordered\">";
+          echo "<td align=\"right\" class=\"mk $class$ordered fail\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
-          echo "<td align=\"right\" class=\"$class$ordered\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class$ordered\">&nbsp;" . $string['fail'] . "</td>";
+          echo "<td align=\"right\" class=\"$class fail\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class fail\">&nbsp;" . $string['fail'] . "</td>";
         } else {
           if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
-            echo "<td align=\"right\" class=\"mk $class$ordered\">";
+            echo "<td align=\"right\" class=\"mk $class dist\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
-            echo "<td align=\"right\" class=\"grey $class$ordered\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class$ordered grey\">&nbsp;" . $string['distinction'] . "</td>";
+            echo "<td align=\"right\" class=\"dist $class\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class dist\">&nbsp;" . $string['distinction'] . "</td>";
           } else {
             echo "<td align=\"right\" class=\"mk $class$ordered\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
-            echo "<td align=\"right\" class=\"$class$ordered\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class\">&nbsp;" . $string['pass'] . "</td>";
+            echo "<td align=\"right\" class=\"$class\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class\">&nbsp;" . $string['pass'] . "</td>";
           }
         }
         if ($_GET['sortby'] == 'started') {
