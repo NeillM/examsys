@@ -1152,14 +1152,22 @@
           $paper[$question]['totalpos'] = 0;
           $all_correct = true;
           
-          foreach ($paper[$question]['correct'] as $tmp_correct) {
-            if ($paper[$question]['score_method'] != 'Bonus Mark' or $tmp_correct != 0) {
+          $correct_no = 0;
+          for ($i=0; $i<count($paper[$question]['correct']); $i++) {
+            if ($paper[$question]['correct'][$i] != 0) $correct_no++;
+          }
+          if (substr($tmp_exclude,0,1) == '0') {
+            if ($paper[$question]['score_method'] == 'Mark per Option') {
+              $paper[$question]['totalpos'] += count($paper[$question]['option_text']) * $paper[$question]['marks_correct'];
+            } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
               $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
+            } elseif ($paper[$question]['score_method'] == 'Allow partial Marks') {
+              $paper[$question]['totalpos'] += $correct_no * $paper[$question]['marks_correct'];
+            } elseif ($paper[$question]['score_method'] == 'Bonus Mark' and $correct_no > 0) {
+              $paper[$question]['totalpos'] += ($correct_no + 1) * $paper[$question]['marks_correct'];
             }
           }
 
-          if ($paper[$question]['score_method'] == 'Bonus Mark') $paper[$question]['totalpos'] += $paper[$question]['marks_correct'];
-          
           if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
           echo_content($paper[$question]['leadin']);
@@ -1191,7 +1199,7 @@
             $tmp_part_id = $option_order[$i-1]+1;
             echo '<tr>';
             if ($tmp_display_correct_answer == '1') {
-              if(($paper[$question]['score_method'] == 'Bonus Mark' and $paper[$question]['correct'][$tmp_part_id-1] != 0) or $paper[$question]['score_method'] != 'Bonus Mark') {
+              if (($paper[$question]['score_method'] == 'Bonus Mark' and $paper[$question]['correct'][$tmp_part_id-1] != 0) or $paper[$question]['score_method'] != 'Bonus Mark') {
                 echo '<td>';
                 if(isset($paper[$question]['std'][$tmp_part_id-1])) echo display_std($paper[$question]['std'][$tmp_part_id-1]);
                 echo '</td>';

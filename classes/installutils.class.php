@@ -363,7 +363,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT,INSERT ON " . $dbname . ".temp_users TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_username . "'@'". self::$cfg_db_host . "'";    
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
         echo self::$db->error;

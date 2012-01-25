@@ -60,13 +60,14 @@
   while ($row = $search_results->fetch()) {
     $edit_id = $_GET['id'];
     if ($type == 'pointer') {
-      $redirect_results = $mysqli->query("SELECT title, body, deleted FROM staff_help WHERE id=$tmp_body");
-      while ($redirect_row = $redirect_results->fetch_assoc()) {
-        $edit_id = $tmp_body;
-        $tmp_body = $redirect_row['body'];
-        $deleted = $redirect_row['deleted'];
-      }
-      $redirect_results->close();
+      $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM staff_help WHERE id=?");
+      $pointer_results->bind_param('i', $tmp_body);
+      $pointer_results->execute();
+      $pointer_results->store_result();
+      $pointer_results->bind_result($tmp_title, $tmp_body, $deleted);
+      $pointer_results->fetch();
+      $pointer_results->close();
+      $edit_id = $tmp_body;
     }
   }
   $search_results->free_result();
@@ -78,7 +79,7 @@
   }
 
   if ($_GET['id'] != '1' and strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
-    $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL,'staff',?,NOW(),?)");
+    $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'staff', ?, NOW(), ?)");
     $result->bind_param('ii', $userID, $_GET['id']);
     $result->execute();  
     $result->close();

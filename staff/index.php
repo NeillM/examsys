@@ -178,8 +178,6 @@ require '../include/staff_auth.inc';
   $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $internal_review_deadline, $crypt_name);
   $result->store_result();
 
-  //$query_string = "SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND internal_review_deadline >= NOW() AND properties.property_id=papers.paper AND internal_reviewers LIKE '%$userID%' GROUP BY paper";
-  //$results = $mysqli->query($query_string) or die("failed : " . $mysqli->error . " $query_string");
   if ($result->num_rows() > 0) {
     echo "<br />\n";
     echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Papers for Review</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";

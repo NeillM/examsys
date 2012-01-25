@@ -50,16 +50,25 @@ $search_results->bind_param('i', $_GET['id']);
 $search_results->execute();
 $search_results->store_result();
 $search_results->bind_result($tmp_title, $tmp_body, $type, $deleted);
-while ($row = $search_results->fetch()) {
+while ($search_results->fetch()) {
   $edit_id = $_GET['id'];
   if ($type == 'pointer') {
-    $redirect_results = $mysqli->query("SELECT title, body, deleted FROM student_help WHERE id=$tmp_body");
-    while ($redirect_row = $redirect_results->fetch_assoc()) {
-      $edit_id = $tmp_body;
-	  $tmp_body = $redirect_row['body'];
-	  $deleted = $redirect_row['deleted'];
-    }
-    $redirect_results->close();
+    $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM student_help WHERE id=?");
+    $pointer_results->bind_param('i', $tmp_body);
+    $pointer_results->execute();
+    $pointer_results->store_result();
+    $pointer_results->bind_result($tmp_title, $tmp_body, $deleted);
+    $pointer_results->fetch();
+    $pointer_results->close();
+    $edit_id = $tmp_body;
+  
+    //$redirect_results = $mysqli->query("SELECT title, body, deleted FROM student_help WHERE id=$tmp_body");
+    //while ($redirect_row = $redirect_results->fetch_assoc()) {
+    //  $edit_id = $tmp_body;
+    //  $tmp_body = $redirect_row['body'];
+    //  $deleted = $redirect_row['deleted'];
+    //}
+    //$redirect_results->close();
   }
 }
 $search_results->free_result();
