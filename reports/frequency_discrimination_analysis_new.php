@@ -82,7 +82,7 @@
     }
 	
     if ($value < 0.2) {
-      $html = '<span style="color:#C00000">p=' . number_format($value,2) . '</span><img src="../artwork/red_flag.png" width="14" height="14" alt="' . $string['warning1'] . '" border="0" class="in-exclusion" />';
+      $html = '<nobr><span style="color:#C00000">p=' . number_format($value,2) . '</span><img src="../artwork/red_flag.png" width="14" height="14" alt="' . $string['warning1'] . '" border="0" class="in-exclusion" /></nobr>';
     } else {
       $html = 'p=' . number_format($value,2);
     }
@@ -532,8 +532,6 @@
                 $tmp_exclude = '';
               }
               
-              echo '<span style="border:1px solid #6593CF; background-color:#EBF3FF">';
-              
               if ($display_method == 'dropdown') {
                 $options_array = explode(',', $blank_options);
                 $i = 0;
@@ -541,35 +539,16 @@
                   $individual_blank_option = trim($individual_blank_option);
                   if (!isset($log[$q_id][$blank_count+1][$individual_blank_option])) $log[$q_id][$blank_count+1][$individual_blank_option] = 0;
                   if ($i == 0) {
-                    $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $blank_count+1, $individual_blank_option);
-                    $d_no++;
-                    $d_total += $d;
-                    $tmp_correct_no = (isset($freq_log[$q_id][$blank_count+1][$individual_blank_option])) ? $freq_log[$q_id][$blank_count+1][$individual_blank_option] : 0;
-                    $tmp_top_no = (isset($top_log[$q_id][$blank_count+1][$individual_blank_option])) ? $top_log[$q_id][$blank_count+1][$individual_blank_option] : 0;
-                    $tmp_bottom_no = (isset($bottom_log[$q_id][$blank_count+1][$individual_blank_option])) ? $bottom_log[$q_id][$blank_count+1][$individual_blank_option] : 0;
-                    echo '<strong>' . $individual_blank_option . '</strong> ' . pStats($tmp_correct_no/$user_total) . ', ' . dStats($d) . ', t=' . number_format(($tmp_correct_no/$user_total)*100,0) . '%, u=' . number_format(($tmp_top_no/$candidate_no)*100,0) . '%, l=' . number_format(($tmp_bottom_no/$candidate_no)*100,0) . '%';
+                    echo ' <strong>' . chr($blank_count+64) . '.</strong> <select><option value="">' . $individual_blank_option . '</option></select>';
                   }
                   $i++;
                 }
               } else {
-                // Correct answer.
-                $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $blank_count+1, $blank_options);
-                $d_no++;
-                $d_total += $d;
-                if (isset($freq_log[$q_id][$blank_count+1][$blank_options])) {
-                  $tmp_correct_p = pStats($freq_log[$q_id][$blank_count+1][$blank_options]/$user_total);
-                  $tmp_correct_no = $freq_log[$q_id][$blank_count+1][$blank_options];
-                } else {
-                  $tmp_correct_p = 0;
-                  $tmp_correct_no = 0;
-                }
-                $tmp_top_no = (isset($top_log[$q_id][$blank_count+1][$blank_options])) ? $top_log[$q_id][$blank_count+1][$blank_options] : 0;
-                $tmp_bottom_no = (isset($bottom_log[$q_id][$blank_count+1][$blank_options])) ? $bottom_log[$q_id][$blank_count+1][$blank_options] : 0;
                 $tmp_parts = explode(',', $blank_options);
-                echo chr($blank_count+64) . ' . <strong>' . $tmp_parts[0] . ' </strong>';
+                echo '<strong>' . chr($blank_count+64) . '.</strong> <input type="text" size="20" value="' . $tmp_parts[0] . '" />';
               }
 
-              echo '</span>' . $remainder;
+              echo $remainder;
             }
             $blank_count++;
           }
@@ -585,21 +564,32 @@
             $tmp_correct_no = 0;
             $tmp_top_no = 0;
             $tmp_bottom_no = 0;
-            foreach ($blank_options as $blank_option) {
-              $blank_option = strtolower(trim($blank_option));
-              if (isset($freq_log[$q_id][$i+1][$blank_option])) {
-                $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_option];
+            
+            if ($display_method == 'dropdown') {
+              $blank_word = strtolower(trim($blank_options[0]));
+              if (isset($freq_log[$q_id][$i+1][$blank_word])) $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_word];
+              if (isset($top_log[$q_id][$i+1][$blank_word])) $tmp_top_no += $top_log[$q_id][$i+1][$blank_word];
+              if (isset($bottom_log[$q_id][$i+1][$blank_word])) $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_word];
+              
+              $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_word);
+            } else {
+              foreach ($blank_options as $blank_option) {
+                $blank_option = strtolower(trim($blank_option));
+                if (isset($freq_log[$q_id][$i+1][$blank_option])) {
+                  $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_option];
+                }
+                if (isset($top_log[$q_id][$i+1][$blank_option])) {
+                  $tmp_top_no += $top_log[$q_id][$i+1][$blank_option];
+                }
+                if (isset($bottom_log[$q_id][$i+1][$blank_option])) {
+                  $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_option];
+                }
               }
-              if (isset($top_log[$q_id][$i+1][$blank_option])) {
-                $tmp_top_no += $top_log[$q_id][$i+1][$blank_option];
-              }
-              if (isset($bottom_log[$q_id][$i+1][$blank_option])) {
-                $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_option];
-              }
+              $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_options);
+              
             }
             $t = number_format(($tmp_correct_no/$user_total)*100,0);
             
-            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_options);
             $d_no++;
             $d_total += $d;
             $html = '';
@@ -623,11 +613,15 @@
             echo "<td id=\"q_" . ($ex_no) . "_1\"";
             if (isset($excluded[$q_id]) and substr($excluded[$q_id], $i-1,1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
             echo ">";
-            foreach ($blank_options as $blank_option) {
-              if ($html == '') {
-                $html = $blank_option;
-              } else {
-                $html .= ', ' . $blank_option;
+            if ($display_method == 'dropdown') {
+              $html = $blank_options[0];
+            } else {
+              foreach ($blank_options as $blank_option) {
+                if ($html == '') {
+                  $html = $blank_option;
+                } else {
+                  $html .= ', ' . $blank_option;
+                }
               }
             }
             echo "$html</td>";
