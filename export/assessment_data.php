@@ -24,6 +24,12 @@
 
   require '../include/staff_auth.inc';
   require '../include/demo_replace.inc';
+  require '../include/errors.inc';
+  
+  check_var('paperID', 'GET', true, false);
+  check_var('startdate', 'GET', true, false);
+  check_var('enddate', 'GET', true, false);
+  
   if (strpos($userroles,'Demo') !== false) {
     $demo = true;
   } else {
@@ -64,13 +70,14 @@
       if ($q_type != 'extmatch' and $q_type != 'matrix') {
         $old_correct = ',' . $correct;
       }
-      if ($q_type == 'blank') {
+      if ($old_q_type == 'blank') {
         $old_correct = '';
-        $split1 = explode('[blank]',$option_text);
+        $split1 = explode('[blank', $old_option_text);
         for ($i=1; $i<count($split1); $i++) {
-          $split2 = explode(',', substr($split1[$i],0,strpos($split1[$i],'[/blank]')));
+          $split2 = explode(',', substr($split1[$i],1,strpos($split1[$i],'[/blank]')-1));
           $old_correct .= ',' . $split2[0];
         }
+        $paper_buffer[$question_no-1]['correct'] = $old_correct;
       }
     } else {
       if ($q_type == 'mcq' or $q_type == 'calculation') {
@@ -86,6 +93,7 @@
     $old_q_type = $q_type;
     $old_screen = $screen;
     $old_score_method = $score_method;
+    $old_option_text = $option_text;
     $part++;
   }
   $result->close();
@@ -133,7 +141,7 @@
   $result->execute();
   $result->bind_result($tmp_userID, $total_mark);
   $result->store_result();
-  $user_no = round(($result->num_rows/100)*$_GET['percent']);
+  $user_no = round(($result->num_rows/100) * $_GET['percent']);
   $student_no = 0;
   while ($result->fetch() and $student_no < $user_no) {
     if ($student_list == '') {
@@ -200,35 +208,37 @@
         switch ($paper_buffer[$i]['type']) {
           case 'blank':
             for ($sec=1; $sec<=substr_count($paper_buffer[$i]['correct'],','); $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . chr($sec+64);
             }
+            //var_dump($paper_buffer[$i]['correct']);
+            //exit;
             break;
           case 'extmatch':
             $correct_parts = explode(',',$paper_buffer[$i]['correct']);
             $partID = 0;
             for ($sec=1; $sec<substr_count($paper_buffer[$i]['correct'],',') + 1; $sec++) {
-              if (substr($tmp_exclude,$partID,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (substr($tmp_exclude,$partID,1) == '0') echo ',Q' . ($i+1) . chr($sec+64);
               $partID += substr_count($correct_parts[$sec],'$') + 1;
             }
             break;
           case 'matrix':
             for ($sec=1; $sec<substr_count($paper_buffer[$i]['correct'],',') + 1; $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . chr($sec+64);
             }
             break;
           case 'rank':
             for ($sec=1; $sec<=substr_count($paper_buffer[$i]['correct'],','); $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . chr($sec+64);
             }
             break;
           case 'dichotomous':
             for ($sec=1; $sec<=substr_count($paper_buffer[$i]['correct'],','); $sec++) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . '.' . $sec;
+              if (substr($tmp_exclude,$sec-1,1) == '0') echo ',Q' . ($i+1) . chr($sec+64);
             }
             break;
           case 'mrq':
             for ($sec=1; $sec<=substr_count($paper_buffer[$i]['correct'],','); $sec++) {
-	      if (!isset($excluded[$tmp_question_ID])) echo ',Q' . ($i+1) . '.' . $sec;
+              if (!isset($excluded[$tmp_question_ID])) echo ',Q' . ($i+1) . chr($sec+64);
             }
             if ($paper_buffer[$i]['score_method'] == 'other') echo ',Q' . ($i+1) . '.other';
             break;
@@ -337,7 +347,10 @@
           $tmp_answers = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           for ($partID=1; $partID<count($correct_parts); $partID++) {
-            if (substr($tmp_exclude,$partID-1,1) == '0') echo ',' . $tmp_answers[$partID];
+            if (substr($tmp_exclude,$partID-1,1) == '0') {
+              echo ',';
+              if ($tmp_answers[$partID] != 'u') echo $tmp_answers[$partID];
+            }
           }
           break;
         case 'calculation':
@@ -347,7 +360,16 @@
             $answer_parts = array('u','u','u');
           }
           if (!isset($excluded[$tmp_question_ID])) {
-            echo ',"' . $answer_parts[0] . '",' . $answer_parts[1] . ',"' . $answer_parts[2] . '"';
+            $vars = explode(',', $answer_parts[2]);
+            $variables = '';
+            foreach ($vars as $var) {
+              if ($variables == '') {
+                $variables = $var;
+              } else {
+                if ($var != '') $variables .= ',' . $var;
+              }
+            }
+            echo ',"' . $answer_parts[0] . '",' . $answer_parts[1] . ',"' . $variables . '"';
           }
           break;
         case 'dichotomous':

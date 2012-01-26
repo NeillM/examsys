@@ -41,9 +41,6 @@ $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $su
 $result->fetch();
 $result->close();
 
-//var_dump($start_hour);
-//exit;
-
 // Check out team security
 if (strpos($userroles,'SysAdmin') === false) {
   $on_team = false;
