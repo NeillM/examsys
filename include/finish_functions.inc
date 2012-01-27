@@ -1208,6 +1208,20 @@
           }
           $paper[$question]['totalpos'] = $paper[$question]['marks_correct'];
 
+          if ($tmp_display_feedback == '1') {
+            if ($paper[$question]['mark'] > 0) {
+              if ($paper[$question]['correct_fback'] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
+              }
+            } else {
+              if ($paper[$question]['incorrect_fback'] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['incorrect_fback'] . "</div>\n";
+              } elseif ($paper[$question]['correct_fback'] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
+              }
+            }
+          }
+          
 
           break;
         case 'rank':
