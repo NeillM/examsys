@@ -383,7 +383,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
 }
 
 function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status, &$tmp_mark, &$tmp_user_mark_array) {
-  global $paper_buffer, $user_results;
+  global $paper_buffer, $user_results, $tmp_array;
   
   if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
 
@@ -556,14 +556,21 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           $i++;
         }
       }
+
+      // Strip out width and height for graphical labels.
+      foreach ($correct_labels as $key=>$value) {
+        $tmp_parts = explode('~', $value);
+        $correct_labels[$key] = $tmp_parts[0];
+      }
    
-      $user_split1 = explode(';',$tmp_user_answer);
-      $user_split2 = explode('$',$user_split1[1]);
+      $user_split1 = explode(';', $tmp_user_answer);
+      $user_split2 = explode('$', $user_split1[1]);
       $i = 0;
       $correct = 0;
       for ($a=0; $a<count($user_split2)-3; $a+=4) {
         $x = $user_split2[$a];
         $y = $user_split2[$a+1];
+               
         if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
           $tmp_mark += $paper_buffer[$q_id]['marks_correct'];
           $correct += $paper_buffer[$q_id]['marks_correct'];
@@ -591,7 +598,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       }
       
       $paper_buffer[$q_id]['correct_labels'] = $correct_labels;
-      //if ($correct_labels > 0) $tmp_user_mark_array[$q_id][] = $correct;
     }
   } else {
     // Marking per Question, or all other question types, simply return the original mark.
@@ -908,12 +914,11 @@ while ($stmt->fetch()) {
   $metadata_array[$type] = $type;
 }
 $stmt->close();
-
     
 $warnings = array('deleted_qns' => array());
 if ($log_query->num_rows > 0) {
   while ($log_query->fetch()) {
-    if (isset($_GET['repmodule']) AND $_GET['repmodule'] != '' AND $user_modules[$tmp_userID]['moduleid'] != $_GET['repmodule']) {
+    if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and $user_modules[$tmp_userID]['moduleid'] != $_GET['repmodule']) {
 	    continue; //this user is not on the module set in repmodule so dont put them in the array
 	  }
     if ($old_screen != $screen or $old_username != $username or $old_started != $started) {

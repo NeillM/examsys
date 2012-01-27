@@ -763,16 +763,20 @@
             foreach ($options as $individual_option) {
               $first_part = explode('|',$individual_option);
               $individual_option = trim($first_part[0]);
+
+              $tmp_parts = explode('~', $individual_option);
+              $text_only = $tmp_parts[0];
+
               if ($individual_coord == $first_part[1] . 'x' . $first_part[2]) {
-                $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $individual_coord, $individual_option);
+                $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $individual_coord, $text_only);
                 if (isset($tmp_std_array[$std_part])) {
                   $std_rating = $tmp_std_array[$std_part];
                 } else {
                   $std_rating = '';
                 }
-                $tmp_correct_no = (isset($freq_log[$q_id][$individual_coord][$individual_option])) ? $freq_log[$q_id][$individual_coord][$individual_option] : 0;
-                $tmp_top_no = (isset($top_log[$q_id][$individual_coord][$individual_option])) ? $top_log[$q_id][$individual_coord][$individual_option] : 0;
-                $tmp_bottom_no = (isset($bottom_log[$q_id][$individual_coord][$individual_option])) ? $bottom_log[$q_id][$individual_coord][$individual_option] : 0;
+                $tmp_correct_no = (isset($freq_log[$q_id][$individual_coord][$text_only])) ? $freq_log[$q_id][$individual_coord][$text_only] : 0;
+                $tmp_top_no = (isset($top_log[$q_id][$individual_coord][$text_only])) ? $top_log[$q_id][$individual_coord][$text_only] : 0;
+                $tmp_bottom_no = (isset($bottom_log[$q_id][$individual_coord][$text_only])) ? $bottom_log[$q_id][$individual_coord][$text_only] : 0;
                 if ($score_method == 'Mark per Option') {
                   if (isset($excluded[$q_id])) {
                     echo "<td>" . excludeButton($ex_no, $q_id, substr($excluded[$q_id],$i-1,1), 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total) . "</td><td>" . dStats($d) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
@@ -783,7 +787,14 @@
                 } else {
                   echo "<td></td><td>" . pStats($tmp_correct_no/$user_total) . "</td><td>" . dStats($d) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
                 }
-                echo "><strong>$individual_option</strong></td></tr>\n";
+                echo ">";
+                if (strpos(strtolower($individual_option),'.jpg') !== false or strpos(strtolower($individual_option),'.jpeg') !== false or strpos(strtolower($individual_option),'.gif') !== false or strpos(strtolower($individual_option),'.png') !== false) {
+                  $image_parts = explode('~', $individual_option);
+                  echo "<img src=\"../media/" . $image_parts[0] . "\" width=\"" . $image_parts[1] . "\" height=\"" . $image_parts[2] . "\" alt=\"\" border=\"1\" />";
+                } else {
+                  echo "<strong>$individual_option</strong>";
+                }
+                echo "</td></tr>\n";
                 $std_part++;
               }
               $option_no++;
@@ -1536,7 +1547,7 @@ td p:first-child {margin-top:0}
     $result = $mysqli->prepare("(SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log0, users, log_metadata) WHERE log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND grade LIKE ? AND log0.started>=? AND log0.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log0.started) UNION ALL (SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log1, users, log_metadata) WHERE log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log1.started>=? AND log1.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' " . str_replace('log0', 'log1', $student_modules_sql) . " GROUP BY username, q_paper, log1.started) ORDER BY total_mark ASC, username");
     $result->bind_param('isssiss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=users.id AND q_paper=? AND grade LIKE ? AND DATE_ADD(log$paper_type.started, INTERVAL 2 MINUTE)>=? AND log$paper_type.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log$paper_type.started ORDER BY total_mark ASC, username");
+    $result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND (users.roles='Student' OR users.roles='graduate') AND log$paper_type.userID=users.id AND q_paper=? AND grade LIKE ? AND DATE_ADD(log$paper_type.started, INTERVAL 2 MINUTE)>=? AND log$paper_type.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log$paper_type.started ORDER BY total_mark ASC, username");
     $result->bind_param('isss',$paperID, $_GET['repcourse'], $startdate, $enddate);
   }
   $result->execute();
