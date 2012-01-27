@@ -272,7 +272,6 @@ function getMSCAA($paperID, $mysqlidb) {
   <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
-  <script type="text/javascript" src="../js/jquery.paperdetails.js"></script>
 <script defer="defer" language="JavaScript">
   var paperID='<?php echo $_GET['paperID'] ?>';
 
@@ -376,9 +375,6 @@ function getMSCAA($paperID, $mysqlidb) {
     document.getElementById('scrOfY').value = scrOfY;
   }
 </script>
-</head>
-<body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?>>
-
 <?php
   $result = $mysqli->prepare("SELECT paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
   $result->bind_param('i', $paperID);
@@ -386,11 +382,31 @@ function getMSCAA($paperID, $mysqlidb) {
   $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $surname, $tmp_module, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed);
   $result->fetch();
   $result->close();
-  
+
   $paper_owner = $title  . ' ' . $initials . ', ' . $surname;
-  
+
   $mscaa_metadata = getMSCAA($paperID, $mysqli);
 
+  if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
+    $active_date = 1;
+  } else {
+    $active_date = 0;
+  }
+  if (date("YmdHis", time()) >= $start_date and $paper_type == '2') {
+    $summative_lock = 1;
+  } else {
+    $summative_lock = 0;
+  }
+  if ($summative_lock != 1) {
+?>
+  <script type="text/javascript" src="../js/jquery.paperdetails.js"></script>
+<?php
+}
+?>
+</head>
+<body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?>>
+
+<?php
   if (!isset($paper_title)) {
   ?>
     <div id="left-sidebar" class="sidebar">
@@ -490,16 +506,6 @@ function getMSCAA($paperID, $mysqlidb) {
   }
   $result->close();
 
-  if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
-    $active_date = 1;
-  } else {
-    $active_date = 0;
-  }
-  if (date("YmdHis", time()) >= $start_date and $paper_type == '2') {
-    $summative_lock = 1;
-  } else {
-    $summative_lock = 0;
-  }
   $old_p_id = 0;
   $row_no = 0;
   $row_no2 = 0;
