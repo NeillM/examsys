@@ -1,8 +1,8 @@
 <?php
-$string['remark'] = 'Remark';  // Niko, please translate whole file
-$string['msg'] = 'Click the checkboxes and then \'Save\' to include and remark alternative answers and/or spellings.';
-$string['correct'] = 'Correct';
-$string['wordphrase'] = 'Word/Phrase';
-$string['occurrence'] = 'Occurrence';
-$string['uniqueanswers'] = 'Unique Answers';
+$string['remark'] = 'Komentarz'; 
+$string['msg'] = 'Kliknij na pola wyboru, a następnie \'Zapisz\' aby załączyć i skomentować alternatywne odpowiedzi lub/i wersje.';
+$string['correct'] = 'Poprawne';
+$string['wordphrase'] = 'Słowo/Zdanie';
+$string['occurrence'] = 'Wystąpienie';
+$string['uniqueanswers'] = 'Odpowiedzi Unikalne';
 ?>
