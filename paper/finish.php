@@ -124,6 +124,7 @@ table {font-size:100%}
 .matrix {border:1px solid #808080; border-collapse:collapse}
 .matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
+.exclude {color:red; text-decoration:line-through}
 </style>
 <?php
   if ($latex_needed == 1) {

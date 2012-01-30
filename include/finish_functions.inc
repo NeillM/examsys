@@ -1167,37 +1167,70 @@
           
           echo '<table cellpadding="2" cellspacing="0" border="0"><tr>';
           echo '<td>';
-          if ($paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 't') {
-            if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-          } elseif ($paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 'f') {
-            if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-          }
-          echo '</td>';
-          echo "<td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked /></td><td>";
-          if ($paper[$question]['correct'][0] == 't') {
-            echo $strong_on . 'True' . $strong_off;
+          if ($paper[$question]['display_method'] == 'dropdown') {
+            if ($paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
+            } elseif ($paper[$question]['user_answer'] != 'u') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+            }
+            echo "</td><td><select name=\"q" . $question_no . "\">\n";
+            if ($paper[$question]['user_answer'] == 'u') {
+              echo "<option value=\"\" style=\"color:#808080\">unanswered</option>\n";
+            }
+            if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't') {
+              echo "<option value=\"t\" selected>True</option>\n";
+            } else {
+              echo "<option value=\"t\">True</option>\n";
+            }
+            if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'f') {
+              echo "<option value=\"f\" selected>False</option>\n";
+            } else {
+              echo "<option value=\"f\">False</option>\n";
+            }
+            echo "</select>\n";
           } else {
-            echo 'True';
+            if ($paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 't') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
+            } elseif ($paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 'f') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+            }
+            echo '</td>';
+            echo "<td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked /></td>";
+            if (substr($tmp_exclude,0,1) == '1') {
+              echo '<td class="exclude">';
+            } else {
+              echo '<td>';
+            }
+            if ($paper[$question]['correct'][0] == 't') {
+              echo $strong_on . 'True' . $strong_off;
+            } else {
+              echo 'True';
+            }
+            if ($paper[$question]['display_method'] == 'horizontal') {
+              echo '&nbsp;&nbsp;&nbsp;';
+            } elseif ($paper[$question]['display_method'] == 'vertical') {
+              echo '</tr><tr>';
+            }
+            echo '<td>';
+            if ($paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 'f') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
+            } elseif ($paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 't') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+            }
+            echo '</td>';
+            echo "<td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked /></td>";
+            if (substr($tmp_exclude,0,1) == '1') {
+              echo '<td class="exclude">';
+            } else {
+              echo '<td>';
+            }
+            if ($paper[$question]['correct'][0] == 'f') {
+              echo $strong_on . 'False' . $strong_off;
+            } else {
+              echo 'False';
+            }
           }
-          if ($paper[$question]['display_method'] == 'horizontal') {
-            echo '&nbsp;&nbsp;&nbsp;';
-          } elseif ($paper[$question]['display_method'] == 'vertical') {
-            echo '</tr><tr>';
-          }
-          echo '<td>';
-          if ($paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 'f') {
-            if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-          } elseif ($paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 't') {
-            if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-          }
-          echo '</td>';
-          echo "<td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked /></td><td>";
-          if ($paper[$question]['correct'][0] == 'f') {
-            echo $strong_on . 'False' . $strong_off;
-          } else {
-            echo 'False';
-          }
-          echo '</tr></table>';
+          echo '</td></tr></table>';
           
           if ($paper[$question]['user_answer'] == 'u') {
             $paper[$question]['mark'] = 0;
@@ -1221,7 +1254,11 @@
               }
             }
           }
-          
+          //if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+          if (substr($tmp_exclude,0,1) == '1') {
+            $paper[$question]['mark'] = 0;
+            $paper[$question]['totalpos'] = 0;        
+          }
 
           break;
         case 'rank':

@@ -619,16 +619,32 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $true_checked = '';
         $false_checked = '';
         
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') $true_checked = ' checked="checked"';
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') $false_checked = ' checked="checked"';
-        
-        echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked />&nbsp;True";
-        if ($question['display_method'] == 'horizontal') {
-          echo '&nbsp;&nbsp;&nbsp;';
-        } elseif ($question['display_method'] == 'vertical') {
-          echo '<br />';
+        if ($question['display_method'] == 'dropdown') {
+          echo "<select name=\"q" . $question_no . "\">\n";
+          echo "<option value=\"\"></option>\n";
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') {
+            echo "<option value=\"t\" selected>True</option>\n";
+          } else {
+            echo "<option value=\"t\">True</option>\n";
+          }
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') {
+            echo "<option value=\"f\" selected>False</option>\n";
+          } else {
+            echo "<option value=\"f\">False</option>\n";
+          }
+          echo "</select>\n";
+        } else {
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') $true_checked = ' checked="checked"';
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') $false_checked = ' checked="checked"';
+          
+          echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked />&nbsp;True";
+          if ($question['display_method'] == 'horizontal') {
+            echo '&nbsp;&nbsp;&nbsp;';
+          } elseif ($question['display_method'] == 'vertical') {
+            echo '<br />';
+          }
+          echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked />&nbsp;False";
         }
-        echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked />&nbsp;False";
         
         echo '</blockquote>';
         break;
