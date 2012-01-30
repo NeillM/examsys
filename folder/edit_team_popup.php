@@ -65,16 +65,22 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['teammembers'] . ' ' . $_GET['teamID']; ?></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title><?php echo $string['teammembers'] . ' ' . $_GET['teamID'] . ' ' . $cfg_install_type; ?></title>
 <style>
   body {font-family:Arial,sans-serif; font-size:90%; background-color:#F1F5FB; color:black; margin:0px}
+  hr {width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5}
+  .r1 {background-color:white}
+  .r2 {background-color:#B3C8E8}
+  .g {color:#808080}
+  .letter {padding-bottom:5px; width:95%; background-color:white; color:#1E3287}
 </style>
 <script language="JavaScript">
   function toggle(objectID) {
-    if (document.getElementById(objectID).style.backgroundColor == 'white') {
-      document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
+    if (document.getElementById(objectID).className == 'r2') {
+      document.getElementById(objectID).className = 'r1';
     } else {
-      document.getElementById(objectID).style.backgroundColor = 'white';
+      document.getElementById(objectID).className = 'r2';
     }
   }
   
@@ -116,34 +122,41 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:12px 4px 8px 4px; font-size:90%\" id=\"list\">";
-  $query_string = $mysqli->query("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND roles LIKE 'Staff%' AND grade != 'left' ORDER BY surname, initials");
   $staff_no = 0;
   $old_letter = '';
-  while ($row = $query_string->fetch_assoc()) {
-    if ($old_letter != strtoupper(substr($row['surname'],0,1))) {
-      echo "<table border=\"0\" style=\"padding-bottom:5px; width:95%; background-color:white; color:#1E3287\"><tr><td><nobr>" . strtoupper(substr($row['surname'],0,1)) . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" style=\"width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5\" /></td></tr></table>\n";
+
+  $tmp_role = 'Staff%';
+  
+  $result = $mysqli->prepare("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND roles LIKE ? AND grade != 'left' ORDER BY surname, initials");
+  $result->bind_param('s', $tmp_role);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($tmp_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title);
+  while ($result->fetch()) {
+    if ($old_letter != strtoupper(substr($tmp_surname, 0, 1))) {
+      echo "<table border=\"0\" class=\"letter\"><tr><td><nobr>" . strtoupper(substr($tmp_surname, 0, 1)) . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
     }
   
     $match = false;
     foreach ($team_members as $member) {
-      if ($member == $row['id']) $match = true;
+      if ($member == $tmp_id) $match = true;
     }
    
     if ($match == true) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divstaff$staff_no\"><input type=\"checkbox\" onclick=\"toggle('divstaff$staff_no')\" name=\"staff$staff_no\" value=\"" . $row['id'] . "\" checked />";
+      echo "<div class=\"r2\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" value=\"" . $tmp_id . "\" checked=\"checked\" />";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divstaff$staff_no\"><input type=\"checkbox\" onclick=\"toggle('divstaff$staff_no')\" name=\"staff$staff_no\" value=\"" . $row['id'] . "\" />";
+      echo "<div class=\"r1\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" value=\"" . $tmp_id . "\" />";
     }
-    if ($row['first_names'] != '') {
-      $display_text = $row['first_names'];
+    if ($tmp_first_names != '') {
+      $display_text = $tmp_first_names;
     } else {
-      $display_text = $row['initials'];
+      $display_text = $tmp_initials;
     }
-    echo "&nbsp;" . $row['surname'] . '<span style="color:#808080">, ' . $display_text . '. ' . $row['title'] . "</span></div>\n";
-    $old_letter = strtoupper(substr($row['surname'],0,1));
+    echo " " . $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></div>\n";
+    $old_letter = strtoupper(substr($tmp_surname, 0, 1));
     $staff_no++;
   }
-  $query_string->close();
+  $result->close();
   echo "<input type=\"hidden\" name=\"staff_no\" value=\"$staff_no\" /></div></td>\n</tr>\n";
 ?>
 

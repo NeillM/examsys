@@ -181,14 +181,16 @@ if (isset($_POST['submit'])) {
   .o {text-align:right; padding-right:10px}
   .c1 {width:65px; text-align:center}
   .c2 {width:250px}
+  .r1 {background-color:white}
+  .r2 {background-color:#B3C8E8}
   .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
 </style>
 <script language="JavaScript">
   function toggle(objectID) {
-    if (document.getElementById(objectID).style.backgroundColor == 'white') {
-      document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
+    if (document.getElementById(objectID).className == 'r2') {
+      document.getElementById(objectID).className = 'r1';
     } else {
-      document.getElementById(objectID).style.backgroundColor = 'white';
+      document.getElementById(objectID).className = 'r2';
     }
   }
   
@@ -256,9 +258,9 @@ foreach ($unique_list as $word=>$occurrance) {
   }
   
   if ($match) {
-    echo '<tr id="div' . $word_count . '" style="background-color:#B3C8E8"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . $word . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
+    echo '<tr id="div' . $word_count . '" class="r2"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . $word . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
   } else {
-    echo '<tr id="div' . $word_count . '" style="background-color:white"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . $word . '" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
+    echo '<tr id="div' . $word_count . '" class="r1"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . $word . '" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
   }
   $word_count++;
 }
