@@ -389,7 +389,7 @@ if ($question != null and $question->requires_flash()):
 endif;
 ?>
 <script type="text/javascript">
-var qType = '<?php echo $question->get_type() ?>';
+var qType = '<?php if (isset($question)) echo $question->get_type() ?>';
 var lang = {
 <?php
 $langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'showmore', 'hidemore', 'enteroption', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'mappingwarning', 'markchangewarning');

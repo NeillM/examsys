@@ -689,7 +689,7 @@ function getMSCAA($paperID, $mysqlidb) {
     $old_option_text[] = $option_text;
     if (trim($o_media != '')) $old_o_media[] = $o_media;
     $old_marks = $marks_correct;
-    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
+    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash'))) $options++;
   }
   $result->close();
   
