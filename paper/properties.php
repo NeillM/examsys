@@ -191,14 +191,6 @@ if (isset($_POST['Submit'])) {
     if ($tmp_pass_mark == '') $tmp_pass_mark = 40;
 
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
-
-    /*
-    if (isset($_POST['calculator'])) {
-      $tmp_calculator = 1;
-    } else {
-      $tmp_calculator = 0;
-    }
-    */
     $tmp_calculator = $_POST['calculator'];
 
     
@@ -372,18 +364,20 @@ if (isset($_POST['Submit'])) {
     body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:0px; font-size:100%}
     table {font-size:100%; text-align:left}
     input,textarea {font-family:Arial,sans-serif; color:black}
-    .indenton {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
-    .indentoff {text-indent:-23px; padding-left:23px; background-color:white}
+    .r1 {text-indent:-23px; padding-left:23px; background-color:white}
+    .r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
   </style>
 
   <?php echo $cfg_editor_javascript; ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
-    $(getMetadataDropdowns);
+    $(getMeta);
   
-    function getMetadataDropdowns() {
+    function getMeta() {
       var mod_codes = '';
-      for (i=0; i<=100; i++) {
+      var module_no = document.getElementById('module_no').value;
+      
+      for (i=0; i<module_no; i++) {
         if (document.getElementById('module' + i).checked == true) {
           if (mod_codes == '') {
             mod_codes = document.getElementById('module' + i).value;
@@ -404,13 +398,13 @@ if (isset($_POST['Submit'])) {
     }
   
     function toggle(objectID) {
-      if (document.getElementById(objectID).className == 'indentoff') {
-        document.getElementById(objectID).className = 'indenton';
+      if (document.getElementById(objectID).className == 'r2') {
+        document.getElementById(objectID).className = 'r1';
       } else {
-        document.getElementById(objectID).className = 'indentoff';
+        document.getElementById(objectID).className = 'r2';
       }
     }
-    
+
     function checkForm() {
       if (edit_form.fyear.value > edit_form.tyear.value) {
         alert ("<?php echo $string['availablefromyear']; ?>");
@@ -823,13 +817,6 @@ if ($paper_type != '4' and $paper_type != '5') {
          echo "</option>\n";
        }
        echo "</select></td>\n";
-/*
-       if ($calculator == 1) {
-         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" checked /> " . $string['displaycalculator'] . "</td>";
-       } else {
-         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"calculator\" /> " . $string['displaycalculator'] . "</td>";
-       }
-*/
        if ($sound_demo == 1) {
          echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" checked /> " . $string['demosoundclip'] . "</td></tr>\n";
        } else {
@@ -934,7 +921,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="prologue" style="width:100%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/prologue_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['prologueheading']; ?></td></tr>
   <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit2','paper_prologue',$paper_prologue,688,498);
+    echo "<tr><td>" . wysiwyg_editor('oEdit2', 'paper_prologue', $paper_prologue, 688, 498);
   ?>
 </td></tr>
 </table>
@@ -942,7 +929,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="postscript" style="width:100%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/postscript_heading_icon.png" width="22" height="29" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['postscriptheading']; ?></td></tr>
 <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit3','paper_postscript',$paper_postscript,688,498);
+    echo "<tr><td>" . wysiwyg_editor('oEdit3', 'paper_postscript', $paper_postscript, 688, 498);
   ?>
 </td></tr>
 </table>
@@ -959,7 +946,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <td style="text-align:center; vertical-align:top" colspan="2">
 <?php
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
-    echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMetadataDropdowns();\">\n<option value=\"\">" . $string['na'] .  "</option>\n";
+    echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\">\n<option value=\"\">" . $string['na'] .  "</option>\n";
     $academic_years = array('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16');
     foreach ($academic_years as $value) {
       echo "<option value=\"" . $value . "\"";
@@ -1156,12 +1143,12 @@ if ($paper_type != '4' and $paper_type != '5') {
         }
         if ($match == true) {
           if (in_array($module['id'],$teams) or strpos($userroles,'SysAdmin') !== false) {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
-            echo "<div class=\"indenton\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           }
         } else {
-          echo "<div class=\"indentoff\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMetadataDropdowns();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
         }
         $module_no++;  
         $old_school = $module['school'];        
@@ -1187,17 +1174,16 @@ if ($paper_type != '4' and $paper_type != '5') {
         if ($lab_id == $individual_lab) $match = true;
       }
       if ($match) {
-        echo "<div class=\"indenton\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
+        echo "<div class=\"r2\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
       } else {
-        echo "<div class=\"indentoff\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\">&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
+        echo "<div class=\"r1\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\">&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
       }
       $lab_no++;
       $old_campus = $lab_campus;
     }
     $lab_details->close();
     echo "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div></td>\n</tr>";
-    
-    //echo "</table>\n";
+
   ?>
   </td></tr>
   <tr><td style="background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px" colspan="2">&nbsp;<?php echo $string['restricttometadata']; ?></td></tr>
@@ -1209,7 +1195,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <table id="rubric" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['rubricheading']; ?></td></tr>
   <?php
-    echo "<tr><td>" . wysiwyg_editor('oEdit4','rubric_text',$rubric,686,498);
+    echo "<tr><td>" . wysiwyg_editor('oEdit4', 'rubric_text', $rubric, 686, 498);
   ?>
   </td></tr>
 </table>
@@ -1363,15 +1349,15 @@ if ($paper_type != '4' and $paper_type != '5') {
   $internal_details->execute();
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
   $internal_no = 0;
-  while ($row = $internal_details->fetch()) {
+  while ($internal_details->fetch()) {
     $match = false;
     foreach ($current_internals as $individual_internal) {
       if ($internal_id == $individual_internal) $match = true;
     }
     if ($match) {
-      echo "<div class=\"indenton\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked>&nbsp;" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></div>\n";
+      echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked>&nbsp;" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></div>\n";
     } else {
-      echo "<div class=\"indentoff\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\">&nbsp;" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></div>\n";
+      echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\">&nbsp;" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></div>\n";
     }
     $internal_no++;
   }
@@ -1384,15 +1370,15 @@ if ($paper_type != '4' and $paper_type != '5') {
   $external_details->execute();
   $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
   $examiner_no = 0;
-  while ($row = $external_details->fetch()) {
+  while ($external_details->fetch()) {
     $match = false;
     foreach ($current_externals as $individual_external) {
       if ($external_id == $individual_external) $match = true;
     }
     if ($match) {
-      echo "<div class=\"indenton\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked>&nbsp;" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></div>\n";
+      echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked>&nbsp;" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></div>\n";
     } else {
-      echo "<div class=\"indentoff\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\">&nbsp;" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></div>\n";
+      echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\">&nbsp;" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></div>\n";
     }
     $examiner_no++;
   }
