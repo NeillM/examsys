@@ -125,6 +125,9 @@ table {font-size:100%}
 .matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
 .exclude {color:red; text-decoration:line-through}
+.scr_br {width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url('../artwork/screen_no_background.gif'); background-repeat:repeat-x}
+.scr_no {vertical-align:top; font-size:90%; font-weight:bold; color:#15428B}
+.box {width:90%; background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left}
 </style>
 <?php
   if ($latex_needed == 1) {

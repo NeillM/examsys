@@ -402,7 +402,7 @@
     ?>
       <br />
       <div align="center">
-      <table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; width:90%; background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left">
+      <table cellpadding="4" cellspacing="0" border="0" class="box" style="font-size:90%">
       <tr>
       <td style="margin:0px"><div style="font-weight:bold; font-size:120%"><?php echo $string['key']; ?></div>
       <div><img src="../artwork/tick.gif" width="17" height="16" alt="Tick" /> <?php echo $string['correctanswer']; ?><br />
@@ -430,9 +430,9 @@
       init_feedback($strong_on, $strong_off);
 
       if ($old_screen < $paper[$question]['screen']) {
-        echo '</table><br /><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
+        echo '</table><br /><table cellpadding="0" cellspacing="1" border="0" class="scr_br">';
         echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-        echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;" . $paper[$question]['screen'] . "</td>\n</tr>\n";
+        echo "<td class=\"scr_no\">" . $string['screen'] . "&nbsp;" . $paper[$question]['screen'] . "</td>\n</tr>\n";
         echo '</table>';
         echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
         if ($paper[$question]['q_type'] != 'info') {
@@ -567,7 +567,7 @@
             echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[3];
           } else {
             echo '<td>';
-            if ($tmp_exclude == '1')  echo '<span style="color:red; text-decoration:line-through">';
+            if ($tmp_exclude == '1')  echo '<span class="exclude">';
             
             $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
             $difference = round(abs($saved_response_clean - $tmp_answer[1]), $decimals);
@@ -706,11 +706,11 @@
             // Option data
             if ($paper[$question]['o_media'][$tmp_part_id] == '') {
               echo "<td";
-              if (substr($tmp_exclude,$tmp_part_id,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+              if (substr($tmp_exclude,$tmp_part_id,1) == '1') echo ' class="exclude"';
               echo ">" . $paper[$question]['option_text'][$tmp_part_id] . "</td></tr>\n";
             } else {
               echo "<td";
-              if (substr($tmp_exclude,$tmp_part_id,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+              if (substr($tmp_exclude,$tmp_part_id,1) == '1') echo ' class="exclude"';
               echo ">";
               if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') echo $paper[$question]['option_text'][$tmp_part_id] . '<br />';
               echo "<img src=\"../media/" . $paper[$question]['o_media'][$tmp_part_id] . "\" width=\"" . $paper[$question]['o_media_width'][$tmp_part_id] . "\" height=\"" . $paper[$question]['o_media_height'][$tmp_part_id] . "\" border=\"0\" /></td></tr>\n";
@@ -791,7 +791,7 @@
                 }
                 echo "<td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" checked /></td><td style=\"width:99%\">";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
-                  if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                  if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                   echo $strong_on . $paper[$question]['option_text'][$tmp_part_id] . $strong_off;
                   if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                   echo '<br />';
@@ -811,7 +811,7 @@
                 }
                 echo "<td></td><td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" /></td><td style=\"width:99%\">";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
-                  if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                  if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                   echo $strong_on . $paper[$question]['option_text'][$tmp_part_id] . $strong_off;
                   if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                   echo '<br />';
@@ -832,7 +832,7 @@
                 }
                 echo "<td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" checked /></td><td style=\"width:99%\">";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
-                  if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                  if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                   echo $paper[$question]['option_text'][$tmp_part_id];
                   if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                   echo '<br />';
@@ -844,7 +844,7 @@
               } else {
                 echo "<td></td><td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" /></td><td>";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
-                  if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                  if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                   echo $paper[$question]['option_text'][$tmp_part_id];
                   if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                   echo '<br />';
@@ -921,7 +921,7 @@
                   echo '<td></td>';
                 }
                 echo "<td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_" . $tmp_part_id . "\" value=\"y\" checked />&nbsp;</td><td>";
-                if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
                   echo $strong_on;
                   echo $paper[$question]['option_text'][$tmp_part_id];
@@ -930,7 +930,7 @@
                 if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                 if ($paper[$question]['o_media'][$tmp_part_id] != '') {
                   echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
-                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red;">'. $string['isexcluded'] . '</span>';
+                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
                 }
                 echo "</td></tr>\n";
                 if ($paper[$question]['feedback_right'][$tmp_part_id] != '' and $tmp_display_feedback == '1') {
@@ -943,14 +943,14 @@
                   echo '<tr><td></td><td></td>';
                 }
                 echo "<td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_" . $tmp_part_id . "\" value=\"y\" checked />&nbsp;</td><td>";
-                if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
                   echo $paper[$question]['option_text'][$tmp_part_id] . "<br />\n";
                 }
                 if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                 if ($paper[$question]['o_media'][$tmp_part_id] != '') {
                   echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
-                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red;">'. $string['isexcluded'] . '</span>';
+                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
                 }
                 echo "</td></tr>\n";
                 if ($tmp_display_feedback == '1') {
@@ -978,7 +978,7 @@
                 }
                 echo "<td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_" . $tmp_part_id . "\" value=\"y\" />&nbsp;</td><td valign=\"top\">";
                 $std_part++;
-                if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
                   echo "$strong_on";
                   echo $paper[$question]['option_text'][$tmp_part_id];
@@ -987,7 +987,7 @@
                 if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                 if ($paper[$question]['o_media'][$tmp_part_id] != '') {
                   echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
-                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red;">'. $string['isexcluded'] . '</span>';
+                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
                 }
                 if ($tmp_display_feedback == '1') {
                   if ($paper[$question]['feedback_wrong'][$tmp_part_id] != '') {
@@ -1003,14 +1003,14 @@
                   echo '<tr><td></td><td></td>';
                 }
                 echo "<td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_" . $tmp_part_id . "\" value=\"y\" />&nbsp;</td><td valign=\"top\">";
-                if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+                if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
                   echo $paper[$question]['option_text'][$tmp_part_id] . "<br />\n";
                 }
                 if (substr($tmp_exclude,0,1) == '1') echo '</span>';
                 if ($paper[$question]['o_media'][$tmp_part_id] != '') {
                   echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
-                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red;">'. $string['isexcluded'] . '</span>';
+                  if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
                 }
                 echo "</td></tr>\n";
                 if ($paper[$question]['feedback_right'][$tmp_part_id] != '' and $tmp_display_feedback == '1') {
@@ -1107,7 +1107,7 @@
                 echo "<td style=\"text-align:right; color:#808080\">-</td>";
               }
               echo "<td style=\"width:99%; padding-left:5px\">";
-              if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+              if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
               echo $strong_on . $paper[$question]['option_text'][$tmp_part_id] . $strong_off;
               if (substr($tmp_exclude,0,1) == '1') echo '</span>';
               echo '</td></tr>';
@@ -1126,7 +1126,7 @@
                 echo "<td style=\"text-align:right; color:#808080\">-</td>";
               }
               echo "<td style=\"width:99%; padding-left:5px\">";
-              if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
+              if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
               echo $strong_on . $paper[$question]['option_text'][$tmp_part_id] . $strong_off;
               if (substr($tmp_exclude,0,1) == '1') echo '</span>';
               echo '</td></tr>';
@@ -1254,7 +1254,6 @@
               }
             }
           }
-          //if (substr($tmp_exclude,0,1) == '1') echo '<span style="color:red; text-decoration:line-through">';
           if (substr($tmp_exclude,0,1) == '1') {
             $paper[$question]['mark'] = 0;
             $paper[$question]['totalpos'] = 0;        
@@ -1362,7 +1361,7 @@
             echo "</td>";
 
             if (substr($tmp_exclude,0,1) == '1') {
-              echo "<td><select name=\"q" . $question . "_" . $tmp_part_id . "\" style=\"color:red; text-decoration:line-through; border:1px solid red\">\n";
+              echo "<td><select name=\"q" . $question . "_" . $tmp_part_id . "\" class=\"exclude\" style=\"border:1px solid red\">\n";
             } else {
               echo "<td><select name=\"q" . $question . "_" . $tmp_part_id . "\">\n";
             }
@@ -1381,7 +1380,7 @@
               echo "<td></td>";
             }
             if (substr($tmp_exclude,0,1) == '1') {
-              echo "<td style=\"vertical-align:top; color:red; text-decoration:line-through\">" . $paper[$question]['option_text'][$tmp_part_id-1] . "</td>";
+              echo "<td style=\"vertical-align:top\" class=\"exclude\">" . $paper[$question]['option_text'][$tmp_part_id-1] . "</td>";
             } else {
               echo "<td style=\"vertical-align:top\">" . $paper[$question]['option_text'][$tmp_part_id-1] . "</td>";
             }
@@ -1521,7 +1520,7 @@
               if (substr($tmp_exclude,$section,1) == '0') {
                 echo "<select name=\"q" . $question. "_" . $std_part . "\">\n";
               } else {
-                echo "<select name=\"q" . $question. "_" . $std_part . "\" style=\"color:red; text-decoration:line-through; border:1px solid red\">\n";
+                echo "<select name=\"q" . $question. "_" . $std_part . "\" class=\"exclude\" style=\"border:1px solid red\">\n";
               }
               if ($user_answers[$i] == 'u' or $user_answers[$i] == '') {
                 echo "<option value=\"\" style=\"color:#808080\">" . $string['unanswered'] . "</option>\n";
@@ -1581,7 +1580,7 @@
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
                   }
                   echo '&nbsp;</td><td';
-                  if (substr($tmp_exclude,$section,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+                  if (substr($tmp_exclude,$section,1) == '1') echo ' class="exclude"';
                   echo ">$strong_on" . $paper[$question]['option_text'][$option_order[$option_no]] . "$strong_off</td></tr>\n";
                 } else {
                   $matching_user_option = 0;
@@ -1600,7 +1599,7 @@
                     if ($tmp_display_students_response == '1') echo '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
                   }
                   echo '&nbsp;</td><td';
-                  if (substr($tmp_exclude,$section,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+                  if (substr($tmp_exclude,$section,1) == '1') echo ' class="exclude"';
                   echo ">" . $paper[$question]['option_text'][$option_order[$option_no]] . "</td></tr>\n";
                 }
                 $tmp_option_no++;
@@ -1661,7 +1660,7 @@
               echo '<td align="right">' . chr(64 + $part_id) . '.</td>';
               if (isset($paper[$question]['std'][$row_no]) and display_std($paper[$question]['std'][$row_no]) != '') echo '<td>' . display_std($paper[$question]['std'][$row_no]) . '</td>';
               echo '<td';
-              if (substr($tmp_exclude,$row_no,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+              if (substr($tmp_exclude,$row_no,1) == '1') echo ' class="exclude"';
               echo '>' . $single_scenario . '</td>';
               $answer_no = 1;
               $col_no = 1;
@@ -1718,14 +1717,14 @@
               echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
             echo '<p';
-            if (substr($tmp_exclude,0,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+            if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
             echo '>' . $paper[$question]['leadin'] . "</p>\n";
           } else {
             if ($paper[$question]['q_media'] != '') {
               echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
             }
             echo '<p class="leadin"';
-            if (substr($tmp_exclude,0,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+            if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
             echo '>' . $paper[$question]['leadin'] . "</p>\n";
           }
           if (isset($paper[$question]['user_answer'])) {
@@ -1785,7 +1784,7 @@
           $blank_details = explode("[blank",$paper[$question]['option_text'][0]);
           $no_blanks = count($blank_details);
           echo '<p><span';
-          if (substr($tmp_exclude,0,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+          if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
           echo '>' . $blank_details[0];
           $blank_count = 1;
           
@@ -1864,7 +1863,7 @@
               if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
             }
             echo '<span';
-            if (substr($tmp_exclude,$blank_count,1) == '1') echo ' style="color:red; text-decoration:line-through"';
+            if (substr($tmp_exclude,$blank_count,1) == '1') echo ' class="exclude"';
             echo '>' . $answer_options[1]; // Bit after the closing [/blank] tag.
             $blank_count++;
           }
@@ -2192,7 +2191,7 @@
 
     // Marks summary
     if ($total_marks > 0 and $paper_type != 3) {
-      echo '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#E4EEFC; border:1px solid #B5C4DF">';
+      echo '<br /><div align="center"><table cellpadding="4" cellspacing="0" border="0" class="box">';
       echo '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
       echo '<tr><td colspan="2" style="margin:0px; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
       if ($marking == 1) {
