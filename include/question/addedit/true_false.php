@@ -52,7 +52,7 @@ require_once 'detail_parts/details_general_feedback.php';
         <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">
 <?php
 if ($num_options == 0) {
-  $option = Option::option_factory($mysqli, $userID, $question, $index, $string);
+  $option = Option::option_factory($mysqli, $userID, $question, 1, $string);
 }
 include 'options/opt_true_false.php';
 ?>
