@@ -83,7 +83,7 @@
           if ($user_results[$i]['adj_percent'] < $pass_mark) {
             echo $string['fail'] . ',';
           } else {
-            if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
+            if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
               echo $string['distinction'] . ',';
             } else {
               echo $string['pass'] . ',';

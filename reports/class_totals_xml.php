@@ -233,7 +233,7 @@
           echo '<Cell ss:StyleID="s25"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
           echo '<Cell ss:StyleID="s25"><Data ss:Type="String">' . $string['fail'] . '</Data></Cell>';
         } else {
-          if (isset($ss_hon) and $user_results[$i]['percent'] >= $ss_hon) {
+          if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
             echo '<Cell ss:StyleID="s31"><Data ss:Type="Number">' . $temp_percent . '</Data></Cell>';
             echo '<Cell ss:StyleID="s31"><Data ss:Type="String">' . $string['distinction'] . '</Data></Cell>';
           } else {
@@ -417,7 +417,7 @@
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['experimantalquestions'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="String">' . $display_experimental . '</Data></Cell>';
   echo '</Row>';
-  if(count($warnings['deleted_qns']) > 0) {
+  if (count($warnings['deleted_qns']) > 0) {
 	  echo '<Row>';
 	  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Warnings</Data></Cell>';
 	  echo '<Cell><Data ss:Type="String">Answers found for questions that no longer appear on the paper (IDs';
