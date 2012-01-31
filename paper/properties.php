@@ -187,7 +187,7 @@ if (isset($_POST['Submit'])) {
     if ($tmp_marking == '') $tmp_marking = '0';
     if ($tmp_marking == '2') $tmp_marking = $_POST['std_set'];
         
-    $tmp_pass_mark = $_POST['pass_mark'];
+    $tmp_pass_mark = (isset($_POST['pass_mark'])) ? $_POST['pass_mark'] : 0;
     if ($tmp_pass_mark == '') $tmp_pass_mark = 40;
 
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;

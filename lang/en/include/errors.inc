@@ -1,5 +1,6 @@
 <?php
 $string['error'] = 'Error';
+$string['errormsg'] = 'If you repeatedly get this error please contact:';
 $string['uploaderrormsg0'] = 'Error - ';
 $string['uploaderrormsg1'] = 'No problem, the file is uploaded.';
 $string['uploaderrormsg2'] = 'The uploaded file was bigger then  upload_max_filesize in php.ini.';

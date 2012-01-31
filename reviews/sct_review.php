@@ -173,6 +173,7 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   $old_q_id = '';
   $q_no = 0;
   $question_no = 0;
+  $questions_array = array();
 
   $stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, display_method, q_media, q_media_width, q_media_height, q_option_order, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
   $stmt->bind_param('i', $paperID);
@@ -200,15 +201,25 @@ pre {font-family:Arial,sans-serif; font-size:100%}
   $stmt->close();
   
   //display the questions
-  foreach ($questions_array as &$question) {
-    if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    display_question($question, $question_no, $saved_data, $string);	
+  if (count($questions_array) > 0) {
+    foreach ($questions_array as &$question) {
+      if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+      display_question($question, $question_no, $saved_data, $string);
+    }
+  } else {
+    echo "<tr><td>&nbsp;</td><td>{$string['nosctquestions']}</td></tr>\n";
   }
 
 ?>
 </table>
 
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
+<?php
+  if (count($questions_array) > 0) {
+?>
+  <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
+<?php
+  }
+?>
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="reviewer_name" value="<?php echo $_POST['reviewer_name']; ?>" />
 <input type="hidden" name="reviewer_email" value="<?php echo $_POST['reviewer_email']; ?>" />
@@ -219,4 +230,3 @@ pre {font-family:Arial,sans-serif; font-size:100%}
 ?>
 </body>
 </html>
-

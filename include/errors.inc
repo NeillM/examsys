@@ -31,7 +31,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
   // $eaders - if true output HTML header code
   // $stop_execution - if true exit the script
 
-  global $mysqli, $support_email, $string;
+  global $mysqli, $support_email, $string, $cfg_root_path;
   
   if ($headers == false) {
     echo "<html>\n<head>\n<title>" . $string['error'] . "</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black\">\n";
