@@ -23,19 +23,22 @@
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
-  require_once 'staff_student_auth.inc';
+require_once 'staff_student_auth.inc';
 
-  if(strpos($userroles,'Admin') === false) {
-    access_denied($string['accessdeniedadmin'],true);
-  } 
+if(strpos($userroles,'Admin') === false) {
+  access_denied($string['accessdeniedadmin'],true);
+} 
 
-  // Get teams.
-  $teams = array();
-  $team_details = $mysqli->query("SELECT name FROM teams WHERE memberID='$userID' ORDER BY name");
-  while ($team_row = $team_details->fetch_assoc()) {
-    $teams[] = $team_row['name'];
-  }
-  $team_details->close();
+// Get teams.
+$teams = array();
+$result = $mysqli->prepare("SELECT name FROM teams WHERE memberID=? ORDER BY name");
+$result->bind_param('i', $userID);
+$result->execute();
+$result->bind_result($team_name);
+while ($result->fetch()) {
+  $teams[] = $team_name;
+}
+$result->close();
 
-  $types_array = array('Formative Self-Assessments','Progress Tests','Summative Exams','Surveys','OSCE Stations','Spotters');
+$types_array = array('Formative Self-Assessments','Progress Tests','Summative Exams','Surveys','OSCE Stations','Spotters');
 ?>

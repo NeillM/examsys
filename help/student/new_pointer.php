@@ -81,20 +81,19 @@ a:visited {color:black}
 <div id="toc" style="margin-left:20px; padding:2px; border:#C0C0C0 solid 1px; width:400px; height:500px; overflow-y:scroll">
 <?php
   $sub_section = 0;
-  $query_string = "SELECT id, title FROM student_help WHERE id != 1 ORDER BY title, id";
-  $search_results = $mysqli->query($query_string);
-  if (!$search_results) {
-    echo mysql_error();
-    exit;
-  }
   $help_section = 0;
   $help_toc = array();
-  while ($row = $search_results->fetch_assoc()) {
-    $help_toc[$help_section]['id'] = $row['id'];
-    $help_toc[$help_section]['title'] = $row['title'];
+    
+  $result = $mysqli->prepare("SELECT id, title FROM student_help WHERE id != 1 ORDER BY title, id");
+  $result->execute();
+  $result->bind_result($page_id, $page_title);
+  while ($result->fetch()) {
+    $help_toc[$help_section]['id'] = $page_id;
+    $help_toc[$help_section]['title'] = $page_title;
     $help_section++;
   }
-  $search_results->close();
+  $result->close();
+  
 
   $old_title = '';
   for ($i=0; $i<$help_section; $i++) {

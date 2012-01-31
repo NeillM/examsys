@@ -169,7 +169,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
         if ($calculator == -1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         if ($calculator >= 1) {
-          echo '<br /><img onclick="openCalc(' . $calculator . ');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+          if ($question['q_type'] == 'calculation') {
+            echo '<br /><img onclick="openCalc(' . $calculator . ',\'questions\', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+          } else {
+            echo '<br /><img onclick="openCalc(' . $calculator . ');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+          }
         }
         echo '</td><td>';
       }
@@ -938,9 +942,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<tr><td></td><td>';
     } else {
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-            if ($calculator == -1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
-      if ($calculator >= 1)
+      if ($calculator == -1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+      if ($calculator >= 1) {
         echo '<br /><img  onclick="openCalc(' . $calculator . ',\'questions\', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" />';
+      }
       echo '</td><td>';
     }
     $new_leadin = '';

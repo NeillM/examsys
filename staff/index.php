@@ -47,7 +47,7 @@ require '../include/staff_auth.inc';
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-<title>Rogō<?php echo " $cfg_install_type"; ?></title>
+<title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
 <script src="../js/staff_help.js" type="text/javascript"></script>
@@ -79,8 +79,8 @@ require '../include/staff_auth.inc';
   }
 
   function displayCredits(){
-    notice=window.open("../credits/credits.php","credits","width=700,height=487,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
-    notice.moveTo(screen.width/2-350,screen.height/2-243)
+    notice=window.open("../credits/credits.php","credits","width=700,height=500,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
+    notice.moveTo(screen.width/2-350,screen.height/2-250)
     if (window.focus) {
       notice.focus();
     }

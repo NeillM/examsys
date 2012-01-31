@@ -1843,6 +1843,11 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
+  
+  // 27/01/2012
+  //$priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO 'notts_login'@'". self::$cfg_db_host . "'";
+  //  $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".password_tokens TO 'notts_login'@'". self::$cfg_db_host . "'";
+    
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

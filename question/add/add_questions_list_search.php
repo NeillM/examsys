@@ -88,23 +88,25 @@ require '../../include/media.inc';
   <option value="<?php echo $_SERVER['PHP_AUTH_USER']; ?>"><?php echo $string['myquestionsonly']; ?></option>
   <option value="%" style="background-color:#F1F5FB"></option>
   <?php
-  $search_results = $mysqli->query("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%' ORDER BY surname");
-  while ($row = $search_results->fetch_assoc()) {
+  $result = $mysqli->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%' ORDER BY surname");
+  $result->execute();
+  $result->bind_result($tmp_id, $tmp_title, $tmp_initials, $tmp_surname);
+  while ($result->fetch()) {
     if (isset($_GET['search'])) {
-      if ($row['id'] == $_GET['owner']) {
-        echo "<option value=\"" . $row['id'] . "\" selected>"  . $row['surname'] . ", " . $row['initials'] . " " . $row['title'] . "</option>\n";
+      if ($tmp_id == $_GET['owner']) {
+        echo "<option value=\"" . $tmp_id . "\" selected>$tmp_surname, $tmp_initials $tmp_title</option>\n";
       } else {
-        echo "<option value=\"" . $row['id'] . "\">"  . $row['surname'] . ", " . $row['initials'] . " " . $row['title'] . "</option>\n";
+        echo "<option value=\"" . $tmp_id . "\">$tmp_surname, $tmp_initials $tmp_title</option>\n";
       }
     } else {
-      if ($row['id'] == $userID) {
-        echo "<option value=\"" . $row['id'] . "\" selected>"  . $row['surname'] . ", " . $row['initials'] . " " . $row['title'] . "</option>\n";
+      if ($tmp_id == $userID) {
+        echo "<option value=\"" . $tmp_id . "\" selected>$tmp_surname, $tmp_initials $tmp_title</option>\n";
       } else {
-        echo "<option value=\"" . $row['id'] . "\">"  . $row['surname'] . ", " . $row['initials'] . " " . $row['title'] . "</option>\n";
+        echo "<option value=\"" . $tmp_id . "\">$surname, $tmp_initials $title</option>\n";
       }
     }
   }
-  $search_results->close();
+  $result->close();
   ?>
   </select>&nbsp;<input type="submit" value=" <?php echo $string['search']; ?> " name="search" />
   </form>
@@ -160,7 +162,7 @@ require '../../include/media.inc';
     $result->bind_param('sssssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchterm'], $_GET['searchtype']);
     $result->execute();  
     $result->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked, $parts);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       if ($q_id != $old_id) {
         $tmp_leadin = strip_tags($leadin);
         if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';

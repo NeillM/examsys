@@ -22,35 +22,40 @@
 * @package
 */
 
-  require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete pages.
-  require '../../include/errors.inc';
-  
-  check_var('id', 'GET', true, false);
-  
-  // Is the current page real or a pointer.
-  $results = $mysqli->query("SELECT type, body FROM staff_help WHERE id = " . $_GET['id']);
-  $row = $results->fetch_assoc();
-  $results->close();
-  $type = $row['type'];
-  $body = $row['body'];
+require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete pages.
+require '../../include/errors.inc';
 
-  if ($type == 'page') {
-    // Search for any pointers to the current page.
-    $results = $mysqli->query("SELECT id, body FROM staff_help WHERE type='pointer' AND id != " . $_GET['id'] . " AND body=" . $_GET['id']);
-    while ($row = $results->fetch_assoc()) {
-      $deleteQuery = "UPDATE staff_help SET deleted=NOW() WHERE id=" . $row['id'];
-      if (!$mysqli->query($deleteQuery)) {
-        display_error("Error deleting from 'staff_help' table.",$mysqli->error);
-      }
-    }
+check_var('id', 'GET', true, false);
+
+// Is the current page real or a pointer.
+$result = $mysqli->prepare("SELECT type, body FROM staff_help WHERE id=?");
+$result->bind_param('i', $_GET['id']);
+$result->execute();
+$result->bind_result($type, $body);
+$result->fetch();
+$result->close();
+
+if ($type == 'page') {
+  // Search for any pointers to the current page.
+  $result = $mysqli->prepare("SELECT id, body FROM staff_help WHERE type='pointer' AND id != ? AND body=?");
+  $result->bind_param('ii', $_GET['id'], $_GET['id']);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($page_id, $body);
+  while ($result->fetch()) {
+    $deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted=NOW() WHERE id=?");
+    $deleteQuery->bind_param('i',  $page_id);
+    $deleteQuery->execute();
+    $deleteQuery->close();
   }
-  
-  $deleteQuery = "UPDATE staff_help SET deleted=NOW() WHERE id=" . $_GET['id'];
-  if (!$mysqli->query($deleteQuery)) {
-    display_error("Error deleting from 'staff_help' table.",$mysqli->error);
-  }
+  $result->close();
+}
 
-  $mysqli->close();
+$deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted=NOW() WHERE id=?");
+$deleteQuery->bind_param('i',  $_GET['id']);
+$deleteQuery->execute();
+$deleteQuery->close();
 
-  header("location: index.php");
+$mysqli->close();
+header("location: index.php");
 ?>

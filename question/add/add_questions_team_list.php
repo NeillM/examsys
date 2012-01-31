@@ -74,19 +74,19 @@ a:hover {color:black}
 <tr style="height:4px"><td valign="top" colspan="5"><img src="../../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>
 <?php
-  $query_string = "SELECT name, COUNT(groupID) AS count_no FROM teams WHERE name IN (SELECT name FROM teams WHERE memberID=$userID) GROUP BY teams.name";
-  $results = $mysqli->query($query_string);
-  if ($results->num_rows > 0) {
-    while ($row = $results->fetch_assoc()) {
-      echo '<div class="foldername">';
-      echo '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:66px" align="center">';
-      echo '  <a href="add_questions_by_team.php?team=' . $row['name'] . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/user_accounts_icon.png" width="48" height="48" alt="' . $row['name'] . '" border="0"  /></a><td>';
-      echo '  <td width="290"><a href="add_questions_by_team.php?team=' . $row['name'] . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $row['name'] . '</a><br />';
-      echo '  <span style="color:#808080">' . $row['count_no'] . ' ' . $string['members'] . '</span></td></tr></table>';
-      echo "</div>\n";
-    }
+  $result = $mysqli->prepare("SELECT name, COUNT(groupID) AS count_no FROM teams WHERE name IN (SELECT name FROM teams WHERE memberID=?) GROUP BY teams.name");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->bind_result($team_name, $count_no);
+  while ($result->fetch()) {
+    echo '<div class="foldername">';
+    echo '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:66px" align="center">';
+    echo '  <a href="add_questions_by_team.php?team=' . $team_name . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/user_accounts_icon.png" width="48" height="48" alt="' . $team_name . '" border="0"  /></a><td>';
+    echo '  <td width="290"><a href="add_questions_by_team.php?team=' . $team_name . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $team_name . '</a><br />';
+    echo '  <span style="color:#808080">' . $count_no . ' ' . $string['members'] . '</span></td></tr></table>';
+    echo "</div>\n";
   }
-  $results->close();
+  $result->close();
   $mysqli->close();
 ?>
 </body>

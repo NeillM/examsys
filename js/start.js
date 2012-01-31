@@ -43,7 +43,7 @@ function KillClock() {
     clockID  = 0;
   }
 }
-function MRQ(questionid,part_id,options_total,selectable) {
+function MRQ(questionid, part_id, options_total, selectable) {
   checked_total = 0;
   for (i=1; i<=options_total; i++) {
     currentid = "q" + questionid + "_" + i;
@@ -72,7 +72,7 @@ function rankCheck() {
   }
 }
 
-function multimatchingCheck(questionid,options_total,selectable) {
+function multimatchingCheck(questionid, options_total, selectable) {
   checked_total = 0;
   for (i=0; i<options_total; i++) {
     if (document.getElementById(questionid).options[i].selected == 1) {
@@ -93,12 +93,11 @@ function multimatchingCheck(questionid,options_total,selectable) {
     }
   }
 }
-function openCalc(obj_control,obj_control1,obj_control2) {
+function openCalc(obj_control, obj_control1, obj_control2) {
   if (typeof(calc) == 'object' && calc.closed != true) {
     calc.focus();
   } else {
-//    calc=window.open("../tools/calc98/jcalc98.htm","calculator","width=250,height=331,top=10,left="+(document.documentElement.clientWidth-280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    calc=window.open("../tools/sCal-8-9/sCal-09.php?calc="+ obj_control +"&form=" + obj_control1 + "&field=" + obj_control2,"win_ch", "width=" + 320 + ",height=" + 500 + ",help=no,status=no,scrollbars=no,resizable=no,toolbar=no,location=no,scrollbars=no,directories=no,status=no,menubar=no,resizable=no,location=no,directories=no,status=no,menubar=no,top=10,left=" + (document.documentElement.clientWidth-350) + ",dependent=yes,alwaysRaised=yes", true);
+    calc=window.open("../tools/sCal-8-9/sCal-09.php?calc="+ obj_control +"&form=" + obj_control1 + "&field=" + obj_control2,"win_ch", "width=230,height=425,help=no,status=no,scrollbars=no,resizable=no,toolbar=no,location=no,scrollbars=no,directories=no,status=no,menubar=no,resizable=no,location=no,directories=no,status=no,menubar=no,top=10,left=" + (document.documentElement.clientWidth-350) + ",dependent=yes,alwaysRaised=yes", true);
     if (window.focus) {
       calc.focus();
     }

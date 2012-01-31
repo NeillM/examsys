@@ -92,10 +92,13 @@
     if (isset($_GET['leavers']) and $_GET['leavers'] == '' and isset($_GET['staff']) and  $_GET['staff'] != '') $roles_sql .= " AND grade != 'left'";
 
     $needs_array = array();
-    $special_needs_data = $mysqli->query("SELECT userID FROM special_needs");
-    while ($row = $special_needs_data->fetch_assoc()) {
-      $needs_array[$row['userID']] = '1';
+    $result = $mysqli->prepare("SELECT userID FROM special_needs");
+    $result->execute();
+    $result->bind_result($tmp_userID);
+    while ($result->fetch()) {
+      $needs_array[$tmp_userID] = '1';
     }
+    $result->close();
     
     $user_no = 0;
     if ($roles_sql != '') {
@@ -122,7 +125,10 @@
           $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
         }
       }
-      $user_data = $mysqli->query($query_string);
+      $user_data = $mysqli->prepare($query_string);
+      $user_data->execute();
+      $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
+      $user_data->store_result();
       $user_no = number_format($user_data->num_rows);
     }
   }
@@ -311,90 +317,91 @@ if ($sortby == 'title') {
   $old_grade = '';
   $old_year = '';
   $x = 0;
-  while ($row = $user_data->fetch_assoc()) {
-    if ($old_letter != strtoupper(substr($row['surname'],0,1)) and $sortby == 'surname') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . strtoupper(substr($row['surname'],0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_title != $row['title'] and $sortby == 'title') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string[strtolower($row['title'])] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_username != substr($row['username'],0,4) and $sortby == 'username') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . substr($row['username'],0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_grade != $row['grade'] and $sortby == 'grade') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $row['grade'] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_year != $row['yearofstudy'] and $sortby == 'yearofstudy') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Year " . $row['yearofstudy'] . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+  while ($user_data->fetch()) {
+    if ($old_letter != strtoupper(substr($tmp_surname, 0, 1)) and $sortby == 'surname') {
+      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . strtoupper(substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+    } elseif ($old_title != $tmp_title and $sortby == 'title') {
+      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+    } elseif ($old_username != substr($tmp_username, 0, 4) and $sortby == 'username') {
+      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+    } elseif ($old_grade != $tmp_grade and $sortby == 'grade') {
+      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+    } elseif ($old_year != $tmp_yearofstudy and $sortby == 'yearofstudy') {
+      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     }
-    $tmp_username = $row['username'];
+    //$tmp_username = $row['username'];
     if (strpos($userroles,'SysAdmin') !== false) {
-      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $row['id'] . "',$x,'2c'); return false;\" ondblclick=\"profile('" . $row['id'] . "'); return false;\">";
-      if (file_exists($cfg_web_root . 'users/photos/' . $row['username'] . '.jpg')) {
+      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $tmp_id . "',$x,'2c'); return false;\" ondblclick=\"profile('" . $tmp_id . "'); return false;\">";
+      if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';
       }
-      if (array_key_exists($row['id'],$needs_array)) {
-        echo "<td>" . $string[strtolower($row['title'])] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $row['surname'] . ", ";
-        if ($row['first_names'] != '') {
-          echo '<span style="color:#A5A5A5">' . $row['first_names'] . '</span>';
+      if (array_key_exists($tmp_id, $needs_array)) {
+        echo "<td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $tmp_surname . ", ";
+        if ($tmp_first_names != '') {
+          echo '<span style="color:#A5A5A5">' . $tmp_first_names . '</span>';
         } else {
-          echo $row['initials'];
+          echo $tmp_initials;
         }
-        echo  "</td><td>" . $row['username'] . "</td>";
+        echo  "</td><td>" . $tmp_username . "</td>";
       } else {
-        if (isset($row['title']) and $row['title'] != '') {
-          $tmp_title = $string[strtolower($row['title'])];
+        if (isset($tmp_title) and $tmp_title != '') {
+          $tmp_title = $string[strtolower($tmp_title)];
         } else {
           $tmp_title = '';
         }
-        echo "<td>" . $tmp_title . "</td><td></td><td>" . $row['surname'] . ", ";
-        if ($row['first_names'] != '') {
-          echo '<span style="color:#A5A5A5">' . $row['first_names'] . '</span>';
+        echo "<td>" . $tmp_title . "</td><td></td><td>" . $tmp_surname . ", ";
+        if ($tmp_first_names != '') {
+          echo '<span style="color:#A5A5A5">' . $tmp_first_names . '</span>';
         } else {
-          echo $row['initials'];
+          echo $tmp_initials;
         }
-        echo "</td><td>" . $row['username'] . "</td>";
+        echo "</td><td>" . $tmp_username . "</td>";
       }
     } else {
-      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $row['id'] . "',$x,'2b'); return false;\" ondblclick=\"profile('" . $row['id'] . "'); return false;\">";
-      if (file_exists($cfg_web_root . '/users/photos/' . $row['username'] . '.jpg')) {
+      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $tmp_id . "',$x,'2b'); return false;\" ondblclick=\"profile('" . $tmp_id . "'); return false;\">";
+      if (file_exists($cfg_web_root . '/users/photos/' . $tmp_username . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';
       }
-      if (array_key_exists($row['id'],$needs_array)) {
-        echo "<td>" . $row['title'] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $row['surname'] . ", ";
-        if ($row['first_names'] != '') {
-          echo '<span class="fn">' . $row['first_names'] . '</span>';
+      if (array_key_exists($tmp_id, $needs_array)) {
+        echo "<td>" . $tmp_title . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $tmp_surname . ", ";
+        if ($tmp_first_names != '') {
+          echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {
-          echo $row['initials'];
+          echo $tmp_initials;
         }
-        echo "</a></td><td>" . $row['username'] . "</td>";
+        echo "</a></td><td>" . $tmp_username . "</td>";
       } else {
-        echo "<td>&nbsp;" . $row['title'] . "</td><td></td><td>" . $row['surname'] . ", ";
-        if ($row['first_names'] != '') {
-          echo '<span class="fn">' . $row['first_names'] . '</span>';
+        echo "<td>&nbsp;" . $tmp_title . "</td><td></td><td>" . $tmp_surname . ", ";
+        if ($tmp_first_names != '') {
+          echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {
-          echo $row['initials'];
+          echo $tmp_initials;
         }
-        echo "</a></td><td>" . $row['username'] . "</td>";
+        echo "</a></td><td>" . $tmp_username . "</td>";
       }
     }
-    if ($row['roles'] == 'Student') {
-      if ($row['student_id'] == NULL) {
+    if ($tmp_roles == 'Student') {
+      if ($tmp_student_id == NULL) {
         echo "<td class=\"fn\">" . $string['unknown'] . "</td>";
       } else {
-        echo "<td>" . $row['student_id'] . "</td>";
+        echo "<td>" . $tmp_student_id . "</td>";
       }
     } else {
       echo "<td class=\"fn\">" . $string['na'] . "</td>";
     }
-    echo "<td>" . $row['yearofstudy'] . "</td><td>&nbsp;" . $row['grade'] . "</td></tr>\n";
-    $old_letter = strtoupper(substr($row['surname'],0,1));
-    $old_title = $row['title'];
-    $old_username = substr($row['username'],0,4);
-    $old_grade = $row['grade'];
-    $old_year = $row['yearofstudy'];
+    echo "<td>" . $tmp_yearofstudy . "</td><td>&nbsp;" . $tmp_grade . "</td></tr>\n";
+    $old_letter = strtoupper(substr($tmp_surname, 0, 1));
+    $old_title = $tmp_title;
+    $old_username = substr($tmp_username, 0, 4);
+    $old_grade = $tmp_grade;
+    $old_year = $tmp_yearofstudy;
     $x++;
   }
+  $user_data->close();
 ?>
 </table>
 </div>

@@ -88,29 +88,36 @@
     $team_string = " OR team_name IN('" . implode("','",$teams) . "')";
   }
   $my_folders_array = array();
-  $folder_details = $mysqli->query("SELECT id, name FROM folders WHERE (ownerID=$userID $team_string) AND deleted IS NULL ORDER BY name");
-  while ($folder_row = $folder_details->fetch_assoc()) {
-    $path_parts = substr_count($folder_row['name'],';');
-    $folder_array = explode(';',$folder_row['name']);
-    $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
-    $display_name = str_replace("'","\'",$display_name);
-    $url = '/folder/details.php?folder=' . $folder_row['id'];
+  
+  $result = $mysqli->prepare("SELECT id, name FROM folders WHERE (ownerID=? $team_string) AND deleted IS NULL ORDER BY name");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->bind_result($folder_id, $folder_name);
+  while ($result->fetch()) {
+    $path_parts = substr_count($folder_name,';');
+    $folder_array = explode(';', $folder_name);
+    $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
+    $display_name = str_replace("'", "\'", $display_name);
+    $url = '/folder/details.php?folder=' . $folder_id;
     $my_folders_array[$display_name] = $url;
   }
-  $folder_details->close();
+  $result->close();
 
   // Module folders.
   $modules_array = array();
   if (count($teams) > 0) {
     $team_sql = implode("','", $teams);
     if ($team_sql != '') $team_sql = "'$team_sql'";
-    $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
-    while ($module_row = $module_details->fetch_assoc()) {
-      $title = $module_row['moduleid'] . ' - ' . str_replace("'","\'",$module_row['fullname']);
-      $url = '/folder/details.php?module=' . $module_row['moduleid'];
+    
+    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    $result->execute();
+    $result->bind_result($tmp_moduleid, $tmp_fullname);
+    while ($result->fetch()) {
+      $title = $tmp_moduleid . ' - ' . str_replace("'", "\'", $tmp_fullname);
+      $url = '/folder/details.php?module=' . $tmp_moduleid;
       $modules_array[$title] = $url;
     }
-    $module_details->close();
+    $result->close();
   }
   
   // Teams
@@ -123,18 +130,18 @@
   $keywords_array = array();
   $keyword_no = 0;
   $old_moduleID = '';
-  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$teams) . "') ORDER BY moduleid, keyword");
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($moduleID, $tmp_keyword, $keywordID);
-  while ($stmt->fetch()) {
+  $result = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$teams) . "') ORDER BY moduleid, keyword");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($moduleID, $tmp_keyword, $keywordID);
+  while ($result->fetch()) {
     if ($old_moduleID != $moduleID) $keywords_array[$keyword_no] = "#$moduleID";
     $keywords_array[htmlspecialchars($tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
     $old_moduleID = $moduleID;
     $keyword_no++;
   }
-  if ($stmt->num_rows > 0) $keywords_array[$keyword_no] = '#Personal Keywords';
-  $stmt->close();
+  if ($result->num_rows > 0) $keywords_array[$keyword_no] = '#Personal Keywords';
+  $result->close();
 
   $result = $mysqli->prepare("SELECT DISTINCT id, keyword FROM keywords_user WHERE userID=? ORDER BY keyword");
   $result->bind_param('i', $userID);

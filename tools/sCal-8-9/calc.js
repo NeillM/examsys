@@ -6,24 +6,62 @@
  * To change this template use File | Settings | File Templates.
  */
 
-
 //
 // sCal ver 0.9: PUBLIC DOMAIN.  Checked for Win-98 to XP & Mobile 2003 -- r.mohaupt, May, 2004
 // -Source Code intended user read/modify;  set Word Wrap=off for gen'l layout, =on for details.
 // v.p9u
 var ps = "";  // Info. Alerts: READ!
-
 var object_calc;
 
-/*
-if( calculator.calc_loaded != true)
-{
-var calculator = new sCal();
+function checkButton(e) {
+  var bCode = window.event ? e.keyCode : e.which;
+  var shifton = window.event ? window.event.shiftKey : e.SHIFT_MASK;
+  
+  if (bCode >= 48 && bCode <= 57 && !shifton) {
+    bCode = bCode - 48;
+    xPlusEq(bCode);
+  } else if (bCode == 48 && shifton) {
+    xPlusEq(')');
+  } else if (bCode == 57 && shifton) {
+    xPlusEq('(');
+  } else if (bCode >= 96 && bCode <= 105) {
+    bCode = bCode - 96;
+    xPlusEq(bCode);
+  } else if (bCode == 42 || bCode == 106) {
+    xPlusEq('*');
+  } else if (bCode == 43 || bCode == 107) {
+    xPlusEq('+');
+  } else if (bCode == 45 || bCode == 109) {
+    xPlusEq('-');
+  } else if (bCode == 110) {
+    xPlusEq('.');
+  } else if (bCode == 46) {
+    Clear();
+  } else if (bCode == 8) {
+    BkSpace();
+  } else if (bCode == 191 || bCode == 111) {
+    xPlusEq('/');
+  } else if (bCode == 187) {
+    if (shifton == 1) {
+      xPlusEq('+');
+    } else {
+      xEval();
+    }
+  } else if (bCode == 189) {
+    xPlusEq('-');
+  } else if (bCode == 56 && shifton) {
+    xPlusEq('*');
+  }
 }
-*/
 
-function sCal()
-{
+function checkShift(e) {
+  var bCode = window.event ? e.keyCode : e.which;
+  if (bCode == 16 && shifton == 1) {
+    shifton = 0;
+  }
+}
+
+function sCal() {
   this.f_out = '';
   this.calc_load = false;
   this.calc_loaded = true;
@@ -95,17 +133,6 @@ function scalcPopup(obj_control,obj_control1,obj_control2) {
   var ua = navigator.userAgent.toLowerCase();
   var v = navigator.appVersion.substring(0,1);
   var n = navigator.appName.toLowerCase();
-/*
-  if (!obj_control)
-
-    return alert("Form element specified can't be found in the document.");
-  this.control_obj = obj_control;
-//  calculator.control_obj1 = obj_control;
-  object_calc = obj_control;
-
-  if (!this.scalcisNumber(this.control_obj.value)) alert('wrong data');
-  else {
-*/
     if (ua.indexOf("opera") > 0) {w = 320; h = 500;}
     else if (ua.indexOf("netscape") < 0 && ua.indexOf("msie") < 0
         && v >= 5 && ua.indexOf("mac") > 0) {
@@ -115,7 +142,6 @@ function scalcPopup(obj_control,obj_control1,obj_control2) {
 
       w = 320; h = 500;
     }
-  //}
 
     if (screen) {
       n_left = (screen.width - w) >> 1;
@@ -123,8 +149,6 @@ function scalcPopup(obj_control,obj_control1,obj_control2) {
     }
     win_ch = window.open("sCal-09.php?calc=obj_control&form="+obj_control1+"&field="+obj_control2,"win_ch", "width=" + w + ",height=" + h + ",help=no,status=no,scrollbars=no,resizable=no,top=" + n_top + ",left=" + n_left + ",dependent=yes,alwaysRaised=yes", true);
     win_ch.focus();
- // }
-
 }
 
 function About_sCal() {
@@ -153,20 +177,40 @@ var sC_t=100;
 function Mr(val,place) {var d=Math.pow(10,place); // set output decimal places
     return Math.round(d*val)/d
     }
-function Ix() { var s = document.sCal.IOx.value;  var n = s.indexOf('/*=');
-    if (n>0) {var InPrompt=s.substring(0,n); var xCode=s.substring(n);
-    x=InPrompt.replace(sp_x+/\n/g,";") +xCode}
-else {x=s} }
+function Ix() {
+  var s = document.sCal.IOx.value;
+  var n = s.indexOf('/*=');
+  if (n>0) {
+    var InPrompt=s.substring(0,n);
+    var xCode=s.substring(n);
+    x=InPrompt.replace(sp_x+/\n/g,";") +xCode
+  } else {
+    x=s
+  }
+}
+
 // IOx BLOCK: updates x-value for any keyboard inputs & puts calculated x into x-display.
 // If the JScrAp is a simple function, Oxf() is used;
 //  else'/*=' shows its a program. 'New Lines' are unset and set for even input prompts.
-function Oxf() {if (isNaN(x)) {document.sCal.IOx.value=x} else {document.sCal.IOx.value=Mr(x,sC_xDec)}}
+function Oxf() {
+  if (isNaN(x)) {
+    document.sCal.IOx.value=x;
+    document.sCal.answer.value = x;
+  } else {
+    document.sCal.IOx.value=Mr(x,sC_xDec);
+    document.sCal.answer.value = Mr(x,sC_xDec);
+  }
+}
+
 function Ox() { var n = x.indexOf('/*=');
     if (n>0) {InPrompt=x.substring(0,n); var xCode=x.substring(n);
-    document.sCal.IOx.value = InPrompt.replace(/;/g,sp_x+"\n") +xCode}
-else {document.sCal.IOx.value = x }
+      document.sCal.IOx.value = InPrompt.replace(/;/g,sp_x+"\n") +xCode
+    } else {
+    document.sCal.IOx.value = x;
+  }
 }
-function xEval() {Ix(); // xEval is the backbone of the 'sCal-eton'
+function xEval() {
+  Ix(); // xEval is the backbone of the 'sCal-eton'
     xTemp=x; var n = x.indexOf('^');
     if (n > 0) {
     if (x.indexOf('^',n+1) > 0) {alert("WARNING! Only 1 [^] allowed in expression!");}
@@ -177,16 +221,11 @@ else {document.sCal.IOx.value = eval(x);}
 if (xRedo>0) {x=xTemp; Ox(); Om(); if(xRedo==2) {alert(InPrompt+NL+m)} xRedo=0;}
 Ix();
 }
-function returntoform()    {
-    xEval();
-Oxf();
- // window.opener.document.tc_test.input1.value=x;
+function returntoform() {
+  xEval();
+  //Oxf();
   window.opener.document[urlParams["form"]][urlParams["field"]].value=x; //.getElementById(urlParams["id"]).value=x;
- // alert(rrrrr);
-//  alert(document.getElementById(urlParams["id"]));
- // document.setElementById(urlParams["id"])=x;
-window.close();
-  //object_calc.value=x;
+  window.close();
 }
 function xPlusEq(s) {Ix(); x += s; Ox();} // --- DISPLAY-x functions ---
 function xMultEq(s) {xEval(); x *= s; Oxf();}
@@ -202,11 +241,12 @@ function xSquare() {
     }
 
 function xFactorial() {
-    if(x<=2)
-    {
+  if (x<=2) {
 
-    }
-for(j=x;j>2;j--){x*=j-1;}
+  }
+  for(j=x;j>2;j--) {
+    x*=j-1;
+  }
 }
 function Xwork(s)  // --- finds how to handle incoming MENU (s)-values ---
  {if (s.indexOf('!')==0) {alert(s.replace(/~~/g,"\n"))} else  // '!' is key, '~~' is newline
@@ -220,12 +260,32 @@ function DoRecip(s) //--- does [,]: inverse [d] eg. ft>m becomes m>ft. NOT ALWAY
  {Ix(); var temp=eval(s); if (s.indexOf('x')>-1) {x=x*x/temp} else {x=1/temp} Oxf();
 }
 function Im() {m = document.sCal.IOm.value;} // --- MEMORY fcns: like Ix() & Ox() ---
-function Om() {document.sCal.IOm.value = m;}
+function Om() {
+  document.getElementById('memory').innerHTML = '<span style="font-size:70%">+M</span>  ' + m;
+}
 function XtoM()  {Ix(); Im(); m+=x; Om(); x=""; Ox(); Timer=1;} //--with stopwatch settings
 function MtoX()  {Ix(); Im(); x += m; Ox();}
-function Mplus() {if (st0p>0){
-    if (Timer==0) {Timer=1} else {Timer=0} m=st0p-0.00001; Om(); runStop(m*1000);}
-else {xEval(); if (m==""){m=0;} m = parseFloat(m) + parseFloat(x); Om(); x=""; Ox();}}
+function Mplus() {
+  if (st0p > 0) {
+    if (Timer==0) {
+      Timer=1
+    } else {
+      Timer=0
+    }
+    m=st0p-0.00001;
+    Om();
+    runStop(m*1000);
+  } else {
+    xEval();
+    if (m=="") {
+      m=0;
+    }
+    m = parseFloat(m) + parseFloat(x);
+    Om();
+    x="";
+    Ox();
+  }
+}
 
 function Mminus() {if (st0p>0){
     if (Timer==0) {Timer=1} else {Timer=0} m=st0p-0.00001; Om(); runStop(m*1000);}
@@ -253,10 +313,7 @@ st0p=m+0.00001; m+= ", "; Om();
 if (st0p<0) {st0p=0; m=0; Om(); x=temp; xRedo=1; Ox(); alert("Time Up!");}
 setTimeout("upDate();",sC_thousanths);}}
 }
-function d_w(s)
-{
+function d_w(s) {
   return document.write(s)
 }
-/*
-comment
-*/
+

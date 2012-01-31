@@ -30,6 +30,7 @@
   $marks_color = '#808080';
   $themecolor = '#316AC5';
   $labelcolor = '#C00000';
+  $textsize = 100;
   $question_offset = 0;
   $question_no = 0;
 ?>

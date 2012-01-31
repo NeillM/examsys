@@ -1138,7 +1138,7 @@ for ($i=0; $i<$user_no; $i++) {
       if ($user_results[$i]['adj_percent'] < $min_percent) $min_percent = $user_results[$i]['adj_percent'];
       if ($user_results[$i]['adj_percent'] > $max_percent) $max_percent = $user_results[$i]['adj_percent'];
     }
-    if ($user_results[$i]['percent'] >= $ss_hon) $honours++;
+    if ($user_results[$i]['adj_percent'] >= $distinction_mark) $honours++;
     if ($user_results[$i]['mark'] < $min_mark) $min_mark = $user_results[$i]['mark'];
     if ($user_results[$i]['mark'] > $max_mark) $max_mark = $user_results[$i]['mark'];
   }

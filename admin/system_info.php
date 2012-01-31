@@ -65,21 +65,23 @@ a.heading:hover {color:#428EFF; font-weight:bold}
 <tr><td style="width:120px" class="sechead"><?php echo $string['table']; ?></td><td class="sechead"><?php echo $string['records']; ?></td><td class="sechead"><?php echo $string['updated']; ?><td class="sechead"><?php echo $string['engine']; ?></td>
 </tr>
 <?php
-  $results = $mysqli->query("SHOW TABLE STATUS");
-  while ($row = $results->fetch_assoc()) {
-    if (($row['Name'] == 'log_late' or $row['Name'] == 'temp_users') and $row['Rows'] > 0) {
-      echo "<tr><td style=\"color:#C00000\">" . $row['Name'] . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td style=\"text-align:right; color:#C00000\">" . number_format($row['Rows']) . "</td>";
+  $result = $mysqli->prepare("SHOW TABLE STATUS");
+  $result->execute();
+  $result->bind_result($Name, $Engine, $Version, $Row_format, $Rows, $Avg_row_length, $Data_length, $Max_data_length, $Index_length, $Data_free, $Auto_increment, $Create_time, $Update_time, $Check_time, $Collation, $Checksum, $Create_options, $Comment);
+  while ($result->fetch()) {
+    if (($Name == 'log_late' or $Name == 'temp_users') and $Rows > 0) {
+      echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
     } else {
-      echo "<tr><td>" . $row['Name'] . "</td><td style=\"text-align:right\">" . number_format($row['Rows']) . "</td>";
+      echo "<tr><td>" . $Name . "</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
     }
-    if ($row['Engine'] == 'InnoDB') {
+    if ($Engine == 'InnoDB') {
       echo "<td>&nbsp;<span style=\"color:#808080\">" . $string['na'] . "</span></td>";
     } else {
-      echo "<td>&nbsp;" . substr($row['Update_time'], 8, 2) . "/" . substr($row['Update_time'], 5, 2) . "/" . substr($row['Update_time'], 0, 4) .  "</td>";
+      echo "<td>&nbsp;" . substr($Update_time, 8, 2) . "/" . substr($Update_time, 5, 2) . "/" . substr($Update_time, 0, 4) .  "</td>";
     }
-    echo "<td>" . $row['Engine'] . "</td></tr>\n";
+    echo "<td>" . $Engine . "</td></tr>\n";
   }
-  $results->close();
+  $result->close();
 
   echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"2\" class=\"sechead\">" . $string['mysqlstatus'] . "</td><td colspan=\"2\"></td></tr>\n";

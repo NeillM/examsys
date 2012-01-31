@@ -39,7 +39,7 @@ a:hover {color:black}
 
 <body>
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%">
-<tr style="background-color:#F1F5FB"><td colspan="5"style="font-size:160%; font-weight:bold">&nbsp;xx by Paper</td></tr>
+<tr style="background-color:#F1F5FB"><td colspan="5"style="font-size:160%; font-weight:bold">&nbsp;by Paper</td></tr>
 <tr style="background-color:#F1F5FB"><td>&nbsp;</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Title</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Module</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Owner</td><td><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Created</td></tr>
 <tr style="height:4px"><td valign="top" colspan="5"><img src="../../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 <?php
@@ -48,17 +48,21 @@ a:hover {color:black}
     $my_teams .= " OR moduleID LIKE '%$individual_team%'";
   }
 
-  $paper_icons = array('formative_16.gif','progress_16.gif','summative_16.gif','survey_16.gif','osce_16.gif','spotter_16.gif');
+  $paper_icons = array('formative_16.gif','progress_16.gif','summative_16.gif','survey_16.gif','osce_16.gif','offline_16.gif','peer_review_16.gif');
   
   if (isset($_GET['paper_type'])) {
     $sql = "SELECT property_id, paper_title, paper_type, moduleID, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname FROM (properties, users) WHERE paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=$userID $my_teams) ORDER BY paper_title";
   } else {
     $sql = "SELECT property_id, paper_title, paper_type, moduleID, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname FROM (properties, users) WHERE moduleID LIKE '%" . $_GET['team_name'] . "%' AND deleted IS NULL AND paper_ownerID=users.id ORDER BY paper_title";
   }
-  $papers = $mysqli->query($sql);
-  while ($row = $papers->fetch_assoc()) {
-    echo '<tr><td class="f"><a href="add_questions_by_paper.php?question_paper=' . $row['property_id'] . '"><img src="../../artwork/' . $paper_icons[$row['paper_type']] . '" width="16" height="16" alt="Folder" border="0" align="middle" /></a></td><td class="s"><a href="add_questions_by_paper.php?question_paper=' . $row['property_id'] . '">' . $row['paper_title'] . '</a></td><td class="s">' . $row['moduleID'] . '</td><td class="s">' . $row['surname'] . ', ' . $row['initials'] . '. ' . $row['title'] . '</td><td class="s">' . $row['created'] . '</td></tr>';
+  
+  $result = $mysqli->prepare($sql);
+  $result->execute();
+  $result->bind_result($property_id, $paper_title, $paper_type, $moduleID, $created, $tmp_title, $tmp_initials, $tmp_surname);
+  while ($result->fetch()) {
+    echo '<tr><td class="f"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '"><img src="../../artwork/' . $paper_icons[$paper_type] . '" width="16" height="16" alt="Folder" border="0" align="middle" /></a></td><td class="s"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '">' . $paper_title . '</a></td><td class="s">' . $moduleID . '</td><td class="s">' . $tmp_surname . ', ' . $tmp_initials . '. ' . $tmp_title . '</td><td class="s">' . $created . '</td></tr>';
   }
+  $result->close();
 ?>
 </table>
 </body>

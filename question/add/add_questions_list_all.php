@@ -86,19 +86,21 @@ require '../../include/staff_auth.inc';
   
   $id = 0;
   if ($order == 'leadin') $order = 'leadin_plain';
-  $query_string = "SELECT q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM questions WHERE ownerID=$userID AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction";
-  $question_data = $mysqli->query($query_string);
   $question_array = array();
-  while ($row = $question_data->fetch_assoc()) {
-    $tmp_leadin = strip_tags($row['leadin']);
-    if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
+
+  $result = $mysqli->prepare("SELECT q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM questions WHERE ownerID=$userID AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction");
+  $result->execute();
+  $result->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
+  while ($result->fetch()) {
+    $tmp_leadin = strip_tags($leadin);
+    if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin, 0, 160) . '...';
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
       
     echo "<tr><td>";
-    if ($row['locked'] != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
-    echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $row['q_id'] . "\" value=\"" . $row['q_id'] . "\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview(" . $row['q_id'] . ")\">$tmp_leadin</td><td>&nbsp;" . $string[$row['q_type']] . "</td><td>&nbsp;" . $row['display_date'] . "</td></tr>\n";
+    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
+    echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $q_id . "\" value=\"" . $q_id . "\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview(" . $q_id . ")\">$tmp_leadin</td><td>&nbsp;" . $string[$q_type] . "</td><td>&nbsp;" . $display_date . "</td></tr>\n";
   }
-  $question_data->close();
+  $result->close();
   $mysqli->close();
 ?>
 </table>
