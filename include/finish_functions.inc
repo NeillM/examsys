@@ -1657,7 +1657,7 @@
           foreach ($matching_scenarios as $single_scenario) {
             if (trim($single_scenario) != '') {
               echo "<tr>\n";
-              echo '<td align="right">' . chr(64 + $part_id) . '.</td>';
+              echo '<td align="right">' . chr(65 + $part_id) . '.</td>';
               if (isset($paper[$question]['std'][$row_no]) and display_std($paper[$question]['std'][$row_no]) != '') echo '<td>' . display_std($paper[$question]['std'][$row_no]) . '</td>';
               echo '<td';
               if (substr($tmp_exclude,$row_no,1) == '1') echo ' class="exclude"';
