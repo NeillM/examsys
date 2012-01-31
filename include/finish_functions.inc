@@ -1058,7 +1058,11 @@
           }
           
           echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\">\n";
-          echo "<tr><td></td><td></td><td></td><td style=\"color:#808080\">" . $string['experts'] . "</td><td></td></tr>\n";
+          echo "<tr><td></td><td></td><td></td>";
+          if ($tmp_display_correct_answer == 1) {
+            echo "<td style=\"color:#808080\">" . $string['experts'] . "</td>";
+          }
+          echo "<td></td></tr>\n";
           for ($part_id=0; $part_id<$no_options; $part_id++) {
             $tmp_part_id = $option_order[$part_id];
             
@@ -1101,10 +1105,12 @@
                 echo '<td></td>';
               }
               echo "<td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" checked /></td>";
-              if ($paper[$question]['correct'][$tmp_part_id] > 0) {
-                echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;" . $string['of'] . "&nbsp;$reviewers_total</td>";
-              } else {
-                echo "<td style=\"text-align:right; color:#808080\">-</td>";
+              if ($tmp_display_correct_answer == 1) {
+                if ($paper[$question]['correct'][$tmp_part_id] > 0) {
+                  echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;" . $string['of'] . "&nbsp;$reviewers_total</td>";
+                } else {
+                  echo "<td style=\"text-align:right; color:#808080\">-</td>";
+                }
               }
               echo "<td style=\"width:99%; padding-left:5px\">";
               if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
@@ -1120,10 +1126,12 @@
                 echo '<td></td>';          
               }
               echo "<td></td><td><input type=\"radio\" name=\"q" . $question . "\" value=\"\" /></td>";
-              if ($paper[$question]['correct'][$tmp_part_id] > 0) {
-                echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;" . $string['of'] . "&nbsp;$reviewers_total</td>";
-              } else {
-                echo "<td style=\"text-align:right; color:#808080\">-</td>";
+              if ($tmp_display_correct_answer == 1) {
+                if ($paper[$question]['correct'][$tmp_part_id] > 0) {
+                  echo "<td style=\"text-align:right; color:#808080\">" . $paper[$question]['correct'][$tmp_part_id] . "&nbsp;" . $string['of'] . "&nbsp;$reviewers_total</td>";
+                } else {
+                  echo "<td style=\"text-align:right; color:#808080\">-</td>";
+                }
               }
               echo "<td style=\"width:99%; padding-left:5px\">";
               if (substr($tmp_exclude,0,1) == '1') echo '<span class="exclude">';
