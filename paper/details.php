@@ -20,7 +20,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2011 The University of Nottingham
+* @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
 
@@ -61,7 +61,7 @@ if (strpos($userroles,'SysAdmin') === false) {
   }
 }
 
-function findDecisionQ($question_array,$sourceID) {
+function findDecisionQ($question_array, $sourceID) {
   $source_question_no = 0;
   $tmp_q_no = 0;
   foreach ($question_array as $question) {
