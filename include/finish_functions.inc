@@ -965,7 +965,7 @@
               if ($paper[$question]['correct'][$tmp_part_id] == 'y') {
                 if ($tmp_display_correct_answer == '1') {
                   echo '<tr><td>';
-                  if(isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
+                  if(isset($paper[$question]['std'][$tmp_part_id])) echo display_std($paper[$question]['std'][$tmp_part_id]);
                   echo '</td>';
                 } else {
                   echo '<tr><td></td>';
