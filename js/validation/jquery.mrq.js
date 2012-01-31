@@ -1,14 +1,18 @@
 $(function () {
-  $('#edit_form').submit(function () {
+  var button = null;
+  ($('.submit').focus(function () { button = $(this).attr('id'); }))
+  $('#edit_form').submit(function (e) {
     tinyMCE.triggerSave();
     var checked = 0;
-    $('.mrq-correct').each(function () {
-      if ($(this).is(':checked')) {
-        checked++;
+    if (button == 'addbank' || button == 'addpaper' || button == 'submit-save') {
+      $('.mrq-correct').each(function () {
+        if ($(this).is(':checked')) {
+          checked++;
+        }
+      });
+      if (checked == 1 && confirm(lang['mrqconvert'])) {
+        $('#mcqconvert').val('1');
       }
-    });
-    if (checked == 1 && confirm(lang['mrqconvert'])) {
-      $('#mcqconvert').val('1');
     }
   });
   $('#edit_form').validate({
