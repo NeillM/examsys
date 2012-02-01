@@ -115,6 +115,9 @@ Class Question extends TouchStoneObject {
   
   // Refrence to array of localised language strings
   protected $_lang_strings = null;
+
+  // A list of correction behaviours that will be called sequentially for the Correct operation
+  protected $_correctors = array();
   
   
   /**
@@ -465,55 +468,100 @@ QUERY;
   }
   
   /**
+   * Add the default correction behaviour based on the type of question
+   * @throws ClassNotFoundException
+   */
+  public function add_default_correction_behaviours() {
+    $file_base = 'behaviours/corrections/';
+
+    if ($this->allow_correction()) {
+      $type = strtoupper($this->get_type());
+      $classfile = $file_base . $type . 'Corrector.class.php';
+      $classname = $type . 'Corrector';
+    } else {
+      $classfile = $file_base . 'NullCorrector.class.php';
+      $classname = 'NullCorrector';
+    }
+    try {
+      include $classfile;
+      $correction_object = new $classname($this->_mysqli, $this->_lang_strings, $this);
+    } catch (Exception $ex) {
+      throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
+    }
+
+    $this->add_corrector($correction_object);
+  }
+
+  /**
+   * Add a new correction behaviour to the list
+   * @param $correction_object
+   */
+  public function add_corrector($correction_object) {
+    $this->_correctors[] = $correction_object;
+  }
+
+  /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
   public function update_correct($new_correct, $paper_id) {
     $errors = array();
-    $changes = false;
-    
-    $first = reset($this->options);
-    $old_correct = $first->get_correct();
-        
-    if ($new_correct['option_correct'] != $old_correct) {
-      foreach ($this->options as $option) {
-        $option->set_correct($new_correct['option_correct']);
+    foreach ($this->_correctors as $corrector) {
+      $tmp_errors = $corrector->execute($new_correct, $paper_id);
+      if (count($tmp_errors) > 0) {
+        array_merge($errors, $tmp_errors);
       }
-    
-      $this->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
-      $changes = true;
     }
-    
-    if ($changes) {
-      try {
-    	  if(!$this->save()) {
-    	    $errors[] = $this->_lang_strings['datasaveerror'];
-    	  } else {
-          // Remark the student's answers in 'log2'.
-          $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
-          $result->bind_param('ii', $this->id, $paper_id);
-          $result->execute();  
-          $result->store_result();
-          $result->bind_result($user_answer);
-          while ($row = $result->fetch()) {
-            $new_mark = ($user_answer == $new_correct['option_correct']) ? $first->get_marks_correct() : $first->get_marks_incorrect();
-            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('isii', $new_mark, $user_answer, $this->id, $paper_id);
-            $updateLog->execute();  
-            $updateLog->close();
-          }
-          $result->free_result();
-          $result->close();
-    	  }
-    	} catch (ValidationException $vex) {
-    	  $errors[] = $vex->getMessage();
-    	}
-    }
-    
+
     return $errors;
   }
   
+//  public function update_correct($new_correct, $paper_id) {
+//    $errors = array();
+//    $changes = false;
+//
+//    $first = reset($this->options);
+//    $old_correct = $first->get_correct();
+//
+//    if ($new_correct['option_correct'] != $old_correct) {
+//      foreach ($this->options as $option) {
+//        $option->set_correct($new_correct['option_correct']);
+//      }
+//
+//      $this->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
+//      $changes = true;
+//    }
+//
+//    if ($changes) {
+//      try {
+//    	  if(!$this->save()) {
+//    	    $errors[] = $this->_lang_strings['datasaveerror'];
+//    	  } else {
+//          // Remark the student's answers in 'log2'.
+//          $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
+//          $result->bind_param('ii', $this->id, $paper_id);
+//          $result->execute();
+//          $result->store_result();
+//          $result->bind_result($user_answer);
+//          while ($row = $result->fetch()) {
+//            $new_mark = ($user_answer == $new_correct['option_correct']) ? $first->get_marks_correct() : $first->get_marks_incorrect();
+//            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
+//            $updateLog->bind_param('isii', $new_mark, $user_answer, $this->id, $paper_id);
+//            $updateLog->execute();
+//            $updateLog->close();
+//          }
+//          $result->free_result();
+//          $result->close();
+//    	  }
+//    	} catch (ValidationException $vex) {
+//    	  $errors[] = $vex->getMessage();
+//    	}
+//    }
+//
+//    return $errors;
+//  }
+
   /**
    * Does this question type require a media upload?
    * @return boolean
@@ -1221,7 +1269,6 @@ QUERY;
     $this->_comments = $value;
   }
 
-  
   // STATIC METHODS
   
   /**
@@ -1294,12 +1341,12 @@ QUERY;
         throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
       }
     }
-    
+
     return $object;
   }
   
   // PRIVATE METHODS
-  
+
   /**
    * Get the actual data for the question and its options
    */

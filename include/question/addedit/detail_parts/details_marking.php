@@ -29,7 +29,8 @@ if (count($question->options) > 0) {
   $option = reset($question->options);
   $mark_correct = $option->get_marks_correct();
   $mark_incorrect = $option->get_marks_incorrect();
-  $mark_partial = number_format($option->get_marks_partial(), 1);
+  $mark_partial = $option->get_marks_partial();
+  $mark_partial = ($mark_partial != '') ? number_format($mark_partial, 1) : 0;
 } else {
   $mark_correct = 1;
   $mark_incorrect = 0;

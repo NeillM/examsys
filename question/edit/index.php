@@ -110,6 +110,8 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
 }
 
 if ($critical_error == '') {
+  $question->add_default_correction_behaviours();
+
   // If existing question, check how many summative papers it is on
   if ($mode == 'Edit') {
     $paper_count = $question->get_other_summative_count($paper_id);

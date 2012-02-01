@@ -94,6 +94,7 @@ if ($media['filename'] != ''):
                   write_string('<param name="movie" value="hotspot_correct.swf" />');
                   write_string('<param name="quality" value="high" />');
                   write_string('<param name="bgcolor" value="#FFFFFF" />');
+                  write_string('<param name="wmode" value="opaque" />');
                   write_string('<embed src="hotspot_correct.swf" quality="high" bgcolor="#FFFFFF" width="<?php echo ($media['width'] + 306); ?>" height="<?php echo $plugin_height; ?>" swliveconnect="true" id="flash1" name="flash1" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
                   write_string('</object>');
                 </script>
