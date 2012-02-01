@@ -517,51 +517,6 @@ QUERY;
     return $errors;
   }
   
-//  public function update_correct($new_correct, $paper_id) {
-//    $errors = array();
-//    $changes = false;
-//
-//    $first = reset($this->options);
-//    $old_correct = $first->get_correct();
-//
-//    if ($new_correct['option_correct'] != $old_correct) {
-//      foreach ($this->options as $option) {
-//        $option->set_correct($new_correct['option_correct']);
-//      }
-//
-//      $this->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
-//      $changes = true;
-//    }
-//
-//    if ($changes) {
-//      try {
-//    	  if(!$this->save()) {
-//    	    $errors[] = $this->_lang_strings['datasaveerror'];
-//    	  } else {
-//          // Remark the student's answers in 'log2'.
-//          $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
-//          $result->bind_param('ii', $this->id, $paper_id);
-//          $result->execute();
-//          $result->store_result();
-//          $result->bind_result($user_answer);
-//          while ($row = $result->fetch()) {
-//            $new_mark = ($user_answer == $new_correct['option_correct']) ? $first->get_marks_correct() : $first->get_marks_incorrect();
-//            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-//            $updateLog->bind_param('isii', $new_mark, $user_answer, $this->id, $paper_id);
-//            $updateLog->execute();
-//            $updateLog->close();
-//          }
-//          $result->free_result();
-//          $result->close();
-//    	  }
-//    	} catch (ValidationException $vex) {
-//    	  $errors[] = $vex->getMessage();
-//    	}
-//    }
-//
-//    return $errors;
-//  }
-
   /**
    * Does this question type require a media upload?
    * @return boolean
