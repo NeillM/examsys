@@ -115,13 +115,17 @@
     
     // Send out email welcome.
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
-      $result = $mysqli->query("SELECT email FROM users WHERE username='" . $_SERVER['PHP_AUTH_USER'] . "'");
-      $row = $result->fetch_assoc();
+      $result = $mysqli->prepare("SELECT email FROM users WHERE username=?");
+      $result->bind_param('s', $_SERVER['PHP_AUTH_USER']);
+      $result->execute();
+      $result->bind_result($tmp_email);
+      $result->fetch();
       $result->close();
+      
       $subject = "New Rogo account";
       $headers = "From: " . $row['email'] . "\n";
       $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
-      $headers .= "bcc: " . $row['email'] . "\n";
+      $headers .= "bcc: $tmp_email\n";
       $sname = ucwords($_POST['new_surname']);
       $message = <<< MESSAGE
 <!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">
