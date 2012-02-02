@@ -23,7 +23,7 @@
 */
 
 $num_options = count($question->options);
-$decimals = array('', 0, 1, 2, 3, 4);
+$decimals = array('', 0, 1, 2, 3, 4, 5, 6, 7, 8);
 $increments = array('', 0.0001, 0.001, 0.02, 0.01, 0.5, 0.2, 0.1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100, 1000);
 $variables = $question->get_variables();
 if (count($question->options) > 0) {
