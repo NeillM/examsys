@@ -585,7 +585,7 @@ a.access:hover {color:white}
     }
     $stmt->close();
 
-    $stmt = $mysqli->prepare("SELECT paper_title, paper_type, q_paper, DATE_FORMAT(reviewed,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(reviewed,'$cfg_long_date_time') AS display_started, duration, screen, ipaddress FROM (properties, review_comments) WHERE properties.property_id=review_comments.q_paper AND reviewer=? ORDER BY q_paper, started, screen");
+    $stmt = $mysqli->prepare("SELECT crypt_name, paper_title, paper_type, q_paper, DATE_FORMAT(reviewed,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(reviewed,'$cfg_long_date_time') AS display_started, duration, screen, ipaddress FROM (properties, review_comments) WHERE properties.property_id=review_comments.q_paper AND reviewer=? ORDER BY q_paper, started, screen");
     $stmt->bind_param('i', $tmp_id);
   } else {
     $query_sql = "(SELECT crypt_name, paper_title, 0 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(log_metadata.started,'$cfg_long_date_time') AS display_started, duration, screen, ipaddress FROM properties, log0, log_metadata WHERE log0.q_paper=log_metadata.paperID AND log0.started=log_metadata.started AND log0.userID=log_metadata.userID AND properties.property_id=log0.q_paper AND log0.userID=?)";
