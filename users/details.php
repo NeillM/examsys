@@ -567,16 +567,18 @@ a.access:hover {color:white}
   if (strpos($tmp_roles,'External Examiner') !== false) {      // Get the papers the External is down to review.
     $external_array = array();
 
-    $stmt = $mysqli->prepare("SELECT DISTINCT paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=? WHERE deleted IS NULL AND externals LIKE ? AND reviewed IS NULL ORDER BY paper_title");
+    $stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=? WHERE deleted IS NULL AND externals LIKE ? AND reviewed IS NULL ORDER BY paper_title");
     $tmp_id_like = '%' . $tmp_id . '%';
     $stmt->bind_param('is', $tmp_id, $tmp_id_like);
     $stmt->execute();
-    $stmt->bind_result($paper_title, $property_id, $paper_type);
-    while($stmt->fetch()) {
+    $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type);
+    while ($stmt->fetch()) {
+      $paper[$results_no]['crypt_name'] = $crypt_name;
       $paper[$results_no]['q_paper'] = $paper_title;
       $paper[$results_no]['id'] = $property_id;
       $paper[$results_no]['paper_type'] = '2';
       $paper[$results_no]['started'] = '';
+      $paper[$results_no]['display_started'] = '';
       $paper[$results_no]['duration'] = '';
       $paper[$results_no]['mark'] = '';
       $paper[$results_no]['totalpos'] = '';
@@ -642,6 +644,7 @@ a.access:hover {color:white}
     $paper[$results_no]['ipaddress'] = $old_ipaddress;
     $results_no++;
   }
+
   if ($results_no > 0) {
     $paper = array_csort($paper,$sortby,$ordering);
 
