@@ -31,18 +31,18 @@ $dbclass = 'debug_mysqli';
   
 $queryInfo = array();
 Class debug_mysqli extends mysqli {
-    var $queryCount = 1;
+  var $queryCount = 1;
 	var $closed = false;
-    function __construct($db_host , $db_username, $db_passwd, $db_database) {
+  function __construct($db_host , $db_username, $db_passwd, $db_database) {
 	  parent::__construct($db_host , $db_username, $db_passwd, $db_database);
 	  $this->query('set profiling_history_size=200',false);
-      $this->query('set profiling=1',false);
+    $this->query('set profiling=1',false);
 	}
 	
 	function cacheSqlProfile() {
 	  global $queryInfo;
 	  $res = $this->query('show profiles', false);
-	  if(!$res) {
+	  if (!$res) {
 	    return 'ERROR';
 	  } else {
 	    $i = 0;
@@ -96,7 +96,7 @@ Class debug_mysqli extends mysqli {
 	
 	function query($sql,$log = true) {
 	  global $queryInfo;
-	  if($log) {
+	  if ($log) {
       if (isset($stmt->error) and $stmt->error != '') {
 	      $queryInfo[$this->queryCount]['sql']['error'] = $stmt->error;
 		  }
@@ -149,7 +149,7 @@ function outputLoadTimes() {
     return;
   }
   
-  if(!$mysqli->closed) {
+  if (!$mysqli->closed) {
     $mysqli->cacheSqlProfile();
   }
   echo  '<br style="clear:both;" /><div style="clear:both; font-size:90%; margin: 20px; padding:15px; background-color:#ffffff; width:90%">';
@@ -173,9 +173,7 @@ function outputLoadTimes() {
     echo '<div id="allQueries" style="display:none">';
   }
   echo '<hr /><ol>';
-  foreach($queryInfo as $id => $query) {
-    //$style = '';
-    //if(isset($query['sql']['error']) AND $query['sql']['error'] != '') $style = 'style="border:1px solid red"';
+  foreach ($queryInfo as $id => $query) {
     if (isset($query['sql']['error'])) {
       echo "<li><div style=\"background-color:#C00000; color:white\">";
     } else {

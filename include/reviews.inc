@@ -37,12 +37,17 @@ function record_comments($paper_id, $screen_no, $dblink, $posted_vars, $userid, 
   $userid = trim($userid);
   $submit_time = date("YmdHis", time());
 
-  $questions = $dblink->query("SELECT q_id, q_type FROM (papers, questions) WHERE paper=$paper_id AND screen=" . $screen_no . " AND papers.question=questions.q_id ORDER BY display_pos");
-  while ($row = $questions->fetch_assoc()) {
+  $stmt = $dblink->prepare("SELECT q_id, q_type FROM (papers, questions) WHERE paper=? AND screen=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $stmt->bind_param('ii', $paper_id, $screen_no);
+  $stmt->execute();
+  $stmt->bind_result($q_id, $q_type);
+  $stmt->store_result();
+  while ($stmt->fetch()) {
     if ($old_q_id != $row['q_id']) {
       // Record external examiner comments.
       if ($row['q_type'] != 'info') {
         $question_no++;
+        
         $result = $dblink->prepare("DELETE FROM review_comments WHERE q_paper=? AND q_id=? AND reviewer=?");
         $result->bind_param('iis', $paper_id, $row['q_id'], $userid);
         $result->execute();  
@@ -52,7 +57,8 @@ function record_comments($paper_id, $screen_no, $dblink, $posted_vars, $userid, 
         if ($tmp_duration < 0) $tmp_duration += 86400;
         $tmp_duration += $_POST['previous_duration'];
         $extcomments = $_POST["extcomments$question_no"];
-        $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL,?,?,?,?,?,?,'Not actioned','',?,'" . NetworkUtils::get_ipaddress() . "',$tmp_duration,?)");
+        
+        $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, ?, ?, ?, 'Not actioned', '', ?, '" . NetworkUtils::get_ipaddress() . "', $tmp_duration, ?)");
         $result->bind_param('iiisissi', $paper_id, $row['q_id'], $_POST["exttype$question_no"], $extcomments, $userid, $_POST['sessionid'], $review_type, $_POST['old_screen']);
         $result->execute();  
         $result->close();
@@ -60,6 +66,6 @@ function record_comments($paper_id, $screen_no, $dblink, $posted_vars, $userid, 
     }
     $old_q_id = $row['q_id'];
   }                    // End of while loop.
-  $questions->close();
+  $stmt->close();
 }
 ?>

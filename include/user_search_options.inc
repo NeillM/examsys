@@ -102,14 +102,17 @@ if (isset($_GET['calendar_year'])) {
 <div><?php echo $string['academicyear']; ?><br /><select name="calendar_year">
 <option value="%"><?php echo $string['anyyear']; ?></option>
 <?php
-  $year_details = $mysqli->query("SELECT DISTINCT calendar_year FROM student_modules ORDER BY calendar_year DESC");
-  while ($year_row = $year_details->fetch_assoc()) {
-    if ($year_row['calendar_year'] == $calendar_year) {
-      echo "<option value=\"" . $year_row['calendar_year'] . "\" selected>" . $year_row['calendar_year'] . "</option>\n";
+  $result = $mysqli->prepare("SELECT DISTINCT calendar_year FROM student_modules ORDER BY calendar_year DESC");
+  $result->execute();
+  $result->bind_result($tmp_calendar_year);
+  while ($result->fetch()) {
+    if ($tmp_calendar_year == $calendar_year) {
+      echo "<option value=\"$tmp_calendar_year\" selected>$tmp_calendar_year</option>\n";
     } else {
-      echo "<option value=\"" . $year_row['calendar_year'] . "\">" . $year_row['calendar_year'] . "</option>\n";
+      echo "<option value=\"$tmp_calendar_year\">$tmp_calendar_year</option>\n";
     }
   }
+  $result->close();
 ?>
 </select></div>
 <br />

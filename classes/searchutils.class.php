@@ -35,26 +35,30 @@ Class SearchUtils {
     
     if ($team_sql != '' or strpos($userroles,'Admin') !== false) {
       if (strpos($userroles,'SysAdmin') !== false) {
-        $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID");
+        $sql = "SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
       } elseif (strpos($userroles,'Admin') !== false) {
         $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $db));
         if ($schoolIDs != '') {
-          $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID");
+          $sql = "SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID";
         } elseif ($team_sql != '') {
-          $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($team_sql) ORDER BY school, moduleID");
+          $sql = "SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($team_sql) ORDER BY school, moduleID";
         }
       } else {
-        $search_results = $db->query("SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($team_sql) ORDER BY school, moduleID");
+        $sql = "SELECT DISTINCT moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($team_sql) ORDER BY school, moduleID";
       }
       
       $team_no = 0;
-      while ($row = $search_results->fetch_assoc()) {
-        $teams_list[$team_no]['school'] = $row['school'];
-        $teams_list[$team_no]['id'] = $row['moduleid'];
-        $teams_list[$team_no]['fullname'] = $row['fullname'];
+      
+      $result = $db->prepare($sql);
+      $result->execute();
+      $result->bind_result($moduleid, $fullname, $school);
+      while ($result->fetch()) {
+        $teams_list[$team_no]['school'] = $school;
+        $teams_list[$team_no]['id'] = $moduleid;
+        $teams_list[$team_no]['fullname'] = $fullname;
         $team_no++;
       }
-      $search_results->close();
+      $result->close();
     }
     
     return $teams_list;

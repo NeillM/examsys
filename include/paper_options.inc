@@ -666,13 +666,16 @@ if ($paper_type == '2') {
     $modules_array = array();
     $team_sql = implode("','", $teams);
     if ($team_sql != '') $team_sql = "'$team_sql'";
-    $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
-    while ($module_row = $module_details->fetch_assoc()) {
-      $title = $module_row['moduleid'] . ' - ' . str_replace("'","\'",$module_row['fullname']);
-      $url = $cfg_root_path . '/folder/details.php?module=' . $module_row['moduleid'];
-      $modules_array[$title] = $url;
+
+    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    $result->execute();
+    $result->bind_result($moduleid, $fullname);
+    while ($result->fetch()) {
+      $title = $moduleid . ' - ' . str_replace("'", "\'", $fullname);
+      $url = $cfg_root_path . '/folder/details.php?module=' . $moduleid;
+      $modules_array[$title] = $url;    
     }
-    $module_details->close();
+    $result->close();
   }
   
   // Teams

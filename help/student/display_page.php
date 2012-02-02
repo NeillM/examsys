@@ -61,14 +61,6 @@ while ($search_results->fetch()) {
     $pointer_results->fetch();
     $pointer_results->close();
     $edit_id = $tmp_body;
-  
-    //$redirect_results = $mysqli->query("SELECT title, body, deleted FROM student_help WHERE id=$tmp_body");
-    //while ($redirect_row = $redirect_results->fetch_assoc()) {
-    //  $edit_id = $tmp_body;
-    //  $tmp_body = $redirect_row['body'];
-    //  $deleted = $redirect_row['deleted'];
-    //}
-    //$redirect_results->close();
   }
 }
 $search_results->free_result();
@@ -80,7 +72,7 @@ if ($tmp_body == '' and $tmp_title == '') {
 }
 
 if ($_GET['id'] != '1' and strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
-  $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL,'student',?,NOW(),?)");
+  $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'student', ?, NOW(), ?)");
   $result->bind_param('ii', $userID, $_GET['id']);
   $result->execute();  
   $result->close();

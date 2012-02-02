@@ -39,7 +39,7 @@
       $ip_address = trim($individual_address);
       if ($ip_address != '') {
         $hostname = gethostbyaddr($ip_address);
-        $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
+        $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL, ?, ?, ?, ?)");
         $result->bind_param('issi', $_GET['labID'], $ip_address, $hostname, $_POST['low_bandwidth']);
         $result->execute();  
         $result->close();
@@ -54,7 +54,6 @@
 
     header("location: lab_details.php?labID=" . $_GET['labID']);
   } else {
-    $lab_details = $mysqli->query("SELECT name, address, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab=labs.id AND labs.id=" . $_GET['labID']);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -76,16 +75,12 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
 
 <?php
   $ip_no = 0;
-  while ($lab_row = $lab_details->fetch_assoc()) {
+  $result = $mysqli->prepare("SELECT name, address, campus, building, room_no, timetabling, it_support, plagarism, low_bandwidth FROM (ip_addresses, labs) WHERE ip_addresses.lab=labs.id AND labs.id=?");
+  $result->bind_param('i', $_GET['labID']);
+  $result->execute();
+  $result->bind_result($name, $address, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $low_bandwidth);
+  while ($result->fetch()) {
     if ($ip_no == 0) {
-      $name = $lab_row['name'];
-      $campus = $lab_row['campus'];
-      $building = $lab_row['building'];
-      $room_no = $lab_row['room_no'];
-      $timetabling = $lab_row['timetabling'];
-      $it_support = $lab_row['it_support'];
-      $plagarism = $lab_row['plagarism'];
-      $low_bandwidth = $lab_row['low_bandwidth'];
       echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
       echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php\">" . $string['administrativetools'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./list_labs.php\">" . $string['editcomputerlab'] . "</a></div><div style=\"font-size:220%; font-weight:bold; margin-left:10px\">Edit Lab</div></td>\n";
       echo "<td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(231); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
@@ -93,9 +88,10 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:200px\"><div><strong>" . $string['ipaddresses'] . "</strong></div>\n";
       echo "<textarea cols=\"20\" rows=\"28\" style=\"width:200px; height:590px\" name=\"addresses\">\n";
     }
-    echo $lab_row['address'] . "\n";
+    echo $address . "\n";
     $ip_no++;
   }
+  $result->close();
   
   echo "</textarea></td><td style=\"width:50px\"></td><td style=\"vertical-align:top\">\n";
   echo "<div><strong>" . $string['name'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" name=\"name\" value=\"$name\" /></div>\n";
@@ -127,7 +123,6 @@ input, textarea {font-family:Arial,sans-serif; line-height:140%}
 </body>
 </html>
 <?php
-  $lab_details->close();
 }
 
 $mysqli->close();

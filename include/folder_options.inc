@@ -28,13 +28,16 @@ if (count($teams) > 0) {
   $modules_array = array();
   $team_sql = implode("','", $teams);
   if ($team_sql != '') $team_sql = "'$team_sql'";
-  $module_details = $mysqli->query("SELECT DISTINCT moduleid, fullname, checklist FROM modules WHERE moduleid IN ($team_sql) ORDER BY moduleID");
-  while ($module_row = $module_details->fetch_assoc()) {
-    $title = $module_row['moduleid'] . ' - ' . str_replace("'","\'",$module_row['fullname']);
-    $url = '/folder/details.php?module=' . $module_row['moduleid'];
+  
+  $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname, checklist FROM modules WHERE moduleid IN ($team_sql) ORDER BY moduleID");
+  $result->execute();
+  $result->bind_result($moduleid, $fullname, $checklist);
+  while ($result->fetch()) {
+    $title = $moduleid . ' - ' . str_replace("'", "\'", $fullname);
+    $url = '/folder/details.php?module=' . $moduleid;
     $modules_array[$title] = $url;
   }
-  $module_details->close();
+  $result->close();
 }
 ?>
 <div id="left-sidebar" class="sidebar">
@@ -152,16 +155,19 @@ if ($folder != '') {
     $team_string = " OR team_name IN ('" . implode("','",$teams) . "')";
   }
   $my_folders_array = array();
-  $folder_details = $mysqli->query("SELECT id, name FROM folders WHERE (ownerID=$userID $team_string) AND deleted IS NULL ORDER BY name");
-  while ($folder_row = $folder_details->fetch_assoc()) {
-    $path_parts = substr_count($folder_row['name'],';');
-    $folder_array = explode(';',$folder_row['name']);
+  $result = $mysqli->prepare("SELECT id, name FROM folders WHERE (ownerID=? $team_string) AND deleted IS NULL ORDER BY name");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->bind_result($folder_id, $folder_name);
+  while ($result->fetch()) {
+    $path_parts = substr_count($folder_name, ';');
+    $folder_array = explode(';', $folder_name);
     $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
-    $display_name = str_replace("'","\'",$display_name);
-    $url = '/folder/details.php?folder=' . $folder_row['id'];
+    $display_name = str_replace("'", "\'", $display_name);
+    $url = '/folder/details.php?folder=' . $folder_id;
     $my_folders_array[$display_name] = $url;
   }
-  $folder_details->close();
+  $result->close();
 
   // Teams
   $teams_array = array();

@@ -28,11 +28,14 @@ $paperID = $_GET['paperID'];
 
 // Get any questions to exclude.
 $exclude = array();
-$exclude_query = $mysqli->query("SELECT q_id, parts FROM question_exclude WHERE q_paper=$paperID");
-while ($row = $exclude_query->fetch_assoc()) {
-  $exclude[$row['q_id']] = $row['parts'];
+$result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($q_id, $parts);
+while ($result->fetch()) {
+  $exclude[$q_id] = $parts;
 }
-$exclude_query->close();
+$result->close();
 
 // Calculate marks for the current paper.
 $marks_array = array();
@@ -42,7 +45,7 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 <html>
 <head>
 
-<title><?php echo $string['selectreviewers'] . " $cfg_install_type"?></title>
+<title><?php echo $string['selectreviewers'] . ' ' . $cfg_install_type; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style type="text/css">
@@ -81,7 +84,7 @@ $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, total_mark,
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
 $result->bind_result($paper_title, $paper_type, $total_marks, $paper_prologue, $marking, $screen, $leadin, $start_date, $end_date, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
-while ($row = $result->fetch()) {
+while ($result->fetch()) {
   $no_screens = strval($screen);
   if (isset($screen_data[$no_screens])) {
     $screen_data[$no_screens] += 1;

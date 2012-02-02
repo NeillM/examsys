@@ -180,19 +180,22 @@ require_once '../classes/searchutils.class.php';
 <tr><td><div style="margin-left:4px"><?php echo $string['lab']; ?>&nbsp;</div></td><td><select style="width:150px" name="lab"><option value=""><?php echo $string['anylab']; ?></option>
 <?php
   $old_campus = '';
-  $search_results = $mysqli->query("SELECT DISTINCT id, name, campus FROM labs ORDER BY campus, name");
-  while ($row = $search_results->fetch_assoc()) {
-    if ($old_campus != $row['campus']) {
-      echo "<optgroup label=\"" . $row['campus'] . "\">\n";
+  
+  $result = $mysqli->prepare("SELECT DISTINCT id, name, campus FROM labs ORDER BY campus, name");
+  $result->execute();
+  $result->bind_result($lab_id, $lab_name, $campus);
+  while ($result->fetch()) {
+    if ($old_campus != $campus) {
+      echo "<optgroup label=\"$campus\">\n";
     }
-    if (isset($_POST['lab']) and $row['id'] == $_POST['lab']) {
-      echo "<option value=\"" . $row['id'] . "\" selected>" . $row['name'] . "</option>\n";
+    if (isset($_POST['lab']) and $lab_id == $_POST['lab']) {
+      echo "<option value=\"$lab_id\" selected>$lab_name</option>\n";
     } else {
-      echo "<option value=\"" . $row['id'] . "\">" . $row['name'] . "</option>\n";
+      echo "<option value=\"$lab_id\">$lab_name</option>\n";
     }
-    $old_campus = $row['campus'];
+    $old_campus = $campus;
   }
-  $search_results->close();
+  $result->close();
   echo "</optgroup>\n";  
 ?>
 </select></td></tr>

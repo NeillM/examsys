@@ -116,7 +116,7 @@ if (!isset($no_screens)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-	<title><?php echo $string['standardssetting'] . " $cfg_install_type"?></title>
+	<title><?php echo $string['standardssetting'] . ' ' . $cfg_install_type; ?></title>
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -124,7 +124,7 @@ if (!isset($no_screens)) {
   body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%}
   li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
   select, input {font-size:100%}
-  table {font-size:100%}
+  table {font-size:100%; text-align:left}
   .raised_tbl {background-color:#5582D2; border-left:solid #90C8FF 1px; border-right:solid #003060 1px; border-top:solid #90C8FF 1px; border-bottom:solid #003060 1px}
   .paper {margin-left:0px; font-family:Arial,sans-serif; font-size:180%; color:white; font-weight: bold}
   .question_no {width:40px; text-align:right; vertical-align:top}
@@ -134,6 +134,7 @@ if (!isset($no_screens)) {
   .active {color:<?php echo $fgcolor; ?>}
   .inactive {color:#C0C0C0}
   .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
+  .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
 </style>
 
 <script src="../js/ie_fix.js" type="text/javascript"></script>
@@ -209,11 +210,7 @@ $stmt->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $mar
 
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
-while($stmt->fetch()) {
-//  $tmp_userID = $setter_id;
-//  $reviews[$tmp_userID][$questionID] = $rating;
-//  $reviews[$tmp_userID]['name'] = $title . ' ' .$surname;
-
+while ($stmt->fetch()) {
   if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
     echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     $prologue_show = 0;
@@ -225,7 +222,6 @@ while($stmt->fetch()) {
     $li_set = 0;
     if ($old_leadin != '') {
       if ($li_set == 1) echo "</td></tr>\n";
-//      display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $setterID);
       display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
       
       if ($old_screen != $screen) {
@@ -290,7 +286,6 @@ while($stmt->fetch()) {
 $stmt->close();
 
 // Print the options for the last question on the screen.
-//display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $setterID);
 display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
 
 echo '</td></tr></table></td></tr>';

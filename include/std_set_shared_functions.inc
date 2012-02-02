@@ -54,8 +54,8 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     $question_no = 0;
     $std_total = 0;
     $review_no = 0;
-    $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
-    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
+    $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
+    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
     $angoff_review_marks = 0;
   
     $reviews = array();
@@ -86,15 +86,15 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           $pass_score = round($pass_score,1);
   
           $cut_marks2 = 0.0;
-          $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
-          $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
-          $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
-          $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
-          $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
-          $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
-          $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
-          $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
-          $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
+          $cut_marks2 += $ebel_marks['EE2'] * $ebel_percents['EE2'] * 100;
+          $cut_marks2 += $ebel_marks['EI2'] * $ebel_percents['EI2'] * 100;
+          $cut_marks2 += $ebel_marks['EN2'] * $ebel_percents['EN2'] * 100;
+          $cut_marks2 += $ebel_marks['ME2'] * $ebel_percents['ME2'] * 100;
+          $cut_marks2 += $ebel_marks['MI2'] * $ebel_percents['MI2'] * 100;
+          $cut_marks2 += $ebel_marks['MN2'] * $ebel_percents['MN2'] * 100;
+          $cut_marks2 += $ebel_marks['HE2'] * $ebel_percents['HE2'] * 100;
+          $cut_marks2 += $ebel_marks['HI2'] * $ebel_percents['HI2'] * 100;
+          $cut_marks2 += $ebel_marks['HN2'] * $ebel_percents['HN2'] * 100;
           $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
           $distinction_score = round($distinction_score,1);
         }
@@ -111,8 +111,8 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           'distinction_score' => $distinction_score,
           'pass_score' => $pass_score,
           'name' => "$old_title $old_initials $old_surname");
-        $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
-        $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0);
+        $ebel_percents = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
+        $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
         $question_no = 0;
         $std_total = 0;
         $angoff_review_marks = 0;
@@ -171,40 +171,40 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $old_questionID = $reviews_row['questionID'];
     }  // End while loop
   
-      $review_no++;
-      if ($old_method == 'Modified Angoff') {
-        if ($question_no > 0) {
-          $pass_score = round($std_total/$question_no);
-        } else {
-          $pass_score = 0;
-        }
-        $review_total = $angoff_review_marks;
-        $distinction_score = 'n/a';
-      } elseif ($old_method == 'Ebel') {
-        $cut_marks = 0.0;
-        $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
-        $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
-        $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
-        $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
-        $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
-        $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
-        $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
-        $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
-        $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-        $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
-        $pass_score = ($total_marks == 0) ? $total_marks : (($cut_marks / ($total_marks * 100)) * 100);
-        $pass_score = round($pass_score,1);
+    $review_no++;
+    if ($old_method == 'Modified Angoff') {
+      if ($question_no > 0) {
+        $pass_score = round($std_total/$question_no);
+      } else {
+        $pass_score = 0;
+      }
+      $review_total = $angoff_review_marks;
+      $distinction_score = 'n/a';
+    } elseif ($old_method == 'Ebel') {
+      $cut_marks = 0.0;
+      $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
+      $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
+      $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
+      $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
+      $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
+      $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
+      $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
+      $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
+      $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
+      $review_total = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
+      $pass_score = ($total_marks == 0) ? $total_marks : (($cut_marks / ($total_marks * 100)) * 100);
+      $pass_score = round($pass_score,1);
   
       $cut_marks2 = 0.0;
-      $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
-      $cut_marks2 += $ebel_marks['EI'] * $ebel_percents['EI2'] * 100;
-      $cut_marks2 += $ebel_marks['EN'] * $ebel_percents['EN2'] * 100;
-      $cut_marks2 += $ebel_marks['ME'] * $ebel_percents['ME2'] * 100;
-      $cut_marks2 += $ebel_marks['MI'] * $ebel_percents['MI2'] * 100;
-      $cut_marks2 += $ebel_marks['MN'] * $ebel_percents['MN2'] * 100;
-      $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
-      $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
-      $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
+      $cut_marks2 += $ebel_marks['EE2'] * $ebel_percents['EE2'] * 100;
+      $cut_marks2 += $ebel_marks['EI2'] * $ebel_percents['EI2'] * 100;
+      $cut_marks2 += $ebel_marks['EN2'] * $ebel_percents['EN2'] * 100;
+      $cut_marks2 += $ebel_marks['ME2'] * $ebel_percents['ME2'] * 100;
+      $cut_marks2 += $ebel_marks['MI2'] * $ebel_percents['MI2'] * 100;
+      $cut_marks2 += $ebel_marks['MN2'] * $ebel_percents['MN2'] * 100;
+      $cut_marks2 += $ebel_marks['HE2'] * $ebel_percents['HE2'] * 100;
+      $cut_marks2 += $ebel_marks['HI2'] * $ebel_percents['HI2'] * 100;
+      $cut_marks2 += $ebel_marks['HN2'] * $ebel_percents['HN2'] * 100;
       $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
       $distinction_score = round($distinction_score,1);
     }
