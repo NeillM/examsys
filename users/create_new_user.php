@@ -123,7 +123,7 @@
       $result->close();
       
       $subject = "New Rogo account";
-      $headers = "From: " . $row['email'] . "\n";
+      $headers = "From: $tmp_email\n";
       $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
       $headers .= "bcc: $tmp_email\n";
       $sname = ucwords($_POST['new_surname']);
