@@ -14,23 +14,31 @@ var ps = "";  // Info. Alerts: READ!
 var object_calc;
 
 function checkButton(e) {
-  var bCode = window.event ? e.keyCode : e.which;
-  var shifton = window.event ? window.event.shiftKey : e.SHIFT_MASK;
+  var evt = e || window.event;
+  var bCode = evt.keyCode || evt.charCode;
   
-  if (bCode >= 48 && bCode <= 57 && !shifton) {
+  if (bCode == 16 && shifton == 0) {
+    shifton = 1;
+  }
+
+  if (bCode >= 48 && bCode <= 57 && shifton == 0) {
     bCode = bCode - 48;
     xPlusEq(bCode);
-  } else if (bCode == 48 && shifton) {
+  } else if (bCode == 48 && shifton == 1) {
     xPlusEq(')');
-  } else if (bCode == 57 && shifton) {
+  } else if (bCode == 57 && shifton == 1) {
     xPlusEq('(');
   } else if (bCode >= 96 && bCode <= 105) {
     bCode = bCode - 96;
     xPlusEq(bCode);
   } else if (bCode == 42 || bCode == 106) {
     xPlusEq('*');
-  } else if (bCode == 43 || bCode == 107) {
+  } else if (bCode == 43) {
     xPlusEq('+');
+  } else if (bCode == 107) {
+    xPlusEq('+');
+  } else if (bCode == 61) {
+    xEval();
   } else if (bCode == 45 || bCode == 109) {
     xPlusEq('-');
   } else if (bCode == 110) {
@@ -49,7 +57,7 @@ function checkButton(e) {
     }
   } else if (bCode == 189) {
     xPlusEq('-');
-  } else if (bCode == 56 && shifton) {
+  } else if (bCode == 56 && shifton == 1) {
     xPlusEq('*');
   }
 }
@@ -133,13 +141,11 @@ function scalcPopup(obj_control,obj_control1,obj_control2) {
   var ua = navigator.userAgent.toLowerCase();
   var v = navigator.appVersion.substring(0,1);
   var n = navigator.appName.toLowerCase();
-    if (ua.indexOf("opera") > 0) {w = 320; h = 500;}
-    else if (ua.indexOf("netscape") < 0 && ua.indexOf("msie") < 0
+    if (ua.indexOf("opera") > 0) {w = 320; h = 500;
+    } else if (ua.indexOf("netscape") < 0 && ua.indexOf("msie") < 0
         && v >= 5 && ua.indexOf("mac") > 0) {
       w = 320; h = 500;
-    }
-    else if (n == 'netscape') {
-
+    } else if (n == 'netscape') {
       w = 320; h = 500;
     }
 
@@ -159,7 +165,8 @@ function About_Script() {
     if (confirm(ps)) {About_Calc()}; }
 function About_Calc() {
     ps= "Simple Calculator operated by buttons or keyboard.  Drop-down Select more functions.  -{[do] does now, -{[o] does opposite, [js]}- codes to x. /*Comments*/ aid data entry. [=] evaluates.\n **  Only one-[x^] power allowed, Math.pow(x,y) is preferred JavaScript.\n[x>m][m>x][m+][mc] for memory; with stopwatch [stop][lap][pause/go][clr]\n**  EXPERIMENT --not randomly, but with a point.";
-alert(ps); }
+alert(ps);
+}
 
 var x = "";  // by JScript loose typing, 'x' is a string OR number: confuses '+' if adding
 var m = "";  // stores Memory.  Note: x & m are GLOBAL--of concern if sCal embedded.
@@ -170,6 +177,10 @@ var NL="\n";
 var sp_x=" ";
 var sC_xDec=8;//decimal places for Oxf()
 var sC_t=100;
+var clearFlag = false;
+var equalsFlag = false;
+var buffer = '';
+var shifton = 0;
 //timer x/1000 of second; USE 10 for PC's
 //
 // Functions:
@@ -195,50 +206,107 @@ function Ix() {
 function Oxf() {
   if (isNaN(x)) {
     document.sCal.IOx.value=x;
-    document.sCal.answer.value = x;
   } else {
     document.sCal.IOx.value=Mr(x,sC_xDec);
-    document.sCal.answer.value = Mr(x,sC_xDec);
   }
 }
 
-function Ox() { var n = x.indexOf('/*=');
-    if (n>0) {InPrompt=x.substring(0,n); var xCode=x.substring(n);
-      document.sCal.IOx.value = InPrompt.replace(/;/g,sp_x+"\n") +xCode
-    } else {
+function Ox() {
+  var n = x.indexOf('/*=');
+  if (n>0) {
+    InPrompt=x.substring(0,n);
+    var xCode=x.substring(n);
+    document.sCal.IOx.value = InPrompt.replace(/;/g,sp_x+"\n") +xCode
+  } else {
     document.sCal.IOx.value = x;
   }
 }
+
 function xEval() {
   Ix(); // xEval is the backbone of the 'sCal-eton'
-    xTemp=x; var n = x.indexOf('^');
-    if (n > 0) {
-    if (x.indexOf('^',n+1) > 0) {alert("WARNING! Only 1 [^] allowed in expression!");}
-else {  // all to left of '^' is taken as base, and all right as exponent
-    document.sCal.IOx.value = Math.pow(eval(x.substring(0,n)),eval(x.substring(n+1)));}
-}       // likewise, entire x-value used as function argument, not just last term
-else {document.sCal.IOx.value = eval(x);}
-if (xRedo>0) {x=xTemp; Ox(); Om(); if(xRedo==2) {alert(InPrompt+NL+m)} xRedo=0;}
-Ix();
+  xTemp=x;
+  var n = x.indexOf('^');
+  if (n > 0) {
+    if (x.indexOf('^',n+1) > 0) {
+      alert("WARNING! Only 1 [^] allowed in expression!");
+    } else {  // all to left of '^' is taken as base, and all right as exponent
+      document.sCal.IOx.value = Math.pow(eval(x.substring(0,n)),eval(x.substring(n+1)));
+    }
+  } else {      // likewise, entire x-value used as function argument, not just last term
+    document.sCal.IOx.value = eval(x);
+  }
+  if (xRedo>0) {
+    x=xTemp;
+    Ox();
+    Om();
+    if (xRedo==2) {
+      alert(InPrompt+NL+m)
+    }
+    xRedo=0;
+  }
+  Ix();
+  document.getElementById('ans').innerHTML = x;
+  buffer = x;
+  equalsFlag = true;
 }
+
 function returntoform() {
   xEval();
   //Oxf();
   window.opener.document[urlParams["form"]][urlParams["field"]].value=x; //.getElementById(urlParams["id"]).value=x;
   window.close();
 }
-function xPlusEq(s) {Ix(); x += s; Ox();} // --- DISPLAY-x functions ---
-function xMultEq(s) {xEval(); x *= s; Oxf();}
-function Clear() {x = ""; Ox();}
+function xPlusEq(s) {
+  if (equalsFlag && s!='+' && s!='-' && s!='*' && s!='/' && s!='(' && s!=')' && s!='^') {
+    document.sCal.IOx.value = '';
+    buffer = '';
+  }
+  equalsFlag = false;
+  if (clearFlag) {
+    buffer = '';
+  }
+  Ix();
+  x += s;
+  buffer += s;
+  Ox();
+  if (s=='+' || s=='-' || s=='*' || s=='/' || s=='(' || s==')' || s=='^') {
+    clearFlag = true;
+  } else {
+    clearFlag = false
+  }
+  if (!clearFlag) {
+    document.getElementById('ans').innerHTML = buffer;
+  }
+} // --- DISPLAY-x functions ---
+function xMultEq(s) {
+  xEval();
+  x *= s;
+  Oxf();
+
+}
+function Clear() {
+  x = "";
+  Ox();
+  buffer = '';
+  document.getElementById('ans').innerHTML = '0';
+}
 function BkSpace() {Ix(); x = x.substring(0,x.length-1) ; Ox();}
-function recip() {xEval(); x = 1/(x); Oxf();}
+function recip() {
+  xEval();
+  x = 1/(x);
+  document.getElementById('ans').innerHTML = x;
+  buffer = x;
+  Oxf();
+}
 
 
 function xSquare() {
-    xEval();
-    x = x*x;
-    Oxf();
-    }
+  xEval();
+  x = x*x;
+  document.getElementById('ans').innerHTML = x;
+  buffer = x;
+  Oxf();
+}
 
 function xFactorial() {
   if (x<=2) {
@@ -248,13 +316,31 @@ function xFactorial() {
     x*=j-1;
   }
 }
-function Xwork(s)  // --- finds how to handle incoming MENU (s)-values ---
- {if (s.indexOf('!')==0) {alert(s.replace(/~~/g,"\n"))} else  // '!' is key, '~~' is newline
- {if (isNaN(s))
-     {if (s.indexOf('x')>-1)        //-if expression is f(x), i.e.Method,
-     {xEval(); x = eval(s); Oxf();}//  figure x, & substiture in function,  NOTE: Oxf()!
-else {x += eval(s); Ox();} }   //-if a Property (eg. Math.PI), add value
-else {xPlusEq(s);}  }
+function Xwork(s) {  // --- finds how to handle incoming MENU (s)-values ---
+  if (s.indexOf('!')==0) {
+    alert(s.replace(/~~/g,"\n"))
+  } else {  // '!' is key, '~~' is newline
+    if (isNaN(s)) {
+      if (s.indexOf('x')>-1) {       //-if expression is f(x), i.e.Method,
+        xEval();
+        x = eval(s);
+        buffer = eval(s);
+        Oxf(); //  figure x, & substiture in function,  NOTE: Oxf()!
+      } else {
+        if (s=='Math.E') {
+          x = Math.E;
+          buffer = x;
+        } else {
+          x += eval(s);
+          Ox();
+          buffer = eval(s);
+        }
+      }
+    } else {  //-if a Property (eg. Math.PI), add value
+      xPlusEq(s);
+    }
+  }
+  document.getElementById('ans').innerHTML = buffer;
 }
 function DoRecip(s) //--- does [,]: inverse [d] eg. ft>m becomes m>ft. NOT ALWAYS SENSIBLE! ---
  {Ix(); var temp=eval(s); if (s.indexOf('x')>-1) {x=x*x/temp} else {x=1/temp} Oxf();

@@ -1,12 +1,11 @@
 <?php
 print <<<END
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <title>Calculator</title>
   <link rel="stylesheet" type="text/css" href="scal.css" />
 </head>
-<body onkeydown="return checkButton(event);" onkeyup="return checkShift(event);">
+<body onkeypress="return checkButton(event);" onkeyup="return checkShift(event);" oncontextmenu="return false;">
 <script language="JavaScript" src="calc.js"></script>
 <script language="JavaScript">
   var arr_zn = ["7","8","9","/","C","4","5","6","*","sqr","1","2","3","-","=","0","z",".","+"],
@@ -43,12 +42,13 @@ print <<<END
 </script>
 
 <form name="sCal">
-<div align="center">
+<div align="center" style="margin-top:6px">
 <table>
 <tr>
  <td colspan="6"></td>
  </tr>
-  <tr align="center"><td colspan="5"><textarea name="IOx" rows="3" cols="16" class="LCD"></textarea></td></tr>
+  <tr><td colspan="5"><div id="ans" class="ans">0</div></td></tr>
+  <tr><td colspan="5"><textarea name="IOx" rows="3" cols="16" class="LCD"></textarea></td></tr>
   <tr><td colspan="5"><div name="memory" id="memory" class="memory">&nbsp;</div></td></tr>
 
 <tr>
@@ -70,13 +70,13 @@ END;
   }
 print <<<END
 
-  <td>
+  <td><div class="b">
 <script language="javascript">
   if (urlParams["form"] != "undefined") {
-    document.write('<div class="b"><a href="#" class="ret" onclick="returntoform()">RET</a>')
+    document.write('<a href="#" class="ret" onclick="returntoform()">RET</a>')
   }
 </script>
-</td>
+</div></td>
 <td><div class="b"><a href="#" class="off" onClick="window.close()">OFF</a></td>
 </tr>
 
