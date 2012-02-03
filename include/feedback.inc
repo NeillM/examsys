@@ -32,7 +32,7 @@ function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repcourse, $re
     $mod_query->execute();
     $mod_query->bind_result($tmp_userID, $tmp_moduleid);
     $mod_query->store_result();
-    while ($row = $mod_query->fetch()) {
+    while ($mod_query->fetch()) {
 	  if (isset($repmodule) AND $repmodule != '' AND $tmp_moduleid != $repmodule) {
       continue; //this user is not on the module set in repmodule so dont put them in the array
 	  }
@@ -58,11 +58,10 @@ function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repcourse, $re
       $student_modules_sql1 = '';
       $student_modules_sql2 = '';
     }
-    $marks_query = $mysqli->query("(SELECT log0.userID, sum(mark) AS total_mark FROM (log0, log_metadata) WHERE log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=log_metadata.userID AND q_paper=$paperID AND log_metadata.started>='$startdate' AND log_metadata.started<='$enddate' AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND year LIKE '" . $repyear . "'$student_modules_sql1 GROUP BY log0.userID, q_paper, log0.started) UNION ALL (SELECT log1.userID, sum(mark) AS total_mark FROM (log1, log_metadata) WHERE log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=log_metadata.userID AND q_paper=" . $paperID . " AND log_metadata.started>='$startdate' AND log_metadata.started<='$enddate' AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND year LIKE '" . $repyear . "'$student_modules_sql2 GROUP BY log1.userID, q_paper, log1.started) ORDER BY total_mark " . $direction);
+    $marks_query = "(SELECT log0.userID, sum(mark) AS total_mark FROM (log0, log_metadata) WHERE log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=log_metadata.userID AND q_paper=$paperID AND log_metadata.started>='$startdate' AND log_metadata.started<='$enddate' AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND year LIKE '" . $repyear . "'$student_modules_sql1 GROUP BY log0.userID, q_paper, log0.started) UNION ALL (SELECT log1.userID, sum(mark) AS total_mark FROM (log1, log_metadata) WHERE log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=log_metadata.userID AND q_paper=" . $paperID . " AND log_metadata.started>='$startdate' AND log_metadata.started<='$enddate' AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND year LIKE '" . $repyear . "'$student_modules_sql2 GROUP BY log1.userID, q_paper, log1.started) ORDER BY total_mark " . $direction;
   } else {
-    $marks_query = $mysqli->query("SELECT log$paper_type.userID, sum(mark) AS total_mark FROM (log$paper_type, log_metadata) WHERE log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND q_paper=$paperID AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>='$startdate' AND log_metadata.started<='$enddate' AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND student_grade LIKE '" . $repcourse . "' AND year LIKE '" . $repyear . "'$student_modules_sql GROUP BY log$paper_type.userID, q_paper, log$paper_type.started ORDER BY total_mark " . $direction);
+    $marks_query = "SELECT log$paper_type.userID, sum(mark) AS total_mark FROM (log$paper_type, log_metadata) WHERE log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND q_paper=$paperID AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>='$startdate' AND log_metadata.started<='$enddate' AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' AND student_grade LIKE '" . $repcourse . "' AND year LIKE '" . $repyear . "'$student_modules_sql GROUP BY log$paper_type.userID, q_paper, log$paper_type.started ORDER BY total_mark " . $direction;
   }
-  $user_total = $marks_query->num_rows;
 
   $student_no = 0;
   $student_list = '';
@@ -70,42 +69,51 @@ function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repcourse, $re
   //only take the required number of users if $percent is not 100%
   $user_limit = ($percent != 100) ? floor($user_total * ($percent/100)) : $user_total;
   
-  while ($row = $marks_query->fetch_assoc() and $student_no <= $user_limit) {
+  $result = $mysqli->prepare($marks_query);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($tmp_userID, $total_mark);
+  $user_total = $result->num_rows;
+  while ($result->fetch() and $student_no <= $user_limit) {
     if ($student_list == '') {
-      $student_list = "'" . $row['userID'] . "'";
+      $student_list = "'$tmp_userID'";
     } else {
-      $student_list .= ",'" . $row['userID'] . "'";
+      $student_list .= ",'$tmp_userID'";
     }
     $student_no++;
   }
-  $marks_query->close();
+  $result->close();
   
   //get the excluded questions
   $excluded = array();
-  $exclude_query =  $mysqli->query("SELECT q_id, parts FROM question_exclude WHERE q_paper=$paperID");
-  if ($exclude_query->num_rows > 0) {
-    while ($row = $exclude_query->fetch_assoc()) {
-      $excluded[] = $row['q_id'];
+  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($q_id, $parts);
+  if ($result->num_rows > 0) {
+    while ($result->fetch()) {
+      $excluded[] = $q_id;
     }
     $excluded = 'AND q_id NOT IN (' . implode(',',$excluded) . ') ';
   } else {
     $excluded = '';
   }
-  $exclude_query->close();
+  $result->close();
   
   //get users log data
   $qid_list = '';
   $question_data = array();
   if ($student_list != '') {
-    $res =  $mysqli->query("SELECT q_id, SUM(mark) AS mark, SUM(totalpos) AS totalpos FROM log$paper_type WHERE userID IN ($student_list) $excluded AND q_paper=$paperID GROUP BY q_id ORDER BY q_id");
-    if ($res->num_rows > 0) {
-      while ($row = $res->fetch_assoc()) {    
-        $question_data[$row['q_id']]['totalpos'] = $row['totalpos'];
-        $question_data[$row['q_id']]['mark'] = $row['mark'];    
-        $qid_list .= $row['q_id'] . ',';
-      }
-      $res->close();
+    $result = $mysqli->prepare("SELECT q_id, SUM(mark) AS mark, SUM(totalpos) AS totalpos FROM log$paper_type WHERE userID IN ($student_list) $excluded AND q_paper=$paperID GROUP BY q_id ORDER BY q_id");
+    $result->execute();
+    $result->bind_result($q_id, $mark, $totalpos);
+    while ($result->fetch()) {
+      $question_data[$q_id]['totalpos'] = $totalpos;
+      $question_data[$q_id]['mark'] = $mark;    
+      $qid_list .= $q_id . ',';
     }
+    $result->close();
   }
   return $question_data;
 }

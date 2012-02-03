@@ -98,15 +98,10 @@ a:hover {color:black}
     exit;
   }
   
-  $teams = '';
-  $sql = "SELECT name FROM teams WHERE memberID=$userID";
-  $keywords = $mysqli->query($sql);
-  while($row = $keywords->fetch_assoc()) {
-    if ($teams == '') {
-      $teams = "'" . $row['name'] . "'";
-    } else {
-      $teams .= ",'" . $row['name'] . "'";
-    }
+  if (count($teams) == 0) {
+    $team_sql = '';
+  } else {
+    $team_sql = "OR q_group IN ('" . implode("','", $teams) . "')";
   }
   
   $keyword_ids = '';
@@ -125,23 +120,26 @@ a:hover {color:black}
   }
   
   $old_id = '';
-  $sql = "SELECT questions.q_id, leadin_plain, q_type, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND (ownerID=$userID OR q_group IN ($teams)) AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction, questions.q_id";
-  $keywords = $mysqli->query($sql);
-  $old_id;
-  while($row = $keywords->fetch_assoc()) {
-    if ($row['q_id'] != $old_id) {
+  $result = $mysqli->prepare("SELECT questions.q_id, leadin_plain, q_type, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND (ownerID=? $team_sql) AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($q_id, $leadin_plain, $q_type, $display_date, $locked, $parts);
+  while($result->fetch()) {
+    if ($q_id != $old_id) {
       echo "<tr><td style=\"width:20px\">";
-      if ($row['locked'] != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
-      echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"" . $row['q_id'] . "\" value=\"" . $row['q_id'] . "\" /></td>";
-      if ($row['parts'] == '') {
-        echo '<td onclick="Qpreview(' . $row['q_id'] . ')">';
+      if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
+      echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td>";
+      if ($parts == '') {
+        echo '<td onclick="Qpreview(' . $q_id . ')">';
       } else {
-        echo '<td style="color:red; text-decoration:line-through" onclick="Qpreview(' . $row['q_id'] . ')">';
+        echo '<td style="color:red; text-decoration:line-through" onclick="Qpreview(' . $q_id . ')">';
       }
-      echo $row['leadin_plain'] . "</td><td>" . fullQuestionType($row['q_type']) . "</td><td style=\"padding-left:5px; padding-right:2px\">" . $row['display_date'] . "</td></tr>\n";
+      echo $leadin_plain . "</td><td><nobr>" . fullQuestionType($q_type) . "</nobr></td><td style=\"padding-left:5px; padding-right:2px\">$display_date</td></tr>\n";
     }
-    $old_id = $row['q_id'];
+    $old_id = $q_id;
   }
+  $result->close();
 
 ?>
 </table>

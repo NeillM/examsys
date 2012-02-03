@@ -66,9 +66,15 @@
   $last_question = 0;
   $old_q_id = 0;
 
-  $questions = $mysqli->query("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, correct FROM papers, questions, options WHERE paper=$paperID AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' ORDER BY display_pos, id_num");
-  while ($row = $questions->fetch_assoc()) {
-    if ($old_q_id != $row['q_id']) {
+  $result = $mysqli->prepare("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, correct FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' ORDER BY display_pos, id_num");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($q_id, $scenario, $leadin, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct, $correct);
+
+  //$questions = $mysqli->query("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, correct FROM papers, questions, options WHERE paper=$paperID AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type != 'info' ORDER BY display_pos, id_num");
+  while ($result->fetch()) {
+    if ($old_q_id != $q_id) {
       if ($question_no > 0) {
         if ($old_type == 'rank' and $old_score_method == 'Bonus Mark') {
           $question_part++;
@@ -115,19 +121,19 @@
       }
       $question_no++;
       $question_part = 0;
-      $old_q_id = $row['q_id'];
-      $old_leadin = $row['leadin'];
-      $old_type = $row['q_type'];
-      $old_score_method = $row['score_method'];
+      $old_q_id = $q_id;
+      $old_leadin = $leadin;
+      $old_type = $q_type;
+      $old_score_method = $score_method;
     }
 
-    $log_id = $row['q_id'];
+    $log_id = $q_id;
     $question_part++;
 
     if ($question_no > 0) {
       // Default format for $qid
       $qid = 'std' . $question_no;
-      switch ($row['q_type']) {
+      switch ($q_type) {
         case 'calculation':
         case 'mcq':
           if (isset($_POST["std$question_no"])) {
@@ -153,7 +159,7 @@
           $total_parts++;
           break;
         case 'hotspot':
-          $subparts = explode('|',$row['correct']);
+          $subparts = explode('|', $correct);
           $no_parts = count($subparts);
           for ($i=1; $i<=$no_parts; $i++) {
             $qid = 'std' . $question_no . '_' . $i;
@@ -175,12 +181,12 @@
           }
           break;
         case 'mrq':
-          if ($row['score_method'] == 'Mark per Question') {
+          if ($score_method == 'Mark per Question') {
             $qid = 'std' . $question_no . '_1';
             $rating = $_POST[$qid];
           } else {
             $qid = 'std' . $question_no . '_' . $question_part;
-            if ($row['correct'] == 'y' and $row['score_method'] != 'Mark per Question') {
+            if ($correct == 'y' and $score_method != 'Mark per Question') {
               if ($question_part == 1) {
                 $rating = $_POST["$qid"];
               } else {
@@ -189,7 +195,7 @@
               if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
               if ($_POST["$qid"] != '') $last_question = $question_no;
               $total_parts++;
-            } elseif ($row['correct'] == 'n' and $row['score_method'] != 'Mark per Question') {
+            } elseif ($correct == 'n' and $score_method != 'Mark per Question') {
               if ($question_part == 1) {
                 if (isset($_POST[$qid])) {
                   $rating = $_POST[$qid];
@@ -210,7 +216,7 @@
           // Individual scenarios are separated by '|' characters.
           if ($question_part == 1) {
             $scenarios = 0;
-            $matching_scenarios = explode('|', $row['scenario']);
+            $matching_scenarios = explode('|', $scenario);
             for ($part_id=0; $part_id<10; $part_id++) {
               if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') $scenarios++;
             }
@@ -234,18 +240,18 @@
           // Multimatching is similar to matching except that the separate
           // options are separated by '$' characters.
           if ($question_part == 1) {
-            if ($row['score_method'] == 'Mark per Question') {
+            if ($score_method == 'Mark per Question') {
               $qid = 'std' . $question_no . '_1';
               $rating = $_POST["$qid"];
             } else {
-              $correct_options = explode('|',$row['correct']);
-              $matching_scenarios = explode('|', $row['scenario']);
+              $correct_options = explode('|', $correct);
+              $matching_scenarios = explode('|', $scenario);
               $text_scenarios = 0;
               for ($part_id=0; $part_id<10; $part_id++) {
                 if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') $text_scenarios++;
               }
 
-              $matching_media = explode('|', $row['q_media']);
+              $matching_media = explode('|', $q_media);
               $media_scenarios = 0;
               for ($part_id=1; $part_id<10; $part_id++) {
                 if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
@@ -271,7 +277,7 @@
           }
           break;
         case 'rank':
-          if ($row['score_method'] == 'Mark per Question') {
+          if ($score_method == 'Mark per Question') {
               $qid = 'std' . $question_no . '_1';
               $rating = $_POST["$qid"];
           } else {          
@@ -288,7 +294,7 @@
           $total_parts++;
           break;
         case 'textbox':
-          for ($mark_part = $row['marks_correct']; $mark_part > 0; $mark_part--) {
+          for ($mark_part = $marks_correct; $mark_part > 0; $mark_part--) {
             $qid = 'std' . $question_no . '_' . $mark_part;
             if ($rating == '') {
               $rating = $_POST[$qid];
@@ -301,7 +307,7 @@
           }
           break;
         case 'blank':
-          $blank_details = explode('[blank',$row['option_text']);
+          $blank_details = explode('[blank', $option_text);
           $no_answers = count($blank_details) - 1;
           $rating = '';
           for ($i=1; $i<=$no_answers; $i++) {
@@ -319,7 +325,7 @@
           }
           break;
         case 'labelling':
-          $tmp_first_split = explode(';', $row['correct']);
+          $tmp_first_split = explode(';', $correct);
           $tmp_second_split = explode('$', $tmp_first_split[11]);
           for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
             if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 200) {
@@ -347,7 +353,7 @@
       }
     }
   }                    // End of while loop.
-  $questions->close();
+  $result->close();
 
   $question_part++;
   if ($old_type == 'rank' and $old_score_method == 'Bonus Mark') {

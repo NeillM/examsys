@@ -75,13 +75,15 @@ $reviews = array();
 $review_string = substr($review_string,1);
 
 if ($setterID != '') {
-  $query_string = "SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=$paperID AND setterID=$setterID AND std_set=$dateID";
-  $results = $mysqli->query($query_string);
-  while ($row = $results->fetch_assoc()) {
-    $questionID = $row['questionID'];
-    $reviews[$questionID] = $row['rating'];
+  $result = $mysqli->prepare("SELECT std_set, rating, questionID FROM standards_setting WHERE paperID=? AND setterID=? AND std_set=?");
+  $result->bind_param('iis', $paperID, $setterID, $dateID);
+  $result->execute();
+  $result->bind_result($std_set, $rating, $questionID);
+  while ($result->fetch()) {
+    $questionID = $questionID;
+    $reviews[$questionID] = $rating;
   }
-  $results->close();
+  $result->close();
 }
 
 if ($rater_query != '') {
@@ -105,7 +107,7 @@ if (!isset($no_screens)) {
   $paper_properties->bind_param('i', $paperID);
   $paper_properties->execute();
   $paper_properties->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
-  while($paper_properties->fetch()) {
+  while ($paper_properties->fetch()) {
     $no_screens = strval($screen);
     $screen_data[$no_screens] = (isset($screen_data[$no_screens])) ? $screen_data[$no_screens] + 1 : 1;
   }
@@ -168,13 +170,13 @@ if (!isset($no_screens)) {
   </tr>
   </table>
 <?php
-if(count($rater_names) > count($reviews['user'])) {
+if (count($rater_names) > count($reviews['user'])) {
 ?>
   </div>
-  <div align="center" style="margin-top: 12px">
-  <table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#DFE8FF; border:1px solid #5582D2;">
+  <div align="center" style="margin-top:12px">
+  <table cellpadding="4" cellspacing="0" border="0" width="90%" style="background-color:#FFC0C0; border:1px solid #C00000">
   <tr>
-  <td style="background-color: #FFC0C0; margin:0px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <?php echo $string['changedmsg'] ?></td>
+  <td><?php echo $string['changedmsg']; ?></td>
   </tr>
   </table>
   </div>

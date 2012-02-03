@@ -499,10 +499,15 @@ if (isset($_GET['scrOfY'])) {
     $incomplete_names = array();
     $reviewers = explode(',',$reviewers);
     foreach ($incomplete_array as $reviwer=>$flag) {
-      $reviewers_query = $mysqli->query("SELECT title, initials, surname FROM users WHERE users.id='$reviwer'");
-      $row = $reviewers_query->fetch_assoc();
-      $incomplete_names[] = $row['title'] . ' ' . $row['initials']. ' ' . $row['surname'];
-      $reviewers_query->close();
+      $result = $mysqli->prepare("SELECT title, initials, surname FROM users WHERE users.id=? LIMIT 1");
+      $result->bind_param('i', $reviwer);
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($tmp_title, $tmp_initials, $tmp_surname);
+      $result->fetch();
+      $result->close();
+      
+      $incomplete_names[] = $tmp_title . ' ' . $tmp_initials . ' ' . $tmp_surname;
     }
   }
   

@@ -55,7 +55,7 @@ Class MathsUtils {
       if (strpos($min,'var') !== false or strpos($min,'ans') !== false or strpos($max,'var') !== false or strpos($max,'ans') !== false) {
         $gen_no = 0;
       } else {
-        $gen_no = rand($min, $max);
+        $gen_no = rand(intval($min), intval($max));
       }
     } else {
       $new_max = ($max - $min) / $increment;

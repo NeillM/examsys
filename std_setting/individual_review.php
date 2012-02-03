@@ -546,13 +546,14 @@ p {margin-top:0px; padding-top:0px}
   echo '</table>';
   if ($_GET['method'] == 'ebel') {
     if ($setterID != '') {
-      $query_string = $mysqli->query("SELECT percentage FROM ebel WHERE setterID=" . $setterID . " AND date_set='" . $date_id . "' ORDER BY id");
-      if ($query_string->num_rows > 0) {
-        while ($row = $query_string->fetch_assoc()) {
-          $ebel[] = $row['percentage'];
-        }
+      $result = $mysqli->prepare("SELECT percentage FROM ebel WHERE setterID=? AND date_set=? ORDER BY id");
+      $result->bind_param('is', $setterID, $date_id);
+      $result->execute();
+      $result->bind_result($percentage);
+      while ($result->fetch()) {
+        $ebel[] = $percentage;
       }
-      $query_string->close(); 
+      $result->close();
     }
     
     if (empty($ebel)) {

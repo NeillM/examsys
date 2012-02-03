@@ -120,9 +120,9 @@ echo "</table>\n";
 <tr style="height:4px"><td valign="top" colspan="6"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 <?php
 $reviews = get_reviews($mysqli, 'group', $paperID, $total_marks);
-foreach($reviews as $review) {
-  if($review['group_review'] == 'No') {
-    echo "<tr><td align=\"center\"><input type=\"checkbox\" name=\"member{$review['review_no']}\" value=\"{$review['setter_id']},{$review['date']}\" checked /></td><td>&nbsp;{$review['name']}</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+foreach ($reviews as $review) {
+  if ($review['group_review'] == 'No') {
+    echo "<tr><td align=\"center\"><input type=\"checkbox\" name=\"member{$review['review_no']}\" value=\"{$review['setter_id']},{$review['date']}\" checked=\"checked\" /></td><td>&nbsp;{$review['name']}</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
   }
 }
 $mysqli->close();

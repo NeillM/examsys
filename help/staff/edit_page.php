@@ -136,11 +136,14 @@
 
   if ($type == 'pointer') {
     $edit_id = $body;
-    $redirect_results = $mysqli->query("SELECT body FROM staff_help WHERE id=$body");
-    while ($redirect_row = $redirect_results->fetch_assoc()) {
-      $body = $redirect_row['body'];
-    }
-    $redirect_results->close();
+    
+    $result = $mysqli->prepare("SELECT body FROM staff_help WHERE id=?");
+    $result->bind_param('i', $body);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($body);
+    $result->fetch();
+    $result->close();
   } else {
     $edit_id = $_GET['id'];
   }

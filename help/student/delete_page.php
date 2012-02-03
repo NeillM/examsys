@@ -41,41 +41,34 @@
   $image_list = array();
 
   // Is the current page real or a pointer.
-  $results = $mysqli->query("SELECT type, body FROM student_help WHERE id = " . $_GET['id']);
-  $row = $results->fetch_assoc();
-  $results->close();
-  $type = $row['type'];
-  $body = $row['body'];
-  check4Images($body,$image_list);
+  $result = $mysqli->prepare("SELECT type, body FROM student_help WHERE id = ?");
+  $result->bind_param('i', $_GET['id']);
+  $result->execute();
+  $result->bind_result($type, $body);
+  $result->fetch();
+  $result->close();
   
-  if (count($image_list) > 0) {
-    foreach ($image_list as $filename) {
-      // Check to see if the image is used on any other help pages.
-      $results = $mysqli->query("SELECT id FROM student_help WHERE body LIKE '%$filename%' AND id != " . $_GET['id']);
-      if ($results->num_rows == 0) {
-        // No records found - delete file
-        $target = $path . substr($filename,1);
-        unlink($target);
-      }
-      $results->close();
-    }
-  }
-
   if ($type == 'page') {
     // Search for any pointers to the current page.
-    $results = $mysqli->query("SELECT id, body FROM student_help WHERE type='pointer' AND id != " . $_GET['id'] . " AND body=" . $_GET['id']);
-    while ($row = $results->fetch_assoc()) {
-      $deleteQuery = "UPDATE student_help SET deleted=NOW() WHERE id=" . $row['id'];
-      if (!$mysqli->query($deleteQuery)) {
-        display_error("Error deleting from 'student_help' table.",$mysqli->error);
-      }
+    $result = $mysqli->prepare("SELECT id, body FROM student_help WHERE type='pointer' AND id != ? AND body = ?");
+    $result->bind_param('ii', $_GET['id'], $_GET['id']);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($page_id, $body);
+    while ($result->fetch()) {
+      $deleteQuery = $mysqli->prepare("UPDATE student_help SET deleted=NOW() WHERE id=?");
+      $deleteQuery->bind_param('i', $page_id);
+      $deleteQuery->execute();
+      $deleteQuery->close();
     }
+    $result->close();
   }
   
-  $deleteQuery = "UPDATE student_help SET deleted=NOW() WHERE id=" . $_GET['id'];
-  if (!$mysqli->query($deleteQuery)) {
-    display_error("Error deleting from 'student_help' table.",$mysqli->error);
-  }
+  $deleteQuery = $mysqli->prepare("UPDATE student_help SET deleted=NOW() WHERE id=?");
+  $deleteQuery->bind_param('i', $_GET['id']);
+  $deleteQuery->execute();
+  $deleteQuery->close();
+
   $mysqli->close();
 ?>
 <html>

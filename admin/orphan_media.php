@@ -99,10 +99,13 @@ h1 {font-size:140%; margin-left:10px}
   closedir($dp);
 
   //- Get all the files from the 'questions' table. ------------------------------------
-  $results = $mysqli->query("SELECT q_media FROM questions WHERE q_media != ''");
-  while ($row = $results->fetch_assoc()) {
-    if (strlen($row['q_media']) != substr_count($row['q_media'],'|')) {     // Extended matching with no graphics.
-      $tmp_files = explode('|',$row['q_media']);
+  $result = $mysqli->prepare("SELECT q_media FROM questions WHERE q_media != ''");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($q_media);
+  while ($result->fetch()) {
+    if (strlen($q_media) != substr_count($q_media,'|')) {     // Extended matching with no graphics.
+      $tmp_files = explode('|', $q_media);
       foreach ($tmp_files as $single_file) {
         if (isset($file_array[$single_file])) {
           $file_array[$single_file] = 1;
@@ -112,19 +115,25 @@ h1 {font-size:140%; margin-left:10px}
       }
     }
   }
-  $results->close();
+  $result->close();
   
   //- Get all the files from the 'options' table. ------------------------------------
-  $results = $mysqli->query("SELECT o_media FROM options WHERE o_media != '' ORDER BY id_num");
-  while ($row = $results->fetch_assoc()) {
-    if (isset($file_array[$row['o_media']])) $file_array[$row['o_media']] = 1;
+  $result = $mysqli->prepare("SELECT o_media FROM options WHERE o_media != '' ORDER BY id_num");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($o_media);
+  while ($result->fetch()) {
+    if (isset($file_array[$o_media])) $file_array[$o_media] = 1;
   }
-  $results->close();
+  $result->close();
 
   //- Check lead-in field for any images (Latex, etc) ---------------------------------
-  $results = $mysqli->query("SELECT leadin FROM questions WHERE leadin LIKE '%<img%'");
-  while ($row = $results->fetch_assoc()) {
-    $images = getImages($row['leadin']);
+  $result = $mysqli->prepare("SELECT leadin FROM questions WHERE leadin LIKE '%<img%'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($leadin);
+  while ($result->fetch()) {
+    $images = getImages($leadin);
     if (count($images) > 0) {
       foreach($images as $image) {
         if (isset($file_array[$image])) {
@@ -135,12 +144,15 @@ h1 {font-size:140%; margin-left:10px}
       }
     }
   }
-  $results->close();
+  $result->close();
   
   //- Check scenario field for any images (Latex, etc) ---------------------------------
-  $results = $mysqli->query("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
-  while ($row = $results->fetch_assoc()) {
-    $images = getImages($row['scenario']);
+  $result = $mysqli->prepare("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($scenario);
+  while ($result->fetch()) {
+    $images = getImages($scenario);
     if (count($images) > 0) {
       foreach($images as $image) {
         if (isset($file_array[$image])) {
@@ -151,7 +163,7 @@ h1 {font-size:140%; margin-left:10px}
       }
     }
   }
-  $results->close();
+  $result->close();
   
   $tmp_date = mktime(0, 0, 0, date("m"), date("d")-2, date("Y")); 
   $saved_space = 0;

@@ -821,26 +821,14 @@ a.access:hover {color:white}
   echo drawTabs('Accessibility', 1, '', $tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"text-align:left\">";
-  $query = "SELECT * FROM special_needs WHERE userID=$tmp_id";
-  $needs_query = $mysqli->query($query);
-  if ($needs_query->num_rows > 0) {
-    $row = $needs_query->fetch_assoc();
-    $special_needs = true;
-    $textsize = $row['textsize'];
-    $background = $row['background'];
-    if ($background == 'NULL') $background = '';
-    $foreground = $row['foreground'];
-    if ($foreground == 'NULL') $foreground = '';
-    $extra_time = $row['extra_time'];
-    $themecolor = $row['themecolor'];
-    if ($themecolor == 'NULL') $themecolor = '';
-    $labelcolor = $row['labelcolor'];
-    if ($labelcolor == 'NULL') $labelcolor = '';
-    $marks_color = $row['marks_color'];
-    if ($marks_color == 'NULL') $marks_color = '';
-    $font = $row['font'];
-    if ($font == 'NULL') $font = '';
-  } else {
+  
+  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userID=? LIMIT 1");
+  $result->bind_param('i', $tmp_id);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font);
+  $result->fetch();
+  if ($result->num_rows == 0) {
     $textsize = '';
     $background = '';
     $foreground = '';
@@ -849,8 +837,16 @@ a.access:hover {color:white}
     $labelcolor = '';
     $marks_color = '';
     $font = '';
+  } else {
+    $special_needs = true;
+    if ($background == 'NULL') $background = '';
+    if ($foreground == 'NULL') $foreground = '';
+    if ($themecolor == 'NULL') $themecolor = '';
+    if ($labelcolor == 'NULL') $labelcolor = '';
+    if ($marks_color == 'NULL') $marks_color = '';
+    if ($font == 'NULL') $font = '';
   }
-  $needs_query->close();
+  $result->close();
 ?>
 <tr>
 <td><?php echo $string['extratime']; ?></td>
@@ -1030,13 +1026,19 @@ a.access:hover {color:white}
   echo drawTabs('Teams', 3, '', $tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">" . $string['dateadded'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td></tr>\n";
   if (strpos($userroles,'Admin') !== false) {
-  echo "<tr><td colspan=\"3\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;" . $string['editteams'] . "</a></td></tr>\n";
+    echo "<tr><td colspan=\"3\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;" . $string['editteams'] . "</a></td></tr>\n";
   }
-  $query_string = "SELECT name, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM teams, modules WHERE teams.name=modules.moduleid AND memberID=$tmp_id ORDER BY name";
-  $results = $mysqli->query($query_string);
-  while ($row = $results->fetch_assoc()) {
-    echo "<tr><td>&nbsp;" . $row['name'] . ": " . $row['fullname'] . "</td><td>" . $row['added'] . "</td><td>" . $string[strtolower($row['type'])] . "</td></tr>\n";
+  
+  $result = $mysqli->prepare("SELECT name, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM teams, modules WHERE teams.name=modules.moduleid AND memberID=? ORDER BY name");
+  $result->bind_param('i', $tmp_id);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($name, $fullname, $added, $type);
+  while ($result->fetch()) {
+    echo "<tr><td>&nbsp;$name: $fullname</td><td>$added</td><td>" . $string[strtolower($type)] . "</td></tr>\n";
   }
+  $result->close();
+
   $mysqli->close();
 ?>
 </table>
