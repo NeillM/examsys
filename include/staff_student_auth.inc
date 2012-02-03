@@ -99,7 +99,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
             $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
           }
           $message .= "<li>" . $ldap_user_data['error'] . "</li></ul>";
-          if(!array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
+          if (!array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
             $message .= $fp_link;
           }
           access_denied($message, true);
