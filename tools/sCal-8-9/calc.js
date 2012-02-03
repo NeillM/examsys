@@ -285,10 +285,10 @@ function xMultEq(s) {
 
 }
 function Clear() {
-  x = "";
+  x = '';
   Ox();
   buffer = '';
-  document.getElementById('ans').innerHTML = '0';
+  document.getElementById('ans').innerHTML = '';
 }
 function BkSpace() {Ix(); x = x.substring(0,x.length-1) ; Ox();}
 function recip() {
@@ -324,7 +324,7 @@ function Xwork(s) {  // --- finds how to handle incoming MENU (s)-values ---
       if (s.indexOf('x')>-1) {       //-if expression is f(x), i.e.Method,
         xEval();
         x = eval(s);
-        buffer = eval(s);
+        buffer = x;
         Oxf(); //  figure x, & substiture in function,  NOTE: Oxf()!
       } else {
         if (s=='Math.E') {
