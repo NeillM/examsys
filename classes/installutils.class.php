@@ -917,7 +917,7 @@ define('DIR_SEPARATOR', '/');
   \$cfg_db_staff_user = '{cfg_db_staff_user}';
   \$cfg_db_staff_passwd = '{cfg_db_staff_passwd}';
 //external examiner db user
-  \$cfg_db_external = '{cfg_db_external}';
+  \$cfg_db_external_user = '{cfg_db_external}';
   \$cfg_db_external_passwd = '{cfg_db_external_passwd}';
 //sysdamin db user
   \$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
