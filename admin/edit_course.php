@@ -48,15 +48,15 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_description = trim($_POST['description']);
   $tmp_courseID = $_POST['courseID'];
 
-  $result = $mysqli->prepare("UPDATE courses SET name=?, description=?, school=? WHERE id=?");
-  $result->bind_param('sssi', $tmp_course, $tmp_description, $tmp_school, $tmp_courseID);
+  $result = $mysqli->prepare("UPDATE courses SET name=?, description=?, schoolid=? WHERE id=?");
+  $result->bind_param('ssii', $tmp_course, $tmp_description, $tmp_school, $tmp_courseID);
   $result->execute();  
   $result->close();
   $mysqli->close();
   header("location: list_courses.php");
 } else {
   $courseID = $_GET['courseID'];
-  $result = $mysqli->prepare("SELECT school, name, description FROM courses WHERE id=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT schoolid, name, description FROM courses WHERE id=? LIMIT 1");
   $result->bind_param('i', $courseID);
   $result->execute();
   $result->bind_result($current_school, $name, $description);
@@ -116,9 +116,9 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="description" value="<?php echo $description; ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school">
     <?php
-      $result = $mysqli->prepare("SELECT school, name FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY name, school");
       $result->execute();
-      $result->bind_result($school, $faculty);
+      $result->bind_result($schoolid, $school, $faculty);
       
       $old_faculty = '';
       while ($result->fetch()) {
@@ -127,9 +127,9 @@ if (isset($_POST['submit']) and $unique_course == true) {
           echo "<optgroup label=\"$faculty\">\n";
         }
         if ($current_school == $school) {
-          echo "<option value=\"$school\" selected>$school</option>\n";
+          echo "<option value=\"$schoolid\" selected>$school</option>\n";
         } else {
-          echo "<option value=\"$school\">$school</option>\n";
+          echo "<option value=\"$schoolid\">$school</option>\n";
         }
         $old_faculty = $faculty;
       }

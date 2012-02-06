@@ -1848,6 +1848,43 @@ if (!isset($_POST['update'])) {
   //$priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO 'notts_login'@'". self::$cfg_db_host . "'";
   //  $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".password_tokens TO 'notts_login'@'". self::$cfg_db_host . "'";
     
+  // 06/02/2012 - Change schools from text to integers in courses table
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='courses' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='schoolid'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    // Add new integer column
+    $adjust = $mysqli->prepare("ALTER TABLE courses ADD COLUMN schoolid int");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE courses ADD COLUMN schoolid int</li>\n";
+
+    // Look up existing school names
+    $schools = array();
+    $sch_data = $mysqli->prepare("SELECT id, school FROM schools");
+    $sch_data->execute();
+    $sch_data->store_result();
+    $sch_data->bind_result($schoolid, $school_name);
+    while ($sch_data->fetch()) {
+      $schools[$school_name] = $schoolid; 
+    }
+    $sch_data->close();
+    
+    // Populate the new field
+    foreach($schools as $school_name=>$schoolid) {
+      $adjust = $mysqli->prepare("UPDATE courses SET schoolid=? WHERE school=?");
+      $adjust->bind_param('is', $schoolid, $school_name);
+      $adjust->execute();
+      $adjust->close();
+    }
+    // Drop the old textual column
+    $adjust = $mysqli->prepare("ALTER TABLE courses DROP COLUMN school");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE courses DROP COLUMN school</li>\n";
+  }
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

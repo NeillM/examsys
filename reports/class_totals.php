@@ -581,7 +581,7 @@ a.user:hover {color:white; background-color:#000080}
           echo "<td align=\"right\" class=\"$class fail\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class fail\">&nbsp;" . $string['fail'] . "</td>";
         } else {
           if ($user_results[$i]['adj_percent'] >= $distinction_mark) {
-            echo "<td align=\"right\" class=\"mk $class dist\">";
+            echo "<td align=\"right\" class=\"mk $class$ordered dist\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
             echo "<td align=\"right\" class=\"dist $class\">" . $user_results[$i]['adj_percent'] . "%</td><td class=\"$class dist\">&nbsp;" . $string['distinction'] . "</td>";

@@ -6,6 +6,7 @@ $string['name'] = 'Nazwa';
 $string['school'] = 'Katedra';
 $string['add'] = 'Dodaj';
 $string['createcourse'] = 'Utwórz nowy kurs';
+$string['bulkcourseimport'] = 'Bulk Course Import';  // Niko
 $string['editcourse'] = 'Edytuj kurs';
 $string['deletecourse'] = 'Usuń kurs';
 $string['codecourse'] = 'Wprowadź kod stopnia.';

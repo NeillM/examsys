@@ -205,6 +205,7 @@
         }
         break;
       case 'dichotomous':
+      case 'true_false':
         for ($i=0; $i<strlen($answer); $i++) {
           $tmp_individual_answer = substr($answer, $i, 1);
           if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
@@ -706,6 +707,42 @@
             if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
             echo ">$individual_option</td></tr>\n";
           }
+          break;
+        case 'true_false':
+          if (!isset($log[$q_id][1]['t'])) $log[$q_id][1]['t'] = 0;
+          if (!isset($log[$q_id][1]['f'])) $log[$q_id][1]['f'] = 0;
+          if (!isset($freq_log[$q_id][1]['t'])) $freq_log[$q_id][1]['t'] = 0;
+          if (!isset($freq_log[$q_id][1]['f'])) $freq_log[$q_id][1]['f'] = 0;
+          if (!isset($bottom_log[$q_id][1]['t'])) $bottom_log[$q_id][1]['t'] = 0;
+          if (!isset($bottom_log[$q_id][1]['f'])) $bottom_log[$q_id][1]['f'] = 0;
+          if (!isset($top_log[$q_id][1]['t'])) $top_log[$q_id][1]['t'] = 0;
+          if (!isset($top_log[$q_id][1]['f'])) $top_log[$q_id][1]['f'] = 0;
+          //if (!isset($tmp_std_array[$std_part])) $tmp_std_array[$std_part] = '';
+          
+          if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
+            echo "<tr><td colspan=\"4\"" . excludeButton($ex_no, $q_id, '11', 2, 2) . "</td></tr>\n";
+          } else {
+            echo "<tr><td colspan=\"4\"" . excludeButton($ex_no, $q_id, '00', 2, 2) . "</td></tr>\n";
+          }
+
+          echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_1\">";
+          if ($correct_buf[0] == 't') {
+            $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
+            echo '<strong>True</strong>';
+          } else {
+            echo 'True';
+          }
+          echo "</td></tr>\n";
+          echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_2\">";
+          if ($correct_buf[0] == 'f') {
+            $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
+            echo '<strong>False</strong>';
+          } else {
+            echo 'False';
+          }
+          echo "</td></tr>\n";
+          echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+          echo "<tr><td>" . pStats($freq_log[$q_id][1]['f']/$user_total) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'labelling':
           if ($score_method == 'Mark per Question') {
