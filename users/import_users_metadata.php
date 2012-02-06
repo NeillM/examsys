@@ -160,8 +160,6 @@ if (isset($_GET['module'])) {
             // Check see if user was found
             echo "checking $username<br />";
             if (!isset($student_id_array[$username])) {
-              var_dump($student_id_array[$username], $student_id_array);
-              exit;
               $unknown_users[] = $username;
             } else {
               $student_id = $student_id_array[$username];
