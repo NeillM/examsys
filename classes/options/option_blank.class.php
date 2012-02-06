@@ -34,7 +34,7 @@ Class OptionBLANK extends Option {
    * @return boolean
    */
   public function minimum_fields_exist($data, $files, $index) {
-    return (!empty($data["option_text"]));
+    return (isset($data['option_text']) and $data['option_text'] != '');
   }
 }
 

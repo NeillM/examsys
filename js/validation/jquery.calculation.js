@@ -1,6 +1,7 @@
 $(function() {
   $('#edit_form').submit(function () { 
     tinyMCE.triggerSave();
+    checkHasOption();
   });
 
   $('#edit_form').validate({
@@ -109,4 +110,15 @@ $(function() {
 
 function hasMin(index) {
   return ($('#option_min' + index).val() != '');
+}
+
+function checkHasOption() {
+  var hasVal = false;
+  $('.calc-min').each(function () {
+    if ($(this).val() != '') hasVal = true;
+  });
+  if (!hasVal) {
+    $('#option_min1').val('0');
+    $('#option_increment1').val('1');
+  }
 }

@@ -35,7 +35,7 @@ $spaced = ($index > 1) ? ' spaced-top spaced-bottom' : ' spaced-bottom';
               <th class="<?php echo $spaced ?>">$<?php echo $option->get_variable() ?></th>
               <td class="align-left<?php echo $spaced ?>">
                 <label for="option_min<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['minimum'];?></label>
-                <input type="text" id="option_min<?php echo $index ?>" name="option_min<?php echo $index ?>" value="<?php echo $option->get_min() ?>" class="form-tiny" />
+                <input type="text" id="option_min<?php echo $index ?>" name="option_min<?php echo $index ?>" value="<?php echo $option->get_min() ?>" class="calc-min form-tiny" />
                 <a href="#" class="variable-link" rel="option_min<?php echo $index ?>"><img id="minicon<?php echo $index ?>" src="../../artwork/variable_link_off.png" width="23" height="22" alt="Link" class="form-img" /></a>
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
               </td>

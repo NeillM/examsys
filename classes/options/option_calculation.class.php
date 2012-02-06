@@ -61,7 +61,8 @@ Class OptionCALCULATION extends Option {
    * @return boolean
    */
   public function minimum_fields_exist($data, $files, $index) {
-    return (!empty($data["option_min$index"]) and !empty($data["option_max$index"]));
+    return (isset($data["option_min$index"]) and $data["option_min$index"] != '');
+//    return (!empty($data["option_min$index"]) and !empty($data["option_max$index"]));
   }
   
   

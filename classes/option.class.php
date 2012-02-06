@@ -278,7 +278,7 @@ QUERY;
    * @return boolean
    */
   public function minimum_fields_exist($data, $files, $index) {
-    return (!empty($data["option_text$index"]) or (isset($files["option_media$index"]) and ($files["option_media$index"]['name'] != 'none' and $files["option_media$index"]['name'] != '')));
+    return ((isset($data["option_text$index"]) and $data["option_text$index"] != '') or (isset($files["option_media$index"]) and ($files["option_media$index"]['name'] != 'none' and $files["option_media$index"]['name'] != '')));
   }
   
   // ACCESSORS
