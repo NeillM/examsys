@@ -42,7 +42,12 @@ Class OptionMATRIX extends Option {
   }
   
   public function set_all_corrects($value) {
-    $this->all_corrects = $value;
+    $stems = $this->_question->get_all_stems();
+    $this->all_corrects = array();
+
+    for ($i = 0; $i < $this->_question->max_stems; $i++) {
+      $this->all_corrects[] = (isset($stems[$i]) and $stems[$i] != '') ? $value[$i] : '';
+    }
     $this->set_correct('dummy');
   }
 
