@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Correction behaviour for Extended Matching questions
+ * Class for Correction behaviour for Fill in the Blank questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -26,44 +26,23 @@
 
 include_once 'Corrector.class.php';
 
-class EXTMATCHCorrector extends Corrector {
+class BLANKCorrector extends Corrector {
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id, &$prev_changes) {
-    $new_correct_val = $new_correct['option_correct'];
+  public function execute($new_correct, $paper_id, &$changes) {
     $errors = array();
-    $changes = false;
+    if ($changes) {
+      $new_correct_val = $new_correct['option_correct'];
 
-    $first = reset($this->_question->options);
-    $old_correct = $first->get_all_corrects();
-    $mark_correct = $first->get_marks_correct();
-    $mark_incorrect = $first->get_marks_incorrect();
-    $stems = 0;
-    $correct_count = 0;
-    $data = array();
-
-    for ($i = 0; $i < $this->_question->max_stems; $i++) {
-      $data['option_correct' . strval($i + 1)] = $new_correct_val[$i];
-      if (count($new_correct_val[$i]) > 0) $stems++;
-      $correct_count += count($new_correct_val[$i]);
-      if ($new_correct_val[$i] != $old_correct[$i]) {
-        $changes = true;
-      }
-    }
-
-    if ($prev_changes or $changes) {
-      if ($changes) {
-        $prev_changes = $changes;
-        $opt_ids = array_keys($this->_question->options);
-        $existing = array();
-        for ($option_no = 1; $option_no <= count($this->_question->options); $option_no++) {
-          $option = $this->_question->options[$opt_ids[$option_no - 1]];
-          $option->populate_compound(array('correct'), $data, $existing, 'option_', $this->_lang_strings['postexamchange']);
-        }
-      }
+      $correct_count = count($this->_question->options);
+      $first = reset($this->_question->options);
+      $mark_correct = $first->get_marks_correct();
+      $mark_incorrect = $first->get_marks_incorrect();
+      $option_text = $first->get_text();
+      $display_method = $this->_question->get_display_method();
 
       try {
     	  if(!$this->_question->save()) {
@@ -72,7 +51,38 @@ class EXTMATCHCorrector extends Corrector {
           // Remark the student's answers in 'log2'.
           $score_method = $this->_question->get_score_method();
 
-          $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;
+          $totalpos = 0;
+
+          $blank_details = explode("[blank",$option_text);
+          $no_answers = count($blank_details) - 1;
+          $have_answer = false;
+
+          $answer_lists = array();
+          $part_marks = array();
+
+          for ($i=1; $i<=$no_answers; $i++) {
+            if (preg_match("|mark=\"([0-9]{1,3})\"|", $blank_details[$i], $mark_matches)) {
+              $totalpos += $mark_matches[1];
+              $part_marks[] = $mark_matches[1];
+            } else {
+              $totalpos += $mark_correct;
+              $part_marks[] = $mark_correct;
+            }
+  
+            // Get correct answer.
+            $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
+            $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
+            $answer_list = explode(',',$blank_details[$i]);
+  
+            $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
+            if ($display_method != 'textboxes') {
+              $answer_list = array($answer_list[0]);
+            }
+            $answer_list = array_map('strtolower', $answer_list);
+            $answer_list = array_map('trim', $answer_list);
+
+            $answer_lists[] = $answer_list;
+          }
 
     	    $result = $this->_mysqli->prepare("SELECT DISTINCT user_answer FROM log2 WHERE q_id=? AND q_paper=?");
           $result->bind_param('ii', $this->_question->id, $paper_id);
@@ -80,21 +90,18 @@ class EXTMATCHCorrector extends Corrector {
           $result->store_result();
           $result->bind_result($user_answer);
           while ($row = $result->fetch()) {
-            $big_user_parts = explode('|',$user_answer);
+            $user_answers = explode('|', $user_answer);
+            // Drop first element
+            array_shift($user_answers);
+
             $mark = 0;
             $all_correct = true;
 
-            for ($i=0; $i < $stems; $i++) {
-              if (isset($big_user_parts[$i]) and $big_user_parts[$i] != '' and $big_user_parts[$i] != 'u') {
-                $little_user_parts = explode('$', $big_user_parts[$i]);
-                for ($j = 0; $j < count($new_correct_val[$i]); $j++) {
-                  if ($score_method == 'Mark per Option') {
-                    $mark += (in_array($new_correct_val[$i][$j], $little_user_parts)) ? $mark_correct : $mark_incorrect;
-                  } elseif (!in_array($new_correct_val[$i][$j], $little_user_parts)) {
-                    $all_correct = false;
-                  }
-                }
-              } else {
+            for ($i=0; $i < count($answer_lists); $i++) {
+              $correct = (isset($user_answers[$i]) and in_array(trim(strtolower($user_answers[$i])), $answer_lists[$i]));
+              if ($score_method == 'Mark per Option') {
+                $mark += ($correct) ? $mark_correct : $mark_incorrect;
+              } elseif (!$correct) {
                 $all_correct = false;
               }
             }
@@ -105,6 +112,7 @@ class EXTMATCHCorrector extends Corrector {
               } else {
                 $mark = $mark_incorrect;
               }
+              $totalpos = $mark_correct;
             }
 
             $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");

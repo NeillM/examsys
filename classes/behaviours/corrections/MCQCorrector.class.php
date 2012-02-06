@@ -32,12 +32,12 @@ class MCQCorrector extends Corrector {
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id) {
+  public function execute($new_correct, $paper_id, &$changes) {
     $errors = array();
-    $changes = false;
 
     $first = reset($this->_question->options);
     $old_correct = $first->get_correct();
+    $totalpos = $first->get_marks_correct();
 
     if ($new_correct['option_correct'] != $old_correct) {
       foreach ($this->_question->options as $option) {
@@ -61,8 +61,8 @@ class MCQCorrector extends Corrector {
           $result->bind_result($user_answer);
           while ($row = $result->fetch()) {
             $new_mark = ($user_answer == $new_correct['option_correct']) ? $first->get_marks_correct() : $first->get_marks_incorrect();
-            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('isii', $new_mark, $user_answer, $this->_question->id, $paper_id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
+            $updateLog->bind_param('iisii', $new_mark, $totalpos, $user_answer, $this->_question->id, $paper_id);
             $updateLog->execute();
             $updateLog->close();
           }

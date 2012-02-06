@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Correction behaviour for Calculation questions
+ * Class for Correction behaviour for Matrix questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -32,11 +32,10 @@ class MATRIXCorrector extends Corrector {
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id) {
+  public function execute($new_correct, $paper_id, &$prev_changes) {
     $new_correct_val = $new_correct['option_correct'];
     $errors = array();
-
-    $changes = false;
+    $changes = true;
 
     $first = reset($this->_question->options);
     $old_correct = $first->get_all_corrects();
@@ -53,23 +52,23 @@ class MATRIXCorrector extends Corrector {
       }
     }
 
-    if ($changes) {
-      $opt_ids = array_keys($this->_question->options);
-      $existing = array();
-      for ($option_no = 1; $option_no <= count($this->_question->options); $option_no++) {
-        $option = $this->_question->options[$opt_ids[$option_no - 1]];
-        $option->populate_compound(array('correct'), $data, $existing, 'option_', $this->_lang_strings['postexamchange']);
+
+    if ($prev_changes or $changes) {
+      if ($changes) {
+        $prev_changes = $changes;
+        $opt_ids = array_keys($this->_question->options);
+        $existing = array();
+        for ($option_no = 1; $option_no <= count($this->_question->options); $option_no++) {
+          $option = $this->_question->options[$opt_ids[$option_no - 1]];
+          $option->populate_compound(array('correct'), $data, $existing, 'option_', $this->_lang_strings['postexamchange']);
+        }
       }
-    }
 
-
-    if ($changes) {
       try {
     	  if(!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log2'.
-          $totalpos = 0;
           $score_method = $this->_question->get_score_method();
 
           $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;

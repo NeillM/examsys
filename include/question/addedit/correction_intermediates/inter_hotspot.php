@@ -102,6 +102,8 @@ if ($media['filename'] != ''):
 endif;
 ?>                
                 <input type="hidden" name="option_correct1" id="option_correct1" value="" />
+                <input type="hidden" name="option_marks_correct" id="option_marks_correct" value="<?php echo $_POST['option_marks_correct']; ?>" />
+                <input type="hidden" name="option_marks_incorrect" id="option_marks_incorrect" value="<?php echo $_POST['option_marks_incorrect']; ?>" />
                 <input type="hidden" name="corrected" value="OK" />
                 <input type="hidden" name="paperID" value="<?php echo $_POST['paperID']; ?>" />
                 <input type="hidden" name="module" value="<?php echo $_POST['module']; ?>" />

@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Correction behaviour for Calculation questions
+ * Class for Correction behaviour for Dichotomous questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -32,46 +32,31 @@ class DICHOTOMOUSCorrector extends Corrector {
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id) {
+  public function execute($new_correct, $paper_id, &$prev_changes) {
     $new_correct_val = $new_correct['option_correct'];
     $errors = array();
     $changes = false;
-    $mark_changes = false;
 
     $old_correct_list = '';
     $i = 0;
     foreach ($this->_question->options as $option) {
       if ($i == 0) {
         $mark_correct = $option->get_marks_correct();
-        if (isset($new_fields['option_marks_correct']) and $new_fields['option_marks_correct'] != $mark_correct) {
-          $mark_correct = $new_fields['option_marks_correct'];
-          $mark_changes = true;
-          $this->_question->add_unified_field_modification('marks_correct', '<span style="color: red; font-weight: bold">' . $this->_lang_strings['markscorrect'] . '</span>', $option->get_marks_correct(),  $mark_correct, $this->_lang_strings['postexamchange']);
-        }
         $mark_incorrect = $option->get_marks_incorrect();
-        if (isset($new_fields['option_marks_incorrect']) and $new_fields['option_marks_incorrect'] != $mark_incorrect) {
-          $mark_incorrect = $new_fields['option_marks_incorrect'];
-          $mark_changes = true;
-          $this->_question->add_unified_field_modification('marks_incorrect', '<span style="color: red; font-weight: bold">' . $this->_lang_strings['marksincorrect'] . '</span>', $option->get_marks_incorrect(),  $mark_incorrect, $this->_lang_strings['postexamchange']);
-        }
-      }
-      if ($mark_changes) {
-        $option->set_marks_correct($mark_correct, false);
-        $option->set_marks_incorrect($mark_incorrect, false);
       }
       $old_correct = $option->get_correct();
       $old_correct_list .= $old_correct . ',';
       if ($new_correct_val[$i] != $old_correct) {
         $option->set_correct($new_correct_val[$i]);
         $changes = true;
-
-        $opt_no = $i + 1;
       }
       $i++;
     }
+    $totalpos = $i * $mark_correct;
 
-    if ($mark_changes or $changes) {
+    if ($prev_changes or $changes) {
       if ($changes) {
+        $prev_changes = $changes;
         $this->_question->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], rtrim($old_correct_list, ','),  implode(',', $new_correct_val), $this->_lang_strings['postexamchange']);
       }
       try {
@@ -105,10 +90,11 @@ class DICHOTOMOUSCorrector extends Corrector {
             // Set mark for per-question settings
             if ($score_method == 'Mark per Question') {
               $mark = ($mark == count($new_correct_val)) ? $mark_correct : $mark_incorrect;
+              $totalpos = $mark_correct;
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=? WHERE user_answer=? AND q_id=? AND q_paper=?");
-            $updateLog->bind_param('dsii', $mark, $user_answer, $this->_question->id, $paper_id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log2 SET mark=?, totalpos=? WHERE user_answer=? AND q_id=? AND q_paper=?");
+            $updateLog->bind_param('disii', $mark, $totalpos, $user_answer, $this->_question->id, $paper_id);
             $updateLog->execute();
             $updateLog->close();
           }

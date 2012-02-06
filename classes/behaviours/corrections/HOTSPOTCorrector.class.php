@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Correction behaviour for Calculation questions
+ * Class for Correction behaviour for Image Hotspot questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -32,9 +32,8 @@ class HOTSPOTCorrector extends Corrector {
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id) {
+  public function execute($new_correct, $paper_id, &$changes) {
     $errors = array();
-    $changes = false;
 
     $old_points = $this->_question->get_points1();
     $option = reset($this->_question->options);
@@ -44,7 +43,7 @@ class HOTSPOTCorrector extends Corrector {
     if ($old_points != $new_correct['points1']) {
       $changes = true;
 
-      $option->set_correct($new_correct['points1']);
+      $this->_question->set_points1($new_correct['points1']);
       $this->_question->add_unified_field_modification('points', 'points', $old_points, $new_correct['points1'], $this->_lang_strings['postexamchange']);
     }
 

@@ -1,18 +1,18 @@
 $(function () {
-  // TODO: this will be generalised in next release
-  if (qType == 'dichotomous') {
-    if (typeof postExam != 'undefined' && postExam) {
-      if (otherSummatives == 0) {
-        $('#option_marks_correct').focus(function() {
-            prev_val = $(this).val();
-        }).change(function () { $(this).blur(); return showMarksWarning($(this)); });
-        $('#option_marks_incorrect').focus(function() {
-            prev_val = $(this).val();
-        }).change(function () { $(this).blur(); return showMarksWarning($(this)); });
-      } else {
-        $('#option_marks_correct').attr('disabled', 'disabled');
-        $('#option_marks_incorrect').attr('disabled', 'disabled');
-      }
+  if (typeof postExam != 'undefined' && postExam) {
+    if (otherSummatives == 0) {
+      $('#option_marks_correct').focus(function() {
+          prev_val = $(this).val();
+      }).change(function () { $(this).blur(); return showMarksWarning($(this)); });
+      $('#option_marks_incorrect').focus(function() {
+          prev_val = $(this).val();
+      }).change(function () { $(this).blur(); return showMarksWarning($(this)); });
+      $('#option_marks_partial').focus(function() {
+          prev_val = $(this).val();
+      }).change(function () { $(this).blur(); return showMarksWarning($(this)); });
+    } else {
+      $('#option_marks_correct').attr('disabled', 'disabled');
+      $('#option_marks_incorrect').attr('disabled', 'disabled');
     }
   }
 

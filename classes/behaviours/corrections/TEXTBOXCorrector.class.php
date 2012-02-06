@@ -16,7 +16,7 @@
 
 /**
  *
- * Base class for Correction behaviour
+ * Class for Correction behaviour for Fill in the Blank questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -24,21 +24,35 @@
  * @package
  */
 
-abstract class Corrector {
-  protected $_mysqli;
-  protected $_lang_strings;
-  protected $_question;
+include_once 'Corrector.class.php';
 
-  function __construct($mysqli, $lang_strings, $question) {
-    $this->_mysqli = $mysqli;
-    $this->_lang_strings = $lang_strings;
-    $this->_question = $question;
-  }
-
+class TEXTBOXCorrector extends Corrector {
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  abstract function execute($new_correct, $paper_id, &$changes);
+  public function execute($new_correct, $paper_id, &$changes) {
+    $errors = array();
+    if ($changes) {
+      $first = reset($this->_question->options);
+      $mark_correct = $first->get_marks_correct();
+
+      try {
+    	  if(!$this->_question->save()) {
+    	    $errors[] = $this->_lang_strings['datasaveerror'];
+    	  } else {
+          // Set new value for totalpos in log2 but don't change student marks
+          $updateLog = $this->_mysqli->prepare("UPDATE log2 SET totalpos=? WHERE q_id=? AND q_paper=?");
+          $updateLog->bind_param('iii', $mark_correct, $this->_question->id, $paper_id);
+          $updateLog->execute();
+          $updateLog->close();
+    	  }
+    	} catch (ValidationException $vex) {
+    	  $errors[] = $vex->getMessage();
+    	}
+    }
+
+    return $errors;
+  }
 }

@@ -102,7 +102,7 @@ Class Question extends TouchStoneObject {
   protected $_unified_field_modifications = array();
   
   // These are the fields that are relevant for post-exam corrections
-  protected $_fields_change = array('option_correct');
+  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial');
   
   // Map our 'nice' property names to the database fields and 'parts' in track changes
   protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'group' => 'q_group', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
@@ -473,23 +473,26 @@ QUERY;
    */
   public function add_default_correction_behaviours() {
     $file_base = 'behaviours/corrections/';
+    $classdetails = array();
 
     if ($this->allow_correction()) {
+      $classdetails[] = array('file' => $file_base . 'MARKSCorrector.class.php', 'name' => 'MARKSCorrector');
       $type = strtoupper($this->get_type());
-      $classfile = $file_base . $type . 'Corrector.class.php';
-      $classname = $type . 'Corrector';
+      $classdetails[] = array('file' => $file_base . $type . 'Corrector.class.php', 'name' => $type . 'Corrector');
     } else {
-      $classfile = $file_base . 'NullCorrector.class.php';
-      $classname = 'NullCorrector';
+      $classdetails[] = array('file' => $file_base . 'NullCorrector.class.php', 'name' => 'NullCorrector');
     }
-    try {
-      include $classfile;
-      $correction_object = new $classname($this->_mysqli, $this->_lang_strings, $this);
-    } catch (Exception $ex) {
-      throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
+    foreach ($classdetails as $class) {
+      $classname = '';
+      try {
+        include $class['file'];
+        $classname = $class['name'];
+        $correction_object = new $classname($this->_mysqli, $this->_lang_strings, $this);
+        $this->add_corrector($correction_object);
+      } catch (Exception $ex) {
+        throw new ClassNotFoundException(sprintf($this->lang_strings['noclasserror'], $classname));
+      }
     }
-
-    $this->add_corrector($correction_object);
   }
 
   /**
@@ -507,8 +510,9 @@ QUERY;
    */
   public function update_correct($new_correct, $paper_id) {
     $errors = array();
+    $changes = false;
     foreach ($this->_correctors as $corrector) {
-      $tmp_errors = $corrector->execute($new_correct, $paper_id);
+      $tmp_errors = $corrector->execute($new_correct, $paper_id, $changes);
       if (count($tmp_errors) > 0) {
         array_merge($errors, $tmp_errors);
       }

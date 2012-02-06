@@ -36,7 +36,7 @@ Class QuestionCALCULATION extends Question {
   protected $_allow_change_marking_method = false;
   
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_decimals', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
-  protected $_fields_change = array('option_correct', 'answer_decimals', 'tolerance_full', 'tolerance_partial');
+  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_decimals', 'tolerance_full', 'tolerance_partial');
   
   private $_variables = null;
   

@@ -31,7 +31,6 @@ Class QuestionLABELLING extends Question {
   protected $points1 = '';
   protected $_requires_media = true;
   protected $_requires_flash = true;
-  protected $_allow_correction = false;
   public $max_options = 1;
   
   function __construct($mysqli, $user_id, $lang_strings, $data = null) {

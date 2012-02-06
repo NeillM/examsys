@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Correction behaviour for Calculation questions
+ * Class for Correction behaviour for Multiple Response questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -32,10 +32,9 @@ class MRQCorrector extends Corrector {
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id) {
+  public function execute($new_correct, $paper_id, &$changes) {
     $new_correct_val = $new_correct['option_correct'];
     $errors = array();
-    $changes = false;
 
     $old_correct_list = '';
     $i = 0;

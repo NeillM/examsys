@@ -32,9 +32,8 @@ class CALCULATIONCorrector extends Corrector {
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id) {
+  public function execute($new_correct, $paper_id, &$changes) {
     $errors = array();
-    $changes = false;
 
     $first = reset($this->_question->options);
     $old_correct = $first->get_correct();
