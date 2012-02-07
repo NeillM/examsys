@@ -184,7 +184,7 @@ textarea {font-size:100%}
   if ($bidirectional == 0) {
 ?>
   function confirmSubmit() {
-    var agree = confirm("Have you completed all the questions on this screen, you will NOT be able to go back.\nAre you sure you wish to continue?");
+    var agree = confirm("<?php echo $string['confirmsubmit'] ?>");
     if (agree) {
       document.body.style.cursor = 'wait';
       return true;
@@ -217,7 +217,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
   <?php
-  if (isset($_POST['old_screen']) and $_POST['old_screen'] != '' and time() <= $review_deadline) {  
+  if (isset($_POST['old_screen']) and $_POST['old_screen'] != '' and time() <= $review_deadline and time() <= $start_date) {
     record_comments($property_id, $_POST['old_screen'], $mysqli, $_POST, $userID, $review_type);
   }
 
@@ -249,8 +249,8 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo '</td>';
   echo $logo_html;
   
-  if (time() > $review_deadline) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>Deadline Expired</strong>&nbsp;&nbsp;&nbsp;You may view this assessment but you cannot change your comments as the deadline has expired.</td></tr></table>\n";
+  if (time() > $review_deadline or time() > $start_date) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
   }
   
   $previous_duration = 0;

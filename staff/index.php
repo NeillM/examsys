@@ -174,6 +174,7 @@ require '../include/staff_auth.inc';
 
   // -- Display any papers for review ---------------------------------
   $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND internal_review_deadline >= NOW() AND properties.property_id=papers.paper AND internal_reviewers LIKE '%$userID%' GROUP BY paper");
+//  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND internal_review_deadline >= NOW() AND start_date >= NOW() AND properties.property_id=papers.paper AND internal_reviewers LIKE '%$userID%' GROUP BY paper");
   $result->execute();
   $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $internal_review_deadline, $crypt_name);
   $result->store_result();

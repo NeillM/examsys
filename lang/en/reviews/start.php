@@ -12,4 +12,7 @@ $string['qcomments'] = 'Q%d Comments';
 $string['questionok'] = 'Question OK';
 $string['minorproblems'] = 'Minor/some problems';
 $string['majorproblems'] = 'Major/many problems';
+$string['deadlineexpired'] = 'Deadline Expired';
+$string['deadlinepassed'] = 'You may view this assessment but you cannot change your comments as the deadline has expired or the start time of the exam has passed.';
+$string['confirmsubmit'] = 'Have you completed all the questions on this screen, you will NOT be able to go back.\nAre you sure you wish to continue?';
 ?>
