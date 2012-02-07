@@ -53,6 +53,7 @@ $string['createnewquestion'] = 'Create new Question';
 $string['questions'] = 'Questions';
 $string['papers'] = 'Papers';
 $string['people'] = 'People';
+$string['studentcohort'] = 'Student Cohort of Paper';
 
 $string['startdate'] = 'Start Date';
 $string['enddate'] = 'End Date';
