@@ -47,7 +47,8 @@ $paper_count = 0;
 
 $critical_error = '';
 
-$q_no = (!isset($_GET['q_no'])) ? '' : $_GET['q_no'];
+//$q_no = (!isset($_GET['q_no'])) ? '' : $_GET['q_no'];
+$q_no = '';
 $q_type_full = '';
 
 $errors = array();
@@ -111,6 +112,8 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
 
 if ($critical_error == '') {
   $question->add_default_correction_behaviours();
+
+  if ($mode == 'Edit') $q_no = $question->get_question_number($paper_id);
 
   // If existing question, check how many summative papers it is on
   if ($mode == 'Edit') {
@@ -347,7 +350,7 @@ if ($critical_error == '') {
   }
 
 
-  $q_type_display = (!empty($_REQUEST['q_no'])) ? ' ' . $_REQUEST['q_no'] : '';
+  $q_type_display = (!empty($q_no)) ? ' ' . $q_no : '';
   if ($question->get_type() != '') {
     $q_type_full = $string[$question->get_type()];
     $q_type_display .= " &ndash; $q_type_full";
@@ -491,7 +494,6 @@ if($critical_error != '') {
   } else {
     $query_string .= '?type=' . $question->get_type();;
   }
-  $query_string .= ($q_no != '') ? '&amp;q_no=' . $q_no : '';
   $query_string .= ($paper_id != -1) ? '&amp;paperID=' . $paper_id : '';
   $query_string .= ($module != '') ? '&amp;module=' . $module : '';
 

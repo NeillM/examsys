@@ -331,7 +331,7 @@ function getMSCAA($paperID, $mysqlidb) {
   }
 
   function edQ(questionNo, questionID, qType) {
-    var loc = "../question/edit/index.php?q_id=" + questionID + "&q_no=" + questionNo + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + document.getElementById('scrOfY').value;
+    var loc = "../question/edit/index.php?q_id=" + questionID + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + document.getElementById('scrOfY').value;
     if (qType == 'random' || qType == 'keyword_based') {
       loc += '&type=' + qType;
     }
