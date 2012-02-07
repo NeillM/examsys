@@ -9,7 +9,7 @@ $(function () {
   resetLinks();
   highlightQn();
 
-  $('.menu_list a').click(function (e) { e.preventDefault(); })
+  $('.menu_list a').css('cursor', 'text').click(function (e) { e.preventDefault(); })
 
   var deleteLink = $('#delete_break');
   $('html').click(function () { deActivateDelete(deleteLink); });
@@ -99,6 +99,7 @@ function activateDelete(element, sid) {
   element.addClass('menuitem');
   element.click(deleteScreenBreak);
   element.data('screenID', sid);
+  element.children('a').css('cursor', 'pointer');
 }
 
 function deActivateDelete(element) {
@@ -106,18 +107,21 @@ function deActivateDelete(element) {
   element.addClass('greymenuitem');
   element.removeClass('menuitem');
   element.unbind('click');
+  element.children('a').css('cursor', 'text');
 }
 
 function activateAddBreak(element) {
   element.removeClass('greymenuitem');
   element.addClass('menuitem');
   element.click(incScreen);
+  element.children('a').css('cursor', 'pointer');
 }
 
 function deActivateAddBreak(element) {
   element.addClass('greymenuitem');
   element.removeClass('menuitem');
   element.unbind('click');
+  element.children('a').css('cursor', 'text');
 }
 
 function deleteScreenBreak() {
