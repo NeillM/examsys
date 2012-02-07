@@ -37,7 +37,6 @@
     $surname_sql = '';
     $initials_sql = '';
     $student_id_sql = '';
-  
     $title = '';
 
     if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
@@ -125,12 +124,40 @@
           $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
         }
       }
+      
       $user_data = $mysqli->prepare($query_string);
       $user_data->execute();
       $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
       $user_data->store_result();
       $user_no = number_format($user_data->num_rows);
     }
+  } elseif (isset($_GET['paperID'])) {
+    $needs_array = array();
+    $result = $mysqli->prepare("SELECT userID FROM special_needs");
+    $result->execute();
+    $result->bind_result($tmp_userID);
+    while ($result->fetch()) {
+      $needs_array[$tmp_userID] = '1';
+    }
+    $result->close();
+    
+    // Get the year and modules from the paper properties.
+    $result = $mysqli->prepare("SELECT calendar_year, moduleID FROM properties WHERE property_id=?");
+    $result->bind_param('i', $_GET['paperID']);
+    $result->execute();
+    $result->bind_result($paper_calendar_year, $paper_moduleID);
+    $result->fetch();
+    $result->close();
+    
+    $moduleID = str_replace(",", "','", $paper_moduleID);
+    $roles_sql = "AND roles='Student' AND grade != 'left'";
+
+    $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, moduleid FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID AND moduleid IN ('$moduleID') AND calendar_year='$paper_calendar_year' $roles_sql ORDER BY " . $sortby . " " . $ordering;
+    $user_data = $mysqli->prepare($query_string);
+    $user_data->execute();
+    $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
+    $user_data->store_result();
+    $user_no = number_format($user_data->num_rows);
   }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -199,7 +226,7 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
 </head>
 
 <?php
-  if (isset($_GET['submit'])) {
+  if (isset($_GET['submit']) or isset($_GET['paperID'])) {
     echo "<body onload=\"updateCohortDetails();\">\n";
     include '../include/user_search_options.inc';
     echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
@@ -219,7 +246,9 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
 
 <?php
 echo "<tr><td style=\"background-color:#F1F5FB; padding-left:16px\" colspan=\"7\"><div class=\"breadcrumb\" style=\"margin-left:0px\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
-if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
+if (isset($_GET['paperID'])) {
+  echo str_replace(',', ', ', $paper_moduleID) . ' (' . $paper_calendar_year . ')';
+} elseif (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
   echo $_GET['search_surname'];
 } elseif (isset($_GET['team']) and $_GET['team'] != '%') {
   echo $_GET['team'];
@@ -277,13 +306,16 @@ if (isset($_GET['team'])) {
   $tmp_team = '';
 }
 
-
 $additional_param = '&team=' . $tmp_team . '&search_surname=' . $tmp_surname . '&search_username=' . $tmp_username . '&student_id=' . $tmp_student_id . '&moduleID=' . $moduleID . '&calendar_year=' . $calendar_year . '&submit=Search&userID=';
 $user_types = array('students', 'graduates', 'leavers', 'suspended', 'staff', 'adminstaff', 'inactive', 'externals', 'invigilators');
 foreach ($user_types as $user_type) {
   if (isset($_GET[$user_type])) {
     $additional_param .= '&' .  $user_type . '=' . $_GET[$user_type];
    }
+}
+
+if (isset($_GET['paperID'])) {
+  $string['course'] = $string['module'];   // Override course with module if called from a paper.
 }
 
 if ($sortby == 'title') {
@@ -329,7 +361,7 @@ if ($sortby == 'title') {
     } elseif ($old_year != $tmp_yearofstudy and $sortby == 'yearofstudy') {
       echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     }
-    //$tmp_username = $row['username'];
+
     if (strpos($userroles,'SysAdmin') !== false) {
       echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $tmp_id . "',$x,'2c'); return false;\" ondblclick=\"profile('" . $tmp_id . "'); return false;\">";
       if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
@@ -393,7 +425,13 @@ if ($sortby == 'title') {
     } else {
       echo "<td class=\"fn\">" . $string['na'] . "</td>";
     }
-    echo "<td>" . $tmp_yearofstudy . "</td><td>&nbsp;" . $tmp_grade . "</td></tr>\n";
+    echo "<td>" . $tmp_yearofstudy . "</td><td>&nbsp;";
+    if (isset($_GET['paperID'])) {
+      echo $tmp_moduleid;
+    } else {
+      echo $tmp_grade; 
+    }
+    echo "</td></tr>\n";
     $old_letter = strtoupper(substr($tmp_surname, 0, 1));
     $old_title = $tmp_title;
     $old_username = substr($tmp_username, 0, 4);

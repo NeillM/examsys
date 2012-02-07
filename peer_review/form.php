@@ -28,6 +28,30 @@ require '../include/paper_security.inc';
 
 check_var('id', 'GET', true, false);
 
+function display_question($qID, $details, $member_userID, &$row_no, $columns, $marking) {
+  if ($details['q_type'] == 'likert') {
+    echo "<tr><td>" . $details['leadin'] . "</td>";
+    for ($i=(0 + $marking); $i<($columns + $marking); $i++) {
+      if (isset($saved_results[$member_userID][$qID]['rating']) and $saved_results[$member_userID][$qID]['rating'] === $i) {
+        echo "<td class=\"col\"><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" checked=\"checked\" /></td>";
+      } else {
+        echo "<td class=\"col\"><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" /></td>";
+      }
+    }
+    echo "</tr>";
+  } elseif ($details['q_type'] == 'mcq') {
+    echo "<tr><td><p>" . $details['leadin'] . "</p><blockquote><table>";
+    $i = 1;
+    foreach ($details['options'] as $option) {
+      echo "<tr><td><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" /><td><td>$option</td></tr>\n";
+      $i++;
+    }
+    echo '</table><blockquote></td></tr>';
+  }
+
+  $row_no++;
+}
+
 // Get some properties of the paper.
 $result = $mysqli->prepare("SELECT property_id, paper_title, modules.id, properties.moduleID, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, display_question_mark as review, labs FROM (properties, modules) WHERE properties.moduleID=modules.moduleid AND crypt_name=? LIMIT 1");
 $result->bind_param('s', $_GET['id']);
@@ -73,16 +97,38 @@ if (stripos($userroles,'Student') !== false) {
 
 // Get questions on the paper
 $questions = array();
+$old_options = array();
+$old_questionID = 0;
 
-$result = $mysqli->prepare("SELECT question, leadin, display_method FROM (papers, questions) WHERE papers.question=questions.q_id AND paper=? ORDER BY display_pos");
+$result = $mysqli->prepare("SELECT question, scenario, leadin, display_method, q_type, option_text FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper=? AND questions.q_id=options.o_id ORDER BY display_pos");
 $result->bind_param('i', $property_id);
 $result->execute();
-$result->bind_result($questionID, $leadin, $display_method);
+$result->bind_result($questionID, $scenario, $leadin, $display_method, $q_type, $option_text);
 while ($result->fetch()) {
-  $questions[$questionID]['leadin'] = $leadin;
-  $questions[$questionID]['scale'] = $display_method;
+  if ($old_questionID != $questionID and $old_questionID != 0) {
+    $questions[$old_questionID]['scenario'] = $old_scenario;
+    $questions[$old_questionID]['leadin'] = $old_leadin;
+    $questions[$old_questionID]['display_method'] = $old_display_method;
+    $questions[$old_questionID]['q_type'] = $old_q_type;
+    $questions[$old_questionID]['options'] = $old_options;
+    $old_options = array();
+  }
+  $old_questionID = $questionID;
+  $old_scenario = $scenario;
+  $old_leadin = $leadin;
+  $old_display_method = $display_method;
+  $old_q_type = $q_type;
+  $old_options[] = $option_text;
 }
+$questions[$old_questionID]['scenario'] = $old_scenario;
+$questions[$old_questionID]['leadin'] = $old_leadin;
+$questions[$old_questionID]['display_method'] = $old_display_method;
+$questions[$old_questionID]['q_type'] = $old_q_type;
+$questions[$old_questionID]['options'] = $old_options;
+
 $result->close();
+
+//var_dump($questions);
 
 // Work out the scale.
 $parts = explode('|', $display_method);
@@ -343,18 +389,8 @@ if (isset($_POST['submit'] )) {
         }
         echo "</tr>\n";
         
-        
         foreach ($questions as $questionID=>$details) {
-          echo "<tr><td>" . $details['leadin'] . "</td>";
-          for ($i=(0 + $marking); $i<($columns + $marking); $i++) {
-            if (isset($saved_results[$member_userID][$questionID]['rating']) and $saved_results[$member_userID][$questionID]['rating'] === $i) {
-              echo "<td class=\"col\"><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" checked=\"checked\" /></td>";
-            } else {
-              echo "<td class=\"col\"><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" /></td>";
-            }
-          }
-          echo "</tr>";
-          $row_no++;
+          display_question($questionID, $details, $member_userID, $row_no, $columns, $marking);
         }
         
         echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
@@ -372,16 +408,7 @@ if (isset($_POST['submit'] )) {
     echo "</tr>\n";
        
     foreach ($questions as $questionID=>$details) {
-      echo "<tr><td>" . $details['leadin'] . "</td>";
-      for ($i=(0 + $marking); $i<($columns + $marking); $i++) {
-        if (isset($saved_results[$member_userID][$questionID]['rating']) and $saved_results[$member_userID][$questionID]['rating'] === $i) {
-          echo "<td class=\"col\"><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" checked=\"checked\" /></td>";
-        } else {
-          echo "<td class=\"col\"><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" /></td>";
-        }
-      }
-      echo "</tr>";
-      $row_no++;
+      display_question($questionID, $details, $member_userID, $row_no, $columns, $marking);
     }
     
     echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
