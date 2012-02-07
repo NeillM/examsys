@@ -3,6 +3,7 @@ $string['modules'] = 'Moduły';
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['moduleid'] = 'Identyfikator modułu';
 $string['name'] = 'Nazwa';
+$string['school'] = 'School';  // Niko
 $string['active'] = 'Aktywny';
 $string['yes'] = 'tak';
 $string['no'] = 'nie';
