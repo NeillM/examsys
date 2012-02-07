@@ -41,43 +41,45 @@ Class debug_mysqli extends mysqli {
 	
 	function cacheSqlProfile() {
 	  global $queryInfo;
-	  $res = $this->query('show profiles', false);
-	  if (!$res) {
+    
+    $result = $this->prepare("SHOW PROFILES");
+    $result->execute();
+    if (!$result) {
 	    return 'ERROR';
 	  } else {
 	    $i = 0;
-	    while($row = $res->fetch_assoc()){
-		  if($i > 0) {
-		    if(isset($queryInfo[$i]) and $queryInfo[$i]['type'] != 'prepare') {
-		      $queryInfo[$i]['sql']['Duration'] = $row['Duration'];	
-		      $queryInfo[$i]['sql']['INFO'] = $this->getDetails($row['Query_ID']);	
-			} else {
-			  $queryInfo[$i]['sql']['INFO'] = array('prepared statment no info');
-		    }
-		  }
-		  $i++;
-		}		  
-		$res->close();
-	  }	  
-	}
+      $result->bind_result($query_ID, $duration, $query);
+	    while ($result->fetch()){
+        if ($i > 0) {
+          if (isset($queryInfo[$i]) and $queryInfo[$i]['type'] != 'prepare') {
+            $queryInfo[$i]['sql']['Duration'] = $duration;	
+            $queryInfo[$i]['sql']['INFO'] = $this->getDetails($query_ID);	
+          } else {
+            $queryInfo[$i]['sql']['INFO'] = array('prepared statment no info');
+          }
+        }
+        $i++;
+      }		  
+      $result->close();
+	  }
+  }
 	
-	private function getDetails($qid){
-        
-		$res = $this->query('select min(seq) seq,state,count(*) numb_ops, '
-                . 'round(sum(duration),5) sum_dur, round(avg(duration),5) avg_dur, '
-                . 'round(sum(cpu_user),5) sum_cpu, round(avg(cpu_user),5) avg_cpu '
-                . 'from information_schema.profiling '
-                . 'where query_id = ' . $qid
-                . ' group by state order by seq',false);
-		//$res = $this->query(' show profile for query ' . $qid,false);
-        $ret = array();
-        while($row = $res->fetch_assoc()) {
-          $ret[] = $row;
+	private function getDetails($qid) { 
+    $details = array();
+
+    $result = $this->prepare("SELECT MIN(seq) AS seq, state, count(*) AS numb_ops, ROUND(SUM(duration),5) AS sum_dur, ROUND(avg(duration),5) AS avg_dur, ROUND(SUM(cpu_user),5) AS sum_cpu, ROUND(AVG(cpu_user),5) AS avg_cpu FROM information_schema.profiling WHERE query_id = ? GROUP BY state ORDER BY seq");
+    $result->bind_param('i', $qid);
+    $result->execute();
+    $result->bind_result($seq, $state, $numb_ops, $sum_dur, $avg_dur, $sum_cpu, $avg_cpu);
+    while($result->fetch()) {
+      $details[] = array($seq, $state, $numb_ops, $sum_dur, $avg_dur, $sum_cpu, $avg_cpu);
 		}
-		return $ret;
-    }
+    $result->close();
+    
+		return $details;
+  }
 	
-	function prepare($sql,$log = true) {
+	function prepare($sql, $log = true) {
 	  global $queryInfo;
 	  $stmt = new debug_mysqli_stmt($this, $sql);
 	  if ($log) {
@@ -91,7 +93,6 @@ Class debug_mysqli extends mysqli {
       $this->queryCount++;	
 	  }
 	  return $stmt;
-	  //return parent::prepare($sql);
 	}
 	
 	function query($sql,$log = true) {
@@ -145,20 +146,20 @@ function outputDebug() {
 function outputLoadTimes() {
   global $debug_pagestart, $userroles, $mysqli, $queryInfo;
   
-  if(!is_object($mysqli)) {
+  if (!is_object($mysqli)) {
     return;
   }
   
   if (!$mysqli->closed) {
     $mysqli->cacheSqlProfile();
   }
-  echo  '<br style="clear:both;" /><div style="clear:both; font-size:90%; margin: 20px; padding:15px; background-color:#ffffff; width:90%">';
+  echo  '<br style="clear:both" /><div style="clear:both; font-size:90%; margin:20px; padding:15px; background-color:#ffffff; width:90%">';
   $start = explode(' ',$debug_pagestart);
   $end = explode(' ', microtime());
   $usec = floatval($end[0]) - floatval($start[0]);
   $sec = $end[1] - $start[1];
   $res=(float)$sec+(float)$usec;
-  echo '<p>Queries:  ' . count($queryInfo) .', generation time:' . round($res,3) . 's' . " <a href=\"#\" onclick=\"document.getElementById('allQueries').style.display='block';return false;\">More ...</a></p>";
+  echo '<p>' . count($queryInfo) . ' queries (' . round($res,3) . ' secs)' . " <a href=\"#\" onclick=\"document.getElementById('allQueries').style.display='block'; return false;\">More ...</a></p>";
   
   
   $errors = false;
@@ -172,25 +173,24 @@ function outputLoadTimes() {
   } else {
     echo '<div id="allQueries" style="display:none">';
   }
-  echo '<hr /><ol>';
+  echo '<hr noshade="noshade" style="height:1px; border:0px" /><ol>';
   foreach ($queryInfo as $id => $query) {
     if (isset($query['sql']['error'])) {
       echo "<li><div style=\"background-color:#C00000; color:white\">";
     } else {
       echo "<li>";
     }
-    echo "<p>" . $query['sql']['Query'] . ' [' . $query['sql']['Duration'] . "] <a href=\"#\" onclick=\"document.getElementById('debug_$id').style.display='block';return false;\">More ...</a></p>";
+    echo "<p>" . $query['sql']['Query'] . ' [' . $query['sql']['Duration'] . "] <a href=\"#\" onclick=\"document.getElementById('debug_$id').style.display='block'; return false;\">More ...</a></p>";
     
     echo "<div id=\"debug_$id\" style=\"display:none\"><pre>"; 
       var_dump($query['stack']);
-      if(isset($query['sql']['INFO'])) {
+      if (isset($query['sql']['INFO'])) {
         var_dump($query['sql']['INFO']);
       }
     echo "</pre></div>";
-    if (isset($query['sql']['error'])) echo "</div>";
+    if (isset($query['sql']['error'])) echo '</div>';
     echo "</li>";
   }
-  //echo '<div>';
   echo '</ol></div>';
 }
 //END Debug
