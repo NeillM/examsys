@@ -330,6 +330,15 @@ function Xwork(s) {  // --- finds how to handle incoming MENU (s)-values ---
         if (s=='Math.E') {
           x = Math.E;
           buffer = x;
+        } else if (s=='Math.PI') {
+          if (clearFlag) {
+            x += eval(s);
+            Ox();
+          } else {
+            x = eval(s);
+            document.sCal.IOx.value = x;
+          }
+          buffer = eval(s);
         } else {
           x += eval(s);
           Ox();

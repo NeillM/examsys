@@ -67,7 +67,7 @@
       $tab_array[] = 'Accessibility';
       $tab_array[] = 'Metadata';
     }
-        
+
     foreach($tab_array as $individual_tab) {
       if ($individual_tab == $current_tab) {
         $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
