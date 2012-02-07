@@ -18,6 +18,7 @@ $string['negativemarking'] = 'Negative Marking';
 $string['add'] = 'Add';
 $string['save'] = 'Save';
 $string['createmodule'] = 'Create new Module';
+$string['bulkmoduleimport'] = 'Bulk Module Import';
 $string['editmodule'] = 'Edit Module';
 $string['modulefolder'] = 'Module Folder';
 $string['studentcohort'] = 'Student Cohort';

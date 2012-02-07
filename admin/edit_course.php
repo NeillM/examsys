@@ -116,7 +116,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="description" value="<?php echo $description; ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school">
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND school != '' ORDER BY name, school");
       $result->execute();
       $result->bind_result($schoolid, $school, $faculty);
       
@@ -126,7 +126,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
           if ($old_faculty != '') echo "</optgroup>\n";
           echo "<optgroup label=\"$faculty\">\n";
         }
-        if ($current_school == $school) {
+        if ($current_school == $schoolid) {
           echo "<option value=\"$schoolid\" selected>$school</option>\n";
         } else {
           echo "<option value=\"$schoolid\">$school</option>\n";

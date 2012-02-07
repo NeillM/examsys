@@ -18,6 +18,7 @@ $string['negativemarking'] = 'Ujemna punktacja';
 $string['add'] = 'Dodaj';
 $string['save'] = 'Zachowaj';
 $string['createmodule'] = 'Utwórz nowy moduł';
+$string['bulkmoduleimport'] = 'Bulk Module Import';  // Niko
 $string['editmodule'] = 'Edytuj moduł';
 $string['modulefolder'] = 'Folder modułu';
 $string['studentcohort'] = 'Grupa studentów';
