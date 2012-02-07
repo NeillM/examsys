@@ -266,6 +266,9 @@ function xPlusEq(s) {
     buffer = '';
   }
   Ix();
+  if (s == '.' && x == '' && buffer == '') {
+    x = buffer = '0';
+  }
   x += s;
   buffer += s;
   Ox();
@@ -279,16 +282,15 @@ function xPlusEq(s) {
   }
 } // --- DISPLAY-x functions ---
 function xMultEq(s) {
-  xEval();
-  x *= s;
-  Oxf();
-
+    xEval();
+    x *= s;
+    Oxf();
 }
 function Clear() {
   x = '';
   Ox();
   buffer = '';
-  document.getElementById('ans').innerHTML = '';
+  document.getElementById('ans').innerHTML = '0';
 }
 function BkSpace() {Ix(); x = x.substring(0,x.length-1) ; Ox();}
 function recip() {
@@ -321,7 +323,12 @@ function Xwork(s) {  // --- finds how to handle incoming MENU (s)-values ---
     alert(s.replace(/~~/g,"\n"))
   } else {  // '!' is key, '~~' is newline
     if (isNaN(s)) {
-      if (s.indexOf('x')>-1) {       //-if expression is f(x), i.e.Method,
+      if (s.indexOf('buffer') > -1 && s.indexOf('-1') > -1) {       //-if expression is +-
+        var re = new RegExp(buffer + '+$');
+        x = x.replace(re, '') + eval(s);
+        buffer = eval(s);
+        Oxf(); //  figure x, & substiture in function,  NOTE: Oxf()!
+      } else if (s.indexOf('x')>-1) {       //-if expression is f(x), i.e.Method,
         xEval();
         x = eval(s);
         buffer = x;

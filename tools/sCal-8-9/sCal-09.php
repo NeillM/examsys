@@ -124,7 +124,8 @@ END;
     ?>
 <tr>
 
-  <td><div class="b"><a href="#" class="b2" onclick="xMultEq('-1')">&plusmn;</a></div></td>
+<!--  <td><div class="b"><a href="#" class="b2" onclick="xMultEq('-1')">&plusmn;</a></div></td>-->
+  <td><div class="b"><a href="#" class="b2" onclick="Xwork('buffer * -1')">&plusmn;</a></div></td>
   <td><div class="b"><a href="#" class="b2" onclick="xPlusEq('(')">(</a></div></td>
   <td><div class="b"><a href="#" class="b2" onclick="xPlusEq(')')">)</a></div></td>
   <td><div class="b"><a href="#" class="del" onClick="BkSpace()">DEL</a></div></td>
