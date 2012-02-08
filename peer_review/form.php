@@ -28,7 +28,7 @@ require '../include/paper_security.inc';
 
 check_var('id', 'GET', true, false);
 
-function display_question($qID, $details, $member_userID, &$row_no, $columns, $marking) {
+function display_question($qID, $details, $member_userID, &$row_no, $columns, $marking, $saved_results) {
   if ($details['q_type'] == 'likert') {
     echo "<tr><td>" . $details['leadin'] . "</td>";
     for ($i=(0 + $marking); $i<($columns + $marking); $i++) {
@@ -43,7 +43,11 @@ function display_question($qID, $details, $member_userID, &$row_no, $columns, $m
     echo "<tr><td><p>" . $details['leadin'] . "</p><blockquote><table>";
     $i = 1;
     foreach ($details['options'] as $option) {
-      echo "<tr><td><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" /><td><td>$option</td></tr>\n";
+      if (isset($saved_results[$member_userID][$qID]['rating']) and $saved_results[$member_userID][$qID]['rating'] === $i) {
+        echo "<tr><td><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" checked=\"checked\" /><td><td>$option</td></tr>\n";
+      } else {
+        echo "<tr><td><input type=\"radio\" name=\"" . $member_userID . "_" . $row_no . "\" value=\"$i\" /><td><td>$option</td></tr>\n";
+      }
       $i++;
     }
     echo '</table><blockquote></td></tr>';
@@ -390,7 +394,7 @@ if (isset($_POST['submit'] )) {
         echo "</tr>\n";
         
         foreach ($questions as $questionID=>$details) {
-          display_question($questionID, $details, $member_userID, $row_no, $columns, $marking);
+          display_question($questionID, $details, $member_userID, $row_no, $columns, $marking, $saved_results);
         }
         
         echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
@@ -408,7 +412,7 @@ if (isset($_POST['submit'] )) {
     echo "</tr>\n";
        
     foreach ($questions as $questionID=>$details) {
-      display_question($questionID, $details, $member_userID, $row_no, $columns, $marking);
+      display_question($questionID, $details, $member_userID, $row_no, $columns, $marking, $saved_results);
     }
     
     echo "<tr><td colspan=\"" . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
