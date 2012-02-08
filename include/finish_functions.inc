@@ -1181,7 +1181,12 @@
             } elseif ($paper[$question]['user_answer'] != 'u') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
             }
-            echo "</td><td><select name=\"q" . $question_no . "\">\n";
+            echo '</td><td>';
+            if (substr($tmp_exclude,0,1) == '1') {
+              echo "<select name=\"q" . $question_no . "\" class=\"exclude\" style=\"border:1px solid red\">\n";
+            } else {
+              echo "<select name=\"q" . $question_no . "\">\n";
+            }
             if ($paper[$question]['user_answer'] == 'u') {
               echo "<option value=\"\" style=\"color:#808080\">unanswered</option>\n";
             }

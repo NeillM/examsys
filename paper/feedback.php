@@ -56,8 +56,6 @@
       $sessionid = '';
       
       if ($userroles == 'Student') {
-        if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
-
         // Check for additional password on the paper
         check_paper_password($password);
       
@@ -127,6 +125,7 @@ table {font-size:100%}
 .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
 .matrix {border:1px solid #808080; border-collapse:collapse}
 .matrix td {border:1px solid #808080}
+.box {width:90%; background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left}
 </style>
 <?php
   if ($latex_needed == 1) {

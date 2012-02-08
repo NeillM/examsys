@@ -136,6 +136,7 @@
       switch ($q_type) {
         case 'calculation':
         case 'mcq':
+        case 'true_false':
           if (isset($_POST["std$question_no"])) {
             $rating = $_POST["std$question_no"];
           } else {
@@ -147,7 +148,7 @@
           break;
         case 'dichotomous':
           $qid = 'std' . $question_no . '_' . $question_part;
-          if(isset($_POST["$qid"])) {
+          if (isset($_POST["$qid"])) {
             if ($rating == '') {
               $rating = $_POST["$qid"];
             } else {

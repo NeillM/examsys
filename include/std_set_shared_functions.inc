@@ -125,7 +125,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
         $angoff_review_marks = 0;
       }
       
-      $ebel_percents[$category] = $percentage;
+      $ebel_percents[$category] = round($percentage, 2);
       if ($old_questionID != $questionID) {
         if (array_key_exists($questionID, $exclude)) {
           $tmp_exclude = $exclude[$questionID];
@@ -229,7 +229,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   }
 
   $result->close();
-
+  
   return $reviews;
 }
 
@@ -283,6 +283,11 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
         $partID++;
         break;
       case 'calculation':
+        if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+          $marks_array[$old_q_id][$partID] = $marks_correct;
+        }
+        break;
+      case 'true_false':
         if (substr($exclude[$old_q_id], $partID, 1) == '0') {
           $marks_array[$old_q_id][$partID] = $marks_correct;
         }
@@ -468,7 +473,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       }
       echo '</td>';
       echo "</tr>\n";
-      if($display_option['score_method'] == 'Mark per Option') {
+      if ($display_option['score_method'] == 'Mark per Option') {
          $marks += $display_option['marks_correct'];
       } else {
         $marks = $display_option['marks_correct'];

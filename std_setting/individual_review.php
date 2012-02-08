@@ -51,7 +51,7 @@ if (isset($_POSR['paperID'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Standards Setting<?php echo " $cfg_install_type"; ?></title>
+<title>Standards Setting<?php echo ' ' . $cfg_install_type; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <?php
 // Get any questions to exclude.
@@ -95,7 +95,7 @@ p {margin-top:0px; padding-top:0px}
 .question_no {width:40px; text-align:right; vertical-align:top}
 .theme {font-size:150%; font-weight:bold; color:<?php echo $themecolor; ?>; padding-left:20px}
 .notes {font-size:80%; color: <?php echo $labelcolor; ?>}
-.mk {color:#808080; font-size:80%}
+.mk {padding-top:4px; color:#808080; font-size:80%}
 .active {color:<?php echo $fgcolor; ?>}
 .inactive {color:#C0C0C0}
 .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
@@ -490,10 +490,10 @@ p {margin-top:0px; padding-top:0px}
         echo '<tr><td colspan="2" class="theme">' . $theme . '</td></tr>';
       }
 
-      if (trim($notes) != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
+      if (trim($notes) != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
 
       if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'calculation') {
-        echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td valign="top"><p>' . $scenario . '</p>';
+        echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
         $li_set = 1;
       }
       if ($q_media != '' and $q_media != NULL and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
@@ -514,7 +514,7 @@ p {margin-top:0px; padding-top:0px}
           echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
         }
         $li_set = 1;
-        echo '<p>' . $leadin . '</p>';
+        echo $leadin;
       }
       if ($q_type == 'info') {
         if ($li_set == 0) echo '<tr><td colspan="2" style="padding-left:20px; padding-right:20px">' . $leadin;
@@ -551,7 +551,7 @@ p {margin-top:0px; padding-top:0px}
       $result->execute();
       $result->bind_result($percentage);
       while ($result->fetch()) {
-        $ebel[] = $percentage;
+        $ebel[] = round($percentage, 2);
       }
       $result->close();
     }
@@ -576,7 +576,7 @@ p {margin-top:0px; padding-top:0px}
         $result->close();
         
         for ($i=0; $i<18; $i++) {
-          $ebel[$i] = $ebel[$i] / 100;
+          $ebel[$i] = round($ebel[$i] / 100, 2);
         }
       }
     }
@@ -605,7 +605,6 @@ p {margin-top:0px; padding-top:0px}
     </blockquote>
     <?php
     echo "</td>\n</tr>\n</table>\n</div>\n<br />\n";
-
     echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td>&nbsp;</td><td style=\"width:200px; text-align:center\"><strong>" . $string['essential'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['important'] . "</strong></td><td style=\"width:200px; text-align:center\"><strong>" . $string['nicetoknow'] . "</strong></td></tr>\n";
     echo "<tr><td style=\"text-align:right\"><strong>" . $string['easy'] . "</strong></td><td style=\"text-align:center; background-color:#F8F8F2\"><input type=\"text\" style=\"text-align:right; border:0px; color:red; text-decoration:line-through; background-color:#F8F8F2\" name=\"origee2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; border:0px; background-color:#F8F8F2\" name=\"ee2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EE2',$ebel[9]) . "</td><td style=\"text-align:center; background-color:#F0F0E6\"><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px; color:red; text-decoration:line-through\" name=\"origei2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#F0F0E6; border:0px\" name=\"ei2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EI2',$ebel[10]) . "</td><td style=\"text-align:center; background-color:#E4E4D2\"><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px; color:red; text-decoration:line-through\" name=\"origen2\" size=\"3\" value=\"\" /><input type=\"text\" style=\"text-align:right; background-color:#E4E4D2; border:0px\" name=\"en2\" size=\"7\" value=\"0\" />&nbsp;" . ebelDropdown('EN2',$ebel[11]) . "</td><td style=\"border:0px\"><input type=\"text\" value=\"\" name=\"easy2_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
@@ -630,7 +629,7 @@ p {margin-top:0px; padding-top:0px}
 <div align="center">
 <table cellpadding="2" cellspacing="0" border="0">
 <tr><td style="text-align:center; color:#808080">ALT + S</td><td style="text-align:center; color:#808080">ALT + C</td><td></td><td></td></tr>
-<tr><td><input type="submit" name="submit" value="<?php echo $string['saveexit']; ?>" accesskey="S" style="width:160px" /></td><td><input type="submit" name="continue" value="<?php echo $string['savecontinue']; ?>" accesskey="C" style="width:160px" /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.location='../paper/details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>'" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:90px" /></td></tr>
+<tr><td><input type="submit" name="submit" value="<?php echo $string['saveexit']; ?>" accesskey="S" style="width:160px" /></td><td><input type="submit" name="continue" value="<?php echo $string['savecontinue']; ?>" accesskey="C" style="width:160px" /></td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td><input onclick="javascript:window.location='index.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>'" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:90px" /></td></tr>
 
 <tr><td colspan="2" style="text-align:center">
 <?php

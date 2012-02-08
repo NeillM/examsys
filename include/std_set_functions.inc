@@ -153,7 +153,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
       $replace = array($A,$B,$C,$D,$E,$F,$G,$H,$I,$J);
       echo "<p";
-      if(isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
+      if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
       echo ">" . str_ireplace($search,$replace,$current_leadin) . "</p>\n";
       
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[2] .  "</p>\n";
@@ -163,12 +163,51 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       $marks = $options[0]['marks_correct'];
       break;
     case 'dichotomous':
-      
       echo "</blockquote></table>";
       if ($options[0]['score_method'] == 'Mark per Question') {
         $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
         echo '<br />' . reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
       }
+      break;
+    case 'true_false':
+      $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
+      echo '<blockquote>';
+      
+      $true_checked = '';
+      $false_checked = '';
+      
+      if ($options[0]['display_method'] == 'dropdown') {
+        echo "<select name=\"q" . $question_no . "\">\n";
+        echo "<option value=\"\"></option>\n";
+        if ($options[0]['correct'] == 't') {
+          echo "<option value=\"t\" selected>True</option>\n";
+        } else {
+          echo "<option value=\"t\">True</option>\n";
+        }
+        if ($options[0]['correct'] == 'f') {
+          echo "<option value=\"f\" selected>False</option>\n";
+        } else {
+          echo "<option value=\"f\">False</option>\n";
+        }
+        echo "</select>\n";
+        echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
+        echo '</blockquote>';
+      } else {
+        if ($options[0]['correct'] == 't') $true_checked = ' checked="checked"';
+        if ($options[0]['correct'] == 'f') $false_checked = ' checked="checked"';
+        
+        echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked />&nbsp;True";
+        if ($options[0]['display_method'] == 'horizontal') {
+          echo '&nbsp;&nbsp;&nbsp;';
+        } elseif ($options[0]['display_method'] == 'vertical') {
+          echo '<br />';
+        }
+        echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked />&nbsp;False<br />\n";
+        echo '</blockquote>';
+        echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
+      }
+      
+      $marks = $options[0]['marks_correct'];
       break;
     case 'mrq':
     case 'rank':
