@@ -47,7 +47,6 @@ $paper_count = 0;
 
 $critical_error = '';
 
-//$q_no = (!isset($_GET['q_no'])) ? '' : $_GET['q_no'];
 $q_no = '';
 $q_type_full = '';
 
