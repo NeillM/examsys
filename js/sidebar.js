@@ -162,7 +162,7 @@
     
     mytop = document.getElementById(callingID).offsetParent.offsetTop + document.getElementById(menuID).offsetTop + 12;
     if ((mytop + popupHeight) > sidebarHeight) {
-      mytop = sidebarHeight - popupHeight - 5;
+      mytop = sidebarHeight - popupHeight - 10;
     }
     document.getElementById(submenuID).style.top = mytop + 'px';
     

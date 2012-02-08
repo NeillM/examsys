@@ -370,69 +370,69 @@ if ($sortby == 'title') {
     }
 
     if (strpos($userroles,'SysAdmin') !== false) {
-      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $tmp_id . "',$x,'2c'); return false;\" ondblclick=\"profile('" . $tmp_id . "'); return false;\">";
+      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('$tmp_id',$x,'2c'); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
       if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';
       }
       if (array_key_exists($tmp_id, $needs_array)) {
-        echo "<td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $tmp_surname . ", ";
+        echo "<td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>$tmp_surname, ";
         if ($tmp_first_names != '') {
           echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {
           echo $tmp_initials;
         }
-        echo  "</td><td>" . $tmp_username . "</td>";
+        echo  "</td><td>$tmp_username</td>";
       } else {
         if (isset($tmp_title) and $tmp_title != '') {
           $tmp_title = $string[strtolower($tmp_title)];
         } else {
           $tmp_title = '';
         }
-        echo "<td>" . $tmp_title . "</td><td></td><td>" . $tmp_surname . ", ";
+        echo "<td>$tmp_title</td><td></td><td>$tmp_surname, ";
         if ($tmp_first_names != '') {
-          echo '<span style="color:#A5A5A5">' . $tmp_first_names . '</span>';
+          echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {
           echo $tmp_initials;
         }
-        echo "</td><td>" . $tmp_username . "</td>";
+        echo "</td><td>$tmp_username</td>";
       }
     } else {
-      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('" . $tmp_id . "',$x,'2b'); return false;\" ondblclick=\"profile('" . $tmp_id . "'); return false;\">";
+      echo "<tr id=\"$x\" onmouseover=\"lon($x)\" onmouseout=\"loff($x)\" style=\"cursor:pointer\" onclick=\"selUser('$tmp_id',$x,'2b'); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
       if (file_exists($cfg_web_root . '/users/photos/' . $tmp_username . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
       } else {
         echo '<td></td>';
       }
       if (array_key_exists($tmp_id, $needs_array)) {
-        echo "<td>" . $tmp_title . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $tmp_surname . ", ";
+        echo "<td>" . $tmp_title . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>$tmp_surname, ";
         if ($tmp_first_names != '') {
           echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {
           echo $tmp_initials;
         }
-        echo "</a></td><td>" . $tmp_username . "</td>";
+        echo "</a></td><td>$tmp_username</td>";
       } else {
-        echo "<td>&nbsp;" . $tmp_title . "</td><td></td><td>" . $tmp_surname . ", ";
+        echo "<td>&nbsp;$tmp_title</td><td></td><td>$tmp_surname, ";
         if ($tmp_first_names != '') {
           echo '<span class="fn">' . $tmp_first_names . '</span>';
         } else {
           echo $tmp_initials;
         }
-        echo "</a></td><td>" . $tmp_username . "</td>";
+        echo "</a></td><td>$tmp_username</td>";
       }
     }
     if ($tmp_roles == 'Student') {
       if ($tmp_student_id == NULL) {
         echo "<td class=\"fn\">" . $string['unknown'] . "</td>";
       } else {
-        echo "<td>" . $tmp_student_id . "</td>";
+        echo "<td>$tmp_student_id</td>";
       }
     } else {
       echo "<td class=\"fn\">" . $string['na'] . "</td>";
     }
-    echo "<td>" . $tmp_yearofstudy . "</td><td>&nbsp;";
+    echo "<td>$tmp_yearofstudy</td><td>&nbsp;";
     if (isset($_GET['paperID'])) {
       echo $tmp_moduleid;
     } else {

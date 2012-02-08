@@ -332,7 +332,7 @@
   if ($paper_type != '6') {
 
     if (count($metadata) > 0) {
-      echo "<tr><td colspan=\"2\"><hr style=\"height:1px; color:#C0C0C0; background-color:#C0C0C0\" /></td></tr>\n";
+      echo "<tr><td colspan=\"2\"><hr style=\"height:1px; color:#C0C0C0; background-color:#C0C0C0; border:0px\" /></td></tr>\n";
     }
     foreach ($metadata as $meta_type=>$value_array) {
       echo "<tr><td>$meta_type</td><td><select name=\"meta$meta_no\" id=\"meta$meta_no\">";

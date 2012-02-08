@@ -446,7 +446,18 @@ $stmt->close();
 </table>
 
 <?php
-if ($summative_lock != 1) {
+if ($summative_lock == 1) {
+?>
+<ul id="break_controls" class="menu_list">
+<?php
+  if ($paper_type != '4') {
+?>
+  <li id="add_break" class="break greymenuitem">Add screen break</li>
+  <li id="delete_break" class="greymenuitem">Delete screen break</li>
+<?php
+  }
+  echo '</ul>';
+} else {
 ?>
 <ul id="break_controls" class="menu_list">
 <?php
@@ -457,7 +468,6 @@ if ($summative_lock != 1) {
 <?php
   }
 ?>
-  <li id="move_info" class="has_tip tip_right" title="<?php echo $string['reorderinfo'] ?>">Reordering questions</li>
 </ul>
 <?php
 }

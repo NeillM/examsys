@@ -357,6 +357,11 @@ function getMSCAA($paperID, $mysqlidb) {
     deActivateAddBreak(addLink);
   }
 
+  function hideNotice() {
+    document.getElementById('dragnotice').style.display = 'none';
+    $.cookie("dragnotice", "hide", { expires: 28 });
+  }
+  
   function scrollXY() {
     var scrOfX = 0, scrOfY = 0;
     if( typeof( window.pageYOffset ) == 'number' ) {
@@ -799,9 +804,9 @@ function getMSCAA($paperID, $mysqlidb) {
       $result->close();
    
       if ($record_no == 0) {
-        echo '<span style="align:right"><input type="button" name="unlock" value="' . $string['unlock'] . '" onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" /></span>';
+        echo '<span style="align:right"><input type="button" name="unlock" value=" ' . $string['unlock'] . ' " onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" /></span>';
       } else {
-        echo '<span style="align:right"><input type="button" name="unlock" value="' . $string['unlock'] . '" disabled /></span>';
+        echo '<span style="align:right"><input type="button" name="unlock" value=" ' . $string['unlock'] . ' " disabled /></span>';
       }
     }
     echo "</td></tr>\n";
@@ -819,6 +824,10 @@ function getMSCAA($paperID, $mysqlidb) {
     }
   }
 
+  if (!isset($_COOKIE['dragnotice'])) {
+    echo '<tr id="dragnotice"><td style="padding:2px; color:#154A93; background-color:#B8CFE9" colspan="5">&nbsp;Questions can now be reordered simply by dragging.</td><td style="padding:2px; color:#154A93; background-color:#B8CFE9; text-align:right"><a href="#" onclick="hideNotice();"><img src="../artwork/small_x.png" width="8" height="7" alt="close" border="0" /></a>&nbsp;</td></tr>';
+  }
+  
   $screen_marks = 0;
   $old_screen = 0;
   $question_number = 0;
@@ -846,7 +855,7 @@ function getMSCAA($paperID, $mysqlidb) {
           echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; background-color:#FFC0C0; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
         }
       }
-      echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque screen_no">' . $string['screen'] . " " . $temp_array[$x]['screen'] . '</span></h4></td></tr>';
+      echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque screen_no">' . $string['screen'] . " " . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';
     }
     $old_screen = $temp_array[$x]['screen'];
     $teamOK = false;
