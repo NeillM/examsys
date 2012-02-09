@@ -15,4 +15,5 @@ $string['Read - actioned'] = 'Przeczytano - podjęto działania';
 $string['Not actioned'] = 'Nie podjęto działań';
 $string['notreviewed'] = 'Nieprzejrzany';
 $string['noresponse'] = 'Brak reakcji';
+$string['noreviewers'] = '<strong>Warning:</strong> There have been no reviews of this paper.';  // Niko
 ?>

@@ -38,7 +38,7 @@
     } elseif ($rank_position == 3) {
       $html = '3rd';
     } elseif ($rank_position == 9990) {
-      $html = '<span style="color:#808080; font-weight:normal">' . $string['na'] . '</span>';
+      $html = $string['na'];
     } else {
       $html = $rank_position . 'th';
     }
@@ -86,7 +86,7 @@
     return $html;
   }
 
-  function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $score_method, $labelcolor, $themecolor, $std) {
+  function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std) {
     global $language, $cfg_root_path;
     
     if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
@@ -97,18 +97,18 @@
         echo "<td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">$leadin\n";
       } else {
         if ($scenario != '') {
-          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$scenario</p>\n";
-          echo "<p>$leadin</p>\n";
+          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
+          echo $leadin;
           if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
             echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
           }
-          if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"margin-left:-4px\">\n";
+          if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
         } else {
-          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n";
+          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
           if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
             echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
           }
-          if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"margin-left:-4px\">\n";
+          if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
         }
       }
       switch ($q_type) {
@@ -127,27 +127,28 @@
               $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
               $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
               $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
-              echo '<span style="color:#800000; font-weight:bold">[blank]</span>';
-              
-              if ($score_method == 'dropdown') {
+
+              if ($display_method == 'dropdown') {
+                echo '<select>';
                 $options_array = array();
                 $options_array = explode(',',$blank_options);
                 $i = 0;
                 foreach ($options_array as $individual_blank_option) {
                   $individual_blank_option = trim($individual_blank_option);
                   if ($i == 0) {
-                    echo '<strong>' . $individual_blank_option . '</strong>';
+                    echo '<option value="" selected="selected">' . $individual_blank_option . '</option>';
                   } else {
-                    echo ', ' . $individual_blank_option;
+                    echo '<option value="">' . $individual_blank_option . '</option>';
                   }
                   $i++;
                 }
+                echo '</select>';
               } else {
                 // Correct answer.
-                echo '<strong>' . $blank_options . '</strong>';
+                $correct_options = explode(',' , $blank_options);
+                echo '<input type="text" size="10" value="' . $correct_options[0] . '" />';
               }
-              
-              echo '<span style="color:#800000; font-weight:bold">[/blank]</span>' . $remainder;
+              echo $remainder;
             }
             $blank_count++;
           }
@@ -155,7 +156,7 @@
         case 'calculation':
           break;
         case 'dichotomous':
-          $tmp_std_array = explode(',',$std);
+          $tmp_std_array = explode(',', $std);
           $std_part = 0;
           if ($score_method == 'YN_Positive') {
             $true_label = 'Yes';
@@ -229,7 +230,7 @@
               <script language="JavaScript">
                 function swfLoaded<?php echo $q_no; ?>(message) {
                   var num = message.substring(5,message.length);
-                  setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo $correct; ?>', '', '1,1,0000000000000');
+                  setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $q_media; ?>', '<?php echo str_replace('&nbsp;', ' ', $correct); ?>', '', '1,1,0000000000000');
                 }
                 write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $tmp_width; ?>" height="<?php echo $tmp_height; ?>" align="middle">');
                 write_string('<param name="allowScriptAccess" value="always" />');
@@ -248,11 +249,19 @@
           foreach ($options as $individual_option) {
             $i++;
             if ($correct == $i) {
-              echo "<tr style=\"font-weight:bold\">";
+              echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
             } else {
-              echo "<tr>";
+              echo "<tr><td><input type=\"radio\" /></td><td>$individual_option</td></tr>\n";
             }
-            echo "<td>$individual_option</td></tr>\n";
+          }
+          break;
+        case 'true_false':
+          if ($correct == 't') {
+            echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>True</td></tr>\n";
+            echo "<tr><td><input type=\"radio\" /></td><td>False</td></tr>\n";
+          } else {
+            echo "<tr><td><input type=\"radio\" /></td><td>True</td></tr>\n";
+            echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>False</td></tr>\n";
           }
           break;
         case 'mrq':
@@ -262,23 +271,33 @@
           foreach ($options as $individual_option) {
             $i++;
             if ($correct_buf[$i-1] == 'y') {
-              echo "<tr style=\"font-weight:bold\"><td>$individual_option</td></tr>\n";
+              echo "<tr><td><input type=\"checkbox\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
             } else {
-              echo "<tr><td>$individual_option</td></tr>\n";
+              echo "<tr><td><input type=\"checkbox\" /></td><td>$individual_option</td></tr>\n";
             }
           }
           break;
         case 'rank':
-          $tmp_std_array = explode(',',$std);
+          $tmp_std_array = explode(',', $std);
           $std_part = 0;
           $rank_no = 0;
           foreach ($correct_buf as $individual_correct) {
             if ($individual_correct > $rank_no and $individual_correct < 9990) $rank_no = $individual_correct;
           }
+          
           $i = 0;
           foreach ($options as $individual_option) {
             $i++;
-            echo "<tr><td style=\"font-weight:bold\">" . displayRank($correct_buf[$i-1]) . "</td><td>$individual_option</td></tr>\n";
+            echo "<tr><td><select><option value=\"\"></option>";
+            for ($a=1; $a<=$rank_no; $a++) {
+              //echo '<option value="">' . displayRank($correct_buf[$a]) . '</option>';
+              if ($correct_buf[$i-1] == $a) {
+                echo '<option value="" selected="selected">' . displayRank($a) . '</option>';
+              } else {
+                echo '<option value="">' . displayRank($a) . '</option>';
+              }
+            }
+            echo "</select></td><td>$individual_option</td></tr>\n";
           }
           break;
         case 'textbox':
@@ -292,10 +311,10 @@
     } elseif ($q_type == 'matrix') {
       $matching_scenarios = explode('|', $scenario);
       $correct_answers = explode('|', $correct);
-      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n";
+      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
       echo '<ol type="i">';
       $i = 0;
-      echo '<table cellpadding="2" cellspacing="0" border="1">';
+      echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
       echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
       foreach ($options as $single_option) {
         echo '<td>' . $single_option . '</td>';
@@ -304,16 +323,15 @@
       echo "<tr>\n";
 
       $row_no = 0;
-      $numerals = array('i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
       foreach ($matching_scenarios as $single_scenario) {
         if (trim($single_scenario) != '') {
           echo "<tr>\n";
-          echo '<td align="right">' . $numerals[$row_no] . '.</td><td>' . $single_scenario . '</td>';
+          echo '<td align="right">' . chr(65 + $row_no) . '.</td><td>' . $single_scenario . '</td>';
           $answer_no = 1;
           $col_no = 1;
           foreach ($options as $single_option) {
             if ($correct_answers[$row_no] == $col_no) {
-              echo '<td style="background-color:#C0FFC0"><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" checked /></div></td>';
+              echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" checked /></div></td>';
             } else {
               echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" /></div></td>';
             }
@@ -351,41 +369,44 @@
         $total_scenarios = $tmp_media_no;
       }
       
-      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n<ol type=\"i\">";
+      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
       if ($tmp_media_array[0] != '') {
-        echo "<p align=\"center\">" . display_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0]) . "</p>\n";
+        echo "<div align=\"center\">" . display_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0]) . "</div>\n";
       }
       for ($i=1; $i<=$total_scenarios; $i++) {
         echo "<li>\n";
         if (isset($tmp_media_array[$i]) and $tmp_media_array[$i] != '') {
-          echo "<p>" . display_media($tmp_media_array[$i],$tmp_media_width_array[$i],$tmp_media_height_array[$i]) . "</p>\n";
+          echo "<div>" . display_media($tmp_media_array[$i],$tmp_media_width_array[$i],$tmp_media_height_array[$i]) . "</div>\n";
         }
-        if ($tmp_ext_scenarios[$i-1]) echo "<p>" . $tmp_ext_scenarios[$i-1] . "</p>\n";
-        echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        if ($tmp_ext_scenarios[$i-1]) echo $tmp_ext_scenarios[$i-1] . '<br />';
         $option_no = 1;
+        $specific_answers = array();
+        $specific_answers = explode('$', $tmp_answers_array[$i-1]);
+        if (count($specific_answers) > 1) {
+          echo '<select multiple="multiple" size="10">';
+        } else {
+          echo '<select>';
+        }
         foreach ($options as $individual_option) {
-          $specific_answers = array();
-          $specific_answers = explode('$', $tmp_answers_array[$i-1]);
           $answer_match = false;
           for ($x=0; $x<count($specific_answers); $x++) {
             if ($option_no == $specific_answers[$x]) $answer_match = true;
           }
           if ($answer_match == true) {
-            echo "<tr><td style=\"font-weight:bold\">$individual_option</td></tr>\n";
+            echo "<option value=\"\" selected=\"selected\">$individual_option</option>\n";
           } else {
-            echo "<tr><td>$individual_option</td></tr>\n";
+            echo "<option value=\"\">$individual_option</option>\n";
           }
           $option_no++;
         }
-        echo "</table></p></li>\n";
+        echo "</select><br />&nbsp;</li>\n";
       }
       echo "</ol>\n";
     }
     echo "</td></tr>\n";
-
     
     // Display comments here.
-    if ($q_type != 'info') echo  displayComments($q_id, $comments, $q_type, $q_no);
+    if ($q_type != 'info') echo displayComments($q_id, $comments, $q_type, $q_no);
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
   }
 ?>
@@ -411,6 +432,8 @@ p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
 .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+.matrix {border:1px solid #808080; border-collapse:collapse}
+.matrix td {border:1px solid #808080}
 </style>
 
 <script src="../js/staff_help.js" type="text/javascript"></script>
@@ -530,11 +553,11 @@ if (isset($_GET['scrOfY'])) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, score_method, q_media, q_media_width, q_media_height, correct, std FROM (properties, papers, questions, options) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (properties, papers, questions, options) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
-  while ($row = $result->fetch()) {
+  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
+  while ($result->fetch()) {
     if ($display_header == true) {
       echo '<tr><td class="h"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
       if ($folder != '') {
@@ -560,7 +583,7 @@ if (isset($_GET['scrOfY'])) {
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
       $question_no++;
       if ($old_q_type == 'info') $question_no--;
-      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_score_method, $old_labelcolor, $old_themecolor, $old_std);
+      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std);
       $options_buffer = array();
       $correct_buffer = array();
       if ($old_screen != $screen) {
@@ -614,6 +637,7 @@ if (isset($_GET['scrOfY'])) {
     $old_q_media_width = $q_media_width;
     $old_q_media_height = $q_media_height;
     $old_correct = $correct;
+    $old_display_method = $display_method;
     $old_score_method = $score_method;
     $old_std = $std;
     $old_screen = $screen;
@@ -621,7 +645,7 @@ if (isset($_GET['scrOfY'])) {
   $result->close();
   $question_no++;
   if ($old_q_type == 'info') $question_no--;
-  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_score_method, $old_labelcolor, $old_themecolor, $old_std);
+  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std);
   $mysqli->close();
 ?>
 </table>

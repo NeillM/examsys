@@ -321,6 +321,45 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       
       echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
       break;
+    case 'true_false':
+      if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
+        echo '<blockquote style="line-height:175%" class="unans">';
+      } else {
+        echo '<blockquote style="line-height:175%">';
+      }
+      
+      $true_checked = '';
+      $false_checked = '';
+      
+      if ($question['display_method'] == 'dropdown') {
+        echo "<select name=\"q" . $question_no . "\">\n";
+        echo "<option value=\"\"></option>\n";
+        if ($question['options'][0]['correct'] == 't') {
+          echo "<option value=\"t\" selected>True</option>\n";
+        } else {
+          echo "<option value=\"t\">True</option>\n";
+        }
+        if ($question['options'][0]['correct'] == 'f') {
+          echo "<option value=\"f\" selected>False</option>\n";
+        } else {
+          echo "<option value=\"f\">False</option>\n";
+        }
+        echo "</select>\n";
+      } else {
+        if ($question['options'][0]['correct'] == 't') $true_checked = ' checked="checked"';
+        if ($question['options'][0]['correct'] == 'f') $false_checked = ' checked="checked"';
+        
+        echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked />&nbsp;True";
+        if ($question['display_method'] == 'horizontal') {
+          echo '&nbsp;&nbsp;&nbsp;';
+        } elseif ($question['display_method'] == 'vertical') {
+          echo '<br />';
+        }
+        echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked />&nbsp;False";
+      }
+      
+      echo '</blockquote>';
+      break;
   }
   
   // Processing for each stem.
