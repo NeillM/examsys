@@ -12,6 +12,7 @@
 // v.p9u
 var ps = "";  // Info. Alerts: READ!
 var object_calc;
+var rogo_buffer = '';
 
 function checkButton(e) {
   var evt = e || window.event;
@@ -257,28 +258,45 @@ function returntoform() {
   window.close();
 }
 function xPlusEq(s) {
-  if (equalsFlag && s!='+' && s!='-' && s!='*' && s!='/' && s!='(' && s!=')' && s!='^') {
-    document.sCal.IOx.value = '';
-    buffer = '';
-  }
-  equalsFlag = false;
-  if (clearFlag) {
-    buffer = '';
-  }
-  Ix();
-  if (s == '.' && x == '' && buffer == '') {
-    x = buffer = '0';
-  }
-  x += s;
-  buffer += s;
-  Ox();
-  if (s=='+' || s=='-' || s=='*' || s=='/' || s=='(' || s==')' || s=='^') {
-    clearFlag = true;
+  if (rogo_buffer == '') {
+    if (equalsFlag && s!='+' && s!='-' && s!='*' && s!='/' && s!='(' && s!=')' && s!='^') {
+      document.sCal.IOx.value = '';
+      buffer = '';
+    }
+    equalsFlag = false;
+    if (clearFlag) {
+      buffer = '';
+    }
+    Ix();
+    if (s == '.' && x == '' && buffer == '') {
+      x = buffer = '0';
+    }
+    x += s;
+    buffer += s;
+    if (s == ')') {
+      braceEval();
+      document.getElementById('ans').innerHTML = buffer;
+    }
+
+    Ox();
+    if (s=='+' || s=='-' || s=='*' || s=='/' || s=='(' || s==')' || s=='^') {
+      clearFlag = true;
+    } else {
+      clearFlag = false
+    }
+    if (!clearFlag) {
+      document.getElementById('ans').innerHTML = buffer;
+    }
   } else {
-    clearFlag = false
-  }
-  if (!clearFlag) {
-    document.getElementById('ans').innerHTML = buffer;
+    var reStr = rogo_buffer.replace('^', '\\^') + '+$';
+    var re = new RegExp(reStr);
+    document.getElementById('ans').innerHTML = s;
+    rogo_buffer += s;
+    var buffVal = rogo_eval(rogo_buffer);
+    x = x.replace(re, '') + buffVal.toString();
+    buffer = buffVal;
+    Oxf(); //  figure x, & substiture in function,  NOTE: Oxf()!
+    rogo_buffer = '';
   }
 } // --- DISPLAY-x functions ---
 function xMultEq(s) {
@@ -323,7 +341,7 @@ function Xwork(s) {  // --- finds how to handle incoming MENU (s)-values ---
     alert(s.replace(/~~/g,"\n"))
   } else {  // '!' is key, '~~' is newline
     if (isNaN(s)) {
-      if (s.indexOf('buffer') > -1 && s.indexOf('-1') > -1) {       //-if expression is +-
+      if (s.indexOf('buffer') > -1) {       //-if expression is +-
         var re = new RegExp(buffer + '+$');
         x = x.replace(re, '') + eval(s);
         buffer = eval(s);
@@ -361,9 +379,13 @@ function Xwork(s) {  // --- finds how to handle incoming MENU (s)-values ---
 function DoRecip(s) //--- does [,]: inverse [d] eg. ft>m becomes m>ft. NOT ALWAYS SENSIBLE! ---
  {Ix(); var temp=eval(s); if (s.indexOf('x')>-1) {x=x*x/temp} else {x=1/temp} Oxf();
 }
-function Im() {m = document.sCal.IOm.value;} // --- MEMORY fcns: like Ix() & Ox() ---
+function Im() { // --- MEMORY fcns: like Ix() & Ox() ---
+  if (document.getElementById('memval')) {
+    m = document.getElementById('memval').innerHTML;
+  }
+}
 function Om() {
-  document.getElementById('memory').innerHTML = '<span style="font-size:70%">+M</span>  ' + m;
+  document.getElementById('memory').innerHTML = '<span style="font-size:70%">+M</span>  <span id="memval">' + m + '</span>';
 }
 function XtoM()  {Ix(); Im(); m+=x; Om(); x=""; Ox(); Timer=1;} //--with stopwatch settings
 function MtoX()  {Ix(); Im(); x += m; Ox();}
@@ -419,3 +441,118 @@ function d_w(s) {
   return document.write(s)
 }
 
+// Convert to degrees if mode
+function trigModeConvert (angle) {
+  angle = parseFloat(angle);
+  if (trigMode == 'radians') {
+    return angle;
+  } else {
+    return (angle / 180) * Math.PI;
+  }
+}
+
+function rogo_asinh (arg) {
+  arg = trigModeConvert(arg);
+  return arg / Math.abs(arg) * Math.log(Math.abs(arg) + Math.sqrt(arg * arg + 1));
+}
+
+function rogo_acosh (arg) {
+  arg = trigModeConvert(arg);
+  return 2 * Math.log(Math.sqrt((arg + 1) / 2) + Math.sqrt((arg - 1) / 2));
+}
+
+function rogo_atanh (arg) {
+  arg = trigModeConvert(arg);
+  return 0.5 * Math.log((1 + arg) / (1 - arg));
+}
+
+function rogo_sinh (arg) {
+  arg = trigModeConvert(arg);
+  return ( Math.exp(arg) - 1 / Math.exp(arg) )/ 2;
+}
+
+function rogo_cosh (arg) {
+  arg = trigModeConvert(arg);
+  return (Math.exp(arg) + 1 / Math.exp(arg) )/ 2;
+}
+
+function rogo_tanh (arg) {
+  arg = trigModeConvert(arg);
+  return ( Math.exp(arg) - 1 / Math.exp(arg) )/ ( Math.exp(arg) + 1 / Math.exp(arg) );
+}
+
+function rogo_asin (arg) {
+  arg = trigModeConvert(arg);
+  return Math.asin(arg);
+}
+
+function rogo_acos (arg) {
+  arg = trigModeConvert(arg);
+  return Math.acos(arg);
+}
+
+function rogo_atan (arg) {
+  arg = trigModeConvert(arg);
+  return Math.atan(arg);
+}
+
+function rogo_sin (arg) {
+  arg = trigModeConvert(arg);
+  return Math.sin(arg);
+}
+
+function rogo_cos (arg) {
+  arg = trigModeConvert(arg);
+  return Math.cos(arg);
+}
+
+function rogo_tan (arg) {
+  arg = trigModeConvert(arg);
+  return Math.tan(arg);
+}
+
+function rogo_square (arg) {
+  arg = parseFloat(arg);
+  return arg*arg;
+}
+
+function rogo_recip (arg) {
+  arg = parseFloat(arg);
+  return 1/arg;
+}
+
+function rogo_fact (arg) {
+  arg = parseInt(arg);
+  var rval = arg;
+  for (j = arg; j > 2 ;j--) {
+    rval *= j - 1;
+  }
+  return rval;
+}
+
+function rogo_buffered(arg, operator) {
+  rogo_buffer = parseFloat(arg) + operator;
+  x += operator;
+}
+
+function rogo_eval(arg) {
+  var n = arg.indexOf('^');
+  if (n > 0) {
+    return Math.pow(arg.substring(0,n), arg.substring(n+1));
+  } else {      // likewise, entire x-value used as function argument, not just last term
+    return eval(arg);
+  }
+}
+
+function braceEval() {
+  var start = x.lastIndexOf('(') + 1;
+  if (start >= 0) {
+    var expr = x.substring(start, x.length - 1);
+    buffer = eval(expr);
+    x = x.replace('(' + expr + ')', buffer);
+  }
+}
+
+function changeTrigMode() {
+  trigMode = (document.getElementById('trigmode_rad').checked) ? 'radians' : 'degrees';
+}

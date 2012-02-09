@@ -50,6 +50,7 @@ print <<<END
   <tr><td colspan="5"><div id="ans" class="ans">0</div></td></tr>
   <tr><td colspan="5"><textarea name="IOx" rows="3" cols="16" class="LCD"></textarea></td></tr>
   <tr><td colspan="5"><div name="memory" id="memory" class="memory">&nbsp;</div></td></tr>
+  <tr><td colspan="5" class="trigmode"><input type="radio" id="trigmode_deg" name="trigmode" value="deg" checked="checked" onchange="changeTrigMode()" /> <label for="trigmode_deg">Degrees</label> <input type="radio" id="trigmode_rad" name="trigmode" value="rad" onchange="changeTrigMode()" /> <label for="trigmode_rad">Radians</label></td></tr>
 
 <tr>
 
@@ -57,9 +58,9 @@ END;
 
   if (isset($_GET['calc']) and $_GET['calc'] != 2) {
 print <<<END
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('x / Math.abs(x) * Math.log(Math.abs(x) + Math.sqrt(x * x + 1))')">asinh</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork(' 2 * Math.log(Math.sqrt((x + 1) / 2) + Math.sqrt((x - 1) / 2))')">acosh</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork(' Math.log((x - 1) / (x + 1)) / 2')">atanh</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_asinh(buffer)')">asinh</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_acosh(buffer)')">acosh</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_atanh(buffer)')">atanh</a></div></td>
 
 END;
 
@@ -86,36 +87,36 @@ END;
 print <<<END
 
 <tr>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('( Math.exp(x) - 1 / Math.exp(x) )/ 2')">sinh</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('( Math.exp(x) + 1 / Math.exp(x) )/ 2')">cosh</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('( Math.exp(x) - 1 / Math.exp(x) )/ ( Math.exp(x) + 1 / Math.exp(x) )')">tanh</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.exp(x)')">&nbsp;e<sup><i><span style="font-family:'Times New Roman',serif; font-size:130%; padding-left:2px">x</span></i></sup></a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.pow(10,x)')">&nbsp;10<sup><i><span style="font-family:'Times New Roman',serif; font-size:130%; padding-left:2px">x</span></i></sup></a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_sinh(buffer)')">sinh</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_cosh(buffer)')">cosh</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_tanh(buffer)')">tanh</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.exp(buffer)')">&nbsp;e<sup><i><span style="font-family:'Times New Roman',serif; font-size:130%; padding-left:2px">x</span></i></sup></a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.pow(10,buffer)')">&nbsp;10<sup><i><span style="font-family:'Times New Roman',serif; font-size:130%; padding-left:2px">x</span></i></sup></a></div></td>
 </tr>
 
 <tr>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.asin(x)*180/Math.PI')">asin</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.acos(x)*180/Math.PI')">acos</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.atan(x)*180/Math.PI')">atan</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.log(x)')">ln</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.log(x)*Math.LOG10E')">log</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_asin(buffer)')">asin</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_acos(buffer)')">acos</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_atan(buffer)')">atan</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.log(buffer)')">ln</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.log(buffer)*Math.LOG10E')">log</a></div></td>
 </tr>
 
 
 <tr>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.sin(x*Math.PI/180)')">sin</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.cos(x*Math.PI/180)')">cos</a></div></td>
-  <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.tan(x*Math.PI/180)')">tan</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_sin(buffer)')">sin</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_cos(buffer)')">cos</a></div></td>
+  <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_tan(buffer)')">tan</a></div></td>
   <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.PI')"><span style="font-family:'Times New Roman',serif; font-size:150%">&pi;</span></a></div></td>
   <td><div class="b"><a href="#" class="b1"  onclick="Xwork('Math.E')">e</a></div></td>
 </tr>
 
   <tr>
-   <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.sqrt(x)')" style="font-family:'Times New Roman'">&radic;</a></div></td>
-   <td><div class="b"><a href="#" class="b1" onclick="xSquare()"><span style="font-family:'Times New Roman'; font-size:150%"><i>x</i></span><span style="font-size:90%; padding-left:1px"><sup>2</sup></span></a></div></td>
-   <td><div class="b"><a href="#" class="b1" onclick="recip()">1/<span style="font-family:'Times New Roman',serif; font-size:110%"><i>x</i></span></a></div></td>
-   <td><div class="b"><a href="#" class="b1" onclick="Xwork('for(j=x;j>2;j--){x*=j-1;}')"><span style="font-family:'Times New Roman',serif; font-size:150%"><i>x</i></span>!</a></div></td>
-   <td><div class="b"><a href="#" class="b1" onclick="xPlusEq('^')">&nbsp;<span style="font-family:'Times New Roman',serif; font-size:150%"><i>x</i></span><span style="font-size:90%; padding-left:1px"><sup><i>y</i></sup></span></a></div></td>
+   <td><div class="b"><a href="#" class="b1" onclick="Xwork('Math.sqrt(buffer)')" style="font-family:'Times New Roman'">&radic;</a></div></td>
+   <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_square(buffer)')"><span style="font-family:'Times New Roman'; font-size:150%"><i>x</i></span><span style="font-size:90%; padding-left:1px"><sup>2</sup></span></a></div></td>
+   <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_recip(buffer)')">1/<span style="font-family:'Times New Roman',serif; font-size:110%"><i>x</i></span></a></div></td>
+   <td><div class="b"><a href="#" class="b1" onclick="Xwork('rogo_fact(buffer)')"><span style="font-family:'Times New Roman',serif; font-size:150%"><i>x</i></span>!</a></div></td>
+   <td><div class="b"><a href="#" class="b1" onclick="rogo_buffered(buffer, '^')">&nbsp;<span style="font-family:'Times New Roman',serif; font-size:150%"><i>x</i></span><span style="font-size:90%; padding-left:1px"><sup><i>y</i></sup></span></a></div></td>
   </tr>
 
 END;
@@ -126,8 +127,8 @@ END;
 
 <!--  <td><div class="b"><a href="#" class="b2" onclick="xMultEq('-1')">&plusmn;</a></div></td>-->
   <td><div class="b"><a href="#" class="b2" onclick="Xwork('buffer * -1')">&plusmn;</a></div></td>
-  <td><div class="b"><a href="#" class="b2" onclick="xPlusEq('(')">(</a></div></td>
-  <td><div class="b"><a href="#" class="b2" onclick="xPlusEq(')')">)</a></div></td>
+  <td><div class="b"><a href="#" class="b2" onclick="return xPlusEq('(')">(</a></div></td>
+  <td><div class="b"><a href="#" class="b2" onclick="return xPlusEq(')')">)</a></div></td>
   <td><div class="b"><a href="#" class="del" onClick="BkSpace()">DEL</a></div></td>
   <td><div class="b"><a href="#" class="ac" onclick="Clear()">AC</a></div></td>
   </td>
@@ -173,6 +174,7 @@ if (urlParams["form"]!="undefined") {
   x=window.opener.document[urlParams["form"]][urlParams["field"]].value;
   Ox();
 }
+var trigMode = 'degrees';
 </script>
 </body>
 </html>
