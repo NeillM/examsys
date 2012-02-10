@@ -23,12 +23,10 @@
 */
 
 require '../include/staff_auth.inc';
-
 require_once '../include/errors.inc';
+require 'summary_report.inc';
 
 check_var('paperID', 'GET', true, false);
-
-require 'summary_report.inc';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -36,12 +34,13 @@ require 'summary_report.inc';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Report</title>
+  <title><?php echo $string['reviewsummary'] . ' ' . $cfg_install_type; ?></title>
   
   <style>
     body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%; margin:0px}
     .fn {color:#808080}
-    .num {padding-top:1px; padding-bottom:1px; text-align:right; border-bottom:solid #EEEEEE 1px}
+    .num {padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
+    .errnum {color:#C00000; padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
     .title {padding-left:10px}
     .line {padding-top:1px; padding-bottom:1px; padding-left:6px; border-bottom:solid #EEEEEE 1px}
     .breadcrumb {margin-top:2px; margin-left:10px; font-size:90%}
@@ -197,11 +196,11 @@ require 'summary_report.inc';
 ?>
 <?php
   // write out headings
-  echo '<tr style="background-color:#F1F5FB"><td></td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Name</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Student ID</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Reviewed</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $type . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Reviews</td>';
+  echo '<tr style="background-color:#F1F5FB"><td></td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['name'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['studentid'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviewed'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $type . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviews'] . '</td>';
   for ($i=1; $i<=$heading_no; $i++) {
-    echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Q' . $i . '</td>';
+    echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['q'] . $i . '</td>';
   }
-  echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Overall</td><td style="width:20%">&nbsp;</td></tr>';
+  echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['overall'] . '</td><td style="width:20%">&nbsp;</td></tr>';
   echo '<tr><td colspan="' . ($heading_no + 8) . '" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr>';
 
   foreach ($user_data as $student_userID => $student) {
@@ -217,19 +216,33 @@ require 'summary_report.inc';
     }
     echo '<td class="line">' . $student['group'] . '</td>';
     if (isset($student['review_no'])) {
-      echo '<td class="num">' . $student['review_no'] . '</td>';
+      if ($student['review_no'] < (count($groups[$student['group']])-1)) {
+        echo '<td class="errnum">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+      } else {
+        echo '<td class="num">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+      }
     } else {
-      echo '<td class="num">0</td>';
+      echo '<td class="errnum">0</td>';
     }
     foreach ($questions as $questionID => $tmp_data) {
       if (isset($student['means'][$questionID])) {
-        echo '<td class="num">' . padDecimals($student['means'][$questionID],2) . '</td>';
+        echo '<td class="num">';
+        if ($_GET['percent'] == '1') {
+          echo round($student['percent'][$questionID],0) . '%';
+        } else {
+          echo padDecimals($student['means'][$questionID],1);
+        }
+        echo '</td>';
         $mean_total += $student['means'][$questionID];
       } else {
         echo '<td class="num">&nbsp;</td>';
       }
     }
-    echo '<td class="num">' . padDecimals($mean_total / $heading_no, 2) . '</td>';
+    if ($_GET['percent'] == '1') {
+      echo "<td class=\"num\">" . round($student['total_percent'][$questionID], 0) . "%</td>\n";
+    } else {
+      echo '<td class="num">' . padDecimals($mean_total / $heading_no, 2) . '</td>';
+    }
     echo "<td class=\"num\">&nbsp;</td></tr>\n";
   }
 ?>

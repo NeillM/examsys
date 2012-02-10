@@ -61,11 +61,13 @@ while ($result->fetch()) {
   $heading_no = substr_count($display_method, '|');
   $questions[$questionID]['leadin'] = $leadin;
   $questions[$questionID]['scale'] = $display_method;
+  $questions[$questionID]['scale_size'] = substr_count($display_method, '|');
 }
 $result->close();
 
 // Load basic user information
 $user_data = array();
+$groups = array();
 $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? ORDER BY surname, initials");
 $result->bind_param('iss', $moduleID, $calendar_year, $type);
 $result->execute();
@@ -77,6 +79,8 @@ while ($result->fetch()) {
   $user_data[$userID]['title'] = $title;
   $user_data[$userID]['student_id'] = $student_id;
   $user_data[$userID]['userID'] = $userID;
+  
+  $groups[$group][$student_id] = $student_id;
 }
 $result->close();
 
@@ -94,18 +98,34 @@ $result->close();
 
 // Parse the data calculating means
 foreach ($user_data as $studentID => $student) {
+  $available_marks = 0;
+  $student_marks = 0;
   if (isset($student['data'])) {
     foreach ($student['data'] as $questionID => $question_data) {
       $review_no = 0;
-      $review_total = 0;
+      $review_total = 0;   
+      $sub_student = 0;
+      $sub_available = 0;
       foreach ($question_data as $individual_question) {
         if ($individual_question != '') {
           $review_no++;
           $review_total += $individual_question;
+          $available_marks += $questions[$questionID]['scale_size'];
+          $sub_available += $questions[$questionID]['scale_size'];
+          $student_marks += $individual_question;
+          $sub_student += $individual_question;
         }
       }
       $user_data[$studentID]['review_no'] = $review_no;
-      $user_data[$studentID]['means'][$questionID] = $review_total / $review_no;
+      if ($review_no > 0) {
+        $user_data[$studentID]['means'][$questionID] = $review_total / $review_no;
+        $user_data[$studentID]['percent'][$questionID] = ($sub_student / $sub_available) * 100;
+      } else {
+        $user_data[$studentID]['means'][$questionID] = 0;
+        $user_data[$studentID]['percent'][$questionID] = 0;
+      }
+      $user_data[$studentID]['review_total'][$questionID] = $student_marks;
+      $user_data[$studentID]['total_percent'][$questionID] = ($student_marks / $available_marks) * 100;
     }
   }
 }

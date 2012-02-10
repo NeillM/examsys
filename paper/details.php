@@ -245,7 +245,7 @@ function getMSCAA($paperID, $mysqlidb) {
 <html onscroll="scrollXY();" onclick="qOff(); hideMenus(); hideAssStatsMenu(event);">
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Rogō<?php echo " $cfg_install_type"; ?></title>
+  <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
