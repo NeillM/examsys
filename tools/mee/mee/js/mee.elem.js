@@ -21,7 +21,7 @@ $.Class.extend("MEE.Elem",
         if (token.sizer)
             this.sizer = token.sizer;
         if (token.type == "extsingle") {
-            this.main = new MEE.ElemSetBasic("", new Object(), this);
+            this.main = new MEE.ElemSetBasic("", {}, this);
             this.eldata.lb = token.latex;
             if (eldata.text)
                 this.eldata.lb = eldata.text;
@@ -53,11 +53,7 @@ $.Class.extend("MEE.Elem",
     // replace the main text of an element with a full element set
     // this is used for things like \sqrt{x}, {x} will be the new main
     SetMain: function (token) {
-        /*if (this.eldata.simplemain) {
-        this.main = new MEE.ElemSetBasic(token.latex, this.eldata, this);
-        } else {*/
         this.main = new MEE.ElemSetNormal(token.latex, this);
-        //}
         this.argmap.push(this.main);
     },
 
@@ -107,14 +103,17 @@ $.Class.extend("MEE.Elem",
         }
 
         // create element container
-        this.html_elem = $('<span>');
-        this.html_elem.addClass('mee_elem');
-        if (this.eldata.elemclass)
-            this.html_elem.addClass(this.eldata.elemclass);
-
         this.elemid = MEE.Elem.elems.length;
         MEE.Elem.elems[this.elemid] = this;
-        this.html_elem.attr('elem', this.elemid);
+
+        if (this.eldata.elemclass)
+          this.html_elem = $('<span class="mee_elem ' + this.eldata.elemclass + '">');
+        else 
+          this.html_elem = $('<span class="mee_elem">');
+
+       this.html_elem.attr('elem', this.elemid);
+
+        
 
         // add left bracket if available
         if (this.eldata.lb)
@@ -186,22 +185,25 @@ $.Class.extend("MEE.Elem",
             return;
 
         // this needs to be inserted at the start of the element set
-        this.html_lb = $('<span>');
-        this.html_lb.css('position', 'relative');
+        this.html_lb = $('<span style="position:relative">');
+        //this.html_lb.css('position', 'relative');
         this.html_lb.html(MEE.Data.blankspace);
 
-        this.html_lb_inner = $('<span>');
-        this.html_lb_inner.css('position', 'absolute');
+        var font = '';
+        if (!('scale' in this.eldata && this.eldata.scale == 1) && this.size > 0 && this.size < 5) {
+            // apply static sized brackets
+            font = ';font-family:' + "MathJax_Size" + this.size;
+            //$(this.html_lb_inner).css('font-family', font);
+        }
+        
+        this.html_lb_inner = $('<span style="position:absolute ' + font + '">');
+        //this.html_lb_inner.css('position', 'absolute');
         this.html_lb_inner.html(this.eldata.lb);
 
         this.html_lb.append(this.html_lb_inner);
         this.html_elem.prepend(this.html_lb);
 
-        if (!('scale' in this.eldata && this.eldata.scale == 1) && this.size > 0 && this.size < 5) {
-            // apply static sized brackets
-            var font = "MathJax_Size" + this.size;
-            $(this.html_lb_inner).css('font-family', font);
-        }
+        
     },
 
     createRbHTML: function () {
@@ -212,19 +214,15 @@ $.Class.extend("MEE.Elem",
         if (this.eldata.rb == ".")
             this.eldata.rb = "";
 
-        this.html_rb = $('<span>');
-        this.html_rb.css('position', 'relative');
+        this.html_rb = $('<span style="position:relative">');
         this.html_rb.html(MEE.Data.blankspace);
 
 
-        this.html_rb_inner = $('<span>');
-        this.html_rb_inner.css('position', 'absolute');
+        this.html_rb_inner = $('<span style="position:absolute">');
         this.html_rb_inner.html(this.eldata.rb);
 
         this.html_rb.append(this.html_rb_inner);
-        /*if (this.html_main) {
-        this.html_main.after(this.html_rb);
-        } else*/
+ 
         if (this.html_superscript) {
             this.html_superscript.before(this.html_rb);
         } else if (this.html_subscript) {
@@ -256,7 +254,7 @@ $.Class.extend("MEE.Elem",
     // create the html stuff for a superscript
     createSuperscriptHTML: function () {
         var ssdepth = this.depth + 1;
-        if (ssdepth < 3) ssdepth = 3;
+        if (ssdepth < 4) ssdepth = 4;
         this.html_superscript = this.superscript.toHTML(ssdepth);
         this.html_superscript.addClass('mee_superscript');
         if (this.eldata.superscriptclass)
@@ -319,21 +317,7 @@ $.Class.extend("MEE.Elem",
         if (this.html_sqrt) {
             var offset = 0;
             if (this.bsize == -1) {
-                /*var offset = 0.36;
-                offset = $(offset).toPx({ 'scope': this.html_elem });
-                var offset2 = 0.13;
-                offset2 = $(offset2).toPx({ 'scope': this.html_elem });
-                this.html_sqrt.css('top', -this.align.top + 'px');
-                this.html_sqrt.css('left', lbwidth - offset + 'px');
-                this.html_sqrt.css('padding-right', this.main.align.width - MEE.Data.blankspacesize(this.html_sqrt) + offset + 'px');
-                this.html_sqrt.css('padding-bottom', this.main.align.top + this.main.align.bottom - offset2 + 'px');
-                this.html_sqrt.addClass('mee_sqrt_bar_big');
-                this.align.top += 3;
-
-                // make sure the bar is at least 1px
-                if (parseInt(this.html_sqrt.css('font-size').replace('px', '')) < 20)
-                this.html_sqrt.css('border-top', '1px solid black');*/
-
+                
                 // need to create a char string that fills the box
                 var width = this.main.align.width;
                 width = $(width).toEm({ 'scope': this.html_elem });
@@ -355,20 +339,7 @@ $.Class.extend("MEE.Elem",
                 this.html_lb.append(this.html_sqrt);
                 if (this.bsize > 0)
                     this.html_sqrt.css('font-family', 'MathJax_Size' + this.bsize);
-                /*if (this.bsize == 0)
-                offset = 0.1;
-                else if (this.bsize == 3)
-                offset = 0.07;
-
-                offset = $(offset).toPx({ 'scope': this.html_elem });
-                this.html_sqrt.css('top', -this.align.top + offset + 'px');
-                this.html_sqrt.css('left', lbwidth + 'px');
-                this.html_sqrt.css('padding-right', this.main.align.width - MEE.Data.blankspacesize(this.html_sqrt) + 'px');
-                this.align.top += 3;
-
-                // make sure the bar is at least 1px
-                if (parseInt(this.html_sqrt.css('font-size').replace('px', '')) < 20)
-                this.html_sqrt.css('border-top', '1px solid black');*/
+                
             }
         }
 
@@ -376,11 +347,9 @@ $.Class.extend("MEE.Elem",
         // check super script
         var sswidth = 0;
         if (this.superscript) {
-            //var suptop = Math.abs(this.html_superscript.css('top').replace('px', ''));
-            var suptop = Math.abs(this.html_superscript.css('top').replace('px', '')) + this.superscript.align.top;
+            var suptop = Math.abs(this.html_superscript.css('top').replace('px','')) + this.superscript.align.top;
             if (suptop)
                 this.align.top = Math.max(this.align.top, suptop);
-            //var suptop = Math.abs(this.html_superscript.css('top').replace('px', ''));
             sswidth = Math.max(sswidth, this.superscript.align.width);
         }
 
@@ -402,14 +371,6 @@ $.Class.extend("MEE.Elem",
         this.align.height += this.align.top;
         this.align.height += this.align.bottom;
 
-
-        // pad the top and bottom margins to accomodate the contents
-        /*if (this.align.top)
-        $(this.html_elem).css('margin-top', this.align.top + 'px');
-        if (this.align.bottom)
-        $(this.html_elem).css('margin-bottom', this.align.bottom + 'px');*/
-
-
         var padleft = $(this.html_elem).css('padding-left');
         if (padleft) {
             padleft = parseInt(padleft.replace('px', ''));
@@ -424,24 +385,13 @@ $.Class.extend("MEE.Elem",
             }
         }
 
-
         // check the main element for any margins and add these to the width
-        var marginl = parseInt($(this.html_elem).css('margin-left').replace('px', 'em'));
+        var marginl = parseInt($(this.html_elem).css('margin-left'));
         if (marginl > 0) this.align.width += marginl;
 
-        var marginr = parseInt($(this.html_elem).css('margin-right').replace('px', 'em'));
+        var marginr = parseInt($(this.html_elem).css('margin-right'));
         if (marginr > 0) this.align.width += marginr;
-
-        /*if (this.depth == 1)
-        this.html_elem.css('color', 'red');
-        if (this.depth == 2)
-        this.html_elem.css('color', 'blue');
-        if (this.depth == 3)
-        this.html_elem.css('color', 'green');
-        if (this.depth == 4)
-        this.html_elem.css('color', 'yellow');*/
-
-
+        
         return this.align;
     },
 
@@ -482,7 +432,7 @@ $.Class.extend("MEE.Elem",
             mainhem = $(mainho).toEm({ 'scope': this.html_elem });
 
             // build height tablse
-            var heights = new Object();
+            var heights = {};
             if (bracketchar == '&#x221A;') { // square root table
                 heights.size4 = 3;
                 heights.size3 = 2.4;
@@ -548,14 +498,12 @@ $.Class.extend("MEE.Elem",
 
                 this.align.bottom = this.align.top;
             }
+
             this.align.width += bwidth;
 
         } else {
 
             // need to position the bracket and pad out the parent
-            MEE.Edit.redraw(this.html_elem);
-
-            //var bheight = $(inner).outerHeight(true);// 
             var bheight = bdata['size' + size].height;
             bheight = $(bheight).toPx({ 'scope': this.html_elem });
 
@@ -828,29 +776,29 @@ $.Class.extend("MEE.Elem",
 
     // create a large bracket
     generateLargeBracket: function (bracket, mainh, scopeelem, bracketelem) {
-
+        
+        JQbracketelem = $(bracketelem);
+        
         var bi = MEE.Data.getBracket(bracket);
 
         // pad the bracket element out to the required size
-        $(bracketelem).css('position', 'relative');
-        $(bracketelem).html("");
+        JQbracketelem.css('position', 'relative');
+        JQbracketelem.html("");
 
-        var bh = MEE.Data.getBaseSize($(scopeelem));
+        var bh = MEE.Data.getBaseSize(scopeelem);
         var pad = Math.floor((mainh - bh) / 2);
+        
+        if($.browser.msie) {
+          //nasty hack to fix brackets iin ie 8 and 9
+          pad += 15;
+        }
+        JQbracketelem.css('top', -pad + 'px');
 
-        //pad += 2;
-
-        $(bracketelem).css('top', -pad + 'px');
-        /*$(bracketelem).css('padding-top', pad + 'px');
-        $(bracketelem).css('padding-bottom', pad + 'px');*/
-
-        // position the top part
-        var top = $('<span>');
+        // position the top part   
         var topcdata = MEE.Data.getCharSize(bi.top, scopeelem);
+        var top = $('<span class="mee_bracket_part" style="top:' + -topcdata.top + 'px' + '">');
         top.html(bi.top);
-        top.addClass('mee_bracket_part');
-        top.css('top', -topcdata.top + 'px');
-        $(bracketelem).append(top);
+        JQbracketelem.append(top);
 
 
         // position the bottom part
@@ -859,7 +807,7 @@ $.Class.extend("MEE.Elem",
         bottom.html(bi.bottom);
         bottom.addClass('mee_bracket_part');
         bottom.css('top', mainh - (bottomcdata.top + bottomcdata.height) + 'px');
-        $(bracketelem).append(bottom);
+        JQbracketelem.append(bottom);
 
         var midcdata = MEE.Data.getCharSize(bi.mid, scopeelem);
 
@@ -868,13 +816,11 @@ $.Class.extend("MEE.Elem",
 
             var middletop = topcdata.height;
             var middlebottom = mainh - bottomcdata.height;
-
-            var angle = $('<span>');
-            angle.html(bi.angle);
+            
             var anglecdata = MEE.Data.getCharSize(bi.angle, scopeelem);
-            angle.addClass('mee_bracket_part');
-            angle.css('top', Math.floor((middletop + middlebottom - anglecdata.height) / 2) - anglecdata.top + 'px');
-            $(bracketelem).append(angle);
+            var angle = $('<span class="mee_bracket_part" style="top:' + (Math.floor((middletop + middlebottom - anglecdata.height) / 2) - anglecdata.top) + 'px" >');
+            angle.html(bi.angle);
+            JQbracketelem.append(angle);
 
             // gap sizing
             var gapsize = Math.floor((mainh - (topcdata.height + bottomcdata.height + anglecdata.height)) / 2);
@@ -883,17 +829,13 @@ $.Class.extend("MEE.Elem",
             if (gapsize > 0) { // there is a gap between the top angle and bottom
 
                 if (gapsize < midcdata.height) { // if we need only 1 mid section
-                    var mid = $('<span>');
+                    var mid = $('<span class="mee_bracket_part" style="top:' + (-midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2)) + 'px" >');
                     mid.html(bi.mid);
-                    mid.addClass('mee_bracket_part');
-                    mid.css('top', -midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2) + 'px');
-                    $(bracketelem).append(mid);
+                    JQbracketelem.append(mid);
 
-                    var mid = $('<span>');
+                    var mid = $('<span class="mee_bracket_part" style="top:' + (-midcdata.top + mainh - bottomcdata.height - Math.floor((midcdata.height + gapsize) / 2)) + 'px" >');
                     mid.html(bi.mid);
-                    mid.addClass('mee_bracket_part');
-                    mid.css('top', -midcdata.top + mainh - bottomcdata.height - Math.floor((midcdata.height + gapsize) / 2) + 'px');
-                    $(bracketelem).append(mid);
+                    JQbracketelem.append(mid);
 
                 } else { // need to fill in multiple mid parts
 
@@ -904,21 +846,17 @@ $.Class.extend("MEE.Elem",
                     var last = -midcdata.top + topcdata.height + gapsize - midcdata.height;
                     var cur = -midcdata.top + topcdata.height;
                     while (cur < last && midcdata.height > 0) {
-                        var mid = $('<span>');
+                        var mid = $('<span class="mee_bracket_part" style="top:' + cur + 'px' + '">');
                         mid.html(bi.mid);
-                        mid.addClass('mee_bracket_part');
-                        mid.css('top', cur + 'px');
-                        $(bracketelem).append(mid);
+                        JQbracketelem.append(mid);
                         cur += midcdata.height;
                     }
 
 
                     // top mid bottom
-                    var mid = $('<span>');
+                    var mid = $('<span class="mee_bracket_part"style="top:' + last + 'px' + '">');
                     mid.html(bi.mid);
-                    mid.addClass('mee_bracket_part');
-                    mid.css('top', last + 'px');
-                    $(bracketelem).append(mid);
+                    JQbracketelem.append(mid);
 
                     /////////////////
                     // bottom half //
@@ -929,20 +867,16 @@ $.Class.extend("MEE.Elem",
 
                     var cur = -midcdata.top + mainh - bottomcdata.height - gapsize;
                     while (cur < last && midcdata.height > 0) {
-                        var mid = $('<span>');
+                        var mid = $('<span class="mee_bracket_part" style="top:' + cur + 'px' + '">');;
                         mid.html(bi.mid);
-                        mid.addClass('mee_bracket_part');
-                        mid.css('top', cur + 'px');
-                        $(bracketelem).append(mid);
+                        JQbracketelem.append(mid);
                         cur += midcdata.height;
                     }
 
                     // single bottom mid bottom element
-                    var mid = $('<span>');
+                    var mid = $('<span class="mee_bracket_part"style="top:' + last + 'px' + '">');
                     mid.html(bi.mid);
-                    mid.addClass('mee_bracket_part');
-                    mid.css('top', last + 'px');
-                    $(bracketelem).append(mid);
+                    JQbracketelem.append(mid);
 
                 }
             }
@@ -953,11 +887,9 @@ $.Class.extend("MEE.Elem",
             if (gapsize > 0) { // do we have a gap in the middle of the top and bottom part? if so fill it up
 
                 if (gapsize < midcdata.height) { // only need a single mid character so center it
-                    var mid = $('<span>');
+                    var mid = $('<span class="mee_bracket_part"style="top:' + (-midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2)) + 'px' + '">');
                     mid.html(bi.mid);
-                    mid.addClass('mee_bracket_part');
-                    mid.css('top', -midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2) + 'px');
-                    $(bracketelem).append(mid);
+                    JQbracketelem.append(mid);
 
                 } else {
                     // multiple bottom mid top 
@@ -965,37 +897,34 @@ $.Class.extend("MEE.Elem",
 
                     var cur = -midcdata.top + topcdata.height;
                     while (cur < last && midcdata.height > 0) {
-                        var mid = $('<span>');
+                        var mid = $('<span class="mee_bracket_part"style="top:' + cur + 'px' + '">');;
                         mid.html(bi.mid);
-                        mid.addClass('mee_bracket_part');
-                        mid.css('top', cur + 'px');
-                        $(bracketelem).append(mid);
+                        JQbracketelem.append(mid);
                         cur += midcdata.height;
                     }
 
                     // single bottom mid bottom element
-                    var mid = $('<span>');
+                    var mid = $('<span class="mee_bracket_part" style="top:'+ last +'px">');
                     mid.html(bi.mid);
-                    mid.addClass('mee_bracket_part');
-                    mid.css('top', last + 'px');
-                    $(bracketelem).append(mid);
+                    JQbracketelem.append(mid);
                 }
             }
         }
 
         // if we have a font override specified apply it to all the parts
         if (bi.font)
-            $(bracketelem).children().css('font-family', bi.font);
+            JQbracketelem.children().css('font-family', bi.font);
 
         // add a relative spacer to make browsers heppy
         var mid = $('<span>');
         mid.html(MEE.Data.blankspace);
-        $(bracketelem).append(mid);
+        JQbracketelem.append(mid);
 
         // pad mid to width of the bracket
-        var width = $(top).outerWidth();
+        var width = $(mid).outerWidth();
         if (width == 0)
-            alert("Width = 0");
+            width = 10;
+            //alert("width = 0");
         $(mid).css('padding-right', width + 'px');
         return width;
     },
@@ -1023,9 +952,8 @@ $.Class.extend("MEE.Elem",
             if (side == "left") return "\\lVert";
             if (side == "right") return "\\rVert";
         }
-        for (command in MEE.Data.commands) {
-            var cmd = MEE.Data.commands[command];
-            if (cmd.text == text)
+        for (var command in MEE.Data.commands) {
+            if (MEE.Data.commands[command].text == text)
                 return command;
         }
         return text;
@@ -1036,11 +964,13 @@ $.Class.extend("MEE.Elem",
 
         if (this._name == "MEE.ElemInput")
             return latex;
-
-        for (var i = 0; i < MEE.Data.pairs.length; i++) {
-            var pair = MEE.Data.pairs[i].pair;
-            if (this.latex == pair)
-                this.type = "extpair";
+        
+        if(this.latex != '') {
+          //TODO: quick speed gain do we realy need to loop through this every element? quicker with a regexp??
+          for (var i = 0; i < MEE.Data.pairs.length; i++) {
+              if (this.latex == MEE.Data.pairs[i].pair)
+                  this.type = "extpair";
+          }
         }
 
         // if we have a size
@@ -1191,8 +1121,7 @@ $.Class.extend("MEE.Elem",
             }
         }
         //if (this.type == "command" && !this.eldata.rest_as_arg0)
-        latex.AddText(" ");
-
+        //latex.AddText(" ");
 
         return latex;
     },

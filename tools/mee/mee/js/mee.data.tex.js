@@ -712,10 +712,10 @@ MEE.Data.commands = {
 
     // brackets (left and right)
     'base_brackets_single': { noautofrac: 1 },
-    '\\(': { base: 'base_brackets_single', text: '(' },
-    '\\)': { base: 'base_brackets_single', text: ')' },
-    '\\{': { base: 'base_brackets_single', text: '{' },
-    '\\}': { base: 'base_brackets_single', text: '}' },
+    '(': { base: 'base_brackets_single', text: '(' },
+    ')': { base: 'base_brackets_single', text: ')' },
+    '{': { base: 'base_brackets_single', text: '{' },
+    '}': { base: 'base_brackets_single', text: '}' },
     '\\lbrace': { base: 'base_brackets_single', text: '{' },
     '\\rbrace': { base: 'base_brackets_single', text: '}' },
     '\\lvert': { base: 'base_brackets_single', text: '|' },

@@ -63,7 +63,7 @@ function insertMME() {
     var node = tinyMCEPopup.editor.selection.getNode();
     var fontsize = $(node).css('font-size');
 
-    var data = new Object();
+    var data = {};
     data.inline = edit.inline;
     data.latex = edit.latex;
     data.fontsize = fontsize;
@@ -71,18 +71,15 @@ function insertMME() {
     var datatxt = JSON.stringify(data);
 
     var src = "../../tools/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt;
+    var style = 'display:block';
+    if(data.inline) {
+      style = 'display:inline';
+    }
     if (selelem) {
         selelem.src = src;
         $(selelem).attr('src', src);
-        //$selelem).refresh();
     } else {
-
-        if (edit.inline) {
-            html = "<iframe class='mee_iframe' src='" + src + "' frameborder='0'></iframe>";
-        } else {
-            html = "<p><iframe class='mee_iframe' src='" + src + "' frameborder='0'></iframe></p>";
-        }
-
+        html = "<iframe class='mee_iframe' style='" + style + "' src='" + src + "' frameborder='0'></iframe>";
         tinyMCEPopup.editor.execCommand('mceInsertContent', true, html);
     }
 

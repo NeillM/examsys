@@ -41,16 +41,12 @@ $.Class.extend("MEE.Row",
 
     toHTML: function (depth, subdepth) {
         // if we arent the first row and column, then get the depth info from the first one
-
-        this.html_elem = $('<span>');
-        this.html_elem.addClass('mee_row');
-        this.depth = depth;
-        this.subdepth = subdepth;
-
         this.elemid = MEE.ElemSet.elemsets.length;
         MEE.ElemSet.elemsets[this.elemid] = this;
-        this.html_elem.attr('elem', this.elemid);
-
+        
+        this.html_elem = $('<span class="mee_row" elem="' + this.elemid + '">');
+        this.depth = depth;
+        this.subdepth = subdepth;
 
         for (var i = 0; i < this.cols; i++) {
             this.createColHTML(i, subdepth);
@@ -63,8 +59,7 @@ $.Class.extend("MEE.Row",
                 this.parent.eldata.border = 1;
 
             } else { // hline above this row
-                this.html_line = $('<span>');
-                this.html_line.addClass('mee_hline');
+                this.html_line = $('<span class="mee_hline">');
                 this.html_line.html(MEE.Data.blankspace);
                 this.html_elem.append(this.html_line);
             }
@@ -85,17 +80,17 @@ $.Class.extend("MEE.Row",
 
     sortAlign: function () {
         this.align = new MEE.Align();
-        for (var i = 0; i < this.cols; i++) {
+        for (var i = this.cols;i--;) {
             var colalign = this['col' + i].sortAlign();
             //if (this['col' + i].haselements || this['col' + i].hasinput)
             this.align.Merge(colalign);
         }
-        /*if (this.align.top)
-        $(this.html_elem).css('margin-top', this.align.top + 'px');
-        if (this.align.bottom)
-        $(this.html_elem).css('margin-bottom', this.align.bottom + 'px');*/
+ //       if (this.align.top)
+ //         $(this.html_elem).css('margin-top', this.align.top + 'px');
+ //       if (this.align.bottom)
+ //         $(this.html_elem).css('margin-bottom', this.align.bottom + 'px');
 
-        this.html_elem.attr('al', this.align.toString());
+        //this.html_elem.attr('al', this.align.toString());
         return this.align;
     },
 
@@ -188,8 +183,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
     createRowHTML: function (i, subdepth) {
         this['html_row' + i] = this['row' + i].toHTML(this.depth, subdepth);
         this.html_elem.append(this['html_row' + i]);
-        this['html_row' + i].css('position', 'absolute');
-        this['html_row' + i].css('left', '0px');
+        this['html_row' + i].css({left:'0px', position:'absolute'});
 
         if (i == 0 && this.eldata.upperclass)
             this['html_row' + i].addClass(this.eldata.upperclass);
@@ -210,27 +204,24 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
     toHTML: function (depth) {
         this.validateColWidths();
 
-        this.html_elem = $('<span>');
-        this.html_elem.addClass('mee_elemsetarray');
-        this.html_elem.css('position', 'relative');
+        this.html_elem = $('<span class="mee_elemsetarray" style="position: relative" >');
+        //this.html_elem.addClass('mee_elemsetarray');
+        //this.html_elem.css('position', 'relative');
 
         if (this.eldata.lend) {
-            this.html_lend = $('<span>');
-            this.html_lend.addClass('mee_barend');
+            this.html_lend = $('<span class="mee_barend">');
             this.html_lend.html(this.eldata.lend);
             this.html_elem.append(this.html_lend);
         }
 
         if (this.eldata.rend) {
-            this.html_rend = $('<span>');
-            this.html_rend.addClass('mee_barend');
+            this.html_rend = $('<span class="mee_barend">');
             this.html_rend.html(this.eldata.rend);
             this.html_elem.append(this.html_rend);
         }
 
-        this.html_padding = $('<span>');
+        this.html_padding = $('<span style="position: relative">');
         this.html_padding.html(MEE.Data.blankspace);
-        this.html_padding.css('position', 'relative');
         this.html_elem.append(this.html_padding);
 
         // sort depth out
@@ -264,8 +255,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
 
 
         if (this.eldata.bar) {
-            this.html_bar = $('<span>');
-            this.html_bar.addClass('mee_bar');
+            this.html_bar = $('<span class="mee_bar">');
             this.html_elem.append(this.html_bar);
         }
 
@@ -275,8 +265,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
 
         // general border around entire array
         if (this.eldata.border) {
-            this.html_line = $('<span>');
-            this.html_line.addClass('mee_array_border');
+            this.html_line = $('<span class="mee_array_border">');
             this.html_line.html(MEE.Data.blankspace);
             this.html_elem.append(this.html_line);
         }
@@ -284,8 +273,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
         // vertical lines between columns
         for (col in this.vlines) {
             if (col < this.cols) {
-                this['html_vline' + col] = $('<span>');
-                this['html_vline' + col].addClass('mee_vline');
+                this['html_vline' + col] = $('<span class="mee_vline">');
                 this['html_vline' + col].html(MEE.Data.blankspace);
                 this.html_elem.append(this['html_vline' + col]);
             }
@@ -320,7 +308,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
 
 
 
-            var mainheight = MEE.Data.getBaseSize($(this.html_padding));
+            var mainheight = MEE.Data.getBaseSize(this.html_padding);
             this.align.height = mainheight;
 
             var tpad = 0.1;
@@ -357,7 +345,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
                 totalheight += this['row' + i].align.height;
             }
 
-            var mainheight = MEE.Data.getBaseSize($(this.html_padding));
+            var mainheight = MEE.Data.getBaseSize(this.html_padding);
             this.align.height = mainheight;
 
             var above = -Math.floor((totalheight - mainheight) / 2);
@@ -373,7 +361,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
         }
 
         var totalwidth = 0;
-        var coloffsets = new Object();
+        var coloffsets = {};
 
         // sort out column sizings
         for (var col = 0; col < this.cols; col++) {
@@ -420,12 +408,15 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
                     } else {
                         var padl = Math.floor((maxwidth - elwidth) / 2);
                         var padr = Math.ceil((maxwidth - elwidth) / 2);
-                        $(colc.html_elem).css('padding-left', padl + lendwidth + 'px');
-                        $(colc.html_elem).css('padding-right', padr + 'px');
+                        $(colc.html_elem).css({ 'padding-left': padl + lendwidth + 'px',
+                                                'padding-right': padr + 'px'
+                                              });
                     }
                 } else {
-                    $(colc.html_elem).css('padding-right', '1px');
-                    $(colc.html_elem).css('padding-left', lendwidth + 'px');
+                    $(colc.html_elem).css({ 
+                                            'padding-right': '1px',
+                                            'padding-left': lendwidth + 'px'
+                                          });
                 }
             }
         }
@@ -438,8 +429,10 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
         // size hlines
         for (var row = 0; row < this.rows; row++) {
             if (this['row' + row] && this['row' + row].html_line) {
-                $(this['row' + row].html_line).css('padding-right', padright + 'px');
-                $(this['row' + row].html_line).css('top', -this['row' + row].align.top + 'px');
+                $(this['row' + row].html_line).css({
+                                                      'padding-right': padright + 'px',
+                                                      'top': -this['row' + row].align.top + 'px'
+                                                   });
             }
         }
 
@@ -455,10 +448,6 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
 
             this.html_bar.html(bartext);
 
-            //var elh = MEE.Data.getBaseSize($(this.html_elem));
-            //var baroff = 0.03;
-            //baroff = $(baroff).toPx({ 'scope': this.html_elem });
-            //this.html_bar.css('top', -baroff + 'px');
             this.html_bar.css('margin-left', barpadding + lendwidth + 'px');
         }
 
@@ -481,11 +470,13 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
 
         // size whole border
         if (this.eldata.border) {
-            var borderheight = MEE.Data.getBaseSize($(this.html_line));
-            this.html_line.css('left', '0px');
-            this.html_line.css('top', -this.align.top + 'px');
-            this.html_line.css('padding-right', padright - bl + 'px');
-            this.html_line.css('padding-bottom', this.align.height - borderheight - bl + 'px');
+            var borderheight = MEE.Data.getBaseSize(this.html_line);
+            this.html_line.css({
+                                  'left': '0px',
+                                  'top': -this.align.top + 'px',
+                                  'padding-right': padright - bl + 'px',
+                                  'padding-bottom': this.align.height - borderheight - bl + 'px'
+                                });
         }
 
         // vertical lines between columns
@@ -493,9 +484,11 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
             if (col < this.cols) {
                 var offset = coloffsets[col - 1];
                 var borderheight = MEE.Data.getBaseSize($(this['html_vline' + col]));
-                this['html_vline' + col].css('left', offset + 'px');
-                this['html_vline' + col].css('top', -this.align.top + 'px');
-                this['html_vline' + col].css('padding-bottom', this.align.height - borderheight + 'px');
+                this['html_vline' + col].css({
+                                              'left': offset + 'px',
+                                              'top': -this.align.top + 'px',
+                                              'padding-bottom': this.align.height - borderheight + 'px'
+                                            });
             }
         }
         return this.align;
@@ -507,7 +500,7 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
         if (this.alignment)
             align = this.alignment;
 
-        this.vlines = new Object();
+        this.vlines = {};
 
         if (align) {
             align = align.replace(new RegExp(' ', 'g'), '');

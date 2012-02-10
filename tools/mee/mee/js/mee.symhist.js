@@ -1,7 +1,7 @@
 $.Class.extend("MEE.SymHist",
 {
     init: function () {
-        this.items = new Object();
+        this.items = {};
 
         this.sets = 5;
         this.perset = 3;
@@ -31,11 +31,13 @@ $.Class.extend("MEE.SymHist",
     },
 
     Add: function (item) {
-        var hist = new Object();
-        hist.text = $(item).data('text');
-        hist.latex = $(item).data('latex');
-        hist._class = $(item).data('class');
-        hist.when = new Date().getTime();
+        var i = $(item);
+        var hist = {
+          text : i.data('text'),
+          latex : i.data('latex'),
+          _class : i.data('class'),
+          when : new Date().getTime()
+        };
         this.items[hist.latex] = hist;
 
         this.SortItems();
@@ -52,7 +54,7 @@ $.Class.extend("MEE.SymHist",
             return l.when < r.when;
         });
 
-        this.items = new Object();
+        this.items = {};
 
         var output = new Array();
         for (var i = 0; i < this.sets; i++)

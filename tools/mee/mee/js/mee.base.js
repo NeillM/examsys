@@ -7,7 +7,7 @@ $.Class.extend("MEE.Base",
             return;
         }*/
 
-        this.fontwaitlimit = 10;
+        this.fontwaitlimit = 0;
         // build all recursive definitions
         MEE.Base.displays = new Array();
         MEE.Base.edits = new Array();
@@ -55,7 +55,6 @@ $.Class.extend("MEE.Base",
         }
 
         var proc = this.to_process[i];
-        //debug.log('ProcessNext', i, proc);
         MEE.Base.process(proc);
         MEE.Base.updateProgress();
 
@@ -66,25 +65,20 @@ $.Class.extend("MEE.Base",
         this.fontwaitlimit--;
         i = MEE.Base.current;
         if (i >= MEE.Base.to_process.length) {
-            // dont creating HTML, 
-
-            //MEE.Base.current = 0;
-            //setTimeout("MEE.Base.ProcessAlignNext()", 1);
             MEE.Base.removeProgress();
             return;
         }
 
-        var proc = this.to_process[i];
-        //debug.log('ProcessNext_Fonts', i, proc);
-        if (proc.eqn && this.fontwaitlimit > 0) {
-            if (!proc.eqn.FontsLoaded()) {
-                this.setProgressMessage("Waiting on Fonts");
-                setTimeout("MEE.Base.ProcessNext_Fonts()", 5);
-                return;
-            }
-        }
+        //var proc = this.to_process[i];
+        //if (proc.eqn && this.fontwaitlimit > 0) {
+        //    if (!proc.eqn.FontsLoaded()) {
+        //        this.setProgressMessage("Waiting on Fonts");
+        //        setTimeout("MEE.Base.ProcessNext_Fonts()", 5);
+        //        return;
+        //    }
+        //}
         //debug.log("Fonts OK");
-        setTimeout("MEE.Base.ProcessNext_Align()", 1);
+        setTimeout("MEE.Base.ProcessNext_Align()", 5);
     },
 
     ProcessNext_Align: function () {
@@ -95,41 +89,43 @@ $.Class.extend("MEE.Base",
         }
 
         var proc = this.to_process[i];
-        //debug.log('ProcessNext_Align', i, proc);
         if (proc.eqn)
             proc.eqn.Align();
 
         MEE.Base.updateProgress();
-
+        $(proc.elem).css('color','');
         setTimeout("MEE.Base.ProcessNext()", 1);
     },
 
     processDiv: function (elem) {
-        var proc = new Object();
-        proc.elem = elem;
-        proc.type = 'display';
-        proc.inline = false;
-
+        var proc = {
+          elem : elem,
+          type : 'display',
+          inline : false
+        };
+        $(proc.elem).css('color','white');
         MEE.Base.to_process.push(proc);
     },
 
     processSpan: function (elem) {
-        var proc = new Object();
-        proc.elem = elem;
-        proc.type = 'display';
-        proc.inline = true;
+        var proc = {
+          elem : elem,
+          type :'display',
+          inline : true
+        }
+        $(proc.elem).css('color','white');
         MEE.Base.to_process.push(proc);
     },
 
     processInput: function (elem) {
-        var proc = new Object();
-        proc.elem = elem;
-        proc.type = 'edit';
+        var proc = {
+          elem : elem,
+          type : 'edit'
+        }
         MEE.Base.to_process.push(proc);
     },
 
     process: function (proc) {
-
 
         if (proc.type == "display") {
             if ($(proc.elem).attr('latex'))
@@ -166,127 +162,6 @@ $.Class.extend("MEE.Base",
         $('.mee_progress').remove();
     }
     //#endregion
-
-    /*DoMCERender: function (edid) {
-        // need to locate tinymce editor with id edid
-        var ed = tinyMCE.get(edid);
-        if (ed) {
-            MEE.Base.Render(ed.getBody(), ed.getDoc());
-        }
-    },
-
-    //#region Tiny MCE rendering, requires immediate render instead of timed render
-    ProcessForTinyMCE: function (source, mcedoc) {
-
-        // need to find out the tinymce edit window in use
-        //this.tinymce = tinymce;
-
-        // build all recursive definitions
-        MEE.Base.displays = new Array();
-        MEE.Base.edits = new Array();
-
-        //MEE.Base.buildDefs();
-        MEE.Base.to_process = new Array();
-
-        if (!source)
-            source = document.body;
-
-        if (!this.source) this.source = new Array();
-        if (!this.mcedocs) this.mcedocs = new Array();
-        this.source.push(source);
-        this.mcedocs.push(mcedoc);
-
-        var elems = $(source).find("div.mee");
-        for (var i = 0; i < elems.length; i++)
-            this.processDivMCE(elems[i], mcedoc);
-
-        var elems = $(source).find("span.mee");
-        for (var i = 0; i < elems.length; i++)
-            this.processSpanMCE(elems[i], mcedoc);
-
-        setTimeout("MEE.Base.LayoutOverlays();", 10);
-    },
-
-    LayoutOverlays: function () {
-        for (var i = 0; i < this.source.length; i++) {
-            var res = $(this.source[i]).find('.mee_tinymce_cont');
-            for (var k = 0; k < res.length; k++) {
-                var elem = res[k];
-                this.LayoutOverlay(elem, this.mcedocs[i]);
-            }
-            //$(this.source[i]).find('.mee_tinymce_cont').each(this.callback('LayoutOverlay'));
-        }
-    },
-
-    LayoutOverlay: function (elem, mcedoc) {
-        // find main instance based on id, if not there, then remove 
-        var id = $(elem).attr('id');
-        id = id.replace('cont', 'elem');
-        var el = mcedoc.getElementById(id);
-
-        if (!el) {
-            $(elem).remove();
-        } else {
-            var element = $(el);
-            var cont = $(elem);
-
-            var pos = $(element).offset();
-            var bottom = this.getElOffset(element, "bottom");
-            var top = this.getElOffset(element, "top");
-
-            if ($(element).is('span')) {
-                cont.css('left', pos.left + 'px');
-                $(element).css('padding-right', $(cont).outerWidth() - MEE.Data.blankspacesize(element) + 'px');
-
-                var contheight = $(cont).outerHeight() + top + bottom;
-                var elemheight = $(element).outerHeight();
-                if (elemheight > contheight)
-                    top += Math.abs(elemheight - contheight);
-
-                cont.css('top', pos.top + top - 1 + 'px');
-            } else {
-                cont.css('left', Math.floor(($(element).outerWidth() - $(cont).outerWidth()) / 2) + 'px')
-                cont.css('top', pos.top + top + 'px');
-            }
-        }
-    },
-
-    getElOffset: function (elem, which) {
-        var bottom = parseInt($(elem).css('padding-' + which).replace('px', ''));
-        if (!bottom)
-            bottom = parseInt($(elem).css('margin-' + which).replace('px', ''));
-        if (!bottom)
-            bottom = 0;
-
-        return bottom;
-    },
-
-    processDivMCE: function (elem, doc) {
-        var proc = new Object();
-        proc.elem = elem;
-        proc.type = 'display';
-        proc.inline = false;
-
-        if ($(proc.elem).attr('latex'))
-            return;
-
-        var meeeqn = new MEE.Display(elem, false, doc);
-        MEE.Base.displays.push(meeeqn);
-    },
-
-    processSpanMCE: function (elem, doc) {
-        var proc = new Object();
-        proc.elem = elem;
-        proc.type = 'display';
-        proc.inline = true;
-
-        if ($(proc.elem).attr('latex'))
-            return;
-
-        var meeeqn = new MEE.Display(elem, true, doc);
-        MEE.Base.displays.push(meeeqn);
-    }*/
-    //#endregion
 },
 {
 });
@@ -299,10 +174,6 @@ $.Class.extend("MEE.Align",
     top: 0,
     bottom: 0,
     init: function () {
-        this.width = 0;
-        this.height = 0;
-        this.top = 0;
-        this.bottom = 0;
     },
     Merge: function (align) {
         this.width += align.width;
@@ -318,12 +189,7 @@ $.Class.extend("MEE.Align",
         this.bottom = Math.max(this.bottom, align.bottom);
     },
     toString: function () {
-        var res = "";
-        res += "w " + this.width;
-        res += " h " + this.height;
-        res += " t " + this.top;
-        res += " b " + this.bottom;
-        return res;
+        return "w " + this.width + " h " + this.height + " t " + this.top + " b " + this.bottom;
     }
 });
 //#endregion

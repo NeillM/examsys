@@ -109,7 +109,7 @@ p {margin-top:0px;padding-top:0px}
 li {margin-left:15px;margin-right:15px;font-family:<?php echo $font; ?>,sans-serif;font-size:100%}
 select,input {font-family:<?php echo $font; ?>,sans-serif;font-size:100%}
 blockquote {font-size:90%}
-table {font-size:100%}
+table {font-size:100%; table-layout: fixed}
 .paper {margin-left:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:180%;color:white;font-weight:bold}
 .q_no {width:40px;text-align:right;vertical-align:top}
 .theme {margin-left:15px;font-size:150%;font-weight:bold;color:<?php echo $themecolor; ?>}

@@ -21,16 +21,12 @@ MEE.ElemSet.extend("MEE.ElemSetBasic",
     },
 
     toHTML: function (depth) {
-        this.html_elem = $('<span>');
-        this.depth = depth;
-        this.html_elem.attr('depth', depth);
-
-
         this.elemid = MEE.ElemSetBasic.basicelems.length;
         MEE.ElemSetBasic.basicelems[this.elemid] = this;
-        this.html_elem.attr('elem', this.elemid);
-
-        this.html_elem.addClass('mee_elemsetbasic');
+        this.depth = depth;
+        
+        this.html_elem = $('<span class="mee_elemsetbasic" elem="' + this.elemid + '" depth="' + depth + '">');
+        
         this.text = "";
         if ('text' in this.eldata) {
             this.text = this.eldata.text;
@@ -48,9 +44,8 @@ MEE.ElemSet.extend("MEE.ElemSetBasic",
         if (MEE.Data.largechars[this.basetext] && this.eldata.large) {
             var chardata = MEE.Data.getLargeCharData(this.basetext, this.html_elem);
 
-            this.html_inner = $('<span>');
+            this.html_inner = $('<span class="mee_basic_large_inner" style="position:absolute; left:0px; padding-right200px">');
             this.html_inner.html(this.text);
-            this.html_inner.css('position', 'absolute');
 
             this.html_elem.append(this.html_inner);
             this.html_elem.css('position', 'relative');
@@ -58,9 +53,6 @@ MEE.ElemSet.extend("MEE.ElemSetBasic",
             var space = $(MEE.Data.blankspace);
             this.html_elem.append(space);
 
-            this.html_inner.addClass('mee_basic_large_inner');
-            this.html_inner.css('left', '0px');
-            this.html_inner.css('padding-right', '200px');
             this.html_elem.addClass('mee_basic_large_outer');
         } else {
             this.html_elem.html(this.text);
@@ -91,26 +83,24 @@ MEE.ElemSet.extend("MEE.ElemSetBasic",
             this.align.width = chardata.width + 1;
             this.align.top = chardata.top;
             this.align.bottom = chardata.bottom;
-            this.align.height = MEE.Data.getBaseSize($(this.html_elem)) + this.align.top + this.align.bottom; //$(this.html_elem).outerHeight(true);// OUTER_OK
+            this.align.height = MEE.Data.getBaseSize(this.html_elem) + this.align.top + this.align.bottom; //$(this.html_elem).outerHeight(true);// OUTER_OK
 
         } else if (MEE.Data.largechars[this.basetext]) {
             var size = parseInt(this.html_elem.css('font-family').replace('MathJax_Size', ''));
             if (!(size > 0)) {
                 this.align.width = $(this.html_elem).outerWidth(true);
-                this.align.height = MEE.Data.getBaseSize($(this.html_elem));
+                this.align.height = MEE.Data.getBaseSize(this.html_elem);
             } else {
                 var chardata = MEE.Data.getLargeCharData(this.basetext, this.html_elem, size);
                 this.align.width = chardata.width + 1;
                 this.align.top = chardata.top;
                 this.align.bottom = chardata.bottom;
-                this.align.height = MEE.Data.getBaseSize($(this.html_elem)) + this.align.top + this.align.bottom; //$(this.html_elem).outerHeight(true);// OUTER_OK
+                this.align.height = MEE.Data.getBaseSize(this.html_elem) + this.align.top + this.align.bottom; //$(this.html_elem).outerHeight(true);// OUTER_OK
             }
         } else {
             // need to check the font is loaded
             this.align.width = $(this.html_elem).outerWidth(true); // OUTER_OK
-            //debug.log(this.text, this.align.width, $(this.html_elem).css('font-family'));
-            //this.align.height = $(this.html_elem).outerHeight(true); // OUTER_OK
-            this.align.height = MEE.Data.getBaseSize($(this.html_elem)); // OUTER_OK
+            this.align.height = MEE.Data.getBaseSize(this.html_elem); // OUTER_OK
         }
 
         return this.align;

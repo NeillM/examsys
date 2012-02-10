@@ -555,7 +555,7 @@ $.Class.extend("MEE.Toolbar",
     },
 
     hideTabs: function () {
-        this.visopt = new Object();
+        this.visopt = {};
         var tabonly = false;
         if (this.currentEdit) {
             var baseelem = this.currentEdit.inputelement;

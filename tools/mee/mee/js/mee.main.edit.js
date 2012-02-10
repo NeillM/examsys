@@ -3,23 +3,7 @@ MEE.Main.extend("MEE.Edit",
     //#region Static definitiona
     toolbar: null,
     toolbarelem: null,
-    currentedit: null,
-    redraw: function (element) {
-        // DOESNT WORK! MAKE IT SO THIS ISNT NEEDED
-        // fix for chrome that causes a page refresh to be made.
-        // only works on so much depth, no idea how to made really nested stuff update properly
-        if (jQuery.browser.webkit) {
-            /*if (this.removeme)
-            clearTimeout(this.removeme);
-            $('.REMOVE_ME').remove();
-            var temp = $('<span>');
-            temp.html(MEE.Data.blankspace);
-            temp.addClass("REMOVE_ME");
-            $(element).append(temp);
-            this.removeme = setTimeout("$('.REMOVE_ME').remove();", 10);*/
-        }
-
-    }
+    currentedit: null
     //#endregion
 },
 {
@@ -375,8 +359,6 @@ MEE.Main.extend("MEE.Edit",
     sortBlanks: function () {
         if (this.mode != 1)
             return;
-
-        //$('.mee_elemset_empty_inner').remove();
         for (var i = 0; i < MEE.ElemSet.elemsets.length; i++) {
             if (MEE.ElemSet.elemsets[i]._name != "MEE.Row") {
                 MEE.ElemSet.elemsets[i].sortBlanks();
@@ -861,7 +843,7 @@ MEE.Main.extend("MEE.Edit",
 
         var curvalue = $(this.inputelembox).val() + newchar;
 
-        var outputtext = new Object();
+        var outputtext = {};
 
         // if there is more than 1 character change on the input, then parse it
         // one character at a time. This means that the parsing code for w mode only
@@ -1073,9 +1055,10 @@ MEE.Main.extend("MEE.Edit",
                     if (elem.eldata.sarg_as_sup) {
                         if (!elem.superscript) {
                             // no superscript, so create one
-                            var arg1 = new Object();
-                            arg1.latex = "";
-                            arg1.type = "superscript";
+                            var arg1 = {
+                              latex : "",
+                              type : "superscript"
+                            };
                             elem.SetScript(arg1, null, true);
                         }
                         this.moveToSet(elem.superscript, true, false);
@@ -1274,9 +1257,10 @@ MEE.Main.extend("MEE.Edit",
         }
 
         // create fraction
-        var ftoken = new Object();
-        ftoken.latex = "frac";
-        ftoken.type = "command";
+        var ftoken = {
+          latex : "frac",
+          type : "command"
+        }
         var elem = this.createNewElem(ftoken);
         this.insertIntoCurrentSet(elem);
 
@@ -1329,7 +1313,7 @@ MEE.Main.extend("MEE.Edit",
                 lbsize = -1;
 
             // create a new element set
-            var ntoken = new Object();
+            var ntoken = {};
             ntoken.latex = lbtype.replace("l", "p");
             if (ntoken.latex == "(")
                 ntoken.latex = "pbrackets";
@@ -1339,7 +1323,7 @@ MEE.Main.extend("MEE.Edit",
                 ntoken.latex = "psqbrackets";
             ntoken.type = "extpair";
             var elem = this.createNewElem(ntoken);
-            var itoken = new Object();
+            var itoken = {};
             itoken.latex = "";
             elem.SetMain(itoken);
 
@@ -1487,9 +1471,6 @@ MEE.Main.extend("MEE.Edit",
             this.processInput(event);
 
             this.lasttext = "";
-
-            //if (key == 8 || key == 46 || key == 37 || key == 38 || key == 39 || key == 40)
-            //this.curElemSet.single = false;
 
             this.changed(key, 'inputKeyDown');
 
@@ -2338,20 +2319,23 @@ MEE.Main.extend("MEE.Edit",
 
         if (elem.eldata.args > 0) {
             if (elem.eldata.arg01_as_upperlower || elem.eldata.arg0_as_upper) {
-                var arg1 = new Object();
-                arg1.latex = "";
-                var arg2 = new Object();
-                arg2.latex = "";
-
+                var arg1 = {
+                  latex : ""
+                }
+                var arg2 = {
+                  latex : ""
+                }
                 elem.AddUpperLower(arg1, arg2);
             } else if (elem.eldata.arg0_as_main) {
-                var arg = new Object();
-                arg.latex = "";
+                var arg = {
+                  latex : ""
+                };
                 elem.SetMain(arg);
             } else {
                 for (var a = 0; a < elem.eldata.args; a++) {
-                    var arg = new Object();
-                    arg.latex = "";
+                    var arg =  {
+                      latex : ""
+                    };
                     elem.AddArg(arg);
                 }
             }
@@ -2360,16 +2344,18 @@ MEE.Main.extend("MEE.Edit",
 
         if (elem.eldata.sarg) {
             if (elem.eldata.sarg_as_sup) {
-                var arg = new Object();
-                arg.latex = "";
+                var arg =  {
+                  latex : ""
+                };
                 elem.SetScript(arg, "superscript");
             } else if (elem.eldata.sarg_as_lower) {
                 /*var arg = new Object();
                 arg.latex = "";
                 elem.SetScript(arg, "superscript");*/
             } else {
-                var arg = new Object();
-                arg.latex = "";
+                var arg = {
+                  latex : ""
+                };
                 elem.SetSArg(arg);
             }
         }
@@ -2383,13 +2369,7 @@ MEE.Main.extend("MEE.Edit",
 
     //#region Undo
     createUndo: function () {
-        /*var undoobj = new Object();
-        undoobj.latex = this.latex;
-        if (!this.rawinput == undefined)
-        undoobj.caret = this.rawinput.caret();
-        this.undo = new MEE.Undo(undoobj);*/
         this.undo = new MEE.Undo();
-
         this.sortUndoMeun();
     },
 
@@ -2401,8 +2381,9 @@ MEE.Main.extend("MEE.Edit",
         if (lastundo && lastundo.latex == this.latex)
             return;
 
-        var undoobj = new Object();
-        undoobj.latex = this.latex;
+        var undoobj = {
+          latex : this.latex
+        }
         if (this.rawinput)
             undoobj.caret = this.rawinput.caret();
 

@@ -62,12 +62,12 @@ MEE.Data.charsizes = {
     // {
     '&#x23A7;': { top: 0.86, height: 0.88 }, 
     '&#x23AA;': { top: 1.45, height: 0.31 }, 
-    '&#x23A9;': { top: 1.75, height: 0.88 }, 
+    '&#x23A9;': { top: 1.80, height: 0.88 }, 
     '&#x23A8;': { top: 0.58, height: 1.80 }, 
 
     // }
     '&#x23AB;': { top: 0.86, height: 0.88 }, 
-    '&#x23AD;': { top: 1.75, height: 0.88 }, 
+    '&#x23AD;': { top: 1.80, height: 0.88 }, 
     '&#x23AC;': { top: 0.58, height: 1.80 }, 
 
     // (
@@ -262,13 +262,13 @@ MEE.Data.largechars_size4 = {
 
 //#region font sizes to use at various depths
 // 1 is base depth, and increase for each level we nest.
-// subscripts jump to 3 
+// subscripts jump to 4 
 // arrays and the like dont increase thi
 MEE.Data.fontsizes = {
     '1': '100%',
     '2': '100%',
-    '3': '73%',
-    '4': '73%',
+    '3': '75%',
+    '4': '75%',
     '5': '100%',
     '6': '100%',
     '7': '100%'

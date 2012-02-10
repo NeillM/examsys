@@ -10,12 +10,9 @@ checkloadjscssfile("jquery/jquery.class.js");
 checkloadjscssfile("jquery/jquery.pxem.js");
 checkloadjscssfile("jquery/jquery.scale9.js");
 checkloadjscssfile("jquery/jquery.textarea.js");
-//checkloadjscssfile(mee_baseurl + "jquery/jquery.json2xml.js");
 checkloadjscssfile("jquery/jquery.xml2json.js");
 checkloadjscssfile("jquery/jquery.cookie.js");
 checkloadjscssfile("jquery/json2.js");
-//checkloadjscssfile("jquery/debug.js");
-//checkloadjscssfile("jquery/IE9.js");
 
 checkloadjscssfile("js/mee.main.js");
 checkloadjscssfile("js/mee.main.edit.js");

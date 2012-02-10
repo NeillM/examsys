@@ -3,7 +3,7 @@ MEE.Elem.extend("MEE.ElemAnswer",
 {
     init: function () {
         this._name = 'MEE.ElemAnswer';
-        this.eldata = new Object();
+        this.eldata = {};
     },
 
     toHTML: function () {

@@ -769,7 +769,11 @@ function getMSCAA($paperID, $mysqlidb) {
     $module = implode(',',$OKmodules);
   }
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" id=\"sortable\">\n";
+  echo "<table style=\"table-layout: fixed\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" id=\"sortable\">\n";
+  
+  //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
+  echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td style=\"width:100%\"></td><td class=\"m\"></td><td class=\"d\"></td><td class=\"t\"></td></tr>";
+  
   echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
@@ -783,7 +787,8 @@ function getMSCAA($paperID, $mysqlidb) {
   echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB;font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> $display_start_date</td><td colspan=\"3\" style=\"background-color:#F1F5FB;text-align:right;font-size:90%\"><strong>" . $string['owner'] . ":</strong> $paper_owner&nbsp;</td></tr>\n";
   ?>
     <tr class="details-head">
-    <td style="background-color:#F1F5FB" colspan="2">&nbsp;</td>
+    <td class="icon" style="background-color:#F1F5FB" >&nbsp;</td>
+    <td style="background-color:#F1F5FB" >&nbsp;</td>
     <td style="background-color:#F1F5FB" class="q-cell"><?php echo $string['question']; ?></td>
     <td style="background-color:#F1F5FB;"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</td>
     <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['marks']; ?>&nbsp;</td>

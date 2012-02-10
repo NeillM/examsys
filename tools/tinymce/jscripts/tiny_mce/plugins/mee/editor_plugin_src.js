@@ -1,11 +1,6 @@
 /**
 * editor_plugin_src.js
 *
-* Copyright 2009, Moxiecode Systems AB
-* Released under LGPL License.
-*
-* License: http://tinymce.moxiecode.com/license
-* Contributing: http://tinymce.moxiecode.com/contributing
 */
 
 function getFrameForDocument(document) {
@@ -23,16 +18,16 @@ function getFrameForDocument(document) {
 
 
 function updateMEE(frame, align, inline) {
-    var iframe = getFrameForDocument(frame.document);
+    var iframe = $(getFrameForDocument(frame.document));
     var eqn = $(frame.document).find('#eqn_inner');
 
     if (inline) {
-        $(iframe).css('width', align.width + 'px');
+        iframe.css('width', align.width + 'px');
     } else {
-        $(iframe).css('width', align.width + 'px');
+        iframe.css('width', align.width + 'px');
     }
-    $(iframe).css('height', align.height + 'px');
-    $(iframe).css('vertical-align', 'middle');
+    iframe.css('height', align.height + 'px');
+    iframe.css('vertical-align', 'middle');
 }
 
 function clickMEEiFrame(frame) {
@@ -120,7 +115,7 @@ function clickMEEiFrame(frame) {
                 var elems = $(body).find('.mee');
                 for (var i = 0 ; i < elems.length; i++){
                     var elem = elems[i];
-                    var data = new Object();
+                    var data = {};
                     var eltype = elem.tagName;
                     if (eltype == "DIV"){
                         data.inline = false;

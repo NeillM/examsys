@@ -30,8 +30,9 @@ MEE.Elem.extend("MEE.ElemAccent",
     // TODO: inplement scaled accents here such as arrows
     toHTML: function (depth) {
         if (this.args.length < 1) {
-            var token = new Object();
-            token.latex = '';
+            var token = {
+                latex : ''
+              }
             this.AddArg(token);
         }
 

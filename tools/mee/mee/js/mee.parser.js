@@ -1,10 +1,14 @@
 $.Class.extend("MEE.Parser",
 {
-
+    isTokenAlphaValidChars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    isAlphaValidChars: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<=>~-#",
+    isNumericValidChars: "0123456789",
+    isSingleLetterCommandValidChars: ":,;.>\\/!*{}|",
+ 
     init: function () {
-        this.customcommands = new Object();
-        this.apply_to_parent = new Object();
-        this.apply_to_thisset = new Object();
+        this.customcommands = {};
+        this.apply_to_parent = {};
+        this.apply_to_thisset = {};
     },
 
     //
@@ -40,15 +44,16 @@ $.Class.extend("MEE.Parser",
         var allowspaces = this.allowspaces;
         if (_allowspaces)
             allowspaces = true;
-
-        for (var i = 0; i < text.length; i++) {
+        var l = text.length;
+        for (var i = 0; i < l; i++) {
             aftersize = true;
             if (text.charAt(i) == " ") {
                 if (allowspaces) {
-                    var cmd = new Object();
-                    cmd.latex = "\;";
-                    cmd.type = "command";
-                    cmd.valid = true;
+                    var cmd = {
+                      latex : "\;",
+                      type :"command",
+                      valid : true
+                    }
                     output.push(cmd);
                 } else {
                     continue;
@@ -58,10 +63,11 @@ $.Class.extend("MEE.Parser",
 
                 if (text.charAt(i + 1) == "\\") // we have a \\ character, so handle it as a line break
                 {
-                    var cmd = new Object();
-                    cmd.latex = "";
-                    cmd.type = "newline";
-                    cmd.valid = true;
+                    var cmd = {
+                      latex : "",
+                      type : "newline",
+                      valid : true
+                    }
                     output.push(cmd);
                     i++;
                     type = "";
@@ -69,8 +75,9 @@ $.Class.extend("MEE.Parser",
                 } else { // normal command found
 
                     var isvalidcommand = false;
-                    var validobj = new Object();
-                    validobj.valid = false;
+                    var validobj = {
+                      valid : false
+                    }
                     var end = this.getEndOfCommand(text, i + 1, validobj);
                     isvalidcommand = validobj.valid;
                     var inbrackets = text.substring(i + 1, end);
@@ -83,10 +90,11 @@ $.Class.extend("MEE.Parser",
                             var command = text.substring(i + 7, end);
 
                         // add command
-                        var cmd = new Object();
-                        cmd.latex = command;
-                        cmd.type = "begin";
-                        cmd.valid = true;
+                        var cmd = {
+                          latex : command,
+                          type  : "begin",
+                          valid :  true
+                        }
                         if (end == 0)
                             cmd.valid = false;
                         output.push(cmd);
@@ -99,10 +107,11 @@ $.Class.extend("MEE.Parser",
                             var fintext = "\\end{" + command + "}";
                             end = this.getEndPosition(text, i, command);
                             inbrackets = text.substring(i, end);
-                            var cmd = new Object();
-                            cmd.latex = inbrackets;
-                            cmd.type = "arg";
-                            cmd.valid = true;
+                            var cmd = {
+                              latex : inbrackets,
+                              type : "arg",
+                              valid : true
+                            }
                             output.push(cmd);
 
                             i = end + fintext.length - 1;
@@ -117,10 +126,11 @@ $.Class.extend("MEE.Parser",
                             var command = text.substring(i + 5, end);
 
                         // add command
-                        var cmd = new Object();
-                        cmd.latex = command;
-                        cmd.type = "end";
-                        cmd.valid = true;
+                        var cmd = {
+                          latex : command,
+                          type : "end",
+                          valid : true
+                        }
                         if (end == 0)
                             cmd.valid = false;
                         output.push(cmd);
@@ -135,10 +145,11 @@ $.Class.extend("MEE.Parser",
 
                         if (sepsize) {
                             aftersize = false;
-                            var cmd = new Object();
-                            cmd.latex = sizemod;
-                            cmd.type = 'size';
-                            cmd.valid = false;
+                            var cmd = {
+                              latex : sizemod,
+                              type : 'size',
+                              valid : false
+                            }
                             output.push(cmd);
                         } else {
                             sizemodscope = 2;
@@ -160,11 +171,12 @@ $.Class.extend("MEE.Parser",
                         if (end == 0) {
 
                             // no closing pair found, create as a single element with size modifier
-                            var cmd = new Object();
-                            cmd.latex = inbrackets;
-                            cmd.type = "extsingle";
-                            cmd.valid = isvalidcommand;
-                            cmd.size = sizemod;
+                            var cmd = {
+                              latex: inbrackets,
+                              type: "extsingle",
+                              valid: isvalidcommand,
+                              size: sizemod
+                            }
                             output.push(cmd);
 
                             i = i + inbrackets.length;
@@ -177,18 +189,20 @@ $.Class.extend("MEE.Parser",
                             var trimres = this.TrimAnyRSize(content);
                             content = trimres.text;
 
-                            var cmd = new Object();
-                            cmd.latex = pair.pair;
-                            cmd.type = "extpair";
-                            cmd.size = sizemod;
-                            cmd.sizer = trimres.size;
+                            var cmd = {
+                              latex: pair.pair,
+                              type: "extpair",
+                              size: sizemod,
+                              sizer: trimres.size
+                            }
                             if (res.match) cmd.closing = this.getClosingBracketText(res.match);
 
                             output.push(cmd);
 
-                            var cmd = new Object();
-                            cmd.latex = content;
-                            cmd.type = "arg";
+                            var cmd = {
+                              latex : content,
+                              type : "arg"
+                            }
                             output.push(cmd);
 
                             type = "";
@@ -198,11 +212,12 @@ $.Class.extend("MEE.Parser",
 
                     } else if (this.isNonPairedCmd("\\" + inbrackets)) {
                         // if non pairable command, just apply the size modifier if available
-                        var cmd = new Object();
-                        cmd.latex = inbrackets;
-                        cmd.type = "extsingle";
-                        cmd.size = sizemod;
-                        cmd.valid = isvalidcommand;
+                        var cmd = {
+                          latex : inbrackets,
+                          type : "extsingle",
+                          size : sizemod,
+                          valid : isvalidcommand
+                        }
                         if (inbrackets == ")" || inbrackets == "}" || inbrackets == "]" || inbrackets.substr(0, 1) == "r")
                             cmd.isclosing = true;
                         output.push(cmd);
@@ -210,15 +225,16 @@ $.Class.extend("MEE.Parser",
                         i = end - 1;
 
                     } else if (inbrackets == "") {
-                        var cmd = new Object();
-                        cmd.latex = inbrackets;
-                        cmd.type = "command";
-                        cmd.size = sizemod;
-                        cmd.valid = false;
+                        var cmd = {
+                          latex : inbrackets,
+                          type : "command",
+                          size : sizemod,
+                          valid : false
+                        }
                         output.push(cmd);
                     } else {
                         // non special case command, just create an object for it
-                        var cmd = new Object();
+                        var cmd = {};
 
 
                         // type isnt blank, so we are in subscript or superscript, take the command and add it as the subscript or superscript latex
@@ -248,17 +264,19 @@ $.Class.extend("MEE.Parser",
                                 output.push(cmd);
 
                                 // prefix
-                                cmd = new Object();
-                                cmd.latex = before;
-                                cmd.type = "arg";
-                                cmd.valid = isvalid;
+                                cmd = {
+                                  latex : before,
+                                  type : "arg",
+                                  valid : isvalid
+                                }
                                 output.push(cmd);
 
                                 // postfix
-                                cmd = new Object();
-                                cmd.latex = after;
-                                cmd.type = "arg";
-                                cmd.valid = isvalid;
+                                cmd = {
+                                  latex : after,
+                                  type : "arg",
+                                  valid : isvalid
+                                }
                                 output.push(cmd);
 
                                 return output;
@@ -266,10 +284,11 @@ $.Class.extend("MEE.Parser",
                                 output.push(cmd);
 
                                 // postfix
-                                cmd = new Object();
-                                cmd.latex = text.substr(i + inbrackets.length + 1);
-                                cmd.type = "arg";
-                                cmd.valid = true;
+                                cmd = {
+                                  latex : text.substr(i + inbrackets.length + 1),
+                                  type : "arg",
+                                  valid : true
+                                }
                                 output.push(cmd);
 
                                 return output;
@@ -287,24 +306,26 @@ $.Class.extend("MEE.Parser",
                 var end = this.getEndMatchedBracketPosition(text, i, "{", "}");
                 if (end > 0) {
                     var inbrackets = text.substring(i + 1, end);
-                    var cmd = new Object();
-                    cmd.latex = inbrackets;
                     if (type == "")
                         type = "arg";
-                    cmd.type = type;
-                    cmd.valid = true;
+                    var cmd = {
+                      latex : inbrackets,
+                      type : type,
+                      valid : true
+                    }
                     output.push(cmd);
                     type = "";
                     i = end;
                 } else {
                     var inbrackets = text.substring(i + 1);
-                    var cmd = new Object();
-                    cmd.latex = inbrackets;
                     if (type == "")
                         type = "arg";
-                    cmd.type = type;
-                    cmd.incompletearg = 1;
-                    cmd.valid = true;
+                    var cmd = {
+                      latex : inbrackets,
+                      type : type,
+                      incompletearg : 1,
+                      valid : true
+                    }
                     output.push(cmd);
                     type = "";
                     i = text.length;
@@ -321,7 +342,7 @@ $.Class.extend("MEE.Parser",
                     var trimres = this.TrimAnyRSize(inbrackets); ;
                     inbrackets = trimres.text;
 
-                    var cmd = new Object();
+                    var cmd = {};
                     if (text.charAt(i) == '.') {
                         cmd.latex = "pdotbrackets";
                     } else {
@@ -334,9 +355,10 @@ $.Class.extend("MEE.Parser",
                     if (res.match) cmd.closing = this.getClosingBracketText(res.match);
                     output.push(cmd);
 
-                    var cmd = new Object();
-                    cmd.latex = inbrackets;
-                    cmd.type = "arg";
+                    var cmd = {
+                      latex : inbrackets,
+                      type : "arg"
+                    }
                     output.push(cmd);
 
                     type = "";
@@ -344,11 +366,12 @@ $.Class.extend("MEE.Parser",
                     //sizemod = 0;
                 } else {
                     // unable to find ending ), add as single element
-                    var cmd = new Object();
-                    cmd.latex = "(";
-                    cmd.type = "extsingle";
-                    cmd.size = sizemod;
-                    cmd.valid = true;
+                    var cmd = {
+                      latex : "(",
+                      type : "extsingle",
+                      size : sizemod,
+                      valid : true
+                    }
                     output.push(cmd);
                     //sizemod = 0;                        
                 }
@@ -365,16 +388,18 @@ $.Class.extend("MEE.Parser",
                     var trimres = this.TrimAnyRSize(inbrackets);
                     inbrackets = trimres.text;
 
-                    var cmd = new Object();
-                    cmd.latex = "psqbrackets";
-                    cmd.type = "extpair"; // sometimes this will be taken as an argument for a command
-                    cmd.size = sizemod;
-                    cmd.sizer = trimres.size;
+                    var cmd = {
+                      latex : "psqbrackets",
+                      type : "extpair", // sometimes this will be taken as an argument for a command
+                      size : sizemod,
+                      sizer : trimres.size
+                    }
                     output.push(cmd);
 
-                    var cmd = new Object();
-                    cmd.latex = inbrackets;
-                    cmd.type = "arg";
+                    var cmd = {
+                      latex : inbrackets,
+                      type : "arg"
+                    }
                     output.push(cmd);
 
                     type = "";
@@ -389,18 +414,20 @@ $.Class.extend("MEE.Parser",
                         var trimres = this.TrimAnyRSize(inbrackets); ;
                         inbrackets = trimres.text;
 
-                        var cmd = new Object();
-                        cmd.latex = "psqbrackets";
-                        cmd.type = "extpair";
-                        cmd.size = sizemod;
-                        cmd.sizer = trimres.size;
+                        var cmd = {
+                          latex : "psqbrackets",
+                          type : "extpair",
+                          size : sizemod,
+                          sizer : trimres.size
+                        }
 
                         if (res.match) cmd.closing = this.getClosingBracketText(res.match);
                         output.push(cmd);
 
-                        var cmd = new Object();
-                        cmd.latex = inbrackets;
-                        cmd.type = "arg";
+                        var cmd = {
+                          latex : inbrackets,
+                          type : "arg"
+                        }
                         output.push(cmd);
 
                         type = "";
@@ -408,12 +435,13 @@ $.Class.extend("MEE.Parser",
                         //sizemod = 0;
                     } else {
                         // No ] found, add as single extendable element
-                        var cmd = new Object();
-                        cmd.latex = "[";
-                        cmd.type = "extsingle";
-                        cmd.size = sizemod;
-                        cmd.incompletearg = 1;
-                        cmd.valid = true;
+                        var cmd = {
+                          latex : "[",
+                          type : "extsingle",
+                          size : sizemod,
+                          incompletearg : 1,
+                          valid : true
+                        };
                         output.push(cmd);
                         //sizemod = 0;      
                     }
@@ -422,12 +450,13 @@ $.Class.extend("MEE.Parser",
             } else if (text.charAt(i) == "}" || text.charAt(i) == ")" || text.charAt(i) == "]") {
                 // CHECK: } was commented out, WHY!?
                 // have we found a stray ending bracket, } ] ), add it as a single element
-                var cmd = new Object();
-                cmd.latex = text.charAt(i);
-                cmd.type = "extsingle";
-                cmd.size = sizemod;
-                cmd.valid = true;
-                cmd.isclosing = true;
+                var cmd = {
+                  latex : text.charAt(i),
+                  type : "extsingle",
+                  size : sizemod,
+                  valid : true,
+                  isclosing : true
+                }
                 output.push(cmd);
 
             } else if (text.charAt(i) == "_") {
@@ -447,11 +476,12 @@ $.Class.extend("MEE.Parser",
             } else if (text.charAt(i) == "/") {
                 // bracket char
 
-                var cmd = new Object();
-                cmd.latex = text.charAt(i);
-                cmd.type = "extsingle";
-                cmd.size = sizemod;
-                cmd.valid = true;
+                var cmd = {
+                  latex: text.charAt(i),
+                  type : "extsingle",
+                  size : sizemod,
+                  valid : true
+                };
                 output.push(cmd);
 
             } else {
@@ -459,20 +489,22 @@ $.Class.extend("MEE.Parser",
 
                 if (text.charAt(i) == "&") {
                     // Handler the tab when aligning stuff
-                    var cmd = new Object();
-                    cmd.latex = "";
-                    cmd.type = "tab";
-                    cmd.valid = true;
+                    var cmd = {
+                      latex : "",
+                      type : "tab",
+                      valid : true
+                    }
                     output.push(cmd);
                     type = "";
                 } else {
                     var ch = text.charAt(i);
 
                     // we just have a single character to handle
-                    var cmd = new Object();
-                    cmd.latex = ch;
-                    cmd.type = type;
-                    cmd.valid = true;
+                    var cmd = {
+                      latex : ch,
+                      type : type,
+                      valid : true
+                    };
                     output.push(cmd);
                     type = "";
                 }
@@ -485,10 +517,11 @@ $.Class.extend("MEE.Parser",
         }
 
         if (type != "") {
-            var cmd = new Object();
-            cmd.latex = '';
-            cmd.type = type;
-            cmd.valid = true;
+            var cmd = {
+              latex : '',
+              type : type,
+              valid : true
+            };
             output.push(cmd);
         }
 
@@ -542,9 +575,10 @@ $.Class.extend("MEE.Parser",
                     if (!nametoken || !counttoken || !valuetoken)
                         continue;
 
-                    var cc = new Object();
-                    cc.count = counttoken.latex;
-                    cc.value = valuetoken.latex;
+                    var cc = {
+                      count : counttoken.latex,
+                      value : valuetoken.latex
+                    };
                     this.customcommands[nametoken.latex] = cc;
 
                     continue;
@@ -562,10 +596,11 @@ $.Class.extend("MEE.Parser",
                         text = text.replace(new RegExp(toreplace, 'g'), replacewith);
                     }
 
-                    var newtoken = new Object();
-                    newtoken.type = "arg";
-                    newtoken.value = true;
-                    newtoken.latex = text;
+                    var newtoken = {
+                      type : "arg",
+                      value : true,
+                      latex : text
+                    };
                     elem = new MEE.Elem(newtoken, this.getElementData('base'));
                     elem.SetMain(newtoken);
                     elems.push(elem);
@@ -588,11 +623,11 @@ $.Class.extend("MEE.Parser",
                             var parts = token2.latex.split('$');
 
                             // first part should be the current element
-                            var newtoken = new Object();
-                            newtoken.type = 'arg';
-                            newtoken.valid = true;
-                            newtoken.latex = parts[0];
-
+                            var newtoken = {
+                              type : 'arg',
+                              valid : true,
+                              latex : parts[0]
+                             };
                             elem.SetMain(newtoken);
 
 
@@ -600,10 +635,11 @@ $.Class.extend("MEE.Parser",
                                 elems.push(elem);
 
                                 if (k % 2 == 1) { // math part
-                                    newtoken = new Object();
-                                    newtoken.valid = true;
-                                    newtoken.latex = parts[k];
-                                    newtoken.type = 'arg';
+                                    newtoken = {
+                                      valid : true,
+                                      latex : parts[k],
+                                      type : 'arg'
+                                    };
 
                                     elem = new MEE.Elem(newtoken, this.getElementData('base'));
 
@@ -611,16 +647,18 @@ $.Class.extend("MEE.Parser",
                                     //elems.push(elem);
 
                                 } else { // text part
-                                    newtoken = new Object();
-                                    newtoken.valid = true;
-                                    newtoken.latex = token.latex;
-                                    newtoken.type = token.type;
+                                    newtoken = {
+                                      valid : true,
+                                      latex : token.latex,
+                                      type : token.type
+                                    };
                                     elem = new MEE.Elem(newtoken, eldata);
 
-                                    newtoken = new Object();
-                                    newtoken.valid = true;
-                                    newtoken.latex = parts[k];
-                                    newtoken.type = 'arg';
+                                    newtoken = {
+                                      valid : true,
+                                      latex : parts[k],
+                                      type : 'arg'
+                                    };
                                     var argelem = new MEE.Elem(newtoken, this.getElementData('base'));
                                     elem.SetMain(argelem);
 
@@ -643,9 +681,10 @@ $.Class.extend("MEE.Parser",
                 // add a blank space element when we have a script that has no preceding
                 // element available
                 if (elems.length == 0) {
-                    var blanktoken = new Object();
-                    blanktoken.latex = MEE.Data.blankspace;
-                    blanktoken.type = '';
+                    var blanktoken = {
+                      latex : MEE.Data.blankspace,
+                      type : ''
+                    }
                     var eldata = jQuery.extend({}, this.getElementData('base'));
                     eldata.blank = 1;
 
@@ -824,9 +863,7 @@ $.Class.extend("MEE.Parser",
                 var eldata = MEE.Data.commands.digit;
                 eldata._name = 'digit';
                 return eldata;
-            } /* else {
-                return MEE.Data.commands.digit;
-            }*/
+            }
         }
 
         var latex = token.latex;
@@ -839,32 +876,30 @@ $.Class.extend("MEE.Parser",
             return el;
         }
         
-
         if (token.type == "command") {
             var eldata = MEE.Data.commands['invalidcommand'];
             eldata._name = 'invalidcommand';
             return eldata;
         }
 
-        el = new Object();
-        el.args = 0;
-        el.sarg = 0;
-        el._name = latex;
+        el = {
+          args : 0,
+          sarg : 0,
+          _name : latex
+        }
 
         return el;
     },
 
     // is the character a valid alpha numeric char
     isAlpha: function (sText) {
-        var ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<=>~-#";
+        //var isAlphaValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ<=>~-#";
         var IsNumber = true;
-        var Ch;
-
-
-        for (i = 0; i < sText.length && IsNumber == true; i++) {
-            Ch = sText.charAt(i);
-            if (ValidChars.indexOf(Ch) == -1) {
+        //var Ch;
+        for (i = sText.length; i--; ) {
+            if (this.isAlphaValidChars.indexOf(sText.charAt(i)) == -1) {
                 IsNumber = false;
+                break;
             }
         }
         return IsNumber;
@@ -873,15 +908,14 @@ $.Class.extend("MEE.Parser",
 
     // is the character a valid alpha numeric char
     isTokenAlpha: function (sText) {
-        var ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        //var isTokenAlphaValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         var IsNumber = true;
         var Ch;
 
-
-        for (i = 0; i < sText.length && IsNumber == true; i++) {
-            Ch = sText.charAt(i);
-            if (ValidChars.indexOf(Ch) == -1) {
+        for (i = sText.length; i--;) {
+            if (this.isTokenAlphaValidChars.indexOf(sText.charAt(i)) == -1) {
                 IsNumber = false;
+                break;
             }
         }
         return IsNumber;
@@ -890,15 +924,13 @@ $.Class.extend("MEE.Parser",
 
     // is the character a valid alpha numeric char
     isNumeric: function (sText) {
-        var ValidChars = "0123456789";
+        //var isNumericValidChars = "0123456789";
         var IsNumber = true;
-        var Ch;
-
-
-        for (i = 0; i < sText.length && IsNumber == true; i++) {
-            Ch = sText.charAt(i);
-            if (ValidChars.indexOf(Ch) == -1) {
+        //var Ch;
+        for (i = sText.length; i--; ) {
+            if (this.isNumericValidChars.indexOf(sText.charAt(i)) == -1) {
                 IsNumber = false;
+                break;
             }
         }
         return IsNumber;
@@ -907,9 +939,9 @@ $.Class.extend("MEE.Parser",
 
     // is the character a valid alpha numeric char
     isSingleLetterCommand: function (sText) {
-        var ValidChars = ":,;.>\\/!*{}|";
+        //var isSingleLetterCommandValidChars = ":,;.>\\/!*{}|";
 
-        if (ValidChars.indexOf(sText) != -1)
+        if (this.isSingleLetterCommandValidChars.indexOf(sText) != -1)
             return true;
 
         return false;
@@ -980,9 +1012,10 @@ $.Class.extend("MEE.Parser",
     getEndBracketPosition: function (text, initial, open, close) {
         var bkcount = 0;
 
-        var result = new Object();
-        result.offset = 0;
-        result.match = "";
+        var result = {
+          offset : 0,
+          match : ""
+        }
 
         // match any opening and closing brackets
         for (var k = 0; k < MEE.Data.pairs.length; k++) {
@@ -1100,9 +1133,10 @@ $.Class.extend("MEE.Parser",
     // if the last part of the text is a right sizing command then remove it
     TrimAnyRSize: function (text) {
         text = $.trim(text);
-        var result = new Object();
-        result.text = text;
-        result.size = 0;
+        var result = {
+          text : text,
+          size : 0
+        }
 
         for (var i = 0; i < MEE.Data.sizemodifiers.length; i++) {
             var len = MEE.Data.sizemodifiers[i].right.length;
@@ -1191,7 +1225,7 @@ $.Class.extend("MEE.Parser",
 
     getClosingBracketText: function (match) {
 
-        var newtoken = new Object();
+        var newtoken = {};
         newtoken.type = "command";
         if (match.length == 1) {
             newtoken.latex = match;

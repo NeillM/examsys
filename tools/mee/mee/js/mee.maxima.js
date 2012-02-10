@@ -43,7 +43,7 @@ $.Class.extend("MEE.Maxima",
         // is just so i can see whats going on
         // need to process for * insertion
         var output = "";
-        var lastel = new Object();
+        var lastel = {};
         lastel.type = "";
         lastel.maxima = "";
         m_elems.push(lastel);
@@ -159,9 +159,10 @@ $.Class.extend("MEE.Maxima",
 
             m += ")";
 
-            var elm = new Object();
-            elm.type = "matrix";
-            elm.maxima = m;
+            var elm = {
+              type : "matrix",
+              maxima : m
+            };
 
         } else { // fraction
             // should return a single element with the maxima in
@@ -171,9 +172,10 @@ $.Class.extend("MEE.Maxima",
             var topm = this.ProcessSet(top);
             var bottomm = this.ProcessSet(bottom);
 
-            var elm = new Object();
-            elm.type = "fraction";
-            elm.maxima = "(" + topm + ")/(" + bottomm + ")";
+            var elm = {
+              type : "fraction",
+              maxima : "(" + topm + ")/(" + bottomm + ")"
+            };
         }
 
         m_elems.push(elm);
@@ -183,12 +185,10 @@ $.Class.extend("MEE.Maxima",
 
     ProcessElem: function (elem) {
         // turn an element into some maxima
-        var el_maxima = new Object();
-
-        el_maxima.elem = elem;
-
-        // determine type of element
-        el_maxima.type = this.GetElementType(elem);
+        var el_maxima = {
+          elem : elem,
+          type : this.GetElementType(elem)
+        };
 
         // get the maxima of the element
         this.GetElementMaxima(elem, el_maxima);

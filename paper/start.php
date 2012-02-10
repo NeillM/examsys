@@ -353,7 +353,8 @@ if (($bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and 
   echo "select,input{font-family:$font,sans-serif;font-size:100%}\n";
 }
 ?>
-table {font-size:100%}
+table {font-size:100%; table-layout: fixed}
+td {border: 1px solid red}
 p {margin-top:0px; padding-top:0px}
 pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 .q_no {width:40px; text-align:right;vertical-align:top}
@@ -368,7 +369,7 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 .matrix {border:1px solid #808080; border-collapse:collapse}
 .matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
-.mee {font-size:120%}
+.mee {font-size:120%;}
 <?php
 if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;vertical-align:top}\n";
 if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";

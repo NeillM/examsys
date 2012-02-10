@@ -41,13 +41,16 @@ $.Class.extend("MEE.Tools.HTML",
             var right = 0;
             var top = 99999999;
             var bottom = 0;
-
+            
+            var pos = 0;
+            var w = 0;
+            var h = 0;
             for (var i = 0; i < target.length; i++) {
-                var telem = target[i];
+                var telem = $(target[i]);
 
-                var pos = $(telem).offset();
-                var w = $(telem).outerWidth(true);
-                var h = $(telem).outerHeight(true);
+                pos = telem.offset();
+                w = telem.outerWidth(true);
+                h = telem.outerHeight(true);
 
                 if (pos.left < left)
                     left = pos.left;
@@ -62,9 +65,10 @@ $.Class.extend("MEE.Tools.HTML",
                     bottom = pos.top + h;
             }
 
-            var pos = new Object();
-            pos.left = left;
-            pos.top = top;
+            var pos = {
+              left : left,
+              top : top
+            };
             var w = right - left;
             var h = bottom - top;
         } else {
@@ -80,14 +84,21 @@ $.Class.extend("MEE.Tools.HTML",
             h += align.top + align.bottom;
         }
 
-        elem.css('left', pos.left + 'px');
-        elem.css('top', pos.top + 'px');
         if (!(nosize == false)) {
-            elem.css('width', w + 'px');
-            elem.css('height', h + 'px');
+            elem.css({ 
+                      'left': pos.left + 'px',
+                      'top': pos.top + 'px',
+                      'width': w + 'px',
+                      'height': h + 'px',
+                      'display': 'block'
+                      });
+        } else {
+          elem.css({ 
+                      'left': pos.left + 'px',
+                      'top': pos.top + 'px',
+                      'display': 'block'
+                      });
         }
-
-        elem.css('display', 'block');
     },
 
     html_entity_decode: function (string, quote_style) {

@@ -7,17 +7,18 @@ $.Class.extend("MEE.Data",
 
     // build a table containing all the data required by each bracket (uses bracketheights and bracketwidths). 
     buildBracketSizes: function () {
-        MEE.Data.bsizes = new Object();
+        MEE.Data.bsizes = {};
 
         for (var i = 0; i < MEE.Data.bracketwidths.length; i++) {
             var data = MEE.Data.bracketwidths[i];
             for (var k = 0; k < data.brackets.length; k++) {
                 var bracket = data.brackets[k];
-                var bsize = new Object();
+                var bsize = {};
                 for (var s = 0; s < 5; s++) {
-                    var size = new Object();
-                    size.width = data[s];
-                    size.height = MEE.Data.bracketheights[s];
+                    var size = {
+                      width : data[s],
+                      height : MEE.Data.bracketheights[s]
+                    }
                     bsize['size' + s] = size;
                 }
                 bsize.scalew = data.s;
@@ -36,7 +37,7 @@ $.Class.extend("MEE.Data",
     ];*/
 
     buildNamedOps: function () {
-        MEE.Data.namedops = new Array();
+        MEE.Data.namedops = [];
 
         $.each(MEE.Data.commands, function (cmd, data) {
             if (data.cantype) {
@@ -71,9 +72,10 @@ $.Class.extend("MEE.Data",
     // lookup a character size for building a extensible bracket
     getCharSize: function (ch, scope) {
         if (!ch in MEE.Data.charsizes) {
-            var size = new Object();
-            size.top = 0;
-            size.height = 0;
+            var size = {
+              top : 0,
+              height : 0
+            }
             return size;
         }
         var size = jQuery.extend({}, MEE.Data.charsizes[ch]);
@@ -90,11 +92,12 @@ $.Class.extend("MEE.Data",
             array = 'largechars_size' + size;
 
         if (!ch in MEE.Data[array]) {
-            var size = new Object();
-            size.top = 0;
-            size.bottom = 0;
-            size.width = 0;
-            size.offset = 0;
+            var size = {
+              top : 0,
+              bottom : 0,
+              width : 0,
+              offset : 0
+            }
             return size;
         }
 
