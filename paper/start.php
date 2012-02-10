@@ -354,7 +354,6 @@ if (($bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and 
 }
 ?>
 table {font-size:100%; table-layout: fixed}
-td {border: 1px solid red}
 p {margin-top:0px; padding-top:0px}
 pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 .q_no {width:40px; text-align:right;vertical-align:top}
