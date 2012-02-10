@@ -50,8 +50,17 @@ print <<<END
   <tr><td colspan="5"><div id="ans" class="ans">0</div></td></tr>
   <tr><td colspan="5"><textarea name="IOx" rows="3" cols="16" class="LCD"></textarea></td></tr>
   <tr><td colspan="5"><div name="memory" id="memory" class="memory">&nbsp;</div></td></tr>
+
+END;
+  // No deg/rad mode for simple calc
+  if (isset($_GET['calc']) and $_GET['calc'] != 2) {
+print <<<END
   <tr><td colspan="5" class="trigmode"><input type="radio" id="trigmode_deg" name="trigmode" value="deg" checked="checked" onchange="changeTrigMode()" /> <label for="trigmode_deg">Degrees</label> <input type="radio" id="trigmode_rad" name="trigmode" value="rad" onchange="changeTrigMode()" /> <label for="trigmode_rad">Radians</label></td></tr>
 
+END;
+  }
+
+print <<<END
 <tr>
 
 END;
@@ -169,9 +178,9 @@ END;
 </table>
 </div>
 </form>
-<script language="JavaScript">
-if (urlParams["form"]!="undefined") {
-  x=window.opener.document[urlParams["form"]][urlParams["field"]].value;
+<script type="text/javascript">
+if (urlParams["field"] != "undefined" && typeof(window.opener.document.getElementById(urlParams["field"])) != 'undefined') {
+  x = document.getElementById('ans').innerHTML = window.opener.document.getElementById(urlParams["field"]).value;
   Ox();
 }
 var trigMode = 'degrees';

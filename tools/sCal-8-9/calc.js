@@ -254,7 +254,9 @@ function xEval() {
 function returntoform() {
   xEval();
   //Oxf();
-  window.opener.document[urlParams["form"]][urlParams["field"]].value=x; //.getElementById(urlParams["id"]).value=x;
+  if (typeof(window.opener.document.getElementById(urlParams["field"])) != 'undefined') {
+    window.opener.document.getElementById(urlParams["field"]).value=x; //.getElementById(urlParams["id"]).value=x;
+  }
   window.close();
 }
 function xPlusEq(s) {

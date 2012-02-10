@@ -157,7 +157,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
       if ($calculator == -1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
       if ($calculator >= 1) {
-        echo '<br /><img  onclick="openCalc(' . $calculator . ',\'questions\', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+        echo '<br /><img  onclick="openCalc(' . $calculator . ', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
       }
       echo "</td><td>";
       if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
@@ -170,7 +170,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($calculator == -1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         if ($calculator >= 1) {
           if ($question['q_type'] == 'calculation') {
-            echo '<br /><img onclick="openCalc(' . $calculator . ',\'questions\', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
+            echo '<br /><img onclick="openCalc(' . $calculator . ', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
           } else {
             echo '<br /><img onclick="openCalc(' . $calculator . ');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
           }
@@ -944,7 +944,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
       if ($calculator == -1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
       if ($calculator >= 1) {
-        echo '<br /><img  onclick="openCalc(' . $calculator . ',\'questions\', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" />';
+        echo '<br /><img  onclick="openCalc(' . $calculator . ', \'q' . $question_no . '\');" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="24" alt="' . $string['calculator'] . '" />';
       }
       echo '</td><td>';
     }
@@ -982,9 +982,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             if(isset($tmp_user_answers[0])){
               $ans = $tmp_user_answers[0];
             }
-            echo "<div><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" />" . $score_array[3] .  "</div>\n";
+            echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" />" . $score_array[3] .  "</div>\n";
           } else {
-            echo "<div><input type=\"text\" style=\"text-align:right\" class=\"unans\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" />" . $score_array[3] .  "</div>\n";
+            echo "<div><input type=\"text\" style=\"text-align:right\" class=\"unans\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" />" . $score_array[3] .  "</div>\n";
           }
         }
       }
