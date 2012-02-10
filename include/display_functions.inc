@@ -952,7 +952,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
     $replace = array($A,$B,$C,$D,$E,$F,$G,$H,$I,$J);
     $question['leadin'] = str_ireplace($search, $replace, $question['leadin']);
-    $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">' . $string['unanswered'] . '</span>', $question['leadin']);
+    if(strpos($question['leadin'],'class="mee"') !== false) {
+      $question['leadin'] = str_replace('ERROR', $string['unanswered'] , $question['leadin']);
+    } else {
+      $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">' . $string['unanswered'] . '</span>', $question['leadin']);
+    }
     echo "<p>" . $question['leadin'] . "</p>\n";
     if (in_array('ERROR',$replace,true)) {
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled />" . $score_array[3] .  "</p>\n";
