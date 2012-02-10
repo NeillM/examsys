@@ -94,6 +94,18 @@ $.Class.extend("MEE.Base",
 
         MEE.Base.updateProgress();
         $(proc.elem).css('color','');
+        
+        //add some hight and padding to the parent elments to help with layout.
+        if(!$(proc.elem).hasClass('meeInMCE')) {
+          var h = parseInt(proc.elem.style.height) 
+                                              + parseInt(proc.elem.style.paddingTop)
+                                               + parseInt(proc.elem.style.paddingBottom);
+          if(proc.elem.parentNode.style.height == '' || h > parseInt(proc.elem.parentNode.style.height)) {
+            proc.elem.parentNode.style.height = h + 'px';
+            proc.elem.parentNode.style.paddingTop = proc.elem.style.paddingTop;
+          }
+        }
+          
         setTimeout("MEE.Base.ProcessNext()", 1);
     },
 

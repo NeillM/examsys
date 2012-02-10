@@ -614,8 +614,8 @@ function getMSCAA($paperID, $mysqlidb) {
           $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
         }
       } else {
-        $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($temp_array[$row_no]['leadin'],"<div>,<span>"))));
-        $temp_array[$row_no]['leadin'] = preg_replace('/ style="[\w-,:; \']*"/i', '', $temp_array[$row_no]['leadin']);   // Equation present, strip some formatting
+        $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',$temp_array[$row_no]['leadin']));
+        //$temp_array[$row_no]['leadin'] = preg_replace('/ style="[\w-,:; \']*"/i', '', $temp_array[$row_no]['leadin']);   // Equation present, strip some formatting
       }
       
       $temp_array[$row_no]['scenario'] = $scenario;
