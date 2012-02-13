@@ -20,7 +20,7 @@ $string['adjusted'] = 'skorygowany';
 $string['key'] = 'Legenda';
 $string['greenicon'] = 'Osiągnięcie 80-100% celów specyficznych';  // Niko
 $string['ambericon'] = 'Osiągnięcie 50-79% celów specyficznych';
-$string['redicon'] = 'Osiągnięcie 0-49% celów specyficznychcelów specyficznych';
+$string['redicon'] = 'Osiągnięcie 0-49% celów specyficznych';
 $string['hyperlink'] = '<a href="" onclick="return false;">hiperłącze</a> - przejście do sekcji NLE w celu uzyskania dalszych szczegółów';
 $string['relativekey'] = "<strong>Wzgl.</strong> - o ile punktów więcej '+' lub mniej '-' niż średnia w grupie";
 $string['question'] = '<strong>L.Pyt.</strong> - liczba pytań odwzorowana w celach';

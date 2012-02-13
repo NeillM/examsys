@@ -1,6 +1,6 @@
 <?php
-$string['peerreview'] = 'Peer Review';  // Niko, whole file please
-$string['save'] = 'Save';
-$string['error_time'] = 'The paper you are attempting to access is only available between %s and %s';
+$string['peerreview'] = 'Recenzja wewnetrzna';  
+$string['save'] = 'Zachowaj';
+$string['error_time'] = 'Arkusz który próbujesz otworzyć jest dostępny tylko pomiędzy %s i %s';
 
 ?>
