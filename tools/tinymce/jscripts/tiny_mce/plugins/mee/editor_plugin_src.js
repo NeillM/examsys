@@ -127,7 +127,7 @@ function clickMEEiFrame(frame) {
 
                     var datatxt = JSON.stringify(data);
 
-                    var html = "<iframe src='/tools/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt + "' width='1000' height='5' frameborder='0'></iframe>";
+                    var html = "<iframe class='mee_iframe' data-mce-style='' src='/tools/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt + "' width='1000' height='5' frameborder='0'></iframe>";
                     var newelem = $(html);
 
                     $(newelem).addClass('mee_iframe');
@@ -135,6 +135,8 @@ function clickMEEiFrame(frame) {
                     if (!data.inline)
                         newelem.attr('align','middle');
                     
+                    newelem.attr('data-mce-style','');
+ 
                     $(elem).remove();
                 }
             });

@@ -83,6 +83,8 @@ function insertMME() {
         tinyMCEPopup.editor.execCommand('mceInsertContent', true, html);
     }
 
+    $(node).children('iframe').removeAttr('data-mce-style').css('display','inline');
+    
     tinyMCEPopup.editor.execCommand('mceRepaint');
     tinyMCEPopup.close();
     

@@ -36,6 +36,8 @@
     body {margin:0px; font-family:Arial,sans-serif}
     p, td {font-family:Arial,sans-serif; font-size:80%; color:black}
   </style>
+  <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
   </head>
 
   <body>
@@ -72,7 +74,7 @@
       $question_array[$id]['last_edited'] = $row['last_edited'];
       $id++;
     }
-    $old_leadin = $row['leadin'];
+    $s = $row['leadin'];
     $old_q_id = $row['q_id'];
   }
 

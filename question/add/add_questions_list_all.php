@@ -30,7 +30,8 @@ require '../../include/staff_auth.inc';
 <style>
   body {margin:0px; font-family:Arial,sans-serif; background-color:white; color:black; font-size:80%}
 </style>
-
+<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <script language="JavaScript">
   function Qpreview(qID) {
     parent.previewurl.location = '../view_question.php?q_id=' + qID;
@@ -92,7 +93,7 @@ require '../../include/staff_auth.inc';
   $result->execute();
   $result->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
   while ($result->fetch()) {
-    $tmp_leadin = strip_tags($leadin);
+    $tmp_leadin = strip_tags($leadin,'<div>,<span>');
     if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin, 0, 160) . '...';
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
       

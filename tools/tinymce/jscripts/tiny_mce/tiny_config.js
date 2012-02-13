@@ -1,7 +1,10 @@
   tinyMCE.init({ 
     mode : "specific_textareas",
+    forced_root_block : 'div',
+    force_br_newlines : false,
+    force_p_newlines : false,
     //language : window.navigator.language,
-	editor_selector : "mceEditor",
+	  editor_selector : "mceEditor",
     theme : "advanced", 
     skin : "default",
     plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras", 

@@ -7,7 +7,7 @@
  .divider {padding-left:10px; padding-bottom:2px; font-weight:bold}
  .f {float:left; width:375px; padding-left:10px; font-size:90%}
  .file {float:left; width:375px; height:74px; padding-left:12px; font-size:90%}
- .mee {display:inline}
+ .mee {font-size:120%; display:inline}
 
  a:link {color:#0000FF}
  a:visited {color:#0000FF}

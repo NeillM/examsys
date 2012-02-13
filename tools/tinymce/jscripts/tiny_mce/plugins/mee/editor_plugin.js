@@ -133,7 +133,7 @@ function clickMEEiFrame(frame) {
                     $(newelem).insertBefore(elem);
                     if (!data.inline)
                         newelem.attr('align','middle');
-                    
+                                  
                     $(elem).remove();
                 }
             });

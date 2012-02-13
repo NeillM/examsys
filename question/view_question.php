@@ -57,27 +57,12 @@
   .s1 {width:18px; text-align:center; background-color:#C00000; font-size:80%}
   .likert_button {text-align:center; width:40px; vertical-align:top}
   .unans {background-color:#FFC0C0}
+  .mee {font-size:120%; display:inline}
 </style>
 
 <script language="JavaScript" src="../js/flash_include.js"></script>
-<script src="/tools/MathJax/MathJax.js"> 
-  MathJax.Hub.Config({
-    showProcessingMessages: false,
-	menuSettings: {zoom:"none"},
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-	preRemoveClass: "MathJax_Preview",
-    tex2jax: {
-	    showProcessingMessages: false,
-	    inlineMath: [["[tex]","[/tex]"],["[tex]","[/tex]"]],
-		preview: "none"
-	},
-	"HTML-CSS": { scale: <?php echo ($textsize + 30); ?>,
-	              showMathMenu: false,
-	              availableFonts: ["TeX"] 
-				}
-  });
-</script>
+<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <script language="JavaScript">
 function write_string(p_string) {
   document.write(p_string);
