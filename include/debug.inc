@@ -43,12 +43,13 @@ Class debug_mysqli extends mysqli {
 	  global $queryInfo;
     
     $result = $this->prepare("SHOW PROFILES");
+    $result->bind_result($query_ID, $duration, $query);
     $result->execute();
     if (!$result) {
 	    return 'ERROR';
 	  } else {
 	    $i = 0;
-      $result->bind_result($query_ID, $duration, $query);
+      
 	    while ($result->fetch()){
         if ($i > 0) {
           if (isset($queryInfo[$i]) and $queryInfo[$i]['type'] != 'prepare') {
