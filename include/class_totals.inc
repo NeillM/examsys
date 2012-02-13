@@ -403,14 +403,13 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       for ($a=0; $a<count($paper_answers); $a++) {
         if ($paper_answers[$a] != '') {
           $answers_correct = 0;
-          $answers_incorrect = 0;
-          
+          $answers_incorrect = 0;          
           if ($paper_buffer[$q_id]['q_type'] == 'extmatch') {
             $sub_paper_answers = explode('$', $paper_answers[$a]);
             $sub_user_answers = explode('$', $user_answers[$a]);
             $exclude_on = true;
             
-            for ($c=0; $c<count($sub_user_answers); $c++) {
+            for ($c=0; $c<count($sub_paper_answers); $c++) {
               if (substr($tmp_exclude, $section, 1) == '0') {
                 if ($sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
                   // Do nothing
@@ -964,7 +963,7 @@ if ($log_query->num_rows > 0) {
       $tmp_array['duration'] = $user_duration;
       $tmp_array['paper_type'] = $paper_type;
     }
-    getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array);
+    getUserMark($q_id, $user_answer, $mark, $excluded, $status = $tmp_array['username'], $tmp_mark, $tmp_user_mark_array);
     
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {
@@ -1015,8 +1014,6 @@ if ($log_query->num_rows > 0) {
       for ($i=0; $i<count($student_cohort); $i++) {
         if ($student_cohort[$i]['taken'] == 0) {
           $user_results[$user_no]['name'] = $student_cohort[$i]['name'];
-          var_dump($student_cohort[$i]['name']);
-          exit;
           $user_results[$user_no]['mark'] = 0;
           $user_results[$user_no]['adj_percent'] = 0;
           $user_results[$user_no]['percent'] = 0;
