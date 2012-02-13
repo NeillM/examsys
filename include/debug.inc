@@ -47,6 +47,7 @@ Class debug_mysqli extends mysqli {
 	    return 'ERROR';
 	  } else {
 	    $i = 0;
+      var_dump($result);
       $result->bind_result($query_ID, $duration, $query);
 	    while ($result->fetch()){
         if ($i > 0) {
