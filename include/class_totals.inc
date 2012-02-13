@@ -411,7 +411,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
             
             for ($c=0; $c<count($sub_paper_answers); $c++) {
               if (substr($tmp_exclude, $section, 1) == '0') {
-                if ($sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
+                if (!isset($sub_user_answers[$c]) or $sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
                   // Do nothing
                 } elseif (in_array($sub_user_answers[$c], $sub_paper_answers)) {
                   $answers_correct++;
