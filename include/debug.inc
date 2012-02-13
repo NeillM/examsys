@@ -35,21 +35,19 @@ Class debug_mysqli extends mysqli {
 	var $closed = false;
   function __construct($db_host , $db_username, $db_passwd, $db_database) {
 	  parent::__construct($db_host , $db_username, $db_passwd, $db_database);
-	  $this->query('set profiling_history_size=200',false);
-    $this->query('set profiling=1',false);
+	  $this->query('SET profiling_history_size=200',false);
+    $this->query('SET profiling=1',false);
 	}
 	
 	function cacheSqlProfile() {
 	  global $queryInfo;
-    
-    $result = $this->prepare("SHOW PROFILES");
-    $result->bind_result($query_ID, $duration, $query);
+    $result = $this->prepare("SHOW PROFILES",false);
     $result->execute();
     if (!$result) {
 	    return 'ERROR';
 	  } else {
 	    $i = 0;
-      
+      $result->bind_result($query_ID, $duration, $query);
 	    while ($result->fetch()){
         if ($i > 0) {
           if (isset($queryInfo[$i]) and $queryInfo[$i]['type'] != 'prepare') {
@@ -67,7 +65,6 @@ Class debug_mysqli extends mysqli {
 	
 	private function getDetails($qid) { 
     $details = array();
-
     $result = $this->prepare("SELECT MIN(seq) AS seq, state, count(*) AS numb_ops, ROUND(SUM(duration),5) AS sum_dur, ROUND(avg(duration),5) AS avg_dur, ROUND(SUM(cpu_user),5) AS sum_cpu, ROUND(AVG(cpu_user),5) AS avg_cpu FROM information_schema.profiling WHERE query_id = ? GROUP BY state ORDER BY seq");
     $result->bind_param('i', $qid);
     $result->execute();
