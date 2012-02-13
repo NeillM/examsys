@@ -41,27 +41,25 @@ Class debug_mysqli extends mysqli {
 	
 	function cacheSqlProfile() {
 	  global $queryInfo;
-    $result = $this->prepare("SHOW PROFILES",false);
-    $result->execute();
-    if (!$result) {
-	    return 'ERROR';
-	  } else {
-	    $i = 0;
-      var_dump($result);
-      $result->bind_result($query_ID, $duration, $query);
-	    while ($result->fetch()){
-        if ($i > 0) {
-          if (isset($queryInfo[$i]) and $queryInfo[$i]['type'] != 'prepare') {
-            $queryInfo[$i]['sql']['Duration'] = $duration;	
-            $queryInfo[$i]['sql']['INFO'] = $this->getDetails($query_ID);	
+    // THIS CAN NOT BE "prepare" on all versions of php so is left "unprepare" for now!
+    $res = $this->query('SHOW PROFILES', false);
+    if(!$res) {
+      return 'ERROR';
+    } else {
+      $i = 0;
+      while($row = $res->fetch_assoc()){
+        if($i > 0) {
+          if(isset($queryInfo[$i]) and $queryInfo[$i]['type'] != 'prepare') {
+            $queryInfo[$i]['sql']['Duration'] = $row['Duration'];
+            $queryInfo[$i]['sql']['INFO'] = $this->getDetails($row['Query_ID']);
           } else {
             $queryInfo[$i]['sql']['INFO'] = array('prepared statment no info');
           }
         }
         $i++;
-      }		  
-      $result->close();
-	  }
+      }
+      $res->close();
+    }
   }
 	
 	private function getDetails($qid) { 
