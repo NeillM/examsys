@@ -97,7 +97,7 @@ $.Class.extend("MEE.Elem",
         this.depth = depth;
 
         // if bracket size is defined in eldata, override size
-        if ('size' in this.eldata) {
+        if (this.eldata.size) {
             this.size = this.eldata.size;
             this.sizer = this.eldata.size;
         }
@@ -107,11 +107,11 @@ $.Class.extend("MEE.Elem",
         MEE.Elem.elems[this.elemid] = this;
 
         if (this.eldata.elemclass)
-          this.html_elem = $('<span class="mee_elem ' + this.eldata.elemclass + '">');
+          this.html_elem = $('<span class="mee_elem ' + this.eldata.elemclass + '" elem="' + this.elemid + '">');
         else 
-          this.html_elem = $('<span class="mee_elem">');
+          this.html_elem = $('<span class="mee_elem" elem="' + this.elemid + '">');
 
-       this.html_elem.attr('elem', this.elemid);
+       //this.html_elem.attr('elem', this.elemid);
 
         
 
@@ -122,9 +122,7 @@ $.Class.extend("MEE.Elem",
         // deal with a sqrt as a special case as needs a bar creating
         // TODO: change this to a flag in the eldata
         if (this.latex == "sqrt") {
-            this.html_sqrt = $('<span>');
-            this.html_sqrt.addClass('mee_sqrt_bar');
-            this.html_sqrt.css('position', 'absolute');
+            this.html_sqrt = $('<span class="mee_sqrt_bar" style="position:absolute">');
             this.html_sqrt.html(MEE.Data.blankspace);
             this.html_elem.append(this.html_sqrt);
             this.html_elem.css('position', 'relative');
@@ -157,7 +155,6 @@ $.Class.extend("MEE.Elem",
                 if (this.eldata['arg' + i + 'class'])
                     arg.addClass(this.eldata['arg' + i + 'class']);
                 this.html_elem.append(arg);
-
                 this['html_arg' + i] = arg;
             }
         }

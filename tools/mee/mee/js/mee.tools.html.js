@@ -1,5 +1,7 @@
 $.Class.extend("MEE.Tools.HTML",
 {
+    'hash_map':null, //cache the hashmap
+    
     BuildBarText: function (barwidth, bartype) {
         if (!bartype)
             bartype = 'single';
@@ -100,7 +102,8 @@ $.Class.extend("MEE.Tools.HTML",
                       });
         }
     },
-
+    
+    
     html_entity_decode: function (string, quote_style) {
         // Convert all HTML entities to their applicable characters  
         // 
@@ -122,24 +125,29 @@ $.Class.extend("MEE.Tools.HTML",
         // *     returns 1: 'Kevin & van Zonneveld'
         // *     example 2: html_entity_decode('&amp;lt;');    
         // *     returns 2: '&lt;'
-        var hash_map = {},
-            symbol = '',
-            tmp_str = '',
-            entity = ''; tmp_str = string.toString();
-
-        if (false === (hash_map = this.get_html_translation_table('HTML_ENTITIES', quote_style))) {
-            return false;
+        
+        symbol = '',
+        //tmp_str = '',
+        entity = ''; 
+        //tmp_str = string.toString();
+            
+        if(this.hash_map == null) {
+          if (false === (this.hash_map = this.get_html_translation_table('HTML_ENTITIES', quote_style))) {
+              return false;
+          }
+          // fix &amp; problem
+          // http://phpjs.org/functions/get_html_translation_table:416#comment_97660
+          delete (this.hash_map['&']);
+          this.hash_map['&'] = '&amp;';
         }
-        // fix &amp; problem
-        // http://phpjs.org/functions/get_html_translation_table:416#comment_97660
-        delete (hash_map['&']);
-        hash_map['&'] = '&amp;';
-        for (symbol in hash_map) {
-            entity = hash_map[symbol];
-            tmp_str = tmp_str.split(entity).join(symbol);
-        } tmp_str = tmp_str.split('&#039;').join("'");
+        
+        for (symbol in this.hash_map) {
+            entity = this.hash_map[symbol];
+            string = string.split(entity).join(symbol);
+        } 
+        //string = string.split('&#039;').join("'");
 
-        return tmp_str;
+        return string;
     },
 
     get_html_translation_table: function (table, quote_style) {

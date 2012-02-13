@@ -48,10 +48,6 @@ MEE.ElemSet.extend("MEE.ElemSetNormal",
             depth = 2;
         this.depth = depth;
         
-        //this.html_elem = $('<span>');
-        //this.html_elem.addClass('mee_elemset');
-        //this.html_elem.attr('elem', this.elemid);
-        //this.html_elem.attr('depth', depth);
         this.html_elem = $('<span class="mee_elemset" depth="' + depth + '" elem="' + this.elemid + '">');
         var dodepth = true;
         if (this.parent && this.parent.depth == this.depth)
@@ -64,8 +60,7 @@ MEE.ElemSet.extend("MEE.ElemSetNormal",
 
 
         for (var i = 0; i < this.elements.length; i++) {
-            var elemhtml = this.elements[i].toHTML(depth);
-            this.html_elem.append(elemhtml);
+            this.html_elem.append(this.elements[i].toHTML(depth));
         }
 
         this.sortBlanks();
