@@ -11,7 +11,7 @@ while ($result->fetch()) {
     $marks_correct = 20;
   }
   //echo "<div>ALTER options SET marks_correct=$marks_correct WHERE o_id=$q_id</div>";
-  $adjust = $mysqli->prepare("ALTER options SET marks_correct=? WHERE o_id=?");
+  $adjust = $mysqli->prepare("UPDATE options SET marks_correct=? WHERE o_id=?");
   $adjust->bind_param('ii', $marks_correct, $q_id);
   $adjust->execute();
   $adjust->close();
