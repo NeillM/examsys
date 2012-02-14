@@ -17,5 +17,5 @@ while ($result->fetch()) {
   $adjust->close();
 }
 $result->close();
-
+echo "Done";
 ?>
