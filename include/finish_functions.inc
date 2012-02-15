@@ -571,8 +571,8 @@
             
             $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
             $difference = round(abs($saved_response_clean - $tmp_answer[1]), $decimals);
-
-            if ($saved_response_clean == $tmp_answer[1]) {
+            
+            if ($saved_response_clean == floatval($tmp_answer[1])) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
             } elseif ($difference <= $score_array[1] and $score_array[1] > 0) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
@@ -584,6 +584,7 @@
             if (substr($tmp_exclude,$part_id,1) == '1') {
               $paper[$question]['mark'] = 0;
             }
+            
             if ($paper[$question]['mark'] == $paper[$question]['marks_correct']) {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
             } elseif ($score_array[2] > 0 and $paper[$question]['mark'] == $paper[$question]['marks_partial']) {
@@ -1201,6 +1202,13 @@
               echo "<option value=\"f\">False</option>\n";
             }
             echo "</select>\n";
+            if ($tmp_display_correct_answer == '1') {
+              if ($paper[$question]['correct'][0] == 't') {
+                echo ' <strong>True</strong>';
+              } else {
+                echo ' <strong>False</strong>';
+              }
+            }
           } else {
             if ($paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 't') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
@@ -1256,14 +1264,14 @@
 
           if ($tmp_display_feedback == '1') {
             if ($paper[$question]['mark'] > 0) {
-              if ($paper[$question]['correct_fback'] != '') {
-                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
+              if ($paper[$question]['feedback_right'][0] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_right'][0] . "</div>\n";
               }
             } else {
-              if ($paper[$question]['incorrect_fback'] != '') {
-                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['incorrect_fback'] . "</div>\n";
-              } elseif ($paper[$question]['correct_fback'] != '') {
-                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
+              if ($paper[$question]['feedback_wrong'][0] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_wrong'][0] . "</div>\n";
+              } elseif ($paper[$question]['feedback_right'][0] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_right'][0] . "</div>\n";
               }
             }
           }
@@ -1437,7 +1445,7 @@
           }
           
           if ($paper[$question]['score_method'] == 'Mark per Question') {
-            if ($paper[$question]['mark'] == $paper[$question]['totalpos']) {
+            if ($all_correct) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
             } else {
               $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
