@@ -1,4 +1,5 @@
 <?php
+// 14/02/2012
 require '../include/sysadmin_auth.inc';
 
 $result = $mysqli->prepare("SELECT q_id, MAX(marks_correct) FROM options, questions WHERE questions.q_id=options.o_id AND q_type='mrq' GROUP BY q_id");
