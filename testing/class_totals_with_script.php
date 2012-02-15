@@ -90,8 +90,8 @@ function parseScript($data) {
 }
 
 $papers = array();
-//$result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20110326080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
-$result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE property_id IN (2625)");
+$result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20110326080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
+//$result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE property_id IN (2625)");
 $result->execute();
 $result->bind_result($crypt_name, $paperID, $title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
@@ -115,7 +115,7 @@ foreach ($papers as $paper) {
   $output = getData($url);
   $marks_set = parseRawMarks($output);
   
-  echo "Checking " . $paper['paperID'] . "...<br />\n";
+  echo "Checking paperID " . $paper['paperID'] . "...<br />\n";
   ob_flush();
   flush();  
 
