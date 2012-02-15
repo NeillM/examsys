@@ -961,7 +961,7 @@ function getMSCAA($paperID, $mysqlidb) {
       echo '<td class="q_no"><img src="../artwork/black_white_info_icon.png" width="6" height="12" alt="Info" />&nbsp;</td>';
     } else {
       $question_number++;
-      echo "<td class=\"q_no\">&nbsp;$question_number.</td>";
+      echo "<td class=\"q_no\">$question_number.</td>";
     }
     
     echo "<td class=\"l\">";
