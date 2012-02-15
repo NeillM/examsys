@@ -111,7 +111,7 @@ table {font-size:100%}
 <body>
 <?php
 foreach ($papers as $paper) {
-  $url = "https://rogo.local/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc";
+  $url = "https://suivarro.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc";
   $output = getData($url);
   $marks_set = parseRawMarks($output);
   
@@ -134,7 +134,7 @@ foreach ($papers as $paper) {
     $result->fetch();
     $result->close();
     
-    $url = "https://rogo.local/paper/finish.php?id=" . $papers[0]['crypt_name'] . "&previous=" . str_replace(' ', '%20', $started) . "&userid=" . $tmp_userID . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']);
+    $url = "https://suivarro.nottingham.ac.uk/paper/finish.php?id=" . $papers[0]['crypt_name'] . "&previous=" . str_replace(' ', '%20', $started) . "&userid=" . $tmp_userID . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']);
     $output = getData($url);
     $script_mark = parseScript($output);
     
