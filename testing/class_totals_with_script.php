@@ -138,11 +138,13 @@ foreach ($papers as $paper) {
     $output = getData($url);
     $script_mark = parseScript($output);
     
-    if ($script_mark != $mark['mark']) {
+    if ($script_mark == $mark['mark']) {
+      echo "$tmp_userID OK<br />";
+    } else {
       echo "Problem with $tmp_userID - $script_mark / " . $mark['mark'] . " <br />";
-      ob_flush();
-      flush();  
     }
+    ob_flush();
+    flush();  
   }
 }
 ob_end_flush();
