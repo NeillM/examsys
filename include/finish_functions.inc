@@ -572,7 +572,7 @@
             if ($tmp_exclude == '1')  echo '<span class="exclude">';
             
             $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
-            $difference = round(abs($saved_response_clean - $tmp_answer[1]), $decimals);
+            $difference = round(abs($saved_response_clean - $tmp_answer[1]), 12);
             
             if ($saved_response_clean == $tmp_answer[1]) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
@@ -1833,7 +1833,9 @@
                 }
               }
               if ($correct_flag == true) {
-                $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+                  $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                }
                 $have_answer = true;
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
@@ -1841,7 +1843,9 @@
                 if ($user_choices[$blank_count] == 'u') {
                     echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" />";
                 } else {
-                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+                    $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  }
                   $have_answer = true;
                   echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $user_choices[$blank_count] .  "\" />";
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
@@ -1879,7 +1883,7 @@
                 }
               } else {
                 if (isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
-                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  if (substr($tmp_exclude,$blank_count-1,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                   $have_answer = true;
                 }
                 if ($tmp_display_students_response == '1'and substr($tmp_exclude,$blank_count-1,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {

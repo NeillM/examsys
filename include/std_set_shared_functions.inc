@@ -104,7 +104,6 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
           $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
           $distinction_score = round($distinction_score,1);
-          var_dump($ebel_marks);
         }
         if ($old_group_review == 'No') $no_reviews++;
         $reviews[] = array(
