@@ -1264,14 +1264,14 @@
 
           if ($tmp_display_feedback == '1') {
             if ($paper[$question]['mark'] > 0) {
-              if ($paper[$question]['feedback_right'][0] != '') {
-                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_right'][0] . "</div>\n";
+              if ($paper[$question]['correct_fback'] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
               }
             } else {
-              if ($paper[$question]['feedback_wrong'][0] != '') {
-                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_wrong'][0] . "</div>\n";
-              } elseif ($paper[$question]['feedback_right'][0] != '') {
-                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['feedback_right'][0] . "</div>\n";
+              if ($paper[$question]['incorrect_fback'] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['incorrect_fback'] . "</div>\n";
+              } elseif ($paper[$question]['correct_fback'] != '') {
+                echo "<br /><div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $paper[$question]['correct_fback'] . "</div>\n";
               }
             }
           }

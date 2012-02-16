@@ -42,12 +42,7 @@ require_once 'detail_parts/details_presentation.php';
 
 <?php
 require_once 'detail_parts/details_marking.php';
-require_once 'detail_parts/details_general_feedback.php';
 ?>
-        
-        <div class="form">
-          <h2><?php echo $string['answer'] ?></h2>
-        </div>
         
         <table id="q-options" class="form" summary="<?php echo $string['oeditsummary'] ?>">
 <?php
@@ -57,4 +52,10 @@ if ($num_options == 0) {
 include 'options/opt_true_false.php';
 ?>
         </table>
+
+<?php
+$label_correct = $string['fbcorrect'] . '<br /><span class="note warning-severe">' . $string['fbcorrectmsg'] . '</span>';
+$show_incorrect = true;
+require_once 'detail_parts/details_general_feedback.php';
+?>
 

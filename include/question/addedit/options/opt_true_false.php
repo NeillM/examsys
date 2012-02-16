@@ -27,23 +27,11 @@ $correct_f = ($option->get_correct() == 'f') ? ' checked="checked"' : '';
 ?>
           <tbody class="option">
             <tr>
-              <th><?php echo $string['value'];?></th>
+              <th><?php echo $string['answer'] ?></th>
               <td>
                 <input type="radio" id="option_correct1_t" name="option_correct1" value="t"<?php echo $correct_t ?> /> <label for="option_correct1_t" class="heavy dichotomous-true spaced-right"><?php echo $string['true'] ?></label>
                 <input type="radio" id="option_correct1_f" name="option_correct1" value="f"<?php echo $correct_f ?> /> <label for="option_correct1_f" class="heavy dichotomous-false"><?php echo $string['false'] ?></label>
                 <input name="optionid1" value="<?php echo $opt_id ?>" type="hidden" />
-              </td>
-            </tr>
-            <tr>
-              <th><label for="option_correct_fback1"><?php echo $string['fbcorrect'];?>:</label><br /><span class="note warning-severe"><?php echo $string['fbcorrectmsg'];?></span></th>
-              <td>
-                <textarea cols="85" rows="2" id="option_correct_fback1" name="option_correct_fback1" class="form-med-large"><?php echo $option->get_correct_fback() ?></textarea>
-              </td>
-            </tr>
-            <tr>
-              <th><label for="option_incorrect_fback1"><?php echo $string['fbincorrect'];?>:</label><br /><span class="note"><?php echo $string['fbincorrectmsg'];?></span></th>
-              <td>
-                <textarea cols="85" rows="2" id="option_incorrect_fback1" name="option_incorrect_fback1" class="form-med-large"><?php echo $option->get_incorrect_fback() ?></textarea>
               </td>
             </tr>
           </tbody>
