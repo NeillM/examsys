@@ -79,6 +79,10 @@ echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
 ?>
                 </select>
 <?php
+else:
+?>
+                <input type="hidden" id="option_marks_incorrect" name="option_marks_incorrect" value="0" />
+<?php
 endif;
 ?>
               </td>
