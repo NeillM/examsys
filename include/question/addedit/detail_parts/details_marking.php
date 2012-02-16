@@ -23,7 +23,7 @@
 */
 
 $marks_positive = range(1, 20);
-$marks_negative = array(0, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10);
+$marks_negative = array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10);
 $marks_partial = array_merge(range(0, 1, 0.1), range(2, 5));
 if (count($question->options) > 0) {
   $option = reset($question->options);
