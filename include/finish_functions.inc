@@ -562,7 +562,9 @@
           } else {
             echo '<td></td>';
           }
-          $saved_response_clean = str_replace(',', '', str_replace(' ', '', $saved_response));
+
+          $saved_response_clean = preg_replace('([^0-9\.])', '', $saved_response);
+                    
           if ($tmp_answer[0] == '') {
             echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[3];
           } else {
@@ -572,7 +574,7 @@
             $decimals = ($score_array[0] != '') ? $score_array[0] : 0;
             $difference = round(abs($saved_response_clean - $tmp_answer[1]), $decimals);
             
-            if ($saved_response_clean == floatval($tmp_answer[1])) {
+            if ($saved_response_clean == $tmp_answer[1]) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
             } elseif ($difference <= $score_array[1] and $score_array[1] > 0) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
@@ -584,7 +586,7 @@
             if (substr($tmp_exclude,$part_id,1) == '1') {
               $paper[$question]['mark'] = 0;
             }
-            
+                 
             if ($paper[$question]['mark'] == $paper[$question]['marks_correct']) {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
             } elseif ($score_array[2] > 0 and $paper[$question]['mark'] == $paper[$question]['marks_partial']) {
@@ -1372,9 +1374,11 @@
                       // Not all correct if Bonus Mark but not exact match
                       if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
                     } else {
-                      echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-                      if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
-                      $all_correct = false;
+                      if ($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') {
+                        echo $rank_answers[$tmp_part_id-1] . '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+                        $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                        $all_correct = false;
+                      }
                     }
                   }
                 }
@@ -2205,7 +2209,7 @@
       }
       if ($paper[$question]['status'] != 'Experimental') {
         $total_marks += $paper[$question]['totalpos'];
-        if (isset($paper[$question]['mark'])) $user_mark += $paper[$question]['mark'];
+        if (isset($paper[$question]['mark'])) $user_mark += round($paper[$question]['mark'], 2);
       }
       if ($paper[$question]['q_type'] != 'info') echo '</td></tr>';
       echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
@@ -2219,7 +2223,7 @@
       echo '<tr><td><table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
       echo '<tr><td colspan="2" style="margin:0px; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
       if ($marking == 1) {
-        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . round($user_mark,2) . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
+        echo "<tr><td style=\"width:210px\">" . $string['yourmark'] . "</td><td style=\"text-align:right\">" . $user_mark . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
         echo "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(13);\" src=\"../artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" border=\"0\" /></td></tr>\n";
         echo "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
         echo "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
