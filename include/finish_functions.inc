@@ -1177,9 +1177,9 @@
           echo '<table cellpadding="2" cellspacing="0" border="0"><tr>';
           echo '<td>';
           if ($paper[$question]['display_method'] == 'dropdown') {
-            if ($paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
+            if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-            } elseif ($paper[$question]['user_answer'] != 'u') {
+            } elseif (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] != 'u') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
             }
             echo '</td><td>';
@@ -1188,7 +1188,7 @@
             } else {
               echo "<select name=\"q" . $question_no . "\">\n";
             }
-            if ($paper[$question]['user_answer'] == 'u') {
+            if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u') {
               echo "<option value=\"\" style=\"color:#808080\">unanswered</option>\n";
             }
             if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't') {
@@ -1209,10 +1209,11 @@
                 echo ' <strong>False</strong>';
               }
             }
+            echo '</td></tr>';
           } else {
-            if ($paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 't') {
+            if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 't') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-            } elseif ($paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 'f') {
+            } elseif (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't' and $paper[$question]['correct'][0] == 'f') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
             }
             echo '</td>';
@@ -1233,9 +1234,9 @@
               echo '</tr><tr>';
             }
             echo '<td>';
-            if ($paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 'f') {
+            if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 'f') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-            } elseif ($paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 't') {
+            } elseif (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'f' and $paper[$question]['correct'][0] == 't') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
             }
             echo '</td>';
@@ -1250,10 +1251,12 @@
             } else {
               echo 'False';
             }
+            echo '</td></tr>';
+            echo "<td style=\"color:#808080\" colspan=\"3\">" . $string['unanswered'] . "</td></tr>";
           }
-          echo '</td></tr></table>';
-          
-          if ($paper[$question]['user_answer'] == 'u') {
+          echo '</table>';
+
+          if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u') {
             $paper[$question]['mark'] = 0;
           } elseif ($paper[$question]['correct'][0] == $paper[$question]['user_answer']) {
             $paper[$question]['mark'] = $paper[$question]['marks_correct'];
