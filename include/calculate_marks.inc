@@ -264,8 +264,21 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
         if ($score_method == 'Mark per Option') {
           $random_mark += (($correct_no * $correct_no) / $option_no) * $marks_correct;
         } elseif ($score_method == 'Mark per Question') {
+          if (isset($_GET['startdate'])) {
+            $tmp_date = $_GET['startdate'];
+          } else {
+            $tmp_date = 20600111100000;
+          }
+          if ($tmp_date > 201111070000 ) {
             $prob = (MathsUtils::factorial($correct_no) * MathsUtils::factorial($option_no - $correct_no)) / MathsUtils::factorial($option_no);
             $random_mark += $prob * $marks_correct;
+          } else {    // Maintain backward compatibility
+            $figure = 1;
+            for ($i=count($option_text); $i>(count($option_text)-$correct_no); $i--) {
+              $figure *= (1/$i);
+            }
+            $random_mark += $figure;
+          }
         } else {
           $random_mark += ($option_no / 2);
         }

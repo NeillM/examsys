@@ -64,10 +64,16 @@ function parseRawMarks($data) {
     if (strpos($row,'Display exam script') !== false) {
       $cols = explode('<td', $row);
       
-      $marks[$line]['studentid'] = tidyLine($cols[3]);
+      $tmp_parts = explode("ItemSelMenu('", $cols[2]);
+      $started = substr($tmp_parts[1], 0, 19);
+      
+      $tmp_parts2 = explode(',', $tmp_parts[1]);
+      $tmp_userID = $tmp_parts2[1];
+     
       $marks[$line]['mark'] = tidyLine($cols[5]);
       $marks[$line]['percent'] = tidyLine($cols[6]);
-      $marks[$line]['classification'] = tidyLine($cols[7]);
+      $marks[$line]['started'] = $started;
+      $marks[$line]['userID'] = $tmp_userID;
 
       $line++;
     }
@@ -83,7 +89,7 @@ function parseScript($data) {
       $cols = explode('>', $row);
       
       $parts = explode(' out of', $cols[4]);
-      $mark = $parts[0];
+      $mark = round($parts[0],1);  // Round it to 1 decimal because this is what Class Totals does.
     }
   }
   return $mark;
@@ -91,7 +97,7 @@ function parseScript($data) {
 
 $papers = array();
 $result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20110326080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
-//$result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE property_id IN (2625)");
+//$result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE property_id IN (3779)");
 $result->execute();
 $result->bind_result($crypt_name, $paperID, $title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
@@ -111,42 +117,35 @@ table {font-size:100%}
 <body>
 <?php
 foreach ($papers as $paper) {
-  $url = "https://suivarro.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc";
+  $url = "https://rogo.local/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc";
   $output = getData($url);
   $marks_set = parseRawMarks($output);
   
-  echo "Checking paperID " . $paper['paperID'] . "...<br />\n";
+  echo "<br /><strong>Checking paperID " . $paper['paperID'] . "...</strong><br />\n";
   ob_flush();
   flush();  
 
+  $result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id=? LIMIT 1");
   foreach ($marks_set as $mark) {
-    $result = $mysqli->prepare("SELECT userID FROM sid WHERE student_id=? LIMIT 1");
-    $result->bind_param('s', $mark['studentid']);
-    $result->execute();
-    $result->bind_result($tmp_userID);
-    $result->fetch();
-    $result->close();
-  
-    $result = $mysqli->prepare("SELECT DATE_FORMAT(started, '%Y-%m-%d %H:%i:%s') FROM log2 WHERE userID=? AND q_paper=? AND DATE_ADD(started, INTERVAL 2 MINUTE) > " . $paper['start_date'] . " LIMIT 1");
-    $result->bind_param('ii', $tmp_userID, $paper['paperID']);
-    $result->execute();
-    $result->bind_result($started);
-    $result->fetch();
-    $result->close();
-    
-    $url = "https://suivarro.nottingham.ac.uk/paper/finish.php?id=" . $papers[0]['crypt_name'] . "&previous=" . str_replace(' ', '%20', $started) . "&userid=" . $tmp_userID . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']);
+    $url = "https://rogo.local/paper/finish.php?id=" . $paper['crypt_name'] . "&previous=" . str_replace(' ', '%20', $mark['started']) . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']);
     $output = getData($url);
     $script_mark = parseScript($output);
     
-    if ($script_mark == $mark['mark']) {
-      echo "$tmp_userID OK<br />";
-    } else {
-      echo "Problem with $tmp_userID - $script_mark / " . $mark['mark'] . " <br />";
+    if ($script_mark != $mark['mark']) {
+      $result->bind_param('i', $mark['userID']);
+      $result->execute();
+      $result->bind_result($tmp_surname, $tmp_first_names, $tmp_username);
+      $result->fetch();
+
+      echo "Problem with " . $mark['userID'] . " $tmp_surname, $tmp_first_names ($tmp_username) - $script_mark / " . $mark['mark'] . "<br />";
     }
+
     ob_flush();
     flush();  
   }
+  $result->close();
 }
+
 ob_end_flush();
 ?>
 Finished<br />

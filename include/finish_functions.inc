@@ -1345,7 +1345,7 @@
             }
 
             echo '<td>';
-            if ($rank_answers[$tmp_part_id-1] != 'u') {
+            if (isset($rank_answers[$tmp_part_id-1]) and $rank_answers[$tmp_part_id-1] != 'u') {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') {
                 if (($paper[$question]['score_method'] == 'Bonus Mark' or $paper[$question]['score_method'] == 'Allow partial Marks') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
                   echo '&nbsp;';
@@ -1386,9 +1386,9 @@
             } else {
               echo "<td><select name=\"q" . $question . "_" . $tmp_part_id . "\">\n";
             }
-            if ($rank_answers[$tmp_part_id-1] == 'u') echo "<option value=\"\" style=\"color:#808080\"></option>\n";
+            if (isset($rank_answers[$tmp_part_id-1]) and $rank_answers[$tmp_part_id-1] == 'u') echo "<option value=\"\" style=\"color:#808080\"></option>\n";
             for ($a=0; $a<=count($paper[$question]['correct']); $a++) {
-            	if ($rank_answers[$tmp_part_id-1] != 'u' and $a == $rank_answers[$tmp_part_id-1]) {
+            	if (isset($rank_answers[$tmp_part_id-1]) and $rank_answers[$tmp_part_id-1] != 'u' and $a == $rank_answers[$tmp_part_id-1]) {
                 echo "<option value=\"" . $a . "\" selected>" . ordinal_suffix($a, $language) . "</option>\n";
               } else {
                 echo "<option value=\"" . $a . "\">" . ordinal_suffix($a, $language) . "</option>\n";;

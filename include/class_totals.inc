@@ -605,6 +605,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       $tmp_user_mark_array[$q_id] = $tmp_user_mark;
     }
   }
+  if ($status == 'mzyln') var_dump($q_id, $tmp_user_mark_array[$q_id]);
 }
 
 function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003

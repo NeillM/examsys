@@ -178,6 +178,9 @@ table {font-size:100%; table-layout: fixed}
   $old_screen = 0;
   if (isset($_GET['previous'])) {
     $sessionid = $_GET['previous'];
+
+    //$sessionid = substr($_GET['previous'],0,4) . '-' . substr($_GET['previous'],5,2) . '-' . 2ubstr($_GET['previous'],7,2)
+        
     $log_type = $_GET['log_type'];
   } else {
     $sessionid = $_POST['sessionid'];
