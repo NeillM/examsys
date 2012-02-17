@@ -88,7 +88,7 @@ print <<<END
     <div class="b">
 <script language="javascript">
   if (urlParams["field"] != "undefined") {
-    document.write('<a href="#" class="ret" onclick="returntoform()">RET</a>')
+    document.write('<a href="#" class="b1" onclick="returntoform()">&laquo;copy</a>')
   } else {
     document.write('<a href="#" class="b1" onclick="return false">&nbsp;</a>')
   }

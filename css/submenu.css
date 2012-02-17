@@ -9,9 +9,10 @@
  .file {float:left; width:375px; height:74px; padding-left:12px; font-size:90%}
  .mee {font-size:120%; display:inline}
 
+ a {text-decoration:none}
  a:link {color:#0000FF}
  a:visited {color:#0000FF}
- a:hover {color:#0000FF}
+ a:hover {color:#0000FF; text-decoration:underline}
 
  a.blacklink:link {color:#000000}
  a.blacklink:visited {color:#000000}

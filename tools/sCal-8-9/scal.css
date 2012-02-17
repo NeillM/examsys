@@ -26,26 +26,6 @@ a.ac {
 	background: -moz-linear-gradient(top,  #c9151b,  #a11115);
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#c9151b', endColorstr='#a11115');
 }
-a.ret {
-  text-decoration:none;
-  height:24px;
-  line-height:24px;
-  text-align:center;
-  background-color:#CC9933;
-  background: -moz-linear-gradient(top, #faa51a, #f47a20);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
-  color:white;
-  border-top: 1px solid white;
-  border-left: 1px solid white;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-  display:block;
-  font-size:100%}
-.ret:hover {
-	background: #f47c20;
-	background: -moz-linear-gradient(top,  #f88e11,  #f06015);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015');
-}
 a.b1 {
 text-decoration:none;
   height:24px;
