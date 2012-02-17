@@ -10,6 +10,7 @@ $result->bind_result($q_id, $display_method, $score_method, $marks_correct, $mar
 while ($result->fetch()) {
   $question_parts = explode(',', $display_method);
   $tolerance = $question_parts[1];
+  $partial_tolerance = $question_parts[2];
 
   $result2 = $mysqli->prepare("SELECT id, user_answer, mark FROM log2 WHERE q_id=$q_id");
   $result2->execute();
@@ -28,7 +29,7 @@ while ($result->fetch()) {
         $mark = $marks_correct;
       } elseif ($difference <= $tolerance and $tolerance > 0) {
         $mark = $marks_correct;
-      } elseif ($difference <= $tolerance and $tolerance > 0) {
+      } elseif ($difference <= $partial_tolerance and $partial_tolerance > 0) {
         $mark = $marks_partial;
       } else {
         $mark = $marks_incorrect;

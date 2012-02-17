@@ -64,6 +64,8 @@ function parseRawMarks($data) {
     if (strpos($row,'Display exam script') !== false) {
       $cols = explode('<td', $row);
       
+      $marks[$line]['name'] = tidyLine($cols[2]);
+      $marks[$line]['studentID'] = tidyLine($cols[3]);
       $marks[$line]['mark'] = tidyLine($cols[5]);
       $marks[$line]['percent'] = tidyLine($cols[6]);
       $marks[$line]['classification'] = tidyLine($cols[7]);
@@ -74,7 +76,7 @@ function parseRawMarks($data) {
   return $marks;
 }
 
-function compareMarks($set1, $set2, &$classifications) {
+function compareMarks($set1, $set2, &$classifications, &student_details) {
   $classifications = array();
   
   $classifications[1]['Pass'] = 0;
@@ -85,26 +87,24 @@ function compareMarks($set1, $set2, &$classifications) {
   $classifications[2]['Distinction'] = 0;
 
   $outcome = true;
-  if (count($set1) != count($set2)) {
-    $outcome = false;
-  }
-
+  $affected_no = 0;
   $row_count = count($set1);
 
   if ($outcome) {
     for ($i=0; $i<$row_count; $i++) {
-      if ($set1[$i]['mark'] != $set2[$i]['mark'] or $set1[$i]['percent'] != $set2[$i]['percent']) {
+      if ($set1[$i]['mark'] != $set2[$i]['mark'] or $set1[$i]['percent'] != $set2[$i]['percent'] or $set1[$i]['classification'] != $set2[$i]['classification']) {
         $outcome = false;
+        $affected_no++;
+        
+        $student_details['students'][] = array('name'=>$set1[$i]['name'], 'studentID'=>$set1[$i]['studentID']);
       }
       
-      if ($set1[$i]['classification'] != $set2[$i]['classification']) {
-        $outcome = false;
-      }
-            
       $classifications[1][$set1[$i]['classification']]++;
       $classifications[2][$set2[$i]['classification']]++;
     }
   }
+  
+  $student_details['cohort_size'] = count($set1);
  
   return $outcome;
 }
@@ -142,7 +142,7 @@ foreach ($papers as $paper) {
   $output = getData($url);
   $marks_set2 = parseRawMarks($output);
   
-  $same = compareMarks($marks_set1, $marks_set2, $classifications);
+  $same = compareMarks($marks_set1, $marks_set2, $classifications, &student_details);
   
   if ($same) {
     echo '<tr>'; 
