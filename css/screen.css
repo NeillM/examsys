@@ -228,3 +228,8 @@ label.error {
 #content tr.experimental td {
   color: #808080;
 }
+
+a.checklist {
+  color:black;
+  text-decoration:none;
+}

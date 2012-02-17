@@ -37,6 +37,7 @@ ob_start();
 <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
+a {text-decoration:none}
 a.user {color:black}
 a.user:hover {color:white; background-color:#000080}
 .h {background-color:#F1F5FB; color:black}

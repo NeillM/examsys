@@ -561,9 +561,9 @@ if ($paper_type == '2') {
         } else {
           $tmp_color = '#F27000';
         }
-        echo "<tr><td style=\"width:18px\"><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($internal_array) . "</strong></td></tr>\n";
+        echo "<tr><td style=\"width:18px\"><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($internal_array) . "</strong></td></tr>\n";
       } else {
-        echo "<tr><td style=\"width:18px\"><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
+        echo "<tr><td style=\"width:18px\"><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
       }
     }
   }
@@ -597,9 +597,9 @@ if ($paper_type == '2') {
 		} else {
 		  $tmp_color = '#F27000';
 		}
-        echo "<tr><td><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
+        echo "<tr><td><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
       } else {
-        echo "<tr><td><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
+        echo "<tr><td><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
       }
     }
   }
@@ -621,9 +621,9 @@ if ($paper_type == '2') {
     }
     $stmt->close();
     if ($standards_set == 1) {
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
+      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
     } else {
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
+      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
     }
 	
     if ($standards_set == 1) {
@@ -654,9 +654,9 @@ if ($paper_type == '2') {
 	  } else {
       $tmp_color = '#F27000';
 	  }
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:$tmp_color\"><strong>$mappings_complete/" . count($question_list) . "</strong></td></tr>\n";
+      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:$tmp_color\"><strong>$mappings_complete/" . count($question_list) . "</strong></td></tr>\n";
     } else {
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a style=\"color:black\" href=\"{$cfg_root_path}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
+      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" border=\"0\" /></td><td><a class=\"checklist\" href=\"{$cfg_root_path}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
     }
   }
 }
