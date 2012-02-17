@@ -21,8 +21,12 @@ function checkButton(e) {
   if (bCode == 16 && shifton == 0) {
     shifton = 1;
   }
-
-  if (bCode >= 48 && bCode <= 57 && shifton == 0) {
+  
+  //alert(evt.keyCode);
+ 
+  if (evt.charCode == 46) {
+    xPlusEq('.');
+  } else if (bCode >= 48 && bCode <= 57 && shifton == 0) {
     bCode = bCode - 48;
     xPlusEq(bCode);
   } else if (bCode == 48 && shifton == 1) {
@@ -390,7 +394,7 @@ function Om() {
   document.getElementById('memory').innerHTML = '<span style="font-size:70%">+M</span>  <span id="memval">' + m + '</span>';
 }
 function XtoM()  {Ix(); Im(); m+=x; Om(); x=""; Ox(); Timer=1;} //--with stopwatch settings
-function MtoX()  {Ix(); Im(); x += m; Ox();}
+function MtoX()  {Ix(); Im(); x += m; Ox(); document.getElementById('ans').innerHTML = x}
 function Mplus() {
   if (st0p > 0) {
     if (Timer==0) {

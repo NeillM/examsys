@@ -2,6 +2,7 @@
 print <<<END
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Calculator</title>
   <link rel="stylesheet" type="text/css" href="scal.css" />
 </head>
