@@ -238,7 +238,7 @@ function xEval() {
       document.sCal.IOx.value = Math.pow(eval(x.substring(0,n)),eval(x.substring(n+1)));
     }
   } else {      // likewise, entire x-value used as function argument, not just last term
-    document.sCal.IOx.value = eval(x);
+    document.sCal.IOx.value = eval('0' + x);
   }
   if (xRedo>0) {
     x=xTemp;
