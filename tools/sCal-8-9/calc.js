@@ -12,7 +12,7 @@
 // v.p9u
 var ps = "";  // Info. Alerts: READ!
 var object_calc;
-var rogo_buffer = '';
+var sCal_buffer = '';
 
 function checkButton(e) {
   var evt = e || window.event;
@@ -250,7 +250,9 @@ function xEval() {
     xRedo=0;
   }
   Ix();
-  document.getElementById('ans').innerHTML = x;
+  if (x != 'undefined') {
+    document.getElementById('ans').innerHTML = x;
+  }
   buffer = x;
   equalsFlag = true;
 }
@@ -258,13 +260,14 @@ function xEval() {
 function returntoform() {
   xEval();
   //Oxf();
-  if (typeof(window.opener.document.getElementById(urlParams["field"])) != 'undefined') {
+  if (typeof(window.opener.document.getElementById(urlParams["field"])) != 'undefined' && x != 'undefined') {
     window.opener.document.getElementById(urlParams["field"]).value=x; //.getElementById(urlParams["id"]).value=x;
   }
   window.close();
 }
 function xPlusEq(s) {
-  if (rogo_buffer == '') {
+  if (s == '.' && buffer.indexOf('\.') != -1) return;
+  if (sCal_buffer == '') {
     if (equalsFlag && s!='+' && s!='-' && s!='*' && s!='/' && s!='(' && s!=')' && s!='^') {
       document.sCal.IOx.value = '';
       buffer = '';
@@ -294,15 +297,15 @@ function xPlusEq(s) {
       document.getElementById('ans').innerHTML = buffer;
     }
   } else {
-    var reStr = rogo_buffer.replace('^', '\\^') + '+$';
+    var reStr = sCal_buffer.replace('^', '\\^') + '+$';
     var re = new RegExp(reStr);
     document.getElementById('ans').innerHTML = s;
-    rogo_buffer += s;
-    var buffVal = rogo_eval(rogo_buffer);
+    sCal_buffer += s;
+    var buffVal = sCal_eval(sCal_buffer);
     x = x.replace(re, '') + buffVal.toString();
     buffer = buffVal;
     Oxf(); //  figure x, & substiture in function,  NOTE: Oxf()!
-    rogo_buffer = '';
+    sCal_buffer = '';
   }
 } // --- DISPLAY-x functions ---
 function xMultEq(s) {
@@ -457,77 +460,82 @@ function trigModeConvert (angle) {
   }
 }
 
-function rogo_asinh (arg) {
+function sCal_asinh (arg) {
   arg = trigModeConvert(arg);
   return arg / Math.abs(arg) * Math.log(Math.abs(arg) + Math.sqrt(arg * arg + 1));
 }
 
-function rogo_acosh (arg) {
+function sCal_acosh (arg) {
   arg = trigModeConvert(arg);
   return 2 * Math.log(Math.sqrt((arg + 1) / 2) + Math.sqrt((arg - 1) / 2));
 }
 
-function rogo_atanh (arg) {
+function sCal_atanh (arg) {
   arg = trigModeConvert(arg);
   return 0.5 * Math.log((1 + arg) / (1 - arg));
 }
 
-function rogo_sinh (arg) {
+function sCal_sinh (arg) {
   arg = trigModeConvert(arg);
   return ( Math.exp(arg) - 1 / Math.exp(arg) )/ 2;
 }
 
-function rogo_cosh (arg) {
+function sCal_cosh (arg) {
   arg = trigModeConvert(arg);
   return (Math.exp(arg) + 1 / Math.exp(arg) )/ 2;
 }
 
-function rogo_tanh (arg) {
+function sCal_tanh (arg) {
   arg = trigModeConvert(arg);
   return ( Math.exp(arg) - 1 / Math.exp(arg) )/ ( Math.exp(arg) + 1 / Math.exp(arg) );
 }
 
-function rogo_asin (arg) {
+function sCal_asin (arg) {
   arg = trigModeConvert(arg);
   return Math.asin(arg);
 }
 
-function rogo_acos (arg) {
+function sCal_acos (arg) {
   arg = trigModeConvert(arg);
   return Math.acos(arg);
 }
 
-function rogo_atan (arg) {
+function sCal_atan (arg) {
   arg = trigModeConvert(arg);
   return Math.atan(arg);
 }
 
-function rogo_sin (arg) {
+function sCal_sin (arg) {
   arg = trigModeConvert(arg);
   return Math.sin(arg);
 }
 
-function rogo_cos (arg) {
+function sCal_cos (arg) {
   arg = trigModeConvert(arg);
   return Math.cos(arg);
 }
 
-function rogo_tan (arg) {
+function sCal_tan (arg) {
   arg = trigModeConvert(arg);
   return Math.tan(arg);
 }
 
-function rogo_square (arg) {
+function sCal_square (arg) {
   arg = parseFloat(arg);
   return arg*arg;
 }
 
-function rogo_recip (arg) {
+function sCal_cube (arg) {
+  arg = parseFloat(arg);
+  return arg*arg*arg;
+}
+
+function sCal_recip (arg) {
   arg = parseFloat(arg);
   return 1/arg;
 }
 
-function rogo_fact (arg) {
+function sCal_fact (arg) {
   arg = parseInt(arg);
   var rval = arg;
   for (j = arg; j > 2 ;j--) {
@@ -536,12 +544,12 @@ function rogo_fact (arg) {
   return rval;
 }
 
-function rogo_buffered(arg, operator) {
-  rogo_buffer = parseFloat(arg) + operator;
+function sCal_buffered(arg, operator) {
+  sCal_buffer = parseFloat(arg) + operator;
   x += operator;
 }
 
-function rogo_eval(arg) {
+function sCal_eval(arg) {
   var n = arg.indexOf('^');
   if (n > 0) {
     return Math.pow(arg.substring(0,n), arg.substring(n+1));
