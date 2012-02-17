@@ -48,3 +48,46 @@
 .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
 
 textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
+
+.menu_list {
+ margin: 6px 0 0 0;
+ padding-left: 12px;
+ list-style: none;
+}
+
+.menu_list li {
+ padding-left: 22px;
+ width: 120px;
+ font-size: 90%;
+ margin: 0;
+}
+
+#break_controls {
+ list-style: none;
+}
+
+#break_controls li {
+ height: 16px;
+ margin-bottom: 6px;
+}
+
+.menu_list .break {
+ background: transparent url('../artwork/screen_icon.png') no-repeat left center;
+}
+
+.menu_list .break.greymenuitem {
+ background: transparent url('../artwork/screen_icon_grey.png') no-repeat left center;
+}
+
+#delete_break {
+ background: transparent url('../artwork/screen_icon_delete.png') no-repeat left center;
+}
+
+#delete_break.greymenuitem {
+ background: transparent url('../artwork/screen_icon_delete_off.png') no-repeat left center;
+}
+
+a.checklist {
+  color:black;
+  text-decoration:none;
+}
