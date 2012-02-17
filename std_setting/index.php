@@ -169,8 +169,6 @@ $results->close();
 $no_reviews = 0;
 $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
 
-var_dump($reviews);
-
 foreach ($reviews as $review) {
   $reviews_html .= displayReview($review);
 }
