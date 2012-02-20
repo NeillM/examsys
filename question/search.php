@@ -214,10 +214,10 @@ if (isset($_POST['submit'])) {
     $status_string = '';
   }
 
-  if (isset($_POST['locked']) and $_POST['locked'] != '1') {
-    $locked_string = " AND locked IS NULL";
-  } else {
+  if (isset($_POST['locked']) and $_POST['locked'] == '1') {
     $locked_string = '';
+  } else {
+    $locked_string = " AND locked IS NULL";
   }
 
   if ($_POST['question_date'] == 'dont remember') {
