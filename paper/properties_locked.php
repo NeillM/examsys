@@ -251,6 +251,7 @@ if (isset($_POST['Submit'])) {
        echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
      
        // Question-based Feedback
+       $idfeedback_release = '';
        $feedback_details = $mysqli->prepare("SELECT idfeedback_release FROM feedback_release WHERE paper_id=? AND type='questions'");
        $feedback_details->bind_param('i', $_GET['paperID']);
        $feedback_details->execute();
