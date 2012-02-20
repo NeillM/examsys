@@ -58,7 +58,7 @@ $result->bind_param('i', $property_id);
 $result->execute();
 $result->bind_result($q_type, $questionID, $leadin, $display_method, $option_text);
 while ($result->fetch()) {
-  $heading_no = substr_count($display_method, '|');
+  //$heading_no = substr_count($display_method, '|');
   $questions[$questionID]['leadin'] = $leadin;
   if ($q_type == 'likert') {
     $questions[$questionID]['scale'] = $display_method;
@@ -73,6 +73,8 @@ while ($result->fetch()) {
   }
 }
 $result->close();
+
+$heading_no = $questions[$questionID]['scale_size'];
 
 // Load basic user information
 $user_data = array();
@@ -95,8 +97,8 @@ $result->close();
 
 // Load results from Log6
 $reviewers = array();
-$result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE paperID=? ORDER BY started");
-$result->bind_param('i', $_GET['paperID']);
+$result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE paperID=? AND started>? AND started<? ORDER BY started");
+$result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
 $result->execute();
 $result->bind_result($reviewerID, $peerID, $q_id, $rating);
 while ($result->fetch()) {
