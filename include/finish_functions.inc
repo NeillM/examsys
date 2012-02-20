@@ -1377,7 +1377,7 @@
                       // Not all correct if Bonus Mark but not exact match
                       if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
                     } else {
-                      if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') or $paper[$question]['score_method'] == 'Mark per Option') {
+                      if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') or ($paper[$question]['score_method'] == 'Mark per Option' and $rank_answers[$tmp_part_id-1] != 'u')) {
                         echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                         $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                         $all_correct = false;
