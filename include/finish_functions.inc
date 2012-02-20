@@ -1688,6 +1688,7 @@
           echo "</tr>\n";
           $row_no = 0;
           $part_id = 0;
+          $answered = 0;
           foreach ($matching_scenarios as $single_scenario) {
             if (trim($single_scenario) != '') {
               echo "<tr>\n";
@@ -1709,6 +1710,9 @@
                 $tmp_answer = (isset($user_answers[$row_no])) ? $user_answers[$row_no] : 'u';
                 if ($tmp_answer == $tmp_col_no) echo ' checked';
                 echo ' />';
+                if (isset($user_answers[$row_no]) and $user_answers[$row_no] != 'u') {
+                  $answered++;
+                }
                 if ($correct_answers[$row_no] == $tmp_col_no and $tmp_answer == $tmp_col_no) {
                   if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
                   if (substr($tmp_exclude,$row_no,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_correct'];
@@ -1736,10 +1740,12 @@
           if ($paper[$question]['score_method'] == 'Mark per Question') {
             if ($paper[$question]['mark'] == $paper[$question]['marks_correct'] * $row_no) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
-            } elseif ((strlen($paper[$question]['user_answer']) + 1)  == $row_no) {
+            } elseif (isset($paper[$question]['user_answer']) and (strlen($paper[$question]['user_answer']) + 1)  == $row_no) {
               $paper[$question]['mark'] = 0;
             } else {
-              $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+              if ($answered > 0) {
+                $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
+              }
             }
           }
           break;
