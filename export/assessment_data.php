@@ -361,7 +361,7 @@
       echo "\n";
     }
     // Write out the raw data.
-    echo $individual['gender'] . ',' . $individual['title'] . ',' . $individual['surname'] . ',' . $individual['first_names'] . ',' . $individual['student_id'] . ',' . $individual['course'] . ',' . $individual['year'] . ',' . $individual['started'];
+    echo $individual['gender'] . ',"' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' . $individual['course'] . '",' . $individual['year'] . ',' . $individual['started'];
     for ($i=0; $i<$question_no; $i++) {
       $tmp_question_ID = $paper_buffer[$i]['ID'];
       $tmp_screen = $paper_buffer[$i]['screen'];
@@ -456,7 +456,6 @@
               echo ',';
               if (isset($answer_parts[$partID])) {
                 echo str_replace(',', 'x', substr($answer_parts[$partID],2));
-                //echo "hi";
               } else {
                 echo 'u';
               }

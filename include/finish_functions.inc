@@ -1386,6 +1386,9 @@
               }
             } elseif ($paper[$question]['correct'][$tmp_part_id-1] > 0) {
               $all_correct = false;
+              if ($paper[$question]['score_method'] == 'Mark per Question') {
+                echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+              }
             }
             echo "</td>";
 
@@ -1455,7 +1458,7 @@
           if ($paper[$question]['score_method'] == 'Mark per Question') {
             if ($all_correct) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
-            } else {
+            } elseif ($answered) {
               $paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
             }
             $paper[$question]['totalpos'] = $paper[$question]['marks_correct'];
