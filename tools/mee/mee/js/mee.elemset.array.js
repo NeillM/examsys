@@ -323,8 +323,10 @@ MEE.ElemSet.extend("MEE.ElemSetArray",
             var bottom = Math.floor(mainheight / 2) + row1align.top + bpad;
 
             //var top = -tpad + Math.floor(mainheight / 2);
-            this['html_row0'].css('top', -top + 'px');
-            this['html_row1'].css('top', bottom + 'px');
+            if(this['html_row1'])
+              this['html_row0'].css('top', -top + 'px');
+            if(this['html_row1'])
+              this['html_row1'].css('top', bottom + 'px');
 
             this.align.top = top + row0align.top;
             this.align.bottom = row1align.height - Math.floor(mainheight / 2) + bpad - 1;
