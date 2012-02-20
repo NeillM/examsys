@@ -204,8 +204,6 @@ if (isset($_POST['submit'] )) {
             $result2->execute();
             $result2->close();
           } else {
-            var_dump($property_id, $userID, $member_userID, $current_time, $questionID, $rating);
-            exit;
             $result2 = $mysqli->prepare("INSERT INTO log6 VALUES (NULL, ?, ?, ?, ?, ?, ?)");
             $result2->bind_param('iiisii', $property_id, $userID, $member_userID, $current_time, $questionID, $rating);
             $result2->execute();
@@ -234,6 +232,8 @@ if (isset($_POST['submit'] )) {
         $result2->execute();
         $result2->close();
       } else {
+            var_dump($property_id, $userID, $member_userID, $current_time, $questionID, $rating);
+            exit;
         $result2 = $mysqli->prepare("INSERT INTO log6 VALUES (NULL, ?, ?, ?, ?, ?, ?)");
         $result2->bind_param('iiisii', $property_id, $userID, $member_userID, $current_time, $questionID, $rating);
         $result2->execute();
