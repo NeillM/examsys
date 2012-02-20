@@ -2,11 +2,6 @@
 $.Class.extend("MEE.Base",
 {
     Render: function (source, mcedoc) {
-        /*if (mcedoc) {
-            this.ProcessForTinyMCE(source, mcedoc);
-            return;
-        }*/
-
         this.fontwaitlimit = 10;
         // build all recursive definitions
         MEE.Base.displays = new Array();
@@ -17,10 +12,10 @@ $.Class.extend("MEE.Base",
 
         if (!source)
             source = document.body;
-
-        $(source).find("div.mee").each(this.callback('processDiv'));
-        $(source).find("span.mee").each(this.callback('processSpan'));
-        $(source).find("input.mee").each(this.callback('processInput'));
+        source = $(source)
+        source.find("div.mee").each(this.callback('processDiv'));
+        source.find("span.mee").each(this.callback('processSpan'));
+        source.find("input.mee").each(this.callback('processInput'));
 
         if (MEE.Base.to_process.length > 0)
             MEE.Base.createProgress(MEE.Base.to_process.length);
@@ -47,9 +42,6 @@ $.Class.extend("MEE.Base",
         i = MEE.Base.current;
         if (i >= MEE.Base.to_process.length) {
             // dont creating HTML, 
-
-            //MEE.Base.current = 0;
-            //setTimeout("MEE.Base.ProcessAlignNext()", 1);
             MEE.Base.removeProgress();
             return;
         }
@@ -57,7 +49,6 @@ $.Class.extend("MEE.Base",
         var proc = this.to_process[i];
         MEE.Base.process(proc);
         MEE.Base.updateProgress();
-
         //setTimeout("MEE.Base.ProcessNext_Fonts()", 1);
         setTimeout("MEE.Base.ProcessNext_Align()", 5);
     },
@@ -101,7 +92,7 @@ $.Class.extend("MEE.Base",
                                               + this.replacePX(proc.elem.style.paddingTop)
                                                + this.replacePX(proc.elem.style.paddingBottom);
           if(h == 0 && this.replacePX(proc.elem.parentNode.style.height) == 0) {
-            proc.elem.parentNode.style.height = '1em';
+            proc.elem.parentNode.style.height = 'auto';
           } else if(proc.elem.parentNode.style.height == '' || h > this.replacePX(proc.elem.parentNode.style.height)) {
             proc.elem.parentNode.style.height = h + 'px';
             proc.elem.parentNode.style.paddingTop = proc.elem.style.paddingTop;
