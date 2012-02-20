@@ -197,7 +197,7 @@
     $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $score_method, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $display_pos, $status);
     while ($answer_data->fetch()) {
       if ($old_q_id != $q_id or $old_display_pos != $display_pos) {  // New question.
-        if ($old_q_id != 0) {
+       if ($old_q_id != 0) {
           if (isset($excluded[$old_q_id])) {
             $tmp_exclude = $excluded[$old_q_id];
           } else {
@@ -471,6 +471,7 @@
       $option_order = explode(',',$paper[$question]['option_order']);
       $question_no = $display_no;
 
+      echo $paper[$question]['q_id'] . '<br />';
       switch ($paper[$question]['q_type']) {
         case 'calculation':
           $paper[$question]['mark'] = 0;
@@ -1375,7 +1376,7 @@
                       if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
                     } else {
                       if ($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') {
-                        echo $rank_answers[$tmp_part_id-1] . '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+                        echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                         $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                         $all_correct = false;
                       }
@@ -1417,7 +1418,7 @@
         
           if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_students_response == '1') {
             $img_name = 'cross';
-            if ($all_correct) {
+            if ($paper[$question]['mark'] == ($paper[$question]['totalpos'] - 1) and $all_correct) {
               $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               $img_name = 'tick';
             }
@@ -1533,7 +1534,7 @@
                 echo '<td></td>';
               }
               echo '<td>';
-              if ($user_answers[$i] == $correct_answers[$i]) {
+              if ($separate_user_answers[0] == $correct_answers[$i]) {
                 if (substr($tmp_exclude,$section,1) == '0') {
                   $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 }

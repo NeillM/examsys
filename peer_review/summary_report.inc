@@ -53,15 +53,24 @@ $result->close();
 
 // Get questions on the paper
 $questions = array();
-$result = $mysqli->prepare("SELECT question, leadin, display_method FROM (papers, questions) WHERE papers.question=questions.q_id AND paper=? ORDER BY display_pos");
+$result = $mysqli->prepare("SELECT q_type, question, leadin, display_method, option_text FROM (papers, questions, options) WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND paper=? ORDER BY display_pos, id_num");
 $result->bind_param('i', $property_id);
 $result->execute();
-$result->bind_result($questionID, $leadin, $display_method);
+$result->bind_result($q_type, $questionID, $leadin, $display_method, $option_text);
 while ($result->fetch()) {
   $heading_no = substr_count($display_method, '|');
   $questions[$questionID]['leadin'] = $leadin;
-  $questions[$questionID]['scale'] = $display_method;
-  $questions[$questionID]['scale_size'] = substr_count($display_method, '|');
+  if ($q_type == 'likert') {
+    $questions[$questionID]['scale'] = $display_method;
+    $questions[$questionID]['scale_size'] = substr_count($display_method, '|');
+  } elseif ($q_type == 'mcq') {
+    if (isset($questions[$questionID]['scale'])) {
+      $questions[$questionID]['scale_size']++;
+    } else {
+      $questions[$questionID]['scale_size'] = 1;
+    }
+    $questions[$questionID]['scale'][] = $option_text;
+  }
 }
 $result->close();
 

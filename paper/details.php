@@ -847,7 +847,7 @@ function getMSCAA($paperID, $mysqlidb) {
       if ($old_screen > 0) {
         $tmp_screen_mean = ($total_marks == 0) ? 0 : ($screen_marks / $total_marks);
         if ($paper_type == '2' and $question_number > 2 and $tmp_screen_mean * 100 > 25 and $screen_marks > 3) {
-          echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;";
+          echo "\n<tr><td colspan=\"6\" style=\"margin-left:5px; font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;";
           $percent = round(($screen_marks / $total_marks) * 100);
           printf($string['markswarning'], $old_screen, $screen_marks, $percent);
           echo "</td></tr>\n";
