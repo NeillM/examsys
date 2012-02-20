@@ -38,7 +38,8 @@ a:hover {color:black}
 .f {padding-left:2px}
 .n {text-align:right; padding-right:2px}
 </style>
-
+<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
 <script language="JavaScript">
   function orderTable(order_val, direction_val) {
     document.keywordsform.order.value = order_val;
