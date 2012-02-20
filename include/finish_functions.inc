@@ -1351,7 +1351,7 @@
             }
 
             echo '<td>';
-            if (isset($rank_answers[$tmp_part_id-1]) and $rank_answers[$tmp_part_id-1] != 'u') {
+            if (isset($rank_answers[$tmp_part_id-1]) and ($rank_answers[$tmp_part_id-1] != 'u' or $paper[$question]['score_method'] == 'Mark per Option')) {
               if ($tmp_display_students_response == '1' and substr($tmp_exclude,0,1) == '0') {
                 if (($paper[$question]['score_method'] == 'Bonus Mark' or $paper[$question]['score_method'] == 'Allow partial Marks') and $rank_answers[$tmp_part_id-1] == '0' and $paper[$question]['correct'][$tmp_part_id-1] == '0') {
                   echo '&nbsp;';
@@ -1364,8 +1364,10 @@
                       echo '&nbsp;<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" />';
                       $paper[$question]['mark'] += $paper[$question]['marks_partial'];
                     } else {
-                      echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-                      if ($rank_answers[$tmp_part_id-1] != 'u') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                      if ($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') {
+                        echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
+                        $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                      }
                       $all_correct = false;
                     }
                   } else {
@@ -1375,7 +1377,7 @@
                       // Not all correct if Bonus Mark but not exact match
                       if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
                     } else {
-                      if ($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') {
+                      if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') or $paper[$question]['score_method'] == 'Mark per Option') {
                         echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
                         $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                         $all_correct = false;
