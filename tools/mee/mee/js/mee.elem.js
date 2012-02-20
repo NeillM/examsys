@@ -344,14 +344,14 @@ $.Class.extend("MEE.Elem",
         // check super script
         var sswidth = 0;
         if (this.superscript) {
-            var suptop = Math.abs(this.html_superscript.css('top').replace('px','')) + this.superscript.align.top;
+            var suptop = this.replacePX(this.html_superscript.css('top')) + this.superscript.align.top;
             if (suptop)
                 this.align.top = Math.max(this.align.top, suptop);
             sswidth = Math.max(sswidth, this.superscript.align.width);
         }
 
         if (this.subscript) {
-            var subbottom = Math.abs(this.html_subscript.css('bottom').replace('px', '')) + this.subscript.align.bottom;
+            var subbottom = this.replacePX(this.html_subscript.css('bottom')) + this.subscript.align.bottom;
             if (subbottom)
                 this.align.bottom = Math.max(this.align.bottom, subbottom);
             sswidth = Math.max(sswidth, this.subscript.align.width);
@@ -751,16 +751,15 @@ $.Class.extend("MEE.Elem",
     // if there is a large bracket, then remove it and change it to a normal bracket.
     // updates html_lb_inner etc 
     removeLargeBaracket: function (side, bracket, oldinner, scopeelem, bracketelem) {
-        if (bracketelem[0].children.length > 2) {
+        if (bracketelem.children.length > 2) {
             // we have a large bracket, so remove it and replace with 
             bracketelem.attr('style', '');
             bracketelem.css('position', 'relative');
             bracketelem.html(MEE.Data.blankspace);
 
-            var newbracket = $('<span>');
-            newbracket.css('position', 'absolute');
-            newbracket.html(bracket);
-
+            var newbracket = $('<span style="position:absolute">' + bracket + '</span>');
+            //newbracket.css('position', 'absolute');
+            //newbracket.html(bracket);
             bracketelem.append(newbracket);
 
             this['html_' + side + '_inner'] = newbracket;
@@ -1121,6 +1120,15 @@ $.Class.extend("MEE.Elem",
         //latex.AddText(" ");
 
         return latex;
+    },
+    
+    replacePX: function (val) {
+      val = parseInt(val);
+      if(!val || val == 'NaN') {
+        return 0;
+      } else {
+        return val;
+      }
     },
     ////////////////////////////
     // DEBUG STUFF BELOW HERE //
