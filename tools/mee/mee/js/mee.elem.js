@@ -591,9 +591,9 @@ $.Class.extend("MEE.Elem",
 
             // sort out vertical alignment of above and below ss
             if (this.subscript) {
-                var suph = this.superscript.align.height - this.superscript.align.top; ; // was $(this.html_superscript).outerHeight(true)
+                var suph = this.subscript.align.height - this.subscript.align.top; ; // was $(this.html_superscript).outerHeight(true)
                 var elemh = this.main.align.height; // was $(this.html_elem).outerHeight(true);
-                elemh = Math.floor(elemh/2) + this.main.align.bottom - this.superscript.align.top;
+                elemh = Math.floor(elemh/2) + this.main.align.bottom - this.subscript.align.top;
                 if($.browser.msie) 
                   elemh += suph/2;
                   
@@ -792,7 +792,7 @@ $.Class.extend("MEE.Elem",
         
         if($.browser.msie) {
           //nasty hack to fix brackets iin ie 8 and 9
-          pad += 15;
+          pad += 12;
         }
         JQbracketelem.css('top', -pad + 'px');
 
@@ -919,13 +919,13 @@ $.Class.extend("MEE.Elem",
 
         // add a relative spacer to make browsers heppy
         var mid = $('<span></span>');
-        mid.html(MEE.Data.blankspace);
+        mid.html(MEE.Data.blankspace+MEE.Data.blankspace);
         JQbracketelem.append(mid);
 
         // pad mid to width of the bracket
         var width = $(mid).outerWidth();
         if (width == 0)
-            width = 10;
+            width = '12';
             //alert("width = 0");
         $(mid).css('padding-right', width + 'px');
         return width;
