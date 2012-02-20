@@ -236,7 +236,11 @@ function get_ss_pass(&$pass_score, &$distinction_score) {
     }
   } else {
     // Modified Angoff method.
-    $pass_score = round($std_total/$question_no,1);
+    if ($question_no > 0) {
+      $pass_score = round($std_total/$question_no,1);
+    } else {
+      $pass_score = 0;
+    }
   }
 
   if ($distinction_score == 0) {
