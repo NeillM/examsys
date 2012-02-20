@@ -242,6 +242,7 @@ $.Class.extend("MEE.Elem",
         if (ssdepth < 3) ssdepth = 3;
         this.html_subscript = this.subscript.toHTML(ssdepth);
         this.html_subscript.addClass('mee_subscript');
+        this.html_subscript.css('position','absoluet');
         if (this.eldata.subscriptclass)
             this.html_subscript.addClass(this.eldata.subscriptclass);
         this.subscript.subscript = 1;
@@ -254,6 +255,7 @@ $.Class.extend("MEE.Elem",
         if (ssdepth < 4) ssdepth = 4;
         this.html_superscript = this.superscript.toHTML(ssdepth);
         this.html_superscript.addClass('mee_superscript');
+        this.html_superscript.css('position','absoluet');
         if (this.eldata.superscriptclass)
             this.html_superscript.addClass(this.eldata.superscriptclass);
         this.superscript.superscript = 1;
@@ -589,10 +591,12 @@ $.Class.extend("MEE.Elem",
 
             // sort out vertical alignment of above and below ss
             if (this.subscript) {
-                var subh = this.subscript.align.height - this.subscript.align.bottom;
+                var suph = this.superscript.align.height - this.superscript.align.top; ; // was $(this.html_superscript).outerHeight(true)
                 var elemh = this.main.align.height; // was $(this.html_elem).outerHeight(true);
-                var mainbottom = this.main.align.bottom; // $(this.html_main).css('margin-bottom').replace('px', '');
-
+                elemh = Math.floor(elemh/2) + this.main.align.bottom - this.superscript.align.top;
+                if($.browser.msie) 
+                  elemh += suph/2;
+                  
                 var pad = 0.3;
                 if (this.eldata.limits_l)
                     pad = 0.1;
@@ -600,15 +604,17 @@ $.Class.extend("MEE.Elem",
                     pad = 0.07;
 
                 pad = $(pad).toPx({ 'scope': this.html_elem });
-                pad = -pad + parseInt(mainbottom) + subh;
-
+                pad = -pad + elemh;
                 $(this.html_subscript).css('bottom', -pad + 'px');
             }
 
             if (this.superscript) {
                 var suph = this.superscript.align.height - this.superscript.align.top; ; // was $(this.html_superscript).outerHeight(true)
-                var maintop = this.main.align.top; // $(this.html_main).css('margin-top').replace('px', '');
-
+                var elemh = this.main.align.height; // was $(this.html_elem).outerHeight(true);
+                elemh = Math.floor(elemh / 2) + this.main.align.top - this.superscript.align.top;
+                if($.browser.msie) 
+                  elemh += suph;
+                  
                 var pad = 0.4;
                 if (this.eldata.limits_h)
                     pad = 0.2;
@@ -616,8 +622,8 @@ $.Class.extend("MEE.Elem",
                     pad = 0.05;
 
                 pad = $(pad).toPx({ 'scope': this.html_elem });
-                pad = -pad + parseInt(maintop) + suph;
-
+                //pad = -pad + parseInt(maintop) + suph;
+                pad = pad + elemh;
                 $(this.html_superscript).css('top', -pad + 'px');
             }
 
