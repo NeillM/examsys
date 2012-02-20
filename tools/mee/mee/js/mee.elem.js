@@ -107,9 +107,9 @@ $.Class.extend("MEE.Elem",
         MEE.Elem.elems[this.elemid] = this;
 
         if (this.eldata.elemclass)
-          this.html_elem = $('<span class="mee_elem ' + this.eldata.elemclass + '" elem="' + this.elemid + '">');
+          this.html_elem = $('<span class="mee_elem ' + this.eldata.elemclass + '" elem="' + this.elemid + '"></span>');
         else 
-          this.html_elem = $('<span class="mee_elem" elem="' + this.elemid + '">');
+          this.html_elem = $('<span class="mee_elem" elem="' + this.elemid + '"></span>');
 
        //this.html_elem.attr('elem', this.elemid);
 
@@ -122,7 +122,7 @@ $.Class.extend("MEE.Elem",
         // deal with a sqrt as a special case as needs a bar creating
         // TODO: change this to a flag in the eldata
         if (this.latex == "sqrt") {
-            this.html_sqrt = $('<span class="mee_sqrt_bar" style="position:absolute">');
+            this.html_sqrt = $('<span class="mee_sqrt_bar" style="position:absolute"></span>');
             this.html_sqrt.html(MEE.Data.blankspace);
             this.html_elem.append(this.html_sqrt);
             this.html_elem.css('position', 'relative');
@@ -182,7 +182,7 @@ $.Class.extend("MEE.Elem",
             return;
 
         // this needs to be inserted at the start of the element set
-        this.html_lb = $('<span style="position:relative">');
+        this.html_lb = $('<span style="position:relative"></span>');
         //this.html_lb.css('position', 'relative');
         this.html_lb.html(MEE.Data.blankspace);
 
@@ -193,7 +193,7 @@ $.Class.extend("MEE.Elem",
             //$(this.html_lb_inner).css('font-family', font);
         }
         
-        this.html_lb_inner = $('<span style="position:absolute ' + font + '">');
+        this.html_lb_inner = $('<span style="position:absolute ' + font + '"></span>');
         //this.html_lb_inner.css('position', 'absolute');
         this.html_lb_inner.html(this.eldata.lb);
 
@@ -211,11 +211,11 @@ $.Class.extend("MEE.Elem",
         if (this.eldata.rb == ".")
             this.eldata.rb = "";
 
-        this.html_rb = $('<span style="position:relative">');
+        this.html_rb = $('<span style="position:relative"></span>');
         this.html_rb.html(MEE.Data.blankspace);
 
 
-        this.html_rb_inner = $('<span style="position:absolute">');
+        this.html_rb_inner = $('<span style="position:absolute"></span>');
         this.html_rb_inner.html(this.eldata.rb);
 
         this.html_rb.append(this.html_rb_inner);
@@ -792,7 +792,7 @@ $.Class.extend("MEE.Elem",
 
         // position the top part   
         var topcdata = MEE.Data.getCharSize(bi.top, scopeelem);
-        var top = $('<span class="mee_bracket_part" style="top:' + -topcdata.top + 'px' + '">');
+        var top = $('<span class="mee_bracket_part" style="top:' + -topcdata.top + 'px' + '"></span>');
         top.html(bi.top);
         JQbracketelem.append(top);
 
@@ -814,7 +814,7 @@ $.Class.extend("MEE.Elem",
             var middlebottom = mainh - bottomcdata.height;
             
             var anglecdata = MEE.Data.getCharSize(bi.angle, scopeelem);
-            var angle = $('<span class="mee_bracket_part" style="top:' + (Math.floor((middletop + middlebottom - anglecdata.height) / 2) - anglecdata.top) + 'px" >');
+            var angle = $('<span class="mee_bracket_part" style="top:' + (Math.floor((middletop + middlebottom - anglecdata.height) / 2) - anglecdata.top) + 'px" ></span>');
             angle.html(bi.angle);
             JQbracketelem.append(angle);
 
@@ -825,11 +825,11 @@ $.Class.extend("MEE.Elem",
             if (gapsize > 0) { // there is a gap between the top angle and bottom
 
                 if (gapsize < midcdata.height) { // if we need only 1 mid section
-                    var mid = $('<span class="mee_bracket_part" style="top:' + (-midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2)) + 'px" >');
+                    var mid = $('<span class="mee_bracket_part" style="top:' + (-midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2)) + 'px" ></span>');
                     mid.html(bi.mid);
                     JQbracketelem.append(mid);
 
-                    var mid = $('<span class="mee_bracket_part" style="top:' + (-midcdata.top + mainh - bottomcdata.height - Math.floor((midcdata.height + gapsize) / 2)) + 'px" >');
+                    var mid = $('<span class="mee_bracket_part" style="top:' + (-midcdata.top + mainh - bottomcdata.height - Math.floor((midcdata.height + gapsize) / 2)) + 'px" ></span>');
                     mid.html(bi.mid);
                     JQbracketelem.append(mid);
 
@@ -842,7 +842,7 @@ $.Class.extend("MEE.Elem",
                     var last = -midcdata.top + topcdata.height + gapsize - midcdata.height;
                     var cur = -midcdata.top + topcdata.height;
                     while (cur < last && midcdata.height > 0) {
-                        var mid = $('<span class="mee_bracket_part" style="top:' + cur + 'px' + '">');
+                        var mid = $('<span class="mee_bracket_part" style="top:' + cur + 'px' + '"></span>');
                         mid.html(bi.mid);
                         JQbracketelem.append(mid);
                         cur += midcdata.height;
@@ -850,7 +850,7 @@ $.Class.extend("MEE.Elem",
 
 
                     // top mid bottom
-                    var mid = $('<span class="mee_bracket_part"style="top:' + last + 'px' + '">');
+                    var mid = $('<span class="mee_bracket_part"style="top:' + last + 'px' + '"></span>');
                     mid.html(bi.mid);
                     JQbracketelem.append(mid);
 
@@ -863,14 +863,14 @@ $.Class.extend("MEE.Elem",
 
                     var cur = -midcdata.top + mainh - bottomcdata.height - gapsize;
                     while (cur < last && midcdata.height > 0) {
-                        var mid = $('<span class="mee_bracket_part" style="top:' + cur + 'px' + '">');;
+                        var mid = $('<span class="mee_bracket_part" style="top:' + cur + 'px' + '"></span>');
                         mid.html(bi.mid);
                         JQbracketelem.append(mid);
                         cur += midcdata.height;
                     }
 
                     // single bottom mid bottom element
-                    var mid = $('<span class="mee_bracket_part"style="top:' + last + 'px' + '">');
+                    var mid = $('<span class="mee_bracket_part"style="top:' + last + 'px' + '"></span>');
                     mid.html(bi.mid);
                     JQbracketelem.append(mid);
 
@@ -883,7 +883,7 @@ $.Class.extend("MEE.Elem",
             if (gapsize > 0) { // do we have a gap in the middle of the top and bottom part? if so fill it up
 
                 if (gapsize < midcdata.height) { // only need a single mid character so center it
-                    var mid = $('<span class="mee_bracket_part"style="top:' + (-midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2)) + 'px' + '">');
+                    var mid = $('<span class="mee_bracket_part"style="top:' + (-midcdata.top + topcdata.height - Math.floor((midcdata.height - gapsize) / 2)) + 'px' + '"></span>');
                     mid.html(bi.mid);
                     JQbracketelem.append(mid);
 
@@ -893,14 +893,14 @@ $.Class.extend("MEE.Elem",
 
                     var cur = -midcdata.top + topcdata.height;
                     while (cur < last && midcdata.height > 0) {
-                        var mid = $('<span class="mee_bracket_part"style="top:' + cur + 'px' + '">');;
+                        var mid = $('<span class="mee_bracket_part"style="top:' + cur + 'px' + '"></span>');;
                         mid.html(bi.mid);
                         JQbracketelem.append(mid);
                         cur += midcdata.height;
                     }
 
                     // single bottom mid bottom element
-                    var mid = $('<span class="mee_bracket_part" style="top:'+ last +'px">');
+                    var mid = $('<span class="mee_bracket_part" style="top:'+ last +'px"></span>');
                     mid.html(bi.mid);
                     JQbracketelem.append(mid);
                 }
@@ -912,7 +912,7 @@ $.Class.extend("MEE.Elem",
             JQbracketelem.children().css('font-family', bi.font);
 
         // add a relative spacer to make browsers heppy
-        var mid = $('<span>');
+        var mid = $('<span></span>');
         mid.html(MEE.Data.blankspace);
         JQbracketelem.append(mid);
 

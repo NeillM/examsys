@@ -7,7 +7,7 @@ $.Class.extend("MEE.Base",
             return;
         }*/
 
-        this.fontwaitlimit = 0;
+        this.fontwaitlimit = 10;
         // build all recursive definitions
         MEE.Base.displays = new Array();
         MEE.Base.edits = new Array();
@@ -58,7 +58,8 @@ $.Class.extend("MEE.Base",
         MEE.Base.process(proc);
         MEE.Base.updateProgress();
 
-        setTimeout("MEE.Base.ProcessNext_Fonts()", 1);
+        //setTimeout("MEE.Base.ProcessNext_Fonts()", 1);
+        setTimeout("MEE.Base.ProcessNext_Align()", 5);
     },
 
     ProcessNext_Fonts: function () {
@@ -69,14 +70,14 @@ $.Class.extend("MEE.Base",
             return;
         }
 
-        //var proc = this.to_process[i];
-        //if (proc.eqn && this.fontwaitlimit > 0) {
-        //    if (!proc.eqn.FontsLoaded()) {
-        //        this.setProgressMessage("Waiting on Fonts");
-        //        setTimeout("MEE.Base.ProcessNext_Fonts()", 5);
-        //        return;
-        //    }
-        //}
+        var proc = this.to_process[i];
+        if (proc.eqn && this.fontwaitlimit > 0) {
+            if (!proc.eqn.FontsLoaded()) {
+                this.setProgressMessage("Waiting on Fonts");
+                setTimeout("MEE.Base.ProcessNext_Fonts()", 5);
+                return;
+            }
+        }
         //debug.log("Fonts OK");
         setTimeout("MEE.Base.ProcessNext_Align()", 5);
     },
