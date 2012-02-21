@@ -113,7 +113,7 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
 $papers = array();
 
 //$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20110326080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20111110080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date LIMIT 2");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20111110080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date LIMIT 4");
 $result->execute();
 $result->bind_result($paperID, $title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
@@ -136,7 +136,7 @@ $total_students = 0;
 $total_affected = 0;
 
 echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"2\" widht=\"100%\">\n";
-echo "<tr><td>Start Date</td><td>Paper ID</td><td>Title</td><td>Status</td><td>Old Fails</td><td>New Fails</td><td>Old Passes</td><td>New Passes</td><td>Old Distinctions</td><td>New Distinctions</td></tr>";
+echo "<tr><td>Start Date</td><td>Paper ID</td><td>Title</td><td>Status</td><td>Old Fails</td><td>New Fails</td><td>Old Passes</td><td>New Passes</td><td>Old Distinctions</td><td>New Distinctions</td><td>Affected</td></tr>";
 foreach ($papers as $paper) {
 
   $url = "https://suivarro.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc";
@@ -152,7 +152,7 @@ foreach ($papers as $paper) {
   $total_students += $student_details['cohort_size'];
   $total_affected += $student_details['affected'];
   
-  var_dump($total_students, $total_affected);
+  //var_dump($total_students, $total_affected);
     
   if ($same) {
     echo '<tr>'; 
@@ -161,11 +161,12 @@ foreach ($papers as $paper) {
     echo '<tr style="background-color:#FFC0C0">'; 
     $status = 'Problem';
   }
-  echo "<td>" . $paper['display_start_date'] . "</td><td>" . $paper['paperID'] . "</td><td>" . $paper['title'] . "</td><td>$status</td><td class=\"n\">" . $classifications[1]['Fail'] . "</td><td class=\"n\">" . $classifications[2]['Fail'] . "</td><td class=\"n\">" . $classifications[1]['Pass'] . "</td><td class=\"n\">" . $classifications[2]['Pass'] . "</td><td class=\"n\">" . $classifications[1]['Distinction'] . "</td><td class=\"n\">" . $classifications[2]['Distinction'] . "</td></tr>\n"; 
+  echo "<td>" . $paper['display_start_date'] . "</td><td>" . $paper['paperID'] . "</td><td>" . $paper['title'] . "</td><td>$status</td><td class=\"n\">" . $classifications[1]['Fail'] . "</td><td class=\"n\">" . $classifications[2]['Fail'] . "</td><td class=\"n\">" . $classifications[1]['Pass'] . "</td><td class=\"n\">" . $classifications[2]['Pass'] . "</td><td class=\"n\">" . $classifications[1]['Distinction'] . "</td><td class=\"n\">" . $classifications[2]['Distinction'] . "</td><td>" . round((($student_details['affected'] / $student_details['cohort_size']) * 100), 1) . "%</td></tr>\n"; 
   ob_flush();
   flush();  
 }
 echo "</table>\n";
+echo "<div>Total affected number = $total_affected (" . round((($total_affected / $total_students) * 100), 1) . "%)</div>\n";
 ob_end_flush();
 ?>
 </body>
