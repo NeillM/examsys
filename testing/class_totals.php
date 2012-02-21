@@ -113,7 +113,7 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
 $papers = array();
 
 //$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20110326080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20111110080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date LIMIT 4");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20111110080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->bind_result($paperID, $title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
@@ -171,7 +171,7 @@ foreach ($papers as $paper) {
   flush();  
 }
 echo "</table>\n";
-echo "<div>Total affected number = $total_affected (" . round((($total_affected / $total_students) * 100), 1) . "%)</div>\n";
+echo "<div>Total affected number = $total_affected out of $total_students (" . round((($total_affected / $total_students) * 100), 1) . "%)</div>\n";
 ob_end_flush();
 ?>
 </body>
