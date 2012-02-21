@@ -51,13 +51,13 @@
 textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
 
 .menu_list {
- margin: 6px 0 0 0;
- padding-left: 12px;
+ margin: 5px 0 0 0;
+ padding-left: 11px;
  list-style: none;
 }
 
 .menu_list li {
- padding-left: 25px;
+ padding-left: 24px;
  width: 120px;
  font-size: 90%;
  margin: 0;
@@ -94,5 +94,12 @@ a.checklist {
 }
 
 .ico {
- width:20px;
+  text-align:center;
+  width:16px;
+}
+
+.submenuheading {
+  font-weight:bold;
+  padding-top:15px;
+  margin-left:2px;
 }
