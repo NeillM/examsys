@@ -271,13 +271,9 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
           }
           
           if ($tmp_date > 20111107000000 ) {
-          echo "$tmp_date new<br />";
-          //exit;
             $prob = (MathsUtils::factorial($correct_no) * MathsUtils::factorial($option_no - $correct_no)) / MathsUtils::factorial($option_no);
             $random_mark += $prob * $marks_correct;
           } else {    // Maintain backward compatibility
-          echo "old";
-          //exit;
             $figure = 1;
             for ($i=count($option_text); $i>(count($option_text)-$correct_no); $i--) {
               $figure *= (1/$i);
