@@ -173,7 +173,7 @@ function About_Calc() {
 alert(ps);
 }
 
-var x = "";  // by JScript loose typing, 'x' is a string OR number: confuses '+' if adding
+var x = "0";  // by JScript loose typing, 'x' is a string OR number: confuses '+' if adding
 var m = "";  // stores Memory.  Note: x & m are GLOBAL--of concern if sCal embedded.
 var xRedo=0; // if xRedo=1, restores current x; =2, output to alert, etc. see xEval.
 var Timer=0; var st0p=0; // for stopwatch
@@ -184,7 +184,7 @@ var sC_xDec=8;//decimal places for Oxf()
 var sC_t=100;
 var clearFlag = false;
 var equalsFlag = false;
-var buffer = '';
+var buffer = '0';
 var shifton = 0;
 //timer x/1000 of second; USE 10 for PC's
 //
@@ -238,7 +238,8 @@ function xEval() {
       document.sCal.IOx.value = Math.pow(eval(x.substring(0,n)),eval(x.substring(n+1)));
     }
   } else {      // likewise, entire x-value used as function argument, not just last term
-    document.sCal.IOx.value = eval('0' + x);
+//    if (x.substring(0, 1) == '.') x = '0' + x;
+    document.sCal.IOx.value = eval(x);
   }
   if (xRedo>0) {
     x=xTemp;
@@ -267,6 +268,13 @@ function returntoform() {
 }
 function xPlusEq(s) {
   if (s == '.' && buffer.indexOf('\.') != -1) return;
+  if (buffer == '0') {
+    if (s == '0') {
+      return;
+    } else {
+      x = buffer = '';
+    }
+  }
   if (sCal_buffer == '') {
     if (equalsFlag && s!='+' && s!='-' && s!='*' && s!='/' && s!='(' && s!=')' && s!='^') {
       document.sCal.IOx.value = '';
@@ -277,7 +285,7 @@ function xPlusEq(s) {
       buffer = '';
     }
     Ix();
-    if (s == '.' && x == '' && buffer == '') {
+    if (s == '.' && buffer == '') {
       x = buffer = '0';
     }
     x += s;
@@ -314,9 +322,8 @@ function xMultEq(s) {
     Oxf();
 }
 function Clear() {
-  x = '';
+  x = buffer = '0';
   Ox();
-  buffer = '';
   document.getElementById('ans').innerHTML = '0';
 }
 function BkSpace() {Ix(); x = x.substring(0,x.length-1) ; Ox();}

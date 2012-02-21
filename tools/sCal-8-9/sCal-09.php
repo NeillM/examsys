@@ -49,7 +49,7 @@ print <<<END
  <td colspan="6"></td>
  </tr>
   <tr><td colspan="5"><div id="ans-holder"><div id="ans">0</div></div></td></tr>
-  <tr><td colspan="5"><textarea name="IOx" rows="3" cols="16" class="LCD"></textarea></td></tr>
+  <tr><td colspan="5"><textarea name="IOx" rows="3" cols="16" class="LCD">0</textarea></td></tr>
   <tr><td colspan="5"><div name="memory" id="memory" class="memory">&nbsp;</div></td></tr>
 
 END;
