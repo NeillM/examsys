@@ -161,7 +161,12 @@ foreach ($papers as $paper) {
     echo '<tr style="background-color:#FFC0C0">'; 
     $status = 'Problem';
   }
-  echo "<td>" . $paper['display_start_date'] . "</td><td>" . $paper['paperID'] . "</td><td>" . $paper['title'] . "</td><td>$status</td><td class=\"n\">" . $classifications[1]['Fail'] . "</td><td class=\"n\">" . $classifications[2]['Fail'] . "</td><td class=\"n\">" . $classifications[1]['Pass'] . "</td><td class=\"n\">" . $classifications[2]['Pass'] . "</td><td class=\"n\">" . $classifications[1]['Distinction'] . "</td><td class=\"n\">" . $classifications[2]['Distinction'] . "</td><td>" . round((($student_details['affected'] / $student_details['cohort_size']) * 100), 1) . "%</td></tr>\n"; 
+  if ($student_details['cohort_size'] > 0) {
+    $tmp_percent = round((($student_details['affected'] / $student_details['cohort_size']) * 100), 1);
+  } else {
+    $tmp_percent = 0;
+  }
+  echo "<td>" . $paper['display_start_date'] . "</td><td>" . $paper['paperID'] . "</td><td>" . $paper['title'] . "</td><td>$status</td><td class=\"n\">" . $classifications[1]['Fail'] . "</td><td class=\"n\">" . $classifications[2]['Fail'] . "</td><td class=\"n\">" . $classifications[1]['Pass'] . "</td><td class=\"n\">" . $classifications[2]['Pass'] . "</td><td class=\"n\">" . $classifications[1]['Distinction'] . "</td><td class=\"n\">" . $classifications[2]['Distinction'] . "</td><td>$tmp_percent%</td></tr>\n"; 
   ob_flush();
   flush();  
 }
