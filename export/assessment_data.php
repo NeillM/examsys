@@ -221,7 +221,7 @@
       for ($i=0; $i<$question_no; $i++) {
         $tmp_question_ID = $paper_buffer[$i]['ID'];
         $tmp_screen = $paper_buffer[$i]['screen'];
-        if (array_key_exists($tmp_question_ID,$excluded)) {
+        if (array_key_exists($tmp_question_ID, $excluded)) {
           $tmp_exclude = $excluded[$tmp_question_ID];
         } else {
           $tmp_exclude = '0000000000000000000000000000000000000000';
@@ -245,6 +245,19 @@
             for ($sec=0; $sec<count($correct_parts); $sec++) {
               if (substr($tmp_exclude,$sec,1) == '0') echo ',Q' . ($i+1) . chr($sec+65);
             }
+            break;
+          case 'labelling':
+            $sec = 1;
+            $tmp_first_split = explode(';', $paper_buffer[$i]['correct']);
+            $tmp_second_split = explode('$', $tmp_first_split[11]);
+            for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
+              if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+                if (substr($tmp_exclude,$sec-1,1) == '0') {
+                  echo ',Q' . ($i+1) . chr($sec+64);
+                }
+                $sec++;
+              }
+            }          
             break;
           case 'matrix':
             for ($sec=1; $sec<substr_count($paper_buffer[$i]['correct'],',') + 1; $sec++) {
@@ -322,7 +335,18 @@
             }
             break;
           case 'labelling':
-            if (!isset($excluded[$tmp_question_ID])) echo ',';
+            $sec = 1;
+            $tmp_first_split = explode(';', $paper_buffer[$i]['correct']);
+            $tmp_second_split = explode('$', $tmp_first_split[11]);
+            for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
+              if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+                if (substr($tmp_exclude,$sec-1,1) == '0') {
+                  $tmp_third_split = explode('|', $tmp_second_split[$label_no]);
+                  echo ',' . $tmp_third_split[0];
+                }
+                $sec++;
+              }
+            }          
             break;
           case 'dichotomous':
             $correct_parts = explode(',',$paper_buffer[$i]['correct']);
@@ -461,6 +485,33 @@
               }
             }
           }
+          break;
+        case 'labelling':
+          $tmp_first_split = explode(';', $individual[$tmp_screen][$tmp_question_ID]);
+          $tmp_answers = explode('$', $tmp_first_split[1]);
+          $user_answers = array();
+          for ($label_no = 0; $label_no <= count($tmp_answers)-4; $label_no += 4) {
+            $user_answers[$tmp_answers[$label_no] . 'x' . $tmp_answers[$label_no+1]] = $tmp_answers[$label_no+2];
+          }
+         
+          $sec = 1;
+          $tmp_first_split = explode(';', $paper_buffer[$i]['correct']);
+          $tmp_second_split = explode('$', $tmp_first_split[11]);
+          for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
+            if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+              if (substr($tmp_exclude,$sec-1,1) == '0') {
+                $location = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
+                if (isset($user_answers[$location])) {
+                  //echo $user_answers[$location];
+                  echo ',' . $user_answers[$location];
+                  //echo ',' . $user_answers[($sec*4)-2] . ' (' . $user_answers[($sec*4)-4] . 'x' . ($user_answers[($sec*4)-3] + 25) . ')';
+                } else {
+                  echo ',';
+                }
+              }
+              $sec++;
+            }
+          }          
           break;
         case 'dichotomous':
         case 'mrq':
