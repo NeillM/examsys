@@ -502,9 +502,7 @@
               if (substr($tmp_exclude,$sec-1,1) == '0') {
                 $location = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
                 if (isset($user_answers[$location])) {
-                  //echo $user_answers[$location];
                   echo ',' . $user_answers[$location];
-                  //echo ',' . $user_answers[($sec*4)-2] . ' (' . $user_answers[($sec*4)-4] . 'x' . ($user_answers[($sec*4)-3] + 25) . ')';
                 } else {
                   echo ',';
                 }
