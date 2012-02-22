@@ -47,6 +47,9 @@
       case 5:
         $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offlinepaper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
         break;
+      case 6:
+        $html = "<img src=\"../artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['peerreview'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        break;
     }
     return $html;
   }
@@ -62,6 +65,7 @@
     if (isset($_POST['survey']) and $_POST['survey'] == '1') $type .= " OR paper_type='3'";
     if (isset($_POST['osce']) and $_POST['osce'] == '1') $type .= " OR paper_type='4'";
     if (isset($_POST['offline']) and $_POST['offline'] == '1') $type .= " OR paper_type='5'";
+    if (isset($_POST['peerreview']) and $_POST['peerreview'] == '1') $type .= " OR paper_type='6'";
     if (strlen($type) > 0) $type = 'AND (' . substr($type,4) . ')';
   }
   
