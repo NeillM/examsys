@@ -798,7 +798,7 @@ function getMSCAA($paperID, $mysqlidb) {
   <?php
 
   if ($summative_lock == 1) {
-    echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"3\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">Click for more details.</a></td><td style=\"text-align:right; background-image:url('../artwork/locked_gradient.png'); background-repeat:repeat-x\">";
+    echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"locked\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" style=\"position:relative; top:2px\" />&nbsp;&nbsp;</div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"locked\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">Click for more details.</a></div></td><td style=\"text-align:right\"><div class=\"locked\">";
     if (strpos($userroles,'Admin') !== false) {
       $record_no = 0;
       $result = $mysqli->prepare("SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE paperID=? AND log_metadata.userID=users.id AND roles='Student'");
@@ -809,12 +809,12 @@ function getMSCAA($paperID, $mysqlidb) {
       $result->close();
    
       if ($record_no == 0) {
-        echo '<span style="align:right"><input type="button" name="unlock" value=" ' . $string['unlock'] . ' " onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" /></span>';
+        echo '<input type="button" name="unlock" value=" ' . $string['unlock'] . ' " onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" />';
       } else {
-        echo '<span style="align:right"><input type="button" name="unlock" value=" ' . $string['unlock'] . ' " disabled /></span>';
+        echo '<input type="button" name="unlock" value=" ' . $string['unlock'] . ' " disabled />';
       }
     }
-    echo "</td></tr>\n";
+    echo "&nbsp;</div></td></tr>\n";
   } elseif ($paper_type == '2') {
     $tmp_hour = $tmp_start_hour;
     if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
