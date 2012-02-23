@@ -125,10 +125,19 @@ table {font-size:100%; table-layout: fixed}
 .matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
 .exclude {color:red; text-decoration:line-through}
-.scr_br {width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url('../artwork/screen_no_background.gif'); background-repeat:repeat-x}
-.scr_no {vertical-align:top; font-size:90%; font-weight:bold; color:#15428B}
 .box {width:90%; background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left}
 .mee {font-size:120%; display:inline}
+.scr_no {margin-left:25px}
+.screenbrk {
+  color:#15428B;
+  font-weight:bold;
+  font-size:90%;
+  height:70px;
+  width:100%;
+  border-top: 1px solid #B5C4DF;
+  background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+}
 </style>
 <?php
   if ($latex_needed == 1) {

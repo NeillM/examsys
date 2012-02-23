@@ -54,7 +54,7 @@ if (preg_match( '|MSIE ([5-9].[0-9]{1,2})|',$_SERVER['HTTP_USER_AGENT'],$log_ver
     $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
     if ($cfg_use_ldap == true) $message .= "<li>" . $string['tsonldap'] . "</li>\n";
     $message .= '<li>' . $string['pressf5'] . '</li>';
-     if ($_SERVER['PHP_SELF'] == '/index.php') {
+    if ($_SERVER['PHP_SELF'] == '/index.php') {
       $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
     }
     $message .= "</ul>";

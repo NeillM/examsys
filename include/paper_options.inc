@@ -487,7 +487,7 @@ if ($paper_type == '2') {
 
 <div class="submenuheading"><?php echo $string['summativechecklist']; ?></div>
 
-<table cellpadding="2" cellspacing="0" border="0" width="98%" style="margin-left:9px; padding-bottom:2px; font-size:90%">
+<table cellpadding="2" cellspacing="0" border="0" width="185" style="margin-left:9px; padding-bottom:2px; font-size:90%">
 
 <?php
   // Session

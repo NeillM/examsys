@@ -89,6 +89,9 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
   $outcome = true;
   $affected_no = 0;
   $row_count = count($set1);
+  
+  $percent_total1 = 0;
+  $percent_total2 = 0;
 
   if ($outcome) {
     for ($i=0; $i<$row_count; $i++) {
@@ -98,6 +101,8 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
         
         $student_details['students'][] = array('name'=>$set1[$i]['name'], 'studentID'=>$set1[$i]['studentID']);
       }
+      $percent_total1 += $set1[$i]['percent'];
+      $percent_total2 += $set2[$i]['percent'];
       
       $classifications[1][$set1[$i]['classification']]++;
       $classifications[2][$set2[$i]['classification']]++;
@@ -106,6 +111,8 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
   
   $student_details['cohort_size'] = count($set1);
   $student_details['affected'] = $affected_no;
+  
+  $student_details['percent_change'] = ($percent_total2 / count($set2)) - ($percent_total1 / count($set1));
  
   return $outcome;
 }
@@ -113,7 +120,7 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
 $papers = array();
 
 //$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20110326080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20111110080000 AND end_date < 20120208070000 AND deleted IS NULL ORDER BY start_date");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20100306080000 AND end_date < 20110422070000 AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->bind_result($paperID, $title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
@@ -136,14 +143,14 @@ $total_students = 0;
 $total_affected = 0;
 
 echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"2\" widht=\"100%\">\n";
-echo "<tr><td>Start Date</td><td>Paper ID</td><td>Title</td><td>Status</td><td>Old Fails</td><td>New Fails</td><td>Old Passes</td><td>New Passes</td><td>Old Distinctions</td><td>New Distinctions</td><td>Affected</td></tr>";
+echo "<tr><td>Start Date</td><td>Paper ID</td><td>Title</td><td>Status</td><td>Old Fails</td><td>New Fails</td><td>Old Passes</td><td>New Passes</td><td>Old Distinctions</td><td>New Distinctions</td><td>Affected</td><td>Change</td></tr>";
 foreach ($papers as $paper) {
 
-  $url = "https://suivarro.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc";
+  $url = "https://rogo.local/touchstone/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&repyear=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
   $output = getData($url);
   $marks_set1 = parseRawMarks($output);
   
-  $url = "https://rogo.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc";
+  $url = "https://suivarro.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
   $output = getData($url);
   $marks_set2 = parseRawMarks($output);
   
@@ -152,8 +159,6 @@ foreach ($papers as $paper) {
   $total_students += $student_details['cohort_size'];
   $total_affected += $student_details['affected'];
   
-  //var_dump($total_students, $total_affected);
-    
   if ($same) {
     echo '<tr>'; 
     $status = 'OK';
@@ -166,7 +171,7 @@ foreach ($papers as $paper) {
   } else {
     $tmp_percent = 0;
   }
-  echo "<td>" . $paper['display_start_date'] . "</td><td>" . $paper['paperID'] . "</td><td>" . $paper['title'] . "</td><td>$status</td><td class=\"n\">" . $classifications[1]['Fail'] . "</td><td class=\"n\">" . $classifications[2]['Fail'] . "</td><td class=\"n\">" . $classifications[1]['Pass'] . "</td><td class=\"n\">" . $classifications[2]['Pass'] . "</td><td class=\"n\">" . $classifications[1]['Distinction'] . "</td><td class=\"n\">" . $classifications[2]['Distinction'] . "</td><td>$tmp_percent%</td></tr>\n"; 
+  echo "<td>" . $paper['display_start_date'] . "</td><td>" . $paper['paperID'] . "</td><td>" . $paper['title'] . "</td><td>$status</td><td class=\"n\">" . $classifications[1]['Fail'] . "</td><td class=\"n\">" . $classifications[2]['Fail'] . "</td><td class=\"n\">" . $classifications[1]['Pass'] . "</td><td class=\"n\">" . $classifications[2]['Pass'] . "</td><td class=\"n\">" . $classifications[1]['Distinction'] . "</td><td class=\"n\">" . $classifications[2]['Distinction'] . "</td><td>" . $student_details['affected'] . " ($tmp_percent%)</td><td class=\"n\">" . round($student_details['percent_change'],2) . "%</td></tr>\n"; 
   ob_flush();
   flush();  
 }

@@ -430,10 +430,9 @@
       init_feedback($strong_on, $strong_off);
 
       if ($old_screen < $paper[$question]['screen']) {
-        echo '</table><br /><table cellpadding="0" cellspacing="1" border="0" class="scr_br">';
-        echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-        echo "<td class=\"scr_no\">" . $string['screen'] . "&nbsp;" . $paper[$question]['screen'] . "</td>\n</tr>\n";
-        echo '</table>';
+        echo '</table><br />';
+        
+        echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $paper[$question]['screen'] . '</span></div>';
         echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
         if ($paper[$question]['q_type'] != 'info') {
           if ($paper[$question]['theme'] != '') echo "<tr><td colspan=\"2\" class=\"theme\">" . $paper[$question]['theme'] . "</td></tr>\n";

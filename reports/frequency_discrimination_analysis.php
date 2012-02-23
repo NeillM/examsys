@@ -1482,6 +1482,17 @@ p {margin-left:0px; margin-right:0px}
 .excluded img.in-exclusion {border:0}
 td p:first-child {margin-top:0}
 .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
+.scr_no {margin-left:25px}
+.screenbrk {
+  color:#15428B;
+  font-weight:bold;
+  font-size:90%;
+  height:70px;
+  width:100%;
+  border-top: 1px solid #B5C4DF;
+  background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+}
 </style>
 
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -1739,10 +1750,9 @@ td p:first-child {margin-top:0}
         $correct_buffer = array();
         $o_media_buffer = array();
         if ($old_screen != $screen) {
-          echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
-          echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-          echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;$screen</td>\n</tr>\n";
-          echo '</table></td></tr>';
+          echo '<tr><td colspan="2">';
+          echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
+          echo '</td></tr>';
         }
       }
       if ($q_type == 'labelling') {
