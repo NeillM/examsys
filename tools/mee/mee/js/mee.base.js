@@ -49,7 +49,6 @@ $.Class.extend("MEE.Base",
         var proc = this.to_process[i];
         MEE.Base.process(proc);
         MEE.Base.updateProgress();
-        //setTimeout("MEE.Base.ProcessNext_Fonts()", 1);
         setTimeout("MEE.Base.ProcessNext_Align()", 5);
     },
 
@@ -69,7 +68,6 @@ $.Class.extend("MEE.Base",
                 return;
             }
         }
-        //debug.log("Fonts OK");
         setTimeout("MEE.Base.ProcessNext_Align()", 5);
     },
 
@@ -91,14 +89,27 @@ $.Class.extend("MEE.Base",
           var h = this.replacePX(proc.elem.style.height) 
                                               + this.replacePX(proc.elem.style.paddingTop)
                                                + this.replacePX(proc.elem.style.paddingBottom);
-          if(h == 0 && this.replacePX(proc.elem.parentNode.style.height) == 0) {
-            proc.elem.parentNode.style.height = 'auto';
-          } else if(proc.elem.parentNode.style.height == '' || h > this.replacePX(proc.elem.parentNode.style.height)) {
-            proc.elem.parentNode.style.height = h + 'px';
-            proc.elem.parentNode.style.paddingTop = proc.elem.style.paddingTop;
-          }
-        }
           
+          var elem = proc.elem.parentNode;
+          if(elem.tagName == 'SPAN') {
+            elem = elem.parentNode; // if we are in a table set the height on the tr not the td
+          } 
+          if(elem.tagName == 'TD') {
+            elem = elem.parentNode; // if we are in a table set the height on the tr not the td
+          } 
+          
+          if(h == 0 && this.replacePX(elem.style.height) == 0) {
+            elem.style.height = 'auto';
+          } else if(elem.style.height == '' || h > this.replacePX(elem.style.height)) {
+            elem.style.height = h + 'px';
+            elem.style.paddingTop = proc.elem.style.paddingTop;
+          }
+        } else {
+           var w = this.calcWidth(proc.elem,0);
+           proc.elem.parentNode.style.width = w + 'px';
+           //var h = this.calcHeight(proc.elem,0);
+           //proc.elem.parentNode.style.height = h + 'px';
+        }
         setTimeout("MEE.Base.ProcessNext()", 1);
     },
 
@@ -174,6 +185,36 @@ $.Class.extend("MEE.Base",
       } else {
         return val;
       }
+    },
+    calcWidth : function (e,w) {
+        //recursivly caculate width of an equasion
+       if(e.childNodes) {
+          for(var i = 0; i < e.childNodes.length; i++) {
+            if(e.childNodes[i].style) {
+              je=$(e.childNodes[i]);
+              if (je.width() > w)
+                  w += je.width();
+            }
+            w = this.calcWidth(e.childNodes[i],w);
+          }
+          return w;
+       }
+       return 0;
+    },
+    calcHeight : function (e,h) {
+        //recursivly caculate height of an equasion
+       if(e.childNodes) {
+          for(var i = 0; i < e.childNodes.length; i++) {
+            if(e.childNodes[i].style) {
+              je=$(e.childNodes[i]);
+              //if (je.height() > h)
+                  h += je.height();
+            }
+            h = this.calcWidth(e.childNodes[i],h);
+          }
+          return h;
+       }
+       return 0;
     }
 },
 {
