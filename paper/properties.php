@@ -807,7 +807,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        echo "</tr>\n";
 
        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><select name=\"calculator\">\n";
-       for ($calcloop=-1;$calcloop<3;$calcloop++) {
+       for ($calcloop=0; $calcloop<3; $calcloop++) {
          echo "<option value=\"$calcloop\"";
          if ($calcloop == $calculator) {
            echo " selected";
