@@ -1886,46 +1886,6 @@ if (!isset($_POST['update'])) {
     echo "<li>ALTER TABLE courses DROP COLUMN school</li>\n";
   }
 
-
-  // 21/02/2012 - Add new pagecharacter set to configuration file.
-  $new_cfg_str =  array("\$cfg_page_charset = 'UTF-8';\n");
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
-
-  //remove refrances to old vars
-  $cfg_new = array();
-  $found = false;
-  foreach ($cfg as $line) {
-    if (strpos($line,'cfg_page_charset') !== false) {
-      $found = true;
-    }
-    $cfg_new[] = $line;
-  }
-
-  if (!$found) {
-    $index = 0;
-    foreach ($cfg as $line) {
-      if (strpos($line, '$protocol') !== false) {
-        $found = true;
-        break;
-      }
-      $index++;
-    }
-
-    if (!$found) $index = 20;
-
-    //add the new config chunk
-    array_splice($cfg_new, $index + 1, 0, $new_cfg_str);
-
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
-    }
-
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
-      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
-    }
-    echo "<li>Added page charset.</li>\n";
-  }
-
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   
