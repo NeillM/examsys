@@ -27,7 +27,6 @@ require_once '../include/errors.inc';
 require 'summary_report.inc';
 
 check_var('paperID', 'GET', true, false);
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
@@ -196,54 +195,90 @@ check_var('paperID', 'GET', true, false);
 ?>
 <?php
   // write out headings
-  echo '<tr style="background-color:#F1F5FB"><td></td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['name'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['studentid'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviewed'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $type . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviews'] . '</td>';
+  echo '<tr style="background-color:#F1F5FB"><td></td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['name'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['studentid'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviewed'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $type . '</td>';
+  if ($review_type == 1) {
+    echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviews'] . '</td>';
+  }
   for ($i=1; $i<=$heading_no; $i++) {
     echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['q'] . $i . '</td>';
   }
-  echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['overall'] . '</td><td style="width:20%">&nbsp;</td></tr>';
+  if ($review_type == 1) {
+    echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['overall'] . '</td><td style="width:20%">&nbsp;</td></tr>';
+  } else {
+    echo "<td><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;</td><td class=\"num\">&nbsp;</td><td class=\"num\">&nbsp;</td></tr>\n";
+  }
   echo '<tr><td colspan="' . ($heading_no + 8) . '" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr>';
 
   foreach ($user_data as $student_userID => $student) {
-    $mean_total = 0;
-    echo '<tr>';
-    echo '<td class="line"><img src="../artwork/peer_review_16.gif" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $student_userID . ', event);" /></td>';
-    echo '<td class="line" onclick="ItemSelMenu(' . $student_userID . ', event);">' . $student['title'] . ' ' . $student['surname'] . ', <span class="fn">' . $student['first_names'] . '</span></td>';
-    echo '<td class="line">' . $student['student_id'] . '</td>';
-    if (isset($reviewers[$student['userID']])) {
-      echo '<td class="line">Complete</td>';
-    } else {
-      echo '<td class="line" style="color:#C00000">Missing</td>';
-    }
-    echo '<td class="line">' . $student['group'] . '</td>';
-    if (isset($student['review_no'])) {
-      if ($student['review_no'] < (count($groups[$student['group']])-1)) {
-        echo '<td class="errnum">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+    if ($student_userID > 0) {
+      $have_review = isset($reviewers[$student['userID']]);
+      $icon = ($have_review) ? 'peer_review_16.gif' : 'peer_review_retired_16.png';
+      $mean_total = 0;
+      echo '<tr>';
+      echo '<td class="line"><img src="../artwork/' . $icon . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $student_userID . ', event);" /></td>';
+      echo '<td class="line" onclick="ItemSelMenu(' . $student_userID . ', event);">' . $student['title'] . ' ' . $student['surname'] . ', <span class="fn">' . $student['first_names'] . '</span></td>';
+      echo '<td class="line">' . $student['student_id'] . '</td>';
+      if ($have_review) {
+        echo '<td class="line">Complete</td>';
       } else {
-        echo '<td class="num">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+        echo '<td class="line" style="color:#C00000">Missing</td>';
       }
-    } else {
-      echo '<td class="errnum">0</td>';
-    }
-    foreach ($questions as $questionID => $tmp_data) {
-      if (isset($student['means'][$questionID])) {
-        echo '<td class="num">';
-        if ($_GET['percent'] == '1') {
-          echo round($student['percent'][$questionID],0) . '%';
+      echo '<td class="line">' . $student['group'] . '</td>';
+      if ($review_type == 1) {
+        if (isset($student['review_no'])) {
+          if ($student['review_no'] < (count($groups[$student['group']])-1)) {
+            echo '<td class="errnum">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+          } else {
+            echo '<td class="num">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+          }
         } else {
-          echo padDecimals($student['means'][$questionID],1);
+          echo '<td class="errnum">0</td>';
         }
-        echo '</td>';
-        $mean_total += $student['means'][$questionID];
+        foreach ($questions as $questionID => $tmp_data) {
+          if (isset($student['means'][$questionID])) {
+            echo '<td class="num">';
+            if ($_GET['percent'] == '1') {
+              echo round($student['percent'][$questionID],0) . '%';
+            } else {
+              echo padDecimals($student['means'][$questionID],1);
+            }
+            echo '</td>';
+            $mean_total += $student['means'][$questionID];
+          } else {
+            echo '<td class="num">&nbsp;</td>';
+          }
+        }
+        if ($_GET['percent'] == '1') {
+          echo "<td class=\"num\">" . round($student['total_percent'][$questionID], 0) . "%</td>\n";
+        } else {
+          echo '<td class="num">' . padDecimals($mean_total / $heading_no, 2) . '</td>';
+        }
+      } else {
+        foreach ($questions as $questionID => $tmp_data) {
+          if (isset($user_data[0]['data'][$questionID][$student_userID])) {
+            echo '<td class="num">' . $user_data[0]['data'][$questionID][$student_userID] . '</td>';
+          } else {
+            echo '<td class="num">&nbsp;</td>';
+          }
+        }
+        echo "<td>&nbsp;</td><td>&nbsp;</td>\n";
+      }
+      echo "<td class=\"num\">&nbsp;</td></tr>\n";
+    }
+  }
+  if ($review_type != '1') {
+    echo '<tr>';
+    echo '<td class="line">&nbsp;</td>';
+    echo '<td class="line" colspan="4"><strong>Mean</strong></td>';
+    foreach ($questions as $questionID => $tmp_data) {
+      if (isset($user_data[0]['means'][$questionID])) {
+        echo '<td class="num"><strong>' . padDecimals($user_data[0]['means'][$questionID], 2) . '</strong></td>';
       } else {
         echo '<td class="num">&nbsp;</td>';
       }
     }
-    if ($_GET['percent'] == '1') {
-      echo "<td class=\"num\">" . round($student['total_percent'][$questionID], 0) . "%</td>\n";
-    } else {
-      echo '<td class="num">' . padDecimals($mean_total / $heading_no, 2) . '</td>';
-    }
-    echo "<td class=\"num\">&nbsp;</td></tr>\n";
+    echo "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+
   }
 ?>
 </table>
