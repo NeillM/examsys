@@ -21,7 +21,7 @@ while ($result->fetch()) {
     $student_answer = $answer_parts[0];
     $answer = $answer_parts[1];
 
-    $student_answer = preg_replace('([^0-9\.])', '', $student_answer);
+    $student_answer = preg_replace('([^0-9\.\-])', '', $student_answer);
     
     $difference = round(abs($student_answer - $answer), 12);
     if (trim($student_answer) != '') {
