@@ -563,7 +563,7 @@
             echo '<td></td>';
           }
 
-          $saved_response_clean = preg_replace('([^0-9\.])', '', $saved_response);
+          $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
                     
           if ($tmp_answer[0] == '') {
             echo "<td><img src=\"../artwork/blank_tick_cross.gif\" width=\"17\" height=\"16\" alt=\"\" /><input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $score_array[3];
