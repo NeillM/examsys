@@ -28,6 +28,13 @@
   
   function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked, $retired) {
     global $string;
+    
+    if (strlen($retired) == 0) {
+      $retired = '';
+    } else {
+      $retired = '_retired';
+    }
+    
     switch ($paper_type) {
       case 0:
         $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
