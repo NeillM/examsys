@@ -50,8 +50,8 @@
 
 textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
 
-.menu_list {
- margin: 5px 0 0 0;
+ .menu_list {
+ margin: 4px 0 0 0;
  padding-left: 11px;
  list-style: none;
 }
@@ -93,13 +93,25 @@ a.checklist {
   text-decoration:none;
 }
 
-.ico {
-  text-align:center;
-  width:16px;
+ .ico {
+   text-align:center;
+   width:16px;
+ }
+
+.ico img {
+  border: 0;
 }
 
 .submenuheading {
   font-weight:bold;
   padding-top:15px;
   margin-left:2px;
+}
+
+ #menu2b, #menu2c {
+  display: none;
+}
+
+div.iefixdiv {
+  padding-top: 1px;
 }

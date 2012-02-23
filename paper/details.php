@@ -315,7 +315,7 @@ function getMSCAA($paperID, $mysqlidb) {
       }
     }
     hideMenus();
-    
+
     document.getElementById('stats_menu').style.display = 'none';
     document.getElementById('copy_submenu').style.display = 'none';
     document.getElementById('change_screen_submenu').style.display='none';
