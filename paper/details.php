@@ -790,9 +790,9 @@ function getMSCAA($paperID, $mysqlidb) {
     <td class="icon" style="background-color:#F1F5FB" >&nbsp;</td>
     <td style="background-color:#F1F5FB" >&nbsp;</td>
     <td style="background-color:#F1F5FB" class="q-cell"><?php echo $string['question']; ?></td>
-    <td style="background-color:#F1F5FB;"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['marks']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</td>
+    <td style="background-color:#F1F5FB;" class="t"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</td>
+    <td style="background-color:#F1F5FB" class="m"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['marks']; ?>&nbsp;</td>
+    <td style="background-color:#F1F5FB" class="d"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</td>
     </tr>
     <tr><td colspan="6" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr>
   <?php
