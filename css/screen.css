@@ -94,7 +94,7 @@ label.error {
   padding-left: 6px;
   padding-right: 6px;
   width:108px;
-  min-width:108px
+  min-width:108px;
 }
 
 #content td.m, td.m {
@@ -103,6 +103,11 @@ label.error {
   padding-right: 4px;
   width: 46px;
   min-width: 46px;
+}
+
+#content td.delimited {
+  background: url('../artwork/header_vertical_line.gif') no-repeat 0 0;
+  padding-left: 6px;
 }
 
 #content td.l {

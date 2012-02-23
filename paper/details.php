@@ -772,7 +772,7 @@ function getMSCAA($paperID, $mysqlidb) {
   echo "<table style=\"table-layout: fixed\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" id=\"sortable\">\n";
   
   //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
-  echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td style=\"width:100%\"></td><td class=\"m\"></td><td class=\"d\"></td><td class=\"t\"></td></tr>";
+  echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
   
   echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
@@ -790,9 +790,9 @@ function getMSCAA($paperID, $mysqlidb) {
     <td class="icon" style="background-color:#F1F5FB" >&nbsp;</td>
     <td style="background-color:#F1F5FB" >&nbsp;</td>
     <td style="background-color:#F1F5FB" class="q-cell"><?php echo $string['question']; ?></td>
-    <td style="background-color:#F1F5FB;" class="t"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB" class="m"><img src="../artwork/header_vertical_line.gif" width="2" height="15" border="0" />&nbsp;<?php echo $string['marks']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB" class="d"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</td>
+    <td style="background-color:#F1F5FB;" class="t delimited"><?php echo $string['type']; ?>&nbsp;</td>
+    <td style="background-color:#F1F5FB" class="m delimited"><?php echo $string['marks']; ?>&nbsp;</td>
+    <td style="background-color:#F1F5FB" class="d delimited"><?php echo $string['modified']; ?>&nbsp;</td>
     </tr>
     <tr><td colspan="6" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr>
   <?php
