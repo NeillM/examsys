@@ -780,17 +780,17 @@ $.Class.extend("MEE.Elem",
     generateLargeBracket: function (bracket, mainh, scopeelem, bracketelem) {
         
         JQbracketelem = $(bracketelem);
-        
+             
         var bi = MEE.Data.getBracket(bracket);
 
         // pad the bracket element out to the required size
         JQbracketelem.css('position', 'relative');
         JQbracketelem.html("");
-
+        
         var bh = MEE.Data.getBaseSize(scopeelem);
         var pad = Math.floor((mainh - bh) / 2);
         
-        if($.browser.msie &&  $.browser.version > 7) {
+        if($.browser.msie &&  $.browser.version > 8) {
           //nasty hack to fix brackets iin ie 8 and 9
           pad += 12;
         }
@@ -798,16 +798,12 @@ $.Class.extend("MEE.Elem",
 
         // position the top part   
         var topcdata = MEE.Data.getCharSize(bi.top, scopeelem);
-        var top = $('<span class="mee_bracket_part" style="top:' + -topcdata.top + 'px' + '"></span>');
-        top.html(bi.top);
+        var top = $('<span class="mee_bracket_part" style="top:' + -topcdata.top + 'px' + '">' + bi.top + '</span>');
         JQbracketelem.append(top);
 
-
         // position the bottom part
-        var bottom = $('<span>');
+        var bottom = $('<span class="mee_bracket_part">' + bi.bottom + '</span>');
         var bottomcdata = MEE.Data.getCharSize(bi.bottom, scopeelem);
-        bottom.html(bi.bottom);
-        bottom.addClass('mee_bracket_part');
         bottom.css('top', mainh - (bottomcdata.top + bottomcdata.height) + 'px');
         JQbracketelem.append(bottom);
 
@@ -916,18 +912,18 @@ $.Class.extend("MEE.Elem",
         // if we have a font override specified apply it to all the parts
         if (bi.font)
             JQbracketelem.children().css('font-family', bi.font);
-
+        
         // add a relative spacer to make browsers heppy
-        var mid = $('<span></span>');
-        mid.html(MEE.Data.blankspace+MEE.Data.blankspace);
-        JQbracketelem.append(mid);
-
+        var spacer = $('<span></span>');
+        spacer.html(MEE.Data.blankspace);
+        JQbracketelem.append(spacer);
+        
         // pad mid to width of the bracket
-        var width = $(mid).outerWidth();
+        var width = $(top).outerWidth();
         if (width == 0)
             width = '12';
             //alert("width = 0");
-        $(mid).css('padding-right', width + 'px');
+        $(spacer).css('padding-right', width + 'px');
         return width;
     },
 
