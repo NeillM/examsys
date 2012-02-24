@@ -134,6 +134,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Rogō<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+<link rel="stylesheet" type="text/css" href="../css/header.css" />
 <style style="text/css">
 input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
 .f a {color:black}
@@ -147,14 +148,14 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
     echo "<body>\n";
     require '../include/paper_search_options.inc';
     echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+    echo "<table class=\"header\">\n";
   } else {
     echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
     require '../include/paper_search_options.inc';
     echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></td></tr>";
-    echo "<tr style=\"height:4px\"><td valign=\"top\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
+    echo "<table class=\"header\">\n";
+    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>";
+    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
   }
 
   if (isset($_POST['submit'])) {
@@ -171,8 +172,8 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
     $results->store_result();
     $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_ownerID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
     
-    echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-    echo "<tr style=\"height:4px\"><td valign=\"top\" colspan=\"2\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>\n</table>\n";
+    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
     if ($results->num_rows > 0) {
       echo '<br />';
       while ($results->fetch()) {
