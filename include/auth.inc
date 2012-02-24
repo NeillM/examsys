@@ -80,11 +80,6 @@ function ldap_auth($u, $p, &$data){
       $info = ldap_get_entries($ldap, $search);
       if ($info['count'] == 1) {
         $dn = $info[0]['dn'];
-        if (isset($info[0]['uonprimaryemailalias'])) $data['email'] =  $info[0]['uonprimaryemailalias'][0];
-        if (isset($info[0]['edupersonentitlement'])) $data['roles'] = $info[0]['edupersonentitlement'][0];
-        if (isset( $info[0]['title'])) $data['title'] = $info[0]['title'][0];
-        if (isset($info[0]['givenname'])) $data['first_name'] = $info[0]['givenname'][0];
-        if (isset($info[0]['sn'])) $data['last_name'] = $info[0]['sn'][0];
       } else {
         $data['error'] = '<strong>' . $string['noldapaccount'] . '</strong>';
         return false;
