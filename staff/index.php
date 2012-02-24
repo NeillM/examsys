@@ -49,6 +49,7 @@ require '../include/staff_auth.inc';
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+<link rel="stylesheet" type="text/css" href="../css/header.css" />
 
 <script src="../js/staff_help.js" type="text/javascript"></script>
 <?php echo $cfg_js_root ?>
@@ -140,13 +141,13 @@ require '../include/staff_auth.inc';
   }
 </script>
 
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<table class="header">
   <tr>
-    <td style="background-color:#F1F5FB; padding-left:20px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" /></td>
-    <td style="background-color:#F1F5FB; text-align:right"><?php echo $logo_html; ?>&nbsp;&nbsp;</td>
+    <th style="padding-left:20px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" /></th>
+    <th style="text-align:right"><?php echo $logo_html; ?>&nbsp;&nbsp;</th>
   </tr>
   <tr>
-    <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td>
+    <td colspan="2" class="bevel"></td>
   </tr>
 </table>
 <div style="padding-left:14px; padding-right:14px">

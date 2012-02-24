@@ -33,6 +33,7 @@ require '../include/staff_auth.inc';
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Rogō: <?php echo $string['questionsearch'] . " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+<link rel="stylesheet" type="text/css" href="../css/header.css" />
 <style style="text/css">
 input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
 .owner {color:#A5A5A5}
@@ -89,15 +90,15 @@ input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB
     echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
     require '../include/question_search_options.inc';
     echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></td></tr>";
+    echo "<table class=\"header\">\n";
+    echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th></tr>";
 ?>
   <tr>
-  <td style="background-color:#F1F5FB" align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></td>
-  <td style="background-color:#F1F5FB">&nbsp;<?php echo $string['question']; ?>&nbsp;</td>
-  <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</td>
-  <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</td></tr>
-  <tr style="height:4px"><td valign="top" colspan="4"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+  <th align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th>
+  <th>&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
+  <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+  <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</th></tr>
+  <tr><th colspan="4" class="bevel"></th></tr>
   </table>
 <?php
   }
@@ -113,23 +114,23 @@ if (isset($_POST['submit'])) {
     $error = $string['narrowyoursearch'];
   }
   
-  if($error != '') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-    echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></td></tr>";
+  if ($error != '') {
+    echo "<table class=\"header\">\n";
+    echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></th></tr>";
     ?>
     <tr>
-    <td style="background-color:#F1F5FB" align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></td>
-    <td style="background-color:#F1F5FB">&nbsp;<?php echo $string['question']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</td></tr>
-    <tr style="height:4px"><td valign="top" colspan="4"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+    <th align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th>
+    <th>&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
+    <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+    <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</th></tr>
+    <tr><th colspan="4" class="bevel"></td></tr>
     </table>
     <?php
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;$error.</td></tr></table>\n";
     exit;
   }
   
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+  echo "<table class=\"header\">\n";
 
   $params = '';
   $variables = array();
@@ -299,14 +300,14 @@ if (isset($_POST['submit'])) {
   }
   $result->close();
 
-  echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format(count($temp_results)) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></td></tr>";
+  echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format(count($temp_results)) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></th></tr>";
 ?>
   <tr>
-  <td style="background-color:#F1F5FB" align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></td>
-  <td style="background-color:#F1F5FB">&nbsp;<?php echo $string['question']; ?>&nbsp;</td>
-  <td style="background-color:#F1F5FB"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</td>
-  <td style="background-color:#F1F5FB"><nobr><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?> </nobr></td></tr>
-  <tr style="height:4px"><td valign="top" colspan="4"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+  <th align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th>
+  <th>&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
+  <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+  <th><nobr><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?> </nobr></th></tr>
+  <tr><th colspan="4" class="bevel"></td></tr>
 <?php
   $old_id = -1;
   $old_leadin = '';

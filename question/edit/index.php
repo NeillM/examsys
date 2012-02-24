@@ -464,9 +464,7 @@ if ($critical_error == '') {
 <?php
     } elseif ($disabled == 'locked') {
 ?>
-    <div class="banner">
-      <p><?php echo $string['lockedmsg'] ?></p>
-    </div>
+    <div class="locked" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
 <?php
     }
   }

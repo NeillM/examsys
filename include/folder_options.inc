@@ -92,7 +92,7 @@ if (count($teams) > 0) {
   }
 ?>
 
-<div class="submenuheading"><?php echo $string['papertasks']; ?></div>
+<div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
 <table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:8px">
 <?php
   if (count($teams) > 0) {
@@ -107,7 +107,7 @@ if (count($teams) > 0) {
 
 <br />
 
-<div class="submenuheading"><?php echo $string['questionbank']; ?></div>
+<div class="submenuheading" id="banktasks"><?php echo $string['questionbank']; ?></div>
 <table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:9px">
 <tr><td class="ico"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Papers" border="0" /></a></td><td class="menuitem"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><span id="type"><?php echo $string['questionsbytype']; ?></span><img src="<?php echo $cfg_root_path ?>/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
 <tr><td class="ico"><a href="#" onclick="showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Teams" border="0" /></a></td><td class="menuitem"><a href="#" onclick="showMenu('popup2','banktasks','team',myOptions2,myURLs2,event); return false;"><span id="team"><?php echo $string['questionsbyteam']; ?></span><img src="<?php echo $cfg_root_path ?>/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></a></td></tr>
