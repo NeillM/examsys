@@ -25,6 +25,8 @@ $string['ldapserver'] = 'LDAP server';
 $string['searchdn'] = 'Search dn';
 $string['bindusername'] = 'bind username';
 $string['bindpassword'] = 'bind password';
+$string['userprefix'] = 'Username prefix';
+$string['userprefixtip'] = 'Prefix for username in LDAP search, e.g. &quot;sAMAccountName=&quot;';
 $string['sysadminuser'] = 'Rogō SysAdmin User';
 $string['initialsysadmin'] = 'An initial SysAdmin user account is required to log in and create further normal staff accounts and generally administer the system.';
 $string['title'] = 'Title';

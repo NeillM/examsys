@@ -75,6 +75,7 @@ Class InstallUtils {
   public static $cfg_ldap_search_dn;
   public static $cfg_ldap_bind_rdn;
   public static $cfg_ldap_bind_password;
+  public static $cfg_ldap_user_prefix;
   public static $cfg_use_ldap = 'false';
   
   public static $cfg_support_email;
@@ -145,6 +146,7 @@ Class InstallUtils {
           <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" /> </div>
           <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" /> </div>
           <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" /> </div>
+          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/information_icon.gif" class="tipright" width="16" height="16" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div>
       
       <table class="header"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -217,7 +219,8 @@ Class InstallUtils {
     } else {
       self::$cfg_use_ldap = 'false';
     }
-    
+    self::$cfg_ldap_user_prefix = $_POST['ldap_user_prefix'];
+
     //ASSISTANCE
     self::$cfg_support_email = $_POST['support_email'];
     self::$emergency_support_numbers = 'array(';
@@ -850,8 +853,15 @@ Class InstallUtils {
         form {padding: 1em}
         form div {padding-left: 2em}
       </style>
+      <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
       <script language="text/javascript" type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
       <script language="text/javascript" type="text/javascript" src="../js/jquery.validate.min.js"></script>
+      <script language="text/javascript" type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
+      <script type="text/javascript">
+        $(function(){
+          $(".tipright").tipTip({defaultPosition: 'right'});
+        });
+      </script>
     </head>
     <body>
     <table class="topbar"> 
@@ -941,6 +951,7 @@ define('DIR_SEPARATOR', '/');
   \$cfg_ldap_search_dn     = '{cfg_ldap_search_dn}';
   \$cfg_ldap_bind_rdn      = '{cfg_ldap_bind_rdn}';
   \$cfg_ldap_bind_password = '{cfg_ldap_bind_password}';
+  \$cfg_ldap_user_prefix   = '{cfg_ldap_user_prefix}';
   \$cfg_use_ldap           = {cfg_use_ldap};
 
 // Institutional email domains
@@ -1026,6 +1037,7 @@ CONFIG;
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);
     $config = str_replace('{cfg_ldap_bind_rdn}',self::$cfg_ldap_bind_rdn,$config);
     $config = str_replace('{cfg_ldap_bind_password}',self::$cfg_ldap_bind_password,$config);
+    $config = str_replace('{cfg_ldap_user_prefix}',self::$cfg_ldap_user_prefix,$config);
     $config = str_replace('{cfg_use_ldap}',self::$cfg_use_ldap,$config);
     
     $config = str_replace('{SERVER_NAME}',$_SERVER['HTTP_HOST'],$config);

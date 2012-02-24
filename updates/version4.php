@@ -1886,6 +1886,39 @@ if (!isset($_POST['update'])) {
     echo "<li>ALTER TABLE courses DROP COLUMN school</li>\n";
   }
 
+  // 19/01/2012 - Add LDAP user search prefix to config file.
+  $new_cfg_str = array();
+  $new_cfg_str[] = "  \$cfg_ldap_user_prefix   = 'sAMAccountName='; // Nottingham specific.  Please change.\n";
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  $ldap_pass_location = 0;
+  $index = 0;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_ldap_user_prefix') !== false) {
+      $found = true;
+    }
+    if (strpos($line,'cfg_ldap_bind_password') !== false) {
+      $ldap_pass_location = $index;
+    }
+    $index++;
+  }
+
+  if (!$found) {
+    array_splice($cfg, $ldap_pass_location+1, 0, $new_cfg_str);
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added LDAP user search prefix to config file.\n";
+    echo "<br /><strong>If you use LDAP authentication then you will need to change the value <code>\$cfg_ldap_user_prefix</code> in <code>/config/config.inc.php</code></strong></li>\n";
+    ob_flush();
+    flush();
+  }
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   
