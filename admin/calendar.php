@@ -72,6 +72,7 @@ function echoButtons($year) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Rogō: <?php echo $string['calendar'] . ' ' . $cfg_install_type; ?></title>
 <?php echo $cfg_js_root ?>
 <script language="JavaScript" src="../js/sidebar.js"></script>
@@ -86,7 +87,7 @@ function echoButtons($year) {
 </script>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style>
+<style type="text/css">
   .month {font-size:140%; margin-left:10px; margin-right:10px}
 </style>
 </head>

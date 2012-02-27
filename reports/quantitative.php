@@ -399,22 +399,23 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['quantitativereport']; ?></title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#316AC5}
-table {font-size:100%}
-p {margin-right:15px}
-td {vertical-align:top}
-.figures {text-align:right; width:60px}
-.q_no {text-align:right; width:40px}
-.h {background-color:#F1F5FB; color:black}
-.breadcrumb {margin-left:10px; font-size:90%}
-.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['quantitativereport']; ?></title>
+  <style type="text/css">
+  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
+  h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#316AC5}
+  table {font-size:100%}
+  p {margin-right:15px}
+  td {vertical-align:top}
+  .figures {text-align:right; width:60px}
+  .q_no {text-align:right; width:40px}
+  .h {background-color:#F1F5FB; color:black}
+  .breadcrumb {margin-left:10px; font-size:90%}
+  .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
+  .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
+  .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+  </style>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body>

@@ -29,13 +29,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title><?php echo $string['systeminformation']; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <script src="../js/staff_help.js" type="text/javascript"></script>
 
-<style>
+<style type="text/css">
 .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
 a {font-family:Arial,sans-serif; color:#215DC6}
 a:hover {color:#428EFF}

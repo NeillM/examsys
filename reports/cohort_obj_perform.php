@@ -34,18 +34,19 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rogō: <?php echo $string['learningobjectiveanalysis'] . ' ' . $cfg_install_type; ?></title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-h1 {margin-left:15px; font-size:18pt}
-p {margin-left:15px; margin-right:15px}
-.h {background-color:#F1F5FB; color:black}
-.q_no {text-align:right; vertical-align:top}
-.grey {color:#808080}
-img {border: none;}
-li {list-style:none; padding-bottom:5px}
-</style>
-<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō: <?php echo $string['learningobjectiveanalysis'] . ' ' . $cfg_install_type; ?></title>
+  <style type="text/css">
+  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
+  h1 {margin-left:15px; font-size:18pt}
+  p {margin-left:15px; margin-right:15px}
+  .h {background-color:#F1F5FB; color:black}
+  .q_no {text-align:right; vertical-align:top}
+  .grey {color:#808080}
+  img {border: none;}
+  li {list-style:none; padding-bottom:5px}
+  </style>
+  <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 </head>
 <body>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">

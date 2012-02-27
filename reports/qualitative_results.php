@@ -24,18 +24,18 @@
 
   require '../include/staff_auth.inc';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Qualitative Analysis<?php echo " $cfg_install_type"; ?></title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
-h1 {margin-left:15px; font-size:150%; color:#3A70A4}
-li {margin-right:10px}
-.heading {background-color:#EBEADB; border-left: solid white 1px; border-right: solid #D8D2BD 1px; border-top: solid white 1px; border-bottom: solid #D8D2BD 1px; color:black}
-.comments {margin-left:10px; color:#808080}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Qualitative Analysis<?php echo " $cfg_install_type"; ?></title>
+  <style type="text/css">
+  body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
+  h1 {margin-left:15px; font-size:150%; color:#3A70A4}
+  li {margin-right:10px}
+  .heading {background-color:#EBEADB; border-left: solid white 1px; border-right: solid #D8D2BD 1px; border-top: solid white 1px; border-bottom: solid #D8D2BD 1px; color:black}
+  .comments {margin-left:10px; color:#808080}
+  </style>
 </head>
 
 <body>

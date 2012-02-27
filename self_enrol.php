@@ -80,11 +80,12 @@ if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title><?php echo $string['moduleselfenrolment'] . ' ' . $cfg_install_type; ?></title>
-<style>
-body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
-.field {padding-top:4px; padding-left:6px; font-weight:bold}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['moduleselfenrolment'] . ' ' . $cfg_install_type; ?></title>
+  <style type="text/css">
+  body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
+  .field {padding-top:4px; padding-left:6px; font-weight:bold}
+  </style>
 </head>
 
 <body>

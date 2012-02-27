@@ -166,67 +166,68 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rogō: <?php echo $string['usermanagement'] . ' ' . $cfg_install_type; ?></title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style style="text/css">
-a {color:black}
-input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-.coltitle {cursor:hand; background-color:#F1F5FB; color:black}
-#usertable td {padding-left:6px}
-.fn {color:#A5A5A5}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō: <?php echo $string['usermanagement'] . ' ' . $cfg_install_type; ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+  a {color:black}
+  input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
+  .coltitle {cursor:hand; background-color:#F1F5FB; color:black}
+  #usertable td {padding-left:6px}
+  .fn {color:#A5A5A5}
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-  function selUser(userID, lineID, menuID) {
-    tmp_ID = document.PapersMenu.oldUserID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    function selUser(userID, lineID, menuID) {
+      tmp_ID = document.PapersMenu.oldUserID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+      document.getElementById('menu2a').style.display = 'none';
+      document.getElementById('menu' + menuID).style.display = 'block';
+
+      document.PapersMenu.userID.value = userID;
+
+      document.getElementById(lineID).style.backgroundColor = '#B3C8E8';
+
+      document.PapersMenu.oldUserID.value = lineID;
     }
-    document.getElementById('menu2a').style.display = 'none';
-    document.getElementById('menu' + menuID).style.display = 'block';
 
-    document.PapersMenu.userID.value = userID;
-
-    document.getElementById(lineID).style.backgroundColor = '#B3C8E8';
-    
-    document.PapersMenu.oldUserID.value = lineID;
-  }
-
-  function userOff() {
-    document.getElementById('menu2a').style.display = 'block';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    tmp_ID = document.PapersMenu.oldUserID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function userOff() {
+      document.getElementById('menu2a').style.display = 'block';
+      document.getElementById('menu2b').style.display = 'none';
+      document.getElementById('menu2c').style.display = 'none';
+      tmp_ID = document.PapersMenu.oldUserID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
     }
-  }
-  
-  function updateCohortDetails() {
-    document.PapersMenu.tmp_surname.value = '<?php if (isset($_GET['surname'])) echo $_GET['surname']; ?>';
-    document.PapersMenu.tmp_courseID.value = '<?php if (isset($courseID)) echo $courseID; ?>';
-    document.PapersMenu.tmp_yearID.value = '<?php if (isset($yearID)) echo $yearID; ?>';  
-  }
-  
-  function lon(lineID) {
-    if (lineID != document.PapersMenu.oldUserID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-    }
-  }
 
-  function loff(lineID) {
-    if (lineID != document.PapersMenu.oldUserID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
+    function updateCohortDetails() {
+      document.PapersMenu.tmp_surname.value = '<?php if (isset($_GET['surname'])) echo $_GET['surname']; ?>';
+      document.PapersMenu.tmp_courseID.value = '<?php if (isset($courseID)) echo $courseID; ?>';
+      document.PapersMenu.tmp_yearID.value = '<?php if (isset($yearID)) echo $yearID; ?>';
     }
-  }
 
-  function profile(userID) {
-    document.location.href='details.php?search_surname=<?php if (isset($_GET['search_surname'])) echo $_GET['search_surname']; ?>&search_username=<?php if (isset($_GET['username']))  echo $_GET['search_username']; ?>&student_id=<?php if (isset($_GET['student_id'])) echo $_GET['student_id']; ?>&moduleID=<?php if (isset($_GET['team'])) echo $_GET['team']; ?>&calendar_year=<?php if (isset($_GET['calendar_year'])) echo $_GET['calendar_year']; ?>&students=<?php if (isset($_GET['students'])) echo $_GET['students']; ?>&submit=Search&userID=' + userID + '&email=<?php if (isset($_GET['email'])) echo $_GET['email']; ?>&oldUserID=<?php if (isset($_GET['oldUserID'])) echo $_GET['oldUserID']; ?>&tmp_surname=<?php if (isset($_GET['tmp_surname'])) echo $_GET['tmp_surname']; ?>&tmp_courseID=<?php if (isset($_GET['tmp_courseID'])) echo $_GET['tmp_courseID']; ?>&tmp_yearID=<?php if (isset($_GET['tmp_yearID'])) echo $_GET['tmp_yearID']; ?>';
-  }
-</script>
+    function lon(lineID) {
+      if (lineID != document.PapersMenu.oldUserID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
+    }
+
+    function loff(lineID) {
+      if (lineID != document.PapersMenu.oldUserID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
+    }
+
+    function profile(userID) {
+      document.location.href='details.php?search_surname=<?php if (isset($_GET['search_surname'])) echo $_GET['search_surname']; ?>&search_username=<?php if (isset($_GET['username']))  echo $_GET['search_username']; ?>&student_id=<?php if (isset($_GET['student_id'])) echo $_GET['student_id']; ?>&moduleID=<?php if (isset($_GET['team'])) echo $_GET['team']; ?>&calendar_year=<?php if (isset($_GET['calendar_year'])) echo $_GET['calendar_year']; ?>&students=<?php if (isset($_GET['students'])) echo $_GET['students']; ?>&submit=Search&userID=' + userID + '&email=<?php if (isset($_GET['email'])) echo $_GET['email']; ?>&oldUserID=<?php if (isset($_GET['oldUserID'])) echo $_GET['oldUserID']; ?>&tmp_surname=<?php if (isset($_GET['tmp_surname'])) echo $_GET['tmp_surname']; ?>&tmp_courseID=<?php if (isset($_GET['tmp_courseID'])) echo $_GET['tmp_courseID']; ?>&tmp_yearID=<?php if (isset($_GET['tmp_yearID'])) echo $_GET['tmp_yearID']; ?>';
+    }
+  </script>
 </head>
 
 <?php

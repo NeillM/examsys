@@ -28,11 +28,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title><?php echo $string['systemerrrorreport'] . ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style>
+<style type="text/css">
 th {background-color:#F1F5FB; font-weight:normal; text-align:left}
 .no {text-align:right}
 .err {padding-left:6px; vertical-align:top}

@@ -29,53 +29,54 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['keywords'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style>
-.l {cursor:pointer}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-  function selKey(divID, evt) {
-    tmp_ID = document.myform.oldID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      document.getElementById(tmp_ID).style.color = 'black';
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['keywords'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+  .l {cursor:pointer}
+  </style>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script language="javascript">
+    function selKey(divID, evt) {
+      tmp_ID = document.myform.oldID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+        document.getElementById(tmp_ID).style.color = 'black';
+      }
+
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+
+      document.myform.oldID.value = divID;
+      document.myform.id.value = divID;
+
+      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      evt.cancelBubble = true;
     }
 
-    document.getElementById('menu1a').style.display = 'none';
-    document.getElementById('menu1b').style.display = 'block';
-    
-    document.myform.oldID.value = divID;
-    document.myform.id.value = divID;
-    
-    document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-    evt.cancelBubble = true;
-  }
-  
-  function deselKey() {
-    tmp_ID = document.myform.oldID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function deselKey() {
+      tmp_ID = document.myform.oldID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+      document.myform.oldID.value = '';
+      document.getElementById('menu1b').style.display = 'none';
+      document.getElementById('menu1a').style.display = 'block';
     }
-    document.myform.oldID.value = '';
-    document.getElementById('menu1b').style.display = 'none';
-    document.getElementById('menu1a').style.display = 'block';
-  }
 
-  function lon(lineID) {
-    if (lineID != document.myform.oldID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+    function lon(lineID) {
+      if (lineID != document.myform.oldID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-  }
 
-  function loff(lineID) {
-    if (lineID != document.myform.oldID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
+    function loff(lineID) {
+      if (lineID != document.myform.oldID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body onclick="deselDeg()">

@@ -34,23 +34,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rogō: <?php echo $string['mappingbysession'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō: <?php echo $string['mappingbysession'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style style="text/css">
-  h1 {font-size:160%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
-  img {border:none;}
-  td {font-size:100%}
-  .q_no {text-align:right; vertical-align:top; cursor:pointer}
-  .divider {font-family:Arial,sans-serif; font-size:90%; font-weight:bold; padding-left:30px}
-  .mapping {font-size:90%;color:#FF6300;font-weight:normal}
-  a.q_excluded {color:red; font-weight:normal; text-decoration:line-through}
-  a.q_ok {color:#FF6300; font-weight:normal}
-  .unmapped {color:#C0C0C0}
-  ul {margin-top:0px; margin-bottom:0px}
-  li {padding-left:8px}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
+  <style type="text/css">
+    h1 {font-size:160%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
+    img {border:none;}
+    td {font-size:100%}
+    .q_no {text-align:right; vertical-align:top; cursor:pointer}
+    .divider {font-family:Arial,sans-serif; font-size:90%; font-weight:bold; padding-left:30px}
+    .mapping {font-size:90%;color:#FF6300;font-weight:normal}
+    a.q_excluded {color:red; font-weight:normal; text-decoration:line-through}
+    a.q_ok {color:#FF6300; font-weight:normal}
+    .unmapped {color:#C0C0C0}
+    ul {margin-top:0px; margin-bottom:0px}
+    li {padding-left:8px}
+  </style>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body onclick="hideMenus()">

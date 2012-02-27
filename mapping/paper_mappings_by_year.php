@@ -101,28 +101,29 @@ function getPaper($paperID) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rogō: <?php echo $string['mappingbyyear'] . " $cfg_install_type"; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style style="text/css">
-  img {border:none}
-  .q_no {text-align:right; vertical-align:top; cursor:pointer}
-  .divider {font-weight:normal; color:#1E3287; padding-left:6px}
-  .mapping {font-size:90%; color:#FF6300; font-weight:normal}
-  .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through}
-  .unmapped {color:#C0C0C0}
-  li {padding-left:32px; text-indent:-16px;}
-  a {text-decoration: none}
-  .m_s {background-image:url('../artwork/red_hash_background.png'); background-repeat:repeat}
-  .o_s {background-color:#99FF99}
-  .nm_s {background-color:white}
-  td.m_s {border:1px solid #c0c0c0}
-  td.o_s {border:1px solid #c0c0c0}
-  td.nm_s {border:1px solid #c0c0c0}
-  td.obj {border:1px solid #c0c0c0}
-  table {border-collapse:collapse}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō: <?php echo $string['mappingbyyear'] . " $cfg_install_type"; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+    img {border:none}
+    .q_no {text-align:right; vertical-align:top; cursor:pointer}
+    .divider {font-weight:normal; color:#1E3287; padding-left:6px}
+    .mapping {font-size:90%; color:#FF6300; font-weight:normal}
+    .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through}
+    .unmapped {color:#C0C0C0}
+    li {padding-left:32px; text-indent:-16px;}
+    a {text-decoration: none}
+    .m_s {background-image:url('../artwork/red_hash_background.png'); background-repeat:repeat}
+    .o_s {background-color:#99FF99}
+    .nm_s {background-color:white}
+    td.m_s {border:1px solid #c0c0c0}
+    td.o_s {border:1px solid #c0c0c0}
+    td.nm_s {border:1px solid #c0c0c0}
+    td.obj {border:1px solid #c0c0c0}
+    table {border-collapse:collapse}
+  </style>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body onclick="hideMenus()">

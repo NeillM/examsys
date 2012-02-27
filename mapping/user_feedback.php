@@ -138,12 +138,13 @@
   $result->close();*/
 
  ?>
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-  <html>
-  <head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
 
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['examfeedback']; ?></title>
-  <style style="text/css">
+  <style type="text/css">
     body {font-family:Arial,sans-serif; font-size:90%; color:black; background-color:white; margin:10px}
     td {font-size:100%}
     img {border: none;}
@@ -157,8 +158,8 @@
     .r {text-align:right}
     .c {text-align:center}
   </style>
-  </head>
-  <body>
+</head>
+<body>
     <table style="position:relative; border: 1px solid #808080; float:right; font-size:90%; background-color:#FFFFEE; box-shadow: 2px 2px 2px #C0C0C0; z-index:10">
     <tr><td colspan="2" style="padding-left:10px; padding-right:10px"><strong><?php echo $string['key']; ?></strong></td></tr>
     <tr><td style="padding-left:10px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td style="padding-right:10px"><?php echo $string['greenicon']; ?></td></tr>

@@ -28,39 +28,40 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['bykeywords']; ?></title>
-<style>
-html {height:100%; border-left:1px solid #95AEC8}
-body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
-a:link {color:black}
-a:visited {color:black}
-a:hover {color:black}
-.f {padding-left:2px}
-.n {text-align:right; padding-right:2px}
-</style>
-<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
-<script language="JavaScript">
-  function orderTable(order_val, direction_val) {
-    document.keywordsform.order.value = order_val;
-    document.keywordsform.direction.value = direction_val;
-    document.keywordsform.submit();
-  }
-  
-  function Qpreview(qID) {
-    parent.parent.previewurl.location = '../view_question.php?q_id=' + qID;
-  }
-  
-  function populateTicks() {
-    q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
-    for (i=0; i<q_array.length; i++) { 
-      var obj = document.getElementById(q_array[i]);
-      if (obj != null) {
-        obj.checked = true;
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['bykeywords']; ?></title>
+  <style type="text/css">
+  html {height:100%; border-left:1px solid #95AEC8}
+  body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
+  a:link {color:black}
+  a:visited {color:black}
+  a:hover {color:black}
+  .f {padding-left:2px}
+  .n {text-align:right; padding-right:2px}
+  </style>
+  <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript">
+    function orderTable(order_val, direction_val) {
+      document.keywordsform.order.value = order_val;
+      document.keywordsform.direction.value = direction_val;
+      document.keywordsform.submit();
+    }
+
+    function Qpreview(qID) {
+      parent.parent.previewurl.location = '../view_question.php?q_id=' + qID;
+    }
+
+    function populateTicks() {
+      q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
+      for (i=0; i<q_array.length; i++) {
+        var obj = document.getElementById(q_array[i]);
+        if (obj != null) {
+          obj.checked = true;
+        }
       }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body onload="populateTicks()">

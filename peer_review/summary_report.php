@@ -28,14 +28,14 @@ require 'summary_report.inc';
 
 check_var('paperID', 'GET', true, false);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?php echo $string['reviewsummary'] . ' ' . $cfg_install_type; ?></title>
   
-  <style>
+  <style type="text/css">
     body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%; margin:0px}
     .fn {color:#808080}
     .num {padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}

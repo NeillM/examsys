@@ -118,32 +118,31 @@ if (!isset($no_screens)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 	<title><?php echo $string['standardssetting'] . ' ' . $cfg_install_type; ?></title>
-<meta http-equiv="imagetoolbar" content="no">
-<meta http-equiv="imagetoolbar" content="false">
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-  body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%}
-  li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
-  select, input {font-size:100%}
-  table {font-size:100%; text-align:left}
-  .raised_tbl {background-color:#5582D2; border-left:solid #90C8FF 1px; border-right:solid #003060 1px; border-top:solid #90C8FF 1px; border-bottom:solid #003060 1px}
-  .paper {margin-left:0px; font-family:Arial,sans-serif; font-size:180%; color:white; font-weight: bold}
-  .question_no {width:40px; text-align:right; vertical-align:top}
-  .theme {font-size:150%; font-weight:bold; color:<?php echo $themecolor; ?>}
-  .notes {font-size:80%; color:<?php echo $labelcolor; ?>}
-  .no_marks {color:#808080; font-size:80%}
-  .active {color:<?php echo $fgcolor; ?>}
-  .inactive {color:#C0C0C0}
-  .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
-  .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
-</style>
-
-<script src="../js/ie_fix.js" type="text/javascript"></script>
-<script language="JavaScript" src="../js/flash_include.js"></script>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-
+  <meta http-equiv="imagetoolbar" content="no">
+  <meta http-equiv="imagetoolbar" content="false">
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+    body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%}
+    li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
+    select, input {font-size:100%}
+    table {font-size:100%; text-align:left}
+    .raised_tbl {background-color:#5582D2; border-left:solid #90C8FF 1px; border-right:solid #003060 1px; border-top:solid #90C8FF 1px; border-bottom:solid #003060 1px}
+    .paper {margin-left:0px; font-family:Arial,sans-serif; font-size:180%; color:white; font-weight: bold}
+    .question_no {width:40px; text-align:right; vertical-align:top}
+    .theme {font-size:150%; font-weight:bold; color:<?php echo $themecolor; ?>}
+    .notes {font-size:80%; color:<?php echo $labelcolor; ?>}
+    .no_marks {color:#808080; font-size:80%}
+    .active {color:<?php echo $fgcolor; ?>}
+    .inactive {color:#C0C0C0}
+    .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
+    .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
+  </style>
+  <script src="../js/ie_fix.js" type="text/javascript"></script>
+  <script language="JavaScript" src="../js/flash_include.js"></script>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 <body>
 	<form method="post" name="questions" action="record_review.php?group=true">

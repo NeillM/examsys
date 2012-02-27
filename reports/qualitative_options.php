@@ -24,20 +24,19 @@
 
   require '../include/staff_auth.inc';
 ?>
-<!DOCTYPE html
-   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['qualitativeanalysis'] . ' ' . $cfg_install_type; ?></title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
-.heading {background-color:#F1F5FB}
-.breadcrumb {margin-top:2px; margin-left:10px; font-size:90%}
-.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['qualitativeanalysis'] . ' ' . $cfg_install_type; ?></title>
+  <style type="text/css">
+  body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
+  .heading {background-color:#F1F5FB}
+  .breadcrumb {margin-top:2px; margin-left:10px; font-size:90%}
+  .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
+  .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
+  .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+  </style>
 </head>
 
 <body>

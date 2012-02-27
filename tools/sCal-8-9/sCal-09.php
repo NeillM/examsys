@@ -3,6 +3,7 @@ print <<<END
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Calculator</title>
   <link rel="stylesheet" type="text/css" href="scal.css" />
 </head>

@@ -28,28 +28,29 @@ require '../../include/media.inc';
 ?>
 <html>
 <head>
-<title>Rogō</title>
-<style>
-  body {margin:0px; font-family:Arial,sans-serif; color:black}
-  p, td {font-size:80%}
-</style>
-<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
-<script language="JavaScript">
-  function Qpreview(qID) {
-    parent.previewurl.location = '../view_question.php?q_id=' + qID;
-  }
-  
-  function populateTicks() {
-    q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
-    for (i=0; i<q_array.length; i++) { 
-      var obj = document.getElementById(q_array[i]);
-      if (obj != null) {
-        obj.checked = true;
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō</title>
+  <style type="text/css">
+    body {margin:0px; font-family:Arial,sans-serif; color:black}
+    p, td {font-size:80%}
+  </style>
+  <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+  <script language="JavaScript">
+    function Qpreview(qID) {
+      parent.previewurl.location = '../view_question.php?q_id=' + qID;
+    }
+
+    function populateTicks() {
+      q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
+      for (i=0; i<q_array.length; i++) {
+        var obj = document.getElementById(q_array[i]);
+        if (obj != null) {
+          obj.checked = true;
+        }
       }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body onload="populateTicks(); document.search.searchterm.focus();">

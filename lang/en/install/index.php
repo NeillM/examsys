@@ -12,6 +12,7 @@ $string['databaseport'] = 'Database port';
 $string['databasename'] = 'Database Name';
 $string['databasecharset'] = 'Database Character Set';
 $string['databaseuser'] = 'Rogō Database user';
+$string['pagecharset'] = 'Page Character Set';
 $string['rdbusername'] = 'Username';
 $string['rdbpassword'] = 'Password';
 $string['timedateformats'] = 'Time/Date formats';

@@ -27,8 +27,9 @@
 ?>
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>by Paper</title>
-<style>
+<style type="text/css">
 body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
 table {font-size:100%}
 a:link {color:black}

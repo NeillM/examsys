@@ -24,34 +24,36 @@
 
 require '../include/staff_auth.inc';
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Textbox Marking</title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-table {font-size:100%}
-.h {background-color:#F1F5FB; color:black}
-a {color:blue}
-</style>
-<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript">
-  function hideMarked() {
-    if (document.getElementById('hidemarked').checked == 1) {
-      setting = " checked";
-    } else {
-      setting = "";
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Textbox Marking</title>
+  <style type="text/css">
+  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
+  table {font-size:100%}
+  .h {background-color:#F1F5FB; color:black}
+  a {color:blue}
+  </style>
+  <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    function hideMarked() {
+      if (document.getElementById('hidemarked').checked == 1) {
+        setting = " checked";
+      } else {
+        setting = "";
+      }
+
+      var ExpireDate = new Date ();
+      expiredays = 100;
+      ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
+      NameOfCookie = "hidemarked";
+      document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
+
+      parent.body.location.href='textbox_marking.php?<?php echo $_SERVER['QUERY_STRING']; ?>';
     }
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "hidemarked";
-    document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-
-    parent.body.location.href='textbox_marking.php?<?php echo $_SERVER['QUERY_STRING']; ?>';
-  }
-</script>
+  </script>
 </head>
 
 <body>

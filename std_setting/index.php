@@ -70,65 +70,65 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['listsettings'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script language="JavaScript" type="text/javascript">
+    var groupReview;
 
-<title><?php echo $string['listsettings'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript" type="text/javascript">
-var groupReview;
+    function selReview(setterID, dateID, reviewID, methodType, menuID, group, evt) {
+      groupReview = group;
 
-  function selReview(setterID, dateID, reviewID, methodType, menuID, group, evt) {
-    groupReview = group;
-    
-    tmp_ID = document.StdSetMenu.oldReviewID.value;
-    if (tmp_ID != '') {
-      document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
-      document.getElementById('review' + tmp_ID).style.color = 'black';
+      tmp_ID = document.StdSetMenu.oldReviewID.value;
+      if (tmp_ID != '') {
+        document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
+        document.getElementById('review' + tmp_ID).style.color = 'black';
+      }
+      document.getElementById('menu2a').style.display = 'none';
+      document.getElementById('menu2b').style.display = 'none';
+      document.getElementById('menu2c').style.display = 'none';
+      document.getElementById(menuID).style.display = 'block';
+
+      document.StdSetMenu.setterID.value = setterID;
+      document.StdSetMenu.dateID.value = dateID;
+      document.StdSetMenu.method.value = methodType;
+
+      document.getElementById('review' + reviewID).style.backgroundColor = '#316AC5';
+      document.getElementById('review' + reviewID).style.color = 'white';
+      document.StdSetMenu.oldReviewID.value = reviewID;
+      evt.cancelBubble = true;
     }
-    document.getElementById('menu2a').style.display = 'none';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    document.getElementById(menuID).style.display = 'block';
 
-    document.StdSetMenu.setterID.value = setterID;
-    document.StdSetMenu.dateID.value = dateID;
-    document.StdSetMenu.method.value = methodType;
-
-    document.getElementById('review' + reviewID).style.backgroundColor = '#316AC5';
-    document.getElementById('review' + reviewID).style.color = 'white';
-    document.StdSetMenu.oldReviewID.value = reviewID;
-    evt.cancelBubble = true;
-  }
-
-  function reviewOff() {
-    document.getElementById('menu2a').style.display = 'block';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    tmp_ID = document.StdSetMenu.oldReviewID.value;
-    if (tmp_ID != '') {
-      document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
-      document.getElementById('review' + tmp_ID).style.color = 'black';
+    function reviewOff() {
+      document.getElementById('menu2a').style.display = 'block';
+      document.getElementById('menu2b').style.display = 'none';
+      document.getElementById('menu2c').style.display = 'none';
+      tmp_ID = document.StdSetMenu.oldReviewID.value;
+      if (tmp_ID != '') {
+        document.getElementById('review' + tmp_ID).style.backgroundColor = 'white';
+        document.getElementById('review' + tmp_ID).style.color = 'black';
+      }
     }
-  }
 
-  function highlight(lineID) {
-    if (lineID != document.StdSetMenu.oldReviewID.value) {
-      document.getElementById('review' + lineID).style.backgroundColor = '#EEEEEE';
+    function highlight(lineID) {
+      if (lineID != document.StdSetMenu.oldReviewID.value) {
+        document.getElementById('review' + lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-  }
 
-  function unhighlight(lineID) {
-    if (lineID != document.StdSetMenu.oldReviewID.value) {
-      document.getElementById('review' + lineID).style.backgroundColor = '';
+    function unhighlight(lineID) {
+      if (lineID != document.StdSetMenu.oldReviewID.value) {
+        document.getElementById('review' + lineID).style.backgroundColor = '';
+      }
     }
-  }
 
-  function roundNumber(num, dec) {
-    var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-    return result;
-  }
-</script>
+    function roundNumber(num, dec) {
+      var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+      return result;
+    }
+  </script>
 </head>
 
 <body onclick="reviewOff()">

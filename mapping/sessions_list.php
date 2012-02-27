@@ -33,64 +33,65 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onclick="hideSessCopyMenu(event);">
 <head>
-<title>Rogō: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style>
-.obj_no {text-align:right; padding-right:6px}
-.zero_obj_no {text-align:right; padding-right:6px; color:#C00000}
-.title {padding-left:6px}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+  .obj_no {text-align:right; padding-right:6px}
+  .zero_obj_no {text-align:right; padding-right:6px; color:#C00000}
+  .title {padding-left:6px}
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-  function selSession(divID, identifier, session, VLE, evt) {
-    hideSessCopyMenu(evt);
-    tmp_ID = document.myform.oldDivID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-    }
-    
-    if (VLE == 'NLE') {
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1c').style.display = 'block';
-    } else {
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-    }
-     
-    document.myform.oldDivID.value = divID;
-    document.myform.divID.value = divID;
-    
-    document.myform.identifier.value = identifier;
-    document.myform.session.value = session;
-    document.myform.VLE.value = VLE;
-    
-    document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-    evt.cancelBubble = true;
-  }
-  
-  function editSession(identifier, calendar_year) {
-    window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $_GET['module']; ?>&calendar_year=" + calendar_year;
-  }
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    function selSession(divID, identifier, session, VLE, evt) {
+      hideSessCopyMenu(evt);
+      tmp_ID = document.myform.oldDivID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
 
-  function editNLESession(calendar_year) {
-    alert("<?php echo $string['thisisnle']; ?>");
-  }
-  
-  function highlight(lineID) {
-    if (lineID != document.myform.oldDivID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-    }
-  }
+      if (VLE == 'NLE') {
+        document.getElementById('menu1a').style.display = 'none';
+        document.getElementById('menu1c').style.display = 'block';
+      } else {
+        document.getElementById('menu1a').style.display = 'none';
+        document.getElementById('menu1b').style.display = 'block';
+      }
 
-  function unhighlight(lineID) {
-    if (lineID != document.myform.oldDivID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
-    }
-  }
+      document.myform.oldDivID.value = divID;
+      document.myform.divID.value = divID;
 
-</script>
+      document.myform.identifier.value = identifier;
+      document.myform.session.value = session;
+      document.myform.VLE.value = VLE;
+
+      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      evt.cancelBubble = true;
+    }
+
+    function editSession(identifier, calendar_year) {
+      window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $_GET['module']; ?>&calendar_year=" + calendar_year;
+    }
+
+    function editNLESession(calendar_year) {
+      alert("<?php echo $string['thisisnle']; ?>");
+    }
+
+    function highlight(lineID) {
+      if (lineID != document.myform.oldDivID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
+    }
+
+    function unhighlight(lineID) {
+      if (lineID != document.myform.oldDivID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
+    }
+
+  </script>
 </head>
 
 <body onclick="hideSessCopyMenu(event);">

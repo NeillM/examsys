@@ -131,7 +131,7 @@ $result->close();
 <html>
 <head>
 <title>Testing: Class Totals</title>
-<style>
+<style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%}
 table {font-size:100%}
 .n {text-align:right}

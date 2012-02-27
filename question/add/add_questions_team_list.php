@@ -58,14 +58,15 @@ if (isset($_GET['scrOfY'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['byteam']; ?></title>
-<style>
-body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
-a:link {color:black}
-a:visited {color:black}
-a:hover {color:black}
-.foldername {float:left; width:380px; height:60px; padding-left:12px; font-size:80%}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['byteam']; ?></title>
+  <style type="text/css">
+  body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
+  a:link {color:black}
+  a:visited {color:black}
+  a:hover {color:black}
+  .foldername {float:left; width:380px; height:60px; padding-left:12px; font-size:80%}
+  </style>
 </head>
 
 <body>

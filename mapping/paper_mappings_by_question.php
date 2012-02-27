@@ -29,24 +29,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rogō: <?php echo $string['mappingbyquestion'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style style="text/css">
-  td {font-size:100%}
-  img {border:none}
-  .q_no {text-align:right; vertical-align:top; cursor:pointer; width:40px}
-  .divider {font-family:Arial,sans-serif; font-size:90%; font-weight:bold}
-  .mapping {font-size:90%;color:#FF6300;font-weight:normal}
-  .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through;}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript">
-  function mapQuestion(qNo, pid, qid, session) {
-    mapWindow = window.open('./map_question.php?qNo=' + qNo + '&paperID=' + pid + '&q_id=' + qid + '&session=' + session, "",'height=' + (screen.height - 300) + ',width=' + (screen.width - 300) + ',scrollbars=1,resizable=1,statusbar=0');
-    mapWindow.moveTo(100,100);
-  }
-</script>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō: <?php echo $string['mappingbyquestion'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+    td {font-size:100%}
+    img {border:none}
+    .q_no {text-align:right; vertical-align:top; cursor:pointer; width:40px}
+    .divider {font-family:Arial,sans-serif; font-size:90%; font-weight:bold}
+    .mapping {font-size:90%;color:#FF6300;font-weight:normal}
+    .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through;}
+  </style>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script language="JavaScript">
+    function mapQuestion(qNo, pid, qid, session) {
+      mapWindow = window.open('./map_question.php?qNo=' + qNo + '&paperID=' + pid + '&q_id=' + qid + '&session=' + session, "",'height=' + (screen.height - 300) + ',width=' + (screen.width - 300) + ',scrollbars=1,resizable=1,statusbar=0');
+      mapWindow.moveTo(100,100);
+    }
+  </script>
 </head>
 
 <body onclick="hideMenus()">

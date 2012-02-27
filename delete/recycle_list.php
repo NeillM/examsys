@@ -56,53 +56,54 @@ if (isset($_GET['folder'])) {
 <html>
 <head>
 
-<title>Rogō: <?php echo $string['recyclebin'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<style>
-  .icon {width:20px; text-align:right; padding-right:8px}
-  .f {float:left; width:375px; height:74px; padding-left:12px}
-  .h {background-color:#F1F5FB; color:black}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō: <?php echo $string['recyclebin'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .icon {width:20px; text-align:right; padding-right:8px}
+    .f {float:left; width:375px; height:74px; padding-left:12px}
+    .h {background-color:#F1F5FB; color:black}
+  </style>
 
-<script language="JavaScript">
-  function selQ(lineNo,itemID,itemType) {
-    tmp_ID = document.PapersMenu.oldLineNo.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      document.getElementById(tmp_ID).style.color = 'black';
+  <script type="text/javascript">
+    function selQ(lineNo,itemID,itemType) {
+      tmp_ID = document.PapersMenu.oldLineNo.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+        document.getElementById(tmp_ID).style.color = 'black';
+      }
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+
+      document.getElementById(lineNo).style.backgroundColor = '#B3C8E8';
+
+      document.PapersMenu.oldLineNo.value = lineNo;
+      document.PapersMenu.lineNo.value = lineNo;
+      document.PapersMenu.itemType.value = itemType;
+      document.PapersMenu.itemID.value = itemID;
     }
-    document.getElementById('menu1a').style.display = 'none';
-    document.getElementById('menu1b').style.display = 'block';
 
-    document.getElementById(lineNo).style.backgroundColor = '#B3C8E8';
-    
-    document.PapersMenu.oldLineNo.value = lineNo;
-    document.PapersMenu.lineNo.value = lineNo;
-    document.PapersMenu.itemType.value = itemType;
-    document.PapersMenu.itemID.value = itemID;
-  }
-
-  function qOff() {
-    document.getElementById('menu1a').style.display = 'block';
-    document.getElementById('menu1b').style.display = 'none';
-    tmp_ID = document.PapersMenu.oldLineNo.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function qOff() {
+      document.getElementById('menu1a').style.display = 'block';
+      document.getElementById('menu1b').style.display = 'none';
+      tmp_ID = document.PapersMenu.oldLineNo.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
     }
-  }
 
-  function lon(lineID) {
-    if (lineID != document.PapersMenu.oldLineNo.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+    function lon(lineID) {
+      if (lineID != document.PapersMenu.oldLineNo.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-  }
 
-  function loff(lineID) {
-    if (lineID != document.PapersMenu.oldLineNo.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
+    function loff(lineID) {
+      if (lineID != document.PapersMenu.oldLineNo.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body onclick="qOff();">

@@ -31,15 +31,16 @@ require '../include/staff_auth.inc';
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Rogō: <?php echo $string['questionsearch'] . " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style style="text/css">
+<style type="text/css">
 input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
 .owner {color:#A5A5A5}
 </style>
 
-<script language="JavaScript">
+<script type="text/javascript">
   function selQ(questionID, lineID, qType, menuID) {
     tmp_ID = document.PapersMenu.oldQuestionID.value;
     if (tmp_ID != '') {

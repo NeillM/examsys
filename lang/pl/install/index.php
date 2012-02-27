@@ -11,6 +11,7 @@ $string['databaseport'] = 'Port:';
 $string['databasename'] = 'Nazwa:';
 $string['databasecharset'] = 'Database Character Set';
 $string['databaseuser'] = 'Użytkownik bazy danych Rogō';
+$string['pagecharset'] = 'Page Character Set'; // Niko
 $string['rdbusername'] = 'Użytkownik';
 $string['rdbpassword'] = 'Hasło:';
 $string['timedateformats'] = 'Formaty czasu/daty';

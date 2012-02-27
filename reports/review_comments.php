@@ -412,84 +412,84 @@
   }
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo ucfirst($type); ?> Comments Report</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-h1 {margin-left:15px; font-size:18pt}
-p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
-.h {background-color:#F1F5FB; color:black}
-.figures {text-align:right}
-.q_no {text-align:right; vertical-align:top; width:50px}
-.grey {color:#808080}
-.OK {}
-.Minor {}
-.Major {}
-.breadcrumb {margin-left:10px; font-size:90%}
-.breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-.breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
-.matrix {border:1px solid #808080; border-collapse:collapse}
-.matrix td {border:1px solid #808080}
-.scr_no {margin-left:25px}
-.screenbrk {
-  color:#15428B;
-  font-weight:bold;
-  font-size:90%;
-  height:70px;
-  width:100%;
-  border-top: 1px solid #B5C4DF;
-  background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-}
-.reviewbar {
-  color:black;
-  width:100%;
-  border-top: 1px solid #6593CF;
-  border-bottom: 1px solid #6593CF;
-  background: -moz-linear-gradient(top, #FFFFFF, #C5DEFF);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#C5DEFF');
-}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo ucfirst($type); ?> Comments Report</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <style type="text/css">
+  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
+  h1 {margin-left:15px; font-size:18pt}
+  p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
+  .h {background-color:#F1F5FB; color:black}
+  .figures {text-align:right}
+  .q_no {text-align:right; vertical-align:top; width:50px}
+  .grey {color:#808080}
+  .OK {}
+  .Minor {}
+  .Major {}
+  .breadcrumb {margin-left:10px; font-size:90%}
+  .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
+  .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
+  .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+  .matrix {border:1px solid #808080; border-collapse:collapse}
+  .matrix td {border:1px solid #808080}
+  .scr_no {margin-left:25px}
+  .screenbrk {
+    color:#15428B;
+    font-weight:bold;
+    font-size:90%;
+    height:70px;
+    width:100%;
+    border-top: 1px solid #B5C4DF;
+    background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+  }
+  .reviewbar {
+    color:black;
+    width:100%;
+    border-top: 1px solid #6593CF;
+    border-bottom: 1px solid #6593CF;
+    background: -moz-linear-gradient(top, #FFFFFF, #C5DEFF);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#C5DEFF');
+  }
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script src="../js/flash_include.js" type="text/javascript"></script>
-<script src="../js/ie_fix.js" type="text/javascript"></script>
-<script language="JavaScript">
-  function getScrollXY() {
-    var scrOfX = 0, scrOfY = 0;
-    if( typeof( window.pageYOffset ) == 'number' ) {
-      //Netscape compliant
-      scrOfY = window.pageYOffset;
-      scrOfX = window.pageXOffset;
-    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-      //DOM compliant
-      scrOfY = document.body.scrollTop;
-      scrOfX = document.body.scrollLeft;
-    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-      //IE6 standards compliant mode
-      scrOfY = document.documentElement.scrollTop;
-      scrOfX = document.documentElement.scrollLeft;
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script src="../js/flash_include.js" type="text/javascript"></script>
+  <script src="../js/ie_fix.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    function getScrollXY() {
+      var scrOfX = 0, scrOfY = 0;
+      if( typeof( window.pageYOffset ) == 'number' ) {
+        //Netscape compliant
+        scrOfY = window.pageYOffset;
+        scrOfX = window.pageXOffset;
+      } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+        //DOM compliant
+        scrOfY = document.body.scrollTop;
+        scrOfX = document.body.scrollLeft;
+      } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+        //IE6 standards compliant mode
+        scrOfY = document.documentElement.scrollTop;
+        scrOfX = document.documentElement.scrollLeft;
+      }
+      document.getElementById('scrOfY').value = scrOfY;
     }
-    document.getElementById('scrOfY').value = scrOfY;
-  }
-  
-  function editQuestion(qtype,qid,qno) {
-    location.href='../question/edit/index.php?type=' + qtype + '&q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
-  }
-  
-  function showHideSerious() {
-    if (document.styleSheets[0].rules) {
-      document.styleSheets[0].rules.item(7).style.display = (document.styleSheets[0].rules.item(7).style.display == 'none') ? 'block' : 'none';
-    } else {
-      document.styleSheets[0].cssRules[7].style.display = (document.styleSheets[0].cssRules[7].style.display == 'none') ? 'table-row' : 'none';
+
+    function editQuestion(qtype,qid,qno) {
+      location.href='../question/edit/index.php?type=' + qtype + '&q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
     }
-  }
-</script>
+
+    function showHideSerious() {
+      if (document.styleSheets[0].rules) {
+        document.styleSheets[0].rules.item(7).style.display = (document.styleSheets[0].rules.item(7).style.display == 'none') ? 'block' : 'none';
+      } else {
+        document.styleSheets[0].cssRules[7].style.display = (document.styleSheets[0].cssRules[7].style.display == 'none') ? 'table-row' : 'none';
+      }
+    }
+  </script>
 </head>
 
 <body onscroll="getScrollXY()"<?php

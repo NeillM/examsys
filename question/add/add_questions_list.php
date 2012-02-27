@@ -29,15 +29,16 @@
   
   $paper = $_GET['paper'];
 ?>
-  <html>
+<html>
   <head>
-  <title>Add new Question</title>
-  <style>
-    body {margin:0px; font-family:Arial,sans-serif}
-    p, td {font-family:Arial,sans-serif; font-size:80%; color:black}
-  </style>
-  <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <title>Add new Question</title>
+    <style type="text/css">
+      body {margin:0px; font-family:Arial,sans-serif}
+      p, td {font-family:Arial,sans-serif; font-size:80%; color:black}
+    </style>
+    <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
   </head>
 
   <body>

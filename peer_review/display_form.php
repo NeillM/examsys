@@ -120,34 +120,33 @@ while ($result->fetch()) {
 $result->close();
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Form</title>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Form</title>
 
-<style>
-body {margin:0px; font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-table {font-size:100%}
-td p {margin:0px}
-.paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
-.group {padding-left:5px; color:white}
-.title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
-.col {text-align:center; color:<?php echo $labelcolor; ?>}
-.phototd {vertical-align:top; border-top:1px solid #C0C0C0}
-.photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
-.mcq td {vertical-align:top; padding: 3px 0}
-.mcq td.radio {width: 36px}
-.indented {margin-left: 36px; width:100%; border: 0; border-collapse: collapse}
-</style>
+  <style type="text/css">
+  body {margin:0px; font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+  table {font-size:100%}
+  td p {margin:0px}
+  .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
+  .group {padding-left:5px; color:white}
+  .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
+  .col {text-align:center; color:<?php echo $labelcolor; ?>}
+  .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
+  .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
+  .mcq td {vertical-align:top; padding: 3px 0}
+  .mcq td.radio {width: 36px}
+  .indented {margin-left: 36px; width:100%; border: 0; border-collapse: collapse}
+  </style>
 
-<script language="JavaScript">
-  function changeGroup() {
-    window.location = "form.php?id=<?php echo $crypt_name; ?>&group=" + document.getElementById('group').value;
-  }
-</script>
+  <script type="text/javascript">
+    function changeGroup() {
+      window.location = "form.php?id=<?php echo $crypt_name; ?>&group=" + document.getElementById('group').value;
+    }
+  </script>
 </head>
 <body>
 

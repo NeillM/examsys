@@ -245,6 +245,7 @@ function getMSCAA($paperID, $mysqlidb) {
 <html onscroll="scrollXY();" onclick="qOff(); hideMenus(); hideAssStatsMenu(event);">
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -273,7 +274,7 @@ function getMSCAA($paperID, $mysqlidb) {
   <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
-<script defer="defer" language="JavaScript">
+<script defer="defer" type="text/javascript">
   var paperID='<?php echo $_GET['paperID'] ?>';
 
   function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, prev_screen, next_screen, current_screen, menuID, subparts, evt) {

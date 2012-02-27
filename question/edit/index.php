@@ -365,7 +365,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title><?php echo $mode . ' ' . $string['question'] . ' - ' . $q_type_full .  ' ' . $cfg_install_type ?></title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 <link rel="stylesheet" href="../../css/screen.css" type="text/css" />

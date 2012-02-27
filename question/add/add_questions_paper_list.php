@@ -26,15 +26,16 @@ require '../../include/staff_auth.inc';
 ?>
 <html>
 <head>
-<title>by Paper</title>
-<style>
-body {margin:0px; font-family:Arial,sans-serif; color:black; background-color:white; font-size:80%}
-a:link {color:black}
-a:visited {color:black}
-a:hover {color:black}
-.f {padding-left:2px; width:20px}
-.s {padding-left:6px}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>by Paper</title>
+  <style type="text/css">
+  body {margin:0px; font-family:Arial,sans-serif; color:black; background-color:white; font-size:80%}
+  a:link {color:black}
+  a:visited {color:black}
+  a:hover {color:black}
+  .f {padding-left:2px; width:20px}
+  .s {padding-left:6px}
+  </style>
 </head>
 
 <body>

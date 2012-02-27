@@ -27,15 +27,16 @@ require '../include/staff_auth.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['textboxmarking'] . ' ' . $cfg_install_type; ?></title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-table {font-size:100%}
-.h {background-color:#F1F5FB; color:black}
-a {color:blue}
-</style>
-<link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
-<script src="../js/staff_help.js" type="text/javascript"></script>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['textboxmarking'] . ' ' . $cfg_install_type; ?></title>
+  <style type="text/css">
+  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
+  table {font-size:100%}
+  .h {background-color:#F1F5FB; color:black}
+  a {color:blue}
+  </style>
+  <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+  <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body>

@@ -73,6 +73,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Rogo: <?php echo $string['invigilatoraccess']; ?></title>
 
 <script language="JavaScript">
@@ -140,7 +141,7 @@
   }
   
 </script>
-<style>
+<style type="text/css">
 body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-serif}
 </style>
 </head>

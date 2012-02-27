@@ -49,6 +49,7 @@ Class InstallUtils {
   public static $cfg_db_username;
   public static $cfg_db_password;
   public static $cfg_db_charset;
+  public static $cfg_page_charset;
 
   public static $cfg_db_student_user;
   public static $cfg_db_student_passwd;
@@ -86,7 +87,7 @@ Class InstallUtils {
     global $string, $language, $timezone_array;
     
     ?>
-    <script>
+    <script type="text/javascript">
       $(document).ready(function(){
           $("#installForm").validate();
       });
@@ -116,6 +117,7 @@ Class InstallUtils {
         <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" /> </div>
       <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /> </div>
       <div><label for="mysql_db_charset"><?php echo $string['databasecharset']; ?></label> <select id="mysql_db_charset" name="mysql_db_charset"><option value="latin1">latin1</option><option value="utf8">UTF-8</option></select> </div>
+      <div style="clear: left"><label for="page_charset"><?php echo $string['pagecharset']; ?></label> <select id="page_charset" name="page_charset"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO 8859-1</option></select> </div>
 
       <table class="header"><tr><td><nobr><?php echo $string['databaseuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="mysql_database_username"><?php echo $string['rdbusername']; ?></label> <input type="text" value="" id="mysql_database_username" name="mysql_database_username" class="required" minlength="3"/></div>
@@ -195,6 +197,7 @@ Class InstallUtils {
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
     self::$cfg_db_charset = $_POST['mysql_db_charset'];
+    self::$cfg_page_charset = $_POST['page_charset'];
     self::$cfg_db_port = $_POST['mysql_db_port'];
     self::$cfg_db_name = $_POST['mysql_db_name'];
     self::$db_admin_username = $_POST['mysql_admin_user'];
@@ -833,6 +836,7 @@ Class InstallUtils {
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     <head>
+      <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
       <title>Rogō Install script</title>
       <style type="text/css">
         html { padding: 0em; margin: 0em; width: 100%}
@@ -910,6 +914,7 @@ define('DIR_SEPARATOR', '/');
 \$cfg_web_root = get_root_path() . '/';
 \$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');
 \$protocol = 'https://';
+\$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
 
 \$news_msg = '';
@@ -1008,6 +1013,7 @@ CONFIG;
     $config = str_replace('{cfg_db_host}',self::$cfg_db_host,$config);
     $config = str_replace('{cfg_db_port}',self::$cfg_db_port,$config);
     $config = str_replace('{cfg_db_charset}',self::$cfg_db_charset,$config);
+    $config = str_replace('{cfg_page_charset}',self::$cfg_page_charset,$config);
     $config = str_replace('{cfg_company}',self::$cfg_company,$config);
     
     $config = str_replace('{cfg_db_database}',self::$cfg_db_name,$config);

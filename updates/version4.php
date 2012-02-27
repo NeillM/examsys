@@ -67,8 +67,10 @@ function convert_year($old_year) {
   return $new_year;
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
     <title>TouchStone 4.x to Rogō update Script</title>
     <style type="text/css">
       html {padding:0em; margin:0em; width:100%}
@@ -106,7 +108,7 @@ function convert_year($old_year) {
 <?php
 if (!isset($_POST['update'])) {
 ?>
-    <script>
+    <script type="text/javascript">
       $(document).ready(function(){
           $("#installForm").validate();
       });
@@ -1917,6 +1919,45 @@ if (!isset($_POST['update'])) {
     echo "<br /><strong>If you use LDAP authentication then you will need to change the value <code>\$cfg_ldap_user_prefix</code> in <code>/config/config.inc.php</code></strong></li>\n";
     ob_flush();
     flush();
+  }
+
+  // 24/02/2012 - Add new page character set to configuration file.
+  $new_cfg_str =  array("\$cfg_page_charset = 'UTF-8';\n");
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+
+  //remove refrances to old vars
+  $cfg_new = array();
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_page_charset') !== false) {
+      $found = true;
+    }
+    $cfg_new[] = $line;
+  }
+
+  if (!$found) {
+    $index = 0;
+    foreach ($cfg as $line) {
+      if (strpos($line, '$protocol') !== false) {
+        $found = true;
+        break;
+      }
+      $index++;
+    }
+
+    if (!$found) $index = 20;
+
+    //add the new config chunk
+    array_splice($cfg_new, $index + 1, 0, $new_cfg_str);
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added page charset to configuration file.</li>\n";
   }
 
   // End ------------------------------------------------------------------

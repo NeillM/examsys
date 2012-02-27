@@ -92,12 +92,12 @@ require '../include/staff_auth.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['loadkeywords']; ?></title>
-<link rel="stylesheet" href="../css/submenu.css" type="text/css">
-<style>
-  body, p {color:#003366; font-family:Arial,sans-serif}
-</style>
-
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['loadkeywords']; ?></title>
+  <link rel="stylesheet" href="../css/submenu.css" type="text/css">
+  <style type="text/css">
+    body, p {color:#003366; font-family:Arial,sans-serif}
+  </style>
 </head>
 
 <body>

@@ -24,42 +24,44 @@
 
   require '../../include/staff_student_auth.inc';
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Help and Support Center<?php echo " $cfg_install_type"; ?></title>
-<style>
-html {margin:0px; width:100%; height:100%; overflow:hidden}
-body {margin:0px; width:100%; height:100%; overflow:hidden; font-size:75%; background-color:#F1F5FB; color:#154A93; font-family:Arial,sans-serif}
-div {line-height:180%}
-a:link.book {color:#154A93}
-a:visited.book {color:#154A93}
-a:link {color:#003DB2}
-a:visited {color:#003DB2}
-#main {height:100%; width:100%; overflow:scroll; border-left:2px solid #7699C7; border-right:2px solid #7699C7; border-bottom:2px solid #7699C7; padding:2px}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Help and Support Center<?php echo " $cfg_install_type"; ?></title>
+  <style type="text/css">
+  html {margin:0px; width:100%; height:100%; overflow:hidden}
+  body {margin:0px; width:100%; height:100%; overflow:hidden; font-size:75%; background-color:#F1F5FB; color:#154A93; font-family:Arial,sans-serif}
+  div {line-height:180%}
+  a:link.book {color:#154A93}
+  a:visited.book {color:#154A93}
+  a:link {color:#003DB2}
+  a:visited {color:#003DB2}
+  #main {height:100%; width:100%; overflow:scroll; border-left:2px solid #7699C7; border-right:2px solid #7699C7; border-bottom:2px solid #7699C7; padding:2px}
+  </style>
 
-<script language="Javascript">
-  function updateMenu(sectionID,imageID) {
-    current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
-    document.getElementById(sectionID).style.display = current;
+  <script type="text/javascript">
+    function updateMenu(sectionID,imageID) {
+      current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
+      document.getElementById(sectionID).style.display = current;
 
-    icon = (document.getElementById(imageID).getAttribute('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
-    document.getElementById(imageID).setAttribute('src',icon);
-  }
+      icon = (document.getElementById(imageID).getAttribute('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
+      document.getElementById(imageID).setAttribute('src',icon);
+    }
 
-  function resizeTOC() {
-    if (parseInt(navigator.appVersion)>3) {
-      if (navigator.appName=="Netscape") {
-        winW = window.innerWidth;
-        winW = winW - 8;
-        document.getElementById("main").style.width = winW + 'px';
-        
-        winH = window.innerHeight;
-        winH = winH - 6;
-        document.getElementById("main").style.height = winH + 'px';
+    function resizeTOC() {
+      if (parseInt(navigator.appVersion)>3) {
+        if (navigator.appName=="Netscape") {
+          winW = window.innerWidth;
+          winW = winW - 8;
+          document.getElementById("main").style.width = winW + 'px';
+
+          winH = window.innerHeight;
+          winH = winH - 6;
+          document.getElementById("main").style.height = winH + 'px';
+        }
       }
     }
-  }
   </script>
 </head>
 <body onload="resizeTOC()">

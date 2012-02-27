@@ -79,17 +79,18 @@
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     <head>
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
     <title>Rogo: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
     <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
-    <style style="text/css">
+    <style type="text/css">
       img {border:none;}
       .editBox {width:90%}
       .field {text-align:right; font-weight:bold}
       .note {width:90%}
     </style>
     <script src="../js/staff_help.js" type="text/javascript"></script>
-    <script>
+    <script type="text/javascript">
         function checkForm() {
           if (document.getElementById('session_title').value == '' || document.getElementById('session_title').value == ' ') {
             alert("<?php echo $string['msg2'];?>");

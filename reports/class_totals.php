@@ -29,11 +29,11 @@ require '../include/class_totals.inc';
   
 ob_start();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
 body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
@@ -841,7 +841,7 @@ a.user:hover {color:white; background-color:#000080}
         }
 
         // Perform replacement.
-        $message = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html><head>\n<title>$paper</title>\n<style>\nbody {font-family: Arial,sans-serif; background-color: white; color:black}</style>\n</head>\n<body>";
+        $message = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html><head>\n<title>$paper</title>\n<style type=\"text/css\">\nbody {font-family: Arial,sans-serif; background-color: white; color:black}</style>\n</head>\n<body>";
         $message .= $_POST['emailtemplate'];
         $message = str_replace("{student-title}",$user_results[$i]['title'],$message);
         $message = str_replace("{student-last-name}",$user_results[$i]['surname'],$message);

@@ -28,33 +28,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Rogō<?php echo " $cfg_install_type"; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<style>
-.divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
-.sch {padding-left:32px; text-indent:-20px}
-.greysch {padding-left:12px; color:#808080}
-.mod {padding-left:60px; text-indent:-20px}
-</style>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō<?php echo " $cfg_install_type"; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+  .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
+  .sch {padding-left:32px; text-indent:-20px}
+  .greysch {padding-left:12px; color:#808080}
+  .mod {padding-left:60px; text-indent:-20px}
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<?php echo $cfg_js_root ?>
-<script src="../js/sidebar.js" type="text/javascript"></script>
-<script language="JavaScript">
-  function displayCredits(){
-    notice=window.open("../credits/credits.php","credits","width=700,height=487,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
-    notice.moveTo(screen.width/2-350,screen.height/2-243)
-    if (window.focus) {
-      notice.focus();
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <?php echo $cfg_js_root ?>
+  <script src="../js/sidebar.js" type="text/javascript"></script>
+  <script language="JavaScript">
+    function displayCredits(){
+      notice=window.open("../credits/credits.php","credits","width=700,height=487,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
+      notice.moveTo(screen.width/2-350,screen.height/2-243)
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
 
-  function showHide(sectionID) {
-    sectionID = 'block' + sectionID;
-    current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
-    document.getElementById(sectionID).style.display = current;
-  }
-</script>
+    function showHide(sectionID) {
+      sectionID = 'block' + sectionID;
+      current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
+      document.getElementById(sectionID).style.display = current;
+    }
+  </script>
 </head>
 
 <body onclick="hideMenus()">

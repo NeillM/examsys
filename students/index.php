@@ -115,29 +115,30 @@ for($i = 0; $i < count($modules); $i++) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Rogō<?php echo " $cfg_install_type"; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<style type="text/css">
-body { padding-left: 0px; }
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō<?php echo " $cfg_install_type"; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+  body { padding-left: 0px; }
+  </style>
 
-<script src="../js/student_help.js" type="text/javascript"></script>
-<script type="text/javascript">
-function switchYear(toShow) {
-	var years = ['<?php echo implode('\',\'', $sessions_with_papers) ?>'];
-	for(var i = 0; i < years.length; i++) {
-		target = document.getElementById('papers-' + years[i].replace('/', '-'));
-		link = document.getElementById('button-' + years[i].replace('/', '-'));
-		if (target != null) {
-			target.style.display = (years[i] == toShow) ? 'block' : 'none';
-			if (link != null) {
-				link.style.backgroundImage = (years[i] == toShow) ? 'url(../artwork/tab_on.gif)' : 'url(../artwork/tab_off.gif)';
-			}
-		}
-	}
-}
-</script>
+  <script src="../js/student_help.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  function switchYear(toShow) {
+    var years = ['<?php echo implode('\',\'', $sessions_with_papers) ?>'];
+    for(var i = 0; i < years.length; i++) {
+      target = document.getElementById('papers-' + years[i].replace('/', '-'));
+      link = document.getElementById('button-' + years[i].replace('/', '-'));
+      if (target != null) {
+        target.style.display = (years[i] == toShow) ? 'block' : 'none';
+        if (link != null) {
+          link.style.backgroundImage = (years[i] == toShow) ? 'url(../artwork/tab_on.gif)' : 'url(../artwork/tab_off.gif)';
+        }
+      }
+    }
+  }
+  </script>
 </head>
 <body>
 <div id="content" class="content" style="font-size:80%">
