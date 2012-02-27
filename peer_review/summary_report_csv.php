@@ -33,7 +33,8 @@ header("Content-type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; filename=data.csv");
 
 // write out headings
-echo "Title,Surname,First Names,Student ID,Reviewed,Group,Reviews";
+echo "Title,Surname,First Names,Student ID,Reviewed,Group";
+if ($review_type == 1) echo ",Reviews";
 for ($i=1; $i<=$heading_no; $i++) {
   echo ',Q' . $i;
 }
@@ -52,10 +53,12 @@ foreach ($user_data as $student_userID => $student) {
       echo ',Missing';
     }
     echo ',' . $student['group'];
-    if (isset($student['review_no'])) {
-      echo ',' . $student['review_no'];
-    } else {
-      echo ',0';
+    if ($review_type == 1){
+      if (isset($student['review_no'])) {
+        echo ',' . $student['review_no'];
+      } else {
+        echo ',0';
+      }
     }
     if ($review_type == 1) {
       foreach ($questions as $questionID => $tmp_data) {
