@@ -24,8 +24,8 @@ $string['ldapserver'] = 'Serwer LDAP:';
 $string['searchdn'] = 'Wyszukaj dn:';
 $string['bindusername'] = 'użytkownik:';
 $string['bindpassword'] = 'hasło:';
-$string['userprefix'] = 'Username prefix'; // Niko
-$string['userprefixtip'] = 'Prefix for username in LDAP search, e.g. &quot;sAMAccountName=&quot;'; // Niko
+$string['userprefix'] = 'Prefiks nazwy użytkownika'; // Niko
+$string['userprefixtip'] = 'Prefiks nazwy użytkownika w wyszukianiach LDAP, np. &quot;sAMAccountName=&quot;'; 
 $string['sysadminuser'] = 'Administrator systemu Rogō';
 $string['initialsysadmin'] = 'Wymagane jest wyjściowe konto administratora systemu, aby móc zalogować się i utworzyć zwykłe konta użytkowników i zarządzać systemem.';
 $string['title'] = 'Tytuł:';
