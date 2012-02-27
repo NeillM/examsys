@@ -247,6 +247,7 @@ function getMSCAA($paperID, $mysqlidb) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
 
@@ -769,12 +770,12 @@ function getMSCAA($paperID, $mysqlidb) {
     $module = implode(',',$OKmodules);
   }
 
-  echo "<table style=\"table-layout: fixed\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" id=\"sortable\">\n";
+  echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
   
   //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
   echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
   
-  echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
+  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
   } elseif ($folder != '') {
@@ -783,18 +784,18 @@ function getMSCAA($paperID, $mysqlidb) {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
   }
   echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
-  echo "<tr><td colspan=\"3\" style=\"background-color:#F1F5FB;font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> $display_start_date</td><td colspan=\"3\" style=\"background-color:#F1F5FB;text-align:right;font-size:90%\"><strong>" . $string['owner'] . ":</strong> $paper_owner&nbsp;</td></tr>\n";
+  echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+  echo "<tr><th colspan=\"3\" style=\"font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> $display_start_date</th><th colspan=\"3\" style=\"text-align:right;font-size:90%\"><strong>" . $string['owner'] . ":</strong> $paper_owner&nbsp;</th></tr>\n";
   ?>
     <tr class="details-head">
-    <td class="icon" style="background-color:#F1F5FB" >&nbsp;</td>
-    <td style="background-color:#F1F5FB" >&nbsp;</td>
-    <td style="background-color:#F1F5FB" class="q-cell"><?php echo $string['question']; ?></td>
-    <td style="background-color:#F1F5FB;" class="t delimited"><?php echo $string['type']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB" class="m delimited"><?php echo $string['marks']; ?>&nbsp;</td>
-    <td style="background-color:#F1F5FB" class="d delimited"><?php echo $string['modified']; ?>&nbsp;</td>
+    <th class="icon">&nbsp;</th>
+    <th>&nbsp;</th>
+    <th class="q-cell"><?php echo $string['question']; ?></th>
+    <th class="t delimited"><?php echo $string['type']; ?>&nbsp;</th>
+    <th class="m delimited"><?php echo $string['marks']; ?>&nbsp;</th>
+    <th class="d delimited"><?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
-    <tr><td colspan="6" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr>
+    <tr><th colspan="6" class="bevel"></th></tr>
   <?php
 
   if ($summative_lock == 1) {
@@ -829,7 +830,7 @@ function getMSCAA($paperID, $mysqlidb) {
     }
   }
 
-  if (!isset($_COOKIE['dragnotice'])) {
+  if (!isset($_COOKIE['dragnotice']) and $summative_lock != 1) {
     echo '<tr id="dragnotice"><td style="padding:2px; color:#154A93; background-color:#B8CFE9" colspan="5">&nbsp;Questions can now be reordered simply by dragging.</td><td style="padding:2px; color:#154A93; background-color:#B8CFE9; text-align:right"><a href="#" onclick="hideNotice();"><img src="../artwork/small_x.png" width="8" height="7" alt="close" border="0" /></a>&nbsp;</td></tr>';
   }
   
