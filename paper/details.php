@@ -801,7 +801,7 @@ function getMSCAA($paperID, $mysqlidb) {
 
   if ($summative_lock == 1) {
     echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"locked\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" style=\"position:relative; top:2px\" />&nbsp;&nbsp;</div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"locked\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">Click for more details.</a></div></td><td style=\"text-align:right\"><div class=\"locked\">";
-    if (strpos($userroles,'Admin') !== false) {
+    if (strpos($userroles, 'Admin') !== false) {
       $record_no = 0;
       $result = $mysqli->prepare("SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE paperID=? AND log_metadata.userID=users.id AND roles='Student'");
       $result->bind_param('i', $paperID);
@@ -820,14 +820,14 @@ function getMSCAA($paperID, $mysqlidb) {
   } elseif ($paper_type == '2') {
     $tmp_hour = $tmp_start_hour;
     if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
-    if (substr($display_start_date,12,4) > (date("Y")+1)) {
-      echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">";
+    if (substr($display_start_date,6,4) > (date("Y")+1)) {
+      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"earlywarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"earlywarn\">";
       printf($string['farfuturewarning'], $display_start_date); 
-      echo "</td></tr>\n";
+      echo "</div></td></tr>\n";
     } elseif ($tmp_hour < $cfg_hour_warning) {
-      echo "<tr><td colspan=\"2\" style=\"height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"7\" style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">";
+      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"earlywarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"earlywarn\">";
       printf($string['earlywarning'], $cfg_hour_warning);
-      echo "</td></tr>\n";
+      echo "</div></td></tr>\n";
     }
   }
 

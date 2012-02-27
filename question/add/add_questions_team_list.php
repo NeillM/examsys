@@ -60,6 +60,7 @@ if (isset($_GET['scrOfY'])) {
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['byteam']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
   body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
   a:link {color:black}
@@ -70,9 +71,9 @@ if (isset($_GET['scrOfY'])) {
 </head>
 
 <body>
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%">
-<tr style="background-color:#F1F5FB"><td colspan="5"style="font-size:160%; font-weight:bold">&nbsp;<?php echo $string['byteam']; ?></td></tr>
-<tr style="height:4px"><td valign="top" colspan="5"><img src="../../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+<table class="header">
+<tr><th colspan="5" style="font-size:160%; font-weight:bold">&nbsp;<?php echo $string['byteam']; ?></th></tr>
+<tr><th colspan="5" class="bevel"></th></tr>
 </table>
 <?php
   $result = $mysqli->prepare("SELECT name, COUNT(groupID) AS count_no FROM teams WHERE name IN (SELECT name FROM teams WHERE memberID=?) GROUP BY teams.name");

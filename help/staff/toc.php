@@ -29,6 +29,7 @@ require '../../include/staff_auth.inc';
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Help and Support Center<?php echo ' ' . $cfg_install_type; ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <style type="text/css">
   html {margin:0px; width:100%; height:100%; overflow:hidden}
   body {margin:0px; width:100%; height:100%; overflow:hidden; font-size:75%; background-color:#F1F5FB; color:#154A93; font-family:Arial,sans-serif}
@@ -40,43 +41,7 @@ require '../../include/staff_auth.inc';
   #main {height:100%; width:100%; overflow:scroll; border-left:2px solid #7699C7; border-right:2px solid #7699C7; border-bottom:2px solid #7699C7; padding:2px}
   </style>
 
-  <script language="Javascript">
-    function updateMenu(sectionID,imageID) {
-      current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
-      document.getElementById(sectionID).style.display = current;
-
-      icon = (document.getElementById(imageID).getAttribute('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
-      document.getElementById(imageID).setAttribute('src',icon);
-    }
-
-  function getInternetExplorerVersion()
-  // Returns the version of Windows Internet Explorer or a -1
-  // (indicating the use of another browser).
-  {
-     var rv = -1; // Return value assumes failure.
-     if (navigator.appName == 'Microsoft Internet Explorer')
-     {
-        var ua = navigator.userAgent;
-        var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-        if (re.exec(ua) != null)
-           rv = parseFloat( RegExp.$1 );
-     }
-     return rv;
-  }
-
-    function resizeTOC() {
-        if ((parseInt(navigator.appVersion)>3 && navigator.appName=="Netscape") || (parseInt(getInternetExplorerVersion())>8 && navigator.appName=="Microsoft Internet Explorer")) {
-          winW = window.innerWidth;
-          winW = winW - 8;
-          document.getElementById("main").style.width = winW + 'px';
-
-          winH = window.innerHeight;
-          winH = winH - 6;
-          document.getElementById("main").style.height = winH + 'px';
-        }
-
-    }
-  </script>
+  <script type="text/javascript" src="../../js/help_toc.js"></script>
 </head>
 <body onload="resizeTOC()">
 
@@ -130,11 +95,11 @@ require '../../include/staff_auth.inc';
     }
     $id = $help_toc[$i]['id'];
     if ($icon == 'closed_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $tmp_title . "</nobr></a></div>\n";
       echo "<div style=\"display:none; margin-left:18px\" id=\"submenu$id\">";
       $sub_section = 1;
     } elseif ($icon == 'open_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $tmp_title . "</nobr></a></div>\n";
       echo "<div style=\"display:block; margin-left:18px\" id=\"submenu$id\">";
       $sub_section = 1;
     } else {
@@ -142,7 +107,7 @@ require '../../include/staff_auth.inc';
         echo "</div>\n";
         $sub_section = 0;
       }
-      echo "<div id=\"title$id\"><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">" . $tmp_title . "</nobr></a></div>\n";
     }
 
   }

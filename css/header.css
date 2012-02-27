@@ -1,5 +1,6 @@
 .header {
   border:0px;
+  font-size:100%;
   width:100%;
   border-collapse:collapse;
 }
@@ -12,7 +13,6 @@
 }
 .header td {
   padding:0px;
-  border:0px
 }
 .bevel {
   width:100%;

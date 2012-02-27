@@ -22,6 +22,7 @@
 * @package
 */
 
+require '../../include/staff_auth.inc';
 ?>
 <html>
 <head>

@@ -112,12 +112,12 @@ require '../include/staff_auth.inc';
 <tr><td valign="middle">
 <div align="center">
 
-<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; width:85%">
+<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; width:600px">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_csv_32.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['loadkeywords']; ?></span></td>
+<td style="background-color:white; width:54px;"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="background-color:white; text-align:left; width:90%; font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['loadkeywords']; ?></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#DFE8FF">
+<td align="left" colspan="2" style="background-color:#DFE8FF">
 
 <p><?php echo $string['msg1']; ?></p>
 

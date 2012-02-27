@@ -41,6 +41,7 @@ function getData($url) {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSLVERSION, 3);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept-Language: en-us,en;q=0.5'));
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept-Language: en-us,en;q=0.5'));
 
   $output = curl_exec($ch);
   curl_close($ch);
@@ -112,8 +113,12 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
   $student_details['cohort_size'] = count($set1);
   $student_details['affected'] = $affected_no;
   
-  $student_details['percent_change'] = ($percent_total2 / count($set2)) - ($percent_total1 / count($set1));
- 
+  if (count($set2) > 0 and count($set1) > 0) {
+    $student_details['percent_change'] = ($percent_total2 / count($set2)) - ($percent_total1 / count($set1));
+  } else {
+    $student_details['percent_change'] = 0;
+  }
+  
   return $outcome;
 }
 
@@ -139,6 +144,7 @@ table {font-size:100%}
 </head>
 <body>
 <?php
+echo time() . '<br />';
 $total_students = 0;
 $total_affected = 0;
 
@@ -146,11 +152,11 @@ echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"2\" widht=\"100%\">\n"
 echo "<tr><td>Start Date</td><td>Paper ID</td><td>Title</td><td>Status</td><td>Old Fails</td><td>New Fails</td><td>Old Passes</td><td>New Passes</td><td>Old Distinctions</td><td>New Distinctions</td><td>Affected</td><td>Change</td></tr>";
 foreach ($papers as $paper) {
 
-  $url = "https://rogo.local/touchstone/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&repyear=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
+  $url = "https://rogo.local/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&repcourse=%&repyear=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
   $output = getData($url);
   $marks_set1 = parseRawMarks($output);
   
-  $url = "https://suivarro.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
+  $url = "https://cuctouchstone02.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repdegree=%&repmodule=&repcourse=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
   $output = getData($url);
   $marks_set2 = parseRawMarks($output);
   
@@ -176,7 +182,8 @@ foreach ($papers as $paper) {
   flush();  
 }
 echo "</table>\n";
-echo "<div>Total affected number = $total_affected out of $total_students (" . round((($total_affected / $total_students) * 100), 1) . "%)</div>\n";
+echo "<div>Total affected number = $total_affected out of $total_students (" . round((($total_affected / $total_students) * 100), 1) . "%)</div>\n<br />";
+echo time();
 ob_end_flush();
 ?>
 </body>
