@@ -278,7 +278,6 @@ check_var('paperID', 'GET', true, false);
       }
     }
     echo "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-
   }
 ?>
 </table>
