@@ -2203,6 +2203,14 @@
             echo_content($paper[$question]['scenario']);
           }
           echo_content($paper[$question]['leadin']);
+
+          $movie = $paper[$question]['o_media'][0];
+          if (!isset($paper[$question]['user_answer'])) {
+            reset_feedback($hide_if_unanswered);
+            if ($tmp_display_correct_answer == '0') {
+              $movie = $paper[$question]['q_media'];
+            }
+          }
 ?>
     <div align="center">
     <script language="JavaScript">
@@ -2212,11 +2220,14 @@
       write_string('<param name="quality" value="high" />');
       write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
       write_string('<param name="FlashVars" value="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" />');
-      write_string('<embed src="/media/<?php echo $paper[$question]['o_media'][0]; ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+      write_string('<embed src="/media/<?php echo $movie ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
       write_string('</object>');
     </script>
     </div>
 <?php
+          if (!$answered) {
+            reset_feedback($hide_if_unanswered);
+          }
           break;
         case 'random_failed':
           echo '<p>' . $paper[$question]['leadin'] . '</p>';
