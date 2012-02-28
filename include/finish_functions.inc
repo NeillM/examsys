@@ -472,7 +472,6 @@
       $option_order = explode(',',$paper[$question]['option_order']);
       $question_no = $display_no;
 
-      echo $paper[$question]['q_id'] . '<br />';
       switch ($paper[$question]['q_type']) {
         case 'calculation':
           $paper[$question]['mark'] = 0;
