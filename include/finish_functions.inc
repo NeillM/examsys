@@ -1256,7 +1256,9 @@
               echo 'False';
             }
             echo '</td></tr>';
-            echo "<td style=\"color:#808080\" colspan=\"3\">" . $string['unanswered'] . "</td></tr>";
+            if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u') {
+              echo "<td style=\"color:#808080\" colspan=\"3\">" . $string['unanswered'] . "</td></tr>";
+            }
           }
           echo '</table>';
 
