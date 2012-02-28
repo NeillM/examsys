@@ -72,6 +72,7 @@ function convert_year($old_year) {
   <head>
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
     <title>TouchStone 4.x to Rogō update Script</title>
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <style type="text/css">
       html {padding:0em; margin:0em; width:100%}
       body {padding:0em; margin:0em; width:100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black}
@@ -81,12 +82,10 @@ function convert_year($old_year) {
       .warning {float:none; color:red; padding-left: .5em; vertical-align:top}
       label {float:left; width:7.5em; padding-left:0em; text-align:left}
       p {clear:both}
-      .submit {margin-left:42%; padding-top:2em}
+      .submit {text-align:center; padding-top:2em}
       table {border:none}
-      table.topbar {font-weight:bold; width:100%; border-collapse:collapse}
-      .topbar td {background-color:#F1F5FB}
-      .header {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
-      .header hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:97%}
+      .heading {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
+      .heading hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:97%}
       td.line {width:98%}
       input {width:150px}
       form {padding:1em}
@@ -96,13 +95,13 @@ function convert_year($old_year) {
     <script language="text/javascript" type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
-  <table class="topbar"> 
+  <table class="header"> 
     <tr> 
-      <td><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:48px; top:-6px; font-size:10pt; color:#001979">version 4.x to <?php echo $version; ?></div></td> 
-      <td style="text-align:right; padding-top:10px; padding-right:10px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="Logo" border="0" />&nbsp;&nbsp;</td> 
+      <th><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:48px; top:-6px; font-size:10pt; color:#001979; font-weight:bold">version 4.x to <?php echo $version; ?></div></th> 
+      <th style="text-align:right; padding-top:10px; padding-right:10px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="Logo" border="0" />&nbsp;&nbsp;</th> 
     </tr> 
     <tr> 
-      <td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td> 
+      <th colspan="2" class="bevel"></th> 
     </tr> 
   </table>
 <?php
@@ -130,7 +129,7 @@ if (!isset($_POST['update'])) {
       ?>    
       <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <div><?php printf($string['msg1'], $version); ?></div>
-        <table class="header"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
+        <table class="heading"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
           <div><?php echo $string['msg2']; ?></div>
           <br />
           <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
