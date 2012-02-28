@@ -35,17 +35,15 @@ check_var('paperID', 'GET', true, false);
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?php echo $string['reviewsummary'] . ' ' . $cfg_install_type; ?></title>
   
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%; margin:0px}
+    body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:100%; margin:0px}
     .fn {color:#808080}
     .num {padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
     .errnum {color:#C00000; padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
     .title {padding-left:10px}
     .line {padding-top:1px; padding-bottom:1px; padding-left:6px; border-bottom:solid #EEEEEE 1px}
-    .breadcrumb {margin-top:2px; margin-left:10px; font-size:90%}
-    .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-    .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-    .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+    td {font-size:110%}
   </style>
   
   <script language="JavaScript">
@@ -165,10 +163,10 @@ check_var('paperID', 'GET', true, false);
 </head>
 
 <body>
-  <div id="menudiv" style="filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-  <table width="160" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #6593CF; font-size:90%; background-color:white">
+  <div id="menudiv" style="font-size:80%; filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+  <table width="160" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #6593CF; font-size:100%; background-color:white">
     <tr><td>
-      <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
+      <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white">
         <tr>
           <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewReviews();">Review Form</td>
         </tr>
@@ -180,8 +178,8 @@ check_var('paperID', 'GET', true, false);
   </table>
   </div>
 <?php
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
+  echo "<table class=\"header\" style=\"font-size:80%\">\n";
+  echo "<tr><th colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
   if ($moduleID != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID_text . '">' . $moduleID_text . '</a>';
   } elseif ($folder != '') {
@@ -191,23 +189,23 @@ check_var('paperID', 'GET', true, false);
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a>';
   echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-  echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
+  echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 ?>
 <?php
   // write out headings
-  echo '<tr style="background-color:#F1F5FB"><td></td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['name'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['studentid'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviewed'] . '</td><td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $type . '</td>';
+  echo '<tr><th></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['name'] . '</th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['studentid'] . '</th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviewed'] . '</th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $type . '</th>';
   if ($review_type == 1) {
-    echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviews'] . '</td>';
+    echo '<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviews'] . '</th>';
   }
   for ($i=1; $i<=$heading_no; $i++) {
-    echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['q'] . $i . '</td>';
+    echo '<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['q'] . $i . '</th>';
   }
   if ($review_type == 1) {
-    echo '<td><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['overall'] . '</td><td style="width:20%">&nbsp;</td></tr>';
+    echo '<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['overall'] . '</th><th style="width:20%">&nbsp;</th></tr>';
   } else {
-    echo "<td><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;</td><td class=\"num\">&nbsp;</td><td class=\"num\">&nbsp;</td></tr>\n";
+    echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;</th><th class=\"num\">&nbsp;</th><th class=\"num\">&nbsp;</th></tr>\n";
   }
-  echo '<tr><td colspan="' . ($heading_no + 8) . '" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr>';
+  echo '<tr><th colspan="' . ($heading_no + 8) . '" class="bevel"></th></tr>';
 
   foreach ($user_data as $student_userID => $student) {
     if ($student_userID > 0) {

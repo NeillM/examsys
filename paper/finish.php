@@ -136,6 +136,7 @@ table {font-size:100%; table-layout: fixed}
   width:100%;
   border-top: 1px solid #B5C4DF;
   background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
+  background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
 }
 </style>

@@ -36,10 +36,11 @@ ob_start();
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
 <style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
+body {font-family:Arial,sans-serif; font-size:100%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
 a {text-decoration:none}
 a.user {color:black}
 a.user:hover {color:white; background-color:#000080}
+td {font-size:110%}
 .field {text-align:right; padding-right:10px}
 .mk {padding-right:10px}
 .redln {border-bottom:solid red 1px}
@@ -306,10 +307,10 @@ a.user:hover {color:white; background-color:#000080}
 <div id="noteMsg"></div>
 </div>
 
-<div id="menudiv" style="filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table width="160" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #6593CF; font-size:90%; background-color:white">
+<div id="menudiv" style="font-size:80%; filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+<table width="180" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #6593CF; font-size:100%; background-color:white">
   <tr><td>
-    <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
+    <table width="180" cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white">
       <tr>
         <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
       </tr>
@@ -397,7 +398,7 @@ a.user:hover {color:white; background-color:#000080}
   
   $cols = count($table_order);
  
-  echo "<table class=\"header\">\n";
+  echo "<table class=\"header\" style=\"font-size:80%\">\n";
   if ($paper_type == '2') {
     echo "<tr><th class=\"h\" colspan=\"" . ($cols - 1) . "\">";
   } else {
@@ -430,6 +431,7 @@ a.user:hover {color:white; background-color:#000080}
   echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
   
   // output table header
+  echo "<tr style=\"font-size:110%\">\n";
   if (isset($user_results[0])){
     foreach ($table_order as $display => $key) {
       if ($key == '') {
