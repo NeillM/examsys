@@ -43,12 +43,13 @@
 
   function reset_feedback($hide) {
     // Set all the feedback display options to '0' so that they become hidden.
-    global $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $strong_on, $strong_off;
+    global $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $strong_on, $strong_off;
   
     if ($hide == '1') {
       $tmp_display_correct_answer = '0';
       $tmp_display_students_response = '0';
       $tmp_display_feedback = '0';
+      $tmp_display_question_mark = '0';
 
       $strong_on = '';
       $strong_off = '';
@@ -57,12 +58,13 @@
 
   function init_feedback(&$strong_on, &$strong_off) {
     // Reset feedback back to defaults.
-    global $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $display_correct_answer, $display_students_response, $display_feedback;
+    global $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $display_correct_answer, $display_students_response, $display_feedback, $display_question_mark;
   
     $tmp_display_correct_answer = $display_correct_answer;
     $tmp_display_students_response = $display_students_response;
     $tmp_display_feedback = $display_feedback;
-    
+    $tmp_display_question_mark = $display_question_mark;
+
     if ($display_correct_answer == '1') {
       $strong_on = '<strong>';
       $strong_off = '</strong>';
@@ -136,7 +138,7 @@
   }
 
   function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqlidb) {
-    global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $cfg_root_path, $strong_on, $strong_off;
+    global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $cfg_root_path, $strong_on, $strong_off;
     
     $strong_on = '';
     $strong_off = '';
@@ -767,7 +769,7 @@
           $display_no--;
           break;
         case 'mcq':
-          if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 0) {
+          if (!isset($paper[$question]['user_answer']) or (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 0)) {
             reset_feedback($hide_if_unanswered);
           }
              
@@ -1471,7 +1473,8 @@
         case 'extmatch':
           $paper[$question]['mark'] = 0;
           $all_correct = true;
-          
+          $have_answer = false;
+
           echo_content($paper[$question]['leadin']);
           echo '<ol class="extmatch">';
           $matching_scenarios = array();
@@ -1504,6 +1507,7 @@
           $i = 0;
           $section = 0;
           $std_part = 0;
+          $option_answered = 0;
           for ($scenario_no=0; $scenario_no<$total_scenarios; $scenario_no++) {
             if(isset($matching_scenarios[$scenario_no])) {
               $single_scenario = $matching_scenarios[$scenario_no];
@@ -1522,7 +1526,6 @@
             $separate_user_answers = explode('$', $user_answers[$i]);
             echo '<table cellpadding="0" cellspacing="1" border="0">';
             $tmp_option_no = 1;
-            $option_answered = 0;
             if (count($separate_answers) == 1) {   // Single answer Extended Matching
               if ($user_answers[$i] == 'u' or $user_answers[$i] == '') {
                 reset_feedback($hide_if_unanswered);
@@ -1551,10 +1554,13 @@
                 if ($tmp_display_students_response == '1' and $user_answers[$i] != '' and $user_answers[$i] != 'u') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />&nbsp;';
               }
               if (substr($tmp_exclude,$section,1) == '0') {
-                echo "<select name=\"q" . $question. "_" . $std_part . "\">\n";
+                echo "<select name=\"q" . $question. "_" . $std_part;
+                if ($user_answers[$i] == 'u' or $user_answers[$i] == '') echo "\" style=\"color: #808080";
               } else {
-                echo "<select name=\"q" . $question. "_" . $std_part . "\" class=\"exclude\" style=\"border:1px solid red\">\n";
+                echo "<select name=\"q" . $question. "_" . $std_part . "\" class=\"exclude\" style=\"border:1px solid red";
+                if ($user_answers[$i] == 'u' or $user_answers[$i] == '') echo ";color: #808080";
               }
+              echo "\">\n";
               if ($user_answers[$i] == 'u' or $user_answers[$i] == '') {
                 echo "<option value=\"\" style=\"color:#808080\">" . $string['unanswered'] . "</option>\n";
               } else {
@@ -1649,7 +1655,10 @@
             $i++;
           }
           echo "</ol>\n";
+
+          init_feedback($strong_on, $strong_off);
           if ($option_answered == 0) {
+            reset_feedback($hide_if_unanswered);
             echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
             //$paper[$question]['mark'] = 0;
           } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
@@ -1709,7 +1718,7 @@
                 $tmp_answer = (isset($user_answers[$row_no])) ? $user_answers[$row_no] : 'u';
                 if ($tmp_answer == $tmp_col_no) echo ' checked';
                 echo ' />';
-                if (isset($user_answers[$row_no]) and $user_answers[$row_no] != 'u') {
+                if (isset($user_answers[$row_no]) and $user_answers[$row_no] != 'u' and $user_answers[$row_no] != '') {
                   $answered++;
                 }
                 if ($correct_answers[$row_no] == $tmp_col_no and $tmp_answer == $tmp_col_no) {
@@ -1732,6 +1741,12 @@
             }
           }    
           echo '</table></blockquote>';
+
+          if ($answered == 0) {
+            reset_feedback($hide_if_unanswered);
+            echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
+          }
+
           if ($tmp_display_feedback == '1' and trim($paper[$question]['correct_fback']) != '') {
             echo "<p class=\"fback\">" . $paper[$question]['correct_fback'] . "</p>\n";
           }
@@ -1830,8 +1845,10 @@
           while ($blank_count < $no_blanks) {
             if (!isset($user_choices[$blank_count]) or $user_choices[$blank_count] == 'u') {
               reset_feedback($hide_if_unanswered);
+            } else {
+              init_feedback($strong_on, $strong_off);
             }
-          
+
             $answer_options = array();
             $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
             $answer_list = array();
@@ -1852,7 +1869,7 @@
                 if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
               } else {
                 if ($user_choices[$blank_count] == 'u') {
-                    echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" />";
+                    echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" style=\"color: #808080\" />";
                 } else {
                   if (substr($tmp_exclude,$blank_count-1,1) == '0') {
                     $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
@@ -1876,7 +1893,12 @@
               if ($tmp_display_correct_answer == '1') {
                 if (isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
               }
-              echo "<select name=\"\">\n<option value=\"\"></option>";
+              $colormod = (!isset($user_choices[$blank_count]) or $user_choices[$blank_count] == 'u') ? " style=\"color: #808080\"" : '';
+              echo "<select name=\"\"{$colormod}>\n";
+              echo "<option value=\"\"></option>";
+              if (!isset($user_choices[$blank_count]) or $user_choices[$blank_count] == 'u') {
+                echo "<option value=\"u\" selected=\"selected\">{$string['unanswered']}</option>\n";
+              }
               foreach ($answer_list as $answer_option) {
                 if (isset($user_choices[$blank_count]) and html_entity_decode(trim($answer_option)) == html_entity_decode(trim($user_choices[$blank_count]))) {
                   echo "<option value=\"\" selected>$answer_option</option>\n";
@@ -1911,6 +1933,12 @@
             $blank_count++;
           }
           echo "</span></p>\n";
+
+          init_feedback($strong_on, $strong_off);
+          if (!$have_answer) {
+            reset_feedback($hide_if_unanswered);
+          }
+
           if ($paper[$question]['correct_fback'] != '') {
             echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
@@ -2058,22 +2086,26 @@
           $tmp_height = $paper[$question]['q_media_height'];
           if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
 
+          $answered = false;
           if (isset($paper[$question]['user_answer'])) {
             $user_split1 = explode(';',$paper[$question]['user_answer']);
-            $user_split2 = explode('$',$user_split1[1]);
-            
-            $i = 0;
-            for ($a=0; $a<count($user_split2)-3; $a+=4) {
-              $x = $user_split2[$a];
-              $y = $user_split2[$a+1];
-              if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
-                $paper[$question]['mark'] += $paper[$question]['marks_correct'];
-                $correct_no++;
-              } else {
-                $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
-                $all_correct = false;
+            if ($user_split1[1] != '') {
+              $answered = true;
+              $user_split2 = explode('$',$user_split1[1]);
+
+              $i = 0;
+              for ($a=0; $a<count($user_split2)-3; $a+=4) {
+                $x = $user_split2[$a];
+                $y = $user_split2[$a+1];
+                if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
+                  $paper[$question]['mark'] += $paper[$question]['marks_correct'];
+                  $correct_no++;
+                } else {
+                  $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                  $all_correct = false;
+                }
+                $i++;
               }
-              $i++;
             }
           }
           
@@ -2091,6 +2123,11 @@
             echo_content($paper[$question]['scenario']);
           }
           echo_content($paper[$question]['leadin']);
+
+          if ($answered == 0) {
+            reset_feedback($hide_if_unanswered);
+          }
+
           echo '<div align="center">';
           echo '<script language="JavaScript">';
           if ($tmp_display_correct_answer == '0' or $tmp_display_students_response == '0') {
@@ -2150,8 +2187,13 @@
     <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="" />
     </div>
     <br />
-    <div align="center" style="color:#808080">(Move the mouse over incorrect labels to reveal the correct answer)</div>
 <?php
+          if ($answered == 0) {
+            echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
+          } else {
+            echo '<div align="center" style="color:#808080">(Move the mouse over incorrect labels to reveal the correct answer)</div>';
+          }
+
           if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
             echo '<div class="fback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
@@ -2204,7 +2246,7 @@
       }
       
       // Write out the marks for the question
-      if ($display_question_mark == '1' and $paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
+      if ($tmp_display_question_mark == '1' and $paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
         if (isset($paper[$question]['mark']) and is_numeric($paper[$question]['mark'])) {
           if ($paper[$question]['status'] == 'Experimental') {
             echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0 - Experimental Question&nbsp;</span></p>';
