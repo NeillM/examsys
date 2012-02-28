@@ -1,5 +1,5 @@
 <?php
-$string['frequencydiscrimination'] = 'Frequency & Discrimination Analysis'; // Niko
+$string['frequencydiscrimination'] = 'Analiza częstości i różnicowania'; 
 $string['reporttitle'] = 'Raport analizy częstości i różnicowania (U-L)';
 $string['totalcandidatenumber'] = 'Całkowita liczba kandydatów';
 $string['groupsizes'] = 'Górne/dolne rozmiary grup';

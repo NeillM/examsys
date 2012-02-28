@@ -1,4 +1,4 @@
 <?php
 $string['secondmark'] = 'Punktacja wtórna';
-$string['secondmarkselection'] = 'Second Mark Selection';  // Niko
+$string['secondmarkselection'] = 'Selekcja do punktacji wtórnej';  // Niko
 ?>
