@@ -1040,6 +1040,7 @@
           $sct_titles = array(1=>$string['hypothesis'],2=>$string['investigation'],3=>$string['prescription'],4=>$string['intervention'],5=>$string['treatment']);
           $sct_intros = array(1=>$string['tdiagnosis'],2=>$string['tinvestigation'],3=>$string['tprescription'],4=>$string['tintervention'],5=>$string['ttreatment']);
           echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$paper[$question]['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
+          echo "<tr><td style=\"width:49%;\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%;\">" . $sct_parts[1] . "</td></tr>\n";
           echo '</table>';
       
           echo "\n<br /><p><strong>" . $string['thenthis'] . " " . mb_strtolower($sct_titles[$paper[$question]['display_method']], 'UTF-8') . " " . $string['is'] . ":</strong></p>\n";
@@ -1062,6 +1063,10 @@
             }
           }
           
+          if (!isset($paper[$question]['user_answer']) OR $paper[$question]['user_answer'] == 0) {
+            reset_feedback($hide_if_unanswered);
+          }
+
           echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\">\n";
           echo "<tr><td></td><td></td><td></td>";
           if ($tmp_display_correct_answer == 1) {
