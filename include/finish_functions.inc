@@ -1939,7 +1939,7 @@
             reset_feedback($hide_if_unanswered);
           }
 
-          if ($paper[$question]['correct_fback'] != '') {
+          if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
             echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
           }
           
