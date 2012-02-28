@@ -35,6 +35,18 @@
   li {margin-right:10px}
   .heading {background-color:#EBEADB; border-left: solid white 1px; border-right: solid #D8D2BD 1px; border-top: solid white 1px; border-bottom: solid #D8D2BD 1px; color:black}
   .comments {margin-left:10px; color:#808080}
+  .scr_no {margin-left:25px}
+  .screenbrk {
+    color:#15428B;
+    font-weight:bold;
+    font-size:90%;
+    height:70px;
+    width:100%;
+    border-top: 1px solid #B5C4DF;
+    background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
+    background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+  }
   </style>
 </head>
 
@@ -83,11 +95,7 @@
       if ($old_screen < $screen) {
         if ($list_on == 1) echo "</ul>\n";
         $list_on = 0;
-        echo '<br /><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
-        echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-        echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">Screen&nbsp;$screen</td>\n</tr>\n";
-        echo "</table>\n";
-        
+        echo '<br /><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
       }
 
       if ($old_theme != '') {
