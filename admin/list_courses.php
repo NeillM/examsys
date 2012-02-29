@@ -155,7 +155,9 @@ while ($result->fetch()) {
 $result->close();
 $mysqli->close();
 
-$courses = array_csort($courses, $sortby, $ordering);
+if (count($courses) > 0) {
+  $courses = array_csort($courses, $sortby, $ordering);
+}
 $old_code_letter = '';
 $old_name_letter = '';
 $old_school = '';
