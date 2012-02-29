@@ -139,6 +139,24 @@ table {font-size:100%; table-layout: fixed}
   background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
 }
+.studentview {
+  color:#800000;
+  font-size:90%;
+  font-weight:bold;
+  padding-left:15px;
+  padding-bottom:2px
+}
+.staffview {
+  color:#800000;
+  font-size:90%;
+  height:70px;
+  width:100%;
+  padding-top:2px;
+  padding-left:15px
+  background: -moz-linear-gradient(top, #FF8282, #FFFFFF);
+  background: -webkit-linear-gradient(top, #FF8282, #FFFFFF);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='#FFFFFF');
+}
 </style>
 <?php
   if ($latex_needed == 1) {

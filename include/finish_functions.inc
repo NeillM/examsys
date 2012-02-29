@@ -161,10 +161,9 @@
         //echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
         if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
         echo '</blockquote>';
-        echo '<table cellpadding="0" cellspacing="0" width="100%" border="0">';
-        echo "<tr>\n<td width=\"21\" style=\"font-weight:bold\">&nbsp;</td><td style=\"color:#800000; font-size:90%; font-weight:bold\">" . $string['studentviewend'] . "&nbsp;</td></tr>\n";
-        echo "<tr style=\"height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x\">\n<td width=\"21\">&nbsp;</td><td style=\"color:#800000; font-size:90%\">" . $string['staffviewbelow'] . "</td></tr>\n";
-        echo '</table>';
+        
+        echo '<div class="studentview">' . $string['studentviewend'] . '</div>';
+        echo '<div class="staffview" style="padding-top:2px; padding-left:15px">' . $string['staffviewbelow'] . '</div>';
       }
     }
     $q_no = 0;
