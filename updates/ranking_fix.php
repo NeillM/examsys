@@ -34,9 +34,9 @@ while ($result->fetch()) {
   }
   $result2->close();
   
-  for ($i=0; $i<3; $i++) {
+  for ($log_id=0; $log_id<3; $log_id++) {
     // Get student answers for the question
-    $result2 = $mysqli->prepare("SELECT id, user_answer, mark FROM log$i WHERE q_id=$q_id");
+    $result2 = $mysqli->prepare("SELECT id, user_answer, mark FROM log$log_id WHERE q_id=$q_id");
     $result2->execute();
     $result2->store_result();
     $result2->bind_result($log_id, $user_answer, $original_mark);
@@ -87,9 +87,9 @@ while ($result->fetch()) {
         }
       }
       
-      echo "<div>$score_method, UPDATE log$i SET mark=$mark, totalpos=$totalpos WHERE id=$log_id</div>";
+      echo "<div>$score_method, UPDATE log$log_id SET mark=$mark, totalpos=$totalpos WHERE id=$log_id</div>";
 
-      $adjust = $mysqli->prepare("UPDATE log$i SET mark=?, totalpos=? WHERE id=?");
+      $adjust = $mysqli->prepare("UPDATE log$log_id SET mark=?, totalpos=? WHERE id=?");
       $adjust->bind_param('dii', $mark, $totalpos, $log_id);
       $adjust->execute();
       $adjust->close();
