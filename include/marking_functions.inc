@@ -699,7 +699,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         break;
       case 'textbox':
         $qid = 'q' . $question_no;
-        if(isset($_POST[$qid])) {
+        if (isset($_POST[$qid])) {
           $saved_response = $_POST[$qid];
         } else {
           $saved_response = '';
@@ -710,6 +710,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       case 'hotspot':
         $qid = 'q' . $question_no;
         $mark = 0;
+        $all_correct = true;
         if (isset($_POST[$qid])) {
           $saved_response = $_POST[$qid];
           $sub_parts = explode('|',$saved_response);
@@ -717,16 +718,20 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
             if ($sub_part{0} == 1) {
               $mark += $marks_correct;
             } else {
-              if ($saved_response != 'u') $mark += $marks_incorrect;
+              $all_correct = false;
+              if ($saved_response != 'u') {
+                $mark += $marks_incorrect;
+              }
             }
           }
         } else {
+          $all_correct = false;
           $saved_response = '';
         }
         if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
-          if ($mark == $totalpos) {
+          if ($all_correct) {
             $mark = $marks_correct;
-          } elseif ($saved_response == 'u') {
+          } elseif ($saved_response == 'u' or $saved_response = '') {
             $mark = 0;
           } else {
             $mark = $marks_incorrect;
