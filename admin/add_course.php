@@ -45,8 +45,8 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_course = trim($_POST['course']);
   $tmp_description = trim($_POST['description']);
   
-  $result = $mysqli->prepare("INSERT INTO courses VALUES (NULL, ?, ?, ?, NULL)");
-  $result->bind_param('sss', $tmp_school, $tmp_course, $tmp_description);
+  $result = $mysqli->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
+  $result->bind_param('ssi', $tmp_course, $tmp_description, $tmp_school);
   $result->execute();  
   $result->close();
   $mysqli->close();
