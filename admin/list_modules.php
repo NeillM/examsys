@@ -184,7 +184,7 @@ for ($i=0; $i<$module_no; $i++) {
   } elseif ($sortby == 'active' and $old_active != $modules[$i]['active']) {
     echo "<tr><td colspan=\"5\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $tmp_active . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
-  echo "<tr id=\"$i\" onclick=\"selMod($i,'" . $modules[$i]['moduleid'] . "',event)\" ondblclick=\"edit('$moduleid')\" onmouseover=\"lon($i)\" onmouseout=\"loff($i)\" class=\"l\"><td><div class=\"col1\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
+  echo "<tr id=\"$i\" onclick=\"selMod($i,'" . $modules[$i]['moduleid'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['moduleid'] . "')\" onmouseover=\"lon($i)\" onmouseout=\"loff($i)\" class=\"l\"><td><div class=\"col1\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
   
   $old_moduleid_letter = substr($modules[$i]['moduleid'], 0, 1);
   $old_name_letter = substr($modules[$i]['name'], 0, 1);
