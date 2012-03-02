@@ -142,7 +142,7 @@ function outputDebug() {
 }
 
 function outputLoadTimes() {
-  global $debug_pagestart, $userroles, $mysqli, $queryInfo;
+  global $debug_pagestart, $userroles, $mysqli, $queryInfo, $displayDebug;
   
   if (!is_object($mysqli)) {
     return;
