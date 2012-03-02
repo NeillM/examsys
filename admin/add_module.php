@@ -127,7 +127,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
           $tmp_userID = UserUtils::createUser($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $student->YearofStudy, 'Student', $student->StudentID, $mysqli);
         }
         // Add student onto the module
-        UserUtils::addUserToModule($tmp_userID, $module, $session, $mysqli);
+        UserUtils::addUserToModule($tmp_userID, $module, 1, $session, $mysqli);
         
         $enrolements++;
         if ($enrolement_details == '') {
