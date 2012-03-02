@@ -28,6 +28,7 @@
 $debug_pagestart = microtime();
 register_shutdown_function('outputLoadTimes');
 $dbclass = 'debug_mysqli';
+$displayDebug = true;
   
 $queryInfo = array();
 Class debug_mysqli extends mysqli {
@@ -144,6 +145,10 @@ function outputLoadTimes() {
   global $debug_pagestart, $userroles, $mysqli, $queryInfo;
   
   if (!is_object($mysqli)) {
+    return;
+  }
+  
+  if(!$displayDebug) {
     return;
   }
   
