@@ -3,9 +3,9 @@ table, td {font-size:100%; border-spacing:0px; padding:0px; border-collapse:coll
 h1 {font-size:150%; color:black}
 h2 {font-size:140%; color:#f27000}
 *.b {padding:0px; margin:1px; width:40px}
-.wide {width:82px}
 a.del {border-radius:4px; text-decoration:none; height:30px; line-height:30px; text-align:center; background-color:#CC9933; color:white; border-top: 1px solid white; border-left: 1px solid white; border-right: 1px solid black; border-bottom: 1px solid black; display:block; font-size:110%}
 a.ac {
+  width:81px;
   text-decoration:none;
   height:30px;
   line-height:30px;

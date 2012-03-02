@@ -370,6 +370,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 
 <link rel="stylesheet" href="../../css/screen.css" type="text/css" />
 <link rel="stylesheet" href="../../css/add_edit_new.css" type="text/css" />
+<link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 
 <?php echo $cfg_editor_javascript; ?>
 <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
@@ -464,7 +465,7 @@ if ($critical_error == '') {
 <?php
     } elseif ($disabled == 'locked') {
 ?>
-    <div class="locked" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
+    <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
 <?php
     }
   }
