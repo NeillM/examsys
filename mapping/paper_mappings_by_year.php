@@ -2,6 +2,7 @@
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
@@ -260,7 +261,7 @@ foreach($allsession as $moduleID => $module) {
                 if (is_array($tmpObj['mapped'])) {
                   echo "\t<td class=\"o_s\">";
                   foreach($tmpObj['mapped'] as $qid) {
-                    echo "<span class=\"\" style=\"cursor:pointer\" title=\"" . $papers[$p_id]['questions'][$qid]['leadin'] . "\"><a href=\"preview_question.php?q_id=" . $papers[$p_id]['questions'][$qid]['q_id'] . "&qNo=" . $papers[$p_id]['questions'][$qid]['qnumber'] . "\" target=\"_blank\">Q" . $papers[$p_id]['questions'][$qid]['qnumber'] . "</a></span> ";
+                    echo "<span class=\"\" style=\"cursor:pointer\" title=\"" . $papers[$p_id]['questions'][$qid]['leadin'] . "\"><a href=\"../question/view_question.php?q_id=" . $papers[$p_id]['questions'][$qid]['q_id'] . "&qNo=" . $papers[$p_id]['questions'][$qid]['qnumber'] . "\" target=\"_blank\">Q" . $papers[$p_id]['questions'][$qid]['qnumber'] . "</a></span> ";
                   }
                 } else {
                   echo "\t<td class=\"nm_s\">";
