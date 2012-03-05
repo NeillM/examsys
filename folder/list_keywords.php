@@ -31,6 +31,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['keywords'] . ' ' . $cfg_install_type; ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -120,7 +121,7 @@
 ?>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['mypersonalkeywords']; ?>" border="0" /></a></th>
 </tr>
-<tr><td colspan="2" class="bevel"></td></tr>
+<tr><th colspan="2" class="bevel"></th></tr>
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {
   echo "<tr id=\"$keywordID\" onclick=\"selKey($keywordID,event)\" ondblclick=\"edit($keywordID)\" onmouseover=\"lon($keywordID)\" onmouseout=\"loff($keywordID)\" class=\"l\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";

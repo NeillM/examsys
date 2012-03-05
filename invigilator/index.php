@@ -73,9 +73,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Rogo: <?php echo $string['invigilatoraccess']; ?></title>
-
+<link rel="stylesheet" type="text/css" href="../css/header.css" />
 <script language="JavaScript">
   // please keep these lines on when you copy the source
   // made by: Nicolas - http://www.javascript-page.com
@@ -159,9 +160,9 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
   $lab_results->close();
 
 ?>
-<table cellspacing="0" cellpadding="0" border="0" style="width:100%; font-size:100%; background-color:#F1F5FB">
+<table class="header">
 <tr>
-<td><div style="padding-left:10px; font-size:24pt; font-weight:bold">
+<th><div style="padding-left:10px; font-size:24pt; font-weight:bold">
 <?php
   if ($room_name == '') {
     echo NetworkUtils::get_ipaddress() . $string['unknownlab']; 
@@ -169,9 +170,9 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
     echo $string['lab'] . ' ' . $room_name; 
   }
 ?>
-</div><div style="padding-left:10px; font-size:10pt; font-weight:bold"><?php echo $string['invigilatoraccess']; ?></div></td>
-<td align="right"><input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" />&nbsp;</td></tr>
-<tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+</div><div style="padding-left:10px; font-size:10pt; font-weight:bold"><?php echo $string['invigilatoraccess']; ?></div></th>
+<th style="text-align:right"><input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theTime" />&nbsp;</th></tr>
+<tr><th colspan="2" class="bevel"></th></tr>
 </table>
 <br />
 <br />
@@ -188,7 +189,7 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
     $col_width = round(100 / ($paper_results->num_rows + 1));
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%\">\n<tr>\n";
     while ($row = $paper_results->fetch()) {
-      echo "<td style=\"vertical-align:top; width:$col_width%\"><div><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a></div><hr noshade=\"noshade\" size=\"1\" />";
+      echo "<td style=\"vertical-align:top; width:$col_width%\"><div><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a></div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
       get_students($moduleID, $calendar_year, $property_id, $exam_duration);
       echo "</td>";
     }

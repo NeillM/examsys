@@ -68,7 +68,7 @@ function getPaper($paperID) {
   $result->execute();
   $result->bind_result($random_mark, $total_mark, $q_group, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
   $temp_array['questionID'] = '';
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $row_no++;
     $temp_array['questions'][$q_id]['screen'] = $screen;
     $temp_array['questions'][$q_id]['q_type'] = $q_type;
@@ -153,7 +153,7 @@ function getPaper($paperID) {
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($paper_title, $moduleID, $session, $start_date, $end_date, $paper_type);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     echo "<table class=\"header\" style=\"font-size:80%\">\n";
     echo '<tr><th>';
     echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -170,7 +170,7 @@ function getPaper($paperID) {
 ?>
 <table class="header" style="font-size:80%">
 <tr><th style="padding-top:1px">
-  <table cellpadding="1" cellspacing="0" border="0" style="font-size:100%; width:378px">
+  <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%; width:378px">
   <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
   <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
   <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)"><?php echo $string['longitudinal']; ?></td>
@@ -188,7 +188,7 @@ $papersRes = $mysqli->prepare($sql);
 $papersRes->bind_param('is', $_GET['paperID'],$start_date);
 $papersRes->execute();
 $papersRes->bind_result($property_id);
-while ($row = $papersRes->fetch()) {
+while ($papersRes->fetch()) {
   $papers_tmp[] =  $property_id;
 }
 
@@ -203,7 +203,7 @@ if(isset($papers_tmp)) {
 }
 
 foreach ($papers as $p_id => $paper) {
-  $objsBySession[$p_id] = getObjectives($paper['moduleID'],$paper['session'],$p_id,$paper['questionID'],$mysqli);
+  $objsBySession[$p_id] = getObjectives($paper['moduleID'], $paper['session'], $p_id,$paper['questionID'], $mysqli);
 }
 
 $allsession = array();

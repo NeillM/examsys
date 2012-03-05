@@ -43,7 +43,7 @@
       document.getElementById(tmp_ID).style.backgroundColor = 'white';
       document.getElementById(tmp_ID).style.color = 'black';
     }
-    document.getElementById(labNo).style.backgroundColor = '#EEEEEE';
+    document.getElementById(labNo).style.backgroundColor = '#316AC5';
     document.getElementById(labNo).style.color = 'white';
 
     document.getElementById('menu1a').style.display = 'none';
@@ -115,7 +115,7 @@ if (count($labs) > 0) {
     echo '<div class="foldername">';
     echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:66px; cursor:pointer" align="center">';
     echo "  <img onclick=\"selLab('" . $lab['id'] . "','lab$lab_no',event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\" src=\"../artwork/computer_lab_48.png\" width=\"48\" height=\"48\" alt=\"" . $lab['name'] . "\" border=\"0\" /><td>\n";
-    echo "  <td style=\"width:290px; cursor:pointer\"><span id=\"lab$lab_no\" onclick=\"selLab('" . $lab['id'] . "','lab$lab_no',event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\">" . $lab['name'] . "</span><br />";
+    echo "  <td style=\"width:290px; cursor:pointer\"><span id=\"lab$lab_no\" onclick=\"selLab('" . $lab['id'] . "', 'lab$lab_no', event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\">" . $lab['name'] . "</span><br />";
     echo '  <span style="color:#808080">' . $lab['pc_number'];
     if ($lab['pc_number'] == 1) {
       echo ' ' . $string['machine'];

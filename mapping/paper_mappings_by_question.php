@@ -108,7 +108,7 @@
   ?>
   <table class="header" style="font-size:90%">
   <tr><th style="padding-top:1px">
-  <table cellpadding="1" cellspacing="0" border="0" style="font-size:90%; width:378px">
+  <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
   <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
   <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_on.gif)"><?php echo $string['byquestion']; ?></td>
   <td style="cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(../artwork/tab_off.gif)" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
@@ -147,7 +147,7 @@
   $result->bind_param('ii', $paperID, $paperID);
   $result->execute();
   $result->bind_result($total_random_mark, $total_marks, $paper_ownerID, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $row_no++;
     $temp_array[$row_no]['screen'] = $screen;
     $temp_array[$row_no]['q_type'] = $q_type;

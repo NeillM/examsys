@@ -384,10 +384,10 @@ function getMSCAA($paperID, $mysqlidb) {
   }
 </script>
 <?php
-  $result = $mysqli->prepare("SELECT paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
+  $result = $mysqli->prepare("SELECT paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed, retired FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $surname, $tmp_module, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed);
+  $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $surname, $tmp_module, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed, $retired);
   $result->fetch();
   $result->close();
 
@@ -785,11 +785,24 @@ function getMSCAA($paperID, $mysqlidb) {
   } else {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
   }
-  echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
+  echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
+  if ($retired != '') {
+    echo ' class="retired"';
+  }
+  echo '>' . $paper_title . '</div>';
   echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-  echo "<tr><th colspan=\"3\" style=\"font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> $display_start_date</th><th colspan=\"3\" style=\"text-align:right;font-size:90%\"><strong>" . $string['owner'] . ":</strong> $paper_owner&nbsp;</th></tr>\n";
+  if ($retired == '') {
+    echo "<tr>\n";
+  } else {
+    echo "<tr class=\"retired\">\n";
+  }
+  echo "<th colspan=\"3\" style=\"font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> $display_start_date</th><th colspan=\"3\" style=\"text-align:right;font-size:90%\"><strong>" . $string['owner'] . ":</strong> $paper_owner&nbsp;</th></tr>\n";
+  if ($retired == '') {
+    echo '<tr class="details-head">';
+  } else {
+    echo '<tr class="details-head retired">';
+  }
   ?>
-    <tr class="details-head">
     <th class="icon">&nbsp;</th>
     <th>&nbsp;</th>
     <th class="q-cell"><?php echo $string['question']; ?></th>

@@ -191,3 +191,6 @@ label.error {
 #content tr.experimental td {
   color: #808080;
 }
+.retired {
+  color: #808080;
+}

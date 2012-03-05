@@ -124,8 +124,10 @@
   $result->store_result();
   $result->bind_result($moduleID, $tmp_keyword, $keywordID);
   while ($result->fetch()) {
-    if ($old_moduleID != $moduleID) $keywords_array[$keyword_no] = "#$moduleID";
-    $keywords_array[htmlspecialchars($tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
+    if ($old_moduleID != $moduleID) {
+      $keywords_array[$keyword_no] = "#$moduleID";
+    }
+    $keywords_array[htmlspecialchars($moduleID . '[BR]' . $tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
     $old_moduleID = $moduleID;
     $keyword_no++;
   }
@@ -140,7 +142,7 @@
     $keywords_array[htmlspecialchars($tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
   }
   $result->close();
-      
+  
   if (count($my_folders_array) > 0) {
     $divider = array('-'=>'-');
     $full_modules_array = array();
