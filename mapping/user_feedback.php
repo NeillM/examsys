@@ -181,7 +181,7 @@
   
   //get Cohort Data
   $chort_question_data = getCohortData($mysqli, $moduleID, $start_date, $end_date, '%', '%', '%', $paperID, $paper_type, '');
-  if($_SERVER['PHP_AUTH_USER'] == 'cczab1') var_dump('<pre>',$chort_question_data,'</pre>');
+
   //get users log data excluding exclued questions
   $qid_list = '';
   $question_data = array();
