@@ -235,11 +235,10 @@ function xEval() {
     if (x.indexOf('^',n+1) > 0) {
       alert("WARNING! Only 1 [^] allowed in expression!");
     } else {  // all to left of '^' is taken as base, and all right as exponent
-      document.sCal.IOx.value = Math.pow(eval(x.substring(0,n)),eval(x.substring(n+1)));
+      showAnswer(Math.pow(eval(x.substring(0,n)),eval(x.substring(n+1))));
     }
   } else {      // likewise, entire x-value used as function argument, not just last term
-//    if (x.substring(0, 1) == '.') x = '0' + x;
-    document.sCal.IOx.value = eval(x);
+    showAnswer(eval(x));
   }
   if (xRedo>0) {
     x=xTemp;
@@ -580,4 +579,9 @@ function braceEval() {
 
 function changeTrigMode() {
   trigMode = (document.getElementById('trigmode_rad').checked) ? 'radians' : 'degrees';
+}
+
+function showAnswer(val) {
+  val = parseFloat(val);
+  document.sCal.IOx.value = val.toFixed(12).replace(/0+$/, "").replace(/\.+$/, "");
 }
