@@ -681,6 +681,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         $array_size = count($blank_details);
         $blank_count = 1;
         while ($blank_count < $array_size) {
+          $reviewScale = '';
           $blank_parts = explode("[/blank]", $blank_details[$blank_count]);
           $results = array();
           $not_used = preg_match("|size=\"([0-9]{1,3})\"|", $blank_details[$blank_count], $results);
