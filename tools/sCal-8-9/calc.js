@@ -285,8 +285,12 @@ function xPlusEq(s) {
       buffer = '';
     }
     Ix();
-    if (s == '.' && buffer == '') {
-      x = buffer = '0';
+    if (buffer == '') {
+      if (s == '.') {
+        x = buffer = '0';
+      } else if (x == '0') {
+        x = '';
+      }
     }
     x += s;
     buffer += s;
