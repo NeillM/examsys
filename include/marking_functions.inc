@@ -731,7 +731,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         if ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
           if ($all_correct) {
             $mark = $marks_correct;
-          } elseif ($saved_response == 'u' or $saved_response = '') {
+          } elseif ($saved_response == 'u' or $saved_response == '') {
             $mark = 0;
           } else {
             $mark = $marks_incorrect;
