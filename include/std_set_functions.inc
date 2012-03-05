@@ -148,7 +148,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       if ($li_set == 1) {
         echo '<tr><td></td><td>';
       } else {
-        echo '<tr><td class="question_no">' . ($question_no - 1) . '.&nbsp;</td><td>';
+        echo '<tr><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
       }
       $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
       $replace = array($A,$B,$C,$D,$E,$F,$G,$H,$I,$J);
