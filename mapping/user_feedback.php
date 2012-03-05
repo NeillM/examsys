@@ -38,6 +38,7 @@
   
   $showReflection = true;
   if ((strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false) AND (!isset($_GET['userID']) OR $_GET['userID'] != '') ) {
+    check_var('userID', 'GET', true, false);
     $userID = $_GET['userID'];
     $showReflection = false;
   }
