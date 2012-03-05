@@ -138,7 +138,7 @@
       } else {
         echo '<td style="color:red; text-decoration:line-through" onclick="Qpreview(' . $q_id . ')">';
       }
-      echo $leadin_plain . "</td><td><nobr>" . fullQuestionType($q_type) . "</nobr></td><td style=\"padding-left:5px; padding-right:2px\">$display_date</td></tr>\n";
+      echo $leadin_plain . "</td><td><nobr>" . fullQuestionType($q_type, $string) . "</nobr></td><td style=\"padding-left:5px; padding-right:2px\">$display_date</td></tr>\n";
     }
     $old_id = $q_id;
   }

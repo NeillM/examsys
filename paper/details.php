@@ -1040,7 +1040,7 @@ function getMSCAA($paperID, $mysqlidb) {
     if ($temp_array[$x]['q_type'] == 'random') {
       $sub_question = 1;
       foreach ($temp_array[$x]['random'] as $random_question) {
-        echo "<tr style=\"display:none\" ondblclick=\"edQ(" . ($question_number+1) . "," . $random_question['q_id'] . ",'" . $random_question['type'] . "');\" id=\"r" . $x . "_" . $sub_question . "\"><td></td><td></td><td class=\"s\">&#149&nbsp;" . $random_question['leadin'] . "</td><td class=\"t\">" . fullQuestionType($random_question['type']) . "</td>";
+        echo "<tr style=\"display:none\" ondblclick=\"edQ(" . ($question_number+1) . "," . $random_question['q_id'] . ",'" . $random_question['type'] . "');\" id=\"r" . $x . "_" . $sub_question . "\"><td></td><td></td><td class=\"s\">&#149&nbsp;" . $random_question['leadin'] . "</td><td class=\"t\">" . fullQuestionType($random_question['type'], $string) . "</td>";
         if ($temp_array[$x]['marks'] == 'ERR') {
           echo "<td class=\"errmk\">" . $random_question['marks'] . "</td>";
         } else {

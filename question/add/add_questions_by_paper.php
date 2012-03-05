@@ -101,7 +101,7 @@ a:hover {color:black}
     } else {
       echo '<td style="color:red; text-decoration:line-through" onclick="Qpreview(' . $q_id . ')">';
     }
-    echo "$leadin_plain</td><td class=\"s\">" . fullQuestionType($q_type) . "</td><td class=\"s\">$last_edited</td></tr>\n";
+    echo "$leadin_plain</td><td class=\"s\">" . fullQuestionType($q_type, $string) . "</td><td class=\"s\">$last_edited</td></tr>\n";
     $old_screen = $screen;
   }
   $stmt->close();
