@@ -1972,6 +1972,26 @@ if (!isset($_POST['update'])) {
     echo "<li>Added page charset to configuration file.</li>\n";
   }
 
+  // 05/03/2012 - Add announcements table
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='announcements' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE announcements (id int not null primary key auto_increment, title varchar(255), staff_msg text, student_msg text, icon varchar(255), startdate datetime, enddate datetime)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE announcements (id int not null primary key auto_increment, title varchar(255), staff_msg text, student_msg text, icon varchar(255), startdate datetime, enddate datetime, deleted datetime)</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   

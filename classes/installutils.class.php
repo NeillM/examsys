@@ -420,6 +420,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT,INSERT ON " . $dbname . ".temp_users TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".announcements TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";    
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
@@ -1925,6 +1926,20 @@ QUERY;
           `value` varchar(255) default NULL,
           `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
           PRIMARY KEY  (`id`)
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['announcements'] = <<<QUERY
+        CREATE TABLE `announcements` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `title` varchar(255) DEFAULT NULL,
+          `staff_msg` text,
+          `student_msg` text,
+          `icon` varchar(255) DEFAULT NULL,
+          `startdate` datetime DEFAULT NULL,
+          `enddate` datetime DEFAULT NULL,
+          `deleted` datetime DEFAULT NULL,
+          PRIMARY KEY (`id`)
         ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 

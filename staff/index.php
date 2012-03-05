@@ -50,7 +50,7 @@ require '../include/staff_auth.inc';
 <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-
+<link rel="stylesheet" type="text/css" href="../css/announcements.css" />
 <script src="../js/staff_help.js" type="text/javascript"></script>
 <?php echo $cfg_js_root ?>
 <script src="../js/sidebar.js" type="text/javascript"></script>
@@ -152,9 +152,15 @@ require '../include/staff_auth.inc';
 </table>
 <div style="padding-left:14px; padding-right:14px">
 <?php
-  if ($news_msg != '') {
-    echo "<blockquote>\n<table cellpadding=\"10\" cellspacing=\"0\" border=\"0\"><tr><td style=\"border-top:1px solid #EEEEEE; border-bottom:1px solid #EEEEEE; border-left:1px solid #EEEEEE\"><img src=\"../artwork/news.png\" width=\"62\" height=\"52\" alt=\"Newspaper\" /></td><td style=\"border-top:1px solid #EEEEEE; border-bottom:1px solid #EEEEEE; border-right:1px solid #EEEEEE; border-left:1px solid #EEEEEE; vertical-align:top\">$news_msg</td></tr></table>\n</blockquote>\n";
+  // Check for any news/announcements
+  $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png');
+  $result = $mysqli->prepare("SELECT title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
+  $result->execute();
+  $result->bind_result($news_title, $staff_msg, $icon);
+  while ($result->fetch()) {
+    echo "<br /><div class=\"announcement\"><div style=\"min-height:64px; padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$staff_msg</div></div>\n";
   }
+  $result->close();
 
   echo "<br />\n";
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
