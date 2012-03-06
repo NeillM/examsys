@@ -43,7 +43,7 @@ require '../../include/staff_auth.inc';
 
   <script type="text/javascript" src="../../js/help_toc.js"></script>
 </head>
-<body onload="resizeTOC()">
+<body onload="resizeTOC()" onresize="resizeTOC()">
 
 <div id="main">
 <?php
