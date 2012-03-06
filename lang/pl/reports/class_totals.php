@@ -76,4 +76,5 @@ $string['displaypaper'] = 'Wyświetl arkusz dla';
 $string['notcompleted'] = 'Uwaga: nie wypełniono wszystkich ekranów';
 $string['unknown'] = '&nbsp;&lt;Nieznany&gt;';
 $string['markingnotcomplete'] = 'Punktacja nie zakończona';
+$string['of'] = ' of '; // Niko
 ?>

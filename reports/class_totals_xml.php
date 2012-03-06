@@ -311,9 +311,10 @@
   echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="' . $exp_row_count . '" x:FullColumns="1" x:FullRows="1">';
   echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
 
+  $size_msg = ($cohort_size < $display_no) ? $cohort_size : $display_no;
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['cohortsize'] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="Number">' . $display_no . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' . $size_msg . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['failureno'] . '</Data></Cell>';

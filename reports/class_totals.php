@@ -691,15 +691,16 @@ ob_start();
     echo "<tr><td class=\"field\" style=\"width:150px\">" . $string['paper'] . "</td><td colspan=\"2\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
-      if ($_GET['direction'] = 'asc') {
+      if ($_GET['direction'] == 'desc') {
         echo ' (top ' . $_GET['percent'] . '%)';
       } else {
         echo ' (bottom ' . $_GET['percent'] . '%)';
       }
     }
-    echo "</td><td class=\"r\">$display_no</td>";
-    if ($completed_no < $display_no) {
-      echo '<td>(' . ($display_no - $completed_no). ' ' . $string['candidatenotcomplete'] . ')</td>';
+    $size_msg = ($cohort_size < $display_no) ? $cohort_size . $string['of'] . $display_no : $display_no;
+    echo "</td><td class=\"r\">$size_msg</td>";
+    if (($completed_no + $out_of_range) < $display_no) {
+      echo '<td>(' . ($display_no - $completed_no - $out_of_range). ' ' . $string['candidatenotcomplete'] . ')</td>';
     } else {
       echo '<td>';
       if ($absent_no == 1) {
@@ -711,9 +712,9 @@ ob_start();
     }
     echo "</tr>\n";
     
-    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . round(($failures / $display_no) * 100) . "% of cohort)</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . round(($passes / $display_no) * 100) . "% of cohort)</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . round(($honours / $display_no) * 100) . "% of cohort)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . round(($passes / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . "% of cohort)</td></tr>\n";
     
     echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td class=\"r\">";
     if ($total_marks < $orig_total_marks) echo "<span class=\"exclude\">$orig_total_marks</span>&nbsp;&nbsp;";

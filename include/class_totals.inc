@@ -348,7 +348,7 @@ function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $
   $master_array[$user_number]['paper_type'] = $tmp['paper_type'];
   $master_array[$user_number]['room'] = $tmp['room'];
   $master_array[$user_number]['visible'] = 1;    // Default to visible unless switched off below.
-  
+
   
   // Add metadata
   if (count($met_array) > 0) {
@@ -807,6 +807,7 @@ if ($old_status != 'Experimental') {
 }
 
 $cohort_size = 0;
+$out_of_range = 0;
 if ($_GET['absent'] == 1) {
   // Get students in the cohort.
   $student_cohort = array();
@@ -998,6 +999,7 @@ if ($log_query->num_rows > 0) {
       for ($i=0; $i<$user_no; $i++) {
         if ($i >= $cohort_size) {
           $user_results[$i]['visible'] = 0;
+          $out_of_range++;
         } else {
           $total_mark += $user_results[$i]['mark'];
           $total_adjusted_mark += ($user_results[$i]['mark'] - $total_random_mark);
@@ -1133,7 +1135,7 @@ for ($i=0; $i<$user_no; $i++) {
     $mark_total += $user_results[$i]['mark'];
     $percent_total += $user_results[$i]['adj_percent'];
   }
-  if (isset($user_results[$i]['mark'])) {
+  if (isset($user_results[$i]['mark']) and $user_results[$i]['visible'] == 1) {
     if (isset($user_results[$i]['adj_percent'])) {
       $marks_data[] = $user_results[$i]['adj_percent'];
       if ($user_results[$i]['adj_percent'] < $pass_mark) $failures++;
