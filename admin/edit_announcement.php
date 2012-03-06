@@ -99,9 +99,9 @@ h1 {font-size:120%}
 <tr>
 <td></td><td>
 <?php
-$icons = array(1=>'news_64.png', 2=>'new_64.png', 3=>'tip_64.png', 4=>'software_64.png', 5=>'exclamation_64.png', 6=>'sync_64.png');
+$icons = array(1=>'news_64.png', 2=>'new_64.png', 3=>'tip_64.png', 4=>'software_64.png', 5=>'exclamation_64.png', 6=>'sync_64.png', 7=>'megaphone_64.png');
 
-for ($i=1; $i<=6; $i++) {
+for ($i=1; $i<=7; $i++) {
   if ($i == $news_icon) {
     echo "<input type=\"radio\" name=\"icon\" value=\"$i\" checked=\"checked\" /><img src=\"../artwork/" . $icons[$i] . "\" width=\"64\" height=\"64\" border=\"0\" />&nbsp;&nbsp;&nbsp;";
   } else {

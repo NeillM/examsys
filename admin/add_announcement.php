@@ -93,6 +93,8 @@ h1 {font-size:120%}
 <input type="radio" name="icon" value="5" /><img src="../artwork/exclamation_64.png" width="64" height="64" border="0" />
 &nbsp;&nbsp;&nbsp;
 <input type="radio" name="icon" value="6" /><img src="../artwork/sync_64.png" width="64" height="64" border="0" />
+&nbsp;&nbsp;&nbsp;
+<input type="radio" name="icon" value="7" /><img src="../artwork/megaphone_64.png" width="64" height="64" border="0" />
 </td>
 </tr>
 <tr>

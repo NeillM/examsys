@@ -174,7 +174,7 @@ $result->fetch();
 $result->close();
 
 if ($student_msg != '') {
-  $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png');
+  $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
   echo "<br /><div class=\"announcement\"><div style=\"padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$student_msg</div></div>\n<br />\n";
 }
   

@@ -153,7 +153,7 @@ require '../include/staff_auth.inc';
 <div style="padding-left:14px; padding-right:14px">
 <?php
   // Check for any news/announcements
-  $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png');
+  $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
   $result = $mysqli->prepare("SELECT title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
   $result->execute();
   $result->bind_result($news_title, $staff_msg, $icon);
