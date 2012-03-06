@@ -327,10 +327,12 @@ function getMSCAA($paperID, $mysqlidb) {
       evt.cancelBubble = true;
     }
 
-    var deleteLink = $('#delete_break');
-    deActivateDelete(deleteLink);
-    var addLink = $('#add_break');
-    activateAddBreak(addLink);
+    if (typeof deActivateAddBreak != 'undefined') {
+      var deleteLink = $('#delete_break');
+      deActivateDelete(deleteLink);
+      var addLink = $('#add_break');
+      activateAddBreak(addLink);
+    }
   }
 
   function edQ(questionNo, questionID, qType) {
@@ -356,8 +358,10 @@ function getMSCAA($paperID, $mysqlidb) {
 
     hideMenus();
 
-    var addLink = $('#add_break');
-    deActivateAddBreak(addLink);
+    if (typeof deActivateAddBreak != 'undefined') {
+      var addLink = $('#add_break');
+      deActivateAddBreak(addLink);
+    }
   }
 
   function hideNotice() {
