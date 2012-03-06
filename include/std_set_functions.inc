@@ -383,7 +383,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       if ($matching_media[0] != '') {
         echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0]) . "</p>\n";
       }
-      echo '<table cellpadding="2" cellspacing="0" border="1">';
+      echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
       echo "<tr><td colspan=\"2\">&nbsp;</td>\n";
       foreach ($matching_options as $single_option) {
         echo '<td>' . $single_option . '</td>';
@@ -392,12 +392,12 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         echo '<td>&nbsp;</td>';
       }
       echo "</tr>\n";
-      $numerals = array('0','i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
+      //$numerals = array('0','i','ii','iii','iv','v','vi','vii','viii','ix','x','xi','xii');
       foreach ($matching_scenarios as $single_scenario) {
         $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $part_id, $tmp_reviews, $is_group);
         if (trim($single_scenario) != '') {
           echo '<tr>';
-          echo '<td align="right">' . $numerals[$part_id] . '.</td><td';
+          echo '<td align="right">' . chr(64 + $part_id) . '.</td><td';
           if (substr($tmp_exclude,$part_id-1,1) == '1') echo ' style="color:red; text-decoration:line-through"';
           echo '>' . $single_scenario . '</td>';
           $answer_no = 1;

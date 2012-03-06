@@ -101,6 +101,8 @@ p {margin-top:0px; padding-top:0px}
 .active {color:<?php echo $fgcolor; ?>}
 .inactive {color:#C0C0C0}
 .heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
+.matrix {border:1px solid #808080; border-collapse:collapse}
+.matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
 .scr_no {margin-left:25px}
 .screenbrk {
