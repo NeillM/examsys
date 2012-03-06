@@ -333,7 +333,14 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
         foreach ($matching_options as $single_option) {
           $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $part_id, $tmp_reviews, $is_group);
-          echo "<tr><td>" . chr($part_id + 64) . ".</td><td>" . $single_option . "</td><td>&nbsp;</td><td>";
+          echo "<tr><td>" . chr($part_id + 64) . ".</td><td>";
+          if (strpos($single_option,'.gif') !== false or strpos($single_option,'.png') !== false or strpos($single_option,'.jpg') !== false or strpos($single_option,'.jpeg') !== false) {
+            $image_parts = explode('~', $single_option);
+            echo '<img src="../media/' . $image_parts[0] . '" width="' . $image_parts[1] . '" height="' . $image_parts[2] . '" border="0" />';
+          } else {
+            echo $single_option; 
+          }
+          echo "</td><td>&nbsp;</td><td>";
           echo reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,$part_id - 1,1), $review_val, $stdID, $std_excluded, $is_group);
           echo "</td></tr>\n";
           $part_id++;
