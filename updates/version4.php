@@ -1265,6 +1265,8 @@ if (!isset($_POST['update'])) {
     
   } // END Create SCT user
   
+  $cfg_db_inv_username = $cfg_db_database . '_inv';
+
   $result = $mysqli->prepare("SELECT user FROM mysql.user WHERE user = '" . $cfg_db_database . "_inv'");
   $result->execute();
   $result->store_result();
@@ -1272,7 +1274,6 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
     
-    $cfg_db_inv_username = $cfg_db_database . '_inv';
     $cfg_db_inv_password = PasswordUtils::gen_password(16);
         
     $priv_SQL = array();
@@ -1991,6 +1992,10 @@ if (!isset($_POST['update'])) {
   $sql = "GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".announcements TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

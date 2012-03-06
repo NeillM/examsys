@@ -56,6 +56,22 @@
       echo "</td></tr>\n";
     }
     $results->close();
+
+    $results = $mysqli->prepare("SELECT DISTINCT extra_time, log2.userID, surname, first_names, title FROM log2, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE log2.q_paper=? AND log2.userID=users.id and users.username LIKE 'user%' ORDER BY surname, initials");
+    $results->bind_param('i', $paperID);
+    $results->execute();
+    $results->store_result();
+    $results->bind_result($extra_time, $tmp_userID, $surname, $first_names, $title);
+    while ($results->fetch()) {
+      if ($extra_time == '') {
+        echo "<tr><td></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span>";
+      } else {
+        echo "<tr><td><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['extratime'] . "\" border=\"0\" /></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span> <span style=\"color:#C00000\">+ " . round(($exam_length/100) * $extra_time) . $string['mins'] . "</span>";
+      }
+      if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) echo ' <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0" />';
+      echo "</td></tr>\n";
+    }
+    $results->close();
     echo "</table>\n</div>\n";
   }
   
