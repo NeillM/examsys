@@ -38,6 +38,7 @@ require '../include/staff_auth.inc';
 <style type="text/css">
 input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
 .owner {color:#A5A5A5}
+.retired {color:#808080}
 </style>
 
 <script type="text/javascript">
@@ -209,9 +210,13 @@ if (isset($_POST['submit'])) {
   }
   
   if (isset($_POST['status']) and $_POST['status'] != '%') {
-    $status_string = ' AND questions.status=?';
-    $variables[] = $_POST['status'];
-    $params .= 's';
+    if ($_POST['status'] == 'nonretired') {
+      $status_string = " AND questions.status != 'retired'";
+    } else {
+      $status_string = ' AND questions.status=?';
+      $variables[] = $_POST['status'];
+      $params .= 's';
+    }
   } else {
     $status_string = '';
   }
@@ -266,9 +271,9 @@ if (isset($_POST['submit'])) {
   }
   
   if ($keywordsSQL == '') {
-    $result = $mysqli->prepare("SELECT DISTINCT option_text, title, initials, surname, q_type, q_id, theme, scenario_plain, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked FROM (questions, users) LEFT JOIN options ON questions.q_id = options.o_id WHERE questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, o_id");
+    $result = $mysqli->prepare("SELECT DISTINCT option_text, title, initials, surname, q_type, q_id, theme, scenario_plain, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users) LEFT JOIN options ON questions.q_id = options.o_id WHERE questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, o_id");
   } else {
-    $result = $mysqli->prepare("SELECT DISTINCT option_text, title, initials, surname, q_type, questions.q_id, theme, scenario_plain, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked FROM (questions, users, keywords_question) LEFT JOIN options ON questions.q_id = options.o_id WHERE questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, o_id");
+    $result = $mysqli->prepare("SELECT DISTINCT option_text, title, initials, surname, q_type, questions.q_id, theme, scenario_plain, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question) LEFT JOIN options ON questions.q_id = options.o_id WHERE questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, o_id");
   }
   array_unshift($variables, $params);
   foreach($variables as $key => $value) $tmp[$key] = &$variables[$key];
@@ -276,7 +281,7 @@ if (isset($_POST['submit'])) {
   call_user_func_array(array($result,'bind_param'), $tmp);
   $result->execute();
   $result->store_result();
-  $result->bind_result($option_text, $title, $initials, $surname, $q_type, $q_id, $theme, $scenario_plain, $leadin_plain, $last_edited, $ownerID, $locked);
+  $result->bind_result($option_text, $title, $initials, $surname, $q_type, $q_id, $theme, $scenario_plain, $leadin_plain, $last_edited, $ownerID, $locked, $status);
 
   $temp_results = array();
   $hits = 0;
@@ -296,6 +301,7 @@ if (isset($_POST['submit'])) {
     $temp_results[$hits]['leadin'] = $leadin_plain;
     $temp_results[$hits]['last_edited'] = strip_tags($last_edited);
     $temp_results[$hits]['locked'] = $locked;
+    $temp_results[$hits]['status'] = $status;
     $temp_results[$hits]['ownerID'] = $ownerID;
     $old_id = $q_id;
   }
@@ -314,10 +320,14 @@ if (isset($_POST['submit'])) {
   $old_leadin = '';
   $display_no = 1;
   foreach ($temp_results as $temp_line) {
+    echo '<tr';
+    if ($temp_results[$display_no]['status'] == 'Retired') {
+      echo ' class="retired"';
+    }
     if ($temp_results[$display_no]['locked'] != '') {
-      echo "<tr id=\"link$display_no\" onmouseover=\"lon($display_no)\" onmouseout=\"loff($display_no)\" onclick=\"selQ('" . $temp_line['q_id'] . "',$display_no, '" . $temp_line['q_type'] . "','menu2c'); return false;\" ondblclick=\"editQuestion('" . $temp_line['q_id'] . "', '" . $temp_line['q_type'] . "'); return false;\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $string['locked'] . "\" /></td>";
+      echo " id=\"link$display_no\" onmouseover=\"lon($display_no)\" onmouseout=\"loff($display_no)\" onclick=\"selQ('" . $temp_line['q_id'] . "',$display_no, '" . $temp_line['q_type'] . "','menu2c'); return false;\" ondblclick=\"editQuestion('" . $temp_line['q_id'] . "', '" . $temp_line['q_type'] . "'); return false;\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $string['locked'] . "\" /></td>";
     } else {
-      echo "<tr id=\"link$display_no\" onmouseover=\"lon($display_no)\" onmouseout=\"loff($display_no)\" onclick=\"selQ('" . $temp_line['q_id'] . "',$display_no, '" . $temp_line['q_type'] . "','menu2b'); return false;\" ondblclick=\"editQuestion('" . $temp_line['q_id'] . "', '" . $temp_line['q_type'] . "'); return false;\"><td></td>";
+      echo " id=\"link$display_no\" onmouseover=\"lon($display_no)\" onmouseout=\"loff($display_no)\" onclick=\"selQ('" . $temp_line['q_id'] . "',$display_no, '" . $temp_line['q_type'] . "','menu2b'); return false;\" ondblclick=\"editQuestion('" . $temp_line['q_id'] . "', '" . $temp_line['q_type'] . "'); return false;\"><td></td>";
     }
 
     $tmp_leadin = trim($temp_line['leadin']);
