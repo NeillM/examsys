@@ -1979,10 +1979,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $adjust = $mysqli->prepare("CREATE TABLE announcements (id int not null primary key auto_increment, title varchar(255), staff_msg text, student_msg text, icon varchar(255), startdate datetime, enddate datetime)");
+    $adjust = $mysqli->prepare("CREATE TABLE announcements (id int not null primary key auto_increment, title varchar(255), staff_msg text, student_msg text, icon varchar(255), startdate datetime, enddate datetime, deleted datetime)");
     $adjust->execute();
     $adjust->close();
-    echo "<li>CREATE TABLE announcements (id int not null primary key auto_increment, title varchar(255), staff_msg text, student_msg text, icon varchar(255), startdate datetime, enddate datetime, deleted datetime)</li>\n";
+    echo "<li>CREATE TABLE announcements (id int not null primary key auto_increment, title varchar(255), staff_msg text, student_msg text, icon varchar(255), startdate datetime, enddate datetime, deleted datetime, deleted datetime)</li>\n";
     ob_flush();
     flush();
   }
