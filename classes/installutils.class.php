@@ -418,7 +418,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log6 TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_late TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT,INSERT ON " . $dbname . ".temp_users TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT,INSERT,UPDATE ON " . $dbname . ".temp_users TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".announcements TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";    
     $priv_SQL[] = "FLUSH PRIVILEGES";
