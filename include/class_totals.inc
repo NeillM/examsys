@@ -609,9 +609,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       $tmp_user_mark_array[$q_id] = round($tmp_user_mark, 2);
     }
   }
-  if ($status == 23885) {
-    echo "<div>$q_id = $tmp_user_mark</div>\n";
-  }
 }
 
 function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
@@ -971,7 +968,7 @@ if ($log_query->num_rows > 0) {
       $tmp_array['duration'] = $user_duration;
       $tmp_array['paper_type'] = $paper_type;
     }
-    getUserMark($q_id, $user_answer, $mark, $excluded, $status=$tmp_userID, $tmp_mark, $tmp_user_mark_array);
+    getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array);
     
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {
