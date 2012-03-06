@@ -1429,7 +1429,7 @@
         
           if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_students_response == '1') {
             $img_name = 'cross';
-            if ($paper[$question]['mark'] == ($paper[$question]['totalpos'] - 1) and $all_correct) {
+            if ($paper[$question]['mark'] == ($paper[$question]['totalpos'] - $paper[$question]['marks_correct']) and $all_correct) {
               $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               $img_name = 'tick';
             }

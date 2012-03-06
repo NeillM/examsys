@@ -833,9 +833,9 @@ function check_formula($formula, $variables) {
 
 function finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $old_marks_incorrect, $saved_response, &$totalpos, &$mark) {
   if ($old_score_method == 'Bonus Mark') {
-    $totalpos++;
-    if ($correct_rank == true and $mark == ($totalpos - 1)) {
-      $mark++;  // Add one mark if the user has all options in the correct order
+    $totalpos += $old_marks_correct;
+    if ($correct_rank == true and $mark == ($totalpos - $old_marks_correct)) {
+      $mark += $old_marks_correct;  // Add one mark if the user has all options in the correct order
     }
   } elseif ($old_score_method == 'Mark per Question') {
     $totalpos = $old_marks_correct;
