@@ -971,7 +971,7 @@ if ($log_query->num_rows > 0) {
       $tmp_array['duration'] = $user_duration;
       $tmp_array['paper_type'] = $paper_type;
     }
-    getUserMark($q_id, $user_answer, $mark, $excluded, $status=$student_id, $tmp_mark, $tmp_user_mark_array);
+    getUserMark($q_id, $user_answer, $mark, $excluded, $status=$tmp_userID, $tmp_mark, $tmp_user_mark_array);
     
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {
