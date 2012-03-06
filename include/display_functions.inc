@@ -110,7 +110,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } elseif ($question['q_option_order'] == 'alphabetic') {
         $tmp_order_array = array();
         for ($i=0; $i<$option_no; $i++) {
-          $tmp_order_array[$i] = $question['options'][$i]['option_text'];
+          $tmp_order_array[$i] = strtolower($question['options'][$i]['option_text']);
         }
         asort($tmp_order_array);
         foreach ($tmp_order_array as $key => $value) {
