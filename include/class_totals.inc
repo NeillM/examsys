@@ -609,7 +609,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       $tmp_user_mark_array[$q_id] = round($tmp_user_mark, 2);
     }
   }
-  if ($status == 23885)
+  if ($status == 23885) {
     echo "<div>$q_id = $tmp_user_mark</div>\n";
   }
 }
