@@ -125,6 +125,7 @@ table {font-size:100%; table-layout: fixed}
 .matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
 .exclude {color:red; text-decoration:line-through}
+input.exclude, select.exclude {border: 1px solid red}
 .box {width:90%; background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left}
 .mee {font-size:120%; display:inline}
 .scr_no {margin-left:25px}
