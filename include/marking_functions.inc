@@ -565,14 +565,20 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           if ($_POST[$qid] != 'u' and $_POST[$qid] <> $correct) $correct_rank = false;
         } elseif ($score_method == 'Allow partial Marks') {
           if ($_POST[$qid] != 'u') {
-            if ($_POST[$qid] == $correct) {
-              $mark += $marks_correct;
-            } elseif ($_POST[$qid] == ($correct + 1) and $correct > 0) {
-              $mark += $marks_partial;
-            } elseif ($_POST[$qid] == ($correct - 1) and $correct > 0) {
-              $mark += $marks_partial;
-            } else {
-              $mark += $marks_incorrect;
+            if ($_POST[$qid] != 0) {
+              if ($correct != 0) {
+                if ($_POST[$qid] == $correct) {
+                  $mark += $marks_correct;
+                } elseif ($_POST[$qid] == ($correct + 1)) {
+                  $mark += $marks_partial;
+                } elseif ($_POST[$qid] == ($correct - 1)) {
+                  $mark += $marks_partial;
+                } else {
+                  $mark += $marks_incorrect;
+                }
+              } elseif ($correct == 0) {
+                $mark += $marks_incorrect;
+              }
             }
           }
         } elseif ($score_method == 'Bonus Mark') {
