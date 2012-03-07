@@ -72,7 +72,7 @@ if ($fullname == '') {
 
 if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils::isUserOnModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
   // Insert new module enrollment
-  UserUtils::addUserToModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli);
+  UserUtils::addUserToModule($userID, $_GET['moduleid'], 1, $_POST['session'], $mysqli);
 }
 
 ?>
