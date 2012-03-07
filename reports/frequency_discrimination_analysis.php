@@ -489,7 +489,7 @@
         echo "<td colspan=\"2\" style=\"padding-left:15px\">$leadin\n";
       } else {
         echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><div";
-        if (($q_type == 'dichotomous' or $q_type == 'labelling' or $q_type == 'blank' or $q_type == 'hotspot') and $score_method == 'Mark per Question') {
+        if ((($q_type == 'dichotomous' or $q_type == 'labelling' or $q_type == 'blank' or $q_type == 'hotspot') and $score_method == 'Mark per Question') or $q_type == 'flash') {
           echo ' id="q_' . ($ex_no+1) . '_1"';
           if (isset($excluded[$q_id])) {
              echo ' class="excluded"';
@@ -497,12 +497,13 @@
         }
         echo '>';
         if (trim(str_replace('&nbsp;', '', $scenario)) != '') echo "$scenario<br /><br />\n";
-        if ($q_type != 'hotspot' and $q_type != 'timedate' and $q_type != 'calculation') echo "$leadin</div>\n";
-        if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
+        if ($q_type != 'hotspot' and $q_type != 'timedate' and $q_type != 'calculation' and $q_type != 'flash') echo "$leadin</div>\n";
+        if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash') {
           echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
         }
-        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'calculation' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'calculation' and $q_type != 'blank' and $q_type != 'flash') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
       }
+
       switch ($q_type) {
         case 'blank':
           $blank_details = explode('[blank',$options[0]);
@@ -842,6 +843,51 @@
             }
             $i++;
           }
+          break;
+        case 'flash':
+          if (isset($excluded[$q_id])) {
+            echo excludeButton($ex_no, $q_id, 1, 1,1);
+          } else {
+            echo excludeButton($ex_no, $q_id, 0, 1, 1);
+          }
+          echo $leadin;
+          ?>
+            <script language="JavaScript">
+            var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
+            function flash<?php echo $q_no; ?>_DoFSCommand(command, args) {
+              var flash<?php echo $q_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $q_no; ?> : document.flash<?php echo $q_no; ?>;
+              document.questions.q<?php echo $q_no; ?>.value = args;
+            }
+            if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
+              document.write('<script language=\"VBScript\"\>\n');
+              document.write('On Error Resume Next\n');
+              document.write('Sub flash<?php echo $q_no; ?>_FSCommand(ByVal command, ByVal args)\n');
+              document.write('	Call flash<?php echo $q_no; ?>_DoFSCommand(command, args)\n');
+              document.write('End Sub\n');
+              document.write('</script\>\n');
+            }
+          </script>
+          <div style="text-align:center">
+          <script language="JavaScript">
+            write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $q_media_width; ?>" height="<?php echo $q_media_height; ?>" align="middle">');
+            write_string('<param name="allowScriptAccess" value="sameDomain" />');
+            write_string('<param name="movie" value="../media/<?php echo $q_media; ?>" />');
+            write_string('<param name="quality" value="high" />');
+            write_string('<param name="bgcolor" value="#ffffff" />');
+            <?php
+              if ($scenario != '') {
+                echo 'write_string(\'<param name="FlashVars" value="' . $scenario . '">\')';
+              }
+              echo 'write_string(\'<embed src="../media/' . $q_media . '"';
+              if ($scenario != '') {
+                echo ' FlashVars="' . $scenario . '"';
+              }
+              echo ' quality="high" bgcolor="#ffffff" width="' . $q_media_width . '" height="' . $q_media_height . '" swLiveConnect=true id="flash' . $q_no . '" name="flash' . $q_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';
+            ?>
+            write_string('</object>');
+          </script>
+          </div>
+          <?php
           break;
         case 'hotspot':
           $layers = explode('|', $correct);
