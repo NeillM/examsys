@@ -323,6 +323,7 @@
               $paper[$i]['q_media'] = $q_media;
               $paper[$i]['q_media_height'] = $q_media_height;
               $paper[$i]['q_media_width'] = $q_media_width;
+              $paper[$i]['display_method'] = $display_method;
               $paper[$i]['score_method'] = $score_method;
               $paper[$i]['correct_fback'] = $correct_fback;
               $paper[$i]['incorrect_fback'] = $incorrect_fback;
