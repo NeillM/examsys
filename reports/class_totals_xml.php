@@ -30,7 +30,7 @@
   $displayDebug = false; //disable debud output in this script as it effects the output
   
   header("Content-type: application/vnd.ms-excel");
-  header("Content-Disposition: attachment; filename=" . $paper . ".xml");
+  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".xml");
 
   if ($marking == '0') {
     $marking_label = '%';
