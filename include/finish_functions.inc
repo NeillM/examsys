@@ -2231,9 +2231,6 @@
     </script>
     </div>
 <?php
-          if (!$answered) {
-            reset_feedback($hide_if_unanswered);
-          }
           break;
         case 'random_failed':
           echo '<p>' . $paper[$question]['leadin'] . '</p>';
