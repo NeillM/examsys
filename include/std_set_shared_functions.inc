@@ -431,7 +431,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       if ($std_method == 'modified_angoff') {
         for ($mark_part=$marks; $mark_part>0; $mark_part--) {
           $review_val = get_review('textbox', $std_method, $q_id, $mark_part, $tmp_reviews, $is_group);
-          echo reviewScale($question_no, $mark_part, $display_option['marks'], $std_method, $qn_excluded, $review_val, $stdID, $std_excluded, $is_group);
+          echo reviewScale($question_no, $mark_part, $display_option['marks_correct'], $std_method, $qn_excluded, $review_val, $stdID, $std_excluded, $is_group);
           if ($mark_part == 1) $plural = '';
           echo "<span class=\"part-mark\">$mark_part mark$plural</span><br />\n";
         }
@@ -473,7 +473,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       }
       echo "</td>";
       echo '<td>';
-      if($display_option['score_method'] == 'Mark per Option') {
+      if ($display_option['score_method'] == 'Mark per Option') {
         echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, ($exclude == '1'), $review_val, $stdID, $std_excluded, $is_group);
       }
       echo '</td>';
