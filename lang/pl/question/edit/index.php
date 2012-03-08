@@ -210,6 +210,7 @@ $string['now'] = 'teraz';
 $string['never'] = 'nigdy';
 $string['validationerror'] = 'Wystąpił problem podczas wysyłania. Przejrzyj formularz i spróbuj ponownie';
 $string['enterleadin'] = 'Sformułuj pytanie';
+$string['enterdescription'] = 'Please enter a description'; // Niko
 $string['enteroption'] = 'Wprowadź tekst opcji lub plik medialny dla tej opcji';
 $string['enteroptionshort'] = 'Wymagane';
 $string['enteroption_kw'] = 'Please select a keyword for the question';

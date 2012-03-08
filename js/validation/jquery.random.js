@@ -13,7 +13,7 @@ $(function() {
       questioncheck: 'havequestions'
     },
     messages: {
-      leadin: lang['enterleadin'],
+      leadin: lang['enterdescription'],
       questioncheck: lang['randomenterquestion']
     },
     errorPlacement: function(error, element) {

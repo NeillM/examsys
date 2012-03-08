@@ -210,6 +210,7 @@ $string['now'] = 'now';
 $string['never'] = 'never';
 $string['validationerror'] = 'There were problems with your submission. Please review the form and re-try';
 $string['enterleadin'] = 'Please enter a leadin for the question';
+$string['enterdescription'] = 'Please enter a description';
 $string['enteroption'] = 'Please enter either option text or a media file for this option';
 $string['enteroptionshort'] = 'Required';
 $string['enteroption_kw'] = 'Please select a keyword for the question';
