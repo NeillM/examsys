@@ -1844,7 +1844,7 @@
           $blank_details = explode("[blank",$paper[$question]['option_text'][0]);
           $no_blanks = count($blank_details);
           echo '<p><span';
-          if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
+          //if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
           echo '>' . $blank_details[0];
           $blank_count = 1;
           
