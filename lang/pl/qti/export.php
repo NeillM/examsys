@@ -4,5 +4,5 @@ require 'shared.inc';
 
 $string['qtiexport'] = 'Eksport %s QTI';//ąę
 $string['exportsready'] = 'Eksport %s QTI jest gotowy';
-$string['download'] = 'Pobieranie';
+$string['download'] = 'Pobierz';
 ?>

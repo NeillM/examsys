@@ -231,8 +231,8 @@ $string['description'] = 'Opis';
 $string['questions'] = 'Pytania';
 $string['addquestions'] = 'Dodaj pytanie(a)';
 $string['questionbasedon'] = 'Pytanie bazujące na';
-$string['keywordwarning'] = 'Ostrzeżenie: nie znaleziono słów kluczowych, utworzenie pytania niemożliwe.';
+$string['keywordwarning'] = 'Ostrzeżenie: nie znaleziono słów kluczowych, utworzenie pytania jest niemożliwe.';
 $string['mappingwarning'] = 'Ostrzeżenie: wszystkie odwzorowania będą utracone jeśli to pytanie nie zostanie dodane do arkusza!';
-$string['markchangewarning'] = 'Ostrzeżenie: changing mark allocations post-exam should only be undertaken if absolutely necessary. Are you sure you want to continue?'; //niko
+$string['markchangewarning'] = 'Ostrzeżenie: zmiana parametrów oceny po egzaminie powinna być podejmowana tylko w razie najwyższej konieczności. Czy na pewno kontynuować?'; 
 $string['percenttolerance'] = 'Tolerances may now be expressed as percentages (e.g. 5%) as well as absolute numbers'; // Niko
 ?>
