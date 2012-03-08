@@ -141,7 +141,7 @@ function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
 $course_no = 0;
 $courses = array();
 
-$result = $mysqli->prepare("SELECT courses.id, school, name, description FROM courses LEFT JOIN schools ON courses.schoolid = schools.id WHERE name != 'left' AND name != 'none'");
+$result = $mysqli->prepare("SELECT courses.id, school, name, description FROM courses LEFT JOIN schools ON courses.schoolid = schools.id WHERE name != 'left' AND name != 'none' AND courses.deleted IS NULL");
 $result->execute();
 $result->bind_result($id, $school, $name, $description);
 while ($result->fetch()) {
