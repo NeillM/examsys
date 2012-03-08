@@ -216,6 +216,7 @@ $string['enteroption_kw'] = 'Please select a keyword for the question';
 $string['enterquestion'] = 'Please enter the question';
 $string['enterformula'] = 'Please enter a formula';
 $string['entervignette'] = 'Please enter a clinical vignette for the question';
+$string['randomenterquestion'] = 'Please select questions to be included in the block';
 $string['mrqconvert'] = 'There is only one correct answer, this would be better as a MCQ question type.\r\nDo you wish to convert this question to MCQ?';
 $string['showmore'] = 'Show more';
 $string['hidemore'] = 'Hide more';

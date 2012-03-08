@@ -216,6 +216,7 @@ $string['enteroption_kw'] = 'Please select a keyword for the question';
 $string['enterquestion'] = 'Wprowadź pytanie';
 $string['enterformula'] = 'Wprowadź wzór';
 $string['entervignette'] = 'Wprowadź przypadek kliniczny dla tego pytania';
+$string['randomenterquestion'] = 'Please select questions to be included in the block'; // Niko
 $string['mrqconvert'] = 'Jest tylko jedna poprawna odpowiedź - do tego celu lepsze będzie pytanie wielokrotnego wyboru.\r\nCzy chcesz przekonwertować to pytanie na pytanie wielokrotnego wyboru?';
 $string['showmore'] = 'Pokaż więcej';
 $string['hidemore'] = 'Ukryj więcej';

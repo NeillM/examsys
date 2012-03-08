@@ -209,8 +209,10 @@ function addQuestionsToList(questions) {
   var num_options = current_qns.length + 1;
   
   for (i = 0; i < questions.length; i++) {
-    $('#questionlist').append('<li><label for="option_text' + (num_options + i) + '" class="fullwidth"><input id="option_text' + (num_options + i) + '" name="option_text' + (num_options + i) + '" value="' + questions[i][0] + '" type="checkbox" checked="checked" /> ' + questions[i][1] + '</label><input name="optionid' + (num_options + i) + '" value="-1" type="hidden" /></li>');
+    $('#questionlist').append('<li><label for="option_text' + (num_options + i) + '" class="fullwidth"><input id="option_text' + (num_options + i) + '" name="option_text' + (num_options + i) + '" value="' + questions[i][0] + '" type="checkbox" checked="checked" class="random-q" /> ' + questions[i][1] + '</label><input name="optionid' + (num_options + i) + '" value="-1" type="hidden" /></li>');
   }
+
+  $('#questioncheck').valid();
 }
 
 function showMarksWarning(element) {

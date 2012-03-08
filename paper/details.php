@@ -586,7 +586,9 @@ function getMSCAA($paperID, $mysqlidb) {
         $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
         if ($temp_array[$row_no2]['status'] != 'Experimental') {
           $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-          $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
+          if (count($temp_array[$row_no2]['random']) > 0) {
+            $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
+          }
         }
       } else {
         if (isset($excluded[$old_q_id])) {
@@ -988,6 +990,7 @@ function getMSCAA($paperID, $mysqlidb) {
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
+      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
     } elseif ($temp_array[$x]['q_type'] == 'branching') {
       if ($temp_array[$x]['leadin'] == '') {
         echo "Branching question set based on Q" . findDecisionQ($temp_array,$temp_array[$x]['scenario']);
@@ -1028,7 +1031,10 @@ function getMSCAA($paperID, $mysqlidb) {
       echo '<td>&nbsp;</td>';
     } else {
       if ($temp_array[$x]['status'] !== 'Experimental' and $temp_array[$x]['marks'] === 'ERR') {
-        echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['variablenomarks'] . '" border="0" /></td>';
+        // Only ever get in here for random questions
+        if (count($temp_array[$x]['marks']) > 0) {
+          echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" border="0" /></td>';
+        }
         $marks_incorrect_error = true;
       } elseif ($temp_array[$x]['status'] === 'Experimental') {
         echo '<td style="text-align:right; vertical-align:top">N/A</td>';
