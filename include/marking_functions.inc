@@ -314,11 +314,11 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         $difference = round(abs($saved_response_clean - $answer), 12);
 
         if ($saved_response_clean != '') {
-          if ($saved_response_clean == $answer) {
+          if ($saved_response_clean == '' . $answer) {    // Want to treat $answer as a string here
             $mark = $marks_correct;
-          } elseif ($difference <= $score_array[1] and $score_array[1] > 0) {
+          } elseif ($difference > 0 and $difference <= $score_array[1] and $score_array[1] > 0) {
             $mark = $marks_correct;
-          } elseif ($difference <= $score_array[2] and $score_array[2] > 0) {
+          } elseif ($difference > 0 and $difference <= $score_array[2] and $score_array[2] > 0) {
             $mark = $marks_partial;
           } else {
             $mark = $marks_incorrect;
