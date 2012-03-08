@@ -77,4 +77,5 @@ $string['notcompleted'] = 'Warning: not all screens completed';
 $string['unknown'] = '&nbsp;&lt;Unknown&gt;';
 $string['markingnotcomplete'] = 'Marking not complete';
 $string['of'] = ' of ';
+$string['percentofcohort'] = '% of cohort';
 ?>
