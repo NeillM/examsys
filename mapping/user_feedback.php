@@ -177,7 +177,7 @@
   echo "<table class=\"header\" style=\"position:absolute; top:0px; left:0px; font-size:90%\">\n";
   echo "<tr><th style=\"padding:5px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
   echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";
-  echo "<tr><td class=\"bevel\"></th></tr>\n";
+  echo "<tr><th class=\"bevel\"></th></tr>\n";
   echo "</table>\n";
   
   //get Cohort Data
