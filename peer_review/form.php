@@ -176,7 +176,7 @@ if (isset($_POST['submit'] )) {
   $variables = array();
   $params = '';
   
-  $current_time = date("Ymdhis");
+  $current_time = date("YmdHis");
 
   if ($review == '1') {
     // Get the other users in the same group.
@@ -197,8 +197,8 @@ if (isset($_POST['submit'] )) {
           }
         
           if (isset($saved_results[$member_userID][$questionID]['id'])) {
-            $result2 = $mysqli->prepare("UPDATE log6 SET started=NOW(), rating=? WHERE id=?");
-            $result2->bind_param('ii', $rating, $saved_results[$member_userID][$questionID]['id']);
+            $result2 = $mysqli->prepare("UPDATE log6 SET started=?, rating=? WHERE id=?");
+            $result2->bind_param('sii', $current_time, $rating, $saved_results[$member_userID][$questionID]['id']);
             $result2->execute();
             $result2->close();
           } else {
