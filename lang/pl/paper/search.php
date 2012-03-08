@@ -26,4 +26,6 @@ $string['mypaperssonly'] = '(Tylko moje arkusze)';
 $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['to'] = 'do';
+$string['module'] = 'Module:';  // Niko
+$string['owner'] = 'Owner:';  // Niko
 ?>

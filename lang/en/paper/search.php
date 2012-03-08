@@ -27,4 +27,6 @@ $string['mypaperssonly'] = '(My papers only)';
 $string['type'] = 'Type';
 $string['author'] = 'Author';
 $string['to'] = 'to';
+$string['module'] = 'Module:';
+$string['owner'] = 'Owner:';
 ?>
