@@ -93,7 +93,7 @@ label.error {
   vertical-align: top;
   padding-left: 6px;
   padding-right: 6px;
-  width:108px;
+  width:130px;
   min-width:108px;
 }
 
@@ -136,14 +136,6 @@ label.error {
 .qline:hover {
 	background-color: #eee;
 }
-
-/*#content .qline td.handle-holder {*/
-	/*vertical-align: top;*/
-	/*padding-top: 6px;*/
-	/*width: 8px;*/
-	/*text-align: right;*/
-  /*color: red;*/
-/*}*/
 
 #content .breakline td, .breakline td {
   padding-top: 14px;
