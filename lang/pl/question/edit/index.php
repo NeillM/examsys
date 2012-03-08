@@ -234,4 +234,5 @@ $string['questionbasedon'] = 'Pytanie bazujące na';
 $string['keywordwarning'] = 'Ostrzeżenie: nie znaleziono słów kluczowych, utworzenie pytania niemożliwe.';
 $string['mappingwarning'] = 'Ostrzeżenie: wszystkie odwzorowania będą utracone jeśli to pytanie nie zostanie dodane do arkusza!';
 $string['markchangewarning'] = 'Ostrzeżenie: changing mark allocations post-exam should only be undertaken if absolutely necessary. Are you sure you want to continue?'; //niko
+$string['percenttolerance'] = 'Tolerances may now be expressed as percentages (e.g. 5%) as well as absolute numbers'; // Niko
 ?>

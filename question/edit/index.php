@@ -110,7 +110,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
 }
 
 if ($critical_error == '') {
-  $question->add_default_correction_behaviours();
+  $question->add_default_correction_behaviours($cfg_web_root);
 
   if ($mode == 'Edit') $q_no = $question->get_question_number($paper_id);
 
@@ -371,12 +371,14 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/screen.css" type="text/css" />
 <link rel="stylesheet" href="../../css/add_edit_new.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
+<link rel="stylesheet" href="../../css/tipTip.css" type="text/css" />
 
 <?php echo $cfg_editor_javascript; ?>
 <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
+<script type="text/javascript" src="../../js/jquery.tipTip.minified.js"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
 <?php
