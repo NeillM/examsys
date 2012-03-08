@@ -1843,9 +1843,7 @@
           $blank_details = array();
           $blank_details = explode("[blank",$paper[$question]['option_text'][0]);
           $no_blanks = count($blank_details);
-          echo '<p><span';
-          //if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
-          echo '>' . $blank_details[0];
+          echo '<p>' . $blank_details[0];
           $blank_count = 1;
           
           while ($blank_count < $no_blanks) {
@@ -1896,7 +1894,7 @@
                 }
               }
             } else {                                                                // Dropdown menus
-              echo '</span>';
+              //echo '</span>';
               if ($tmp_display_correct_answer == '1') {
                 if (isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
               }
@@ -1934,12 +1932,10 @@
               }
               if ($tmp_display_correct_answer == '1') echo ' <strong>(' . $answer_list[0] . ')</strong>';
             }
-            echo '<span';
-            if (substr($tmp_exclude,$blank_count,1) == '1') echo ' class="exclude"';
-            echo '>' . $answer_options[1]; // Bit after the closing [/blank] tag.
+            echo $answer_options[1]; // Bit after the closing [/blank] tag.
             $blank_count++;
           }
-          echo "</span></p>\n";
+          echo "</p>\n";
 
           init_feedback($strong_on, $strong_off);
           if (!$have_answer) {
