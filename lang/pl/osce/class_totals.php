@@ -1,6 +1,6 @@
 <?php
-$string['classtotals'] = 'Całkowita liczba klas';
-$string['classtotalsmodule'] = 'Całkowita liczba klas (%s tylko studentów)';
+$string['classtotals'] = 'Zestawienie klasy';
+$string['classtotalsmodule'] = 'Zestawienie klasy (%s tylko studentów)';
 $string['name'] = 'Nazwa';
 $string['studentid'] = 'Numer legitymacji';
 $string['course'] = 'Kurs';

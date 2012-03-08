@@ -1,5 +1,5 @@
 <?php
-$string['classtotals'] = 'Całkowita liczba klas';
+$string['classtotals'] = 'Zestawienie klasy';
 $string['studentsonly'] = 'Tylko studenci';
 $string['paper'] = 'Arkusz';
 $string['temporaryaccountswarning'] = '<strong>Uwaga konta tymczasowe</strong>&nbsp;&nbsp;&nbsp;Przypisz do właściwych kont studenckich.';

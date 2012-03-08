@@ -1,7 +1,7 @@
 <?php
 $string['frequencydiscrimination'] = 'Analiza częstości i różnicowania'; 
 $string['reporttitle'] = 'Raport analizy częstości i różnicowania (U-L)';
-$string['totalcandidatenumber'] = 'Całkowita liczba kandydatów';
+$string['totalcandidatenumber'] = 'liczba wszystkich kandydatów';
 $string['groupsizes'] = 'Górne/dolne rozmiary grup';
 $string['pergroup'] = 'na grupę';
 $string['boldstems'] = 'ważne opcje';//1Bold stems??

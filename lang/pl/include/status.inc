@@ -1,7 +1,7 @@
 <?php
 $string['status'] = 'Stan';
 $string['anystatus'] = '(każdy stan)';
-$string['anynonretiredstatus'] = "(każdy status poza 'wycofanym')";
+$string['anynonretiredstatus'] = "(każdy stan poza 'wycofane')";
 $string['normal'] = 'Normalne';
 $string['retired'] = 'Wycofane';
 $string['incomplete'] = 'Niekompletne';
