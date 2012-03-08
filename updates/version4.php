@@ -1997,6 +1997,11 @@ if (!isset($_POST['update'])) {
   $mysqli->query($sql);
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   
