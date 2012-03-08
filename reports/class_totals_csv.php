@@ -46,7 +46,7 @@
     $total_time = 0;
     
     //output table heading
-    $table_order = array('title'=>'title', 'surname'=>'Surname' ,'firstnames'=>'First_Names','studentid'=>'student_id','course'=>'student_grade','mark'=>'mark',$marking_label=>$marking_key,'classification'=>'mark','starttime'=>'started','duration'=>'duration','ipaddress'=>'ipaddress');
+    $table_order = array('title'=>'title', 'surname'=>'Surname' ,'firstnames'=>'First_Names','studentid'=>'student_id','course'=>'student_grade','module'=>'module','mark'=>'mark',$marking_label=>$marking_key,'classification'=>'mark','starttime'=>'started','duration'=>'duration','ipaddress'=>'ipaddress');
     $table_order['room'] = 'room';
     $metadata_cols = array();
     if (isset($user_results[0])){
@@ -74,12 +74,12 @@
           echo $user_results[$i]['student_id'] . ",";
         }
         if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
-          echo $user_results[$i]['module'] . ",,,,No Attendance,,,\n";
+          echo $user_results[$i]['student_grade'] . "," . $user_results[$i]['module'] . ",,,,No Attendance,,,\n";
         } else {
           // If room is unknown then it will contain HTML that we want to discard
           $user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
     
-          echo $user_results[$i]['module'] . "," . $user_results[$i]['mark'] . "," . $user_results[$i]['adj_percent'] . "%,";
+          echo $user_results[$i]['student_grade'] . "," . $user_results[$i]['module'] . "," . $user_results[$i]['mark'] . "," . $user_results[$i]['adj_percent'] . "%,";
           
           
           if ($user_results[$i]['adj_percent'] < $pass_mark) {
