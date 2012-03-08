@@ -11,7 +11,7 @@ $string['nocompletions'] = 'brak prac ukończonych';
 $string['candidateabsent'] = 'kandydat nieobecny';
 $string['candidatesabsent'] = 'kandydaci nieobecni';
 $string['failureno'] = 'liczba niepowodzeń';
-$string['passno'] = '# Passes';  // Niko
+$string['passno'] = '# zdanych'; 
 $string['distinctionno'] = 'liczba wyróżnień';
 $string['totalmarks'] = 'Całkowita liczba dostępnych punktów';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
@@ -76,5 +76,5 @@ $string['displaypaper'] = 'Wyświetl arkusz dla';
 $string['notcompleted'] = 'Uwaga: nie wypełniono wszystkich ekranów';
 $string['unknown'] = '&nbsp;&lt;Nieznany&gt;';
 $string['markingnotcomplete'] = 'Punktacja nie zakończona';
-$string['of'] = ' of '; // Niko
+$string['of'] = ' z '; 
 ?>
