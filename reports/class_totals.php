@@ -88,6 +88,14 @@ ob_start();
     document.getElementById('item3b').style.backgroundColor='#FFFFFF';
     document.getElementById('item4b').style.backgroundColor='#FFFFFF';
     document.getElementById('item5b').style.backgroundColor='#FFFFFF';
+    
+    if (tmpStarted == '') {
+      document.getElementById('item1b').style.color='#C0C0C0';
+      document.getElementById('item2b').style.color='#C0C0C0';
+    } else {
+      document.getElementById('item1b').style.color='#000000';
+      document.getElementById('item2b').style.color='#000000';
+    }
 
     if (tmpReassign == 'y') {
       document.getElementById('item5b').style.color='#000000';
@@ -170,16 +178,20 @@ ob_start();
 
   function viewScript() {
     document.getElementById('menudiv').style.display = 'none';
-    var winwidth = screen.width-80;
-    var winheight = screen.height-80;
-    window.open("../paper/finish.php?id=<?php echo $crypt_name; ?>&previous=" + document.getElementById('started').value + "&userid=" + document.getElementById('userID').value + "&surname=" + document.getElementById('display_name').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (document.getElementById('started').value != '') {
+      var winwidth = screen.width-80;
+      var winheight = screen.height-80;
+      window.open("../paper/finish.php?id=<?php echo $crypt_name; ?>&previous=" + document.getElementById('started').value + "&userid=" + document.getElementById('userID').value + "&surname=" + document.getElementById('display_name').value + "&log_type=" +document.getElementById('log_type').value+ "&percent=" +document.getElementById('percent').value+ "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    }
   }
 
   function viewFeedback() {
     document.getElementById('menudiv').style.display = 'none';
-    var winwidth = screen.width-80;
-    var winheight = screen.height-80;
-    window.open("../mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (document.getElementById('started').value != '') {
+      var winwidth = screen.width-80;
+      var winheight = screen.height-80;
+      window.open("../mapping/user_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + document.getElementById('userID').value + "&started=" + document.getElementById('started').value + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    }
   }
 
   function viewProfile() {
@@ -294,8 +306,8 @@ ob_start();
 <div id="noteMsg"></div>
 </div>
 
-<div id="menudiv" style="font-size:80%; filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table width="180" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #6593CF; font-size:100%; background-color:white">
+<div id="menudiv" style="font-size:80%; box-shadow:2px 2px 2px #808080; position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+<table width="180" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #C0C0C0; font-size:100%; background-color:white; border:collapse">
   <tr><td>
     <table width="180" cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white">
       <tr>
@@ -475,7 +487,7 @@ ob_start();
       if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
         $bg_color = '#FFC0C0';
         echo "<tr class=\"nonattend\"><td>&nbsp;</td>";
-        echo "<td style=\"padding:1px\">&nbsp;<a class=\"user\" href=\"../users/details.php?username=" . $user_results[$i]['username'] . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></a>";
+        echo "<td style=\"padding:1px\" onclick=\"ItemSelMenu(''," . $user_results[$i]['tmp_userID'] . ",'" . $user_results[$i]['username'] . "','" . $user_results[$i]['title'] . " " . str_replace("'","&#8217;",$user_results[$i]['surname']) . "," . $user_results[$i]['initials'] . " (" . $user_results[$i]['student_id'] . ")', '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\" />&nbsp;" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span>";
         if ($user_results[$i]['student_id'] == '') {
           echo "<td class=\"padl grey\">" . $string['unknown'] . "</td>";
         } else {

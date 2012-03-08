@@ -96,6 +96,11 @@
   $black   = ImageColorAllocate($Image, 0, 0, 0);
   $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
   $blue    = ImageColorAllocate($Image, 0, 192, 192);
+  
+  // Convert strings from UTF8 to Latin
+  $string['occurrance'] = mb_convert_encoding($string['occurrance'], 'ISO-8859-2', 'UTF-8');
+  $string['percent'] = mb_convert_encoding($string['percent'], 'ISO-8859-2', 'UTF-8');
+  $string['adjustedpercent'] = mb_convert_encoding($string['adjustedpercent'], 'ISO-8859-2', 'UTF-8');
 
   // Label x axis
   if (!isset($_GET['plotuser'])) {
