@@ -362,7 +362,9 @@
             if (!isset($excluded[$tmp_question_ID])) echo ',';
             break;
           case 'calculation':
-            echo ',,"' . substr($paper_buffer[$i]['correct'],1) . '",';
+            if (!isset($excluded[$tmp_question_ID])) {
+              echo ',,"' . substr($paper_buffer[$i]['correct'],1) . '",';
+            }
             break;
           case 'sct':
             if (!isset($excluded[$tmp_question_ID])) {
