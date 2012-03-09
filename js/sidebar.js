@@ -163,7 +163,7 @@
     
     sidebarHeight = document.getElementById('left-sidebar').offsetHeight;
     
-    mytop = document.getElementById(callingID).offsetParent.offsetTop + document.getElementById(menuID).offsetTop + 12;
+    mytop = document.getElementById(callingID).offsetParent.offsetTop + document.getElementById(menuID).offsetTop + 26;
     if ((mytop + popupHeight) > sidebarHeight) {
       mytop = sidebarHeight - popupHeight - 10;
     }

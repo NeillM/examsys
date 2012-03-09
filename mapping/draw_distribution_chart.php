@@ -95,7 +95,6 @@
   $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
   $blue =  ImageColorAllocate($Image, 0, 192, 192);
 
-
   //caculate Xaxis reduction for anon feedback
   if (isset($_GET['plotuser'])) {
     $reduction_factor = ($minMark * 7) - 40;
@@ -119,7 +118,6 @@
       ImageLine($Image, ($label * 7) + 40, 250, ($label * 7) + 40, 253, $dkgrey);
     }
   }
-
   
   // Label y axis
   for ($label=$label_inc; $label<=$points; $label+=$label_inc) {
@@ -134,16 +132,10 @@
   }
 
   ImageLine($Image, 40, 10, 40, 250, $dkgrey);
-  
-  
   ImageLine($Image, 35, 250, 45, 250, $dkgrey);
-  
-  
   ImageLine($Image, 45, 250, 50, 255, $dkgrey);
   ImageLine($Image, 50, 255, 60, 245, $dkgrey);
   ImageLine($Image, 60, 245, 65, 250, $dkgrey);
-  
-  
   ImageLine($Image, 65, 250, 740 - $reduction_factor, 250, $dkgrey);
 
   for ($i=1; $i<=100; $i++) {

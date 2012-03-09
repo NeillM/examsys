@@ -25,10 +25,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onscroll="scrollXY();" onclick="hideMenus();">
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-	<title>TouchStone Export to QTI</title>
+	<title>Export to QTI</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
+	<link rel="stylesheet" type="text/css" href="../css/header.css" />
 	<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
 	<style type="text/css">
@@ -130,11 +132,10 @@ if (count($result['save']['data']->files) > 1) {
   $files = $result['save']['data']->files;
 }
 
-?>
+$qti_ver = ($dest == "qti12") ? "v1.2.1" : "v2.1";
 
-<?php
-echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
+echo "<table class=\"header\">\n";
+echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
 if ($module != '') {
   echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
 } elseif ($folder != '') {
@@ -142,26 +143,27 @@ if ($module != '') {
 } else {
   echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
 }
-echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"".$string['help']."\" border=\"0\" /></a></td></tr>\n";
-echo "<tr><td colspan=\"6\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>";
+echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+
+echo "<div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . sprintf($string['qtiexport'], $qti_ver) . "</div>";
+echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+echo "<tr><th colspan=\"6\" class=\"bevel\"></th></tr>";
 echo "</table>";
 ?>
 
 <div style="margin:9px;" align="center">
-
-<table border="0" cellpadding="4" cellspacing="0" width="500" style="border:1px solid #5582D2"> 
+<br />
+<table border="0" cellpadding="0" cellspacing="0" width="500" style="border:1px solid #95AEC8; text-align:left"> 
 	<tr> 
-    <?php $qti_ver = ($dest == "qti12") ? "v1.2.1" : "v2.1"; ?>
-		<td valign="middle" align="left" style="background-color:white"><img src="../artwork/statistics_menu_icon.gif" width="36" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php printf($string['qtiexport'], $qti_ver) ?></span></td> 
+		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php printf($string['qtiexport'], $qti_ver) ?></span></td> 
 	</tr> 
 	<tr> 
-		<td align="left" style="background-color:#DFE8FF">
+		<td style="background-color:#DFE8FF" colspan="2">
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php printf($string['exportsready'], $qti_ver) ?></div>
 			<?php foreach ($files as $file) : ?>
 				<?php $path = $file->path; ?>
 				<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-					<?php echo $string['download'] ?> : <a href="download.php?file=<?php echo(urlencode($file->filename)) ?>&path=<?php echo(urlencode($file->path)) ?>&title=<?php echo(urlencode($file->title)) ?>"><?php echo $file->title ?></a>
+					<strong><a href="download.php?file=<?php echo(urlencode($file->filename)) ?>&path=<?php echo(urlencode($file->path)) ?>&title=<?php echo(urlencode($file->title)) ?>"><?php echo $string['download'] . ' ' . $file->title ?>.xml</a></strong>
 				</div>
 			<?php endforeach; ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation']; ?></div>

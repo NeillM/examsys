@@ -34,10 +34,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō: <?php echo $string['mappingbysession'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     h1 {font-size:160%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
     img {border:none;}

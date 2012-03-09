@@ -731,7 +731,7 @@ if ($paper_type == '2') {
   }
   
   if ($summative_lock == 1) {
-    makeMenu(array($string['export12']=>"$cfg_root_path/qti/export.php?dest=qti12&paperID=$paperID"));
+    makeMenu(array($string['export12']=>"$cfg_root_path/qti/export.php?dest=qti12&paperID=$paperID&module=$module"));
   } else {
     makeMenu(array($string['import']=>"$cfg_root_path/qti/import.php?paperID=$paperID&module=$module",$string['export12']=>"$cfg_root_path/qti/export.php?dest=qti12&paperID=$paperID"));
   }
