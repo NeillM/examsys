@@ -38,10 +38,10 @@ $string['requsername'] = "Wprowadź nazwę użytkownika.";
 $string['usernamechars'] = "Nazwa użytkownika nie może zawierać podkreślnika.";
 $string['reqpassword'] = "Wprowadź domyślne hasło dla użytkownika.";
 $string['usernameinuse'] = 'Nazwa użykownika \'%s\' jest już wykorzystywana. Wybierz inną.';
-$string['email1'] = 'Utworzone zostało nowe konto w Rogō - systemie elektronicznego ankietowania i egzaminowania. Szczegóły Twego osobistego dostępu są następujące:';
-$string['email2'] = 'Aby zalogować się do systemu przejdź do:';
-$string['email3'] = 'Gdy sie zalogujesz przedstawiona będzie Twoja strona osobista wymieniająca wszystkie przeznaczone dla Ciebie arkusze .';
-$string['casesensitive'] = '(rozróżniane rozmiary liter)';
+$string['email1'] = 'Utworzone zostalo nowe konto w Rogo - systemie elektronicznego ankietowania i egzaminowania. Szczegoly dostepu do Twojego osobistego konta sa nastepujace:';
+$string['email2'] = 'Aby zalogować się do systemu przejdz do:';
+$string['email3'] = 'Gdy sie zalogujesz przedstawiona będzie Twoja strona osobista wymieniajaca wszystkie przeznaczone dla Ciebie arkusze .';
+$string['casesensitive'] = '(wielkosc liter ma znaczenie)';
 $string['rogoaccount'] = 'Konto Rogō';
 $string['couldnotsend'] = 'Nie można było wysłać Emaila do';
 ?>
