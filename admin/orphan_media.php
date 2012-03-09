@@ -148,6 +148,25 @@ h1 {font-size:140%; margin-left:10px}
   }
   $result->close();
   
+  //- Check scenario field for any images (Latex, etc) ---------------------------------
+  $result = $mysqli->prepare("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($scenario);
+  while ($result->fetch()) {
+    $images = getImages($scenario);
+    if (count($images) > 0) {
+      foreach($images as $image) {
+        if (isset($file_array[$image])) {
+          $file_array[$image] = 1;
+        } else {
+          $missing_array[] = $image;
+        }
+      }
+    }
+  }
+  $result->close();
+  
   //- Check correct field for any images (images used as labels in Labelling question) -----------
   $result = $mysqli->prepare("SELECT correct FROM options, questions WHERE questions.q_id=options.o_id AND q_type='labelling'");
   $result->execute();
@@ -168,25 +187,6 @@ h1 {font-size:140%; margin-left:10px}
           } else {
             $missing_array[] = $image;
           }
-        }
-      }
-    }
-  }
-  $result->close();
-  
-  //- Check scenario field for any images (Latex, etc) ---------------------------------
-  $result = $mysqli->prepare("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($scenario);
-  while ($result->fetch()) {
-    $images = getImages($scenario);
-    if (count($images) > 0) {
-      foreach($images as $image) {
-        if (isset($file_array[$image])) {
-          $file_array[$image] = 1;
-        } else {
-          $missing_array[] = $image;
         }
       }
     }
