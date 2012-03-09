@@ -148,6 +148,32 @@ h1 {font-size:140%; margin-left:10px}
   }
   $result->close();
   
+  //- Check correct field for any images (images used as labels in Labelling question) -----------
+  $result = $mysqli->prepare("SELECT correct FROM options, questions WHERE questions.q_id=options.o_id AND q_type='labelling'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($correct);
+  while ($result->fetch()) {
+    $parts = explode(';', $correct);
+    if (isset($parts[11])) {
+      $sub_parts = explode('|', $parts[11]);
+      foreach ($sub_parts as $sub_part) {
+        if (strpos($sub_part,'.gif') !== false or strpos($sub_part,'.png') !== false or strpos($sub_part,'.jpg') !== false or strpos($sub_part,'.jpeg') !== false) {
+          $image_parts = explode('$', $sub_part);
+          $image_text = $image_parts[4];
+          $image_filename = explode('~', $image_text);
+          $image = $image_filename[0];
+          if (isset($file_array[$image])) {
+            $file_array[$image] = 1;
+          } else {
+            $missing_array[] = $image;
+          }
+        }
+      }
+    }
+  }
+  $result->close();
+  
   //- Check scenario field for any images (Latex, etc) ---------------------------------
   $result = $mysqli->prepare("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
   $result->execute();
