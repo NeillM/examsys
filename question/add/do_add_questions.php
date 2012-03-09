@@ -56,6 +56,7 @@ if (isset($_GET['folder'])) $folder = $_GET['folder'];
 ?>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Add new Question</title>
   <script language="javascript">

@@ -28,6 +28,7 @@ require_once $cfg_web_root . 'classes/lang.class.php';
 $html = <<< HTML
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset={$cfg_page_charset}" />
   <title>{$string['preview']}</title>
 </head>
