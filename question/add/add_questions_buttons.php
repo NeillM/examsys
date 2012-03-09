@@ -63,15 +63,16 @@
   </script>
   
   <style type="text/css">
-  body {font-size:100%; font-family:Arial,sans-serif; background-color:#DFECFF; color:black; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
+  html {height:100%}
+  body {height:100%; font-size:100%; font-family:Arial,sans-serif; background-color:#DFECFF; color:black; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
   </style>
 </head>
 <body>
 
-<table cellspacing="0" cellpadding="2" style="font-size:90%; width:126px; height:99%; background-color:white; border:1px solid #95AEC8">
+<table cellspacing="0" cellpadding="0" style="font-size:90%; width:126px; height:99%; background-color:white; border:1px solid #95AEC8">
 <tr><td style="vertical-align:top; text-align:center" valign="top">
 
-<table cellspacing="0" cellpadding="2" style="font-size:90%; width:120px; background-white">
+<table cellspacing="0" cellpadding="0" style="padding:2px; font-size:90%; width:124px; background-white; text-align:left">
 <tr><td id="button_unused" style="background-image:url('../../artwork/2007_button_on.png'); height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('unused')" onmouseout="buttonout('unused')" onclick="buttonclick('unused','add_questions_list_unused.php')">&nbsp;<?php echo $string['myunused']; ?></td></tr>
 <tr><td id="button_alphabetic" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('alphabetic')" onmouseout="buttonout('alphabetic')" onclick="buttonclick('alphabetic','add_questions_list_all.php')">&nbsp;<?php echo $string['allmyquestions']; ?></td></tr>
 <tr><td id="button_keywords" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('keywords')" onmouseout="buttonout('keywords')" onclick="buttonclick('keywords','add_questions_keywords_frame.php')">&nbsp;<?php echo $string['bykeywords']; ?></td></tr>
