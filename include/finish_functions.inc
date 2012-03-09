@@ -1416,7 +1416,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
               }
             } elseif ($paper[$question]['correct'][$tmp_part_id-1] > 0) {
               $all_correct = false;
-              if ($paper[$question]['score_method'] == 'Mark per Question') {
+              if ($paper[$question]['score_method'] == 'Mark per Question' and $rank_answers[$tmp_part_id-1] != 'u') {
                 echo '&nbsp;<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
               }
             }
