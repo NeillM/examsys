@@ -605,7 +605,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
                  
             if ($paper[$question]['mark'] == $paper[$question]['marks_correct']) {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-            } elseif ($tolerance_partial > 0 and $paper[$question]['mark'] == $paper[$question]['marks_partial']) {
+            } elseif ($tolerance_partial > 0 and $paper[$question]['mark'] == $paper[$question]['marks_partial'] and $paper[$question]['marks_partial'] > 0) {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" />';
             } else {
               if ($tmp_display_students_response == '1') echo '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
