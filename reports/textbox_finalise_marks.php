@@ -47,8 +47,10 @@ if (isset($_POST['submit'])) {
   for ($i=1; $i<$_POST['student_no']; $i++) {
     if (isset($_POST["override$i"]) and $_POST["override$i"] != 'NULL') {
       $tmp_mark = $_POST["override$i"];
-    } else {
+    } elseif (isset($_POST["mark$i"])) {
       $tmp_mark = $_POST["mark$i"];
+    } else {
+      $tmp_mark = NULL;
     }
     $logtype = $_POST["logtype$i"];
     $log_id = $_POST["log_id$i"];
@@ -105,6 +107,7 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['finalisemarks'] . ' ' . $cfg_install_type; ?></title>
   <script src="../js/staff_help.js" type="text/javascript"></script>
