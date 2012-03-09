@@ -151,6 +151,7 @@ $t=9;
       elseif ($question->type == "likert") $this->SaveLikert($question);
       elseif ($question->type == "matrix") $this->SaveMatrix($question);
       elseif ($question->type == "mcq") $this->SaveMcq($question);
+      elseif ($question->type == "true_false") $this->SaveTrueFalse($question);
       elseif ($question->type == "mrq") $this->SaveMrq($question);
       elseif ($question->type == "rank") $this->SaveRank($question);
       elseif ($question->type == "textbox") $this->SaveTextbox($question);
@@ -586,7 +587,7 @@ $t=9;
     $this->q_row['q_option_order'] = $question->presentation ;
     $this->q_row['score_method'] = 'Mark per Question';
     $this->q_row['display_method'] = 'vertical';
-    
+
     foreach ($question->options as $option) {
       $o_row = $this->db->GetBlankTableRow("options");
 
@@ -596,7 +597,7 @@ $t=9;
       $o_row['marks_correct'] = $option->marks_correct;
       $o_row['marks_incorrect'] = $option->marks_incorrect;
       $o_row['marks_partial'] = 0;
-      
+
       $o_row['o_media'] = $option->media;
       $o_row['o_media_width'] = $option->media_width;
       $o_row['o_media_height'] = $option->media_height;
@@ -608,6 +609,42 @@ $t=9;
     }
 
   }
+
+
+  function SaveTrueFalse($question) {
+    $this->q_row['scenario'] = $question->scenario ;
+    $this->q_row['correct_fback'] = (!empty($question->feedback)) ? $question->feedback : '';
+    $this->q_row['q_option_order'] = $question->presentation ;
+    $this->q_row['score_method'] = 'Mark per Question';
+    $this->q_row['display_method'] = 'vertical';
+
+    $this->q_row['correct_fback'] =$question->fb_correct;
+    $this->q_row['incorrect_fback'] =$question->fb_incorrect;
+
+    foreach ($question->options as $option) {
+      $o_row = $this->db->GetBlankTableRow("options");
+
+      $o_row['option_text'] = $option->stem;
+      $o_row['correct'] = $question->correct;
+
+      $o_row['marks_correct'] = $option->marks_correct;
+      $o_row['marks_incorrect'] = $option->marks_incorrect;
+      $o_row['marks_partial'] = 0;
+
+      $o_row['o_media'] = $option->media;
+      $o_row['o_media_width'] = $option->media_width;
+      $o_row['o_media_height'] = $option->media_height;
+
+      $o_row['feedback_right'] = $question->fb_correct;
+      $o_row['feedback_wrong'] = $question->fb_incorrect;
+
+
+      $this->o_rows[] = $o_row;
+    }
+
+
+  }
+
 
   function SaveMrq($question) {
     $this->q_row['scenario'] = $question->scenario ;

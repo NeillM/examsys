@@ -280,6 +280,18 @@ class ST_Question_Mcq extends ST_Question {
 
   var $fb_correct;
   var $fb_incorrect;
+  var $answer;
+}
+
+class ST_Question_TrueFalse extends ST_Question {
+  var $scenario = '';
+  var $correct = 0;
+
+  var $options = array(); // array of STQ_Mcq_Option, key as option no
+
+  var $fb_correct;
+  var $fb_incorrect;
+  var $answer;
 }
 
 class STQ_Mrq_Option {

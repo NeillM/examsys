@@ -102,17 +102,9 @@ $numb=0;
 
     $xml = @simplexml_load_string($xmlStr);
 
-    foreach($xml->item->presentation->flow->response_lid->render_extension as $yyy)
-    {
-      //$yyy is ->ims_render_object
-    foreach($yyy as $uuu)
-    {
-      //$uuu is subpart
 
-    $b=$uuu;
-    }
-    }
-
+if($xml->item->presentation->flow)
+{
       foreach($xml->item->presentation->flow as $yyy)
     {
       foreach($yyy as $uuu)
@@ -135,6 +127,7 @@ $numb=0;
         }
       }
     }
+}
 
 
     // single assessment object possible
@@ -233,6 +226,8 @@ $numb=0;
 
     if ($type == "blank") $question = $this->LoadBlank($q_imp);
     elseif ($type == "calculation") $question = $this->LoadCalculation($q_imp);
+    elseif ($type == "truefalse") $question = $this->LoadTrueFalse($q_imp);
+    elseif ($type == "true_false") $question = $this->LoadTrueFalse($q_imp);
     elseif ($type == "dichotomous") $question = $this->LoadDichotomous($q_imp);
     elseif ($type == "extmatch") $question = $this->LoadExtmatch($q_imp);
     elseif ($type == "flash") $question = $this->LoadFlash($q_imp);
@@ -426,6 +421,10 @@ $numb=0;
       // need to match options to one of our know lists	
 
       $response_list = $this->GetResponseLabelList($question);
+
+      if($question->qmd_itemtype =="Multiple Choice") return "mcq";
+      if($question->qmd_itemtype =="True False") return "truefalse";
+      if($question->wct_questiontype =="WCT_TrueFalse") return "truefalse";
 
       if (MatchArraySet($this->dich_values, $response_list, $this->abstainvalues)) return "dichotomous";
 
@@ -1528,6 +1527,156 @@ $numb=0;
     
     return $dest;
   }
+
+
+
+
+
+
+
+  function LoadTrueFalse(&$source) {
+    $dest = new ST_Question_Mcq();
+
+    $dest->load_id = $source->load_id;
+    $dest->status = $source->qmd_status;
+    $dest->presentation = 'vertical';
+    $dest->type = 'true_false';
+    if ($source->responses[1]->shuffle == 1) {
+      $dest->q_option_order = 'random';
+    }
+
+    // should only be 1 response, so get it
+    $response = reset($source->responses);
+    $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
+
+    list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+
+    $conds = $this->GetRespConditions($source, 1);
+    foreach ($conds as $condition) {
+      if (count($condition->conditions) == 0) {
+        $this->AddWarning("Positive outcome with no condition, unable to work out correct answer", $source->load_id);
+      } else {
+        if (count($condition->conditions) > 1) $this->AddWarning("Multiple positive values on outcome, correct answer may be wrong", $source->load_id);
+
+        $correctvalue = $condition->conditions[0]->value;
+        $id = $condition->conditions[0]->respident;
+        $answer= $condition->conditions[0]->value;
+      }
+    }
+$dest->answer=strtolower($answer);
+
+    $choiceno = 1;
+    foreach ($response->labels as $label) {
+      $choice = new STQ_Mcq_Option();
+      $choice->stem = $label->material->GetText();
+      $choice->base_id = $label->id;
+
+      if (!empty($label->material->media)) {
+        $choice->media = $label->material->media;
+        $choice->media_width = $label->material->media_width;
+        $choice->media_height = $label->material->media_height;
+      }
+
+      $choice->marks_correct = $marks_correct;
+      $choice->marks_incorrect = $marks_incorrect;
+
+      $dest->options[$choiceno] = $choice;
+      $choiceno++;
+    }
+
+    // count up response conditions
+    list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
+
+    if ($positive == 0) {
+      $this->AddWarning("Unable to find a correct answer", $source->load_id);
+    } else if ($positive > 1) {
+      $this->AddWarning("Found multiple conditions that are scoring the question, ignoring all but the 1st", $source->load_id);
+    }
+
+    // get back the single positive response for the question
+    $conds = $this->GetRespConditions($source, 1);
+
+    // get first and only response condition
+    $conds = reset($conds);
+
+    // find correct answer (first and only value (hopefully)
+    $corid = '';
+    if (count($conds->conditions) > 0) $corid = reset($conds->conditions)->value;
+
+    foreach ($dest->options as $id => $option) {
+      if ($option->base_id == $corid) {
+        $dest->correct = $id;
+        break;
+      }
+    }
+
+    // SW amendment 16/11/2010
+    foreach ($dest->options as & $option) {
+      $correctfb = $this->GetFeedbacks($source, 1, $option->base_id, 1);
+      $incorrectfb = explode('<br />', $this->GetFeedbackFromArray($source, $correctfb));
+
+      // get list of feedbacks common to both outcomes and add to general feedback array
+      // remove common ones from the list
+      RemoveCommonInArray($correctfb, $incorrectfb, $generalfb);
+
+      $option->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
+      $option->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
+    }
+    // SW amendment
+
+    //$dest->feedback = $this->GetFeedbackFromArray($source,$generalfb);
+
+    // get list of feedbacks for when correct
+    $correctfb = $this->GetFeedbacks($source, 1, $corid, 1);
+
+    // get list of feedbacks for when incorrect
+    $incorrectfb = $this->GetFeedbacks($source, 1, $corid, 0);
+
+    // get list of feedbacks common to both outcomes and add to general feedback array
+    // remove common ones from the list
+    //RemoveCommonInArray($correctfb,$incorrectfb,$generalfb);
+
+    $dest->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
+    $dest->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
+
+    $dest->options2=$dest->options;
+
+
+
+    unset($dest->options);
+    unset($choices);
+    foreach($dest->options2 as $opts) {
+      if($opts->base_id==$dest->answer) {
+        $choice = new STQ_Mcq_Option();
+        $choice=$opts;
+        $as=strtolower(substr($opts->stem,0,1));
+        $dest->options[$as]=$choice;
+        $dest->correct=$as;
+      }
+    }
+
+    // load presentation type from comments field if it was specified
+    if (array_key_exists('DISPLAY', $source->params)) $dest->presentation = $source->params['DISPLAY'];
+
+    return $dest;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // DONE
   function LoadMRQ(&$source) {
