@@ -206,6 +206,13 @@
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Cohort Size</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $user_no . '</Data></Cell>';
   echo '</Row>';
+  foreach ($labels as $i => $label) {
+    //echo "<tr><td align=\"right\">" . $string[strtolower($label)] . "</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
+    echo '<Row>';
+    echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string[strtolower($label)] . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="Number">' . $classifications[$i] . '</Data></Cell>';
+    echo '</Row>';
+  } 
   echo '  </Table>';  
   echo '  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">';
   echo '   <ProtectObjects>False</ProtectObjects>';

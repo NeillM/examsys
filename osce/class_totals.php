@@ -25,10 +25,10 @@
   require '../include/staff_auth.inc';
   require 'class_totals.inc';
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
   <html>
   <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
   <style type="text/css">
@@ -331,7 +331,7 @@
   
   echo "</td></tr>\n";
   echo "</table>\n";
-
+  
   $mysqli->close();
 ?>
 <input type="hidden" id="tmp_userID" value="" />

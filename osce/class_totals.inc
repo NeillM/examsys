@@ -121,7 +121,7 @@
   
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] != '') {   // No attendance
-      //$classifications[$user_results[$i]['classification']]++;
+      $classifications[$user_results[$i]['classification']]++;
       $total_score += $user_results[$i]['numeric_score'];
       $completed_no++;
     }
