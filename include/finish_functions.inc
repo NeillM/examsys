@@ -1596,17 +1596,15 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
               $tmp_option_no = 1;
               for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {
                 if ($option_order[$option_no]+1 == $user_answers[$i]) {
-                  echo "<option value=\"\" selected>" . $paper[$question]['option_text'][$option_order[$option_no]] .  "</option>\n";
+                  echo "<option value=\"\" selected=\"selected\">" . $paper[$question]['option_text'][$option_order[$option_no]] .  "</option>\n";
                 } else {
                   echo "<option value=\"\">" . $paper[$question]['option_text'][$option_order[$option_no]] .  "</option>\n";
                 }
                 $tmp_option_no++;
               }
               echo '</select>';
-              if ($user_answers[$i] != $correct_answers[$i]) {
-                if ($tmp_display_correct_answer == '1') {
-                  echo '&nbsp;&nbsp;<strong>' . $paper[$question]['option_text'][$correct_answers[$i]-1] . '</strong>';
-                }
+              if ($tmp_display_correct_answer == '1') {
+                echo '&nbsp;&nbsp;<strong>' . $paper[$question]['option_text'][$correct_answers[$i]-1] . '</strong>';
               }
               echo "</td>\n";
             } else {                              // Multiple answer Extended Matching     
