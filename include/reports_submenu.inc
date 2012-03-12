@@ -343,7 +343,7 @@
   foreach ($metadata as $meta_type=>$value_array) {
     if ($paper_type != '6' or $rubric == $meta_type) {
       echo "<tr><td>$meta_type</td><td><select name=\"meta$meta_no\" id=\"meta$meta_no\">";
-      echo "<option value=\"$meta_type=%\">&lt;all&gt;</option>";
+      echo "<option value=\"$meta_type=%\">&lt;". $string['all']."&gt;</option>";
       foreach ($value_array as $meta_value) {
         echo "<option value=\"$meta_type=$meta_value\">$meta_value</option>\n";
       }

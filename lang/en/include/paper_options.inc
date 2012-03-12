@@ -66,6 +66,7 @@ $string['allcandidates'] = 'All candidates';
 $string['top'] = 'Top';
 $string['bottom'] = 'Bottom';
 $string['year'] = 'Year';
+$string['all'] = 'All';
 $string['reviews'] = 'Reviews';
 $string['internalpeerreview'] = 'Internal Peer Review';
 $string['externalexaminers'] = 'External Examiners';

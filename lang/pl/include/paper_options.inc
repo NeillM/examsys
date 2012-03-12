@@ -67,6 +67,7 @@ $string['top'] = 'Górna grupa';
 $string['bottom'] = 'Dolna grupa';
 $string['year'] = 'Rok';
 $string['reviews'] = 'Recenzje';
+$string['all'] = 'Wszystkie';
 $string['internalpeerreview'] = 'Recenzja wewnętrzna';
 $string['externalexaminers'] = 'Zewnętrzni egzaminatorzy';
 $string['sctresponses'] = 'Reakcje/Przyczyny SCT';
