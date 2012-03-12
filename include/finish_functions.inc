@@ -2135,8 +2135,9 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
               }
             }
           }
-          
+
           if ($paper[$question]['score_method'] == 'Mark per Question') {
+            if (substr($tmp_exclude, 0, 1) == 1) $paper[$question]['leadin'] = '<div class="exclude">' . $paper[$question]['leadin'] . '</div>';
             if ($correct_no == count($correct_labels)) {
               $paper[$question]['mark'] = $paper[$question]['marks_correct'];
             } elseif ($correct_no == 0 and $all_correct == true) {
