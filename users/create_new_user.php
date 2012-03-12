@@ -122,9 +122,9 @@
       $result->fetch();
       $result->close();
       
-      $subject = "New Rogo account";
+      $subject = "{$string['newrogoaccount']}";
       $headers = "From: $tmp_email\n";
-      $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
+      $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
       $headers .= "bcc: $tmp_email\n";
       $sname = ucwords($_POST['new_surname']);
       $message = <<< MESSAGE
@@ -139,7 +139,7 @@ h2 {font-size:120%}
 </style>
 </head>
 <body>
-<p>Dear {$_POST['new_users_title']} {$sname},</p>
+<p>{$string['dear']} {$_POST['new_users_title']} {$sname},</p>
 <p>{$string['email1']}</p>
 <p>{$string['username']}: {$_POST['new_username']}<br />
 {$string['password']}: {$_POST['new_password']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>"
