@@ -1296,7 +1296,7 @@
         }
       }
       
-      echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\">\n";
+      echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
       echo '<tr><td colspan="7">&nbsp;</td><td>&nbsp;</td>';
       foreach ($options as $individual_option) {
         echo '<td>' . $individual_option . '</td>';
@@ -1524,6 +1524,8 @@ p {margin-left:0px; margin-right:0px}
 .excluded img { border: 2px solid red}
 .excluded img.in-exclusion {border:0}
 td p:first-child {margin-top:0}
+.matrix {border:1px solid #808080; border-collapse:collapse}
+.matrix td {border:1px solid #808080}
 .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
 .scr_no {margin-left:25px}
 .screenbrk {
