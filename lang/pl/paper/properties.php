@@ -64,7 +64,7 @@ $string['textfeedback'] = 'Odzew tekstowy';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
-$string['securityheading'] = 'Kontroluj prawa dostępu studentów do arkuszy.';
+$string['securityheading'] = 'Kontrola praw dostępu studentów do arkuszy.';
 $string['session'] = 'Sesja';
 $string['password'] = 'Hasło';
 $string['timezone'] = 'Strefa czasowa';
@@ -79,18 +79,18 @@ $string['na'] = 'Brak';//data
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';
-$string['reviewersheading'] = 'Zestaw wewnętrznych/zewnętrznych recenzentów z terminami finalizacji.';
+$string['reviewersheading'] = 'Lista recenzentów wewnętrznych i zewnętrznych z terminami finalizacji.';
 $string['internalreviewers'] = 'Wewnętrzni recenzenci';
 $string['externalexaminers'] = 'Zewnętrzni egzaminatorzy';
 $string['deadline'] = 'Termin finalizacji:';
 
 // Exam Rubric tab
 $string['rubrictab'] = 'Rubryka egzaminu';
-$string['rubricheading'] = 'Rubryka egzaminu wyświetlana u studenta przed rozpoczęciem egzaminu końcowego';
+$string['rubricheading'] = 'Rubryka egzaminu prezentowana studentowi przed rozpoczęciem egzaminu końcowego';
 
 // Prologue tab
 $string['prologuetab'] = 'Wstęp';
-$string['prologueheading'] = 'Tekst wyświetlany u góry ekranu 1 przy rozpoczęciu arkusza.';
+$string['prologueheading'] = 'Tekst wyświetlany u góry ekranu 1 po rozpoczęciu pracy z arkuszem.';
 
 // Postscript tab
 $string['postscripttab'] = 'Zakończenie';
