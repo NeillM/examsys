@@ -1820,6 +1820,11 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
             }
           }
           echo "<div style=\"border:1px solid #164994; padding:12px; text-align:justify; line-height:150%\">" . $tmp_answer . "</div>\n<br />\n";
+
+          if ($tmp_answer == '') {
+            reset_feedback($hide_if_unanswered);
+          }
+
           if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
             echo '<p class="fback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
           }
