@@ -191,7 +191,7 @@ if (isset($_POST['Submit'])) {
     if ($tmp_pass_mark == '') $tmp_pass_mark = 40;
 
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
-    $tmp_calculator = $_POST['calculator'];
+    $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
 
     
     if (isset($_POST['sound_demo'])) {
@@ -285,7 +285,7 @@ if (isset($_POST['Submit'])) {
     <meta http-equiv="pragma" content="no-cache" />
     <script type="text/javascript">
       function closeWindow() {
-<?php
+        <?php
           if ($_POST['noadd'] == 'y') {
         ?>
             window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
@@ -412,13 +412,13 @@ if (isset($_POST['Submit'])) {
     }
 
     function checkForm() {
-      if (edit_form.fyear.value > edit_form.tyear.value) {
+      if (document.edit_form.fyear.value > document.edit_form.tyear.value) {
         alert ("<?php echo $string['availablefromyear']; ?>");
         return false;
-      } else if (edit_form.fyear.value == edit_form.tyear.value && edit_form.fmonth.value > edit_form.tmonth.value) {
+      } else if (document.edit_form.fyear.value == document.edit_form.tyear.value && document.edit_form.fmonth.value > document.edit_form.tmonth.value) {
         alert ("<?php echo $string['availablefrommonth']; ?>");
         return false;
-      } else if (edit_form.fyear.value == edit_form.tyear.value && edit_form.fmonth.value == edit_form.tmonth.value && edit_form.fday.value > edit_form.tday.value) {
+      } else if (document.edit_form.fyear.value == document.edit_form.tyear.value && document.edit_form.fmonth.value == document.edit_form.tmonth.value && document.edit_form.fday.value > document.edit_form.tday.value) {
         alert ("<?php echo $string['availablefromday']; ?>");
         return false;
       }
@@ -441,7 +441,7 @@ if (isset($_POST['Submit'])) {
       }
 
       if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '2') {
-        if (edit_form.fday.value != edit_form.tday.value || edit_form.fmonth.value != edit_form.tmonth.value || edit_form.fyear.value != edit_form.tyear.value) {
+        if (document.edit_form.fday.value != document.edit_form.tday.value || document.edit_form.fmonth.value != document.edit_form.tmonth.value || document.edit_form.fyear.value != document.edit_form.tyear.value) {
           alert ("<?php echo $string['msg2']; ?>");
           return false;
         }
@@ -517,7 +517,7 @@ if (isset($_POST['Submit'])) {
         }        
       }
      
-      if (edit_form.paper.value == '') {
+      if (document.edit_form.paper_title.value == '') {
         alert ("<?php echo $string['msg7']; ?>");
         return false;
       }    
@@ -812,21 +812,15 @@ if ($paper_type != '4' and $paper_type != '5') {
        echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" /></td>";
        echo "</tr>\n";
 
-       echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><select name=\"calculator\">\n";
-       for ($calcloop=0; $calcloop<3; $calcloop++) {
-         echo "<option value=\"$calcloop\"";
-         if ($calcloop == $calculator) {
-           echo " selected";
-         }
-         echo ">";
-         echo $string["displaycalculator$calcloop"];
-         echo "</option>\n";
-       }
-       echo "</select></td>\n";
-       if ($sound_demo == 1) {
-         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" checked /> " . $string['demosoundclip'] . "</td></tr>\n";
+       if ($calculator == 1) {
+         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\" checked=\"checked\" /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
        } else {
-         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" name=\"sound_demo\" /> " . $string['demosoundclip'] . "</td></tr>\n";
+         echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\" /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
+       }
+       if ($sound_demo == 1) {
+         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\" checked=\"checked\" /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
+       } else {
+         echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\" /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
        }
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      }
@@ -1368,7 +1362,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     $internal_no++;
   }
   $internal_details->close();
-  echo "<input type=\"hidden\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
+  echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
   echo "<td><div style=\"width:345px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $current_externals = explode(',',$externals);

@@ -2002,6 +2002,23 @@ if (!isset($_POST['update'])) {
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".standards_setting TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
 
 
+  // 12/03/2012 - Fix any uses of old calculator or new basic calculator as we are not shipping that yet
+  $result = $mysqli->prepare("SELECT COUNT(property_id) FROM properties WHERE (calculator = 2 OR calculator = -1)");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($rows);
+  $result->fetch();
+  if ($rows > 0) {
+    $adjust = $mysqli->prepare("UPDATE properties SET calculator=1 WHERE (calculator = 2 OR calculator = -1)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>UPDATE properties SET calculator=1 WHERE (calculator = 2 OR calculator = -1)</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   

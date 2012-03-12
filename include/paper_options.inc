@@ -130,7 +130,7 @@ $stmt->close();
     if (window.focus) {
       notice.focus();
     }
-    this.event.returnValue = false;
+    if (this.event) this.event.returnValue = false;
     return false;
   }
 
@@ -139,7 +139,7 @@ $stmt->close();
     if (window.focus) {
       notice.focus();
     }
-    this.event.returnValue = false;
+    if (this.event) this.event.returnValue = false;
     return false;
   }
 
