@@ -80,7 +80,7 @@
       $result->execute();  
       $result->close();
     }
-    $stmt->close;
+    $stmt->close();
     
     // Add one log_metadata record.
     $result = $mysqli->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
@@ -90,8 +90,10 @@
   }
   
   if (trim($_POST['reason']) != '') {
+    $reason = trim($_POST['reason']);
+    
     $result = $mysqli->prepare("INSERT INTO student_notes VALUES (NULL, ?, ?, NOW(), ?, ?)");
-    $result->bind_param('isis', $_POST['userID'], trim($_POST['reason']), $_POST['paperID'], $userID);
+    $result->bind_param('isis', $_POST['userID'], $reason, $_POST['paperID'], $userID);
     $result->execute();  
     $result->close();
   }
