@@ -1,5 +1,6 @@
 <?php
 $string['latesubmission'] = 'Late Submission';
+$string['question'] = 'Question';
 $string['screen'] = 'Screen';
 $string['saved'] = 'Saved';
 $string['ipaddress'] = 'IP Address';

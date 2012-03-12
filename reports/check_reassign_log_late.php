@@ -31,7 +31,7 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['latesubmission']. ' ' . $cfg_install_type; ?></title>
   <style type="text/css">
-  body {font-size:90%; background-color:#ECE9D8; color:black; font-family:Arial,sans-serif; margin:4px}
+  body {font-size:90%; background-color:#F1F5FB; color:black; font-family:Arial,sans-serif; margin:4px}
   </style>
 
   <script type="text/javascript">
@@ -115,11 +115,11 @@
   echo "<p><strong>$title $surname, $first_names</strong></p>\n";
   
   echo "<div style=\"font-size:100%\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
-  echo "<tr style=\"font-weight:bold\"><td style=\"width:80px\">Question</td><td style=\"width:70px\">" . $string['screen'] . "</td><td style=\"width:150px\">" . $string['saved'] . "</td><td>" . $string['ipaddress'] . "</td></tr>\n";
+  echo "<tr style=\"font-weight:bold\"><td style=\"width:80px\">" . $string['question'] . "</td><td style=\"width:70px\">" . $string['screen'] . "</td><td style=\"width:150px\">" . $string['saved'] . "</td><td>" . $string['ipaddress'] . "</td></tr>\n";
   echo "</table></div>\n";
   
   
-  echo "<div style=\"height:180px; overflow-y:scroll; border:1px solid highlight; background-color:white; font-size:90%\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
+  echo "<div style=\"height:180px; overflow-y:scroll; border:1px solid #CCD9EA; background-color:white; font-size:90%\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
   foreach ($missing as $missing_question) {
     echo "<tr><td style=\"text-align:right; width:80px\">" . $missing_question['question_no'] . "</td><td style=\"text-align:right; width:70px\">" . $missing_question['screen'] . "</td><td style=\"width:150px\">" . $missing_question['updated'] . "</td><td>" . $missing_question['ipaddress'] . "</td></tr>\n";
   }
