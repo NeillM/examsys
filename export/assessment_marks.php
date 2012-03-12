@@ -25,8 +25,8 @@
   require '../include/staff_auth.inc';
   require '../include/class_totals.inc';
   
-  header('Content-type: application/octet-stream');
-  header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . ".csv");
+  //header('Content-type: application/octet-stream');
+  //header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . ".csv");
   
   $row_written = 0;
   foreach ($user_results as $individual) {
