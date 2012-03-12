@@ -399,7 +399,8 @@
       }
       switch ($paper_buffer[$i]['type']) {
         case 'blank':
-          $tmp_answers = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
+          $correct_parts = explode(',',$paper_buffer[$i]['correct']);
+          $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
           for ($partID=1; $partID<count($correct_parts); $partID++) {
             if (substr($tmp_exclude,$partID-1,1) == '0') {
@@ -432,17 +433,17 @@
           for ($partID=0; $partID<count($correct_parts)-1; $partID++) {
             if (substr($tmp_exclude,$partID,1) == '0') {
               echo ',';
-              $part_ans = substr($individual[$tmp_screen][$tmp_question_ID],$partID,1);
-              if(isset($individual[$tmp_screen][$tmp_question_ID]) and $part_ans != 'u') {
+              $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? substr($individual[$tmp_screen][$tmp_question_ID],$partID,1) : 'u';
+              if($part_ans != 'u') {
                 echo $part_ans;
               }
             }
           }
           break;
         case 'extmatch':
-          $answer_parts = explode('|',$individual[$tmp_screen][$tmp_question_ID]);
-
           $correct_parts = explode(',',$paper_buffer[$i]['correct']);
+          $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+
           $partID = 0;
           for ($outer=1; $outer<=count($correct_parts)-1; $outer++) {
             if ($correct_parts[$outer] != '' and substr($tmp_exclude,$partID,1) == '0') {
@@ -456,8 +457,9 @@
           }
           break;
         case 'matrix':
-          $answer_parts = explode('|', $individual[$tmp_screen][$tmp_question_ID]);
           $correct_parts = explode(',', $paper_buffer[$i]['correct']);
+          $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+
           for ($partID=0; $partID<count($correct_parts)-2; $partID++) {
             // $correct_parts[0] is always empty
             if (substr($tmp_exclude,$partID,1) == '0' and $correct_parts[$partID+1] != '') {
@@ -469,13 +471,13 @@
           }
           break;
         case 'rank':
-          $individual[$tmp_screen][$tmp_question_ID] = str_replace('0','N/A',$individual[$tmp_screen][$tmp_question_ID]);
+          $individual[$tmp_screen][$tmp_question_ID] = (isset($individual[$tmp_screen][$tmp_question_ID])) ? str_replace('0','N/A',$individual[$tmp_screen][$tmp_question_ID]) : '';
           if (!isset($excluded[$tmp_question_ID])) echo str_replace(',u', ',', ',' . $individual[$tmp_screen][$tmp_question_ID]);
           break;
         case 'hotspot':
-          $answer_parts = explode('|', $individual[$tmp_screen][$tmp_question_ID]);
           $correct_parts = explode('|', $paper_buffer[$i]['correct']);
-          
+          $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+
           for ($partID=0; $partID<count($correct_parts); $partID++) {
             if (substr($tmp_exclude,$partID,1) == '0') {
               echo ',';
@@ -486,7 +488,7 @@
           }
           break;
         case 'labelling':
-          $tmp_first_split = explode(';', $individual[$tmp_screen][$tmp_question_ID]);
+          $tmp_first_split = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode(';', $individual[$tmp_screen][$tmp_question_ID]) : array('', '');
           $tmp_answers = explode('$', $tmp_first_split[1]);
           $user_answers = array();
           for ($label_no = 0; $label_no <= count($tmp_answers)-4; $label_no += 4) {
@@ -513,10 +515,14 @@
         case 'dichotomous':
         case 'mrq':
           for ($char_pos=0; $char_pos<substr_count($paper_buffer[$i]['correct'],','); $char_pos++) {
-            echo ',"' . substr($individual[$tmp_screen][$tmp_question_ID], $char_pos, 1) , '"';
+            $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? substr($individual[$tmp_screen][$tmp_question_ID], $char_pos, 1) : '';
+            echo ',"' . $part_ans . '"';
           }
           $char_pos = substr_count($paper_buffer[$i]['correct'],',') + 1;
-          if ($paper_buffer[$i]['score_method'] == 'other') echo ',' . substr($individual[$tmp_screen][$tmp_question_ID], $char_pos+1);
+          if ($paper_buffer[$i]['score_method'] == 'other') {
+            $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? substr($individual[$tmp_screen][$tmp_question_ID], $char_pos + 1) : '';
+            echo ',' . $part_ans;
+          }
           break;
         case 'textbox':
           if(isset($individual[$tmp_screen][$tmp_question_ID])) {
