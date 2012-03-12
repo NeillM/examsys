@@ -1,5 +1,5 @@
 <?php
 $string['screen'] = 'Ekran';//ąę
 $string['note'] = 'Uwaga';
-$string['marks'] = 'punktów';
+$string['marks'] = 'punkt/y/ów';
 ?>
