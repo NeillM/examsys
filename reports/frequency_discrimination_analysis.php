@@ -1173,16 +1173,17 @@
             $tmp_bottom_no = (isset($bottom_log[$q_id][1][$i])) ? $bottom_log[$q_id][1][$i] : 0;
             
             $max_correct = 0;
+            $correct_answer_no = 0;
             $answer_no = 1;
             foreach ($correct_buf as $tmp_correct) {
               if ($tmp_correct > $max_correct) {
                 $max_correct = $tmp_correct;
-                $correct_anwer_no = $answer_no;
+                $correct_answer_no = $answer_no;
               }
               $answer_no++;
             }
 
-            $correct_class = ($correct_anwer_no  == $i) ? ' correct' : '';
+            $correct_class = ($correct_answer_no  == $i) ? ' correct' : '';
             echo "<tr class=\"grey{$correct_class}\"><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td></td>";
             echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
             if ($tmp_exclude == '1') echo ' class="excluded"';
