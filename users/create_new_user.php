@@ -142,7 +142,7 @@ h2 {font-size:120%}
 <p>{$string['dear']} {$_POST['new_users_title']} {$sname},</p>
 <p>{$string['email1']}</p>
 <p>{$string['username']}: {$_POST['new_username']}<br />
-{$string['password']}: {$_POST['new_password']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>"
+{$string['password']}: {$_POST['new_password']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>
 MESSAGE;
 
       if (strpos($tmp_roles,'Staff') !== false) {
