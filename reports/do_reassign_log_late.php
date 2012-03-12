@@ -31,7 +31,7 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Reassign Script to User</title>
   <style type="text/css">
-  body {font-size:100%; background-color:#ECE9D8; color:black; font-family:Arial,sans-serif}
+  body {color:black; font-family:Arial,sans-serif}
   </style>
 
   <script type="text/javascript">
@@ -70,7 +70,7 @@
     echo "Q<br />";
       // Delete any existing record for the question in the real log table.
       $result = $mysqli->prepare("DELETE FROM $log_type WHERE userID=? AND q_paper=? AND q_id=? AND screen=? AND started=?");
-      $result->bind_param('iiis', $_POST['userID'], $_POST['paperID'], $q_id, $screen, $_POST['started']);
+      $result->bind_param('iiiis', $_POST['userID'], $_POST['paperID'], $q_id, $screen, $_POST['started']);
       $result->execute();
       $result->close();
     
