@@ -1,5 +1,5 @@
 <?php
-$string['finalisemarks'] = 'Końcowa ocena pytań';
+$string['finalisemarks'] = 'Ostateczna ocena pytań';
 $string['noanswer'] = 'Nie podano odpowiedzi';
 
 $string['first']='Pierwotna';
