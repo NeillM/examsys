@@ -1297,7 +1297,11 @@
       }
       
       echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
-      echo '<tr><td colspan="7">&nbsp;</td><td>&nbsp;</td>';
+      if ($score_method == 'Mark per Question') {
+        echo '<tr><td colspan="6">&nbsp;</td><td>&nbsp;</td>';
+      } else {
+        echo '<tr><td colspan="7">&nbsp;</td><td>&nbsp;</td>';
+      }
       foreach ($options as $individual_option) {
         echo '<td>' . $individual_option . '</td>';
       }
@@ -1318,9 +1322,9 @@
               $tmp_correct_no = (isset($freq_log[$q_id][$i][$correct_answer])) ? $freq_log[$q_id][$i][$correct_answer] : 0;
               $tmp_top_no = (isset($top_log[$q_id][$i][$correct_answer])) ? $top_log[$q_id][$i][$correct_answer] : 0;
               $tmp_bottom_no = (isset($bottom_log[$q_id][$i][$correct_answer])) ? $bottom_log[$q_id][$i][$correct_answer] : 0;
-              echo '<td>';
-              if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1);
-              echo '</td>';
+              if ($score_method == 'Mark per Option') {
+                echo '<td>' .  excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . '</td>';
+              }
               echo "<td style=\"font-weight:bold\">" . pStats($tmp_correct_no/$user_total) . "</td>";
               echo "<td style=\"font-weight:bold\">" . dStats($d) . "</td>";
               echo "<td style=\"font-weight:bold\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td>";
