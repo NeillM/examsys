@@ -382,7 +382,7 @@ ob_start();
   }
   
   //output table heading
-  $table_order = array(''=>'',$string['name']=>'name',$string['studentid']=>'student_id',$string['course']=>'student_grade',$string['mark']=>'mark',$marking_label=>$marking_key,$string['classification']=>'mark',$string['starttime']=>'started',$string['duration']=>'duration',$string['ipaddress']=>'ipaddress');
+  $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
   if ($paper_type == 2) $table_order[$string['room']] = 'room';
   $metadata_cols = array();
   if (isset($user_results[0])){

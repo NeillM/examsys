@@ -97,7 +97,8 @@
             echo "," . $individual['mark_array'][$q_id];
           }
         } else {
-          if (substr($tmp_exclude,0,1) == '0') echo ",0";
+          //if (substr($tmp_exclude,0,1) == '0');
+          echo ",0";
         }
       }
       echo "\n";
