@@ -60,7 +60,7 @@
   if ($_POST['button_pressed'] == 'Accept') {
     $log_type = 'log' . $_POST['log_type'];
 
-    $stmt = $mysqli->prepare("SELECT q_id, mark, totalpos, user_answer, screen, ipaddress, duration, student_grade, year, updated, dismiss, attempt, option_order FROM (log_late, log_metadata) WHERE log_late.userID=log_metadata.userID AND log_late.q_paper=log_metadata.paperID AND log_late.started=log_metadata.started AND log_late.userID=? AND q_paper=? AND log_late.started=?");
+    $stmt = $mysqli->prepare("SELECT q_id, mark, totalpos, user_answer, log_late.screen, ipaddress, duration, student_grade, year, updated, dismiss, attempt, option_order FROM (log_late, log_metadata) WHERE log_late.userID=log_metadata.userID AND log_late.q_paper=log_metadata.paperID AND log_late.started=log_metadata.started AND log_late.userID=? AND q_paper=? AND log_late.started=?");
     $stmt->bind_param('iis', $_POST['userID'], $_POST['paperID'], $_POST['started']);
     $stmt->execute();
     $stmt->store_result();
