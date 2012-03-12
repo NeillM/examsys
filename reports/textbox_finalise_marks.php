@@ -141,7 +141,7 @@ if (isset($_POST['submit'])) {
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div></th><th style="text-align:right; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th></tr>';
 
-  echo '<tr><th><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['finalisemarks'] . '</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">1st</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">2nd</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">Override</div></th></tr>';
+  echo '<tr><th><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['finalisemarks'] . '</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
   echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
   
   $student_no = 1;
@@ -166,7 +166,7 @@ if (isset($_POST['submit'])) {
           echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td>";
           $marked_no++;
         } else {
-          echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px; background-color:#EEEEEE; color:#800000\">&lt;unmarked&gt;</td>";
+          echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px; background-color:#EEEEEE; color:#800000\">&lt;'.$string['unmarked'].'&gt;</td>";
         }
         if (isset($secondary_marks[$log_id])) {
           echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /></td>";
