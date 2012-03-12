@@ -1299,17 +1299,16 @@
       echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
       $cols = 5;
       if ($score_method == 'Mark per Option') $cols++;
-      //if (is_array($tmp_std_array)) $cols++;
-      
-      echo "<tr><td colspan=\"$cols\">&nbsp;</td><td>&nbsp;</td>";
       $std_on = false;
       for ($i=0; $i<count($options); $i++) {
-        echo '<td>' . $options[$i] . '</td>';
-        if (isset($tmp_std_array[$i])) {
-          $std_on = true;
-        }
+        if (isset($tmp_std_array[$i])) $std_on = true;
       }
       if ($std_on) $cols++;
+      
+      echo "<tr><td colspan=\"$cols\">&nbsp;</td><td>&nbsp;</td>";
+      for ($i=0; $i<count($options); $i++) {
+        echo '<td>' . $options[$i] . '</td>';
+      }
       echo "</tr>\n";
       for ($i=1; $i<=(substr_count($scenario,'|')+1); $i++) {
         if ($tmp_ext_scenarios[$i-1] != '') {
