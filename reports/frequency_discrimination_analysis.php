@@ -1297,7 +1297,7 @@
       }
       
       echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
-      $cols = 5;
+      $cols = 4;
       if ($score_method == 'Mark per Option') $cols++;
       if (isset($tmp_std_array)) $cols++;
       
