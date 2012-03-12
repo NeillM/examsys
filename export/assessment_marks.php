@@ -97,8 +97,30 @@
             echo "," . $individual['mark_array'][$q_id];
           }
         } else {
-          //if (substr($tmp_exclude,0,1) == '0');
-          echo ",0";
+          if (($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') and $question['score_method'] == 'Mark per Option') {
+            $sub_parts = 0;
+            $paper_answers = explode("|",$question['correct'][0]);
+            for ($a=0; $a<count($paper_answers); $a++) {
+              $sub_parts += substr_count($paper_answers[$a],'$');
+            
+              if ($paper_answers[$a] != '' and substr($tmp_exclude,$a+$sub_parts,1) == '0') echo ',0';
+            }
+          } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank') and $question['score_method'] == 'Mark per Option') {
+            for ($a=0; $a<count($question['correct']); $a++) {
+              if (substr($tmp_exclude,$a,1) == '0') echo ',0';
+            }
+          } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
+            for ($a=0; $a<count($question['correct_labels']); $a++) {
+              if (substr($tmp_exclude,$a,1) == '0') echo ',0';
+            }
+          } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
+            $paper_answers = explode("|",$question['correct'][0]);
+            for ($a=0; $a<count($paper_answers); $a++) {
+              if (substr($tmp_exclude,$a,1) == '0') echo ',0';
+            }
+          } else {
+            if (!array_key_exists($q_id,$excluded)) echo ',0';
+          }
         }
       }
       echo "\n";
