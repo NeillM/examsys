@@ -1,13 +1,13 @@
 <?php
-$string['latesubmission'] = 'Late Submission';   // Niko, whole file please
-$string['screen'] = 'Screen';
-$string['saved'] = 'Saved';
-$string['ipaddress'] = 'IP Address';
-$string['reject'] = 'Reject';
-$string['accept'] = 'Accept';
-$string['warning'] = 'Warning';
-$string['msg1'] = '(state why the records are accepted or rejected)';
-$string['msg2'] = 'Exam scripts cannot be reassigned mid exam.<br />Please wait until after the exam has finished';
-$string['msg3'] = 'Are you sure you wish to accept these late submitted answers?';
-$string['msg4'] = 'Are you sure you wish to reject and discard these answers?';
+$string['latesubmission'] = 'Spóźnione przedłożenie';   
+$string['screen'] = 'Ekran';
+$string['saved'] = 'Zapisano';
+$string['ipaddress'] = 'Adresy IP';
+$string['reject'] = 'Odrzucono';
+$string['accept'] = 'Przyjęto';
+$string['warning'] = 'Ostrzeżenie';
+$string['msg1'] = '(podaj powód, dla którego wpisy te odrzucono lub przyjęto)';
+$string['msg2'] = 'Skrypty egzaminacyjne nie mogą być ponownie przypisane w trakcie trwania egzaminu.<br />Należy poczekać do zakończenia egzaminu.';
+$string['msg3'] = 'Czy na pewno przyjąć te spóźnione odpowiedzi?';
+$string['msg4'] = 'Czy na pewno odrzucić te spóźnione odpowiedzi?';
 ?>
