@@ -1299,7 +1299,7 @@
       echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
       $cols = 4;
       if ($score_method == 'Mark per Option') $cols++;
-      if (isset($tmp_std_array)) $cols++;
+      if (is_array($tmp_std_array)) $cols++;
       
       echo "<tr><td colspan=\"$cols\">&nbsp;</td><td>&nbsp;</td>";
       foreach ($options as $individual_option) {
@@ -1332,7 +1332,7 @@
               echo "<td style=\"font-weight:bold\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td>";
               
               if (isset($tmp_std_array[$i-1])) {
-                echo '<td style="font-weight:bold">' . $tmp_std_array[$i-1] . '</td>';
+                echo '<td class="std">' . $tmp_std_array[$i-1] . '</td>';
               }
 
               echo "<td ";
