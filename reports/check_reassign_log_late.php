@@ -97,7 +97,7 @@
   // Get any the questions which have gone into log_late
   $missing = array();
   $missing_no = 0;
-  $result = $mysqli->prepare("SELECT q_id, log_late.screen, DATE_FORMAT(updated,'%d/%m/%Y %T'), ipaddress FROM (log_late, log_metadata) WHERE log_late.userID=log_metadata.userID AND log_late.q_paper=log_metadata.paperID AND log_late.started=log_metadata.started AND log_late.userID=? AND q_paper=? AND started=? ORDER BY screen");
+  $result = $mysqli->prepare("SELECT q_id, log_late.screen, DATE_FORMAT(updated,'%d/%m/%Y %T'), ipaddress FROM (log_late, log_metadata) WHERE log_late.userID=log_metadata.userID AND log_late.q_paper=log_metadata.paperID AND log_late.started=log_metadata.started AND log_late.userID=? AND q_paper=? AND log_late.started=? ORDER BY screen");
   $result->bind_param('iis', $_GET['userID'], $_GET['paperID'], $_GET['started']);
   $result->execute();
   $result->bind_result($q_id, $screen, $updated, $ipaddress);
