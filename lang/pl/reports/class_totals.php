@@ -77,5 +77,5 @@ $string['notcompleted'] = 'Uwaga: nie wypełniono wszystkich ekranów';
 $string['unknown'] = '&nbsp;&lt;Nieznany&gt;';
 $string['markingnotcomplete'] = 'Punktacja nie zakończona';
 $string['of'] = ' z ';
-$string['percentofcohort'] = '% of cohort';  // Niko
+$string['percentofcohort'] = '% grupy'; 
 ?>
