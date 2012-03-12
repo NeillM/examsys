@@ -1297,11 +1297,11 @@
       }
       
       echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
-      if ($score_method == 'Mark per Question') {
-        echo '<tr><td colspan="6">&nbsp;</td><td>&nbsp;</td>';
-      } else {
-        echo '<tr><td colspan="7">&nbsp;</td><td>&nbsp;</td>';
-      }
+      $cols = 5;
+      if ($score_method == 'Mark per Question') $cols++;
+      if (isset($tmp_std_array)) $cols++;
+      
+      echo "<tr><td colspan=\"$cols\">&nbsp;</td><td>&nbsp;</td>";
       foreach ($options as $individual_option) {
         echo '<td>' . $individual_option . '</td>';
       }
@@ -1330,9 +1330,10 @@
               echo "<td style=\"font-weight:bold\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td>";
               echo "<td style=\"font-weight:bold\">u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td>";
               echo "<td style=\"font-weight:bold\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td>";
-              echo "<td style=\"font-weight:bold\">";
-              if (isset($tmp_std_array[$i-1])) echo $tmp_std_array[$i-1];
-              echo "</td>";
+              
+              if (isset($tmp_std_array[$i-1])) {
+                echo '<td style="font-weight:bold">' . $tmp_std_array[$i-1] . '</td>';
+              }
 
               echo "<td ";
               if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
