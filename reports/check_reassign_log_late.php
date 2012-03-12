@@ -27,8 +27,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>Late Submission</title>
+  <title><?php echo $string['latesubmission']. ' ' . $cfg_install_type; ?></title>
   <style type="text/css">
   body {font-size:90%; background-color:#ECE9D8; color:black; font-family:Arial,sans-serif; margin:4px}
   </style>
@@ -36,14 +37,14 @@
   <script type="text/javascript">
     function confirmIntention() {
       if (document.myform.button_pressed.value == 'Accept') {
-        var agree = confirm("Are you sure you wish to accept these late submitted answers?");
+        var agree = confirm("<?php echo $string['msg3']; ?>");
         if (agree) {
           return true;
         } else {
           return false;
         }
       } else if (document.myform.button_pressed.value == 'Reject') {
-        var agree = confirm("Are you sure you wish to reject and discard these answers?");
+        var agree = confirm("<?php echo $string['msg4']; ?>");
         if (agree) {
           return true;
         } else {
@@ -66,7 +67,7 @@
   $result->close();
 
   if (time() < $end_date) {
-    echo "<p><strong>Warning</strong><p><p>Exam scripts cannot be reassigned mid exam.<br />Please wait until after the exam has finished</p>\n";
+    echo "<p><strong>" . $string['warning'] . "</strong><p><p>" . $string['msg2'] . "</p>\n";
     exit;
   }
 
@@ -87,7 +88,7 @@
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($question);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $questions[$question] = $q_no;
     $q_no++;
   }
@@ -96,11 +97,11 @@
   // Get any the questions which have gone into log_late
   $missing = array();
   $missing_no = 0;
-  $result = $mysqli->prepare("SELECT q_id, screen, DATE_FORMAT(updated,'%d/%m/%Y %T'), ipaddress FROM log_late WHERE userID=? AND q_paper=? AND started=? ORDER BY screen");
+  $result = $mysqli->prepare("SELECT q_id, log_late.screen, DATE_FORMAT(updated,'%d/%m/%Y %T'), ipaddress FROM (log_late, log_metadata) WHERE log_late.userID=log_metadata.userID AND log_late.q_paper=log_metadata.paperID AND log_late.started=log_metadata.started AND log_late.userID=? AND q_paper=? AND started=? ORDER BY screen");
   $result->bind_param('iis', $_GET['userID'], $_GET['paperID'], $_GET['started']);
   $result->execute();
   $result->bind_result($q_id, $screen, $updated, $ipaddress);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $question_no = $questions[$q_id];
     $missing[$missing_no]['question_no'] = $question_no; 
     $missing[$missing_no]['screen'] = $screen;
@@ -114,7 +115,7 @@
   echo "<p><strong>$title $surname, $first_names</strong></p>\n";
   
   echo "<div style=\"font-size:100%\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
-  echo "<tr style=\"font-weight:bold\"><td style=\"width:80px\">Question</td><td style=\"width:70px\">Screen</td><td style=\"width:150px\">Saved</td><td>IP Address</td></tr>\n";
+  echo "<tr style=\"font-weight:bold\"><td style=\"width:80px\">Question</td><td style=\"width:70px\">" . $string['screen'] . "</td><td style=\"width:150px\">" . $string['saved'] . "</td><td>" . $string['ipaddress'] . "</td></tr>\n";
   echo "</table></div>\n";
   
   
@@ -123,11 +124,11 @@
     echo "<tr><td style=\"text-align:right; width:80px\">" . $missing_question['question_no'] . "</td><td style=\"text-align:right; width:70px\">" . $missing_question['screen'] . "</td><td style=\"width:150px\">" . $missing_question['updated'] . "</td><td>" . $missing_question['ipaddress'] . "</td></tr>\n";
   }
   echo "</table>\n</div><br />";
-  echo "<div><strong>Reason:</strong> <span style=\"font-size:80%; color:#808080\">(state why the records are accepted or rejected)</div>\n";
+  echo "<div><strong>Reason:</strong> <span style=\"font-size:80%; color:#808080\">" . $string['msg1'] . "</div>\n";
   echo "<div><textarea name=\"reason\" cols=\"40\" rows=\"3\" style=\"width:100%; font-family:Arial,sans-serif\"></textarea></div>\n<br />";
   echo "<div style=\"text-align:center\">\n";
   
-  echo "<input type=\"submit\" name=\"submit\" value=\"Accept\" onclick=\"document.myform.button_pressed.value='Accept';\" style=\"width:100px\" />&nbsp;<input type=\"submit\" name=\"submit\" value=\"Reject\" onclick=\"document.myform.button_pressed.value='Reject';\" style=\"width:100px\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"Cancel\" style=\"width:100px\" onclick=\"window.close();\" /></div>";
+  echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['accept'] . "\" onclick=\"document.myform.button_pressed.value='Accept';\" style=\"width:100px\" />&nbsp;<input type=\"submit\" name=\"submit\" value=\"" . $string['reject'] . "\" onclick=\"document.myform.button_pressed.value='Reject';\" style=\"width:100px\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"Cancel\" style=\"width:100px\" onclick=\"window.close();\" /></div>";
   echo "<input type=\"hidden\" name=\"userID\" value=\"" . $_GET['userID'] . "\" /><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" /><input type=\"hidden\" name=\"started\" value=\"" . $_GET['started'] . "\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
 
   $mysqli->close();
