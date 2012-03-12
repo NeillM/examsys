@@ -1,5 +1,7 @@
 <?php
 $string['learningobjectiveanalysis'] = 'Learning Objective Analysis';
+$string['msg1'] = 'This paper has not been attempted by anyone';
+$string['msg2'] = 'This paper has not been mapped to any learning objectives.';
 $string['learningobjectives'] = 'Learning Objectives';
 $string['totalcandidate'] = 'Total Candidate #';
 $string['key1'] = 'Acquisition of 80-100% of specific objective';

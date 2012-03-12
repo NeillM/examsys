@@ -1,5 +1,7 @@
 <?php
 $string['learningobjectiveanalysis'] = 'Analiza celów kształcenia';
+$string['msg1'] = 'Ten arkusz nie był przez nikogo wybrany';
+$string['msg2'] = 'Ten arkusz nie odwzorowuje żadnych celów kształcenia.';
 $string['learningobjectives'] = 'Cele kształcenia';
 $string['totalcandidate'] = 'Całkowita liczba kandydatów';
 $string['key1'] = 'Wypełnienie 80-100% celów szczegółowych';
