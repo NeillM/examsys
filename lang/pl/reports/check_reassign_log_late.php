@@ -1,13 +1,14 @@
 <?php
-$string['latesubmission'] = 'Sp贸藕nione przed艂o偶enie';   
+$string['latesubmission'] = 'Sp髗nione przedlozenie';
+$string['question'] = 'Question';  // Niko
 $string['screen'] = 'Ekran';
 $string['saved'] = 'Zapisano';
 $string['ipaddress'] = 'Adresy IP';
 $string['reject'] = 'Odrzucono';
-$string['accept'] = 'Przyj臋to';
-$string['warning'] = 'Ostrze偶enie';
-$string['msg1'] = '(podaj pow贸d, dla kt贸rego wpisy te odrzucono lub przyj臋to)';
-$string['msg2'] = 'Skrypty egzaminacyjne nie mog膮 by膰 ponownie przypisane w trakcie trwania egzaminu.<br />Nale偶y poczeka膰 do zako艅czenia egzaminu.';
-$string['msg3'] = 'Czy na pewno przyj膮膰 te sp贸藕nione odpowiedzi?';
-$string['msg4'] = 'Czy na pewno odrzuci膰 te sp贸藕nione odpowiedzi?';
+$string['accept'] = 'Przyjeto';
+$string['warning'] = 'Ostrzezenie';
+$string['msg1'] = '(podaj pow骴, dla kt髍ego wpisy te odrzucono lub przyjeto)';
+$string['msg2'] = 'Skrypty egzaminacyjne nie moga byc ponownie przypisane w trakcie trwania egzaminu.<br />Nalezy poczekac do zakonczenia egzaminu.';
+$string['msg3'] = 'Czy na pewno przyjac te sp髗nione odpowiedzi?';
+$string['msg4'] = 'Czy na pewno odrzucic te sp髗nione odpowiedzi?';
 ?>
