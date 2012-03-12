@@ -42,7 +42,7 @@
   </script>
 </head>
 
-<body onload="reloadClose();">
+<body>
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
   $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id=?");
@@ -58,6 +58,7 @@
   }
 
   if ($_POST['button_pressed'] == 'Accept') {
+  echo "Accept<br />";
     $log_type = 'log' . $_POST['log_type'];
 
     $stmt = $mysqli->prepare("SELECT q_id, mark, totalpos, user_answer, log_late.screen, ipaddress, duration, student_grade, year, updated, dismiss, attempt, option_order FROM (log_late, log_metadata) WHERE log_late.userID=log_metadata.userID AND log_late.q_paper=log_metadata.paperID AND log_late.started=log_metadata.started AND log_late.userID=? AND q_paper=? AND log_late.started=?");
@@ -66,6 +67,7 @@
     $stmt->store_result();
     $stmt->bind_result($q_id, $mark, $totalpos, $user_answer, $screen, $ipaddress, $duration, $student_grade, $year, $updated, $dismiss, $attempt, $option_order);
     while ($stmt->fetch()) {
+    echo "Q<br />";
       // Delete any existing record for the question in the real log table.
       $result = $mysqli->prepare("DELETE FROM $log_type WHERE userID=? AND q_paper=? AND q_id=? AND screen=? AND started=?");
       $result->bind_param('iiis', $_POST['userID'], $_POST['paperID'], $q_id, $screen, $_POST['started']);
