@@ -89,12 +89,14 @@
           $tmp_exclude = '0000000000000000000000000000000000000000';
         }
         if (isset($individual['mark_array'][$q_id])) {
+          $a = 0;
           if (is_array($individual['mark_array'][$q_id])) {
             foreach ($individual['mark_array'][$q_id] as $tmp_mark) {
-              echo "," . $tmp_mark;
+              if (substr($tmp_exclude,$a,1) == '0') echo "," . $tmp_mark;
+              $a++;
             }
           } else {
-            echo "," . $individual['mark_array'][$q_id];
+            if (substr($tmp_exclude,$a,1) == '0') echo "," . $individual['mark_array'][$q_id];
           }
         } else {
           if (($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') and $question['score_method'] == 'Mark per Option') {
