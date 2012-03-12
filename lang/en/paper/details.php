@@ -11,6 +11,7 @@ $string['modified'] = 'Modified';
 $string['passmark'] = 'Pass Mark';
 $string['screen'] = 'Screen';
 $string['paperlockedwarning'] = '<strong>Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified.';
+$string['paperlockedclick'] ='Click for more details';
 $string['earlywarning'] = '<strong>Time/Date Warning</strong>&nbsp;&nbsp;&nbsp;This paper is scheduled to start before %sam';
 $string['farfuturewarning'] = '<strong>Time/Date Warning</strong>&nbsp;&nbsp;&nbsp;This paper is scheduled for a long way in the future (%s)';
 $string['unlock'] = 'Unlock';
