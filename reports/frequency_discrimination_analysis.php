@@ -1199,7 +1199,7 @@
           echo "<tr><td>" . $tmp_pstat . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
           break;
       }
-      if ($q_type != 'info' and $q_type != 'blank') echo "</table></p>\n";
+      if ($q_type != 'info' and $q_type != 'blank' and $q_type != 'flash') echo "</table></p>\n";
     } elseif ($q_type == 'textbox') {
       echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><p ";
       if (isset($excluded[$q_id]) and substr($excluded[$q_id], 0, 1) == '1') echo ' class="excluded"';
