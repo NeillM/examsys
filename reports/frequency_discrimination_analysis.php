@@ -1304,7 +1304,7 @@
       echo "<tr><td colspan=\"$cols\">&nbsp;</td><td>&nbsp;</td>";
       $std_on = false;
       for ($i=0; $i<count($options); $i++) {
-        echo '<td>' . $option[$i] . '</td>';
+        echo '<td>' . $options[$i] . '</td>';
         if (isset($tmp_std_array[$i])) {
           $std_on = true;
         }
