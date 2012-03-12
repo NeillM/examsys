@@ -34,7 +34,7 @@
   header("Content-type: application/vnd.ms-excel");
   header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".csv");
 
-  if($cohort_size > 0) {
+  if ($cohort_size > 0) {
     if ($marking == '0') {
       $marking_label = '%';
       $marking_key = 'percent';
@@ -46,7 +46,7 @@
     $total_time = 0;
     
     //output table heading
-    $table_order = array('title'=>'title', 'surname'=>'Surname' ,'firstnames'=>'First_Names','studentid'=>'student_id','course'=>'student_grade','module'=>'module','mark'=>'mark',$marking_label=>$marking_key,'classification'=>'mark','starttime'=>'started','duration'=>'duration','ipaddress'=>'ipaddress');
+    $table_order = array($string['title']=>'title', $string['surname']=>'Surname', $string['firstnames']=>'First_Names', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['module']=>'module', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
     $table_order['room'] = 'room';
     $metadata_cols = array();
     if (isset($user_results[0])){
@@ -60,7 +60,7 @@
     }
     
     foreach ($table_order as $display => $key) {
-      echo $string[$display] . ',';
+      echo $display . ',';
     }
     echo "\n";
     
