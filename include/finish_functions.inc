@@ -2290,7 +2290,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
           }
         } elseif ($paper[$question]['q_type'] == 'textbox') {
           // Unmarked textbox questions.
-          echo '<p class="mkpad"><span class="mk">&lt;unmarked&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+          echo '<p class="mkpad"><span class="mk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
         } else {
           // User has skipped over question.
           echo '<p class="mkpad"><span class="mk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
