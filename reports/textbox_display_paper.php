@@ -183,7 +183,7 @@ $stmt->close();
       echo "$leadin</td></tr>\n";
       
       if ($q_type != 'info') {
-        echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"no_marks\"><br />($marks_correct marks)</td></tr>\n";
+        echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"no_marks\"><br />($marks_correct ". $string['marks'] .")</td></tr>\n";
         echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"feedback\"><br />" . nl2br($correct_fback) . "</td></tr>\n";
       }
     }    
