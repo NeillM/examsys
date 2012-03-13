@@ -24,8 +24,6 @@
 * @package
 */
 
-// TODO: if no students have completed the question
-
   require '../include/staff_auth.inc';
   require '../include/class_totals.inc';
 
@@ -108,6 +106,7 @@
     $size_msg = ($cohort_size < $display_no) ? $cohort_size . $string['of'] . $display_no : $display_no;
     echo $string['cohortsize'] . ",$size_msg,,,,,,,,,,\n";
     echo $string['failureno'] . ",$failures,(" . round(($failures / $cohort_size) * 100) . "% of cohort),,,,,,,,,\n";
+    echo $string['passno'] . ",$passes,(" . round(($honours / $cohort_size) * 100) . $string['percentofcohort'] . "),,,,,,,,,\n";
     if (isset($ss_hon)) {
       echo $string['distinctionno'] . ",$honours,(" . round(($honours / $cohort_size) * 100) . "% of cohort),,,,,,,,,\n";
     }

@@ -699,8 +699,8 @@ ob_start();
     echo "<tr><td colspan=\"" . (11 + $cols) . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
 
     echo "<tr><td>&nbsp;</td><td colspan=\"10\">\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
-    echo "<tr><td class=\"field\" style=\"width:150px\">" . $string['paper'] . "</td><td colspan=\"2\">$paper</td></tr>\n";
+    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:90%\">\n";
+    echo "<tr><td class=\"field\" style=\"width:150px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
       if ($_GET['direction'] == 'desc') {
@@ -710,7 +710,7 @@ ob_start();
       }
     }
     $size_msg = ($cohort_size < $display_no) ? $cohort_size . $string['of'] . $display_no : $display_no;
-    echo "</td><td class=\"r\">$size_msg</td>";
+    echo "</td><td class=\"r\" style=\"width:60px\">$size_msg</td>";
     if (($completed_no + $out_of_range) < $display_no) {
       echo '<td>(' . ($display_no - $completed_no - $out_of_range). ' ' . $string['candidatenotcomplete'] . ')</td>';
     } else {
@@ -720,75 +720,75 @@ ob_start();
       } elseif ($absent_no > 1) {
         echo "<span style=\"color:#C00000\">($absent_no " . $string['candidatesabsent'] . ")</span>";
       }
-      echo '</td>';
+      echo '</td><td>&nbsp;</td>';
     }
     echo "</tr>\n";
     
-    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . $string['percentofcohort'] . ")</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . round(($passes / $cohort_size) * 100) . $string['percentofcohort'] . ")</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . $string['percentofcohort'] . ")</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . round(($passes / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
     
     echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td class=\"r\">";
     if ($total_marks < $orig_total_marks) echo "<span class=\"exclude\">$orig_total_marks</span>&nbsp;&nbsp;";
-    echo "$total_marks</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['passmark'] . "</td><td class=\"r\">$pass_mark%</td><td>&nbsp;</td></tr>\n";
+    echo "$total_marks</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['passmark'] . "</td><td class=\"r\">$pass_mark%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     if ($marking == '1') {
-      echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td class=\"r\">" . number_format($total_random_mark, 2, '.', ',') . "</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['randommark'] . "</td><td class=\"r\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td>&nbsp;</td></tr>\n";
       if ($completed_no > 0) {
         if ($total_marks > 0) {
-          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
+          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td><td>&nbsp;</td></tr>\n";
         } else {
-          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
         }
       } else {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } elseif ($marking == '0') {
       if ($completed_no > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td><td>&nbsp;</td></tr>\n";
       } else {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } else {
-      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . round($ss_pass,2) . "%</td></tr>\n";
-      if ($ss_hon > 0) echo "<tr><td class=\"r\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . round($ss_hon,2) . "%</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['ss'] .  "</td><td class=\"r\">" . round($ss_pass,2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      if ($ss_hon > 0) echo "<tr><td class=\"field\">" . $string['ssdistinction'] . "</td><td class=\"r\">" . round($ss_hon,2) . "%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       if ($completed_no > 0) {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"r\">$mean_mark</td><td>($mean_percent%)</td><td>&nbsp;</td></tr>\n";
       } else {
-        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td class=\"field\">" . $string['meanmark'] . "</td><td class=\"grey r\">" . $string['nocompletions'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     }
     $mid_point = round($cohort_size / 2) - 1;
-    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">$median_mark</td><td>($median_percent%)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['medianmark'] . "</td><td class=\"r\">$median_mark</td><td>($median_percent%)</td><td>&nbsp;</td></tr>\n";
     if ($completed_no == 0) {
-      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent,1) . "%)</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['stdevmark'] . "</td><td class=\"r\">" . number_format($stddev_mark, 2, '.', ',') . "</td><td>(" . round($stddev_percent,1) . "%)</td><td>&nbsp;</td></tr>\n";
     }
-    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">$max_mark</td><td>(" . number_format($max_percent) . "%)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['maxmark'] . "</td><td class=\"r\">$max_mark</td><td>(" . number_format($max_percent) . "%)</td><td>&nbsp;</td></tr>\n";
     if ($min_mark == 9999) $min_mark = 0;
-    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">$min_mark</td><td>(" . number_format($min_percent) . "%)</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . ($max_mark - $min_mark) . "</td><td>(" . ($max_percent - $min_percent) . "%)</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['minmark'] . "</td><td class=\"r\">$min_mark</td><td>(" . number_format($min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['range'] . "</td><td class=\"r\">" . ($max_mark - $min_mark) . "</td><td>(" . ($max_percent - $min_percent) . "%)</td><td>&nbsp;</td></tr>\n";
 
-    echo "<tr><td class=\"field\">" . $string['top10'] . "</td><td class=\"r\">$top_10%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['top15'] . "</td><td class=\"r\">$top_15%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['top20'] . "</td><td class=\"r\">$top_20%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['top25'] . "</td><td class=\"r\">$top_25%</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td class=\"field\">" . $string['bottom10'] . "</td><td class=\"r\">$bottom_10%</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top10'] . "</td><td class=\"r\">$top_10%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top15'] . "</td><td class=\"r\">$top_15%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top20'] . "</td><td class=\"r\">$top_20%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['top25'] . "</td><td class=\"r\">$top_25%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+    echo "<tr><td class=\"field\">" . $string['bottom10'] . "</td><td class=\"r\">$bottom_10%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
 
     if ($completed_no <= 1) {
-      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">n/a</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">n/a</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($total_time / $completed_no,0)) . "</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($total_time / $completed_no,0)) . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     }
     if (count($excluded) > 0) {
-      echo "<tr><td class=\"field\">" . $string['excludedquestions'] . "</td><td colspan=\"2\">$display_excluded</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['excludedquestions'] . "</td><td colspan=\"3\">$display_excluded</td></tr>\n";
     }
     if ($display_experimental != '') {
-      echo "<tr><td class=\"field\">" . $string['experimantalquestions'] . "</td><td colspan=\"2\">$display_experimental</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['experimantalquestions'] . "</td><td colspan=\"3\">$display_experimental</td></tr>\n";
     }
     if (count($warnings['deleted_qns']) > 0) {
-      echo "<tr><td class=\"field\" valign=\"top\">" . $string['warnings'] . "</td><td colspan=\"2\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning: Answers found for questions that no longer appear on the paper\" border=\"0\" />&nbsp;" . $string['nolongerappear'];
+      echo "<tr><td class=\"field\" valign=\"top\">" . $string['warnings'] . "</td><td colspan=\"3\"><img src=\"../artwork/incomplete_paper_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning: Answers found for questions that no longer appear on the paper\" border=\"0\" />&nbsp;" . $string['nolongerappear'];
       for ($i = 0; $i < count($warnings['deleted_qns']); $i++) {
       	echo $warnings['deleted_qns'][$i];
       	if ($i < count($warnings['deleted_qns']) - 1) {

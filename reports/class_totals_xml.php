@@ -321,6 +321,10 @@
   echo '<Cell><Data ss:Type="Number">' . $size_msg . '</Data></Cell>';
   echo '</Row>';
   echo '<Row>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['passno'] . '</Data></Cell>';
+  echo '<Cell><Data ss:Type="Number">' . $passes . '</Data></Cell>';
+  echo '</Row>';
+  echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['failureno'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $failures . '</Data></Cell>';
   echo '</Row>';
