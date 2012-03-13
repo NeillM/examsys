@@ -42,7 +42,7 @@
   </script>
 </head>
 
-<body>
+<body onload="reloadClose()">
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
   $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id=?");
@@ -60,31 +60,39 @@
   if ($_POST['button_pressed'] == 'Accept') {
     $log_type = 'log' . $_POST['log_type'];
 
+    // Get questions that are already in the standard log
+    $logged_qns = array();
+    $log_check = $mysqli->prepare("SELECT $log_type.id, $log_type.q_id FROM ($log_type, log_metadata) WHERE $log_type.userID=log_metadata.userID AND $log_type.q_paper=log_metadata.paperID AND $log_type.started=log_metadata.started AND $log_type.userID=? AND q_paper=? AND $log_type.started=?");
+    $log_check->bind_param('iis', $_POST['userID'], $_POST['paperID'], $_POST['started']);
+    $log_check->execute();
+    $log_check->store_result();
+    $log_check->bind_result($log_id, $log_q_id);
+    while($log_check->fetch()) {
+      $logged_qns[$log_q_id] = $log_id;
+    }
+
     $stmt = $mysqli->prepare("SELECT q_id, mark, totalpos, user_answer, log_late.screen, ipaddress, duration, student_grade, year, updated, dismiss, attempt, option_order FROM (log_late, log_metadata) WHERE log_late.userID=log_metadata.userID AND log_late.q_paper=log_metadata.paperID AND log_late.started=log_metadata.started AND log_late.userID=? AND q_paper=? AND log_late.started=?");
     $stmt->bind_param('iis', $_POST['userID'], $_POST['paperID'], $_POST['started']);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($q_id, $mark, $totalpos, $user_answer, $screen, $ipaddress, $duration, $student_grade, $year, $updated, $dismiss, $attempt, $option_order);
     while ($stmt->fetch()) {
-      // Delete any existing record for the question in the real log table.
-      $result = $mysqli->prepare("DELETE FROM $log_type WHERE userID=? AND q_paper=? AND q_id=? AND screen=? AND started=?");
-      $result->bind_param('iiiis', $_POST['userID'], $_POST['paperID'], $q_id, $screen, $_POST['started']);
-      $result->execute();
-      $result->close();
-    
-      // Insert the records from log_late into the real log table.
-      $result = $mysqli->prepare("INSERT INTO $log_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-      $result->bind_param('isiidisiisss', $_POST['userID'], $_POST['started'], $_POST['paperID'], $q_id, $mark, $totalpos, $user_answer, $screen, $duration, $updated, $dismiss, $option_order);
-      $result->execute();  
-      $result->close();
+      if (array_key_exists($q_id, $logged_qns)) {
+        // Update the record in the real log table with values from log_late
+        $update = $mysqli->prepare("UPDATE $log_type SET mark=?, user_answer=?, duration=?, updated=? WHERE id=?");
+        $update->bind_param('iissi', $mark, $user_answer, $duration, $updated, $logged_qns[$q_id]);
+        $update->execute();
+        $update->close();
+      } else {
+        // Insert the records from log_late into the real log table
+        $insert = $mysqli->prepare("INSERT INTO $log_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $insert->bind_param('isiidisiisss', $_POST['userID'], $_POST['started'], $_POST['paperID'], $q_id, $mark, $totalpos, $user_answer, $screen, $duration, $updated, $dismiss, $option_order);
+        $insert->execute();
+        $insert->close();
+      }
+      $log_check->close();
     }
     $stmt->close();
-    
-    // Add one log_metadata record.
-    $result = $mysqli->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('iisssii', $_POST['userID'], $_POST['paperID'], $_POST['started'], $ipaddress, $student_grade, $year, $attempt);
-    $result->execute();  
-    $result->close();
   }
   
   if (trim($_POST['reason']) != '') {
@@ -92,14 +100,14 @@
     
     $result = $mysqli->prepare("INSERT INTO student_notes VALUES (NULL, ?, ?, NOW(), ?, ?)");
     $result->bind_param('isis', $_POST['userID'], $reason, $_POST['paperID'], $userID);
-    $result->execute();  
+    $result->execute();
     $result->close();
   }
   
   // Clearing up of records in 'log_late' table.
   $result = $mysqli->prepare("DELETE FROM log_late WHERE userID=? AND q_paper=? AND started=?");
   $result->bind_param('iis', $_POST['userID'], $_POST['paperID'], $_POST['started']);
-  $result->execute();  
+  $result->execute();
   $result->close();
   
   $mysqli->close();
