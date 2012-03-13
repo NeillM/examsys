@@ -94,16 +94,30 @@ $rt="";
 
     // detector for jumbled sentance
     $pos=strpos($xmlStr,"wct_questiontype");
+
+
+/*    if(strpos($xmlStr,"WCT_Matching")!==FALSE)
+    {
+      $rep1='   ident="MATCH';
+      while($pos=strpos($xmlStr,'ident="NO_MATCH',$pos)) {
+
+      $xmlStr=substr_replace($xmlStr,$rep1,$pos,strlen($rep1));//ident="MATCH
+      $pos=$pos+3;
+      }
+      $xml = @simplexml_load_string($xmlStr);
+
+    }
+*/
+
 $numb=0;
-    while($pos=strpos($xmlStr,"<material",$pos)) {
+ /*   while($pos=strpos($xmlStr,"<material",$pos)) {
       $xmlStr=substr_replace($xmlStr," objectid=\"" . $numb . "\" oid=\"" . $numb . "\" orderid=\"".$numb++."\"",$pos+9,0);
       $pos=$pos+3;
-    }
-
-    $xml = @simplexml_load_string($xmlStr);
+    } */
 
 
-if($xml->item->presentation->flow)
+/*
+if(isset($xml->item->presentation->flow))
 {
       foreach($xml->item->presentation->flow as $yyy)
     {
@@ -128,7 +142,7 @@ if($xml->item->presentation->flow)
       }
     }
 }
-
+*/
 
     // single assessment object possible
     if ($xml->assessment) $this->LoadAssessment($xml->assessment);
@@ -194,7 +208,7 @@ if($xml->item->presentation->flow)
 
     $oiii=print_r($q_imp,TRUE);
     $t=9;
-    file_put_contents("/tmp/out2.txt",$oiii);
+//    file_put_contents("/tmp/out2.txt",$oiii);
     $t=8;
 
     //file_put_contents("/tmp/out.txt",$q_imp);
@@ -347,6 +361,12 @@ if($xml->item->presentation->flow)
     if (isset($question->counts['hotspot']) && $question->counts['hotspot'] > 0) {
       if ($question->cardinality == "Multi") return "labelling";
       return "hotspot";
+    }
+
+
+    if($question->wct_questiontype =="WCT_Matching") {
+      print "WebCT Matching Question Detected<br>";
+      return "extmatch";
     }
 
     if (isset($question->counts['grp']) && $question->counts['grp'] > 0) {
@@ -1061,7 +1081,14 @@ if($xml->item->presentation->flow)
     $dest->load_id = $source->load_id;
     $dest->status = $source->qmd_status;
     $dest->type = "extmatch";
-    if ($source->responses[1]->shuffle == 1) {
+    $shuf=0;
+    foreach($source->responses as $respeach) {
+      if ($respeach->shuffle == 1) {
+        $shuf=1;
+      }
+    }
+  if ($shuf == 1) {
+    //  if ($source->responses[1]->shuffle == 1) {
       $dest->q_option_order = 'random';
     }
 
@@ -2010,7 +2037,7 @@ $dest->answer=strtolower($answer);
   // gets a list of the possible responses in the question and returns it as an array
   function GetResponseLabelList(&$question, $clean = true) {
     $resplist = array();
-
+$numbb=1;
     foreach ($question->responses as $response) {
       foreach ($response->labels as $label) {
         if ($clean) {
@@ -2018,9 +2045,14 @@ $dest->answer=strtolower($answer);
         } else {
           $value = $label->material->GetHTML();
         }
+        if($question->wct_questiontype =="WCT_Matching") {
+          $label->id="MATCH" . $numbb++;
+        }
         $resplist[$label->id] = $value;
       }
-      break;
+    //  if($question->wct_questiontype != "WCT_Matching") {
+        break;
+     // }
     }
 
     return $resplist;
@@ -2083,6 +2115,10 @@ $dest->answer=strtolower($answer);
 
     // Fix for webCT output where it gives output as a percentage and as this is upto 100 and and doesnt include the
     // question mark and rogo doesnt support above 20 fix it to 1 to allow user editing
+
+    $max=round($max);
+    $min=round($min);
+    $part=round($part);
 
     if($max>20) $max=1;
     if($min>20) $min=1;

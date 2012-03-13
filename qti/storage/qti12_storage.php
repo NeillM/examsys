@@ -543,7 +543,7 @@ class ST_QTI12_Label // <response_label
 
   function __construct($xml) {
     $this->id = (string) $xml->attributes()->ident;
-
+    $this->shuffle = strtolower($xml->attributes()->shuffle) == 'no' ? 0 : 1;
     if($xml->attributes()->orderid) $this->orderid=(int)$xml->attributes()->orderid;
 
     $this->material = new ST_QTI12_Material();
