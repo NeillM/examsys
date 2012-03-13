@@ -203,14 +203,14 @@ if ($textsize > 120) {
   $button_width = 115;
 }
 ?>
-<table cellpadding="3" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto;font-size:100%;border-top:1px solid #5582D2;border-left:1px solid #5582D2;border-right:1px solid #5582D2;background-color:white;width:<?php echo $table_width; ?>%">
+<table cellpadding="3" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto;font-size:100%;border-top:1px solid #95AEC8;border-left:1px solid #95AEC8;border-right:1px solid #95AEC8;background-color:white;width:<?php echo $table_width; ?>%">
 <tr>
 <?php
   $icon_types = array('formative.png', 'progress.png', 'summative.png', 'survey.png');
   echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0"><tr><td style="vertical-align:top; width:54px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . '" width="48" height="48" alt="Icon" />';
-  echo "</td><td><span style=\"font-size:80%\">Rogō $ts_version</span><br />\n";
-  echo "<span style=\"font-size:20pt; font-weight:bold; font-family:Arial,sans-serif\">$paper_title</span></td>\n</tr></table></td></tr>";
-  echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #5582D2;background-color:#DFE8FF\" width=\"$table_width%\">\n";
+  echo "</td><td><span style=\"font-size:80%; color:#5582D2\">Rogō $ts_version</span><br />\n";
+  echo "<span style=\"font-size:20pt; font-weight:bold; color:#5582D2\">$paper_title</span></td>\n</tr></table></td></tr>";
+  echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
     if (file_exists($cfg_web_root . 'users/photos/' . $_SERVER['PHP_AUTH_USER'] . '.jpg')) {
@@ -220,11 +220,11 @@ if ($textsize > 120) {
       } else {
         echo '7';
       }
-      echo '" style="border-left:1px solid #5582D2;background-color:white;width:180px;text-align:center;vertical-align:bottom"><img src="./users/photos/' . $_SERVER['PHP_AUTH_USER'] . '.jpg" width="180" height="270" border="0" alt="Photo" /></td>';
+      echo '" style="border-left:1px solid #95AEC8;background-color:white;width:180px;text-align:center;vertical-align:bottom"><img src="./users/photos/' . $_SERVER['PHP_AUTH_USER'] . '.jpg" width="180" height="270" border="0" alt="Photo" /></td>';
     }
   }
   echo '</tr>';
-  if ($rubric != '') echo '<tr><td class="f"><nobr>' . $string['rubric'] . '</nobr></td><td colspan="3">' . $rubric . '</td></tr>';
+  if ($rubric != '') echo '<tr><td class="f" style="vertical-align:top"><nobr>' . $string['rubric'] . '</nobr></td><td colspan="3" style="text-align:justify; line-height:140%; padding-right:20px; padding-bottom:15px">' . $rubric . '</td></tr>';
   if ($test_type != 2) echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3">' . $display_start_date . ' to '. $display_end_date;
   if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   echo '<input type="hidden" name="startdate" value="$display_start_date" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";

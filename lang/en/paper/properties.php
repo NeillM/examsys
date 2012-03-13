@@ -21,7 +21,7 @@ $string['msg4'] = 'You must specify an academic year for Summative exams (\'Acce
 $string['msg5'] = 'OSCEs must be assigned to at least one module.';
 $string['msg6'] = 'You have set some external examiners but not specified a deadline.';
 $string['msg7'] = 'Please enter a name for the Paper.';
-$string['msg8'] = 'Please enter a name for the Paper. This is a closed-book examination and students may <em>not</em> refer to any other source (including dictionaries) or person in taking this paper. Calculators and other electronic equipment, except the examination computer, are not permitted.';
+$string['msg8'] = 'This is a closed-book examination and students may not refer to any other source or person in taking this paper. No electronic equipment, other than the examination computer, may be used. Dictionaries are <em>not</em> allowed with one exception. Those whose first language is <em>not</em> English may use a standard translation dictionary to translate between that language and English provided that neither language is the subject of this examination. Subject specific translation dictionaries are not permitted. You are not permitted to take any paper or notes out of the examination room during or after the examination. Any rough notes that you make on the paper provided will be collected by staff and destroyed.';
 
 // General tab
 $string['generaltab'] = 'General';

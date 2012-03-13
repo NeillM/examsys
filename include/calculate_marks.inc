@@ -335,6 +335,11 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
       }
       $random_mark += $tmp_total / count($correct);
       break;
+    case 'true_false':
+      if (substr($tmp_exclude,0,1) == '0') {
+        $random_mark += $marks_correct / 2;
+      }
+      break;
     case 'rank':
       $correct_no = 0;
       $option_no = count($option_text);
