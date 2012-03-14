@@ -35,7 +35,7 @@ $(function () {
         keepWidth = $('tr.details-head:first').width();
         ui.helper.find('td:first').width(keepWidth);
       } else {
-        keepWidth = $('td.q-cell:first').width();
+        keepWidth = $('th.q-cell:first').width();
         ui.helper.find('td.l').width(keepWidth);
       }
     },
