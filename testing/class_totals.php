@@ -125,7 +125,7 @@ function compareMarks($set1, $set2, &$classifications, &$student_details) {
 $papers = array();
 
 //$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20080306080000 AND end_date < 20110422070000 AND deleted IS NULL ORDER BY start_date");
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20050306080000 AND end_date < 20080306080000 AND deleted IS NULL ORDER BY start_date");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > 20050306080000 AND end_date < 20120229070000 AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->bind_result($paperID, $title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
@@ -152,7 +152,7 @@ echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"2\" widht=\"100%\">\n"
 echo "<tr><td>Start Date</td><td>Paper ID</td><td>Title</td><td>Status</td><td>Old Fails</td><td>New Fails</td><td>Old Passes</td><td>New Passes</td><td>Old Distinctions</td><td>New Distinctions</td><td>Affected</td><td>Change</td></tr>";
 foreach ($papers as $paper) {
 
-  $url = "https://rogo.local/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&repcourse=%&repyear=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
+  $url = "https://rogo.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&repcourse=%&repyear=%&sortby=student_id&module=&folder=&percent=100&absent=0&direction=asc";
   $output = getData($url);
   $marks_set1 = parseRawMarks($output);
   
