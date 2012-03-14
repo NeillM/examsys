@@ -648,7 +648,7 @@ function getMSCAA($paperID, $mysqlidb) {
         $temp_array[$row_no]['random'] = randomDetails($q_id);
       }
 
-      if ($summative_lock == 1 AND $locked == '') {
+      if ($summative_lock == 1 and $locked == '') {
         $editPaper = $mysqli->prepare("UPDATE questions SET locked=NOW() WHERE q_id=? AND locked IS NULL");
         $editPaper->bind_param('i', $q_id);
         $editPaper->execute();
@@ -665,7 +665,7 @@ function getMSCAA($paperID, $mysqlidb) {
       }
       
       // Unlock code - emergency use only!
-      if (isset($_GET['unlock']) AND $_GET['unlock'] == '1' AND strpos($userroles,'SysAdmin') !== false) {
+      if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and strpos($userroles,'SysAdmin') !== false) {
         $tmp_date = new DateTime();
         $tmp_date->modify('+28 day');
         $tmp_start_date = $tmp_date->format('Ymd' . '100000');
@@ -812,9 +812,9 @@ function getMSCAA($paperID, $mysqlidb) {
     <th class="icon">&nbsp;</th>
     <th>&nbsp;</th>
     <th class="q-cell"><?php echo $string['question']; ?></th>
-    <th class="t delimited"><?php echo $string['type']; ?>&nbsp;</th>
-    <th class="m delimited"><?php echo $string['marks']; ?>&nbsp;</th>
-    <th class="d delimited"><?php echo $string['modified']; ?>&nbsp;</th>
+    <th class="t"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+    <th class="m"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
+    <th class="d"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
     <tr><th colspan="6" class="bevel"></th></tr>
   <?php

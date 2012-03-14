@@ -24,151 +24,151 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  
-  $sortby = 'surname';
-  $ordering = 'asc';
-  $moduleID = '%';
-  $calendar_year = '%';
-  
-  if (isset($_GET['submit'])) {
-    $username_sql = '';
-    $title_sql = '';
-    $surname_sql = '';
-    $initials_sql = '';
-    $student_id_sql = '';
-    $title = '';
+require '../include/staff_auth.inc';
 
-    if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-    if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
-    if (isset($_GET['team']) and $_GET['team'] != '') $moduleID = $_GET['team'];
-    if (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '') $calendar_year = $_GET['calendar_year'];
-    
-    if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
-      $tmp_surname = str_replace("*","%",trim($_GET['search_surname']));
-      
-      $tmp_titles = explode(',', $string['title_types']);
-      foreach ($tmp_titles as $tmp_title) {
-        if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) $title_sql = " AND title='$tmp_title'";
-        $tmp_surname = preg_replace("/(" . $tmp_title . " )/i","",$tmp_surname);
-      }
-      
-      $sections = preg_split('[,.]',$tmp_surname);
-      if (count($sections) > 1) {    // Search for initials.
-        if (strlen($sections[0]) < strlen($sections[1])) {
-          $initials_sql = " AND initials LIKE '" . trim($sections[0]) . "%'";
-          $tmp_surname = trim($sections[1]);
-        } else {
-          $initials_sql = " AND initials LIKE '" . trim($sections[1]) . "%'";
-          $tmp_surname = trim($sections[0]);
-        }
-      } else {
-        $initials_sql = '';
-      }
-      $tmp_surname = str_replace('*','%',$tmp_surname);
-      $surname_sql = " AND surname LIKE '$tmp_surname'";
-    }
-    if ($_GET['search_username'] != '') {
-      $tmp_username = str_replace('*','%',trim($_GET['search_username']));
-      $username_sql = " AND users.username LIKE '$tmp_username'";
-    }
-  
-    if ($_GET['student_id'] != '') {
-      $student_id_sql = " AND student_id ='" . trim($_GET['student_id']) . "'";
-    }
-  
-    $roles_sql = '';
-    if ((isset($_GET['students']) and $_GET['students'] != '') or (isset($_GET['student_id']) and $_GET['student_id'] != '') ) $roles_sql .= " OR roles='Student'";
-    if (isset($_GET['staff']) and $_GET['staff'] != '') $roles_sql .= " OR roles LIKE '%Staff%'";
-    if (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') $roles_sql .= " OR roles LIKE '%,Admin%'";
-    if (isset($_GET['inactive']) and $_GET['inactive'] != '') $roles_sql .= " OR roles LIKE '%inactive%'";
-    if (isset($_GET['externals']) and $_GET['externals'] != '') $roles_sql .= " OR (roles = 'External Examiner' AND grade != 'left')";
-    if (isset($_GET['invigilators']) and $_GET['invigilators'] != '') $roles_sql .= " OR roles = 'Invigilator'";
-    if (isset($_GET['graduates']) and $_GET['graduates'] != '') $roles_sql .= " OR roles = 'Graduate'";
-    if (isset($_GET['leavers']) and $_GET['leavers'] != '') $roles_sql .= " OR roles = 'left'";
-    if (isset($_GET['suspended']) and $_GET['suspended'] != '') $roles_sql .= " OR roles = 'suspended'";
-    if ($roles_sql != '') $roles_sql = '(' . substr($roles_sql,4) . ')';
-    if (isset($_GET['leavers']) and $_GET['leavers'] == '' and isset($_GET['staff']) and  $_GET['staff'] != '') $roles_sql .= " AND grade != 'left'";
+$sortby = 'surname';
+$ordering = 'asc';
+$moduleID = '%';
+$calendar_year = '%';
 
-    $needs_array = array();
-    $result = $mysqli->prepare("SELECT userID FROM special_needs");
-    $result->execute();
-    $result->bind_result($tmp_userID);
-    while ($result->fetch()) {
-      $needs_array[$tmp_userID] = '1';
-    }
-    $result->close();
+if (isset($_GET['submit'])) {
+  $username_sql = '';
+  $title_sql = '';
+  $surname_sql = '';
+  $initials_sql = '';
+  $student_id_sql = '';
+  $title = '';
+
+  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
+  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+  if (isset($_GET['team']) and $_GET['team'] != '') $moduleID = $_GET['team'];
+  if (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '') $calendar_year = $_GET['calendar_year'];
+  
+  if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
+    $tmp_surname = str_replace("*","%",trim($_GET['search_surname']));
     
-    $user_no = 0;
-    if ($roles_sql != '') {
-      if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
-        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN teams ON users.id=teams.memberID AND teams.name LIKE '" . $_GET['team'] . "' WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
-      } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
-        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+    $tmp_titles = explode(',', $string['title_types']);
+    foreach ($tmp_titles as $tmp_title) {
+      if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) $title_sql = " AND title='$tmp_title'";
+      $tmp_surname = preg_replace("/(" . $tmp_title . " )/i","",$tmp_surname);
+    }
+    
+    $sections = preg_split('[,.]',$tmp_surname);
+    if (count($sections) > 1) {    // Search for initials.
+      if (strlen($sections[0]) < strlen($sections[1])) {
+        $initials_sql = " AND initials LIKE '" . trim($sections[0]) . "%'";
+        $tmp_surname = trim($sections[1]);
       } else {
-        // Student search
+        $initials_sql = " AND initials LIKE '" . trim($sections[1]) . "%'";
+        $tmp_surname = trim($sections[0]);
+      }
+    } else {
+      $initials_sql = '';
+    }
+    $tmp_surname = str_replace('*','%',$tmp_surname);
+    $surname_sql = " AND surname LIKE '$tmp_surname'";
+  }
+  if ($_GET['search_username'] != '') {
+    $tmp_username = str_replace('*','%',trim($_GET['search_username']));
+    $username_sql = " AND users.username LIKE '$tmp_username'";
+  }
+
+  if ($_GET['student_id'] != '') {
+    $student_id_sql = " AND student_id ='" . trim($_GET['student_id']) . "'";
+  }
+
+  $roles_sql = '';
+  if ((isset($_GET['students']) and $_GET['students'] != '') or (isset($_GET['student_id']) and $_GET['student_id'] != '') ) $roles_sql .= " OR roles='Student'";
+  if (isset($_GET['staff']) and $_GET['staff'] != '') $roles_sql .= " OR roles LIKE '%Staff%'";
+  if (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') $roles_sql .= " OR roles LIKE '%,Admin%'";
+  if (isset($_GET['inactive']) and $_GET['inactive'] != '') $roles_sql .= " OR roles LIKE '%inactive%'";
+  if (isset($_GET['externals']) and $_GET['externals'] != '') $roles_sql .= " OR (roles = 'External Examiner' AND grade != 'left')";
+  if (isset($_GET['invigilators']) and $_GET['invigilators'] != '') $roles_sql .= " OR roles = 'Invigilator'";
+  if (isset($_GET['graduates']) and $_GET['graduates'] != '') $roles_sql .= " OR roles = 'Graduate'";
+  if (isset($_GET['leavers']) and $_GET['leavers'] != '') $roles_sql .= " OR roles = 'left'";
+  if (isset($_GET['suspended']) and $_GET['suspended'] != '') $roles_sql .= " OR roles = 'suspended'";
+  if ($roles_sql != '') $roles_sql = '(' . substr($roles_sql,4) . ')';
+  if (isset($_GET['leavers']) and $_GET['leavers'] == '' and isset($_GET['staff']) and  $_GET['staff'] != '') $roles_sql .= " AND grade != 'left'";
+
+  $needs_array = array();
+  $result = $mysqli->prepare("SELECT userID FROM special_needs");
+  $result->execute();
+  $result->bind_result($tmp_userID);
+  while ($result->fetch()) {
+    $needs_array[$tmp_userID] = '1';
+  }
+  $result->close();
+  
+  $user_no = 0;
+  if ($roles_sql != '') {
+    if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
+      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN teams ON users.id=teams.memberID AND teams.name LIKE '" . $_GET['team'] . "' WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+    } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
+      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+    } else {
+      // Student search
+      if ($moduleID == '%') {
+        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN sid ON users.id=sid.userID WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+      } else {
+        $roles_sql = 'AND ' . $roles_sql;
         if ($moduleID == '%') {
-          $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN sid ON users.id=sid.userID WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+          $module_sql = '';
         } else {
-          $roles_sql = 'AND ' . $roles_sql;
-          if ($moduleID == '%') {
-            $module_sql = '';
-          } else {
-            $module_sql = " AND moduleid LIKE '$moduleID'";
-          }
-          if ($calendar_year == '%') {
-            $calendar_year_sql = '';
-          } else {
-            $calendar_year_sql = " AND calendar_year LIKE '$calendar_year'";
-          }
-          $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+          $module_sql = " AND moduleid LIKE '$moduleID'";
         }
+        if ($calendar_year == '%') {
+          $calendar_year_sql = '';
+        } else {
+          $calendar_year_sql = " AND calendar_year LIKE '$calendar_year'";
+        }
+        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
       }
-      
-      $user_data = $mysqli->prepare($query_string);
-      $user_data->execute();
-      $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
-      $user_data->store_result();
-      $user_no = number_format($user_data->num_rows);
     }
-  } elseif (isset($_GET['paperID'])) {
-    if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-    if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
-
-    $needs_array = array();
-    $result = $mysqli->prepare("SELECT userID FROM special_needs");
-    $result->execute();
-    $result->bind_result($tmp_userID);
-    while ($result->fetch()) {
-      $needs_array[$tmp_userID] = '1';
-    }
-    $result->close();
     
-    // Get the year and modules from the paper properties.
-    $result = $mysqli->prepare("SELECT calendar_year, moduleID FROM properties WHERE property_id=?");
-    $result->bind_param('i', $_GET['paperID']);
-    $result->execute();
-    $result->bind_result($paper_calendar_year, $paper_moduleID);
-    $result->fetch();
-    $result->close();
-    
-    $moduleID = str_replace(",", "','", $paper_moduleID);
-    $roles_sql = "AND roles='Student' AND grade != 'left'";
-
-    $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, moduleid FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID AND moduleid IN ('$moduleID') AND calendar_year='$paper_calendar_year' $roles_sql ORDER BY " . $sortby . " " . $ordering;
     $user_data = $mysqli->prepare($query_string);
     $user_data->execute();
-    $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
+    $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
     $user_data->store_result();
     $user_no = number_format($user_data->num_rows);
   }
+} elseif (isset($_GET['paperID'])) {
+  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
+  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+
+  $needs_array = array();
+  $result = $mysqli->prepare("SELECT userID FROM special_needs");
+  $result->execute();
+  $result->bind_result($tmp_userID);
+  while ($result->fetch()) {
+    $needs_array[$tmp_userID] = '1';
+  }
+  $result->close();
+  
+  // Get the year and modules from the paper properties.
+  $result = $mysqli->prepare("SELECT calendar_year, moduleID FROM properties WHERE property_id=?");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($paper_calendar_year, $paper_moduleID);
+  $result->fetch();
+  $result->close();
+  
+  $moduleID = str_replace(",", "','", $paper_moduleID);
+  $roles_sql = "AND roles='Student' AND grade != 'left'";
+
+  $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, moduleid FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID AND moduleid IN ('$moduleID') AND calendar_year='$paper_calendar_year' $roles_sql ORDER BY " . $sortby . " " . $ordering;
+  $user_data = $mysqli->prepare($query_string);
+  $user_data->execute();
+  $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
+  $user_data->store_result();
+  $user_no = number_format($user_data->num_rows);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō: <?php echo $string['usermanagement'] . ' ' . $cfg_install_type; ?></title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -241,7 +241,7 @@
     echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
     echo "<table class=\"header\">\n";
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:16px\"><strong>" . $string['usersearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(92); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>";
-    echo "<tr><td colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n</div>\n</body></html>\n";
+    echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n</div>\n</body></html>\n";
     exit;
   }
 ?>
