@@ -43,24 +43,6 @@ $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $su
 $result->fetch();
 $result->close();
 
-// Check out team security
-if (strpos($userroles,'SysAdmin') === false) {
-  $on_team = false;
-  $paper_teams = explode(',', $moduleID);
-  
-  foreach ($teams as $team) {
-    foreach ($paper_teams as $paper_team) {
-      if ($team == $paper_team) {
-        $on_team = true;
-      }
-    }
-  }
-  
-  if ($on_team == false and strpos($moduleID,'SYSTEM') === false) {
-    access_denied($string['denied_paper'], false);
-  }
-}
-
 function findDecisionQ($question_array, $sourceID) {
   $source_question_no = 0;
   $tmp_q_no = 0;

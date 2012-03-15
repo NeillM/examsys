@@ -301,7 +301,7 @@ ob_start();
 </head>
 
 <body>
-<div id="noteDiv" style="position:absolute; background-color:#FDFDCB; top:0px; left:0px; width:350px; z-index:10000; display:none">
+<div id="noteDiv" style="position:absolute; background-color:#FDFDCB; top:0px; left:0px; width:350px; z-index:10000; display:none; font-size:90%">
 <div style="background-color:#F8F7B6; text-align:right; padding:2px"><img onclick="document.getElementById('noteDiv').style.display='none'" src="../artwork/close_note.png" width="16" height="16" alt="Close" border="0" style="cursor:pointer" /></div>
 <div id="noteMsg"></div>
 </div>

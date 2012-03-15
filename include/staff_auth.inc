@@ -62,6 +62,7 @@
         $tmp_paperID = $_POST['paperID'];
       }
       if (substr($tmp_paperID,0,5) != 'find:') {
+
         // Get the moduleID of the paper
         $result = $mysqli->prepare("SELECT moduleID, paper_ownerID FROM properties WHERE property_id=?");
         $result->bind_param('i', $tmp_paperID);
@@ -88,7 +89,7 @@
         }
       }
     }
-    
+   
     if ($on_team == false and isset($_GET['module']) and $_GET['module'] != '') {
       // Is 'Admin' on the module as normal
       $result = $mysqli->prepare("SELECT groupID FROM teams WHERE memberID=? AND name=?");
@@ -117,7 +118,7 @@
         $result->close();
       }
       
-       // Override access for the system training module.
+      // Override access for the system training module.
       if ($on_team == false and strpos($_GET['module'], 'SYSTEM') === false) {
         $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
         access_denied($message, false);
@@ -141,6 +142,7 @@
     }
   } else {
     //normal users can acces things they own or are on the team of only !!
+    $on_team = false;
 
     //can the user acsess the module 
     if (isset($_GET['module']) and $_GET['module'] != '' and !isset($_GET['paperID'])) {
@@ -169,7 +171,6 @@
         while ($result->fetch()) {
           if ($paper_ownerID != $userID) {
             $moduleIDs = explode(',',$moduleID);
-            $on_team = false;
             foreach ($moduleIDs as $g) {
               if (isset($teams[$g])) { 
                 $on_team = true;

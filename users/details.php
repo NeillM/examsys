@@ -773,20 +773,30 @@ a.access:hover {color:white}
     if ($old_faculty != $faculty) {
       echo '<tr><td colspan="2"><table border="0" style="padding-top:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $faculty . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
     }
-    echo '<tr><td class="sch_check">';
-    if (in_array($schoolID,$current_schools)) {
-      echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" checked />";
+    
+    if (strpos($userroles,'SysAdmin') === false) {
+      if (in_array($schoolID,$current_schools)) {
+      echo "<tr><td style=\"padding-left:20px\">$school</td></tr>\n";
+      }
     } else {
-      echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" />";
+      echo '<tr><td class="sch_check">';
+      if (in_array($schoolID,$current_schools)) {
+        echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" checked />";
+      } else {
+        echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" />";
+      }
+      echo "</td><td>$school</td></tr>\n";
     }
-    echo "</td><td>$school</td></tr>\n";
+    
     $old_faculty = $faculty;
     $admin_school_no++;
   }
   $results->close();
   echo "</table>\n</td></tr>\n";
+  if (strpos($userroles,'SysAdmin') !== false) {
+    echo '<tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="' . $string['save'] . '" style="width:100px" /><input type="hidden" name="admin_school_no" value="' . $admin_school_no . '" /></td></tr>';
+  }
   ?>
-  <tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="<?php echo $string['save']; ?>" style="width:100px" /><input type="hidden" name="admin_school_no" value="<?php echo $admin_school_no; ?>" /></td></tr>
   </form>
   </table>
   <?php
