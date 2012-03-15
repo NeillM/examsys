@@ -13,7 +13,8 @@ body {
 h1 {
   margin: 0;
   color: #000;
-  font: 32px/36px 'Arial Black', Arial, sans-serif;
+  font: 32px/36px Arial, sans-serif;
+  font-weight:bold;
 }
 
 h2 {

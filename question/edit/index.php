@@ -348,8 +348,10 @@ if ($critical_error == '') {
     redirect();
   }
 
-
-  $q_type_display = (!empty($q_no)) ? ' ' . $q_no : '';
+  $q_type_display = '';
+  if ($question->get_type() != 'info' and !empty($q_no)) {
+    $q_type_display = ' ' . $q_no;
+  }
   if ($question->get_type() != '') {
     $q_type_full = $string[$question->get_type()];
     $q_type_display .= " &ndash; $q_type_full";
