@@ -147,3 +147,13 @@ function filterKeypress(event) {
     }
   }
 }
+
+function hideshowRef() {
+  if (document.getElementById('maincontent').style.right == '0px') {
+    document.getElementById('maincontent').style.right = '350px';
+    document.getElementById('framecontent').style.display = 'block';
+  } else {
+    document.getElementById('maincontent').style.right = '0px';
+    document.getElementById('framecontent').style.display = 'none';
+  }
+}
