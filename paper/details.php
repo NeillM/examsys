@@ -1052,7 +1052,7 @@ function getMSCAA($paperID, $mysqlidb) {
       echo "</td></tr>\n";
     }
     if ($row_no > 0 and $paper_type != '3' and $paper_type != '4') {
-      echo "<tr><td colspan=\"4\"></td><td style=\"border-top:1px solid black; padding-right:4px\" align=\"right\">";
+      echo "<tr><td colspan=\"4\"></td><td id=\"marks_total\" style=\"border-top:1px solid black; padding-right:4px\" align=\"right\">";
       if ($marks_incorrect_error == true) {
         echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['variablenomarks'] . '" border="0" />';
       } else {
