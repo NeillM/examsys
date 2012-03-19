@@ -84,6 +84,7 @@ class IE_qti12_Load extends IE_Main {
 
     $xmlStr = file_get_contents($file);
     $xmlStr = str_replace('webct:localizable_mattext','webct_localizable_mattext',$xmlStr,$count);
+    $xmlStr = str_replace(array('‘','’'),array("'","'"),$xmlStr,$count);
     $xml = @simplexml_load_string($xmlStr);
 
     if (!$xml) {
