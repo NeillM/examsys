@@ -467,7 +467,7 @@ $numb=0;
     }
 
     // single num calculation,
-    if ($quesiton->counts['num'] == 1) return "calculation";
+    if ($question->counts['num'] == 1) return "calculation";
 
     // multiple numeric, not supported
     if ($question->counts['num'] > 1) {
@@ -713,11 +713,12 @@ $numb=0;
 
             // get all conditions that are related to this response
             $conds = $this->GetRespConditions($source, 1, $response->id);
+        /*
             echo "<pre>";
             print_r($response);
             print_r($conds);
             echo "</pre>";
-
+*/
             foreach ($conds as $cond) {
               foreach ($cond->conditions as $opt) {
                 $blank = new STQ_Blank_Option();
