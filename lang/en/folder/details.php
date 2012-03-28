@@ -13,6 +13,7 @@ $string['createnewpaper'] = 'Create new Paper';
 $string['editpropertiessysadmin'] = 'Edit Properties (SysAdmin)';
 $string['manageobjectives'] = 'Manage Objectives';
 $string['managekeywords'] = 'Manage Keywords';
+$string['referencematerial'] = 'Reference Material';
 $string['importstudentmetadata'] = 'Import Student metadata';
 $string['listpapers'] = 'List Papers';
 $string['module'] = 'Module';

@@ -34,6 +34,7 @@ require '../include/paper_security.inc';
 
 check_var('id', 'GET', true, false);
 
+
 function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions;
  
@@ -227,7 +228,7 @@ if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
 if ($special_needs == 1) {
   $stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?");
-  $stmt->bind_param('i', $userID);
+  $stmt->bind_param('i',$userID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
@@ -292,15 +293,6 @@ while ($stmt->fetch()) {
 $stmt->free_result();
 $stmt->close();
 
-// Get any Reference Material
-$reference_material = '';
-$stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id=reference_papers.refID AND paperID=?");
-$stmt->bind_param('i', $property_id);
-$stmt->execute();
-$stmt->bind_result($reference_title, $reference_material, $reference_width);
-$stmt->fetch();
-$stmt->close();
-
 // Extract the posted variables.
 $restart = 0;
 if (isset($_POST['sessionid'])) {
@@ -352,7 +344,7 @@ if ($paper_type == '3') {
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="pragma" content="no-cache" />
 <style type="text/css">
-body {background-color:<?php echo $bgcolor; ?>;color:<?php echo $fgcolor; ?>;padding:0px;margin:0px;border:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:<?php echo $textsize; ?>%}
+body {background-color:<?php echo $bgcolor; ?>;color:<?php echo $fgcolor; ?>;padding:0px;margin:0px;border:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:<?php echo $textsize; ?>%; overflow:hidden; height:100%; max-height:100%}
 li {margin-left:15px;margin-right:15px;font-size:100%}
 <?php
 if (($bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and $fgcolor != '#000000')) {
@@ -382,13 +374,7 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   font-size:100%;
   position: fixed;
   top: 0;
-  <?php
-  if ($reference_material != '') {
-    if (!isset($_COOKIE['refpane']) or (isset($_COOKIE['refpane']) and $_COOKIE['refpane'] == '1')) {
-      echo "  right: " . ($reference_width + 1) . "px;\n";
-    }
-  }
-  ?>
+  right: 451px;
   bottom: 0;
   overflow: auto; 
   background: #fff;
@@ -401,23 +387,14 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   top: 51px;
   bottom: 0; 
   right: 0px;
-  width: <?php echo $reference_width; ?>px; /*Width of frame div*/
+  width: 450px; /*Width of frame div*/
   overflow: auto; /*Disable scrollbars. Set to "scroll" to enable*/
   background: white;
   color: black;
   border-left: 1px solid #535353;
-  <?php
-  if (isset($_COOKIE['refpane']) and $_COOKIE['refpane'] == '0') {
-    echo "  display:none;\n";
-    $refpane_out = false;
-  } else {
-    $refpane_out = true;
-  }
-  ?>
 }
 
-#refhead {
-  font-family:'Arial Black',Arial;
+.refhead {
   font-size:20pt;
   font-weight:bold;
   background: -moz-linear-gradient(top, #FEFEFE, #D9D9D9);
@@ -427,14 +404,10 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   padding:6px;
   position:fixed;
   right: 0px;
-  width:<?php echo ($reference_width - 12); ?>px;
+  width:438px;
   border-left: 1px solid #535353;
-  <?php
-  if (isset($_COOKIE['refpane']) and $_COOKIE['refpane'] == '0') {
-    echo "  display:none;\n";
-  }
-  ?>
 }
+
 <?php
 if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;vertical-align:top}\n";
 if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
@@ -533,10 +506,7 @@ if (stripos($userroles,'Student') !== false) {
 } else {
   echo '<body onload="StartClock();" onunload="KillClock()">';
 }
-$show_ref_material = false;
-if ($reference_material != '') {
-  echo "<div id=\"maincontent\">\n";
-}
+echo "<div id=\"maincontent\">\n";
 if ($current_screen < $no_screens) {
   echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\"";
 } else {
@@ -584,10 +554,6 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   echo '</td>';
   echo $logo_html;
   
-  echo "<div style=\"float:right; cursor:pointer";
-  if ($refpane_out) echo '; display:none';
-  echo "\" onclick=\"showRef()\" id=\"showreflink\"><span style=\"color:#164994; font-size:110%; position:relative; top:8px; font-weight:bold\">$reference_title</span>&nbsp;<img style=\"float:right; padding-right:2px\" src=\"../artwork/toggle_log.png\" width=\"32\" height=\"32\" /></div>";
-  
   $user_answers = array();
   $previous_duration = 0;
   $screen_pre_submitted = 0;
@@ -598,7 +564,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     $log_data->store_result();
     $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
     if ($log_data->num_rows > 0) {
-      while ($log_data->fetch()) {
+      while ($log_row = $log_data->fetch()) {
         $user_answers[$log_screen][$log_q_id] = $log_user_answer;
         $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
         $user_order[$log_screen][$log_q_id] = $option_order;
@@ -619,7 +585,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
         $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
         $user_answers = array();
         $used_questions[$log_q_id] = $log_q_id;
-        while ($log_data->fetch()) {
+        while ($log_row = $log_data->fetch()) {
           $user_answers[$log_screen][$log_q_id] = $log_user_answer;
           $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
           $user_order[$log_screen][$log_q_id] = $option_order;
@@ -645,8 +611,11 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
   $num_rows = $question_data->num_rows;
+  
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
+  echo '<div style="text-align:right"><img src="../artwork/showhide_ref.gif" width="41" height="32" alt="" onclick="hideshowRef();" /></div>';
+
   $q_no = 0;
   //build the questions_array
   $tmp_questions_array = array();
@@ -681,11 +650,11 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
       $tmp_q_no++;
     }
     if ($question['q_type'] == 'random') {
-      randomQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
+      randomQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen,$tmp_q_no);
     } elseif ($question['q_type'] == 'branching') {
-      branchingQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen);
+      branchingQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen);
     } elseif ($question['q_type'] == 'keyword_based') {
-      keywordQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
+      keywordQOverwrite($questions_array,$question,$paper_type,$user_answers,$current_screen,$tmp_q_no);
     } else {
       $questions_array[] = $question;
     }
@@ -724,8 +693,9 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     printf($string['pleasecomplete'], $current_screen);
     echo "</div>\n<br >\n";
   }
+  
   echo $bottom_html;
-  echo '<input type="text" style="background-color:transparent;text-align:center;font-size:80%;color:white;border:0px" id="theTime" size="8" /></td><td align="right">';
+  echo '<input type="text" style="background-color:transparent;text-align:center;font-size:90%;color:white;border:0px" id="theTime" size="8" /></td><td align="right">';
   if ($bidirectional == 1 and $no_screens > 1) {
     if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
     if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
@@ -746,17 +716,252 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     echo "<input type=\"submit\" style=\"width:120px\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;\n";
   }
   echo '</td></tr></table>';
+  $mysqli->close();
 ?>
 </td></tr></table>
 </form>
+</div>
 
-<?php
-if ($reference_material != '') {
-  echo "</div>\n";
-  echo "<div id=\"refhead\">$reference_title<img style=\"float:right; cursor:pointer\" onclick=\"hideRef()\" src=\"../artwork/red_x_14.png\" width=\"14\" height=\"14\" alt=\"Close\" /></div>\n";
-  echo "<div id=\"framecontent\">\n$reference_material</div>\n";
-}
-$mysqli->close();
-?>
+<div class="refhead"><span style="font-family:'Arial Black', Arial">Reference:</span> Drug List</div>
+
+<div id="framecontent">
+
+<table cellpadding="2" cellspacing="0" border="0" style="font-size:95%"> 
+<tr><th>Drug</th><th>Class</th></tr> 
+<tr><td><strong>&alpha;-methyl dopa</strong></td><td>Centrally acting antihypertensives</td></tr>
+<tr><td><strong>&beta;-blockers: as antiarrhythmics (including sotalol)</strong></td><td>Class II antiarrhythmics</td></tr>
+<tr><td><strong>5-fluorouracil</strong></td><td>Antimetabolites</td></tr>
+<tr><td><strong>6-Mercaptopurine</strong></td><td>Antimetabolites</td></tr>
+<tr><td><strong>Aciclovir</strong></td><td>Antiviral</td></tr>
+<tr><td><strong>Acitretin</strong></td><td>Topical and oral retinoids</td></tr>
+<tr><td><strong>Adrenaline</strong></td><td>Catecholamines</td></tr>
+<tr><td><strong>Almotriptan</strong></td><td>Triptans</td></tr>
+<tr><td><strong>Amiloride</strong></td><td>Potassium-sparing diuretics</td></tr>
+<tr><td><strong>Amiodarone</strong></td><td>Class III antiarrhythmics</td></tr>
+<tr><td><strong>Amitriptyline</strong></td><td>Tricyclic antidepressants (TCAs)</td></tr>
+<tr><td><strong>Amlodipine</strong></td><td>Calcium channel inhibitors</td></tr>
+<tr><td><strong>Amoxicillin</strong></td><td>Penicillin</td></tr>
+<tr><td><strong>Amphotericin</strong></td><td>Antifungal agents (others)</td></tr>
+<tr><td><strong>Aripiprazole</strong></td><td>Atypical antipsychotics</td></tr>
+<tr><td><strong>Aspirin</strong></td><td>Antiplatelet drugs</td></tr>
+<tr><td><strong>Atenolol</strong></td><td>&beta;1-blockers</td></tr>
+<tr><td><strong>Atorvastatin</strong></td><td>HMG-CoA reductase inhibitors (Statins)</td></tr>
+<tr><td><strong>Azathioprine</strong></td><td>Immunosuppressants</td></tr>
+<tr><td><strong>Azithromycin</strong></td><td>Macrolides</td></tr>
+<tr><td><strong>Beclometasone</strong></td><td>Corticosteroids</td></tr>
+<tr><td><strong>Bendroflumethiazide</strong></td><td>Thiazide diuretics</td></tr>
+<tr><td><strong>Benzatropine</strong></td><td>Anti-parkinson drugs</td></tr>
+<tr><td><strong>Benzoyl peroxide</strong></td><td>Topical antiseptic</td></tr>
+<tr><td><strong>Benzylpenicillin</strong></td><td>Penicillin</td></tr>
+<tr><td><strong>Betamethasone valerate</strong></td><td>Topical corticosteroids</td></tr>
+<tr><td><strong>Bezafibrate</strong></td><td>Fibrates</td></tr>
+<tr><td><strong>Bisoprolol</strong></td><td>&beta;1-blockers</td></tr>
+<tr><td><strong>Budesonide</strong></td><td>Corticosteroids</td></tr>
+<tr><td><strong>Bumetanide</strong></td><td>Loop diuretics</td></tr>
+<tr><td><strong>Calcipotriol</strong></td><td>Topical vitamin D<small><sub>3</sub></small> analogues</td></tr>
+<tr><td><strong>Candesartan</strong></td><td>Angiotensin (AT1) receptor antagonist (Sartans)</td></tr>
+<tr><td><strong>Captopril</strong></td><td>ACE inhibitors</td></tr>
+<tr><td><strong>Carbamazepine</strong></td><td>Anti-epileptic drugs</td></tr>
+<tr><td><strong>Carbidopa</strong></td><td>Anti-parkinson drugs</td></tr>
+<tr><td><strong>Carbimazole</strong></td><td>Antithyroid</td></tr>
+<tr><td><strong>Cefalexin</strong></td><td>Cephalosporins</td></tr>
+<tr><td><strong>Cefotaxime</strong></td><td>Cephalosporins</td></tr>
+<tr><td><strong>Ceftriaxone</strong></td><td>Cephalosporins</td></tr>
+<tr><td><strong>Cefuroxime</strong></td><td>Cephalosporins</td></tr>
+<tr><td><strong>Celecoxib</strong></td><td>COX-2 inhibitors</td></tr>
+<tr><td><strong>Cetirizine</strong></td><td>Antihistamines</td></tr>
+<tr><td><strong>Chloramphenicol (eye drops)</strong></td><td>Antibacterial agents (others)</td></tr>
+<tr><td><strong>Chlorphenamine</strong></td><td>Antihistamines</td></tr>
+<tr><td><strong>Chlorpromazine</strong></td><td>Antipsychotics</td></tr>
+<tr><td><strong>Ciclosporin</strong></td><td>Immunosuppressants</td></tr>
+<tr><td><strong>Ciprofloxacin</strong></td><td>Quinolones</td></tr>
+<tr><td><strong>Cisplatin</strong></td><td>Platinum compounds</td></tr>
+<tr><td><strong>Citalopram</strong></td><td>Serotonin selective reuptake inhibitors (SSRIs)</td></tr>
+<tr><td><strong>Clarithromycin</strong></td><td>Macrolides</td></tr>
+<tr><td><strong>Clobetasol propionate</strong></td><td>Topical corticosteroids</td></tr>
+<tr><td><strong>Clobetasone butyrate</strong></td><td>Topical corticosteroids</td></tr>
+<tr><td><strong>Clonidine</strong></td><td>Centrally acting antihypertensives</td></tr>
+<tr><td><strong>Clopidogrel</strong></td><td>Antiplatelet drugs</td></tr>
+<tr><td><strong>Clotrimazole</strong></td><td>Antifungal agents (imidazoles)</td></tr>
+<tr><td><strong>Clozapine</strong></td><td>Atypical antipsychotics</td></tr>
+<tr><td><strong>Co-amoxiclav</strong></td><td>Penicillin</td></tr>
+<tr><td><strong>Co-trimoxazole</strong></td><td>Sulphonamides and trimethoprim</td></tr>
+<tr><td><strong>Coal tar extracts</strong></td><td>Tar</td></tr>
+<tr><td><strong>Codeine</strong></td><td>Opioid analgesic</td></tr>
+<tr><td><strong>Colestyramine</strong></td><td>Bile binding agents</td></tr>
+<tr><td><strong>Cyclizine</strong></td><td>Anti-emetics</td></tr>
+<tr><td><strong>Cyclophosphamide</strong></td><td>Alkylating agents</td></tr>
+<tr><td><strong>Dalteparin</strong></td><td>Anticoagulants (injectable)</td></tr>
+<tr><td><strong>Dexamethasone</strong></td><td>Corticosteroids</td></tr>
+<tr><td><strong>Diazepam</strong></td><td>Benzodiazepines</td></tr>
+<tr><td><strong>Diclofenac</strong></td><td>Non-steroidal anti-inflammatory drugs (NSAIDs)</td></tr>
+<tr><td><strong>Digoxin</strong></td><td>Cardiac glycosides</td></tr>
+<tr><td><strong>Dihydrocodeine</strong></td><td>Opioid analgesic</td></tr>
+<tr><td><strong>Diltiazem</strong></td><td>Calcium channel inhibitors/Class IV antiarrhythmics</td></tr>
+<tr><td><strong>Dinoprostone (PGE<sub>2</sub></small>)</strong></td><td>Prostaglandin</td></tr>
+<tr><td><strong>Dipyridamole</strong></td><td>Antiplatelet drugs</td></tr>
+<tr><td><strong>Dithranol</strong></td><td>Dithranol</td></tr>
+<tr><td><strong>Docusate sodium </strong></td><td>Laxative</td></tr>
+<tr><td><strong>Domperidone</strong></td><td>Anti-emetics</td></tr>
+<tr><td><strong>Donepezil</strong></td><td>Alzheimer's disease</td></tr>
+<tr><td><strong>Dosulepin</strong></td><td>Tricyclic antidepressants (TCAs)</td></tr>
+<tr><td><strong>Doxazosin</strong></td><td>&alpha;-blockers</td></tr>
+<tr><td><strong>Doxorubicin</strong></td><td>DNA intercalators</td></tr>
+<tr><td><strong>Doxycycline</strong></td><td>Tetracyclines</td></tr>
+<tr><td><strong>Enalapril</strong></td><td>ACE inhibitors</td></tr>
+<tr><td><strong>Enoxaparin</strong></td><td>Anticoagulants (injectable)</td></tr>
+<tr><td><strong>Entacapone</strong></td><td>Anti-parkinson drugs</td></tr>
+<tr><td><strong>Ergometrine</strong></td><td>Oxytocics</td></tr>
+<tr><td><strong>Erythromycin</strong></td><td>Macrolides</td></tr>
+<tr><td><strong>Ethambutol</strong></td><td>Antituberculous</td></tr>
+<tr><td><strong>Etodolac</strong></td><td>COX-2 selective inhibitors</td></tr>
+<tr><td><strong>Etoposide</strong></td><td>DNA topoisomerase inhibitors</td></tr>
+<tr><td><strong>Fenofibrate</strong></td><td>Fibrates</td></tr>
+<tr><td><strong>Flucloxacillin</strong></td><td>Penicillin</td></tr>
+<tr><td><strong>Fluconazole</strong></td><td>Antifungal agents (triazoles)</td></tr>
+<tr><td><strong>Fluoxetine</strong></td><td>Serotonin selective reuptake inhibitors (SSRIs)</td></tr>
+<tr><td><strong>Fluticasone propionate</strong></td><td>Topical corticosteroids</td></tr>
+<tr><td><strong>Fluvastatin</strong></td><td>HMG-CoA reductase inhibitors (Statins)</td></tr>
+<tr><td><strong>Formoterol</strong></td><td>&beta;2-agonists, long acting</td></tr>
+<tr><td><strong>Furosemide</strong></td><td>Loop diuretics</td></tr>
+<tr><td><strong>Gabapentin</strong></td><td>Anti-epileptic drugs</td></tr>
+<tr><td><strong>Galantamine</strong></td><td>Alzheimer's disease</td></tr>
+<tr><td><strong>Gemifibrozil</strong></td><td>Fibrates</td></tr>
+<tr><td><strong>Gentamicin</strong></td><td>Aminoglycosides</td></tr>
+<tr><td><strong>Glibenclamide</strong></td><td>Sulphonylureas</td></tr>
+<tr><td><strong>Gliclazide</strong></td><td>Sulphonylureas</td></tr>
+<tr><td><strong>Glyceryl trinitrate</strong></td><td>Nitrates</td></tr>
+<tr><td><strong>Griseofulvin</strong></td><td>Antifungal agents (others)</td></tr>
+<tr><td><strong>Haloperidol</strong></td><td>Antipsychotics</td></tr>
+<tr><td><strong>Hydralazine</strong></td><td>Antihypertensives used in pregnancy</td></tr>
+<tr><td><strong>Hydrocortisone</strong></td><td>Corticosteroids</td></tr>
+<tr><td><strong>Hyoscine</strong></td><td>Anti-emetics</td></tr>
+<tr><td><strong>Ibuprofen</strong></td><td>Non-steroidal anti-inflammatory drugs (NSAIDs)</td></tr>
+<tr><td><strong>Imatinib</strong></td><td>Tyrosine kinase inhibitors</td></tr>
+<tr><td><strong>Indoramin</strong></td><td>&alpha;-blockers</td></tr>
+<tr><td><strong>Infliximab</strong></td><td>Cytokine modulators</td></tr>
+<tr><td><strong>Insulin</strong></td><td>Hormones</td></tr>
+<tr><td><strong>Ipratropium</strong></td><td>Muscarinic antagonists</td></tr>
+<tr><td><strong>Isoniazid</strong></td><td>Antituberculous</td></tr>
+<tr><td><strong>Isosorbide mononitrate</strong></td><td>Nitrates</td></tr>
+<tr><td><strong>Isotretinoin</strong></td><td>Topical and oral retinoids</td></tr>
+<tr><td><strong>Ispaghula</strong></td><td>Laxative</td></tr>
+<tr><td><strong>Itraconazole</strong></td><td>Antifungal agents (triazoles)</td></tr>
+<tr><td><strong>Labetalol</strong></td><td>Antihypertensives used in pregnancy</td></tr>
+<tr><td><strong>Lactulose</strong></td><td>Laxative</td></tr>
+<tr><td><strong>Lamotrigine</strong></td><td>Anti-epileptic drugs</td></tr>
+<tr><td><strong>Lansoprazole</strong></td><td>Proton pump inhibitors (PPIs)</td></tr>
+<tr><td><strong>Levodopa</strong></td><td>Anti-parkinson drugs</td></tr>
+<tr><td><strong>Levomepromazine</strong></td><td>Anti-emetics</td></tr>
+<tr><td><strong>Levothyroxine</strong></td><td>Hormones</td></tr>
+<tr><td><strong>Lidocaine</strong></td><td>Class I antiarrhythmics</td></tr>
+<tr><td><strong>Linezolid</strong></td><td>Antibacterial agents (others)</td></tr>
+<tr><td><strong>Lisinopril</strong></td><td>ACE inhibitors</td></tr>
+<tr><td><strong>Lithium</strong></td><td>Antimanic drugs</td></tr>
+<tr><td><strong>Lofepramine</strong></td><td>Tricyclic antidepressants (TCAs)</td></tr>
+<tr><td><strong>Loperamide</strong></td><td>Antidiarrhoeal agents</td></tr>
+<tr><td><strong>Loratadine</strong></td><td>Antihistamines</td></tr>
+<tr><td><strong>Lorazepam</strong></td><td>Benzodiazepines</td></tr>
+<tr><td><strong>Losartan</strong></td><td>Angiotensin (AT1) receptor antagonist (Sartans)</td></tr>
+<tr><td><strong>Macrogols</strong></td><td>Laxative</td></tr>
+<tr><td><strong>Mebeverine</strong></td><td>Antispasmodic agents</td></tr>
+<tr><td><strong>Medroxyprosterone acetate</strong></td><td>Treatment of mennorrhagia</td></tr>
+<tr><td><strong>Mefenamic acid</strong></td><td>Non-steroidal anti-inflammatory drugs (NSAIDs)</td></tr>
+<tr><td><strong>Meloxicam</strong></td><td>COX-2 selective inhibitors</td></tr>
+<tr><td><strong>Mesalazine</strong></td><td>5-aminosalicylates</td></tr>
+<tr><td><strong>Metformin</strong></td><td>Biguanides</td></tr>
+<tr><td><strong>Methotrexate</strong></td><td>Folate antagonist</td></tr>
+<tr><td><strong>Methotrexate (anticancer)</strong></td><td>Antimetabolites</td></tr>
+<tr><td><strong>Methotrexate (dermatology)</strong></td><td>Folate antagonists</td></tr>
+<tr><td><strong>Metoclopramide</strong></td><td>Anti-emetics</td></tr>
+<tr><td><strong>Metronidazole</strong></td><td>Antibacterial agents (others)</td></tr>
+<tr><td><strong>Midazolam</strong></td><td>Benzodiazepines</td></tr>
+<tr><td><strong>Mifepristone</strong></td><td>Antiprogesterogenic steroid</td></tr>
+<tr><td><strong>Mirena (IUD with levonorgestrel)</strong></td><td>Treatment of mennorrhagia</td></tr>
+<tr><td><strong>Mirtazapine</strong></td><td>Other antidepressants</td></tr>
+<tr><td><strong>Misoprostol</strong></td><td>Cytoprotective prostaglandin analogue</td></tr>
+<tr><td><strong>Moclobemide</strong></td><td>MAO inhibitors</td></tr>
+<tr><td><strong>Mometasone furoate</strong></td><td>Topical corticosteroids</td></tr>
+<tr><td><strong>Montelukast</strong></td><td>Leukotriene receptor antagonist</td></tr>
+<tr><td><strong>Morphine</strong></td><td>Opioid analgesic</td></tr>
+<tr><td><strong>Moxonidine</strong></td><td>Centrally acting antihypertensives</td></tr>
+<tr><td><strong>Mupirocin</strong></td><td>Antibacterial agents (others)</td></tr>
+<tr><td><strong>Naloxone</strong></td><td>Opioid antagonist</td></tr>
+<tr><td><strong>Naproxen</strong></td><td>Non-steroidal anti-inflammatory drugs (NSAIDs)</td></tr>
+<tr><td><strong>Nicorandil</strong></td><td>Potassium channel activators</td></tr>
+<tr><td><strong>Nifedipine</strong></td><td>Calcium channel inhibitors</td></tr>
+<tr><td><strong>Nystatin</strong></td><td>Antifungal agents (others)</td></tr>
+<tr><td><strong>Ofloxacin</strong></td><td>Quinolones</td></tr>
+<tr><td><strong>Olanzapine</strong></td><td>Atypical antipsychotics</td></tr>
+<tr><td><strong>Omeprazole</strong></td><td>Proton pump inhibitors (PPIs)</td></tr>
+<tr><td><strong>Ondansetron</strong></td><td>Anti-emetics</td></tr>
+<tr><td><strong>Orlistat</strong></td><td>Anti-obesity</td></tr>
+<tr><td><strong>Oseltamivir</strong></td><td>Antiviral</td></tr>
+<tr><td><strong>Oxytocin</strong></td><td>Oxytocics</td></tr>
+<tr><td><strong>Paclitaxel</strong></td><td>Taxanes</td></tr>
+<tr><td><strong>Paracetamol</strong></td><td>Non-opioid analgesics</td></tr>
+<tr><td><strong>Paroxetine</strong></td><td>Serotonin selective reuptake inhibitors (SSRIs)</td></tr>
+<tr><td><strong>Perindopril</strong></td><td>ACE inhibitors</td></tr>
+<tr><td><strong>Phenoxymethyl penicillin</strong></td><td>Penicillin</td></tr>
+<tr><td><strong>Phenytoin</strong></td><td>Anti-epileptic drugs</td></tr>
+<tr><td><strong>Pioglitazone</strong></td><td>Thiazolidinediones</td></tr>
+<tr><td><strong>Pizotifen</strong></td><td>Antimigraine, prophylaxis</td></tr>
+<tr><td><strong>Pravastatin</strong></td><td>HMG-CoA reductase inhibitors (Statins)</td></tr>
+<tr><td><strong>Prazosin</strong></td><td>&alpha;-blockers</td></tr>
+<tr><td><strong>Prednisolone</strong></td><td>Corticosteroids</td></tr>
+<tr><td><strong>Procyclidine</strong></td><td>Anti-parkinson drugs</td></tr>
+<tr><td><strong>Promethazine</strong></td><td>Anti-emetics</td></tr>
+<tr><td><strong>Propranolol</strong></td><td>&beta;-blockers (non-selective)</td></tr>
+<tr><td><strong>Pyrazinamide</strong></td><td>Antituberculous</td></tr>
+<tr><td><strong>Quetiapine</strong></td><td>Atypical antipsychotics</td></tr>
+<tr><td><strong>Ramipril</strong></td><td>ACE inhibitors</td></tr>
+<tr><td><strong>Ranitidine</strong></td><td>Histamine H<small><sub>2</sub></small> receptor antagonists</td></tr>
+<tr><td><strong>Rifampicin</strong></td><td>Antituberculous</td></tr>
+<tr><td><strong>Risperidone</strong></td><td>Atypical antipsychotics</td></tr>
+<tr><td><strong>Rivastigmine</strong></td><td>Alzheimer's disease</td></tr>
+<tr><td><strong>Ropinirole</strong></td><td>Anti-parkinson drugs</td></tr>
+<tr><td><strong>Rosiglitazone</strong></td><td>Thiazolidinediones</td></tr>
+<tr><td><strong>Salbutamol</strong></td><td>Î²2-agonists</td></tr>
+<tr><td><strong>Salicylic acid</strong></td><td>Topical keratolytic</td></tr>
+<tr><td><strong>Salmeterol</strong></td><td>&beta;2-agonists, long acting</td></tr>
+<tr><td><strong>Selegiline</strong></td><td>Anti-parkinson drugs</td></tr>
+<tr><td><strong>Senna</strong></td><td>Laxative</td></tr>
+<tr><td><strong>Sertraline</strong></td><td>Serotonin selective reuptake inhibitors (SSRIs)</td></tr>
+<tr><td><strong>Simvastatin</strong></td><td>HMG-CoA reductase inhibitors (Statins)</td></tr>
+<tr><td><strong>Sodium cromoglicate (eye drops)</strong></td><td>Cromones </td></tr>
+<tr><td><strong>Sodium cromoglicate (inhaled)</strong></td><td>Cromones</td></tr>
+<tr><td><strong>Sodium valproate</strong></td><td>Anti-epileptic drugs</td></tr>
+<tr><td><strong>Sotalol</strong></td><td>Class III antiarrhythmics</td></tr>
+<tr><td><strong>Spironolactone</strong></td><td>Potassium-sparing diuretic, mineralocorticoid (aldosterone) antagonist</td></tr>
+<tr><td><strong>Streptokinase</strong></td><td>Fibrinolytics</td></tr>
+<tr><td><strong>Sulfasalazine</strong></td><td>5-aminosalicylates</td></tr>
+<tr><td><strong>Sumatriptan</strong></td><td>Triptans</td></tr>
+<tr><td><strong>Tamoxifen</strong></td><td>Oestrogen receptor antagonists</td></tr>
+<tr><td><strong>Temazepam</strong></td><td>Benzodiazepines</td></tr>
+<tr><td><strong>Terbinafine</strong></td><td>Antifungal agents (others)</td></tr>
+<tr><td><strong>Terbutaline</strong></td><td>Î²2-agonists</td></tr>
+<tr><td><strong>Tetracycline</strong></td><td>Tetracyclines</td></tr>
+<tr><td><strong>Theophylline</strong></td><td>Xanthines</td></tr>
+<tr><td><strong>Tinzaparin</strong></td><td>Anticoagulants (injectable)</td></tr>
+<tr><td><strong>Tiotropium</strong></td><td>Muscarinic antagonists</td></tr>
+<tr><td><strong>Tolbutamide</strong></td><td>Sulphonylureas</td></tr>
+<tr><td><strong>Tramadol</strong></td><td>Opioid analgesic</td></tr>
+<tr><td><strong>Tranexamic acid</strong></td><td>Treatment of mennorrhagia</td></tr>
+<tr><td><strong>Tretinoin</strong></td><td>Topical and oral retinoids</td></tr>
+<tr><td><strong>Trimethoprim</strong></td><td>Sulphonamides and trimethoprim</td></tr>
+<tr><td><strong>Unfractionated heparin</strong></td><td>Anticoagulants (injectable)</td></tr>
+<tr><td><strong>Valaciclovir</strong></td><td>Antiviral</td></tr>
+<tr><td><strong>Valsartan</strong></td><td>Angiotensin (AT1) receptor antagonist (Sartans)</td></tr>
+<tr><td><strong>Vancomycin</strong></td><td>Glycopeptides</td></tr>
+<tr><td><strong>Venlafaxine</strong></td><td>Other antidepressants</td></tr>
+<tr><td><strong>Verapamil</strong></td><td>Calcium channel inhibitors/Class IV antiarrhythmics</td></tr>
+<tr><td><strong>Vincristine</strong></td><td>Vinca alkaloids</td></tr>
+<tr><td><strong>Warfarin</strong></td><td>Anticoagulants (oral)</td></tr>
+<tr><td><strong>Zanamivir</strong></td><td>Antiviral</td></tr>
+<tr><td><strong>Zarfirlukast</strong></td><td>Leukotriene receptor antagonist</td></tr>
+<tr><td><strong>Zopiclone</strong></td><td>Z-drugs</td></tr>
+</table>
+</div>
+
 </body>
 </html>

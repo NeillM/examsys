@@ -2027,26 +2027,6 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  // 21/03/2012 - Move to InnoDB for all table except help tables
-  echo "<li>UPDATEING TO InnoDB This may take some time please be patient ;-)</li>\n";
-  ob_flush();
-  flush();
-  $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($name);
-  $skip_table = Array('help_log'=>1,'help_searches'=>1,'help_tutorial_log'=>1,'staff_help'=>1,'student_help'=>1);
-  while ($result->fetch()) {
-    if(isset($skip_table[$name])) {
-      continue;
-    }
-    echo "<li>ALTER TABLE " . $name . " ENGINE=InnoDB</li>\n";
-    if(!$mysqli->real_query("ALTER TABLE $name ENGINE=InnoDB")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
-    }
-    ob_flush();
-    flush();
-  }
   // Adding missing indexes 
   $result->close();
   $result = $mysqli->prepare("SHOW INDEX FROM users WHERE Key_name = 'idx_roles'");
@@ -2129,6 +2109,96 @@ if (!isset($_POST['update'])) {
   } 
   $result->close();
   
+  // 19/03/2012 - Add 'reference_material' and 'paper_reference' tables
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='reference_material' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    // Table to hold Reference material
+    $adjust = $mysqli->prepare("CREATE TABLE reference_material (id int not null primary key auto_increment, title varchar(255), content text, created datetime, deleted datetime)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE reference_material (id int not null primary key auto_increment, title varchar(255), content text, created datetime, deleted datetime)</li>\n";
+    ob_flush();
+    flush();
+    
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_material TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    // Table to hold Reference modules
+    $adjust = $mysqli->prepare("CREATE TABLE reference_modules (id int not null primary key auto_increment, refID mediumint unsigned, moduleID mediumint unsigned)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE reference_material (id int not null primary key auto_increment, title varchar(255), content text, created datetime, deleted datetime)</li>\n";
+    ob_flush();
+    flush();
+    
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_modules TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    // Table to assign Reference material to papers
+    $adjust = $mysqli->prepare("CREATE TABLE reference_papers (id int not null primary key auto_increment, paperID mediumint, refID mediumint)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE reference_papers (id int not null primary key auto_increment, paperID mediumint, refID mediumint)</li>\n";
+    ob_flush();
+    flush();
+
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT ON " . $cfg_db_database . ".reference_papers TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'</li>\n";
+  }
+  $result->close();
+
+  // 21/03/2012 - Move to InnoDB for all table except help tables
+  echo "<li>UPDATEING TO InnoDB This may take some time please be patient ;-)</li>\n";
+  ob_flush();
+  flush();
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($name);
+  $skip_table = Array('help_log'=>1,'help_searches'=>1,'help_tutorial_log'=>1,'staff_help'=>1,'student_help'=>1);
+  while ($result->fetch()) {
+    if(isset($skip_table[$name])) {
+      continue;
+    }
+    echo "<li>ALTER TABLE " . $name . " ENGINE=InnoDB</li>\n";
+    if(!$mysqli->real_query("ALTER TABLE $name ENGINE=InnoDB")) {
+        echo "<li>" . $mysqli->error . "</li>\n";
+    }
+    ob_flush();
+    flush();
+  }
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   

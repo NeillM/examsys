@@ -276,6 +276,19 @@ if (isset($_POST['Submit'])) {
       }
     }
 
+    // Set any Reference Material
+    $editProperties = $mysqli->prepare("DELETE FROM reference_papers WHERE paperID=?");
+    $editProperties->bind_param('i', $paperID);
+    $editProperties->execute();
+    $editProperties->close();
+    
+    for ($i=0; $i<$_POST['reference_no']; $i++) {
+      $editProperties = $mysqli->prepare("INSERT INTO reference_papers VALUES (NULL, ?, ?)");
+      $editProperties->bind_param('ii', $paperID, $_POST['reference_no']);
+      $editProperties->execute();
+      $editProperties->close();
+    }
+    
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -393,6 +406,7 @@ if (isset($_POST['Submit'])) {
         }
       }
       $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>&session=' + $('#session').val() );
+      $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes);
     }
   
     function objreportURL() {
@@ -571,6 +585,7 @@ if (isset($_POST['Submit'])) {
       document.getElementById('rubric').style.display = 'none';
       document.getElementById('prologue').style.display = 'none';
       document.getElementById('postscript').style.display = 'none';
+      document.getElementById('reference').style.display = 'none';
       <?php
         }
       ?>
@@ -585,6 +600,7 @@ if (isset($_POST['Submit'])) {
       document.getElementById('button_rubric').style.background='';
       document.getElementById('button_prologue').style.background='';
       document.getElementById('button_postscript').style.background='';
+      document.getElementById('button_reference').style.background='';
       <?php
         }
       ?>
@@ -649,6 +665,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <tr><td id="button_rubric" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('rubric')" onmouseout="buttonout('rubric')" onclick="buttonclick('rubric')">&nbsp;<?php echo $string['rubrictab']; ?></td></tr>
 <tr><td id="button_prologue" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('prologue')" onmouseout="buttonout('prologue')" onclick="buttonclick('prologue')">&nbsp;<?php echo $string['prologuetab']; ?></td></tr>
 <tr><td id="button_postscript" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('postscript')" onmouseout="buttonout('postscript')" onclick="buttonclick('postscript')">&nbsp;<?php echo $string['postscripttab']; ?></td></tr>
+<tr><td id="button_reference" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('reference')" onmouseout="buttonout('reference')" onclick="buttonclick('reference')">&nbsp;<?php echo $string['referencematerial']; ?></td></tr>
 <?php
 }
 ?>
@@ -1389,6 +1406,14 @@ if ($paper_type != '4' and $paper_type != '5') {
 </td>
 </tr>
 </table>
+
+
+<table id="reference" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
+<tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/toggle_log.png" width="32" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['referenceheading']; ?></td></tr>
+<tr><td style="vertical-align:top"><div id="reference_list"></div></td></tr>
+</table>
+
+
 
 </td>
 </tr>
