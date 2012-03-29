@@ -2179,6 +2179,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 21/03/2012 - Move to InnoDB for all table except help tables
+  /*
   echo "<li>UPDATEING TO InnoDB This may take some time please be patient ;-)</li>\n";
   ob_flush();
   flush();
@@ -2198,6 +2199,7 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
+  */
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
