@@ -2028,7 +2028,6 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // Adding missing indexes 
-  $result->close();
   $result = $mysqli->prepare("SHOW INDEX FROM users WHERE Key_name = 'idx_roles'");
   $result->execute();
   $result->store_result();
