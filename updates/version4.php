@@ -2116,10 +2116,10 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ($result->num_rows() == 0) {
     // Table to hold Reference material
-    $adjust = $mysqli->prepare("CREATE TABLE reference_material (id int not null primary key auto_increment, title varchar(255), content text, created datetime, deleted datetime)");
+    $adjust = $mysqli->prepare("CREATE TABLE reference_material (id int not null primary key auto_increment, title varchar(255), content text,  width  SMALLINT UNSIGNED, created datetime, deleted datetime)");
     $adjust->execute();
     $adjust->close();
-    echo "<li>CREATE TABLE reference_material (id int not null primary key auto_increment, title varchar(255), content text, created datetime, deleted datetime)</li>\n";
+    echo "<li>CREATE TABLE reference_material (id int not null primary key auto_increment, title varchar(255), content text, width  SMALLINT UNSIGNED, created datetime, deleted datetime)</li>\n";
     ob_flush();
     flush();
     
