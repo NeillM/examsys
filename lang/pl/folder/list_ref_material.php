@@ -1,6 +1,6 @@
 <?php
-$string['referencematerial'] = 'Reference Material';  // Niko, whole file please
-$string['creatematerial'] = 'Create Reference Material';
-$string['editmaterial'] = 'Edit Material';
-$string['deletematerial'] = 'Delete Material';
+$string['referencematerial'] = 'Materiał pomocniczy'; 
+$string['creatematerial'] = 'Utwórz materiał pomocniczy';
+$string['editmaterial'] = 'Edytuj materiał';
+$string['deletematerial'] = 'Usuń materiał';
 ?>

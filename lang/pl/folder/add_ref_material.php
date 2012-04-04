@@ -1,7 +1,7 @@
 <?php
-$string['referencematerial'] = 'Reference Material';  // Niko, whole file please
-$string['newreferencematerial'] = 'New Reference Material';
-$string['name'] = 'Name';
-$string['width'] = 'Width';
-$string['modules'] = 'Modules';
+$string['referencematerial'] = 'Materiał pomocniczy';
+$string['newreferencematerial'] = 'Nowy materiał pomocniczy';
+$string['name'] = 'Nazwa';
+$string['width'] = 'Szerokość';
+$string['modules'] = 'Moduły';
 ?>
