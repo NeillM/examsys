@@ -28,17 +28,18 @@
 <br />
 
 <table style="margin-left:9px; font-size:90%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
-<tr><td class="ico"><a href="add_ref_material.php"><img src="../artwork/ref_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="add_ref_material.php"><?php echo $string['creatematerial']; ?></a></td></tr>
+<tr><td class="ico"><a href="add_ref_material.php?module=<?php echo $_GET['module']; ?>"><img src="../artwork/ref_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="add_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['creatematerial']; ?></a></td></tr>
 <tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editmaterial']; ?></td></tr>
 <tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deletematerial']; ?></td></tr>
 </table>
 
 <table style="margin-left:9px; font-size:90%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
 <tr><td class="ico"><a href="add_ref_material.php"><img src="../artwork/ref_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="add_ref_material.php"><?php echo $string['creatematerial']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editFaculty()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editFaculty(); return false;"><?php echo $string['editmaterial']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteCourse()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteFaculty(); return false;"><?php echo $string['deletematerial']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="editReference()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editReference(); return false;"><?php echo $string['editmaterial']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="deleteReference()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteReference(); return false;"><?php echo $string['deletematerial']; ?></a></td></tr>
 </table>
 
 <input type="hidden" id="divID" name="divID" value="" />
+<input type="hidden" id="oldID" name="oldID value="" />
 </form>
 </div>

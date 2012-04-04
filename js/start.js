@@ -147,19 +147,3 @@ function filterKeypress(event) {
     }
   }
 }
-
-function hideRef() {
-  document.cookie = 'refpane=0';
-  document.getElementById('maincontent').style.right = '0px';
-  document.getElementById('refhead').style.display = 'none';
-  document.getElementById('framecontent').style.display = 'none';
-  document.getElementById('showreflink').style.display = 'block';
-}
-
-function showRef() {
-  document.cookie = 'refpane=1';
-  document.getElementById('maincontent').style.right = document.getElementById('framecontent').style.width;
-  document.getElementById('refhead').style.display = 'block';
-  document.getElementById('framecontent').style.display = 'block';
-  document.getElementById('showreflink').style.display = 'none';
-}

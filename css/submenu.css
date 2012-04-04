@@ -5,7 +5,7 @@
  * html div#content{height:100px; background-colour:#FFFFFF}
  img {margin:0px; padding:0px;}
  .divider {padding-left:10px; padding-bottom:2px; font-weight:bold}
- .f {float:left; width:375px; padding-left:10px; font-size:90%}
+ .f {float:left; width:375px; padding-left:10px; font-size:90%; height:50px}
  .file {float:left; width:375px; height:74px; padding-left:12px; font-size:90%}
  .mee {font-size:120%; display:inline}
 

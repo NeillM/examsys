@@ -28,16 +28,31 @@ check_var('modules', 'GET', true, false);
 ?>
 <table cellpadding="0" cellspacing="3" border="0" style="width:100%">
 <?php
+// Get the current metadata settings for the paper
+$current_settings = array();
+$stmt = $mysqli->prepare("SELECT refID FROM reference_papers WHERE paperID=?");
+$stmt->bind_param('i', $_GET['paperID']);
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($current_refID);
+while ($stmt->fetch()) {
+  $current_settings[$current_refID] = $current_refID;
+}
+$stmt->close();
 
 // Get the dropdown list values
-$stmt = $mysqli->prepare("SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id=reference_modules.refID AND reference_modules.moduleID=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $_GET['modules']) . "') GROUP BY reference_material.id");
+$stmt = $mysqli->prepare("SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.moduleID=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $_GET['modules']) . "') GROUP BY reference_material.id");
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($title, $refID);
 
 $ref_line = 0;
 while ($stmt->fetch()) {
-  echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" /> $title<br />";
+  if (isset($current_settings[$refID])) {
+    echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" checked=\"checked\" /> $title<br />";
+  } else {
+    echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" /> $title<br />";
+  }
   $ref_line++;
 }
 

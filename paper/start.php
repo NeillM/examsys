@@ -445,26 +445,38 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script language="JavaScript" src="../js/start.js"></script>
-
-<script type="text/javascript">
-var lang = {
-<?php
-$langstrings = array('msgselectable1', 'msgselectable2', 'msgselectable3', 'msgselectable4');
-$first = true;
-foreach ($langstrings as $langstring) {
-  if (!$first) {
-    echo ',';
-  }
-  echo "'{$langstring}':'{$string[$langstring]}'";
-  $first = false;
-}
-?>
-};
-</script>
-
 <script language="JavaScript" src="../js/flash_include.js"></script>
 <script language="javascript">
   window.history.go(1);
+  var lang = {
+  <?php
+  $langstrings = array('msgselectable1', 'msgselectable2', 'msgselectable3', 'msgselectable4');
+  $first = true;
+  foreach ($langstrings as $langstring) {
+    if (!$first) {
+      echo ',';
+    }
+    echo "'{$langstring}':'{$string[$langstring]}'";
+    $first = false;
+  }
+  ?>
+  };
+  
+  function hideRef() {
+    document.cookie = 'refpane=0';
+    document.getElementById('maincontent').style.right = '0px';
+    document.getElementById('refhead').style.display = 'none';
+    document.getElementById('framecontent').style.display = 'none';
+    document.getElementById('showreflink').style.display = 'block';
+  }
+
+  function showRef() {
+    document.cookie = 'refpane=1';
+    document.getElementById('maincontent').style.right = '<?php echo $reference_width; ?>px';
+    document.getElementById('refhead').style.display = 'block';
+    document.getElementById('framecontent').style.display = 'block';
+    document.getElementById('showreflink').style.display = 'none';
+  }
 <?php
   if ($original_paper_type == '2') {
 ?>
