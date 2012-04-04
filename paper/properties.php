@@ -275,20 +275,41 @@ if (isset($_POST['Submit'])) {
         $editProperties->close();
       }
     }
-
-    // Set any Reference Material
-    $editProperties = $mysqli->prepare("DELETE FROM reference_papers WHERE paperID=?");
-    $editProperties->bind_param('i', $paperID);
-    $editProperties->execute();
-    $editProperties->close();
     
+    // Get existing Reference Materials
+    $existing_refs = array();
+    $result = $mysqli->prepare("SELECT refID FROM reference_papers WHERE paperID=?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($refID);
+    while ($result->fetch()) {
+      $existing_refs[$refID] = $refID;
+    }
+    $result->close();
+    
+    $new_refs = array();
     for ($i=0; $i<$_POST['reference_no']; $i++) {
       if (isset($_POST["ref$i"])) {
+        $new_refs[$_POST["ref$i"]] = $_POST["ref$i"];
+      }
+    }
+    
+    foreach ($new_refs as $new_ref) {
+      if (isset($existing_refs[$new_ref])) {
+        unset($existing_refs[$new_ref]);
+      } else {
         $editProperties = $mysqli->prepare("INSERT INTO reference_papers VALUES (NULL, ?, ?)");
-        $editProperties->bind_param('ii', $paperID, $_POST["ref$i"]);
+        $editProperties->bind_param('ii', $paperID, $new_ref);
         $editProperties->execute();
         $editProperties->close();
       }
+    }
+    foreach ($existing_refs as $existing_ref) {
+      $editProperties = $mysqli->prepare("DELETE FROM reference_papers WHERE paperID=? AND refID=?");
+      $editProperties->bind_param('ii', $paperID, $existing_ref);
+      $editProperties->execute();
+      $editProperties->close();
     }
     
 ?>
