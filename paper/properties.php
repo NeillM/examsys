@@ -283,10 +283,12 @@ if (isset($_POST['Submit'])) {
     $editProperties->close();
     
     for ($i=0; $i<$_POST['reference_no']; $i++) {
-      $editProperties = $mysqli->prepare("INSERT INTO reference_papers VALUES (NULL, ?, ?)");
-      $editProperties->bind_param('ii', $paperID, $_POST['reference_no']);
-      $editProperties->execute();
-      $editProperties->close();
+      if (isset($_POST["ref$i"])) {
+        $editProperties = $mysqli->prepare("INSERT INTO reference_papers VALUES (NULL, ?, ?)");
+        $editProperties->bind_param('ii', $paperID, $_POST["ref$i"]);
+        $editProperties->execute();
+        $editProperties->close();
+      }
     }
     
 ?>
