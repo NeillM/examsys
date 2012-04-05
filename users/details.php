@@ -920,12 +920,12 @@ a.access:hover {color:white}
 <tr>
 <td><?php echo $string['background']; ?></td>
 <td><input type="radio" name="bg_radio" value="0"<?php if ($background == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="bg_radio" value="1"<?php if ($background != '') echo ' checked'; ?> />
+<td><input type="radio" name="bg_radio" id="bg_radio_on" value="1"<?php if ($background != '') echo ' checked'; ?> />
 <?php
   if ($background == '') {
-    echo "<div onclick=\"showPicker('background',event); document.accessibility.bg_radio[1].checked=true;\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
+    echo "<div onclick=\"showPicker('background',event); document.getElementById('bg_radio_on').checked=true;\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
   } else {
-    echo "<div onclick=\"showPicker('background',event); document.accessibility.bg_radio[1].checked=true;\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$background\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
+    echo "<div onclick=\"showPicker('background',event); document.getElementById('bg_radio_on').checked=true;\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$background\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
   }
 ?>
 </td>
@@ -933,12 +933,12 @@ a.access:hover {color:white}
 <tr>
 <td><?php echo $string['foreground']; ?></td>
 <td><input type="radio" name="fg_radio" value="0"<?php if ($foreground == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="fg_radio" value="1"<?php if ($foreground != '') echo ' checked'; ?> />
+<td><input type="radio" name="fg_radio" id="fg_radio_on" value="1"<?php if ($foreground != '') echo ' checked'; ?> />
 <?php
   if ($foreground == '') {
-    echo "<div onclick=\"showPicker('foreground',event); document.accessibility.fg_radio[1].checked=true;\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
+    echo "<div onclick=\"showPicker('foreground',event); document.getElementById('fg_radio_on').checked=true;\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
   } else {
-    echo "<div onclick=\"showPicker('foreground',event); document.accessibility.fg_radio[1].checked=true;\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$foreground\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
+    echo "<div onclick=\"showPicker('foreground',event); document.getElementById('fg_radio_on').checked=true;\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$foreground\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
   }
 ?>
 </td>
@@ -946,12 +946,12 @@ a.access:hover {color:white}
 <tr>
 <td><?php echo $string['markscolour']; ?></td>
 <td><input type="radio" name="marks_radio" value="0"<?php if ($marks_color == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="marks_radio" value="1"<?php if ($marks_color != '') echo ' checked'; ?> />
+<td><input type="radio" name="marks_radio" id="marks_radio_on" value="1"<?php if ($marks_color != '') echo ' checked'; ?> />
 <?php
   if ($marks_color == '') {
-    echo "<div onclick=\"showPicker('marks_color',event); document.accessibility.marks_radio[1].checked=true;\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
+    echo "<div onclick=\"showPicker('marks_color',event); document.getElementById('marks_radio_on').checked=true;\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
   } else {
-    echo "<div onclick=\"showPicker('marks_color',event); document.accessibility.marks_radio[1].checked=true;\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$marks_color\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
+    echo "<div onclick=\"showPicker('marks_color',event); document.getElementById('marks_radio_on').checked=true;\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$marks_color\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
   }
 ?>
 </td>
@@ -959,12 +959,12 @@ a.access:hover {color:white}
 <tr>
 <td><?php echo $string['themecolour']; ?></td>
 <td><input type="radio" name="theme_radio" value="0"<?php if ($themecolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="theme_radio" value="1"<?php if ($themecolor != '') echo ' checked'; ?> />
+<td><input type="radio" name="theme_radio" id="theme_radio_on" value="1"<?php if ($themecolor != '') echo ' checked'; ?> />
 <?php
   if ($themecolor == '') {
-    echo "<div onclick=\"showPicker('themecolor',event); document.accessibility.theme_radio[1].checked=true;\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
+    echo "<div onclick=\"showPicker('themecolor',event); document.getElementById('theme_radio_on').checked=true;\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('themecolor',event); document.accessibility.theme_radio[1].checked=true;\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
+    echo "<div onclick=\"showPicker('themecolor',event); document.getElementById('theme_radio_on').checked=true;\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
   }
 ?>
 </td>
@@ -972,12 +972,12 @@ a.access:hover {color:white}
 <tr>
 <td><?php echo $string['labelscolour']; ?></td>
 <td><input type="radio" name="labels_radio" value="0"<?php if ($labelcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="labels_radio" value="1"<?php if ($labelcolor != '') echo ' checked'; ?> />
+<td><input type="radio" name="labels_radio" id="labels_radio_on" value="1"<?php if ($labelcolor != '') echo ' checked'; ?> />
 <?php
   if ($labelcolor == '') {
-    echo "<div onclick=\"showPicker('labelcolor',event); document.accessibility.labels_radio[1].checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
+    echo "<div onclick=\"showPicker('labelcolor',event); document.getElementById('labels_radio_on').checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('labelcolor',event); document.accessibility.labels_radio[1].checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
+    echo "<div onclick=\"showPicker('labelcolor',event); document.getElementById('labels_radio_on').checked=true;\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
   }
 ?>
 </td>
