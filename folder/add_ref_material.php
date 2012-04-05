@@ -27,7 +27,7 @@ require_once '../classes/searchutils.class.php';
 
 if (isset($_POST['submit'])) {
   // Write the reference material
-  $result = $mysqli->prepare("INSERT INTO reference_material VALUES (NULL, ?, ?, NOW(), NULL, ?)");
+  $result = $mysqli->prepare("INSERT INTO reference_material VALUES (NULL, ?, ?, ?, NOW(), NULL)");
   $result->bind_param('sss', $_POST['title'], $_POST['ref_content'], $_POST['width']);
   $result->execute();
   

@@ -34,7 +34,7 @@ require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$version = '4.2';
+$version = '4.2.1';
 
 set_time_limit(0);
 
