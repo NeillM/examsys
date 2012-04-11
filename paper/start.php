@@ -497,14 +497,14 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
         echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
         echo "      if (i == refID) {\n";
         echo "        document.getElementById('framecontent' + i).style.display = 'block';\n";
-        echo "        document.getElementById('refhead' + i).style.top = (30 * i) + 'px';\n";
+        echo "        document.getElementById('refhead' + i).style.top = (31 * i) + 'px';\n";
         echo "        flag = 1;\n";
         echo "      } else {\n";
         echo "        document.getElementById('framecontent' + i).style.display = 'none';\n";
         echo "        if (flag == 0) {\n";
-        echo "          document.getElementById('refhead' + i).style.top = (30 * i) + 'px';\n";
+        echo "          document.getElementById('refhead' + i).style.top = (31 * i) + 'px';\n";
         echo "        } else {\n";
-        echo "          document.getElementById('refhead' + i).style.top = (winH - (" . count($reference_materials) . " - i) * 30) + 'px';\n";
+        echo "          document.getElementById('refhead' + i).style.top = (winH - (" . count($reference_materials) . " - i) * 31) + 'px';\n";
         echo "        }\n";
         echo "      }\n";
         echo "    }\n";
@@ -516,9 +516,9 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
     winH = getWinH();
 <?php
   if (count($reference_materials) > 0) {
-    $subtract = 34 * count($reference_materials);
+    $subtract = 37 * count($reference_materials);
     echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-    echo "      document.getElementById('framecontent' + i).style.height = (winH - $subtract) + 'px';\n";
+    echo "      document.getElementById('framecontent' + i).style.height = (winH - $subtract + 6) + 'px';\n";
     echo "    }\n";
   }
 ?>  
@@ -814,8 +814,8 @@ if (count($reference_materials) > 0) {
   $ref_no = 0;
   foreach ($reference_materials as $reference_material) {
     echo "<div class=\"refhead\" id=\"refhead" . $ref_no . "\" onclick=\"changeRef(" . $ref_no . ")\" style=\"top:{$top}px\">" . $reference_material['title'] . "</div>\n";
-    echo "<div class=\"framecontent\" id=\"framecontent" . $ref_no . "\" style=\"top:" . (30 + $top) . "px\">\n" . $reference_material['material'] . "</div>\n";
-    $top+=30;
+    echo "<div class=\"framecontent\" id=\"framecontent" . $ref_no . "\" style=\"top:" . (31 + $top) . "px\">\n" . $reference_material['material'] . "</div>\n";
+    $top+=31;
     $ref_no++;
   }
 }
