@@ -2200,6 +2200,302 @@ if (!isset($_POST['update'])) {
   }
   */
 
+  // 05/04/2012 - Enlarge the size of the integer for property_id in properties table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='properties' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='property_id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'smallint') {
+    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for paper in papers table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='papers' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='paper'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'smallint') {
+    $adjust = $mysqli->prepare("ALTER TABLE papers CHANGE COLUMN paper paper mediumint unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE paper CHANGE COLUMN paper paper mediumint unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for id in users table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'smallint') {
+    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in sid table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='sid' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE sid CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE sid CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for memberID in teams table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='teams' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='memberID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE teams CHANGE COLUMN memberID memberID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE teams CHANGE COLUMN memberID memberID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in log0 table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log0' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log0 CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log0 CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in log1 table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log1' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log1 CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log1 CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in log2 table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log2' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log2 CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log2 CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in log3 table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log0' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log3 CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log3 CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in log4 table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log4' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log4 CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log4 CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in log4_overall table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log4_overall' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log4_overall CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log4_overall CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 05/04/2012 - Enlarge the size of the integer for userID in log5 table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log5' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log5 CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log5 CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in log6 table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log6' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='peerID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log6 CHANGE COLUMN peerID peerID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log6 CHANGE COLUMN peerID peerID int unsigned</li>\n";
+    ob_flush();
+    flush();
+    
+    $adjust = $mysqli->prepare("ALTER TABLE log6 CHANGE COLUMN reviewerID reviewerID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log6 CHANGE COLUMN reviewerID reviewerID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 05/04/2012 - Enlarge the size of the integer for ownerID in questions table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='ownerID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE questions CHANGE COLUMN ownerID ownerID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for editor in track_changes table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='track_changes' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='editor'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE track_changes CHANGE COLUMN editor editor int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE track_changes CHANGE COLUMN editor editor int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for userID in special_needs table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='special_needs' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE special_needs CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE special_needs CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for reviewer in review_comments table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='review_comments' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='reviewer'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE review_comments CHANGE COLUMN reviewer reviewer int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE review_comments CHANGE COLUMN reviewer reviewer int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   
