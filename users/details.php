@@ -694,7 +694,7 @@ a.access:hover {color:white}
       }
     }
     if ($results_no == 0) {
-      echo '<tr><td class="coltitle" align="right">&nbsp;</td><td class="coltitle" style="width:240px">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['papername'] . '&nbsp;<img src="../artwork/desc.gif" width="9" height="7" border="0" /></td><td class="coltitle">' . $string['type'] . '&nbsp;</td><td class="coltitle">' . $string['started'] . '&nbsp;</td><td class="coltitle">' . $string['duration'] . '&nbsp;</td><td class="coltitle">' . $string['ipaddress'] . '&nbsp;</td></tr>';
+      //echo '<tr><td class="coltitle" align="right">&nbsp;</td><td class="coltitle" style="width:240px">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['papername'] . '&nbsp;<img src="../artwork/desc.gif" width="9" height="7" border="0" /></td><td class="coltitle">' . $string['type'] . '&nbsp;</td><td class="coltitle">' . $string['started'] . '&nbsp;</td><td class="coltitle">' . $string['duration'] . '&nbsp;</td><td class="coltitle">' . $string['ipaddress'] . '&nbsp;</td></tr>';
       echo "<tr><td colspan=\"8\" style=\"color:#808080; text-align:center\">" . $string['noassessmentstaken'] . "</td></tr>\n";
     }
   } else {
