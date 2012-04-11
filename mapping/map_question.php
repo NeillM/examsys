@@ -65,7 +65,8 @@
     $question_no = 0;
     $paper_type = 0;
     $bgcolor = 'white';
-    display_question($question, $paper_type, 1, '', $question_no, $question_offset, array());	
+    $unanswered = false;
+    display_question($question, $paper_type, 1, '', $question_no, $question_offset, array(), $unanswered);	
     $question_nos[] = $old_q_id;
     echo "<table>\n";
   }
