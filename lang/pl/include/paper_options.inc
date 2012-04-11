@@ -55,7 +55,7 @@ $string['papers'] = 'Arkusze';
 $string['people'] = 'Osoby';
 $string['studentcohort'] = 'Grupa studentów';  // Student Cohort of Paper
 
-$string['dates'] = 'Dates';  // Niko
+$string['dates'] = 'Daty'; 
 $string['course'] = 'Kurs';
 $string['anycourse'] = '&lt;Każdy kurs&gt;';
 $string['module'] = 'Moduł';
@@ -94,7 +94,7 @@ $string['exports'] = 'Eksportowanie';
 $string['quantitativereports'] = 'Raporty ilościowe';
 $string['qualitativeanalysis'] = 'Analiza jakościowa';
 $string['incabsentcandidates'] = 'uwzgl. kandydatów nieobecnych';
-$string['studentsonly'] = 'student attempts only';  // Niko
+$string['studentsonly'] = 'tylko próby studenckie';  // Niko
 $string['completedatasets'] = 'Pokaż tylko pełne zbiory danych';
 
 $string['copyname'] = 'Nazwa kopii:';
