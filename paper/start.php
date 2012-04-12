@@ -430,7 +430,7 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   border-bottom:1px solid #C0C0C0;
   padding:6px;
   position:fixed;
-  height:30px;
+  height:18px;
   right:0px;
   width:<?php echo ($max_ref_width - 12); ?>px;
   border-left: 1px solid #535353;
