@@ -456,6 +456,18 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 <script language="JavaScript" src="../js/flash_include.js"></script>
 <script language="javascript">
   window.history.go(1);
+  
+<?php
+  if (count($reference_materials) > 0) {
+    echo "\$(document).ready(function() {\n";
+    if (isset($_COOKIE['refpane'])) {
+      echo "  changeRef(" . $_COOKIE['refpane'] . ");\n";
+    } else {
+      echo "  resizeReference();\n";
+    }
+    echo "});\n";
+  }
+?>    
   var lang = {
   <?php
   $langstrings = array('msgselectable1', 'msgselectable2', 'msgselectable3', 'msgselectable4');
