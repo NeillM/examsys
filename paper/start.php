@@ -427,9 +427,6 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   font-family:Arial,sans-serif;
   font-size:14pt;
   font-weight:bold;
-  background: -moz-linear-gradient(top, #FEFEFE, #D9D9D9);
-  background: -webkit-linear-gradient(top, #FEFEFE, #D9D9D9);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFEFE', endColorstr='#D0D0D0');
   border-bottom:1px solid #C0C0C0;
   padding:6px;
   position:fixed;
@@ -442,6 +439,9 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
     echo "  display:none;\n";
   }
   ?>
+  background: -moz-linear-gradient(top, #FEFEFE, #D9D9D9);
+  background: -webkit-linear-gradient(top, #FEFEFE, #D9D9D9);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFEFE', endColorstr='#D0D0D0');
 }
 <?php
 if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;vertical-align:top}\n";
