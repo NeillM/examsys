@@ -513,9 +513,9 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
     winH = getWinH();
 <?php
   if (count($reference_materials) > 0) {
-    $subtract = 37 * count($reference_materials);
+    $subtract = (31 * count($reference_materials)) + 11;
     echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-    echo "      document.getElementById('framecontent' + i).style.height = (winH - $subtract + 6) + 'px';\n";
+    echo "      document.getElementById('framecontent' + i).style.height = (winH - $subtract) + 'px';\n";
     echo "    }\n";
   }
 ?>  
