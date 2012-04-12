@@ -2436,10 +2436,27 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'mediumint') {
-    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int unsigned");
+    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN ownerID ownerID int");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE questions CHANGE COLUMN ownerID ownerID int unsigned</li>\n";
+    echo "<li>ALTER TABLE questions CHANGE COLUMN ownerID ownerID int</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 05/04/2012 - Enlarge the size of the integer for paper_ownerID in properties table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='properties' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='paper_ownerID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN paper_ownerID paper_ownerID int");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE properties CHANGE COLUMN paper_ownerID paper_ownerID int</li>\n";
     ob_flush();
     flush();
   }

@@ -366,13 +366,13 @@ html {overflow:hidden}
 body {background-color:<?php echo $bgcolor; ?>;color:<?php echo $fgcolor; ?>;padding:0px;margin:0px;border:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:<?php echo $textsize; ?>%}
 li {margin-left:15px;margin-right:15px;font-size:100%}
 <?php
-if (($bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and $fgcolor != '#000000')) {
+if (($special_needs == 1 and $bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and $fgcolor != '#000000')) {
   echo "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif;font-size:100%}\n";
 } else {
   echo "select,input{font-family:$font,sans-serif;font-size:100%}\n";
 }
 ?>
-table {font-size:100%; table-layout: fixed}
+table {font-size:100%; table-layout:fixed}
 p {margin-top:0px; padding-top:0px}
 pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 .q_no {width:40px; text-align:right;vertical-align:top}
@@ -391,30 +391,27 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 
 #maincontent {
   font-size:100%;
-  position: fixed;
-  top: 0;
+  top:0px;
   <?php
   if (count($reference_materials) > 0) {
-    echo "  right: " . ($max_ref_width + 1) . "px;\n";
+    echo "  position:fixed;\n";
+    echo "  right:" . ($max_ref_width + 1) . "px;\n";
   }
   ?>
-  bottom: 0;
-  overflow: auto; 
-  background: #fff;
-  height: 100%;
+  overflow:auto;
+  height:100%;
 }
 
 .framecontent {
   padding:6px;
   font-size:95%;
-  position: absolute;
-  top: 30px;
-  bottom: 0; 
-  right: 0px;
-  width: <?php echo ($max_ref_width - 12); ?>px; /*Width of frame div*/
-  overflow: auto; /*Disable scrollbars. Set to "scroll" to enable*/
-  background: white;
-  color: black;
+  position:absolute;
+  top:30px;
+  right:0px;
+  width:<?php echo ($max_ref_width - 12); ?>px; /*Width of frame div*/
+  overflow:auto; /*Disable scrollbars. Set to "scroll" to enable*/
+  background:white;
+  color:black;
   border-left: 1px solid #535353;
   <?php
   if (count($reference_materials) > 0) {
@@ -437,7 +434,7 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   padding:6px;
   position:fixed;
   height:30px;
-  right: 0px;
+  right:0px;
   width:<?php echo ($max_ref_width - 12); ?>px;
   border-left: 1px solid #535353;
   <?php
