@@ -592,9 +592,8 @@ if (stripos($userroles,'Student') !== false) {
   echo '<body onload="StartClock();" onunload="KillClock()">';
 }
 $show_ref_material = false;
-if (count($reference_materials) > 0) {
-  echo "<div id=\"maincontent\">\n";
-}
+echo "<div id=\"maincontent\">\n";
+
 if ($current_screen < $no_screens) {
   echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\"";
 } else {
@@ -805,11 +804,10 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
 ?>
 </td></tr></table>
 </form>
-
+</div>
 <?php
 
 if (count($reference_materials) > 0) {
-  echo "</div>\n";
   $top = 0;
   $ref_no = 0;
   foreach ($reference_materials as $reference_material) {

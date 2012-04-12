@@ -311,7 +311,6 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
           $answer = '';
         }
 
-        //$difference = round(abs($saved_response_clean - $answer), $decimals);
         $difference = round(abs($saved_response_clean - $answer), 12);
 
         $tolerance_full = $score_array[1];
@@ -644,14 +643,14 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
         }
         
         if ($saved_response == '') $saved_response = 'u';
-        //if ($totalpos == 0) {
-          if ($saved_response == $correct) {
-            $mark += $marks_correct;
-          } elseif ($saved_response != 'u') {
-            $mark += $marks_incorrect;
-          }
-          $totalpos += $marks_correct;
-        //}
+        
+        if ($saved_response == $correct) {
+          $mark += $marks_correct;
+        } elseif ($saved_response != 'u') {
+          $mark += $marks_incorrect;
+        }
+        $totalpos += $marks_correct;
+        
         break;
       case 'blank':
         $blank_details = explode("[blank",$option_text);

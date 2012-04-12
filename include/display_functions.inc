@@ -467,7 +467,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" />";
           }
           if ($display_option['option_text'] != '') echo '&nbsp;' . $display_option['option_text'];
-          if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']);
+          if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']);
           echo '&nbsp;&nbsp;';
         } else {
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
