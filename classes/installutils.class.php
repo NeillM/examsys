@@ -1062,7 +1062,7 @@ CONFIG;
 
 class databaseTables {
 
-  public static $tableList = array();
+  private $tableList = array();
 
   function __construct($charset) {
     $this->tableList['admin_access'] = <<<QUERY
