@@ -361,85 +361,42 @@ if ($paper_type == '3') {
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="pragma" content="no-cache" />
-<style type="text/css">
-html {overflow:hidden; height:100%}
-body {background-color:<?php echo $bgcolor; ?>;color:<?php echo $fgcolor; ?>;padding:0px;margin:0px;border:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:<?php echo $textsize; ?>%; height:100%}
-li {margin-left:15px;margin-right:15px;font-size:100%}
+<link rel="stylesheet" type="text/css" href="../css/start.css" />
 <?php
-if (($special_needs == 1 and $bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and $fgcolor != '#000000')) {
-  echo "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif;font-size:100%}\n";
-} else {
-  echo "select,input{font-family:$font,sans-serif;font-size:100%}\n";
+$css = '';
+if ($special_needs == 1 and $bgcolor != '#FFFFFF') {
+  $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
 }
-?>
-table {font-size:100%; table-layout:fixed}
-p {margin-top:0px; padding-top:0px}
-pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
-.q_no {width:40px; text-align:right;vertical-align:top}
-.theme {font-size:150%; padding-left:4px;font-weight:bold;color:<?php echo $themecolor; ?>}
-.note {color:<?php echo $labelcolor; ?>}
-.mk {color:<?php echo $marks_color; ?>;font-size:80%}
-.act {color:<?php echo $fgcolor; ?>;text-decoration:none}
-.inact {color:#A5A5A5;text-decoration:line-through}
-.s0 {width:18px;text-align:center;background-color:#003366;font-size:80%}
-.s1 {width:18px;text-align:center;background-color:#C00000;font-size:80%}
-.unans {background-color:#FFC0C0}
-.matrix {border:1px solid #808080; border-collapse:collapse}
-.matrix td {border:1px solid #808080}
-.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
-.mee {font-size:120%; display:inline}
-#maincontent {
-  font-size:100%;
-  top:0px;
-  <?php
-  if (count($reference_materials) > 0) {
-    echo "  position:fixed;\n";
-    echo "  right:" . ($max_ref_width + 1) . "px;\n";
+if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
+  $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
+}
+if ($font != 'Arial') {
+  if (strpos($font,' ') === false) {
+    $css .= "body {font-family:$font,sans-serif}\n";
+    $css .= "pre {font-family:$font,sans-serif}\n";
+  } else {
+    $css .= "body {font-family:'$font',sans-serif}\n";
+    $css .= "pre {font-family:'$font',sans-serif}\n";
   }
-  ?>
-  overflow:auto;
-  height:100%;
 }
-
-<?php
+if ($themecolor != '#316AC5') {
+  $css .= ".theme {color:$themecolor}\n";
+}
+if ($marks_color != '#808080') {
+  $css .= ".mk {color:$marks_color}\n";
+}
+if ($fgcolor != '#000000' and $fgcolor != 'black') {
+  $css .= ".act {color:$fgcolor}\n";
+}
 if (count($reference_materials) > 0) {
-?>
-.framecontent {
-  padding:6px;
-  font-size:95%;
-  position:absolute;
-  top:30px;
-  right:0px;
-  width:<?php echo ($max_ref_width - 12); ?>px; /*Width of frame div*/
-  overflow:auto; /*Disable scrollbars. Set to "scroll" to enable*/
-  background:white;
-  color:black;
-  border-left: 1px solid #535353;
+  $css .= "#maincontent {position:fixed; right:" . ($max_ref_width + 1) . "px}\n";
+  $css .= ".framecontent {width:" . ($max_ref_width - 12) . "px}\n";
+  $css .= ".refhead {width:" . ($max_ref_width - 12) . "px;}\n";
 }
-
-.refhead {
-  font-family:Arial,sans-serif;
-  font-size:14pt;
-  font-weight:bold;
-  border-bottom:1px solid #C0C0C0;
-  padding:6px;
-  position:fixed;
-  height:18px;
-  right:0px;
-  width:<?php echo ($max_ref_width - 12); ?>px;
-  border-left: 1px solid #535353;
-  background: -moz-linear-gradient(top, #FEFEFE, #D9D9D9);
-  background: -webkit-linear-gradient(top, #FEFEFE, #D9D9D9);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFEFE', endColorstr='#D0D0D0');
-}
-<?php
+if ($css != '') {
+  echo "<style type=\"text/css\">\n$css\n</style>\n";
 }
 ?>
-<?php
-if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;vertical-align:top}\n";
-if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
-?>
-</style>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <?php if ($latex_needed == 1) {?>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
@@ -448,7 +405,6 @@ if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
 <script language="JavaScript" src="../js/flash_include.js"></script>
 <script language="javascript">
   window.history.go(1);
-  
 <?php
   if (count($reference_materials) > 0) {
     echo "\$(document).ready(function() {\n";
@@ -610,7 +566,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   }
 
   echo $top_table_html;
-  echo '<tr><td><div style="margin-left:0px;font-size:180%;color:white;font-weight:bold">' . $paper_title . '</div>';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div>';
   $question_offset = 0;
   if ($no_screens > 1) {
     echo '<table cellspacing="1" cellpadding="1" border="0" style="font-weight:bold;color:white"><tr>';
