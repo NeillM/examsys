@@ -1329,6 +1329,10 @@ QUERY;
         $result->close();
         $classname = 'Question' . strtoupper($type);
         $classfile = 'questions/question_' . strtolower($type) . '.class.php';
+
+        // In some versions of PHP, bind_param may change the type of $data to int, so ensure it is a string for future use of ctype_digit()
+        $data = strval($data);
+
         try {
           include $classfile;
           $object = new $classname($mysqli, $user_id, $lang_strings, $data);
