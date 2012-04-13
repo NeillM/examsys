@@ -58,7 +58,7 @@ check_var('module', 'GET', true, false);
       evt.cancelBubble = true;
     }
 
-    function deselKey() {
+    function deselRef() {
       tmp_ID = document.myform.oldID.value;
       if (tmp_ID != '') {
         document.getElementById(tmp_ID).style.backgroundColor = 'white';
@@ -94,7 +94,7 @@ check_var('module', 'GET', true, false);
   </script>
 </head>
 
-<body onclick="deselDeg()">
+<body onclick="deselRef()">
 <?php
   $reference_materials = array();
   $old_id = '';

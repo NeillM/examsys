@@ -362,8 +362,8 @@ if ($paper_type == '3') {
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="pragma" content="no-cache" />
 <style type="text/css">
-html {overflow:hidden}
-body {background-color:<?php echo $bgcolor; ?>;color:<?php echo $fgcolor; ?>;padding:0px;margin:0px;border:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:<?php echo $textsize; ?>%}
+html {overflow:hidden; height:100%}
+body {background-color:<?php echo $bgcolor; ?>;color:<?php echo $fgcolor; ?>;padding:0px;margin:0px;border:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:<?php echo $textsize; ?>%; height:100%}
 li {margin-left:15px;margin-right:15px;font-size:100%}
 <?php
 if (($special_needs == 1 and $bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and $fgcolor != '#000000')) {
@@ -388,7 +388,6 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
 .matrix td {border:1px solid #808080}
 .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
 .mee {font-size:120%; display:inline}
-
 #maincontent {
   font-size:100%;
   top:0px;
@@ -402,6 +401,9 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   height:100%;
 }
 
+<?php
+if (count($reference_materials) > 0) {
+?>
 .framecontent {
   padding:6px;
   font-size:95%;
@@ -413,14 +415,6 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   background:white;
   color:black;
   border-left: 1px solid #535353;
-  <?php
-  if (count($reference_materials) > 0) {
-    $refpane_out = true;
-  } else {
-    echo "  display:none;\n";
-    $refpane_out = false;
-  }
-  ?>
 }
 
 .refhead {
@@ -434,15 +428,13 @@ pre {font-family:<?php echo $font; ?>,sans-serif; font-size:100%}
   right:0px;
   width:<?php echo ($max_ref_width - 12); ?>px;
   border-left: 1px solid #535353;
-  <?php
-  if (!$refpane_out) {
-    echo "  display:none;\n";
-  }
-  ?>
   background: -moz-linear-gradient(top, #FEFEFE, #D9D9D9);
   background: -webkit-linear-gradient(top, #FEFEFE, #D9D9D9);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFEFE', endColorstr='#D0D0D0');
 }
+<?php
+}
+?>
 <?php
 if ($paper_type == '3') echo ".likert_button {text-align:center;width:40px;vertical-align:top}\n";
 if ($latex_needed == 1) echo ".latex {vertical-align:middle}\n";
