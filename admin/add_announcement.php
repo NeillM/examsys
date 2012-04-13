@@ -60,7 +60,7 @@ h1 {font-size:120%}
 <?php
   echo $cfg_editor_javascript;
 ?>
-<script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 
 </head>
