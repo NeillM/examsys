@@ -94,7 +94,7 @@ $string['exports'] = 'Eksportowanie';
 $string['quantitativereports'] = 'Raporty ilościowe';
 $string['qualitativeanalysis'] = 'Analiza jakościowa';
 $string['incabsentcandidates'] = 'uwzgl. kandydatów nieobecnych';
-$string['studentsonly'] = 'tylko próby studenckie';  // Niko
+$string['studentsonly'] = 'tylko próby studenckie'; 
 $string['completedatasets'] = 'Pokaż tylko pełne zbiory danych';
 
 $string['copyname'] = 'Nazwa kopii:';
