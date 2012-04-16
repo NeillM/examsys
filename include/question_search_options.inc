@@ -70,7 +70,7 @@ require_once '../classes/searchutils.class.php';
   }
 
   function deleteQuestion() {
-    notice=window.open("../delete/check_delete_q_original.php?q_id=" + document.PapersMenu.questionID.value + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_q_original.php?q_id=" + document.PapersMenu.questionID.value + "&divID=" + document.PapersMenu.oldQuestionID.value + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-250,screen.height/2-100);
     if (window.focus) {
       notice.focus();
