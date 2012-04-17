@@ -285,7 +285,7 @@ if ($textsize > 120) {
   if (strpos($userroles,'Staff') !== false or strpos($userroles,'QABME') !== false or strpos($userroles,'SysAdmin') !== false) {
     if (time() < $paper_start or time() > $paper_end) {
       echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" onclick=\"\" disabled />\n";
-      echo '<br />' . time() . '&gt;' . $paper_end . '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
+      echo '<div style="font-size:90%;color:#C00000"><img src="./artwork/small_warning_16.png" width="16" height="16" alt="!" />&nbsp;' . $string['papernotavailable'] . '</div>';
     } else {
       echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
     }
@@ -325,7 +325,7 @@ if ($textsize > 120) {
       while ($log_info->fetch()) {
         if ($temp_no == 0) {
           $old_started = $log_started;
-          echo '<hr style="background-color:#5582D2; color:#5582D2; height:1px; width:80%; border:0" />';
+          echo '<hr style="background-color:#95AEC8; color:#95AEC8; height:1px; width:80%; border:0" />';
           echo '<table cellpadding="0" cellspacing="0" border="0" align="center">';
           echo '<tr><td colspan="4" style="text-align:center"><strong>' . $string['previouscompletions'] . '</strong></td></tr>';
           if ($log_max_screen > $old_screen) $old_screen = $log_max_screen;
@@ -365,7 +365,7 @@ if ($textsize > 120) {
       }
       echo '</td></tr></table><br />';
     } else {
-      if ($test_type != 2) echo '<hr style="background-color:#5582D2; color:#5582D2; height:1px; width:80%; border:0" /><p style="color:#808080">' . $string['nottakenpaper'] . '</p><br />';
+      if ($test_type != 2) echo '<hr style="background-color:#95AEC8; color:#95AEC8; height:1px; width:80%; border:0" /><p style="color:#808080">' . $string['nottakenpaper'] . '</p><br />';
     }
   }
   $mysqli->close();

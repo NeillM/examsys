@@ -36,7 +36,7 @@ require '../include/paper_security.inc';
 check_var('id', 'GET', true, false);
 
 getSpecialSettings($userID, $mysqli);
-  
+
 if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
   $paper_properties->bind_param('s', $_GET['id']);
   $paper_properties->execute();
@@ -103,63 +103,38 @@ require '../config/finish.inc';
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
-<style type="text/css">
-body {background-color:<?php echo $bgcolor; ?>;color:<?php echo $fgcolor; ?>;padding:0px;margin:0px;border:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:<?php echo $textsize; ?>%}
-p {margin-top:0px;padding-top:0px}
-li {margin-left:15px;margin-right:15px;font-family:<?php echo $font; ?>,sans-serif;font-size:100%}
-select,input {font-family:<?php echo $font; ?>,sans-serif;font-size:100%}
-blockquote {font-size:90%}
-table {font-size:100%; table-layout: fixed}
-.paper {margin-left:0px;font-family:<?php echo $font; ?>,sans-serif;font-size:180%;color:white;font-weight:bold}
-.q_no {width:40px;text-align:right;vertical-align:top}
-.theme {margin-left:15px;font-size:150%;font-weight:bold;color:<?php echo $themecolor; ?>}
-.objH {font-weight:bold;color:<?php echo $themecolor; ?>}
-.notes {color:<?php echo $labelcolor; ?>}
-.fback {font-family:<?php echo $font; ?>,sans-serif; font-style:italic; color:<?php echo $labelcolor; ?>}
-.label {color:<?php echo $labelcolor; ?>}
-.mk {padding-left:8px;padding-right:8px;background-color:#FFFF00}
-.mkpad {padding-top:10px}
-.answerindent {margin-left:17px;margin-right:15px}
-.std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
-.matrix {border:1px solid #808080; border-collapse:collapse}
-.matrix td {border:1px solid #808080}
-.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
-.exclude {color:red; text-decoration:line-through}
-input.exclude, select.exclude {border: 1px solid red}
-.box {width:90%; background-color:#E4EEFC; border:1px solid #B5C4DF; text-align:left}
-.mee {font-size:120%; display:inline}
-.scr_no {margin-left:25px}
-.screenbrk {
-  color:#15428B;
-  font-weight:bold;
-  font-size:90%;
-  height:70px;
-  width:100%;
-  border-top: 1px solid #B5C4DF;
-  background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-  background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-}
-.studentview {
-  color:#800000;
-  font-size:90%;
-  font-weight:bold;
-  padding-left:15px;
-  padding-bottom:2px
-}
-.staffview {
-  color:#800000;
-  font-size:90%;
-  height:70px;
-  width:100%;
-  padding-top:2px;
-  padding-left:15px
-  background: -moz-linear-gradient(top, #FF8282, #FFFFFF);
-  background: -webkit-linear-gradient(top, #FF8282, #FFFFFF);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='#FFFFFF');
-}
-</style>
+<link rel="stylesheet" type="text/css" href="../css/start.css" />
+<link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <?php
+  $css = '';
+  if ($special_needs == 1 and $bgcolor != '#FFFFFF') {
+    $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
+  }
+  if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
+    $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
+    $css .= ".staffview {\nbackground: -moz-linear-gradient(top, #FF8282, $bgcolor);\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);\nfilter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='$bgcolor');\n}\n";
+  }
+  if ($font != 'Arial') {
+    if (strpos($font,' ') === false) {
+      $css .= "body {font-family:$font,sans-serif}\n";
+      $css .= "pre {font-family:$font,sans-serif}\n";
+    } else {
+      $css .= "body {font-family:'$font',sans-serif}\n";
+      $css .= "pre {font-family:'$font',sans-serif}\n";
+    }
+  }
+  if ($themecolor != '#316AC5') {
+    $css .= ".theme {color:$themecolor}\n";
+    $css .= ".objH {color:$themecolor}\n";
+  }
+  if ($labelcolor != '#316AC5') {
+    $css .= ".fback {color:$labelcolor}\n";
+    $css .= ".label {color:$labelcolor}\n";
+  }
+  if ($css != '') {
+    echo "<style type=\"text/css\">\n$css\n</style>\n";
+  }
+  
   if ($latex_needed == 1) {
    echo "<script type=\"text/javascript\" src=\"../js/jquery-1.6.1.min.js\"></script>";
    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
@@ -207,9 +182,6 @@ input.exclude, select.exclude {border: 1px solid red}
   $old_screen = 0;
   if (isset($_GET['previous'])) {
     $sessionid = $_GET['previous'];
-
-    //$sessionid = substr($_GET['previous'],0,4) . '-' . substr($_GET['previous'],5,2) . '-' . 2ubstr($_GET['previous'],7,2)
-        
     $log_type = $_GET['log_type'];
   } else {
     $sessionid = $_POST['sessionid'];

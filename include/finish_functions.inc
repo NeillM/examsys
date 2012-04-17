@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
   function getSpecialSettings($userID, $mysqlidb) {
     global $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font;
     
-    $stmt = $mysqlidb->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?");
+    $stmt = $mysqlidb->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs, users WHERE users.id=special_needs.userid AND special_needs = 1 AND userid=?");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
@@ -165,7 +165,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
         echo '</blockquote>';
         
         echo '<div class="studentview">' . $string['studentviewend'] . '</div>';
-        echo '<div class="staffview" style="padding-top:2px; padding-left:15px">' . $string['staffviewbelow'] . '</div>';
+        echo '<div class="staffview"><div style="padding-left:15px">' . $string['staffviewbelow'] . '</div></div>';
       }
     }
     $q_no = 0;
@@ -449,7 +449,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
         }
       }
       if (trim($paper[$question]['notes']) != '') {
-        echo "<p class=\"notes\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"" . $string['note']  . "\" />&nbsp;<strong>" . $string['note']  . ":</strong>&nbsp;" . $paper[$question]['notes'] . "</p>\n";
+        echo "<p class=\"note\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"" . $string['note']  . "\" />&nbsp;<strong>" . $string['note']  . ":</strong>&nbsp;" . $paper[$question]['notes'] . "</p>\n";
       }
       $no_options = count($paper[$question]['option_text']);
 

@@ -170,7 +170,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
       $li_set = 1;
     }
-    if ($question['q_type'] != 'likert' and $question['q_type'] != 'calculation') {
+    //if ($question['q_type'] != 'likert' and $question['q_type'] != 'calculation') {
+    if ($question['q_type'] != 'likert') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
         if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
@@ -178,7 +179,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
       $li_set = 1;
       if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
-      if ($question['q_type'] != 'hotspot') echo $question['leadin'];
+      if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'calculation') echo $question['leadin'];
     }
   }
   if ($question['q_type'] == 'info') {
