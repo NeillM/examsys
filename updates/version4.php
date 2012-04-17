@@ -2200,7 +2200,6 @@ if (!isset($_POST['update'])) {
   }
   */
 
-  
   /*
   // 05/04/2012 - Enlarge the size of the integer for property_id in properties table.
   $data_type = '';
@@ -2210,10 +2209,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned");
+    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned AUTO_INCREMENT");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned</li>\n";
+    echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned AUTO_INCREMENT</li>\n";
     ob_flush();
     flush();
   }
@@ -2244,10 +2243,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned");
+    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned AUTO_INCREMENT");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned</li>\n";
+    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned AUTO_INCREMENT</li>\n";
     ob_flush();
     flush();
   }
@@ -2515,7 +2514,7 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
   */
-  
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
   
