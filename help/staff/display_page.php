@@ -91,17 +91,7 @@
   <title>Help and Support Center</title>
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <style type="text/css">
-  body {background-color:white; color:black; margin:0px; font-family:Arial,sans-serif; font-size:85%; line-height:150%}
-  p, div, td {color:#484848}
-  ul {list-style:square outside; color:#f27000}
-  table {font-size:100%}
-  h1 {font-size:150%; color:black}
-  h2 {font-size:140%; color:#f27000}
-  .path {background-color:#F2F2F2; color:#666666; font-size:80%; padding-left:10px; border-bottom:1px solid #B6B6B6}
-  .subheading {font-weight:bold; font-style:italic}
-  .tutorial {background-color:#FCF6CF; width: 95%; cursor:pointer}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   <script type="text/javascript">
     function updateToolbar(editID,deleteID) {
       parent.frames['toolbar'].document.myform.editid.value=editID;

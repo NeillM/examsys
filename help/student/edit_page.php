@@ -68,25 +68,13 @@
     header("location: ../student/display_page.php?id=" . $_POST['original_id']);
   } else {
 ?>
-<!DOCTYPE html
-PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
   <title>Edit Help File</title>
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <style type="text/css">
-    html {height:100%}
-    body {background-color:white; color:black; margin-left:0px; margin-right:0px; font-family:Arial,sans-serif; font-size:85%; line-height:150%; color:#484848}
-    p, div, td {color:#484848}
-    ul {list-style:square outside; color:#FF9900}
-    td {font-size:85%}
-    h1 {font-size:150%; color:black; font-family:Verdana,sans-serif}
-    h2 {font-size:140%; color:#f27000; font-family:Verdana,sans-serif}
-    .subheading {font-weight:bold; font-style:italic}
-  </style>
-  
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   <?php echo $cfg_js_root ?>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_student.js"></script>
@@ -111,10 +99,20 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
       }
     }
 
+    function toScreenHeight(id, minus) {
+      var height;
+      if (typeof(window.innerHeight) == "number") //non-IE
+        height = window.innerHeight;
+      else if (document.documentElement && document.documentElement.clientHeight) //IE 6+ strict mode
+        height = document.documentElement.clientHeight;
+      else if (document.body && document.body.clientHeight) //IE 4 compatible / IE quirks mode
+        height = document.body.clientHeight;
+        document.getElementById(id).style.height = (height - minus) + "px";
+    }
   </script>
 </head>
 
-<body>
+<body onload="toScreenHeight('edit1',120)" onresize="toScreenHeight('edit1',120)">
 
 <form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=" . $_GET['id']; ?>" onsubmit="return checkForm();">
 <?php

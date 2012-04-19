@@ -75,17 +75,7 @@
   <title>Edit Help File</title>
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <style type="text/css">
-    html {height:100%}
-    body {background-color:white; color:black; margin-left:0px; margin-right:0px; font-family:Arial,sans-serif; font-size:85%; line-height:150%; color:#484848}
-    p, div, td {color:#484848}
-    ul {list-style:square outside; color:#FF9900}
-    td {font-size:85%}
-    h1 {font-size:150%; color:black; font-family:Verdana,sans-serif}
-    h2 {font-size:140%; color:#f27000; font-family:Verdana,sans-serif}
-    .subheading {font-weight:bold; font-style:italic}
-  </style>
-  
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />  
   <?php echo $cfg_js_root ?>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
