@@ -346,11 +346,6 @@ function getMSCAA($paperID, $mysqlidb) {
     }
   }
 
-  function hideNotice() {
-    document.getElementById('dragnotice').style.display = 'none';
-    $.cookie("dragnotice", "hide", { expires: 28 });
-  }
-  
   function scrollXY() {
     var scrOfX = 0, scrOfY = 0;
     if( typeof( window.pageYOffset ) == 'number' ) {
@@ -833,10 +828,6 @@ function getMSCAA($paperID, $mysqlidb) {
     }
   }
 
-  if (!isset($_COOKIE['dragnotice']) and $summative_lock != 1) {
-    echo '<tr id="dragnotice"><td style="padding:2px; color:#154A93; background-color:#B8CFE9" colspan="5">&nbsp;Questions can now be reordered simply by dragging.</td><td style="padding:2px; color:#154A93; background-color:#B8CFE9; text-align:right"><a href="#" onclick="hideNotice();"><img src="../artwork/small_x.png" width="8" height="7" alt="close" border="0" /></a>&nbsp;</td></tr>';
-  }
-  
   $screen_marks = 0;
   $old_screen = 0;
   $question_number = 0;
