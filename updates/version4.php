@@ -532,6 +532,7 @@ if (!isset($_POST['update'])) {
     //create 'database user external user' and grant permissions
     $mysqli->query("CREATE USER  '" . $cfg_db_external_user . "'@'". $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_external_passwd . "'");
     echo "<li>NEW DB USER:: $cfg_db_external_user created</li>";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".users TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".papers TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".questions TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".options TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
