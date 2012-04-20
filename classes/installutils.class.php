@@ -395,6 +395,9 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".objectives TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_material TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_modules TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".relationships TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".student_modules TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
@@ -443,6 +446,9 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".options TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_material TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_modules TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".teams TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log0 TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_db_host . "'";
@@ -493,6 +499,9 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".keywords_question TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".keywords_user TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".objectives TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".reference_material TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".reference_modules TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".reference_papers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".relationships TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".review_comments TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".recent_papers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
@@ -1628,6 +1637,36 @@ QUERY;
           `paperID` mediumint(9) NOT NULL default '0',
           `accessed` datetime default NULL,
           PRIMARY KEY  (`userID`,`paperID`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['reference_material'] = <<<QUERY
+        CREATE TABLE `reference_material` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `title` varchar(255) DEFAULT NULL,
+          `content` text,
+          `width` smallint(5) unsigned DEFAULT NULL,
+          `created` datetime DEFAULT NULL,
+          `deleted` datetime DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['reference_modules'] = <<<QUERY
+        CREATE TABLE `reference_modules` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `refID` mediumint(8) unsigned DEFAULT NULL,
+          `moduleID` mediumint(8) unsigned DEFAULT NULL,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['reference_papers'] = <<<QUERY
+        CREATE TABLE `reference_papers` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `paperID` mediumint(9) DEFAULT NULL,
+          `refID` mediumint(9) DEFAULT NULL,
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
