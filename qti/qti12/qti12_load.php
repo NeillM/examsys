@@ -1129,14 +1129,17 @@ $numb=0;
       foreach ($correct as $answer) {
         foreach ($dest->optionlist as $oid => $option) {
           if ($option->id == $answer) {
-         //   $stem->correctans[] = $oid;
+           $stem->correctans[] = $oid;
           }
 
         }
         foreach ($lablkd as $lablkk => $lablkv) {
-          if($lablk[$rid][$answer] == $lablkk)
+          if($lablkk!="")
           {
-            $stem->correctans[]=$lablkv;
+            if($lablk[$rid][$answer] == $lablkk)
+            {
+              $stem->correctans[]=$lablkv;
+            }
           }
         }
       }
