@@ -2178,7 +2178,7 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  // 21/03/2012 - Move to InnoDB for all table except help tables
+  // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
   /*
   echo "<li>UPDATEING TO InnoDB This may take some time please be patient ;-)</li>\n";
   ob_flush();
@@ -2201,6 +2201,8 @@ if (!isset($_POST['update'])) {
   }
   */
 
+  /*
+   *  UPDATES for short int database feilds SHOULD not go live untill ver 4.3 - With full testing
 
   // 05/04/2012 - Enlarge the size of the integer for property_id in properties table.
   $data_type = '';
@@ -2514,7 +2516,7 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
-
+  */
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
