@@ -2201,7 +2201,7 @@ if (!isset($_POST['update'])) {
   }
   */
 
-  /*
+
   // 05/04/2012 - Enlarge the size of the integer for property_id in properties table.
   $data_type = '';
   $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='properties' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='property_id'");
@@ -2514,7 +2514,7 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
-  */
+
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
