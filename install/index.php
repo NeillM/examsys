@@ -51,13 +51,14 @@ require $cfg_web_root . 'classes/installutils.class.php';
 InstallUtils::displayHeader();
 //InstallUtils::checkHTTPS();
 InstallUtils::checkSoftware();
-InstallUtils::checkDirPermissions();
+InstallUtils::checkDirPermissionsPre();
 
 //have we got a config file ?
 InstallUtils::configFile();
 
 //output form
-if(isset($_POST['install'])) {
+if (isset($_POST['install'])) {
+  InstallUtils::checkDirPermissionsPost();
   InstallUtils::processForm();
 } else {
   InstallUtils::displayForm();

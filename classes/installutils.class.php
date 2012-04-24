@@ -111,17 +111,17 @@ Class InstallUtils {
         <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" /> </div>
         <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass"/></div>
 
-      <table class="header"><tr><td><nobr>Server</nobr></td><td class="line"><hr /></td></tr></table>
+      <table class="header"><tr><td><nobr><?php echo $string['server']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <br />
-        <div><label for="tmpdir">Temp Directory</label> <input type="text" id="mysql_admin_pass" name="tmpdir" value="/tmp/" /></div>
+        <div><label for="tmpdir"><?php echo $string['tempdirectory']; ?></label> <input type="text" id="mysql_admin_pass" name="tmpdir" value="/tmp/" /></div>
+        <div style="clear: left"><label for="page_charset"><?php echo $string['pagecharset']; ?></label> <select id="page_charset" name="page_charset"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO 8859-1</option></select> </div>
 
         <table class="header"><tr><td><nobr><?php echo $string['databasesetup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <br />
         <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" /> </div>
         <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" /> </div>
-      <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /> </div>
-      <div><label for="mysql_db_charset"><?php echo $string['databasecharset']; ?></label> <select id="mysql_db_charset" name="mysql_db_charset"><option value="latin1">latin1</option><option value="utf8">UTF-8</option></select> </div>
-      <div style="clear: left"><label for="page_charset"><?php echo $string['pagecharset']; ?></label> <select id="page_charset" name="page_charset"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO 8859-1</option></select> </div>
+        <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /> </div>
+        <div><label for="mysql_db_charset"><?php echo $string['databasecharset']; ?></label> <select id="mysql_db_charset" name="mysql_db_charset"><option value="latin1">latin1</option><option value="utf8">UTF-8</option></select> </div>
 
       <table class="header"><tr><td><nobr><?php echo $string['databaseuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="mysql_database_username"><?php echo $string['rdbusername']; ?></label> <input type="text" value="" id="mysql_database_username" name="mysql_database_username" class="required" minlength="3"/></div>
@@ -310,7 +310,7 @@ Class InstallUtils {
     $res->execute();
     $res->store_result();
     if ($res->num_rows > 0) {
-      self::displayError(array('010' => $string['displayerror1']."The database name '$dbname' is in use please use a different one"));
+      self::displayError(array('010' => sprintf($string['displayerror1'],$dbname)));
     }
     $res->close();
 
@@ -722,14 +722,10 @@ Class InstallUtils {
   * Check Apache can write to the required directories
   *
   */
-  static function checkDirPermissions() {
+  static function checkDirPermissionsPre() {
     global $string;
     self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
-    //tmp
-    if (!is_writable('/tmp')) {
-      $errors['100'] = $string['errors3'];
-    }
     //media
     if (!is_writable(self::$rogo_path . '/media')) {
       $errors['102'] = sprintf($string['errors4'], self::$rogo_path);
@@ -748,12 +744,29 @@ Class InstallUtils {
   }
 
   /**
+  * Check Apache can write to the required directories
+  *
+  */
+  static function checkDirPermissionsPost() {
+    global $string;
+    self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    $errors = array();
+    //tmp
+    if (!is_writable($_POST['tmpdir'])) {
+      $errors['100'] = sprintf($string['errors3'], $_POST['tmpdir']);
+    }
+    if (count($errors) > 0) {
+      self::displayError($errors);
+    }
+  }
+
+  /**
   * Check for installed software versions PHP, Apache
   *
   */
   static function checkSoftware() {
     global $string;
-	$errors = array();
+    $errors = array();
     //apache
     $apache = explode('/',$_SERVER['SERVER_SOFTWARE']);
     $apache_min_ver = '2.0';
@@ -801,7 +814,7 @@ Class InstallUtils {
   */
   static function displayError($error = '') {
     global $string;
-	echo "<div class=\"error\">\n";
+    echo "<div class=\"error\">\n";
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
         echo "\t<div>".$string['errors13']." $errCode:: $message</div>\n";
@@ -963,7 +976,7 @@ define('DIR_SEPARATOR', '/');
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
   \$cfg_timezone = '{cfg_timezone}';
-  date_default_timezone_set($cfg_timezone);
+  date_default_timezone_set(\$cfg_timezone);
 
 // SMS Imports
   \$cfg_sms_api = '';
@@ -1055,7 +1068,7 @@ CONFIG;
     $config = str_replace('{cfg_short_date}',self::$cfg_short_date,$config);
     $config = str_replace('{cfg_long_date_time}',self::$cfg_long_date_time,$config);
     $config = str_replace('{cfg_timezone}',self::$cfg_timezone,$config);
-    $config = str_replace('{cfg_tmpdir}',self::$cfg_tmpdir);
+    $config = str_replace('{cfg_tmpdir}',self::$cfg_tmpdir,$config);
 
     $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);

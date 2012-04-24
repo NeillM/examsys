@@ -1,8 +1,9 @@
 <?php
-
 $string['company'] = 'Company';
 $string['companyname'] = 'Company Name';
-$string['databaseadminuser'] = 'Database Admin User'; 
+$string['databaseadminuser'] = 'Database Admin User';
+$string['server'] = 'Server';
+$string['tempdirectory'] = 'Temp Directory';
 $string['needusername'] = 'The installer need the username and password of a MySQL admin user to create the database and required tables. This username is not saved to the server and is only used by this install script.';
 $string['dbusername'] = 'DB Username';
 $string['dbpassword'] = 'DB Password';
@@ -59,7 +60,7 @@ $string['wnotpermission'] = ' could not set permissions';
 $string['logwarning20'] = 'Unable to FLUSH PRIVILEGES';
 $string['errors1'] = 'Rogo has already been installed! remove/rename %s to run set up again.';
 $string['errors2'] = 'or go to the %s staff interfaces';
-$string['errors3'] = 'Rogo requires /tmp to exist and be writeable to the webserver';
+$string['errors3'] = 'Rogo requires %s to exist and be writeable to the webserver';
 $string['errors4'] = 'Rogo requires %s/media to exist and be writeable to the webserver';
 $string['errors5'] = 'Rogo requires %s/qti/imports to exist and be writeable to the webserver';
 $string['errors6'] = 'Rogo requires %s/qti/exports to exist and be writeable to the webserver';

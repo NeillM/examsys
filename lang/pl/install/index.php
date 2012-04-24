@@ -2,6 +2,8 @@
 $string['company'] = 'Instytucja';
 $string['companyname'] = 'Nazwa instytucji:';
 $string['databaseadminuser'] = 'Administrator bazy danych'; 
+$string['server'] = 'Server';  // Niko
+$string['tempdirectory'] = 'Temp Directory';  // Niko
 $string['needusername'] = 'Ten instalator wymaga nazwy użytkownika administracyjnego bazy danych MySQL oraz jego hasła aby utworzyć bazę danych i wymagane tablice. Dane tego użytkownika nie są zapisywane, a tylko zastosowane w instalacji.';
 $string['dbusername'] = 'Użytkownik:';
 $string['dbpassword'] = 'Hasło:';
@@ -58,7 +60,7 @@ $string['wnotpermission'] = ' nie ma ustawionych przywilejów';
 $string['logwarning20'] = 'Nie można było skasować przywilejów';
 $string['errors1'] = 'Rogō było już zainstalowane! Usuń lub zmień nazwę %s aby móc uruchomić instalację ponownie.';
 $string['errors2'] = 'lub przejdź do interfejsów kadry: %s';
-$string['errors3'] = 'Rogō wymaga aby istniał /tmp i był dostępny do zapisu przez webserver';
+$string['errors3'] = 'Rogō wymaga aby istniał %s i był dostępny do zapisu przez webserver';
 $string['errors4'] = 'Rogō wymaga aby istniał %s/media i był zapisywalny przez webserver';
 $string['errors5'] = 'Rogō wymaga aby istniał %s/qti/imports i był zapisywalny przez webserver';
 $string['errors6'] = 'Rogō wymaga aby istniał %s/qti/exports i był zapisywalny przez webserver';
