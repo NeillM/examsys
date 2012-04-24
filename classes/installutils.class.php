@@ -958,6 +958,7 @@ define('DIR_SEPARATOR', '/');
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
   \$cfg_timezone = '{cfg_timezone}';
+  date_default_timezone_set($cfg_timezone);
 
 // SMS Imports
   \$cfg_sms_api = '';

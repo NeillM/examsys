@@ -2551,6 +2551,31 @@ if (!isset($_POST['update'])) {
 
   }
   
+  // 24/04/2012 - Add default timezone config file.
+  $new_cfg_str = array();
+  $new_cfg_str[] =  "date_default_timezone_set(\$cfg_timezone);\n";
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'date_default_timezone_set') !== false) {
+      $found = true;
+    }
+  }
+  
+  if (!$found) {
+    array_splice($cfg,53,0,$new_cfg_str);
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    }
+    
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Add default timezone config file.</li>\n";
+    ob_flush();
+    flush();
+  }
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
