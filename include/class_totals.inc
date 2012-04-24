@@ -457,7 +457,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       }
     }
   } else {
-    $question = $paper_buffer[$q_id];
+    $question = &$paper_buffer[$q_id];
   }
   
   if (!$skip_random and $question['score_method'] != 'Mark per Question' and in_array($question['q_type'], $multi_part_qns)) {
