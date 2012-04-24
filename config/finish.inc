@@ -14,5 +14,5 @@
     $logo_html = '<td width="160" style="vertical_align:bottom"><img src="../artwork/uni_logo.png" width="160" height="67" alt="Logo" /></td></tr>';
     $bottom_html = '<br /><table cellpadding="2" cellspacing="0" border="0" style="width:100%; border-top:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
   }
-  $leaving_rules = $string['msg'];
+  $leaving_rules = $string['msg2'];
 ?>

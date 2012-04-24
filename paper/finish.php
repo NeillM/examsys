@@ -219,7 +219,7 @@ require '../config/finish.inc';
       // Do not use fancy fonts for foreign lanuages due to extended character support issues.
       echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
     }
-    echo '<p>' . sprintf($string['msg'], $paper_title) . '</p><br />';
+    echo '<p>' . sprintf($string['msg1'], $paper_title) . '</p><br />';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';
     if ($paper_type == '2') {
