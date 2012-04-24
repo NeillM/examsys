@@ -551,10 +551,9 @@ if ($question->get_type() != '') require_once '../../include/question/addedit/' 
 $default_team = '';
 if (count($question->get_teams()) > 0) {
   $q_teams = $question->get_teams();
-  $default_team = $q_teams[0];
+  $default_team = array_slice($q_teams, 0, 1);
 } elseif (isset($state['default_team'])) {
-  $default_team = $state['default_team'];
-  
+  $default_team = explode(',', $state['default_team']);
 }
 
 echo render_metadata($mysqli, $question, $question->use_bloom(), $default_team, $disabled, $string);
