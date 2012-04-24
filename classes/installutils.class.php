@@ -68,7 +68,7 @@ Class InstallUtils {
   public static $db_admin_username;
   public static $db_admin_passwd;
 
-  public static $ts_version = '4.1';
+  public static $ts_version = '4.2.2';
   public static $support_email;
   public static $cfg_SysAdmin_username;
 
@@ -1080,7 +1080,21 @@ class databaseTables {
         `adminID` int(11) NOT NULL auto_increment,
         `userID` int(11) default NULL,
         `schools_id` int(11) default NULL,
-        PRIMARY KEY  (`adminID`)
+        PRIMARY KEY (`adminID`)
+      ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['announcements'] = <<<QUERY
+      CREATE TABLE `announcements` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `title` varchar(255) DEFAULT NULL,
+        `staff_msg` text,
+        `student_msg` text,
+        `icon` varchar(255) DEFAULT NULL,
+        `startdate` datetime DEFAULT NULL,
+        `enddate` datetime DEFAULT NULL,
+        `deleted` datetime DEFAULT NULL,
+        PRIMARY KEY (`id`)
       ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1091,7 +1105,7 @@ QUERY;
           `description` varchar(255) default NULL,
           `deleted` datetime default NULL,
           `schoolid` int(11) default NULL,
-          PRIMARY KEY  (`id`),
+          PRIMARY KEY (`id`),
           KEY `degree` (`name`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1103,7 +1117,7 @@ QUERY;
             `date_set` datetime default NULL,
             `category` char(3) default NULL,
             `percentage` float default NULL,
-            PRIMARY KEY  (`id`),
+            PRIMARY KEY (`id`),
             KEY `SETTER_AND_DATE` (`setterID`,`date_set`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1810,6 +1824,16 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['state'] = <<<QUERY
+        CREATE TABLE `state` (
+          `userID` int(10) unsigned DEFAULT NULL,
+          `state_name` varchar(255) DEFAULT NULL,
+          `content` varchar(255) DEFAULT NULL,
+          `page` varchar(255) DEFAULT NULL,
+          UNIQUE KEY `idx_user_state` (`userID`,`state_name`,`page`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['student_help'] = <<<QUERY
         CREATE TABLE `student_help` (
           `id` smallint(6) NOT NULL auto_increment,
@@ -1966,20 +1990,6 @@ QUERY;
           `value` varchar(255) default NULL,
           `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
-QUERY;
-
-    $this->tableList['announcements'] = <<<QUERY
-        CREATE TABLE `announcements` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `title` varchar(255) DEFAULT NULL,
-          `staff_msg` text,
-          `student_msg` text,
-          `icon` varchar(255) DEFAULT NULL,
-          `startdate` datetime DEFAULT NULL,
-          `enddate` datetime DEFAULT NULL,
-          `deleted` datetime DEFAULT NULL,
-          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
