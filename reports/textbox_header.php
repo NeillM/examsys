@@ -23,6 +23,9 @@
 */
 
 require '../include/staff_auth.inc';
+require '../classes/stateutils.class.php';
+
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -35,7 +38,9 @@ require '../include/staff_auth.inc';
   a {color:blue}
   </style>
   <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript">
     function hideMarked() {
       if (document.getElementById('hidemarked').checked == 1) {
@@ -43,14 +48,9 @@ require '../include/staff_auth.inc';
       } else {
         setting = "";
       }
+      
+      parent.body.$('.marked').toggle();
 
-      var ExpireDate = new Date ();
-      expiredays = 100;
-      ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-      NameOfCookie = "hidemarked";
-      document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-
-      parent.body.location.href='textbox_marking.php?<?php echo $_SERVER['QUERY_STRING']; ?>';
     }
   </script>
 </head>
@@ -109,8 +109,8 @@ require '../include/staff_auth.inc';
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '" target="_top">' . $_GET['module'] . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '" target="_top">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $phase_description . '</div></th>';
-  echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a><br /><input type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\" onclick=\"hideMarked();\"";
-  if (isset($_COOKIE['hidemarked']) and $_COOKIE['hidemarked'] == 'checked') echo ' checked';
+  echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\" onclick=\"hideMarked();\"";
+  if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
   echo "  /> " . $string['hidemarked'] . "</th></tr>\n";
   echo "<tr><td colspan=\"2\" class=\"bevel\"></th></tr>\n";
   echo "</table>\n";

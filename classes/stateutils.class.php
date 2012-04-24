@@ -24,9 +24,11 @@
 
 Class StateUtils {
 
-  static function getState($userID, $db) {
+  static function getState($userID, $db, $page = '') {
     $state_array = array();
-    $page = $_SERVER['PHP_SELF'];
+    if ($page == '') {
+      $page = $_SERVER['PHP_SELF'];
+    }
     
     $result = $db->prepare("SELECT state_name, content FROM state WHERE page=? AND userID=?");
     $result->bind_param('si', $page, $userID);

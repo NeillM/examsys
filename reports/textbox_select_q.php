@@ -33,7 +33,8 @@ require '../include/staff_auth.inc';
   <style type="text/css">
   body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
   table {font-size:100%}
-  a {color:blue}
+  a {color:blue;text-decoration:none;cursor:pointer}
+  p {margin-top:0px;padding-top:0px}
   </style>
   <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
   <script src="../js/staff_help.js" type="text/javascript"></script>

@@ -24,6 +24,9 @@
 
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
+  require_once '../classes/stateutils.class.php';
+  
+  $state = $stateutil->getState($userID, $mysqli, '/reports/textbox_header.php');
   
   $paperID = $_GET['paperID'];
   $q_id = $_GET['q_id'];
@@ -94,29 +97,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Textbox Marking</title>
   <style type="text/css">
   body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
   td {line-height:150%; text-align:justify}
   .heading {background-color:#EBEADB; color:black}
+  <?php
+  if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
+    echo ".marked {color:#808080;display:none}\n";
+  } else {
+    echo ".marked {color:#808080}\n";
+  }
+  ?>
   </style>
-
-  <script src="../js/ie_fix.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    function move_in(img_name) {
-      document[img_name].src=onImg.src;
-    }
-
-    function move_out(img_name) {
-      document[img_name].src=offImg.src;
-    }
-
-    onImg = new Image;
-    onImg.src = '../artwork/up_folder_icon_on.gif';
-    offImg = new Image;
-    offImg.src = '../artwork/up_folder_icon_off.gif';
-  </script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/ie_fix.js"></script>
 </head>
 
 <body style="margin:0px">
@@ -177,27 +174,29 @@
   if ($result->num_rows == 0) {
     echo "<p>No students</p>";
   }
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {
       $style = '';
       if (trim($user_answer) != '') {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
-          if (isset($_COOKIE['hidemarked']) and $_COOKIE['hidemarked'] == 'checked') {
-            $style = ' style="display:none"';
+          if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
+            //$style = ' style="display:none"';
           } else {
-            $style = ' style="color:#808080"';
+            //$style = ' style="color:#808080"';
           }
+          $style = ' class="marked"';
         }
         echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
       } else {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
-          if (isset($_COOKIE['hidemarked']) and $_COOKIE['hidemarked'] == 'checked') {
-            $style = ' style=" display:none"';
+          if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
+            //$style = ' style=" display:none"';
           } else {
-            $style = ' style="color:#808080"';
+            //$style = ' style="color:#808080"';
           }
+          $style = ' class="marked"';
         }
         echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
       }
