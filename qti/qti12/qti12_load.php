@@ -179,14 +179,7 @@ $numb=0;
     $type = $this->DetermineQType($q_imp);
 
     $oiii=print_r($q_imp,TRUE);
-    $t=9;
-//    file_put_contents("/tmp/out2.txt",$oiii);
     $t=8;
-
-    //file_put_contents("/tmp/out.txt",$q_imp);
-
-    //print_p($q_imp,false);
-    //exit;
 
     //echo "<b>Q:</b> " . $item->attributes()->title . " - $type<br>";
     $question = '';
@@ -277,7 +270,7 @@ $numb=0;
 
     $oiii=print_r($question,TRUE);
     $t=9;
-    file_put_contents("/tmp/out3.txt",$oiii);
+    file_put_contents($cfg_tmpdir . 'out3.txt',$oiii);
     $t=8;
 
     if (!empty($q_imp->material->media)) {

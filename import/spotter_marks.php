@@ -32,7 +32,7 @@
   $summative_lock = 0; 
   
   function marks_from_file($fileName) {
-    global $mysqli;
+    global $mysqli, $cfg_tmpdir;
   
     // Get properties of the paper.
     $result = $mysqli->prepare("SELECT property_id, moduleID, calendar_year, start_date FROM properties WHERE property_id=?");
@@ -43,7 +43,7 @@
     $result->close();
     
     if ($property_id == '') {   // Paper could not be found, exit.
-      unlink('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+      unlink($cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
       exit;    
     }
     
@@ -141,12 +141,12 @@
 
   if (isset($_POST['submit']) and $_POST['submit']) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/" . $_SERVER['PHP_AUTH_USER'] . "_spotter_marks.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . "_spotter_marks.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
-        marks_from_file('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
-        unlink('/tmp/' . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+        marks_from_file($cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+        unlink($cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
         ?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html>

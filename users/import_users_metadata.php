@@ -104,7 +104,7 @@ if (isset($_GET['module'])) {
     $stmt->close();
   
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], "/tmp/" . $userID . "_import_metadata.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userID . "_import_metadata.csv"))  {
         echo 'Problem - ';
         if ($_FILES['csvfile']['error'] == "0") {
           echo("Value 0: No problem, the file is uploaded.");
@@ -133,7 +133,7 @@ if (isset($_GET['module'])) {
         }
         $stmt->close();
         
-        $lines = file('/tmp/' . $userID . '_import_metadata.csv');
+        $lines = file($cfg_tmpdir . $userID . '_import_metadata.csv');
         $type = '';
         $value = '';
         
@@ -187,7 +187,7 @@ if (isset($_GET['module'])) {
     }
     echo "<br />\n<input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>";
     
-    unlink("/tmp/" . $userID . "_import_metadata.csv");
+    unlink($cfg_tmpdir . $userID . "_import_metadata.csv");
 
     $mysqli->close();
     exit;

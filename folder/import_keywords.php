@@ -78,12 +78,12 @@ require '../include/staff_auth.inc';
 
   if (isset($_POST['submit'])) {
     if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], "/tmp/" . $userID . "_keywords.txt"))  {
+      if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $cfg_tmpdir . $userID . "_keywords.txt"))  {
         echo uploadError($_FILES['txtfile']['error']);
         exit;
       } else {
-        keywords_from_file('/tmp/' . $userID . '_keywords.txt');
-        unlink('/tmp/' . $userID . '_keywords.txt');
+        keywords_from_file($cfg_tmpdir . $userID . '_keywords.txt');
+        unlink($cfg_tmpdir . $userID . '_keywords.txt');
         header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
       }
     }

@@ -137,8 +137,6 @@ class IE_Local_Save extends IE_Main {
       $this->q_row['q_option_order'] = $question->q_option_order;
 
       $oiii=print_r($question,TRUE);
-$t=9;
-///      file_put_contents("/tmp/out.txt",$oiii);
       $t=8;
       if ($question->type == "blank") $this->SaveBlank($question);
       elseif ($question->type == "calculation") $this->SaveCalculation($question);

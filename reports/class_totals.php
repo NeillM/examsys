@@ -475,7 +475,7 @@ ob_start();
   }
   
   $xmean_total = 0;
-  $scatter_file = fopen('/tmp/' . $userID. '_scatter.dat', 'w');              // Scatter plot data
+  $scatter_file = fopen($cfg_tmpdir . $userID. '_scatter.dat', 'w');              // Scatter plot data
   $absent_no = 0;
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['visible'] == 1) {
@@ -663,7 +663,7 @@ ob_start();
   }
   fclose($scatter_file);
   
-  $distribution_file = fopen('/tmp/' . $userID . '_distribution.dat', 'w');         // Distribution data
+  $distribution_file = fopen($cfg_tmpdir . $userID . '_distribution.dat', 'w');         // Distribution data
   fwrite($distribution_file, serialize($distribution) . "\n");
   fclose($distribution_file);
 

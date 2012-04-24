@@ -42,6 +42,7 @@ Class InstallUtils {
   public static $cfg_short_date;
   public static $cfg_long_date_time;
   public static $cfg_timezone;
+  public static $cfg_tmpdir;
 
   //database config options
   public static $cfg_db_host;
@@ -101,7 +102,7 @@ Class InstallUtils {
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 
       <table class="header"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" value="" id="company_name" name="company_name" class="required" minlength="2" /> </div>
+        <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" id="company_name" name="company_name" value="University of" class="required" minlength="2" /> </div>
 
 
       <table class="header"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -110,8 +111,11 @@ Class InstallUtils {
         <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" /> </div>
         <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass"/></div>
 
-      <table class="header"><tr><td><nobr><?php echo $string['databasesetup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div></div>
+      <table class="header"><tr><td><nobr>Server</nobr></td><td class="line"><hr /></td></tr></table>
+        <br />
+        <div><label for="tmpdir">Temp Directory</label> <input type="text" id="mysql_admin_pass" name="tmpdir" value="/tmp/" /></div>
+
+        <table class="header"><tr><td><nobr><?php echo $string['databasesetup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <br />
         <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" /> </div>
         <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" /> </div>
@@ -211,6 +215,7 @@ Class InstallUtils {
     self::$cfg_short_date = $_POST['cfg_short_date'];
     self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
+    self::$cfg_tmpdir = $_POST['tmpdir'];
 
     //LDAP
     self::$cfg_ldap_server = $_POST['ldap_server'];
@@ -928,7 +933,7 @@ define('DIR_SEPARATOR', '/');
 \$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
 
-\$news_msg = '';
+\$cfg_tmpdir = '{cfg_tmpdir}';
 
 // Local database
   \$cfg_db_username = '{cfg_db_username}';
@@ -1050,6 +1055,7 @@ CONFIG;
     $config = str_replace('{cfg_short_date}',self::$cfg_short_date,$config);
     $config = str_replace('{cfg_long_date_time}',self::$cfg_long_date_time,$config);
     $config = str_replace('{cfg_timezone}',self::$cfg_timezone,$config);
+    $config = str_replace('{cfg_tmpdir}',self::$cfg_tmpdir);
 
     $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
     $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);
