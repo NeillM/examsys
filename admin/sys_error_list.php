@@ -22,8 +22,8 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-
+require '../include/sysadmin_auth.inc';
+require_once '../classes/stateutils.class.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -39,22 +39,11 @@ th {background-color:#F1F5FB; font-weight:normal; text-align:left}
 .err {padding-left:6px; vertical-align:top}
 .errl {padding-right:6px; vertical-align:top; text-align:right}
 </style>
-
-<script src="../js/staff_help.js" type="text/javascript"></script>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/state.js"></script>
+<script type="text/javascript" src="../js/staff_help.js"></script>
 <script language="JavaScript">
-  function updateCookies() {
-    if (document.getElementById('showfixed').checked == 1) {
-      setting = " checked";
-    } else {
-      setting = "";
-    }
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "showfixed";
-    document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-
+  function refreshPage() {
     window.location = 'sys_error_list.php';
   }
 
@@ -88,13 +77,13 @@ th {background-color:#F1F5FB; font-weight:normal; text-align:left}
 <table class="header">
 <tr>
 <th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['systemerrrorreport']; ?></th>
-<th colspan="3" style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a><br /><div style="padding-top:5px"><input type="checkbox" name="showfixed" id="showfixed" value="1" onclick="updateCookies();"<?php if (isset($_COOKIE['showfixed'])) echo $_COOKIE['showfixed']; ?> /> <?php echo $string['showfixed']; ?></div></th>
+<th colspan="3" style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" onclick="refreshPage();"<?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') echo ' checked="checked"'; ?> /> <?php echo $string['showfixed']; ?></div></th>
 </tr>
 <tr><th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['message']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['file']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['lineno']; ?>&nbsp;</nobr></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['user']; ?></nobr></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['userid']; ?>&nbsp;</nobr></th></tr>
 <tr><th colspan="7" class="bevel"></th></tr>
 
 <?php
-  if (isset($_COOKIE['showfixed']) and $_COOKIE['showfixed'] == 'checked') {
+  if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
     $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'$cfg_long_date_time'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID ORDER BY occurred DESC LIMIT 1000";
   } else {
     $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'$cfg_long_date_time'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID WHERE fixed IS NULL ORDER BY occurred DESC LIMIT 1000";

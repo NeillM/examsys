@@ -26,6 +26,7 @@
 
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
+require_once '../classes/stateutils.class.php';
 
 if (isset($_GET['moduleID'])) {
   $moduleID = $_GET['moduleID'];
@@ -38,21 +39,9 @@ if (isset($_GET['calendar_year'])) {
   $calendar_year = '';
 }
 ?>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/state.js"></script>
 <script language="JavaScript">
-  function updateCookies(ID) {
-    if (document.getElementById('checkbox' + ID).checked == 1) {
-      setting = "checked";
-    } else {
-      setting = "";
-    }
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "caausermgt[" + ID + "]";
-    document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-  }
-
   function updateMenu(ID) {
     current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
     document.getElementById('menu' + ID).style.display = current;
@@ -63,12 +52,9 @@ if (isset($_GET['calendar_year'])) {
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
     document.getElementById('icon' + ID).setAttribute('alt',alttag);
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "caausermgt[" + ID + "]";
-    document.cookie = NameOfCookie + "=" + current +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
+    
+    updateState('advanced', current);
+    
   }
 
   function viewProfileSingle() {
@@ -120,7 +106,7 @@ if (isset($_GET['calendar_year'])) {
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(3);"><?php
-    if (isset($_COOKIE['caausermgt'][3]) and $_COOKIE['caausermgt'][3] == 'block') {
+    if (isset($state['advanced']) and $state['advanced'] == 'block') {
       echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" border=\"0\" />";
     } else {
       echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" border=\"0\" />";
@@ -129,60 +115,60 @@ if (isset($_GET['calendar_year'])) {
   </table>
 
 <?php
-  if (isset($_COOKIE['caausermgt'][3])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:" . $_COOKIE['caausermgt'][3] . "\">\n";
+  if (isset($state['advanced'])) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:" . $state['advanced'] . "\">\n";
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:none\">\n";
   }
   echo '<tr><td>';
-  if (isset($_COOKIE['caausermgt'][4]) and $_COOKIE['caausermgt'][4] != 'checked') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox4\" onclick=\"updateCookies(4);\" name=\"students\" /> " . $string['students'] . "</div>\n";
+  if (isset($state['chkbox1']) and $state['chkbox1'] == 'false') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" /> " . $string['students'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox4\" onclick=\"updateCookies(4);\" name=\"students\" checked /> " . $string['students'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" checked /> " . $string['students'] . "</div>\n";
   }
-  if (isset($_COOKIE['caausermgt'][7]) and $_COOKIE['caausermgt'][7] == 'checked') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox7\" onclick=\"updateCookies(7);\" name=\"graduates\" checked /> " . $string['graduates'] . "</div>\n";
+  if (isset($state['chkbox2']) and $state['chkbox2'] == 'true') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" checked /> " . $string['graduates'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox7\" onclick=\"updateCookies(7);\" name=\"graduates\" /> " . $string['graduates'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" /> " . $string['graduates'] . "</div>\n";
   }
-  if (isset($_COOKIE['caausermgt'][8]) and $_COOKIE['caausermgt'][8] == 'checked') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox8\" onclick=\"updateCookies(8);\" name=\"leavers\" checked /> " . $string['leavers'] . "</div>\n";
+  if (isset($state['chkbox3']) and $state['chkbox3'] == 'true') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" checked /> " . $string['leavers'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox8\" onclick=\"updateCookies(8);\" name=\"leavers\" /> " . $string['leavers'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" /> " . $string['leavers'] . "</div>\n";
   }
-  if (isset($_COOKIE['caausermgt'][10]) and $_COOKIE['caausermgt'][10] == 'Suspended') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox10\" onclick=\"updateCookies(10);\" name=\"suspended\" checked /> " . $string['suspended'] . "</div>\n";
+  if (isset($state['chkbox4']) and $state['chkbox4'] == 'true') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" checked /> " . $string['suspended'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox10\" onclick=\"updateCookies(10);\" name=\"suspended\" /> " . $string['suspended'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" /> " . $string['suspended'] . "</div>\n";
   }
   //----------------------------
   echo "<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#95AEC8; color:#95AEC8\" />\n";
-  if (isset($_COOKIE['caausermgt'][5]) and $_COOKIE['caausermgt'][5] == 'checked') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox5\" onclick=\"updateCookies(5);\" name=\"staff\" checked /> " . $string['staff'] . "</div>\n";
+  if (isset($state['chkbox5']) and $state['chkbox5'] == 'true') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" checked /> " . $string['staff'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox5\" onclick=\"updateCookies(5);\" name=\"staff\" /> " . $string['staff'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" /> " . $string['staff'] . "</div>\n";
   }
   if (strpos($userroles,'Admin') !== false) {
-    if (isset($_COOKIE['caausermgt'][12]) and $_COOKIE['caausermgt'][12] == 'checked') {
-      echo "<div><input type=\"checkbox\" id=\"checkbox12\" onclick=\"updateCookies(12);\" name=\"adminstaff\" checked /> " . $string['staffadmin'] . "</div>\n";
+  if (isset($state['chkbox6']) and $state['chkbox6'] == 'true') {
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" checked /> " . $string['staffadmin'] . "</div>\n";
     } else {
-      echo "<div><input type=\"checkbox\" id=\"checkbox12\" onclick=\"updateCookies(12);\" name=\"adminstaff\" /> " . $string['staffadmin'] . "</div>\n";
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" /> " . $string['staffadmin'] . "</div>\n";
     }
   }
-  if (isset($_COOKIE['caausermgt'][9]) and $_COOKIE['caausermgt'][9] == 'checked') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox9\" onclick=\"updateCookies(9);\" name=\"inactive\" checked /> " . $string['inactivestaff'] . "</div>\n";
+  if (isset($state['chkbox7']) and $state['chkbox7'] == 'true') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" checked /> " . $string['inactivestaff'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox9\" onclick=\"updateCookies(9);\" name=\"inactive\" /> " . $string['inactivestaff'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" /> " . $string['inactivestaff'] . "</div>\n";
   }
-  if (isset($_COOKIE['caausermgt'][6]) and $_COOKIE['caausermgt'][6] == 'checked') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox6\" onclick=\"updateCookies(6);\" name=\"externals\" checked /> " . $string['externalexaminers'] . "</div>\n";
+  if (isset($state['chkbox8']) and $state['chkbox8'] == 'true') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" checked /> " . $string['externalexaminers'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox6\" onclick=\"updateCookies(6);\" name=\"externals\" /> " . $string['externalexaminers'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" /> " . $string['externalexaminers'] . "</div>\n";
   }
-  if (isset($_COOKIE['caausermgt'][11]) and $_COOKIE['caausermgt'][11] == 'checked') {
-    echo "<div><input type=\"checkbox\" id=\"checkbox11\" onclick=\"updateCookies(11);\" name=\"invigilators\" checked /> " . $string['invigilators'] . "</div>\n";
+  if (isset($state['chkbox9']) and $state['chkbox9'] == 'true') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" checked /> " . $string['invigilators'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox11\" onclick=\"updateCookies(11);\" name=\"invigilators\" /> " . $string['invigilators'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" /> " . $string['invigilators'] . "</div>\n";
   }
 ?>
 </td></tr>
@@ -250,13 +236,7 @@ if (isset($_GET['calendar_year'])) {
 <br />
 
 <div class="submenuheading"><?php echo $string['cohorttasks']; ?></div>
-<?php
-  if (isset($_COOKIE['caausermgt'][2])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu2\" style=\"display:" . $_COOKIE['caausermgt'][2] . "; margin-left:10px; font-size:90%\">\n";
-  } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu2\" style=\"display:block; margin-left:10px; font-size:90%\">\n";
-  }
-?>
+<table cellpadding="0" cellspacing="0" border="0" style="margin-left:10px; font-size:90%">
 <tr><td>
 
 

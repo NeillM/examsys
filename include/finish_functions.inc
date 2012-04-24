@@ -1709,7 +1709,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
             echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0],$question_no) . '</p>';
           }
 
-          echo '<blockquote><table cellpadding="2" cellspacing="0" border="1" class="matrix">';
+          echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
           if (!isset($paper[$question]['std'][0]) or display_std($paper[$question]['std'][0]) == '') {
             echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
           } else {
@@ -1765,7 +1765,7 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
               $row_no++;
             }
           }    
-          echo '</table></blockquote>';
+          echo '</table>';
 
           if ($answered == 0) {
             reset_feedback($hide_if_unanswered);
@@ -2295,14 +2295,14 @@ require_once $cfg_web_root . 'classes/stringutils.class.php';
             $paper[$question]['mark'] = 0; 
             echo '<p class="mkpad"><span style="color:#800000; background-color:#FFC0C0; padding-left:8px; padding-right:8px">&nbsp;0 ' . $string['outof'] . ' 0&nbsp;</span></p>';
           } else {
-            echo '<p class="mkpad"><span class="mk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+            echo '<p class="mkpad"><span class="usermk">' . round($paper[$question]['mark'],2) . ' ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
           }
         } elseif ($paper[$question]['q_type'] == 'textbox') {
           // Unmarked textbox questions.
-          echo '<p class="mkpad"><span class="mk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+          echo '<p class="mkpad"><span class="usermk">&lt;'. $string['unmarked'] .'&gt; ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
         } else {
           // User has skipped over question.
-          echo '<p class="mkpad"><span class="mk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
+          echo '<p class="mkpad"><span class="usermk">0 ' . $string['outof'] . ' ' . $paper[$question]['totalpos'] . '</span></p>';
         }
       }
       if ($paper[$question]['status'] != 'Experimental') {

@@ -24,24 +24,13 @@
 
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
+require_once '../classes/stateutils.class.php';
+
 ?>
 <script language="JavaScript">
-  function updateCookies(ID) {
-    if (document.getElementById('checkbox' + ID).checked == 1) {
-      setting = " checked";
-    } else {
-      setting = "";
-    }
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    if (ID == 6) {
-      NameOfCookie = "myquestions";
-    } else {
-      NameOfCookie = "papersearch[" + ID + "]";
-    }
-    document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
+  function updateDropdownState(mySel, NameOfState) {
+    setting = mySel.options[mySel.selectedIndex].value;
+    updateState(NameOfState, setting);    
   }
 
   function updateMenu(ID) {
@@ -55,11 +44,7 @@ require_once '../classes/searchutils.class.php';
     document.getElementById('icon' + ID).setAttribute('src',icon);
     document.getElementById('icon' + ID).setAttribute('alt',alttag);
 
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "papersearch[" + ID + "]";
-    document.cookie = NameOfCookie + "=" + current +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
+    updateState('menu' + ID, current);
   }
 </script>
 
@@ -133,7 +118,7 @@ require_once '../classes/searchutils.class.php';
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['accessibility']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
-    if (isset($_COOKIE['papersearch'][6]) and $_COOKIE['papersearch'][6] == 'block') {
+    if (isset($state['menu6']) and $state['menu6'] == 'block') {
       echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="9" height="9" alt="Hide" border="0" />';
     } else {
       echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="9" height="9" alt="Show" border="0" />';
@@ -142,8 +127,8 @@ require_once '../classes/searchutils.class.php';
   </table>
 
 <?php
-  if (isset($_COOKIE['papersearch'][6])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:" . $_COOKIE['papersearch'][6] . "\">\n";
+  if (isset($state['menu6'])) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:none\">\n";
   }
@@ -212,7 +197,7 @@ require_once '../classes/searchutils.class.php';
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(9);"><?php echo $string['ownership']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
-    if (isset($_COOKIE['papersearch'][9]) and $_COOKIE['papersearch'][9] == 'block') {
+    if (isset($state['menu9']) and $state['menu9'] == 'block') {
       echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" border=\"0\" />";
     } else {
       echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" border=\"0\" />";
@@ -221,8 +206,8 @@ require_once '../classes/searchutils.class.php';
   </table>
 
 <?php
-  if (isset($_COOKIE['papersearch'][9])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:" . $_COOKIE['papersearch'][9] . "\">\n";
+  if (isset($state['menu9'])) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
   }

@@ -85,8 +85,13 @@ function displayPaperIcon2($property_id, $paper_type, $screens, $paper_title, $s
 function displayPaperIcon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID) {
   global $userroles, $type, $folder, $module, $mysqli, $userID, $teams, $string;
   
-  echo '<div class="file">';
+  if ($retired != '') {
+    echo '<div class="file retired">';
+  } else {
+    echo '<div class="file">';
+  }
   echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
+
   $icon_type = $paper_type;
   if (date("YmdHis", time()) >= $start_date) {
     $locked = '_locked';

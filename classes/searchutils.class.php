@@ -94,7 +94,7 @@ Class SearchUtils {
     
     $teams = self::getTeams($teams, $userroles, $userID, $db);
     
-    echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'team')\" name=\"team\">\n";
+    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'team')\" name=\"team\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
     
     $old_school = '';
@@ -133,10 +133,10 @@ Class SearchUtils {
   }
 
   static function displayOwnersDropdown($teams, $userroles, $userID, $db, $type) {
-    global $string;
+    global $string, $state;
     $owners = self::getOwners($teams, $userroles, $db);
     
-    echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'owner')\" name=\"owner\">\n";
+    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
     echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
     if ($type == 'questions') {
       echo "<option value=\"$userID\">" . $string['myquestionsonly']. "</option>\n";
@@ -151,7 +151,7 @@ Class SearchUtils {
         if ($old_letter != '') echo "</optgroup>\n";
         echo "<optgroup label=\"" . strtoupper(substr($details['surname'],0,1)) . "\">\n";
       }
-      if ((isset($_COOKIE['owner']) and $_COOKIE['owner'] == $ownerID) or (isset($_POST['owner']) and $_POST['owner'] == $ownerID)) {
+      if ((isset($state['owner']) and $state['owner'] == $ownerID) or (isset($_POST['owner']) and $_POST['owner'] == $ownerID)) {
         echo "<option value=\"$ownerID\" selected>" . $details['surname'] . ", " . $details['initials'] . ". " . $details['title'] . "</option>\n";
       } else {
         echo "<option value=\"$ownerID\">" . $details['surname'] . ", " . $details['initials'] . ". " . $details['title'] . "</option>\n";
@@ -162,18 +162,18 @@ Class SearchUtils {
   }
   
   static function displayStatusDropdown() {
-    global $string;
+    global $string, $state;
     
-    echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'status')\" name=\"status\">\n";
+    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'status')\" name=\"status\">\n";
     echo "<option value=\"nonretired\">" . $string['anynonretiredstatus'] . "</option>\n";
-    if (isset($_COOKIE['status']) and $_COOKIE['status'] == '%') {
+    if (isset($state['status']) and $state['status'] == '%') {
       echo "<option value=\"%\" selected>" . $string['anystatus'] . "</option>\n";
     } else {
       echo "<option value=\"%\">" . $string['anystatus'] . "</option>\n";
     }
     $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
     foreach ($status_array as $individual_status) {
-      if (isset($_COOKIE['status']) and $_COOKIE['status'] == $individual_status) {
+      if (isset($state['status']) and $state['status'] == $individual_status) {
         echo "<option value=\"$individual_status\" selected>" . $string[strtolower($individual_status)] . "</option>"; 
       } else {
         echo "<option value=\"$individual_status\">" . $string[strtolower($individual_status)] . "</option>"; 
@@ -184,14 +184,14 @@ Class SearchUtils {
   }
 
   static function displayBloomsDropdown() {
-    global $string;
+    global $string, $state;
     
-    echo "<select style=\"width:175px\" onchange=\"updateCookieOwner(this,'bloom')\" name=\"bloom\">\n";
+    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";
     echo "<option value=\"%\">" . $string['alllevels'] . "</option>\n";
 
     $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');
     foreach ($blooms_array as $individual_bloom) {
-      if (isset($_COOKIE['bloom']) and $_COOKIE['bloom'] == $individual_bloom) {
+      if (isset($state['bloom']) and $state['bloom'] == $individual_bloom) {
         echo "<option value=\"$individual_bloom\" selected>" . $string[strtolower($individual_bloom)] . "</option>"; 
       } else {
         echo "<option value=\"$individual_bloom\">" . $string[strtolower($individual_bloom)] . "</option>"; 

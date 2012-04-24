@@ -23,8 +23,8 @@
 */
 
 $scales = $question->get_scale_types();
-if ($mode == 'Add' and isset($_COOKIE['likert_format'])) {
-  $scale_value = $_COOKIE['likert_format'];
+if ($mode == 'Add' and isset($state['likert_format'])) {
+  $scale_value = $state['likert_format'];
 } else {
   $scale_value = $question->get_scale_type();
 }

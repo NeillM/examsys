@@ -34,7 +34,7 @@ require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$version = '4.2.1';
+$version = '4.2.2';
 
 set_time_limit(0);
 
@@ -2212,10 +2212,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned AUTO_INCREMENT");
+    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned primary key auto_increment");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned AUTO_INCREMENT</li>\n";
+    echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned primary key auto_increment</li>\n";
     ob_flush();
     flush();
   }
@@ -2246,10 +2246,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned AUTO_INCREMENT");
+    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned primary key auto_increment");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned AUTO_INCREMENT</li>\n";
+    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned primary key auto_increment</li>\n";
     ob_flush();
     flush();
   }
@@ -2263,10 +2263,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'mediumint') {
-    $adjust = $mysqli->prepare("ALTER TABLE sid CHANGE COLUMN userID userID int unsigned");
+    $adjust = $mysqli->prepare("ALTER TABLE sid CHANGE COLUMN userID userID int unsigned primary key");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE sid CHANGE COLUMN userID userID int unsigned</li>\n";
+    echo "<li>ALTER TABLE sid CHANGE COLUMN userID userID int unsigned primary key</li>\n";
     ob_flush();
     flush();
   }
@@ -2342,7 +2342,7 @@ if (!isset($_POST['update'])) {
   
   // 05/04/2012 - Enlarge the size of the integer for userID in log3 table.
   $data_type = '';
-  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log0' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log3' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
   $result->execute();
   $result->store_result();
   $result->bind_result($data_type);
@@ -2518,9 +2518,42 @@ if (!isset($_POST['update'])) {
   $result->close();
   */
 
+  // 19/04/2012 - Add 'state' tables
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='state' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    // Table to hold Reference material
+    $adjust = $mysqli->prepare("CREATE TABLE state (userID int unsigned, state_name varchar(255), content varchar(255), page varchar(255))");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE state (userID int unsigned, state_name varchar(255), content varchar(255), page varchar(255))</li>\n";
+    $adjust = $mysqli->prepare("ALTER TABLE state ADD UNIQUE idx_user_state (userID, state_name, page)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE state ADD UNIQUE idx_user_state (userID, state_name, page)</li>\n";
+    ob_flush();
+    flush();
+    
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_sysadmin_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
+  }
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
-  
+
   //Close the database
   $mysqli->close();
   ob_end_flush();

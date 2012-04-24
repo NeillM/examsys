@@ -25,9 +25,6 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   
-  if (isset($_POST['banksave'])) {
-    setcookie('caabanksave', $_POST['banksave'], time()+60*60*24*30);
-  }
   $paperID = $_POST['paperID'];
 
   $rating = '';

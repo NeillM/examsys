@@ -26,7 +26,11 @@
 
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
+require_once '../classes/stateutils.class.php';
+
 ?>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/state.js"></script>
 <script language="JavaScript">
   function checkForm() {
     if (searchoptions.searchterm.value == "") {
@@ -35,33 +39,7 @@ require_once '../classes/searchutils.class.php';
     }
   }
   
-  function updateCookies(ID) {
-    if (document.getElementById('checkbox' + ID).checked == 1) {
-      setting = " checked";
-    } else {
-      setting = "";
-    }
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    if (ID == 6) {
-      NameOfCookie = "myquestions";
-    } else {
-      NameOfCookie = "questionsearch[" + ID + "]";
-    }
-    document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-  }
-
-  function updateCookieOwner(mySel,NameOfCookie) {
-    setting = mySel.options[mySel.selectedIndex].value;
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-  }
-
-  function editQuestion() {
+   function editQuestion() {
     var loc = '../question/edit/index.php?q_id=' + document.PapersMenu.questionID.value + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
     if (document.PapersMenu.qType.value == 'random' || document.PapersMenu.qType.value == 'keyword_based') {
       loc += '&type=' + document.PapersMenu.qType.value;
@@ -111,14 +89,15 @@ require_once '../classes/searchutils.class.php';
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
     document.getElementById('icon' + ID).setAttribute('alt',alttag);
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "questionsearch[" + ID + "]";
-    document.cookie = NameOfCookie + "=" + current +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
+    
+    updateState('menu' + ID, current);
   }
 
+  function updateDropdownState(mySel, NameOfState) {
+    setting = mySel.options[mySel.selectedIndex].value;
+    updateState(NameOfState, setting);    
+  }
+  
   function selectDateRadio() {
     document.getElementById('question_date5').checked = true;
   }
@@ -147,10 +126,10 @@ require_once '../classes/searchutils.class.php';
 ?>
 </select></div>
 <?php
-  if (isset($_COOKIE['questionsearch'][10])) {
-    echo "<input type=\"checkbox\" id=\"checkbox10\" onclick=\"updateCookies(10);\" name=\"locked\" value=\"1\"" . $_COOKIE['questionsearch'][10] . " /> " . $string['inclockedquestions'];
+  if (isset($state['checkbox10']) and $state['checkbox10'] == 'true') {
+    echo "<input class=\"chk\" type=\"checkbox\" id=\"checkbox10\" name=\"locked\" value=\"1\" checked=\"checked\" /> " . $string['inclockedquestions'];
   } else {
-    echo "<input type=\"checkbox\" id=\"checkbox10\" onclick=\"updateCookies(10);\" name=\"locked\" value=\"1\" /> " . $string['inclockedquestions'];
+    echo "<input class=\"chk\" type=\"checkbox\" id=\"checkbox10\" name=\"locked\" value=\"1\" /> " . $string['inclockedquestions'];
   }
 ?>
 <br />
@@ -158,7 +137,7 @@ require_once '../classes/searchutils.class.php';
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(8);"><?php echo $string['questionsections']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(8);"><?php
-    if (isset($_COOKIE['questionsearch'][8]) and $_COOKIE['questionsearch'][8] == 'block') {
+    if (isset($state['menu8']) and $state['menu8'] == 'block') {
       echo "<img id=\"icon8\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" border=\"0\" />";
     } else {
       echo "<img id=\"icon8\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" border=\"0\" />";
@@ -167,31 +146,31 @@ require_once '../classes/searchutils.class.php';
   </table>
 
 <?php
-  if (isset($_COOKIE['questionsearch'][8])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu8\" style=\"display:" . $_COOKIE['questionsearch'][8] . "\">\n";
+  if (isset($state['menu8'])) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu8\" style=\"display:" . $state['menu8'] . "\">\n";
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu8\" style=\"display:none\">\n";
   }
   echo '<tr><td>';
-  if (isset($_COOKIE['questionsearch'][1])) {
-    echo "<div><input type=\"checkbox\" id=\"checkbox1\" onclick=\"updateCookies(1);\" name=\"theme\"" . $_COOKIE['questionsearch'][1] . " /> " . $string['theme'] . "</div>\n";
+  if (isset($state['checkbox1']) and $state['checkbox1'] == 'false') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\" /> " . $string['theme'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox1\" onclick=\"updateCookies(1);\" name=\"theme\" checked /> " . $string['theme'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\" checked=\"checked\" /> " . $string['theme'] . "</div>\n";
   }
-  if (isset($_COOKIE['questionsearch'][2])) {
-    echo "<div><input type=\"checkbox\" id=\"checkbox2\" onclick=\"updateCookies(2);\" name=\"scenario\"" . $_COOKIE['questionsearch'][2] . " /> " . $string['scenario'] . "</div>\n";
+  if (isset($state['checkbox2']) and $state['checkbox2'] == 'false') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox2\" name=\"scenario\" /> " . $string['scenario'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox2\" onclick=\"updateCookies(2);\" name=\"scenario\" checked /> " . $string['scenario'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox2\" name=\"scenario\" checked=\"checked\" /> " . $string['scenario'] . "</div>\n";
   }
-  if (isset($_COOKIE['questionsearch'][3])) {
-    echo "<div><input type=\"checkbox\" id=\"checkbox3\" onclick=\"updateCookies(3);\" name=\"leadin\"" . $_COOKIE['questionsearch'][3] . " /> " . $string['leadin'] . "</div>\n";
+  if (isset($state['checkbox3']) and $state['checkbox3'] == 'false') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox3\" name=\"leadin\" /> " . $string['leadin'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox3\" onclick=\"updateCookies(3);\" name=\"leadin\" checked /> " . $string['leadin'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox3\" name=\"leadin\" checked=\"checked\" /> " . $string['leadin'] . "</div>\n";
   }
-  if (isset($_COOKIE['questionsearch'][4])) {
-    echo "<div><input type=\"checkbox\" id=\"checkbox4\" onclick=\"updateCookies(4);\" name=\"options\"" . $_COOKIE['questionsearch'][4] . " /> " . $string['options'] . "</div>\n";
+  if (isset($state['checkbox4']) and $state['checkbox4'] == 'false') {
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox4\" name=\"options\" /> " . $string['options'] . "</div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"checkbox4\" onclick=\"updateCookies(4);\" name=\"options\" checked /> " . $string['options'] . "</div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox4\" name=\"options\" checked=\"checked\" /> " . $string['options'] . "</div>\n";
   }
 ?>
 </td></tr>
@@ -200,7 +179,7 @@ require_once '../classes/searchutils.class.php';
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
-    if (isset($_COOKIE['questionsearch'][6]) and $_COOKIE['questionsearch'][6] == 'block') {
+    if (isset($state['menu6']) and $state['menu6'] == 'block') {
       echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="9" height="9" alt="Hide" border="0" />';
     } else {
       echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="9" height="9" alt="Show" border="0" />';
@@ -209,13 +188,13 @@ require_once '../classes/searchutils.class.php';
   </table>
 
 <?php
-  if (isset($_COOKIE['questionsearch'][6])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:" . $_COOKIE['questionsearch'][6] . "\">\n";
+  if (isset($state['menu6'])) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:none\">\n";
   }
   
-  $date_options = array("dont remember"=>$string['dont remember'],"week"=>$string['week'],"month"=>$string['month'],"year"=>$string['year'],"specify"=>$string['specify']);
+  $date_options = array("dont remember"=>$string['dont remember'], "week"=>$string['week'], "month"=>$string['month'], "year"=>$string['year'], "specify"=>$string['specify']);
   $i = 1;
   foreach ($date_options as $date_value=>$date_label) {
     if ((isset($_POST['question_date']) and $_POST['question_date'] == $date_value) or (!isset($_POST['question_date']) and $date_value == 'dont remember')) {
@@ -348,7 +327,7 @@ require_once '../classes/searchutils.class.php';
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color: black" onclick="updateMenu(9);"><?php echo $string['metadata']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
-    if (isset($_COOKIE['questionsearch'][9]) and $_COOKIE['questionsearch'][9] == 'block') {
+    if (isset($state['menu9']) and $state['menu9'] == 'block') {
       echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" border=\"0\" />";
     } else {
       echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" border=\"0\" />";
@@ -357,8 +336,8 @@ require_once '../classes/searchutils.class.php';
   </table>
 
 <?php
-  if (isset($_COOKIE['questionsearch'][9])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:" . $_COOKIE['questionsearch'][9] . "\">\n";
+  if (isset($state['menu9'])) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
   }

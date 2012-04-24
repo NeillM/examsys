@@ -1093,7 +1093,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
   } elseif ($question['q_type'] == 'matrix') {
     $part_id = 1;
-    echo '<blockquote><table cellpadding="2" cellspacing="0" border="1" class="matrix">';
+    echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
     echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
     foreach ($matching_options as $single_option) {
       echo '<td>' . $single_option . '</td>';
@@ -1142,7 +1142,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   }
 
   // Display possible marks for question (if not Survey)
-  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'calculation') echo '</blockquote>';
+  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'calculation' and $question['q_type'] != 'matrix') echo '</blockquote>';
   if ($paper_type < 3) {
     if ($marks == 0) {
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";

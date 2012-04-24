@@ -28,6 +28,7 @@ require '../../include/staff_auth.inc';
 require_once '../../classes/question.class.php';
 require_once '../../classes/logger.class.php';
 require_once '../../classes/viewhelper.class.php';
+require_once '../../classes/stateutils.class.php';
 require '../../include/edit.inc';
 require '../../include/media.inc';
 require '../../include/metadata.inc';
@@ -44,12 +45,9 @@ $keyword = (!isset($_REQUEST['keyword'])) ? '' : $_REQUEST['keyword'];
 $team = (!isset($_REQUEST['team'])) ? '' : $_REQUEST['team'];
 
 $paper_count = 0;
-
 $critical_error = '';
-
 $q_no = '';
 $q_type_full = '';
-
 $errors = array();
 
 if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
@@ -315,26 +313,26 @@ if ($critical_error == '') {
     	      save_objective_mappings($mysqli, $_POST['objective_modules'], $paper_id, $question->id);
     	    }
 
-          // For likert, save the scale to a cookie to ease creation of multiple questions with same scale
+          // For likert, save the scale to a state to ease creation of multiple questions with same scale
           if ($mode == 'Add' and $question->get_type() == 'likert') {
             $scale_type = $question->get_scale_type();
-            setcookie("likert_format", $scale_type, time()+31536000);
+            $state = $stateutil->setState($userID, 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
+
             if ($scale_type == 'custom') {
-              setcookie("likert_scale_custom", implode('|', $question->get_all_custom_scales()), time()+31536000);
+              $state = $stateutil->setState($userID, 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
             }
           }
 
           // Save a default team if defined
           if ($mode == 'Add') {
-            $team_for_cookie = '';
+            $team_for_state = '';
             if ($module != '') {
-              $team_for_cookie = $module;
+              $team_for_state = $module;
             } else {
               $q_teams = $question->get_teams();
-              if (is_array($q_teams) and count($q_teams) > 0) $team_for_cookie = $q_teams[0];
+              if (is_array($q_teams) and count($q_teams) > 0) $team_for_state = $q_teams[0];
             }
-            $time = ($team_for_cookie != '') ? time()+31536000 : 1;
-            setcookie("default_team", $team_for_cookie, $time);
+            $state = $stateutil->setState($userID, 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);            
           }
     	  }
     	} catch (ValidationException $vex) {
@@ -377,6 +375,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 
 <?php echo $cfg_editor_javascript; ?>
 <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../../classes/stateutils.class.php"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
@@ -553,9 +552,11 @@ $default_team = '';
 if (count($question->get_teams()) > 0) {
   $q_teams = $question->get_teams();
   $default_team = $q_teams[0];
-} elseif (isset($_COOKIE['default_team'])) {
-  $default_team = $_COOKIE['default_team'];
+} elseif (isset($state['default_team'])) {
+  $default_team = $state['default_team'];
+  
 }
+
 echo render_metadata($mysqli, $question, $question->use_bloom(), $default_team, $disabled, $string);
 ?>
         </div>

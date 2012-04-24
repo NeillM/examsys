@@ -142,6 +142,8 @@
   .f {float:left; width:375px; height:74px; padding-left:12px}
   </style>
   <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/state.js"></script>
 </head>
 
 <?php

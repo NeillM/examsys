@@ -1,9 +1,9 @@
 html {overflow:auto;height:100%}
-blockquote {font-size:90%}
+blockquote {font-size:100%}
 .objH {font-weight:bold;color:#316AC5}
 .fback {font-style:italic; color:#C00000}
 .label {color:#C00000}
-.mk {padding-left:8px;padding-right:8px;background-color:#FFFF00;font-size:100%;color:black}
+.usermk {padding-left:8px;padding-right:8px;background-color:#FFFF00;font-size:100%;color:black}
 .mkpad {padding-top:10px}
 .answerindent {margin-left:17px;margin-right:15px}
 .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}

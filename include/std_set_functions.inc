@@ -427,7 +427,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
   }
 
   // Display possible marks for question (if not Survey)
-  if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'mrq' and $options[0]['q_type'] != 'calculation' and $options[0]['q_type'] != 'dichotomous') echo '</blockquote>';
+  if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'calculation' and $options[0]['q_type'] != 'dichotomous') echo '</blockquote>';
   if ($q_type < 3 and $options[0]['q_type'] != 'info') {
         
       echo "<div class=\"mk\">($marks ";

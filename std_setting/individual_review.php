@@ -25,6 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/media.inc';
 require '../include/std_set_functions.inc';
+require_once '../classes/stateutils.class.php';
 
 function ebelDropdown($dropdownID, $selected) {
   $html = "<select name=\"$dropdownID\" onchange=\"recountCategories();\">\n";
@@ -52,8 +53,8 @@ if (isset($_POSR['paperID'])) {
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Standards Setting<?php echo ' ' . $cfg_install_type; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Standards Setting<?php echo ' ' . $cfg_install_type; ?></title>
 <?php
 // Get any questions to exclude.
 $excluded = array();
@@ -85,43 +86,17 @@ $current_screen = 1;
 ?>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-body {width:100%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px;margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%}
-pre {width:90%}
-li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
-select, input {font-size:100%}
-table {font-size:100%}
-p {margin-top:0px; padding-top:0px}
-.raised_tbl {background-color:#5582D2; border-left:solid #90C8FF 1px; border-right:solid #003060 1px; border-top:solid #90C8FF 1px; border-bottom: solid #003060 1px}
-.paper {margin-left:0px; font-family:Arial,sans-serif; font-size:180%; color:white; font-weight:bold}
-.question_no {width:40px; text-align:right; vertical-align:top}
-.theme {font-size:150%; font-weight:bold; color:<?php echo $themecolor; ?>; padding-left:20px}
-.notes {font-size:80%; color: <?php echo $labelcolor; ?>}
-.mk {padding-top:4px; color:#808080; font-size:80%}
-.active {color:<?php echo $fgcolor; ?>}
-.inactive {color:#C0C0C0}
-.heading {background-color:#EBEADB; color:black; font-family:Arial,sans-serif}
-.matrix {border:1px solid #808080; border-collapse:collapse}
-.matrix td {border:1px solid #808080}
-.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
-.scr_no {margin-left:25px}
-.screenbrk {
-  color:#15428B;
-  font-weight:bold;
-  font-size:90%;
-  height:70px;
-  width:100%;
-  border-top: 1px solid #B5C4DF;
-  background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-}
+<link rel="stylesheet" type="text/css" href="../css/start.css" />
+<link rel="stylesheet" type="text/css" href="../css/finish.css" />
+<style>
+table {table-layout:auto}
 </style>
-
-<script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
-<script language="JavaScript" src="../tools/mee/mee/js/mee_src.js"></script>
-<script language="JavaScript" src="../js/ie_fix.js"></script>
-<script language="JavaScript" src="../js/flash_include.js"></script>
-<script language="JavaScript" src="../js/staff_help.js"></script>
+<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/state.js"></script>
+<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+<script type="text/javascript" src="../js/ie_fix.js"></script>
+<script type="text/javascript" src="../js/flash_include.js"></script>
+<script type="text/javascript" src="../js/staff_help.js"></script>
 <script language="JavaScript">
 <?php
   if ($_GET['method'] == 'ebel') {
@@ -386,6 +361,7 @@ p {margin-top:0px; padding-top:0px}
   } else {
     echo "<body>\n";
   }
+  echo "<div id=\"maincontent\">\n";
 
   echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\">\n";
 
@@ -471,7 +447,7 @@ p {margin-top:0px; padding-top:0px}
   $prologue_show = 1;
   $options_array = array();
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-
+  
   $result = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
@@ -507,17 +483,17 @@ p {margin-top:0px; padding-top:0px}
       if (trim($notes) != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
 
       if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'calculation') {
-        echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
+        echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
         $li_set = 1;
       }
       if ($q_media != '' and $q_media != NULL and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
         if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
-          if ($li_set == 0) echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
+          if ($li_set == 0) echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
           $li_set = 1;
           echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height) . "</p>\n";
         } else {
           if ($li_set == 0) {
-            echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
+            echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
           }
           $li_set = 1;
           echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height) . "</p>\n";
@@ -525,7 +501,7 @@ p {margin-top:0px; padding-top:0px}
       }
       if ($q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info' and $q_type != 'hotspot') {
         if ($li_set == 0) {
-          echo '<tr><a name="' . $question_no . '"></a><td class="question_no">' . $question_no . '.&nbsp;</td><td>';
+          echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         }
         $li_set = 1;
         echo $leadin;
@@ -647,10 +623,10 @@ p {margin-top:0px; padding-top:0px}
 
 <tr><td colspan="2" style="text-align:center">
 <?php
-  if (isset($_COOKIE['caabanksave']) and $_COOKIE['caabanksave'] == '1') {
-    echo '<input type="checkbox" name="banksave" value="1" checked />&nbsp;' . $string['savebank'];
+  if (isset($state['banksave']) and $state['banksave'] == 'true') {
+    echo '<input class="chk" type="checkbox" id="banksave" name="banksave" value="1" checked />&nbsp;' . $string['savebank'];
   } else {
-    echo '<input type="checkbox" name="banksave" value="1" />&nbsp;' . $string['savebank'];
+    echo '<input class="chk" type="checkbox" id="banksave" name="banksave" value="1" />&nbsp;' . $string['savebank'];
   }
   $mysqli->close();
   
@@ -661,5 +637,6 @@ p {margin-top:0px; padding-top:0px}
 <br />
 <input type="hidden" name="total_marks" id="total_marks" value="<?php echo $total_marks - $std_excluded ?>" />
 </form>
+</div>
 </body>
 </html>

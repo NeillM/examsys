@@ -41,12 +41,8 @@
 <br />
 
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
+<table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:8px">
 <?php
-  if (isset($_COOKIE['caamainmenu'][4])) {
-    echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" id=\"menu0\" style=\"font-size:90%; margin-left:8px; display:" . $_COOKIE['caamainmenu'][0] . "\">\n";
-  } else {
-    echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" id=\"menu0\" style=\"font-size:90%; margin-left:8px; display:block\">\n";
-  }
   if (count($teams) > 0 or strpos($userroles,'Admin') !== false) {    // Allow SysAdmin and Admin users not on any team to still create papers.
     echo "<tr><td style=\"text-align:left\"><a href=\"#\" onclick=\"newPaper(); return false;\"><img style=\"text-align:center\" src=\"{$cfg_root_path}/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"newPaper(); return false;\">" . $string['createnewpaper'] . "</a></td></tr>\n";
   } else {
