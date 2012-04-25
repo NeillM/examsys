@@ -1644,7 +1644,7 @@ if (!isset($_POST['update'])) {
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   foreach ($cfg as $line) {
     if (strpos($line,'ts_version') !== false) {
-      $cfg_new[] = "\$ts_version = '$version';\n";
+      $cfg_new[] = "\$rogo_version = '$version';\n";
     } else {
       $cfg_new[] = $line;
     }

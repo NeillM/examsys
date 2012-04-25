@@ -28,6 +28,7 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <style type="text/css">
 body {font-size:90%; margin:0px; background-color:white; color:black; font-family:Arial,sans-serif}
@@ -119,7 +120,7 @@ p {line-height:150%}
   echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"mailto:$support_email\">$support_email</a><br /><span style=\"color:#808080\">" . $string['helpandsupportext'] . "</span></td></tr>\n";
   
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" border=\"0\" /></a></td>\n</td><td><span style=\"color:#808080\">" . sprintf( $string['rogodetails'],$ts_version) . "</a> <a href=\"https://suivarro.nottingham.ac.uk/trac/rogo/\">suivarro.nottingham.ac.uk/trac/rogo/</a></td></tr>\n";
+  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" border=\"0\" /></a></td>\n</td><td><span style=\"color:#808080\">" . sprintf( $string['rogodetails'],$rogo_version) . "</a> <a href=\"https://suivarro.nottingham.ac.uk/trac/rogo/\">suivarro.nottingham.ac.uk/trac/rogo/</a></td></tr>\n";
   $mysqli->close();
 ?>
 
