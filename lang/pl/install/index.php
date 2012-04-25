@@ -46,9 +46,9 @@ $string['supportnumbers'] = 'Numer telefonów wsparcia';
 $string['name'] = 'Nazwisko:';
 $string['number'] = 'Numer:';
 $string['install'] = 'Instalacja Rogō';
-$string['installed'] = 'Rogō is now successfully installed.';  // Niko
-$string['deleteinstall'] = 'For security reasons please delete the install directory.';  // Niko
-$string['staffhomepage'] = 'Go to staff homepage';  // Niko
+$string['installed'] = 'Rogō jest skutecznie zainstalowane.';  
+$string['deleteinstall'] = 'Ze względów bezpieczeństwa usuń katalog install.';  
+$string['staffhomepage'] = 'Przejdź do strony startowej kadry';  
 
 $string['logwarning1'] = 'nie załadowano staff_help.sql, nie można było zainstalować pomocy dla kadry';
 $string['logwarning2'] = 'nie znaleziono staff_help.sql, nie można było zainstalować pomocy dla kadry';
