@@ -2,8 +2,8 @@
 $string['company'] = 'Instytucja';
 $string['companyname'] = 'Nazwa instytucji:';
 $string['databaseadminuser'] = 'Administrator bazy danych'; 
-$string['server'] = 'Server';  // Niko
-$string['tempdirectory'] = 'Temp Directory';  // Niko
+$string['server'] = 'Serwer';  
+$string['tempdirectory'] = 'Katalog Tymczasowy';  
 $string['needusername'] = 'Ten instalator wymaga nazwy użytkownika administracyjnego bazy danych MySQL oraz jego hasła aby utworzyć bazę danych i wymagane tablice. Dane tego użytkownika nie są zapisywane, a tylko zastosowane w instalacji.';
 $string['dbusername'] = 'Użytkownik:';
 $string['dbpassword'] = 'Hasło:';
