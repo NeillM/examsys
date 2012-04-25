@@ -2556,14 +2556,20 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] =  "  date_default_timezone_set(\$cfg_timezone);\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
+  $target_line = 53;
+  $cur_line = 0;
   foreach ($cfg as $line) {
     if (strpos($line,'date_default_timezone_set') !== false) {
       $found = true;
     }
+    if (strpos($line,'cfg_timezone') !== false) {
+      $target_line = $cur_line + 1;
+    }
+    $cur_line++;
   }
   
   if (!$found) {
-    array_splice($cfg,53,0,$new_cfg_str);
+    array_splice($cfg,$target_line,0,$new_cfg_str);
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
       rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
