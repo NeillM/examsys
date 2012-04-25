@@ -2601,6 +2601,33 @@ if (!isset($_POST['update'])) {
     flush();
   }
   
+  // 25/04/2012 - Remove define lines not used.
+  $new_cfg_str = array();
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,"define('TOUCHSTONE'") === false and strpos($line,"define('DIR_SEPARATOR'") === false and strpos($line,"\$news") === false) {
+      $new_cfg_str[] = $line;
+    } else {
+      $found = true;
+    }
+  }
+  
+  $cfg = $new_cfg_str;
+  
+  if ($found) {
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
+    }
+    
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Removed unneccessary lines from configuration (defines and \$news).</li>\n";
+    ob_flush();
+    flush();
+  }
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

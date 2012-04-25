@@ -933,8 +933,6 @@ if (empty(\$root)) \$root = str_replace('/config', '/', str_replace('\\\\', '/',
 require \$root . '/include/path_functions.inc.php';
 
 \$rogo_version = '{rogo_version}';
-define('TOUCHSTONE', 'true');
-define('DIR_SEPARATOR', '/');
 \$cfg_web_root = get_root_path() . '/';
 \$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');
 \$protocol = 'https://';
