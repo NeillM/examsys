@@ -178,3 +178,10 @@ label.error {
 .retired {
   color:#808080
 }
+#content .warn {
+  color:#C00000;
+  padding-left:1px
+}
+#content .warnicon {
+  text-align:right
+}

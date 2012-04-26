@@ -43,6 +43,16 @@ $result->bind_result($paper_title, $moduleID, $pass_mark, $title, $initials, $su
 $result->fetch();
 $result->close();
 
+function check_duplicates($q_screens) {
+  global $string;
+  
+  foreach ($q_screens as $q_screen=>$qs) {
+    if (count($qs) > 1) {
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\"><strong>Duplicate questions:</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
+    }
+  }
+}
+
 function findDecisionQ($question_array, $sourceID) {
   $source_question_no = 0;
   $tmp_q_no = 0;
@@ -828,6 +838,7 @@ function getMSCAA($paperID, $mysqlidb) {
     }
   }
 
+  $q_screen = array();
   $screen_marks = 0;
   $old_screen = 0;
   $question_number = 0;
@@ -922,6 +933,7 @@ function getMSCAA($paperID, $mysqlidb) {
 
     $prevous_screen = '';
     $next_screen = '';
+    $q_screen[$temp_array[$x]['q_id']][] = ($question_number+1);
     if ($teamOK == true) {
       if (isset($temp_array[$x - 1]['screen'])) {
         $prevous_screen = $temp_array[$x - 1]['screen'];
@@ -1037,7 +1049,7 @@ function getMSCAA($paperID, $mysqlidb) {
 
   if ($total_marks != 0) {
     if ($paper_type == '2' and $question_number > 2 and ($screen_marks / $total_marks) * 100 > 25 and $screen_marks > 3) {
-      echo "\n<tr><td colspan=\"5\" style=\"font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" />&nbsp;";
+      echo "\n<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\" style=\"font-weight:bold\">";
       $percent = round(($screen_marks / $total_marks) * 100);
       printf($string['markswarning'], $old_screen, $screen_marks, $percent);
       echo "</td></tr>\n";
@@ -1052,7 +1064,10 @@ function getMSCAA($paperID, $mysqlidb) {
       echo "</td><td style=\"color:#808080\"><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</nobr></td></tr>\n";
     }
   }
-
+  
+  if ($paper_type != '3') {
+    check_duplicates($q_screen);
+  }
 
   // Final paper warnings.
   if ($paper_type == '2') {
@@ -1063,7 +1078,7 @@ function getMSCAA($paperID, $mysqlidb) {
     }
     foreach ($warning_types as $warning_type) {
       if (isset($paper_warnings[$warning_type]) AND count($paper_warnings[$warning_type]) > 0) {
-        echo "<tr><td colspan=\"6\" style=\"color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" />&nbsp;<strong>The following questions are '$warning_type':</strong> ";
+        echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\"><strong>The following questions are '$warning_type':</strong> ";
         foreach ($paper_warnings[$warning_type] as $question_warning) {
           echo ' Q' . $question_warning;
         }
