@@ -29,22 +29,6 @@
 <?php echo $cfg_js_root ?>
 <script src="<?php echo $cfg_root_path ?>/js/sidebar.js" type="text/javascript"></script>
 <script language="JavaScript">
-  function updateCookies() {
-    if (document.getElementById('myquestions').checked == 1) {
-      setting = " checked";
-    } else {
-      setting = "";
-    }
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "myquestions";
-    document.cookie = NameOfCookie + "=" + setting +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-
-    window.location='<?php echo "list.php?type=$type"; if (isset($_GET['team'])) echo "&team=" . $_GET['team']; if (isset($_GET['keyword'])) echo "&keyword=" . $_GET['keyword']; ?>';
-  }
-  
   function selQ(questionID, lineID, qType, menuID) {
     tmp_ID = document.PapersMenu.oldQuestionID.value;
     if (tmp_ID != '') {
