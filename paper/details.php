@@ -234,7 +234,7 @@ function getMSCAA($paperID, $mysqlidb) {
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html onscroll="scrollXY();" onclick="qOff(); hideMenus(); hideAssStatsMenu(event);">
+<html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
@@ -269,34 +269,55 @@ function getMSCAA($paperID, $mysqlidb) {
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
 <script defer="defer" type="text/javascript">
   var paperID='<?php echo $_GET['paperID'] ?>';
-
-  function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, prev_screen, next_screen, current_screen, menuID, subparts, evt) {
-    tmp_ID = document.PapersMenu.oldQuestionID.value;
-    if (tmp_ID != '') {
-      document.getElementById('link_' + tmp_ID).style.backgroundColor = '#ffffff';
-      document.getElementById('link_' + tmp_ID).style.color = '#000000';
+  
+  function addQID(qID, pID, clearall) {
+    if (clearall) {
+      document.PapersMenu.questionID.value = ',' + qID;
+      document.PapersMenu.pID.value = ',' + pID;
+    } else {
+      document.PapersMenu.questionID.value = document.PapersMenu.questionID.value + ',' + qID;
+      document.PapersMenu.pID.value = document.PapersMenu.pID.value + ',' + pID;
     }
+  }
+
+  function subQID(qID, pID) {
+    var tmpq = ',' + qID;
+    var tmpp = ',' + pID;
+    document.PapersMenu.questionID.value = document.PapersMenu.questionID.value.replace(tmpq, '');
+    document.PapersMenu.pID.value = document.PapersMenu.pID.value.replace(tmpp, '');
+  }
+
+  function clearAll() {
+    $('.highlight').removeClass('highlight');
+  }
+  
+  function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, menuID, subparts, evt) {
     document.getElementById('menu2a').style.display = 'none';
-    if (menuID == 'menu2b') {
+    if (menuID == '2b') {
       document.getElementById('menu2c').style.display = 'none';
     } else {
       document.getElementById('menu2b').style.display = 'none';
     }
-    document.getElementById(menuID).style.display = 'block';
+    document.getElementById('menu' + menuID).style.display = 'block';
 
     document.PapersMenu.questionNo.value = questionNo;
-    document.PapersMenu.questionID.value = questionID;
     document.PapersMenu.qType.value = qType;
     document.PapersMenu.screenNo.value = screenNo;
-    document.PapersMenu.pID.value = pID;
-
     document.PapersMenu.current_pos.value = current_pos;
-    document.PapersMenu.prev_screen.value = prev_screen;
-    document.PapersMenu.next_screen.value = next_screen;
-    document.PapersMenu.current_screen.value = current_screen;
 
-    document.getElementById('link_' + lineID).style.backgroundColor = '#B3C8E8';
-    document.PapersMenu.oldQuestionID.value = lineID;
+    if (evt.ctrlKey == false) {
+      clearAll();
+      $('#link_' + lineID).addClass('highlight');
+      addQID(questionID, pID, true);
+    } else {
+      if ($('#link_' + lineID).hasClass('highlight')) {
+        $('#link_' + lineID).removeClass('highlight');
+        subQID(questionID, pID);
+      } else {
+        $('#link_' + lineID).addClass('highlight');
+        addQID(questionID, pID, false);
+      }
+    }
 
     if (qType == 'random') {
       var row = '';
@@ -325,6 +346,10 @@ function getMSCAA($paperID, $mysqlidb) {
       var addLink = $('#add_break');
       activateAddBreak(addLink);
     }
+    
+    if (document.PapersMenu.questionID.value == '') {
+      qOff();    
+    }
   }
 
   function edQ(questionNo, questionID, qType) {
@@ -339,10 +364,7 @@ function getMSCAA($paperID, $mysqlidb) {
     document.getElementById('menu2a').style.display = 'block';
     document.getElementById('menu2b').style.display = 'none';
     document.getElementById('menu2c').style.display = 'none';
-    tmp_ID = document.PapersMenu.oldQuestionID.value;
-    if (tmp_ID != '') {
-      document.getElementById('link_' + tmp_ID).style.backgroundColor = 'white';
-    }
+    clearAll();
 
     document.getElementById('stats_menu').style.display = 'none';
     document.getElementById('copy_submenu').style.display = 'none';
@@ -404,7 +426,7 @@ function getMSCAA($paperID, $mysqlidb) {
   }
 ?>
 </head>
-<body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?>>
+<body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?> onselectstart="return false">
 
 <?php
   if (!isset($paper_title)) {
@@ -889,23 +911,6 @@ function getMSCAA($paperID, $mysqlidb) {
       echo "document.PapersMenu.screenNo.value = '" . $temp_array[$x]['screen'] . "';\n";
       echo "document.PapersMenu.pID.value = '" . $temp_array[$x]['p_id'] . "';\n";
       echo "document.PapersMenu.current_pos.value = " . $temp_array[$x]['display_pos'] . ";\n";
-      echo "document.PapersMenu.prev_screen.value = '" . $temp_array[$x - 1]['screen'] . "';\n";
-      if ($temp_array[$x - 1]['screen'] == '') {
-        echo "document.getElementById('promotetext').style.color = '#808080';\n";
-        echo "document.getElementById('promoteicon').src = '../artwork/promote_disabled.gif';\n";
-      } else {
-        echo "document.getElementById('promotetext').style.color = '#000000';\n";
-        echo "document.getElementById('promoteicon').src = '../artwork/promote.gif';\n";
-      }
-      echo "document.PapersMenu.next_screen.value = '" . $temp_array[$x + 1]['screen'] . "';\n";
-      if ($temp_array[$x + 1]['screen'] == '') {
-        echo "document.getElementById('demotetext').style.color = '#808080';\n";
-        echo "document.getElementById('demoteicon').src = '../artwork/demote_disabled.gif';\n";
-      } else {
-        echo "document.getElementById('demotetext').style.color = '#000000';\n";
-        echo "document.getElementById('demoteicon').src = '../artwork/demote.gif';\n";
-      }
-      echo "document.PapersMenu.current_screen.value = '" . $temp_array[$x]['screen'] . "';\n";
       echo "document.PapersMenu.oldQuestionID.value = '$x';\n";
       echo "</script>\n";
     }
@@ -944,12 +949,12 @@ function getMSCAA($paperID, $mysqlidb) {
       }
 
       if ($summative_lock == 1) {
-        echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "','$x','" . $temp_array[$x]['q_type'] . "','" . $temp_array[$x]['screen'] . "','" . $temp_array[$x]['p_id'] . "'," . $temp_array[$x]['display_pos'] . ",'" . $prevous_screen . "','" . $next_screen . "','" . $temp_array[$x]['screen'] . "','menu2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+        echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
       } else {
-        echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "','$x','" . $temp_array[$x]['q_type'] . "','" . $temp_array[$x]['screen'] . "','" . $temp_array[$x]['p_id'] . "'," . $temp_array[$x]['display_pos'] . ",'" . $prevous_screen . "','" . $next_screen . "','" . $temp_array[$x]['screen'] . "','menu2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+        echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
       }
     } else {
-      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "','$x','" . $temp_array[$x]['q_type'] . "','" . $temp_array[$x]['screen'] . "','" . $temp_array[$x]['p_id'] . "'," . $temp_array[$x]['display_pos'] . ",'" . $prevous_screen . "','" . $next_screen . "','" . $temp_array[$x]['screen'] . "','menu2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     }
 
     echo '<td>';
@@ -1061,8 +1066,9 @@ function getMSCAA($paperID, $mysqlidb) {
       } else {
         echo $total_marks;
       }
-      echo "</td><td style=\"color:#808080\"><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</nobr></td></tr>\n";
+      echo "</td><td><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</nobr></td></tr>\n";
     }
+    echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($random_mark,1) . "&nbsp;</td><td style=\"color:#808080\">Random mark</td></tr>\n";
   }
   
   if ($paper_type != '3') {
