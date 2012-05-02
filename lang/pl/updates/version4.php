@@ -16,4 +16,5 @@ $string['startupdate'] = 'Rozpocznij aktualizację';
 $string['warning1'] = 'Ta aktualizacja wymaga aby plik /config/config.inc.php był zapisywalny.';
 $string['warning2'] = 'Przypisz plik do webserwera (chown) i zmień jego atrybuty na 644 (chmod)';
 $string['updatefromversion'] = 'Aktualizacja z wersji';
+$string['home'] = 'Strona główna';
 ?>

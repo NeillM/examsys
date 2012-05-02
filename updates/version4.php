@@ -2658,7 +2658,6 @@ if (!isset($_POST['update'])) {
     
     $query = file_get_contents('../install/student_help.sql');
     $mysqli->query($query);
-    echo $mysqli->error . '<br />';
     echo "<li>LOADED student_help</li>\n";
   }
 
@@ -2685,6 +2684,6 @@ if (!isset($_POST['update'])) {
   ob_end_flush();
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<blockquote>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"window.location('../staff/')\" /></div><blockquote>\n";
 }
 ?>

@@ -16,4 +16,5 @@ $string['startupdate'] = 'Start Update';
 $string['warning1'] = 'This update requires that /config/config.inc.php is writeable.';
 $string['warning2'] = 'Please chown the file to the webserver and chomod it 644';
 $string['updatefromversion'] = 'Update from version';
+$string['home'] = 'Home';
 ?>
