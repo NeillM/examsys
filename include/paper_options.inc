@@ -183,13 +183,13 @@ $stmt->close();
   }
 
   function changeScreen(screenNo) {
-    window.location='<?php echo $cfg_root_path ?>/paper/change_screen_no.php?questionID=' + document.PapersMenu.pID.value + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.oldQuestionID.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
+    window.location='<?php echo $cfg_root_path ?>/paper/change_screen_no.php?questionID=' + document.PapersMenu.pID.value + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.current_pos.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
   }
   
   function incScreen() {
     screenNo = document.PapersMenu.screenNo.value;
     screenNo++;
-    window.location='<?php echo $cfg_root_path ?>/paper/change_screen_no.php?questionID=' + getLastID(document.PapersMenu.pID.value) + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.oldQuestionID.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
+    window.location='<?php echo $cfg_root_path ?>/paper/change_screen_no.php?questionID=' + getLastID(document.PapersMenu.pID.value) + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.current_pos.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + document.getElementById('scrOfY').value;
   }
   
   function addQuestions(display, screen_no) {

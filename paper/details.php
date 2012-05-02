@@ -183,55 +183,6 @@ function random_qMarks($random_questions) {
     return 'ERR';
   }
 }
-
-function changeScreenNo($mysqlidb) {
-  $screen = $_GET['screen'];
-
-  // Change the screen number of the actual question.
-  if ($result = $mysqlidb->prepare("UPDATE papers SET screen=? WHERE paper=? AND p_id=?")) {
-    $result->bind_param('iii', $screen, $_GET['paperID'], $_GET['questionID']);
-    $result->execute();
-    $result->close();
-  } else {
-    display_error("Papers Update Error 1", $mysqlidb->error);
-  }
-
-  // Increase screen number of any questions further down the paper with a lower screen number.
-  if ($result = $mysqlidb->prepare("UPDATE papers SET screen=? WHERE screen < ? AND paper=? AND display_pos > ?")) {
-    $result->bind_param('iiii', $screen, $screen, $_GET['paperID'],  $_GET['display_pos']);
-    $result->execute();
-    $result->close();
-  } else {
-    display_error("Papers Update Error 2", $mysqlidb->error);
-  }
-
-  // Decrease screen number of any questions further up the paper with a higher screen number.
-  if ($result = $mysqlidb->prepare("UPDATE papers SET screen=? WHERE screen > ? AND paper=? AND display_pos < ?")) {
-    $result->bind_param('iiii', $screen, $screen, $_GET['paperID'],  $_GET['display_pos']);
-    $result->execute();
-    $result->close();
-  } else {
-    display_error("Papers Update Error 3", $mysqlidb->error);
-  }
-}
-if (isset($_GET['change_screen'])) {
-  changeScreenNo($mysqli);
-}
-
-function getMSCAA($paperID, $mysqlidb) {
-  $mscaa_metadata = array();
-
-  $result = $mysqlidb->prepare("SELECT questionID FROM questions_metadata, papers WHERE questions_metadata.questionID=papers.question AND paper=? AND value LIKE 'MSC_AA%'");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($questionID);
-  while ($result->fetch()) {
-    $mscaa_metadata[$questionID] = '1';
-  }
-  $result->close();
-  
-  return $mscaa_metadata;
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
@@ -254,17 +205,12 @@ function getMSCAA($paperID, $mysqlidb) {
       width:158px;
       min-width:158px
     }
-    #tiptip_content {
-      background: rgb(25,25,25);
-      background: rgba(25,25,25,0.92);
-    }
   </style>
   <![endif]-->
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
 <script defer="defer" type="text/javascript">
@@ -406,8 +352,6 @@ function getMSCAA($paperID, $mysqlidb) {
 
   $paper_owner = $title  . ' ' . $initials . ', ' . $surname;
 
-  $mscaa_metadata = getMSCAA($paperID, $mysqli);
-
   if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
     $active_date = 1;
   } else {
@@ -476,40 +420,6 @@ function getMSCAA($paperID, $mysqlidb) {
 <?php
   // Promoting/Demoting questions
   $q_highlight = 0;
-
-  if (isset($_GET['old_pos']) AND isset($_GET['new_pos']) AND $_GET['old_pos'] != $_GET['new_pos']) {
-    $old_pos = $_GET['old_pos'];
-    $new_pos = $_GET['new_pos'];
-    $old_screen = $_GET['old_screen'];
-    $new_screen = $_GET['new_screen'];
-    $result = $mysqli->prepare("UPDATE papers SET display_pos=9999 WHERE display_pos=? AND paper=?");
-    $result->bind_param('ii', $new_pos, $paperID);
-    $result->execute();
-    $result->close();
-
-    $result = $mysqli->prepare("UPDATE papers SET display_pos=?, screen=? WHERE display_pos=? AND paper=?");
-    $result->bind_param('iiii', $new_pos, $new_screen, $old_pos, $paperID);
-    $result->execute();
-    $result->close();
-
-    $result = $mysqli->prepare("UPDATE papers SET display_pos=?, screen=? WHERE display_pos=9999 AND paper=?");
-    $result->bind_param('iii', $old_pos, $old_screen, $paperID);
-    $result->execute();
-    $result->close();
-
-    $q_highlight = $new_pos;
-  } elseif (isset($_GET['old_screen']) AND isset($_GET['new_screen']) AND $_GET['old_screen'] != $_GET['new_screen']) {
-    $old_pos = $_GET['old_pos'];
-    $new_pos = $_GET['new_pos'];
-    $old_screen = $_GET['old_screen'];
-    $new_screen = $_GET['new_screen'];
-    $result = $mysqli->prepare("UPDATE papers SET screen=? WHERE display_pos=? AND paper=?");
-    $result->bind_param('iii', $new_screen, $old_pos, $paperID);
-    $result->execute();
-    $result->close();
-
-    $q_highlight = $new_pos;
-  }
 
   // Log the hit in recent_papers.
   $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE accessed=NOW();");
@@ -1067,8 +977,8 @@ function getMSCAA($paperID, $mysqlidb) {
         echo $total_marks;
       }
       echo "</td><td><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</nobr></td></tr>\n";
+      echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($total_random_mark,2) . "&nbsp;</td><td style=\"color:#808080\">(" . round(((round($total_random_mark,2) / $total_marks) * 100), 0) . "%) random mark</td></tr>\n";
     }
-    echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($random_mark,1) . "&nbsp;</td><td style=\"color:#808080\">Random mark</td></tr>\n";
   }
   
   if ($paper_type != '3') {
@@ -1083,7 +993,7 @@ function getMSCAA($paperID, $mysqlidb) {
       $warning_types = array('Incomplete','Beta','Retired');
     }
     foreach ($warning_types as $warning_type) {
-      if (isset($paper_warnings[$warning_type]) AND count($paper_warnings[$warning_type]) > 0) {
+      if (isset($paper_warnings[$warning_type]) and count($paper_warnings[$warning_type]) > 0) {
         echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\"><strong>The following questions are '$warning_type':</strong> ";
         foreach ($paper_warnings[$warning_type] as $question_warning) {
           echo ' Q' . $question_warning;
