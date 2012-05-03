@@ -116,16 +116,19 @@ class CALCULATIONCorrector extends Corrector {
               $tolerance_partial = $answer * ($tolerance_perc/100);
             }
 
-            $difference = round(abs($saved_response - $answer), 12);
+            $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
+            $difference = round(abs($saved_response_clean - $answer), 12);
 
-            if ($saved_response == $answer) {
-              $mark = $mark_correct;
-            } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
-              $mark = $mark_correct;
-            } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
-              $mark = $mark_partial;
-            } else {
-              $mark = $mark_incorrect;
+            if ($saved_response_clean != '') {
+              if ($saved_response_clean == $answer) {
+                $mark = $mark_correct;
+              } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
+                $mark = $mark_correct;
+              } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
+                $mark = $mark_partial;
+              } else {
+                $mark = $mark_incorrect;
+              }
             }
             $saved_response .= '|' . $answer . '|' . $answer_parts[2];
             
