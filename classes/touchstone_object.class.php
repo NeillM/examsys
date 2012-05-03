@@ -95,8 +95,6 @@ Class TouchStoneObject {
       }
     } 
     return $text;
-    
-    return $text;
   }
   
   /**
