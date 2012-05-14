@@ -31,5 +31,9 @@ $string['Bidirectional'] = 'Nawigacja dwukierunkowa';
 $string['Unidirectional'] = 'Nawigacja jednokierunkowa';
 $string['requirespassword'] = 'Ten arkusz wymaga podania hasła.';
 $string['mins'] = 'min.';
-$string['forthcomingpapers'] = 'Nadchodzące arkusze'; 
+$string['summativetesting'] = 'Summative Exams for Testing'; // Niko
+$string['summativetestmsg'] = '<strong>Staff only &ndash; this section is not visible to students.</strong> These are the summative exams scheduled for your teams in the next six weeks.'; // Niko
+$string['nodurationwarning'] = 'Warning: duration not set'; // Niko
+$string['startwarning'] = 'Warning: paper starts before %d:00'; // Niko
+$string['nolabswarning'] = 'Warning: no labs set'; // Niko
 ?>
