@@ -1402,10 +1402,10 @@ if ($paper_type != '4' and $paper_type != '5') {
   $team_list = implode("','", $teams);
   
   $schools = getSchools($teams, $mysqli);
-  $school_list = implode(',', $schools);
+  $school_sql = (count($schools) > 0) ? 'AND schoolid IN (' . implode(',', $schools) . ')' : '';
   $current_internals = explode(',',$internal_reviewers);
      
-  $internal_details = $mysqli->prepare("SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, teams, modules WHERE users.id=teams.memberID and modules.moduleid=teams.name AND schoolid IN ($school_list) ORDER BY surname, initials");
+  $internal_details = $mysqli->prepare("SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, teams, modules WHERE users.id=teams.memberID and modules.moduleid=teams.name $school_sql ORDER BY surname, initials");
   $internal_details->execute();
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
   $internal_no = 0;
