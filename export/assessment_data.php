@@ -837,7 +837,12 @@
                     }
                   }
                   if ($is_random) {
-                    echo ',' . $correct_parts[$partID + 1];
+                    echo ',';
+                    if ($mode == 'numeric') {
+                      echo $correct_parts[$partID + 1];
+                    } else {
+                      echo $correct_text_parts[$correct_parts[$partID + 1]];
+                    }
                   }
                 }
               }
