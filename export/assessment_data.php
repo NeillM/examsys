@@ -949,7 +949,7 @@
                     if ($mode == 'numeric') {
                       echo ',' . substr($correct_clean, $char_pos, 1);
                     } else {
-                      if ($part_ans == 'y') {
+                      if (substr($correct_clean, $char_pos, 1) == 'y') {
                         echo ',"' . $correct_text_parts[$char_pos + 1] . '"';
                       } else {
                         echo ',';
