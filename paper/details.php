@@ -477,6 +477,11 @@ function random_qMarks($random_questions) {
         $latex = 1;
       }
     
+     // latex check [tex]
+      if (strpos($leadin,'[texi]') !== false or strpos($scenario,'[texi]') !== false or strpos($option_text,'[texi]') !== false or strpos($score_method,'[texi]') !== false or strpos($correct_fback,'[texi]') !== false or strpos($feedback_right,'[texi]') !== false) {
+        $latex = 1;
+      }
+    
       // latex check $$
       if (strpos($leadin,'$$') !== false or strpos($scenario,'$$') !== false or strpos($option_text,'$$') !== false or strpos($score_method,'$$') !== false or strpos($correct_fback,'$$') !== false or strpos($feedback_right,'$$') !== false) {
         $latex = 1;
