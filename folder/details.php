@@ -214,7 +214,7 @@ if ($folder != '') {
 }
 echo '</div></th>';
 echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\" onclick=\"refreshPage();\"";
-if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked';
+if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
 echo " /> " . $string['showretired'] . "</th></tr>\n";
 
 echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n<br />\n";

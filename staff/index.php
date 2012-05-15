@@ -56,18 +56,8 @@ require '../include/staff_auth.inc';
 <script src="../js/sidebar.js" type="text/javascript"></script>
 <script language="JavaScript">
   function illegalChar(codeID) {
-    if (codeID == 38) {
-      alert("Character '&' illegal - please use alternative characters in folder name.");
-    } else if (codeID == 59) {
+    if (codeID == 59) {
       alert("Character ';' illegal - please use alternative characters in folder name.");
-    } else if (codeID == 63) {
-      alert("Character '?' illegal - please use alternative characters in folder name.");
-    } else if (codeID == 64) {
-      alert("Character '@' illegal - please use alternative characters in folder name.");
-    } else if (codeID == 94) {
-      alert("Character '^' illegal - please use alternative characters in folder name.");
-    } else if (codeID == 126) {
-      alert("Character '~' illegal - please use alternative characters in folder name.");
     }
     event.returnValue = false;
   }
@@ -239,18 +229,38 @@ require '../include/staff_auth.inc';
   }
 
   // Work out if there is anything in the recycle bin.
-  $deleted_details = $mysqli->prepare("SELECT COUNT(property_id) AS no_deleted FROM properties WHERE deleted IS NOT NULL AND paper_ownerID=?");
-  $deleted_details->bind_param('i', $userID);
-  $deleted_details->execute();
-  $deleted_details->bind_result($no_deleted);
-  $deleted_details->store_result();
-  $deleted_details->fetch();
-  if ($no_deleted > 0) {
+  $recycle_bin_no = 0;
+  
+  $stmt = $mysqli->prepare("SELECT COUNT(property_id) FROM properties WHERE (paper_ownerID=? OR moduleID IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
+  $stmt->bind_param('i', $userID);
+  $stmt->execute();
+  $stmt->bind_result($no_deleted);
+  $stmt->fetch();
+  $stmt->close();
+  $recycle_bin_no += $no_deleted;
+  
+  $stmt = $mysqli->prepare("SELECT COUNT(q_id) FROM questions WHERE (ownerID=? OR q_group IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
+  $stmt->bind_param('i', $userID);
+  $stmt->execute();
+  $stmt->bind_result($no_deleted);
+  $stmt->fetch();
+  $stmt->close();
+  $recycle_bin_no += $no_deleted;
+
+  
+  $stmt = $mysqli->prepare("SELECT COUNT(id) FROM folders WHERE (ownerID=? OR team_name IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
+  $stmt->bind_param('i', $userID);
+  $stmt->execute();
+  $stmt->bind_result($no_deleted);
+  $stmt->fetch();
+  $stmt->close();
+  $recycle_bin_no += $no_deleted;
+
+  if ($recycle_bin_no > 0) {
     echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
   } else {
     echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/empty_bin.png\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
   }
-  $deleted_details->close();
 ?>
 <br clear="left" />
 <?php
