@@ -5,20 +5,19 @@ require_once 'TrivialOAuthDataStore.php';
 
 // Returns true if this is a Basic LTI message
 // with minimum values to meet the protocol
-function is_basic_lti_request()
-{
-  if(isset($_REQUEST["lti_message_type"]) and isset($_REQUEST["lti_version"]) and isset($_REQUEST["resource_link_id"]))
-  $good_message_type = $_REQUEST["lti_message_type"] == "basic-lti-launch-request";
-  $good_lti_version = $_REQUEST["lti_version"] == "LTI-1p0";
-  $resource_link_id = $_REQUEST["resource_link_id"];
-  if ($good_message_type and $good_lti_version and isset($resource_link_id)) return (true);
+function is_basic_lti_request() {
+  if (isset($_REQUEST["lti_message_type"]) and isset($_REQUEST["lti_version"]) and isset($_REQUEST["resource_link_id"])) {
+    $good_message_type = $_REQUEST["lti_message_type"] == "basic-lti-launch-request";
+    $good_lti_version = $_REQUEST["lti_version"] == "LTI-1p0";
+    $resource_link_id = $_REQUEST["resource_link_id"];
+    if ($good_message_type and $good_lti_version and isset($resource_link_id)) return (true);
+  }
   return false;
 }
 
 // Basic LTI Class that does the setup and provides utility
 // functions
-class BLTI
-{
+class BLTI {
 
   public $valid = false;
   public $complete = false;
@@ -28,15 +27,13 @@ class BLTI
   public $row = false;
   public $context_id = false; // Override context_id
 
-  function __construct($parm = false, $usesession = true, $doredirect = true)
-  {
-
+  function __construct($parm = false, $usesession = true, $doredirect = true) {
 
     // If this request is not an LTI Launch, either
     // give up or try to retrieve the context from session
     if (!is_basic_lti_request()) {
       if ($usesession === false) return;
-      if (strlen(session_id()) > 0) {
+      if (strlen(session_id()) > 0 and isset($_SESSION['_basiclti_lti_row'])) {
         $row = $_SESSION['_basiclti_lti_row'];
         if (isset($row)) $this->row = $row;
         $context_id = $_SESSION['_basiclti_lti_context_id'];
@@ -50,7 +47,7 @@ class BLTI
         $this->message = "Could not find context in session";
         return;
       }
-      $this->message = "Session not available";
+      //$this->message = "Session not available";
       return;
     }
 
