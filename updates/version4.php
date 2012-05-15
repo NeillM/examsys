@@ -2682,6 +2682,84 @@ if (!isset($_POST['update'])) {
   echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
 
 
+
+
+
+  // 15/05/2012 -  Add LTI Tables
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  // $result->num_rows() == 0
+  if ( $result->num_rows() == 0 ) {
+    // Table to hold Reference material
+    $adjust = $mysqli->prepare("CREATE TABLE IF NOT EXISTS `lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) ");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE IF NOT EXISTS `lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) </li>\n";
+
+    $adjust = $mysqli->prepare("CREATE TABLE IF NOT EXISTS `lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) ");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE IF NOT EXISTS `lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) </li>\n";
+
+
+    $adjust = $mysqli->prepare("CREATE TABLE IF NOT EXISTS `lti_keys` (  `id` mediumint(9) NOT NULL AUTO_INCREMENT,  `oauth_consumer_key` char(255)NOT NULL,  `secret` char(255)DEFAULT NULL,  `name` char(255) DEFAULT NULL,  `context_id` char(255) DEFAULT NULL,  `created_at` datetime NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) ");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE IF NOT EXISTS `lti_keys` (  `id` mediumint(9) NOT NULL AUTO_INCREMENT,  `oauth_consumer_key` char(255)NOT NULL,  `secret` char(255)DEFAULT NULL,  `name` char(255) DEFAULT NULL,  `context_id` char(255) DEFAULT NULL,  `created_at` datetime NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) </li>\n";
+
+
+    ob_flush();
+    flush();
+
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_keys TO '".  $cfg_db_username . "'@'".
+      $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
+
+
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_keys TO '". $cfg_db_sysadmin_user .
+      "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
+
+    $sql="GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_user TO '". $cfg_db_username . "'@'".
+      $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
+    /*
+        $sql = "GRANT SELECT ON " . $cfg_db_database . ".lti_user TO '". $cfg_db_sysadmin_user . "'@'".
+          $cfg_db_host . "'";
+        $mysqli->query($sql);
+        echo "<li>$sql</li>\n";
+    */
+
+
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_resource TO '". $cfg_db_sysadmin_user .
+      "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
+
+
+    $sql="GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_resource TO '". $cfg_db_staff_user . "'@'".
+      $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
+
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".lti_resource TO '". $cfg_db_student_user . "'@'".
+      $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
+
+  }
+
+
+
+
+
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

@@ -110,7 +110,73 @@ function ldap_auth($u, $p, &$data){
  * @return Bool TRUE on sucsess FALSE on failure
  *
  */
-function db_auth($u, $p, $db) {
+
+function db_userlookup($u, $db, $useridlookup = false) {
+  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
+  global $cfg_db_admin_user, $cfg_db_admin_passwd;
+  global $cfg_db_staff_user, $cfg_db_staff_passwd;
+  global $cfg_db_student_user, $cfg_db_student_passwd;
+  global $cfg_db_external_user, $cfg_db_external_passwd;
+  global $cfg_db_inv_user, $cfg_db_inv_passwd;
+
+  if ($u == '') {
+    return false;
+  }
+
+  $split_username = explode('_', $u);
+  $tmp_u = $split_username[0];
+
+if($useridlookup==false) {
+  $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE username=?");
+}  else {
+
+    $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE id=?");
+  }
+
+  $stmt->bind_param('s', $tmp_u);
+  $stmt->execute();
+  $stmt->store_result();
+  $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs);
+  $stmt->fetch();
+
+  return array($stmt,array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade,
+    $year, $special_needs));
+
+}
+
+function db_change_user($db) {
+  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
+  global $cfg_db_admin_user, $cfg_db_admin_passwd;
+  global $cfg_db_staff_user, $cfg_db_staff_passwd;
+  global $cfg_db_student_user, $cfg_db_student_passwd;
+  global $cfg_db_external_user, $cfg_db_external_passwd;
+  global $cfg_db_inv_user, $cfg_db_inv_passwd;
+
+  //select the aproprate database user
+  if (strpos($userroles,'SysAdmin') !== false) {
+    $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
+  } else if (strpos($userroles,'Staff') !== false or strpos($userroles,'Admin') !== false) {           // Process staff first to get higher priority than students
+    $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
+  } else if (strpos($userroles,'Student') !== false) {
+    $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
+  } else if (strpos($userroles,'External Examiner') !== false) {
+    $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
+  } else if (strpos($userroles,'Invigilator') !== false) {
+    $result = $db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
+  } else {
+    $result = false;
+  }
+
+  if ($result === false) {
+    $db_errors = '<strong>' . $string['nodatabaseconnection'] . '</strong>';
+    return false;
+  }
+  return true;
+}
+
+function db_auth($u, $p, $db, $changeuser = true) {
   global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
@@ -125,7 +191,10 @@ function db_auth($u, $p, $db) {
   if ($p == '') {
     return false;
   }
-  
+
+  list($stmt,list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade,
+    $year, $special_needs))=db_userlookup($u,$db);
+
   // Check for '_staff' or '_username' in the username and set user to _username if found and user is SysAdmin.
   $split_username = explode('_', $u);
   $tmp_u = $split_username[0];
@@ -136,6 +205,9 @@ function db_auth($u, $p, $db) {
   $stmt->store_result();
   $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs);
   $stmt->fetch();
+
+  $split_username = explode('_', $u);
+
   if ($stmt->num_rows > 0) {
     if ($p != '' AND crypt($p,$password) == $password) {
       $stmt->close();
@@ -158,7 +230,8 @@ function db_auth($u, $p, $db) {
           $cfg_install_type .= " as $title $surname";
         }
       }
-            
+
+     /*
       //select the aproprate database user
       if (strpos($userroles,'SysAdmin') !== false) {
         $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
@@ -178,8 +251,24 @@ function db_auth($u, $p, $db) {
         $db_errors = '<strong>' . $string['nodatabaseconnection'] . '</strong>';
         return false;
       }
-      
+
+
+
       return true;
+
+
+
+      */
+if($changeuser){
+      $ret=db_change_user($db);
+
+}
+else{
+  $ret=true;
+}
+       return $ret;
+
+
     } else {
       $db_errors = '<strong>' . $string['localtsauthfailed'] . '</strong>';
       return false;
