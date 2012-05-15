@@ -53,15 +53,15 @@ if ($folder != '') {
   $result->bind_param('i', $tmp_folder);
   $result->execute();
   $result->store_result();
-  $result->bind_result($folder_ownerID, $folder_name, $team_name);
+  $result->bind_result($folder_ownerID, $orig_folder_name, $team_name);
   $result->fetch();
   $result->close();
-
+  
   if (isset($folder_teams) and $folder_teams != '' and $module == '') $module = $folder_teams;
 
-  if (substr_count($folder_name,';') > 0) {
-    $last_semicolon = strrpos($folder_name,';');
-    $path = substr($folder_name,0,$last_semicolon);
+  if (substr_count($orig_folder_name,';') > 0) {
+    $last_semicolon = strrpos($orig_folder_name,';');
+    $path = substr($orig_folder_name,0,$last_semicolon);
     $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
     $parent_results->bind_param('si', $path, $userID);
     $parent_results->execute();
@@ -123,7 +123,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == 'Create') {
 }
 
 if ($folder != '') {
-  $folders_array = explode(';',$folder_name);
+  $folders_array = explode(';',$orig_folder_name);
   $parts = count($folders_array) - 1;
   $selfenrol = 0;
 }
@@ -262,14 +262,14 @@ if ($folder != '') {
   if (count($teams) > 0) {
     $tmp_string = " OR team_name IN ('" . implode("','",$teams) . "')";
   }
-
-  $tmp_folder_name = $folder_name . ';%';
+  
+  $tmp_folder_name = $orig_folder_name . ';%';
   $folder_details = $mysqli->prepare("SELECT id, name, team_name, color FROM folders WHERE (ownerID=? $tmp_string) AND name LIKE ? AND deleted IS NULL ORDER BY name, id");
   $folder_details->bind_param('is', $userID, $tmp_folder_name);
   $folder_details->execute();
   $folder_details->bind_result($id, $name, $team_name, $color);
   while ($folder_details->fetch()) {
-    $display_name = str_replace("$folder_name;","",$name);
+    $display_name = str_replace("$orig_folder_name;","",$name);
     if (substr_count($display_name,';') == 0) {
       if ($team_name == '') {
         echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
