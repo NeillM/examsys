@@ -882,6 +882,7 @@
               }
 
               $sec = 1;
+              $cix = 0;
               $tmp_first_split = explode(';', $question['correct']);
               $tmp_second_split = explode('$', $tmp_first_split[11]);
               $label_indexes = array();
@@ -893,8 +894,8 @@
                   $label_indexes[$tmp_third_split[0]] = $tmp_third_split[1];
                   if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no-2] > 219) {
                     $location = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
-                    $tmp_third_split = explode('|', $tmp_second_split[$label_no]);
-                    $correct[$tmp_third_split[1] - 1] = $tmp_third_split[0];
+                    $correct[$cix] = $tmp_third_split[0];
+                    $cix++;
                     if (isset($user_answers[$location])) {
                       $answers[] = $user_answers[$location];
                     } else {
@@ -913,7 +914,7 @@
                       echo $label_indexes[$answer];
                     }
                     if ($is_random) {
-                      echo ',' . $answer;
+                      echo ',' . $label_indexes[$correct[$j]];
                     }
                   } else {
                     echo $answer;
