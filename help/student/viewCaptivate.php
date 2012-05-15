@@ -28,7 +28,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>Rogō Tutorial<?php echo " $cfg_install_type"; ?></title>
+  <title>Online Tutorial<?php echo " $cfg_install_type"; ?></title>
   <style type="text/css">
     html, body {margin:0;	padding:0; height:100%; width:100%}
   </style>
@@ -39,7 +39,7 @@
    echo "<embed width=\"100%\" height=\"100%\" src='./images/" . $_GET['tutorial'] . "' />";
   
    if (strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
-    $result = $mysqli->prepare("INSERT INTO help_tutorial_log VALUES (NULL,?,?,NOW(),?)");
+    $result = $mysqli->prepare("INSERT INTO help_tutorial_log VALUES (NULL, ?, ?, NOW(), ?)");
     $result->bind_param('sis', 'student', $userID, $_GET['tutorial']);
     $result->execute();  
     $result->close();

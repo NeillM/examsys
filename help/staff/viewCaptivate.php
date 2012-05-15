@@ -28,7 +28,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>TouchStone Tutorial<?php echo " $cfg_install_type"; ?></title>
+  <title>Online Tutorial<?php echo " $cfg_install_type"; ?></title>
   <style type="text/css">
     html, body {margin:0;	padding:0; height:100%; width:100%}
   </style>
