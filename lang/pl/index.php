@@ -31,9 +31,9 @@ $string['Bidirectional'] = 'Nawigacja dwukierunkowa';
 $string['Unidirectional'] = 'Nawigacja jednokierunkowa';
 $string['requirespassword'] = 'Ten arkusz wymaga podania hasła.';
 $string['mins'] = 'min.';
-$string['summativetesting'] = 'Summative Exams for Testing'; // Niko
-$string['summativetestmsg'] = '<strong>Staff only &ndash; this section is not visible to students.</strong> These are the summative exams scheduled for your teams in the next six weeks.'; // Niko
-$string['nodurationwarning'] = 'Warning: duration not set'; // Niko
-$string['startwarning'] = 'Warning: paper starts before %d:00'; // Niko
-$string['nolabswarning'] = 'Warning: no labs set'; // Niko
+$string['summativetesting'] = 'Egzaminy kocowe do testów';
+$string['summativetestmsg'] = '<strong>Tylko dla kadry &ndash; ta sekcja nie jest widoczna dla studentów.</strong> Te egzaminy końcowe zaplanowano dla twojego zespołu w najbliższych sześciu tygodniach.'; 
+$string['nodurationwarning'] = 'Ostrzeżenie: nie określono czasu trwania'; 
+$string['startwarning'] = 'Ostrzeżenie: arkusz ustawiono na czas wcześniejszy niż %d:00'; 
+$string['nolabswarning'] = 'Ostrzeżenie: nie określono laboratorium'; 
 ?>
