@@ -38,11 +38,11 @@ require_once $cfg_web_root . 'LTI/ims-blti/blti.php';
 
 require_once  $cfg_web_root . 'include/lti_func.php';
 
-
+/*
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('xdebug.remote_autostart', 1);
-
+*/
 
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$cfg_root_path}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</p>\n";
 

@@ -7,6 +7,7 @@ require_once 'TrivialOAuthDataStore.php';
 // with minimum values to meet the protocol
 function is_basic_lti_request()
 {
+  if(isset($_REQUEST["lti_message_type"]) and isset($_REQUEST["lti_version"]) and isset($_REQUEST["resource_link_id"]))
   $good_message_type = $_REQUEST["lti_message_type"] == "basic-lti-launch-request";
   $good_lti_version = $_REQUEST["lti_version"] == "LTI-1p0";
   $resource_link_id = $_REQUEST["resource_link_id"];
