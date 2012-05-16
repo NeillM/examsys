@@ -125,7 +125,7 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
           $ldap_user_data = array();
           if (ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true) {
             //Ad Account OK
-            $encpw_details = encpw($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $encpw_details = encpw($cfg_encrypt_salt, $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
             $stmt = $mysqli->prepare("UPDATE users SET password = ? WHERE username = ?");
             $stmt->bind_param('ss', $encpw_details, $_SERVER['PHP_AUTH_USER']);
             $stmt->execute();

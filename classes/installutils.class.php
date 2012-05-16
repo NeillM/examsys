@@ -991,6 +991,7 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_ldap_bind_password = '{cfg_ldap_bind_password}';
   \$cfg_ldap_user_prefix   = '{cfg_ldap_user_prefix}';
   \$cfg_use_ldap           = {cfg_use_ldap};
+  \$cfg_encrypt_salt       = '{cfg_encrypt_salt}';    // Do not alter if not on LDAP.
 
 // Institutional email domains
 // If using external authentication (e.g. LDAP) list the domains that will authenticate against the external system
@@ -1041,46 +1042,53 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   ?>
 CONFIG;
 
-    $config = str_replace('{rogo_version}',$version,$config);
-    $config = str_replace('{SysAdmin_username}','USERNMAE_FOR_DEBUG',$config);
-    $config = str_replace('{cfg_db_host}',self::$cfg_db_host,$config);
-    $config = str_replace('{cfg_db_port}',self::$cfg_db_port,$config);
-    $config = str_replace('{cfg_db_charset}',self::$cfg_db_charset,$config);
-    $config = str_replace('{cfg_page_charset}',self::$cfg_page_charset,$config);
-    $config = str_replace('{cfg_company}',self::$cfg_company,$config);
+    $config = str_replace('{rogo_version}', $version, $config);
+    $config = str_replace('{SysAdmin_username}', 'USERNMAE_FOR_DEBUG', $config);
+    $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
+    $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
+    $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
+    $config = str_replace('{cfg_page_charset}', self::$cfg_page_charset, $config);
+    $config = str_replace('{cfg_company}', self::$cfg_company, $config);
 
-    $config = str_replace('{cfg_db_database}',self::$cfg_db_name,$config);
-    $config = str_replace('{cfg_db_username}',self::$cfg_db_username,$config);
-    $config = str_replace('{cfg_db_passwd}',self::$cfg_db_password,$config);
-    $config = str_replace('{cfg_db_student_user}',self::$cfg_db_student_user,$config);
-    $config = str_replace('{cfg_db_student_passwd}',self::$cfg_db_student_passwd,$config);
-    $config = str_replace('{cfg_db_staff_user}',self::$cfg_db_staff_user,$config);
-    $config = str_replace('{cfg_db_staff_passwd}',self::$cfg_db_staff_passwd,$config);
-    $config = str_replace('{cfg_db_external}',self::$cfg_db_external_user,$config);
-    $config = str_replace('{cfg_db_external_passwd}',self::$cfg_db_external_passwd,$config);
-    $config = str_replace('{cfg_db_sysadmin_user}',self::$cfg_db_sysadmin_user,$config);
-    $config = str_replace('{cfg_db_sysadmin_passwd}',self::$cfg_db_sysadmin_passwd,$config);
-    $config = str_replace('{cfg_db_sct_user}',self::$cfg_db_sct_user,$config);
-    $config = str_replace('{cfg_db_sct_passwd}',self::$cfg_db_sct_passwd,$config);
-    $config = str_replace('{cfg_db_inv_user}',self::$cfg_db_inv_user,$config);
-    $config = str_replace('{cfg_db_inv_passwd}',self::$cfg_db_inv_passwd,$config);
+    $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);
+    $config = str_replace('{cfg_db_username}', self::$cfg_db_username, $config);
+    $config = str_replace('{cfg_db_passwd}', self::$cfg_db_password, $config);
+    $config = str_replace('{cfg_db_student_user}', self::$cfg_db_student_user, $config);
+    $config = str_replace('{cfg_db_student_passwd}', self::$cfg_db_student_passwd, $config);
+    $config = str_replace('{cfg_db_staff_user}', self::$cfg_db_staff_user, $config);
+    $config = str_replace('{cfg_db_staff_passwd}', self::$cfg_db_staff_passwd, $config);
+    $config = str_replace('{cfg_db_external}', self::$cfg_db_external_user, $config);
+    $config = str_replace('{cfg_db_external_passwd}', self::$cfg_db_external_passwd, $config);
+    $config = str_replace('{cfg_db_sysadmin_user}', self::$cfg_db_sysadmin_user, $config);
+    $config = str_replace('{cfg_db_sysadmin_passwd}', self::$cfg_db_sysadmin_passwd, $config);
+    $config = str_replace('{cfg_db_sct_user}', self::$cfg_db_sct_user, $config);
+    $config = str_replace('{cfg_db_sct_passwd}', self::$cfg_db_sct_passwd, $config);
+    $config = str_replace('{cfg_db_inv_user}', self::$cfg_db_inv_user, $config);
+    $config = str_replace('{cfg_db_inv_passwd}', self::$cfg_db_inv_passwd, $config);
 
-    $config = str_replace('{cfg_support_email}',self::$cfg_support_email,$config);
-    $config = str_replace('{emergency_support_numbers}',self::$emergency_support_numbers,$config);
+    $config = str_replace('{cfg_support_email}', self::$cfg_support_email, $config);
+    $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
 
-    $config = str_replace('{cfg_short_date}',self::$cfg_short_date,$config);
-    $config = str_replace('{cfg_long_date_time}',self::$cfg_long_date_time,$config);
-    $config = str_replace('{cfg_timezone}',self::$cfg_timezone,$config);
-    $config = str_replace('{cfg_tmpdir}',self::$cfg_tmpdir,$config);
+    $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
+    $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
+    $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
+    $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
 
-    $config = str_replace('{cfg_ldap_server}',self::$cfg_ldap_server,$config);
-    $config = str_replace('{cfg_ldap_search_dn}',self::$cfg_ldap_search_dn,$config);
-    $config = str_replace('{cfg_ldap_bind_rdn}',self::$cfg_ldap_bind_rdn,$config);
-    $config = str_replace('{cfg_ldap_bind_password}',self::$cfg_ldap_bind_password,$config);
-    $config = str_replace('{cfg_ldap_user_prefix}',self::$cfg_ldap_user_prefix,$config);
-    $config = str_replace('{cfg_use_ldap}',self::$cfg_use_ldap,$config);
+    $config = str_replace('{cfg_ldap_server}', self::$cfg_ldap_server, $config);
+    $config = str_replace('{cfg_ldap_search_dn}', self::$cfg_ldap_search_dn, $config);
+    $config = str_replace('{cfg_ldap_bind_rdn}', self::$cfg_ldap_bind_rdn, $config);
+    $config = str_replace('{cfg_ldap_bind_password}', self::$cfg_ldap_bind_password, $config);
+    $config = str_replace('{cfg_ldap_user_prefix}', self::$cfg_ldap_user_prefix, $config);
+    $config = str_replace('{cfg_use_ldap}', self::$cfg_use_ldap, $config);
+    
+    $salt = '';
+    $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    for ($i=0; $i<16; $i++) {
+      $salt .= substr($characters, rand(0,61), 1);
+    }
+    $config = str_replace('{cfg_encrypt_salt}', $salt, $config);
 
-    $config = str_replace('{SERVER_NAME}',$_SERVER['HTTP_HOST'],$config);
+    $config = str_replace('{SERVER_NAME}', $_SERVER['HTTP_HOST'], $config);
 
     if (file_exists(self::$rogo_path . '/config/config.inc.php')) {
       rename(self::$rogo_path . '/config/config.inc.php', self::$rogo_path . '/config/config.inc.old.php');
@@ -1985,7 +1993,7 @@ QUERY;
 
     $this->tableList['users'] = <<<QUERY
         CREATE TABLE `users` (
-          `password` char(40) default NULL,
+          `password` char(90) default NULL,
           `grade` char(30) default NULL,
           `surname` char(35) default NULL,
           `initials` char(10) default NULL,

@@ -127,10 +127,9 @@ function db_userlookup($u, $db, $useridlookup = false) {
   $split_username = explode('_', $u);
   $tmp_u = $split_username[0];
 
-if($useridlookup==false) {
-  $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE username=?");
-}  else {
-
+  if ($useridlookup == false) {
+    $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE username=?");
+  } else {
     $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE id=?");
   }
 
@@ -140,9 +139,7 @@ if($useridlookup==false) {
   $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs);
   $stmt->fetch();
 
-  return array($stmt,array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade,
-    $year, $special_needs));
-
+  return array($stmt, array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs));
 }
 
 function db_change_user($db) {
@@ -177,7 +174,7 @@ function db_change_user($db) {
 }
 
 function db_auth($u, $p, $db, $changeuser = true) {
-  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string, $cfg_encrypt_salt;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
@@ -192,12 +189,13 @@ function db_auth($u, $p, $db, $changeuser = true) {
     return false;
   }
 
-  list($stmt,list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade,
-    $year, $special_needs))=db_userlookup($u,$db);
+  list($stmt,list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs))=db_userlookup($u,$db);
 
   // Check for '_staff' or '_username' in the username and set user to _username if found and user is SysAdmin.
   $split_username = explode('_', $u);
   $tmp_u = $split_username[0];
+  
+  $record_no = 0;
   
   $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE username=?");
   $stmt->bind_param('s', $tmp_u);
@@ -205,12 +203,29 @@ function db_auth($u, $p, $db, $changeuser = true) {
   $stmt->store_result();
   $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs);
   $stmt->fetch();
+  $record_no = $stmt->num_rows();
+  $stmt->close();
 
   $split_username = explode('_', $u);
 
-  if ($stmt->num_rows > 0) {
-    if ($p != '' AND crypt($p,$password) == $password) {
-      $stmt->close();
+  if ($record_no > 0 and $p != '') {
+
+    if (substr($password,0,3) == '$1$') {
+      $encrypt_type = 'MD5';
+    } else {
+      $encrypt_type = 'SHA-512';
+    }
+    $encrypt_password = encpw($cfg_encrypt_salt, $u, $p, $encrypt_type);
+    
+    if ($encrypt_password == $password) {
+      if ($encrypt_type == 'MD5') {
+        $encpw_details = encpw($cfg_encrypt_salt, $u, $p);
+        $stmt = $db->prepare("UPDATE users SET password = ? WHERE username = ?");
+        $stmt->bind_param('ss', $encpw_details, $u);
+        $stmt->execute();
+        $stmt->close();
+      }      
+      
       if (strpos($userroles,'SysAdmin') !== false and count($split_username) > 1) {
         //for Sysadmin only 
         if ($split_username[1] == 'staff') {
@@ -252,23 +267,16 @@ function db_auth($u, $p, $db, $changeuser = true) {
         return false;
       }
 
-
-
       return true;
-
-
-
       */
-if($changeuser){
-      $ret=db_change_user($db);
-
-}
-else{
-  $ret=true;
-}
-       return $ret;
-
-
+      
+      if ($changeuser){
+        $ret=db_change_user($db);
+      } else {
+        $ret=true;
+      }
+      
+      return $ret;
     } else {
       $db_errors = '<strong>' . $string['localtsauthfailed'] . '</strong>';
       return false;
@@ -287,14 +295,24 @@ else{
  * This is function encpw encrpts a password using md5 and a different salt per user. For 
  * storage in the DB
  *
+ * @param string $salt the salt as set in the config.inc.php file
  * @param string $u username
  * @param string $p password
+ * @param string $type the level of encryption to use
  * @return string encrypted password
  *
  */
-function encpw($u,$p) {
-  $salt = '$1$' . substr(md5($u),0,12) . '$';
-  return crypt($p,$salt);
+function encpw($salt, $u, $p, $type='SHA-512') {
+  if ($type == 'SHA-512') {
+    $full_salt = '$6$' . $salt . '$';        // SHA-512
+    $new_password = crypt($p, $full_salt);
+    $new_password = '$6$' . substr($new_password, strlen($full_salt));
+  } else {
+    $full_salt = '$1$' . substr(md5($u), 0, 12) . '$';   // Simple MD5, for barckwards compatibility
+    $new_password = crypt($p, $full_salt);
+  }
+  
+  return $new_password;
 }
 
 /**
@@ -311,9 +329,9 @@ function gen_password() {
   $num =   '0123456789012345678901234501234567890123456789012345';
   $special ='!$%?#@!.%?#@!$%?#@!$%?#@!.!$%?#@!.%?#@!$%?#@!.%?#@!$'; 
   $pass = '';
-  $chars = array($lower,$lower,$lower,$special,$num,$num,$upper,$upper);
+  $chars = array($lower, $lower, $lower, $special, $num, $num, $upper, $upper);
   for($i = 0; $i < 8; $i++) { 
-    $pass .= substr($chars[$i],rand(0,51),1);
+    $pass .= substr($chars[$i], rand(0, 51), 1);
   }
   return $pass;
 }

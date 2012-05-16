@@ -104,8 +104,8 @@ function unique_filename($filename, $strip = TRUE) {
     $filename = preg_replace("/[^a-z0-9_\-\(\)\.]/","",$filename);
   }
 
-  while(file_exists($cfg_web_root . "media/$filename")) {
-    if(!isset($ext)) {
+  while (file_exists($cfg_web_root . "media/$filename")) {
+    if (!isset($ext)) {
       $tmp = explode('.',$filename);
       $n = count($tmp);
       $ext = $tmp[$n - 1];
