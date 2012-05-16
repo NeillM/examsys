@@ -50,6 +50,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['editschool']." $cfg_install_type"; ?></title>
+  <link rel="stylesheet" href="../css/add_edit_new.css" type="text/css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -84,20 +85,25 @@ if (isset($_POST['submit'])) {
   
 <table class="header">
 <tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_schools.php"><?php echo $string['schools'] ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editschool'] ?></th>
+<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="lti_keys_list.php"><?php echo $string['ltikeys']; ?></a></div><div style="margin-left:10px; font-size:200%;
+font-weight:bold"><?php echo $string['editltikeys']; ?></th>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
 </tr>
 <tr><th colspan="2" class="bevel"></th></tr>
-</table>  
-  
+</table>
+  <div class="message">
+    <p style="font-size: 110%">
+      <span class="mandatory">*</span> <?php echo $string['mandatory'] ?>
+    </p>
+  </div>
   <br />
   <div align="center">
   <form name="add_school" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] .
     '?LTIkeysid=' . $_GET['LTIkeysid']; ?>">
     <table cellpadding="0" cellspacing="2" border="0">
-      <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="ltiname"                                                                           id="ltiname" value="<?php echo $ltis['name']; ?>" /></td></tr>
-      <tr><td class="field"><?php echo $string['oauth_consume_key']; ?></td><td><input type="text" size="70"                                                                                 name="ltikey" id="ltikey" value="<?php echo $ltis['oauth_consumer_key']; ?>" /></td></tr>
-      <tr><td class="field"><?php echo $string['oauth_secret']; ?></td><td><input type="text" size="70"                                                                                    name="ltisec" id="ltisec" value="<?php echo $ltis['secret']; ?>" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['name']; ?></td><td><input type="text" size="70" name="ltiname"                                                                           id="ltiname" value="<?php echo $ltis['name']; ?>" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_consume_key']; ?></td><td><input type="text" size="70"                                                                                 name="ltikey" id="ltikey" value="<?php echo $ltis['oauth_consumer_key']; ?>" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_secret']; ?></td><td><input type="text" size="70"                                                                                    name="ltisec" id="ltisec" value="<?php echo $ltis['secret']; ?>" /></td></tr>
       <tr><td class="field"><?php echo $string['oauth_context_id']; ?></td><td><input type="text" size="70"                                                                                     name="lticontext" id="lticontext" value="<?php echo $ltis['context_id']; ?>" /></td></tr>
 
 

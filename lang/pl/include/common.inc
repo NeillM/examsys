@@ -30,4 +30,13 @@ $string['forgottenpassword'] = 'Zapomniane hasło';
 $string['warning'] = 'Ostrzeżenie:';
 $string['secureconnection'] = 'Rogō jest dostępny wyłącznie przez połączenie bezpieczne. W zamian użyj:';
 $string['errormsg'] = 'Jeśli kolejny raz napotkałeś ten błąd skontaktuj się z:';
+
+
+$string['ltifirstlogin'] = 'Rogō Authorisation'; //Niko
+$string['ltifirstlogindesc'] = 'Rogō e-assessment system needs to confirm your identity to ensure
+you have the correct permissions.  This will only happen on your first visit and at infrequent intervals afterwards
+ to ensure security.<br /><a href="./">Click Here to Continue</a> ';//Niko
+$string['unavailablepaper']='You are attempting to access a <strong>paper that is unavailable</strong>!';//Niko
+
+
 ?>
