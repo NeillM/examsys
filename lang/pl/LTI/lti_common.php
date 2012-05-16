@@ -1,5 +1,5 @@
 <?php
-$string['name'] = 'Descriptive Name'; //Niko
+$string['name'] = 'Nazwa opisowa'; //Niko
 $string['oauth_consume_key']= 'Oauth Consumer Key';//Niko
 $string['oauth_secret'] = 'Oauth Consumer Secret';//Niko
 $string['oauth_context_id'] = 'Override LTI Context ID';//Niko

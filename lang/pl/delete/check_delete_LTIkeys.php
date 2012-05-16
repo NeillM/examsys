@@ -1,6 +1,6 @@
 <?php
-$string['confirmschooldelete'] = 'Confirm LTI Key Delete';//Niko
-$string['recyclebin'] = 'Recycle Bin';//Niko
-$string['msg'] = 'Are you sure you wish to delete this LTI Key?';//Niko
-$string['delete'] = 'Delete';//Niko
+$string['confirmschooldelete'] = 'Potwierdź usunięcie klucza LTI';
+$string['recyclebin'] = 'Kosz';
+$string['msg'] = 'Czy na pewno usunąć klucz LTI?';
+$string['delete'] = 'Usuń';
 ?>

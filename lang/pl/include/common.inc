@@ -32,11 +32,9 @@ $string['secureconnection'] = 'Rogō jest dostępny wyłącznie przez połączen
 $string['errormsg'] = 'Jeśli kolejny raz napotkałeś ten błąd skontaktuj się z:';
 
 
-$string['ltifirstlogin'] = 'Rogō Authorisation'; //Niko
-$string['ltifirstlogindesc'] = 'Rogō e-assessment system needs to confirm your identity to ensure
-you have the correct permissions.  This will only happen on your first visit and at infrequent intervals afterwards
- to ensure security.<br /><a href="./">Click Here to Continue</a> ';//Niko
-$string['unavailablepaper']='You are attempting to access a <strong>paper that is unavailable</strong>!';//Niko
-
+$string['ltifirstlogin'] = 'Autoryzacja Rogō';
+$string['ltifirstlogindesc'] = 'System egzaminowania Rogō wymaga identyfikacji Twojej osoby, aby upewnić się co do posiadanych przez Ciebie przywilejów. 
+Dokonane to będzie tylko przy pierwszej wizycie i w nielicznych przypadkach, w celu zapewnienia bezpieczeństwa w przyszłości.<br /><a href="./">Kliknij, aby kontynuować</a> ';
+$string['unavailablepaper']='Próbujesz otworzyć <strong>niedostępny arkusz</strong>!';
 
 ?>
