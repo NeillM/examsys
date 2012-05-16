@@ -27,6 +27,68 @@ class BLTI {
   public $row = false;
   public $context_id = false; // Override context_id
 
+  function updateltikey($parm = false, $ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {
+    if ($parm['dbtype'] == 'mysqli') {
+      $db = $parm['db'];
+      if ($db->error) {
+        try {
+          throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+        }
+        catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
+      $stmt = $db->prepare("UPDATE lti_keys set oauth_consumer_key=?, secret=?, context_id=? , `name`=? WHERE id=?");
+      /*
+      if ($db->error) {
+        try {
+          throw new Exception("1MySQL error $db->error <br> Query:<br> $query", $db->errno);
+        } catch(Exception $e ) {
+          echo "Error No: ".$e->getCode(). " - ". $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
+      */
+      $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname,$ltiid);
+
+      $stmt->execute();
+
+    }
+
+
+  }
+
+  function addltikey($parm = false, $ltiname, $ltikey, $ltisec, $lticontext = '') {
+    if ($parm['dbtype'] == 'mysqli') {
+      $db = $parm['db'];
+      if ($db->error) {
+        try {
+          throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+        }
+        catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
+      $stmt = $db->prepare("INSERT INTO lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
+      /*
+      if ($db->error) {
+        try {
+          throw new Exception("1MySQL error $db->error <br> Query:<br> $query", $db->errno);
+        } catch(Exception $e ) {
+          echo "Error No: ".$e->getCode(). " - ". $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
+      */
+      $stmt->bind_param('ssss', $ltikey, $ltisec, $lticontext, $ltiname);
+
+      $stmt->execute();
+
+    }
+  }
+
   function __construct($parm = false, $usesession = true, $doredirect = true) {
 
     // If this request is not an LTI Launch, either
