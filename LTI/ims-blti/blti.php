@@ -64,10 +64,10 @@ class BLTI {
       $db = $parm['db'];
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+          throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $query", $db->errno);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());
         }
       }

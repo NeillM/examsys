@@ -27,19 +27,12 @@ require '../include/errors.inc';
 check_var('LTIkeysid', 'GET', true, false);
 
 if (isset($_POST['submit'])) {
-
-
   $ltiname = trim($_POST['ltiname']);
   $ltikey = trim($_POST['ltikey']);
   $ltisec = trim($_POST['ltisec']);
   $lticontext = trim($_POST['lticontext']);
 
-  //  $facultyID = trim($_POST['facultyID']);
-
-  $insert_id = BLTI::updateltikey(array('dbtype'=>'mysqli','db' => $mysqli),$_GET['LTIkeysid'], $ltiname, $ltikey,
-    $ltisec, $lticontext);
-
-
+  $insert_id = BLTI::updateltikey(array('dbtype'=>'mysqli','db' => &$mysqli),$_GET['LTIkeysid'], $ltiname, $ltikey, $ltisec, $lticontext);
 
   header("location: lti_keys_list.php");
 } else {
@@ -49,7 +42,7 @@ if (isset($_POST['submit'])) {
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['editschool']." $cfg_install_type"; ?></title>
+  <title><?php echo $string['editltikeys']." $cfg_install_type"; ?></title>
   <link rel="stylesheet" href="../css/add_edit_new.css" type="text/css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -73,7 +66,7 @@ if (isset($_POST['submit'])) {
 <?php
   require '../include/lti_keys_options.inc';
 
-  $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, `name`, context_id FROM lti_keys ORDER BY name");
+  $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE id=?");
   $result->bind_param('i', $_GET['LTIkeysid']);
   $result->execute();
   $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'],  $ltis['context_id']);
@@ -98,13 +91,12 @@ font-weight:bold"><?php echo $string['editltikeys']; ?></th>
   </div>
   <br />
   <div align="center">
-  <form name="add_school" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] .
-    '?LTIkeysid=' . $_GET['LTIkeysid']; ?>">
+  <form name="edit_LTIkeys" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?LTIkeysid=' . $_GET['LTIkeysid']; ?>">
     <table cellpadding="0" cellspacing="2" border="0">
-      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['name']; ?></td><td><input type="text" size="70" name="ltiname"                                                                           id="ltiname" value="<?php echo $ltis['name']; ?>" /></td></tr>
-      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_consume_key']; ?></td><td><input type="text" size="70"                                                                                 name="ltikey" id="ltikey" value="<?php echo $ltis['oauth_consumer_key']; ?>" /></td></tr>
-      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_secret']; ?></td><td><input type="text" size="70"                                                                                    name="ltisec" id="ltisec" value="<?php echo $ltis['secret']; ?>" /></td></tr>
-      <tr><td class="field"><?php echo $string['oauth_context_id']; ?></td><td><input type="text" size="70"                                                                                     name="lticontext" id="lticontext" value="<?php echo $ltis['context_id']; ?>" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['name']; ?></td><td><input type="text" size="70" name="ltiname" id="ltiname" value="<?php echo $ltis['name']; ?>" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_consume_key']; ?></td><td><input type="text" size="70" name="ltikey" id="ltikey" value="<?php echo $ltis['oauth_consumer_key']; ?>" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_secret']; ?></td><td><input type="text" size="70" name="ltisec" id="ltisec" value="<?php echo $ltis['secret']; ?>" /></td></tr>
+      <tr><td class="field"><?php echo $string['oauth_context_id']; ?></td><td><input type="text" size="70" name="lticontext" id="lticontext" value="<?php echo $ltis['context_id']; ?>" /></td></tr>
 
 
     </table>

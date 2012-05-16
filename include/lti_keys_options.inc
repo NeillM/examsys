@@ -45,17 +45,15 @@
 
 
 <table style="margin-left:9px; font-size:90%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
-  <tr><td class="ico"><a href="add_LTIkeys.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createLTIkeys']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_LTIkeys.php"><?php echo $string['createLTIkeys']; ?></a></td></tr>
-
-
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editLTIkeys']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['editLTIkeys']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deleteLTIkeys']; ?></td></tr>
+  <tr><td class="ico"><a href="add_LTIkeys.php" target="body"><img src="../artwork/ims_16.png" width="16" height="16" alt="<?php echo $string['createLTIkeys']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_LTIkeys.php"><?php echo $string['createLTIkeys']; ?></a></td></tr>
+  <tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editLTIkeys']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['editLTIkeys']; ?></td></tr>
+  <tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deleteLTIkeys']; ?></td></tr>
 </table>
 
 <table style="margin-left:9px; font-size:90%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
-<tr><td class="ico"><a href="add_LTIkeys.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createLTIkeys']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_LTIkeys.php"><?php echo $string['createLTIkeys']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editLTIkeys()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editLTIkeys']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="editLTIkeys(); return false;"><?php echo $string['editLTIkeys']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteLTIkeys()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteLTIkeys(); return false;"><?php echo $string['deleteLTIkeys']; ?></a></td></tr>
+  <tr><td class="ico"><a href="add_LTIkeys.php" target="body"><img src="../artwork/ims_16.png" width="16" height="16" alt="<?php echo $string['createLTIkeys']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_LTIkeys.php"><?php echo $string['createLTIkeys']; ?></a></td></tr>
+  <tr><td class="ico"><img onclick="editLTIkeys()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editLTIkeys']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="editLTIkeys(); return false;"><?php echo $string['editLTIkeys']; ?></a></td></tr>
+  <tr><td class="ico"><img onclick="deleteLTIkeys()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteLTIkeys(); return false;"><?php echo $string['deleteLTIkeys']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>

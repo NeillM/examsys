@@ -84,8 +84,8 @@ require '../include/sysadmin_auth.inc';
       }
     }
 
-    function edit(schoolID) {
-      document.location.href='./edit_school.php?schoolid=' + schoolID;
+    function edit(divID) {
+      document.location.href='./edit_LTIkeys.php?LTIkeysid=' + divID;
     }
   </script>
 </head>
@@ -104,12 +104,9 @@ require '../include/lti_keys_options.inc';
     </tr>
     <tr>
       <th><div class="mid"><?php echo $string['name']; ?>&nbsp;</div></th>
-      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php
-        echo $string['oauth_consume_key']; ?>&nbsp;</th>
-      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php
-        echo $string['oauth_secret']; ?>&nbsp;</th>
-      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php
-        echo $string['oauth_context_id']; ?>&nbsp;</th>
+      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['oauth_consume_key']; ?>&nbsp;</th>
+      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['oauth_secret']; ?>&nbsp;</th>
+      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['oauth_context_id']; ?>&nbsp;</th>
     </tr>
     <tr><th colspan="4" class="bevel"></th></tr>
     <?php
