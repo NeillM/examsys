@@ -296,7 +296,7 @@ function mypercentile($data,$percentile) {
 }
 
 function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mark) {
-  if ($ss_hon > 0) {
+  if ($ss_hon > 0 and $ss_hon < 100) {
     if ($tmp_percent < $ss_pass) {
       $cranked = $pass_mark  - ($pass_mark - 0) * (($ss_pass - $tmp_percent) / ($ss_pass - 0));
     } elseif ($tmp_percent >= $ss_pass and $tmp_percent < $ss_hon) {
