@@ -84,17 +84,17 @@ font-weight:bold"><?php echo $string['addltikeys']; ?></th>
 </table>
   <div class="message">
     <p style="font-size: 110%">
-      <span class="mandatory">*</span> <?php echo $string['mandatory'] ?>
+      <span class="mandatory">*</span> <?php echo $string['mandatory']; ?>
     </p>
   </div>
   <br />
   <div align="center">
   <form name="add_LTIkeys" method="post" onsubmit="return checkForm();" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <table cellpadding="0" cellspacing="2" border="0">
-      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['name']; ?></td><td><input type="text" size="70" name="ltiname"                                                                           id="ltiname" value="<?php echo $string['prompt1']; ?>" /></td></tr>
-   <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_consume_key']; ?></td><td><input type="text" size="70"                                                                                 name="ltikey" id="ltikey" value="<?php echo $string['prompt2']; ?>" /></td></tr>
-      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_secret']; ?></td><td><input type="text" size="70"                                                                                    name="ltisec" id="ltisec" value="<?php echo $string['prompt3']; ?>" /></td></tr>
-      <tr><td class="field"><?php echo $string['oauth_context_id']; ?></td><td><input type="text" size="70"                                                                                     name="lticontext" id="lticontext" value="<?php echo $string['prompt4']; ?>" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['name']; ?></td><td><input type="text" size="70" name="ltiname" id="ltiname" /></td></tr>
+   <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_consume_key']; ?></td><td><input type="text" size="70" name="ltikey" id="ltikey" /></td></tr>
+      <tr><td class="field"><span class="mandatory">*</span> <?php echo $string['oauth_secret']; ?></td><td><input type="text" size="70" name="ltisec" id="ltisec" /></td></tr>
+      <tr><td class="field"><?php echo $string['oauth_context_id']; ?></td><td><input type="text" size="70" name="lticontext" id="lticontext" /></td></tr>
     </table>
     <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['add']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>

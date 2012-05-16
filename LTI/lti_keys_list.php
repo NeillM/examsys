@@ -16,7 +16,7 @@
 
 /**
  *
- * Installation script for inital setup of Rogo.
+ * Listing of IMS LTI Keys.
  *
  * @author Simon Atack
  * @version 1.0
@@ -26,14 +26,13 @@
 
 require '../include/sysadmin_auth.inc';
 
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['schools'] . ' ' . $cfg_install_type; ?></title>
+  <title><?php echo $string['ltikeys'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -69,7 +68,6 @@ require '../include/sysadmin_auth.inc';
       if (tmp_ID != '') {
         document.getElementById(tmp_ID).style.backgroundColor = 'white';
       }
-//    document.myform.oldDivID.value = '';
       document.getElementById('menu1b').style.display = 'none';
       document.getElementById('menu1a').style.display = 'block';
     }
@@ -115,22 +113,16 @@ require '../include/lti_keys_options.inc';
     </tr>
     <tr><th colspan="4" class="bevel"></th></tr>
     <?php
-
-
-$id=0;
+      $id=0;
       $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, `name`, context_id FROM lti_keys ORDER BY name");
       $result->execute();
       $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'],  $ltis['context_id']);
-            while ($result->fetch()) {
-$id=$ltis['id'];
-         echo "<tr id=\"$id\" onclick=\"selSch($id,event)\" ondblclick=\"edit('$id')\" onmouseover=\"lon($id)\"
-         onmouseout=\"loff($id)\" class=\"l\"><td><div class=\"mid\">" . $ltis['name'] ."</div></td><td>" .$ltis['oauth_consumer_key'] . "</td><td>" . $ltis['secret'] . "</td><td>" . $ltis['context_id']. "</div></td></tr>\n";
-
-   //     $id++;
+      while ($result->fetch()) {
+        $id=$ltis['id'];
+        echo "<tr id=\"$id\" onclick=\"selSch($id,event)\" ondblclick=\"edit('$id')\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><div class=\"mid\">" . $ltis['name'] ."</div></td><td>" .$ltis['oauth_consumer_key'] . "</td><td>" . $ltis['secret'] . "</td><td>" . $ltis['context_id']. "</div></td></tr>\n";
       }
       $result->close();
       $mysqli->close();
-
 
     ?>
   </table>
