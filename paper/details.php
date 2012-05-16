@@ -727,6 +727,9 @@ function random_qMarks($random_questions) {
   } else {
     echo "<tr class=\"retired\">\n";
   }
+  if (strpos($userroles,'Demo') !== false) {
+    $paper_owner = 'Mr J, Bloggs';
+  }
   echo "<th colspan=\"3\" style=\"font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> $display_start_date</th><th colspan=\"3\" style=\"text-align:right;font-size:90%\"><strong>" . $string['owner'] . ":</strong> $paper_owner&nbsp;</th></tr>\n";
   if ($retired == '') {
     echo '<tr class="details-head">';

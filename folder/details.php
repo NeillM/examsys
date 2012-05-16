@@ -28,6 +28,7 @@ require '../include/staff_auth.inc';
 require '../include/icon_display.inc';
 require '../include/sidebar_menu.inc';
 require '../include/errors.inc';
+require '../include/demo_replace.inc';
 require_once '../classes/stateutils.class.php';
 
 $stateutil = new StateUtils();
@@ -230,9 +231,15 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   $member_details->bind_result($surname, $initials, $title, $tmp_userID);
 
   $tmp_html = '';
+  if (strpos($userroles,'Demo') !== false) {
+    $i = 0;
+  }
   if ($member_details->num_rows > 0) $tmp_html = '<ul type="square" style="line-height:155%; font-size:90%; color:#8492A6; margin-top:4px; margin-bottom:4px; margin-left:20px; padding-left:0px">';
   while ($member_details->fetch()) {
-    if (strpos($userroles,'Admin') !== false) {
+    if (strpos($userroles,'Demo') !== false) {
+      $tmp_html .= "<li><span style=\"color:#254280\">" . demo_replace_name($i) . "</span></li>\n";
+      $i++;
+    } elseif (strpos($userroles,'Admin') !== false) {
       $tmp_html .= "<li><a style=\"color:#254280\" href=\"../users/details.php?userID=$tmp_userID&module=" . $_GET['module'] . "\" target=\"_top\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</a></li>\n";
     } else {
       $tmp_html .= "<li><span style=\"color:#254280\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</span></li>\n";
