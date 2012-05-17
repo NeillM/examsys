@@ -64,45 +64,19 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   session_start();
   $lti = new BLTI(array('table' => 'lti_keys', 'dbtype' => 'mysqli', 'db' => $mysqli), true, false);
 
-  //print "";
-
-
   if ($lti->valid) {
     //LTI Correct
-
-    //print "LTI OK";
-    //    print_r($lti);
-    // print   $lti->dump();
-
-
     $check = usercheck($mysqli, $lti);
 
-
-    list($stmt, list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade,
-      $year, $special_needs)) = db_userlookup($check[0], $mysqli, true);
-
+    list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
 
     db_change_user($mysqli);
-
-    //   print "logged in";
-    /*
-    print "<br>REQUEST<br>";
-        print_r($_REQUEST);
-
-    print "<BR>SESSION<BR>";
-
-        print_r($_SESSION);
-    */
-
-
   }
 
   if (isset($lti->message) AND $lti->message != 'Could not find context in session') {
-
     // DO WE WANT THIS??
-    print $lti->message;
+    echo $lti->message;
   }
-
 
   if (!$lti->valid) {
     if (!isset($_SERVER['PHP_AUTH_USER']) and !($lti->valid)) {

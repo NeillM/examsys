@@ -100,14 +100,13 @@ function ldap_auth($u, $p, &$data){
 }
 
 /**
- * This is function db_auth looks up a user in the local database and populates: 
+ * This is function db_userlookup looks up a user in the local database and populates: 
  * 
  *  $userID, $userroles, $faculty, $title, $surname, $username, $grade, $year
  *
  * @param string $u username
- * @param string $p password
  * @param mixed $db msqli object
- * @return Bool TRUE on sucsess FALSE on failure
+ * @return array 
  *
  */
 
@@ -124,6 +123,7 @@ function db_userlookup($u, $db, $useridlookup = false) {
     return false;
   }
 
+  // Check for '_staff' or '_username' in the username and set user to _username if found and user is SysAdmin.
   $split_username = explode('_', $u);
   $tmp_u = $split_username[0];
 
@@ -189,32 +189,22 @@ function db_auth($u, $p, $db, $changeuser = true) {
     return false;
   }
 
-  list($stmt,list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs))=db_userlookup($u,$db);
-
-  // Check for '_staff' or '_username' in the username and set user to _username if found and user is SysAdmin.
-  $split_username = explode('_', $u);
-  $tmp_u = $split_username[0];
-  
   $record_no = 0;
+
+  //look up user based on username and set globals
+  list($stmt, list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs)) = db_userlookup($u, $db);
   
-  $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE username=?");
-  $stmt->bind_param('s', $tmp_u);
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs);
-  $stmt->fetch();
   $record_no = $stmt->num_rows();
   $stmt->close();
 
-  $split_username = explode('_', $u);
-
-  if ($record_no > 0 and $p != '') {
+  if ($record_no > 0) {
 
     if (substr($password,0,3) == '$1$') {
       $encrypt_type = 'MD5';
     } else {
       $encrypt_type = 'SHA-512';
     }
+
     $encrypt_password = encpw($cfg_encrypt_salt, $u, $p, $encrypt_type);
     
     if ($encrypt_password == $password) {
@@ -224,8 +214,9 @@ function db_auth($u, $p, $db, $changeuser = true) {
         $stmt->bind_param('ss', $encpw_details, $u);
         $stmt->execute();
         $stmt->close();
-      }      
-      
+      }     
+       
+      $split_username = explode('_', $u);
       if (strpos($userroles,'SysAdmin') !== false and count($split_username) > 1) {
         //for Sysadmin only 
         if ($split_username[1] == 'staff') {
@@ -308,10 +299,9 @@ function encpw($salt, $u, $p, $type='SHA-512') {
     $new_password = crypt($p, $full_salt);
     $new_password = '$6$' . substr($new_password, strlen($full_salt));
   } else {
-    $full_salt = '$1$' . substr(md5($u), 0, 12) . '$';   // Simple MD5, for barckwards compatibility
+    $full_salt = '$1$' . substr(md5($u), 0, 8) . '$';   // Simple MD5, for barckwards compatibility
     $new_password = crypt($p, $full_salt);
   }
-  
   return $new_password;
 }
 
