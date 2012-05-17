@@ -138,8 +138,10 @@ function db_userlookup($u, $db, $useridlookup = false) {
   $stmt->store_result();
   $stmt->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs);
   $stmt->fetch();
+  $record_no = $stmt->num_rows();
+  $stmt->close();
 
-  return array($stmt, array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs));
+  return array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username);
 }
 
 function db_change_user($db) {
@@ -192,10 +194,7 @@ function db_auth($u, $p, $db, $changeuser = true) {
   $record_no = 0;
 
   //look up user based on username and set globals
-  list($stmt, list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs)) = db_userlookup($u, $db);
-  
-  $record_no = $stmt->num_rows();
-  $stmt->close();
+  list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($u, $db);
 
   if ($record_no > 0) {
 
@@ -215,8 +214,7 @@ function db_auth($u, $p, $db, $changeuser = true) {
         $stmt->execute();
         $stmt->close();
       }     
-       
-      $split_username = explode('_', $u);
+
       if (strpos($userroles,'SysAdmin') !== false and count($split_username) > 1) {
         //for Sysadmin only 
         if ($split_username[1] == 'staff') {
@@ -227,12 +225,8 @@ function db_auth($u, $p, $db, $changeuser = true) {
           $userroles .= 'Demo';
         } else {
           // Look up all the authentication details of the user you are pretending to log in as.
-          $result = $db->prepare("SELECT password, id, roles, title, initials, surname, username, grade, yearofstudy, special_needs FROM users WHERE username=?");
-          $result->bind_param('s', $split_username[1]);
-          $result->execute();
-          $result->bind_result($password, $userID, $userroles, $title, $initials, $surname, $username, $grade, $year, $special_needs);
-          $result->fetch();
-          $result->close();
+          list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($split_username[1], $db);
+          $stmt->close();
           $cfg_install_type .= " as $title $surname";
         }
       }
