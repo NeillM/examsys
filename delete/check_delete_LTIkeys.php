@@ -34,7 +34,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['confirmschooldelete']; ?></title>
+  <title><?php echo $string['confirmltidelete']; ?></title>
 
   <style type="text/css">
   body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed}

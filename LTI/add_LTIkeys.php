@@ -43,7 +43,7 @@ if (isset($_POST['submit'])) {
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['addLTIkeys'] . ' ' . $cfg_install_type; ?></title>
+  <title><?php echo $string['addltikeys'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" href="../css/add_edit_new.css" type="text/css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

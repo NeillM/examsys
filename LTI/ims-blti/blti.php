@@ -95,8 +95,11 @@ class BLTI {
     // give up or try to retrieve the context from session
     if (!is_basic_lti_request()) {
       if ($usesession === false) return;
-      if (strlen(session_id()) > 0 and isset($_SESSION['_basiclti_lti_row'])) {
-        $row = $_SESSION['_basiclti_lti_row'];
+      if (strlen(session_id()) > 0 ) {
+          if(isset($_SESSION['_basiclti_lti_row'])) {
+            $row = $_SESSION['_basiclti_lti_row'];
+          }
+
         if (isset($row)) $this->row = $row;
         $context_id = $_SESSION['_basiclti_lti_context_id'];
         if (isset($context_id)) $this->context_id = $context_id;
@@ -191,7 +194,7 @@ class BLTI {
 
             $secret=$rsecret;
             $name=$rname;
-            if($rconext_id) {
+            if(isset($rcontext_id)) {
               $this->context_id=$rcontext_id;
               break;
             }

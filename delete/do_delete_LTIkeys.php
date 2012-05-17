@@ -41,7 +41,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>LTI Key Deleted</title>
+  <title><?php echo $string['ltikeydel']; ?></title>
   <script type="text/javascript">
     function updateParent() {
       window.opener.location.reload();
