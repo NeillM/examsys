@@ -226,7 +226,6 @@ function db_auth($u, $p, $db, $changeuser = true) {
         } else {
           // Look up all the authentication details of the user you are pretending to log in as.
           list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($split_username[1], $db);
-          $stmt->close();
           $cfg_install_type .= " as $title $surname";
         }
       }

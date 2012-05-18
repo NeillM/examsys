@@ -49,6 +49,7 @@ require '../include/staff_auth.inc';
 <meta http-equiv="content-type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
 <script src="../js/staff_help.js" type="text/javascript"></script>
@@ -140,8 +141,16 @@ require '../include/staff_auth.inc';
     <td colspan="2" class="bevel"></td>
   </tr>
 </table>
+<?php
+  $as_pos = strpos($cfg_install_type,' as ');
+  if ($as_pos !== false) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Locked\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($cfg_install_type, ($as_pos+4)) . "</div></td></tr></table>\n";
+  //var_dump($cfg_install_type);
+  }
+?>
 <div style="padding-left:14px; padding-right:14px">
 <?php
+
   // Check for any news/announcements
   $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
   $result = $mysqli->prepare("SELECT title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
