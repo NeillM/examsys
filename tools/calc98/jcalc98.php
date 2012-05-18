@@ -6,7 +6,7 @@
     var isNS4 = (navigator.appName == "Netscape") ? 1 : 0;
   </script>
   <link rel="stylesheet" type="text/css" href="calc.css"/>
-  <!--[if lt IE 9]>
+  <!--[if IE ]>
   <style type="text/css">
     .label-button {
       margin: 0 2px 0 1px;
