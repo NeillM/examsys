@@ -330,7 +330,7 @@
                 for ($sec=1; $sec < count($correct_parts); $sec++) {
                   if ($correct_parts[$sec] != '' and substr($tmp_exclude, $partID, 1) == '0') {
                     if (strpos($correct_parts[$sec], '$') === false) {
-                      echo ',Q' . ($i+1) . chr($sec + 64);
+                      echo ',Q' . ($i+1) . $numerals[$sec-1];
                       if ($is_random) {
                         add_random_column_standard($i, $sec);
                       }
@@ -338,7 +338,7 @@
                       $num_ix = 0;
                       $correct_subparts = explode('$', $correct_parts[$sec]);
                       foreach ($correct_subparts as $subpart) {
-                        echo ',Q' . ($i+1) . chr($sec + 64) . $numerals[$num_ix];
+                        echo ',Q' . ($i+1) . $numerals[$sec-1] . chr($num_ix + 65);
                         if ($is_random) {
                           add_random_column_standard($i, $sec, $numerals[$num_ix]);
                         }

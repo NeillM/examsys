@@ -1469,7 +1469,7 @@
             if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' excluded';
             echo "\"";
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
-            echo ">$individual_option</td></tr>\n";
+            echo ">" . chr($option_no+64) . ". $individual_option</td></tr>\n";
             $correct_stems++;
             if (isset($freq_log[$q_id][$i][$option_no])) $tmp_correct_no += $freq_log[$q_id][$i][$option_no];
             $std_part++;
@@ -1493,7 +1493,7 @@
             echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td";
             if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' class="excluded"';
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
-            echo ">$individual_option</td></tr>\n";
+            echo ">" . chr($option_no+64) . ". $individual_option</td></tr>\n";
           }
           $option_no++;
         }
@@ -1527,7 +1527,7 @@ p {margin-left:0px; margin-right:0px}
 .figures {text-align:right}
 .q_no {text-align:right; vertical-align:top; width:50px}
 .grey {color:#808080}
-.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:upper-alpha}
+.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:lower-roman}
 .correct {color:#000; font-weight:bold}
 .excluded {color:red; text-decoration:line-through}
 .excluded img { border: 2px solid red}

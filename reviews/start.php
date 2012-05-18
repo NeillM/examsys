@@ -30,7 +30,7 @@ require '../include/media.inc';
 require '../config/start.inc';
 
 check_var('id', 'GET', true, false);
-session_start();
+//session_start();
 
 // Extract the get variables.
 if (isset($_GET['no_screens'])) {

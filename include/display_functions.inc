@@ -1032,6 +1032,18 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($matching_media[$part_id] != '') $media_scenarios++;
     }
     $scenario_no = max($text_scenarios, $media_scenarios);
+    
+    $col1_no = ceil(count($matching_options) / 2);
+    echo "<table class=\"extmatch_opt_table\">\n<tr><td><ol>\n";
+    for ($i=0; $i<count($matching_options); $i++) {
+
+      echo "<li>" . $matching_options[$i] . "</li>";
+      if ($i == ($col1_no-1)) {
+        echo "</ol></td><td style=\"vertical-align:top\"><ol start=\"" . ($i+2) . "\">";
+      }
+    }
+    echo "</ol></td></tr>\n</table>\n";
+    
     echo '<ol class="extmatch">';
     for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
       $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
@@ -1040,9 +1052,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '<li>';
       if (isset($matching_scenarios[$part_id - 1]) and $matching_scenarios[$part_id - 1] != '') echo '<div>' . $matching_scenarios[$part_id - 1] . '</div>';
       if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
-        echo "<p>" . display_media($matching_media[$part_id],$matching_media_width[$part_id],$matching_media_height[$part_id]) . "</p>\n";
+        echo "<div>" . display_media($matching_media[$part_id],$matching_media_width[$part_id],$matching_media_height[$part_id]) . "</div>\n<br />";
       }
-      $sub_answers = explode('$',$matching_answers[$part_id - 1]);
+      $sub_answers = explode('$', $matching_answers[$part_id - 1]);
       $list_size = 10;
       if (count($matching_options) < 10) $list_size = count($matching_options);
       if ($answer_no == 1) {
@@ -1077,9 +1089,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
         }
         if ($tmp_answer_match == true) {
-          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\" selected>" . $matching_options[$option_no] . "</option>\n";
+          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\" selected>" . chr($option_no+65) . ". " . $matching_options[$option_no] . "</option>\n";
         } else {
-          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\">" . $matching_options[$option_no] . "</option>\n";
+          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\">" . chr($option_no+65) . ". " . $matching_options[$option_no] . "</option>\n";
         }
         $tmp_option_no++;
       }
