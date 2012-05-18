@@ -22,6 +22,8 @@
 * @package
 */
 
+include_once $cfg_web_root . 'tools/getid3/getid3.php';
+
 /**
  * Function takes a filename with the width and height and returns appropriate HTML to display the media type.
  *
@@ -131,23 +133,43 @@ function uploadFile($fileID) {
   $file_width = 0;
   $file_height = 0;
   
-  if(!isset($_FILES[$fileID])) {
+  if (!isset($_FILES[$fileID])) {
     return '';
   }
   
+  $bad_file = true;   // Default safe.
+  
   $unique_name = unique_filename($_FILES[$fileID]['name']);
-  if ($unique_name != 'none' and $unique_name != '') {
-    if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "media/$unique_name"))  {
+  
+  $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.flv', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3');
+  foreach ($permitted as $extension) {
+    if (preg_match("/$extension\$/i", $unique_name)) {
+      $bad_file = false;
+    }
+  }
+  
+  if (!$bad_file and $unique_name != 'none' and $unique_name != '') {
+    if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "media/$unique_name")) {
       echo uploadError($_FILES[$fileID]['error']);
       return false;
     } else {
       chmod($cfg_web_root . "media/$unique_name", 0664);
       switch ($_FILES[$fileID]['type']) {
         case 'application/msword':
-        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         case 'application/vnd.ms-powerpoint':
-        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
         case 'application/vnd.ms-excel':
+          $getID3 = new getID3;
+          $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
+          if (!isset($file_info['fileformat'])) {
+            $bad_file = true;
+          } elseif ($file_info['fileformat'] != 'msoffice') {
+            $bad_file = true;
+          }
+          $file_width = '100%';
+          $file_height = '350';
+          break;
+        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
         case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         case 'application/x-mspublisher':
         case 'application/pdf':
@@ -165,6 +187,9 @@ function uploadFile($fileID) {
           $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
           $file_width = $identifier_size[0];
           $file_height = $identifier_size[1];
+          if ($file_width == 0 or $file_height == 0) {
+            $bad_file = true;
+          }
           break;
         case 'application/x-shockwave-flash':
           //ShockWave
@@ -181,6 +206,19 @@ function uploadFile($fileID) {
           $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
           $file_width = $file_info['video']['resolution_x'];
           $file_height = $file_info['video']['resolution_y'];
+          if ($file_width == 0 or $file_height == 0) {
+            $bad_file = true;
+          }
+          break;
+        case 'audio/mpeg3':
+        case 'audio/x-mpeg-3':
+          $getID3 = new getID3;
+          $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
+          if (!isset($file_info['playtime_seconds'])) {
+            $bad_file = true;
+          } elseif ($file_info['playtime_seconds'] == 0) {
+            $bad_file = true;
+          }
           break;
         default:
           // Can't get mimetype, trying extension types
@@ -195,6 +233,18 @@ function uploadFile($fileID) {
               $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
               $file_width = $file_info['video']['resolution_x'];
               $file_height = $file_info['video']['resolution_y'];
+              if ($file_width == 0 or $file_height == 0) {
+                $bad_file = true;
+              }
+              break;
+            case 'mp3':
+              $getID3 = new getID3;
+              $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
+              if (!isset($file_info['playtime_seconds'])) {
+                $bad_file = true;
+              } elseif ($file_info['playtime_seconds'] == 0) {
+                $bad_file = true;
+              }
               break;
             default:
               $file_width = '0';
@@ -205,7 +255,14 @@ function uploadFile($fileID) {
       }
     }
   }
-  return array('filename' => $unique_name, 'width' => $file_width, 'height' => $file_height);
+  if ($bad_file) {
+    if (file_exists($cfg_web_root . "media/$unique_name")) {
+      unlink ($cfg_web_root . "media/$unique_name");  // Remove the file from the server.
+    }
+    return array('filename' => '', 'width' => 0, 'height' => 0);
+  } else {
+    return array('filename' => $unique_name, 'width' => $file_width, 'height' => $file_height);
+  }
 }
 
 function deleteMedia($filename) {

@@ -53,6 +53,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
 }
 
 function uploadError($errCode) {
+  global $string;
   $engDescription = $string['uploaderrormsg0'];
   
   switch ($errCode) {
