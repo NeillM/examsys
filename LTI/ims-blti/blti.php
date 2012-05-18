@@ -99,12 +99,12 @@ class BLTI {
           if(isset($_SESSION['_basiclti_lti_row'])) {
             $row = $_SESSION['_basiclti_lti_row'];
           }
-
         if (isset($row)) $this->row = $row;
-        $context_id = $_SESSION['_basiclti_lti_context_id'];
-        if (isset($context_id)) $this->context_id = $context_id;
-        $info = $_SESSION['_basic_lti_context'];
-        if (isset($info)) {
+        if (isset($_SESSION['_basiclti_lti_context_id'];)) {
+              $this->context_id = $_SESSION['_basiclti_lti_context_id'];
+          }
+        if (isset($_SESSION['_basic_lti_context'])) {
+            $info = $_SESSION['_basic_lti_context'];
           $this->info = $info;
           $this->valid = true;
           return;
