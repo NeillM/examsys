@@ -1,17 +1,16 @@
 <?php
-$string['name'] = 'Nazwa opisowa'; //Niko
-$string['oauth_consume_key']= 'Oauth Consumer Key';//Niko
-$string['oauth_secret'] = 'Oauth Consumer Secret';//Niko
-$string['oauth_context_id'] = 'Override LTI Context ID';//Niko
-$string['createLTIkeys'] = 'Add new LTI Key';//Niko
-$string['editLTIkeys'] = 'Edit LTI Key';//Niko
-$string['deleteLTIkeys'] = 'Delete LTI Key';//Niko
-$string['ltikeys'] = 'LTI Keys';//Niko
-$string['administrativetools'] = 'Administrative Tools';//Niko
-$string['addltikeys'] = 'Add LTI Key';//Niko
-$string['editltikeys'] = 'Edit LTI Key';//Niko
-$string['mandatory'] = 'Indicates a <strong>mandatory</strong> field that must be completed.';//Niko
+$string['name'] = 'Nazwa opisowa'; 
+$string['oauth_consume_key']= 'Klucz odbiorcy Oauth';
+$string['oauth_secret'] = 'Sekret odbiorcy Oauth';
+$string['oauth_context_id'] = 'Przełam identyfikator kontekstowy LTI';
+$string['createLTIkeys'] = 'Utwórz nowy klucz LTI';
+$string['editLTIkeys'] = 'Zmień klucz LTI';
+$string['deleteLTIkeys'] = 'Usuń klucz LTI';
+$string['ltikeys'] = 'Klucze LTI';
+$string['administrativetools'] = 'Narzędzia administracyjne';
+$string['addltikeys'] = 'Dodaj klucz LTI';
+$string['editltikeys'] = 'Zmień klucz LTI';
+$string['mandatory'] = 'Oznacza pole <strong>wymagane</strong>, które musi być wypełnione.';
 
-$string['bymodulecode'] = 'By Module';//Niko
-
-$string['myfolders'] = 'My folders';//Niko
+$string['bymodulecode'] = 'względem modułu';
+$string['myfolders'] = 'Moje foldery';
