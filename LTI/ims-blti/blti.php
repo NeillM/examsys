@@ -100,7 +100,7 @@ class BLTI {
             $row = $_SESSION['_basiclti_lti_row'];
           }
         if (isset($row)) $this->row = $row;
-        if (isset($_SESSION['_basiclti_lti_context_id'];)) {
+        if (isset($_SESSION['_basiclti_lti_context_id'])) {
               $this->context_id = $_SESSION['_basiclti_lti_context_id'];
           }
         if (isset($_SESSION['_basic_lti_context'])) {
