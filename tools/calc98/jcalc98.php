@@ -8,8 +8,8 @@
   <link rel="stylesheet" type="text/css" href="calc.css"/>
   <!--[if lt IE 9]>
   <style type="text/css">
-    .label-button.off {
-      margin-left: 46px;
+    .label-button {
+      margin: 0 2px 0 1px;
     }
   </style>
   <![endif]-->
