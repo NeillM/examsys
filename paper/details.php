@@ -542,7 +542,7 @@ function random_qMarks($random_questions) {
       $temp_array[$row_no]['screen'] = $screen;
       $temp_array[$row_no]['q_type'] = $q_type;
       $temp_array[$row_no]['leadin'] = $leadin;
-      if (strpos($temp_array[$row_no]['leadin'],'class="mee"') === false AND strpos($temp_array[$row_no]['leadin'],'class=mee') === false) {
+      if (strpos($temp_array[$row_no]['leadin'],'class="mee"') === false and strpos($temp_array[$row_no]['leadin'],'class=mee') === false) {
         $temp_array[$row_no]['leadin'] = strip_tags($temp_array[$row_no]['leadin']);                                     // No equation, strip all tags
         if (strlen($temp_array[$row_no]['leadin']) > 160) {
           $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
@@ -666,7 +666,7 @@ function random_qMarks($random_questions) {
     $folder = '';
     $paper_modules = explode(',',$module);
     if (count($paper_modules) > 0) {     // Paper is on multiple modules
-      if (strpos($userroles,'Admin') !== false) {
+      if (strpos($userroles, 'Admin') !== false) {
         $module = $paper_modules[0];
       } else {
         for ($i=count($paper_modules)-1; $i>0; $i--) {
@@ -687,20 +687,20 @@ function random_qMarks($random_questions) {
     
     $module = '';
   } else {
-    $paper_modules = explode(',',$tmp_module);  // Get the modules off the paper properties
+    $paper_modules = explode(',', $tmp_module);  // Get the modules off the paper properties
     $module = $paper_modules[0];
     $folder = '';
   }
 
   if (strpos($userroles,'Admin') === false) {
     $OKmodules = array();
-    $module_split = explode(',',$module);
+    $module_split = explode(',', $module);
     foreach ($module_split as $individual_module) {
       if (in_array($individual_module, $teams)) {
         $OKmodules[] = $individual_module;
       }
     }
-    $module = implode(',',$OKmodules);
+    $module = implode(',', $OKmodules);
   }
 
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
