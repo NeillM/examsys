@@ -275,7 +275,7 @@ while ($stmt->fetch()) {
       check_datetime($start_date, $end_date);
 	  
       //Check room security
-      $low_bandwidth = check_labs($paper_type, $labs, $mysqli);
+      $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
       
       // get modules if the user is a student and the paper is not formative
       $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
@@ -401,8 +401,8 @@ if ($css != '') {
 <?php if ($latex_needed == 1) {?>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
-<script language="JavaScript" src="../js/start.js"></script>
-<script language="JavaScript" src="../js/flash_include.js"></script>
+<script type="text/javascript" src="../js/start.js"></script>
+<script type="text/javascript" src="../js/flash_include.js"></script>
 <script language="javascript">
   window.history.go(1);
 <?php
