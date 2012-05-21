@@ -106,7 +106,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       
       var_dump($returned_data, $xml);
       
-      if (is_object($xml->Module)) {
+      if (isset($xml->Module)) {
         echo 'OK';
       } else {
         echo 'Not OK';
