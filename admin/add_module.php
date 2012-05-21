@@ -104,7 +104,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $xml = new SimpleXMLElement($returned_data);
       $enrolement_details = '';
       
-      if (is_object($xml->Module->Membership->Student)) {
+      if (is_object($xml->Module)) {
         echo 'OK';
       } else {
         echo 'Not OK';
