@@ -92,7 +92,7 @@
     }
     $initials = strtoupper($initials);
   
-    $new_password = encpw($cfg_encrypt_salt, $_POST['new_username'], trim($_POST['new_password']);
+    $new_password = encpw($cfg_encrypt_salt, $_POST['new_username'], trim($_POST['new_password']));
     $new_surname = my_ucwords(trim($_POST['new_surname']));
     $new_username = trim($_POST['new_username']);
     $new_email = trim($_POST['new_email']);
