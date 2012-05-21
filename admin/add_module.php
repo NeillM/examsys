@@ -104,6 +104,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $xml = new SimpleXMLElement($returned_data);
       $enrolement_details = '';
       
+      var_dump($returned_data, $xml);
+      
       if (is_object($xml->Module)) {
         echo 'OK';
       } else {
