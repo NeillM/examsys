@@ -29,11 +29,6 @@ require './config/config.inc.php';
 require './classes/lang.class.php';
 require_once './classes/networkutils.class.php';
 
-function encpw($u,$p) {
-  $salt = '$1$' . substr(md5($u),0,12) . '$';
-  return crypt($p,$salt);
-}
-
 $mysqli = new mysqli($cfg_db_host, $cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
 
 // Check that the ip_address of the current user is within the exam lab.
@@ -120,9 +115,9 @@ if (isset($_POST['submit'])) {
   $recordID = $mysqli->insert_id;
   
   // Reset password on the chosen guest account.
-  $color = array('blue','green','orange','gold','silver');
+  $color = array('blue', 'green', 'orange', 'gold', 'silver', 'purple', 'white', 'black', 'yellow');
   $random_password = $color[rand(0,4)] . rand(10,99);
-  $tmp_password = encpw($free_account,$random_password);
+  $tmp_password = encpw($cfg_encrypt_salt, $free_account, $random_password);
   $stmt = $mysqli->prepare("UPDATE users SET password=? WHERE username=?");
   $stmt->bind_param('ss', $tmp_password, $free_account);
   $stmt->execute();
