@@ -889,7 +889,7 @@ if ($paper_type != '4' and $paper_type != '5') {
       <option value="4"<?php if ($marking == '4') echo ' selected'; ?> />Fail | Borderline fail | Borderline pass | Pass | Good pass</option>
       <option value="6"<?php if ($marking == '6') echo ' selected'; ?> />Clear FAIL | BORDERLINE | Clear PASS | Honours PASS</option>
   <?php
-    echo "<tr><td colspan=\"4\">" . wysiwyg_editor('oEdit1','osce_marking_guidance',$paper_prologue,684,230);
+    echo "<tr><td colspan=\"4\">" . wysiwyg_editor('oEdit1', 'osce_marking_guidance', $paper_prologue, 684, 230);
   ?>
 </td></tr>
     <?php

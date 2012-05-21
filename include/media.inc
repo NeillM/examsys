@@ -46,7 +46,7 @@ function display_media($filename, $width, $height, $imageid=-1, $locked=false) {
     $html .= "<img src=\"{$cfg_root_path}/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top\" />";
   } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
     $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"{$cfg_root_path}/media/$filename\">Audio Clip</a>";
-  } elseif (in_array($fn_parts['extension'], array('doc', 'ppt', 'xls', 'pdf'))) {
+  } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
     $html .= "<iframe src=\"{$cfg_root_path}/media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
   } elseif ($fn_parts['extension'] == 'flv') {
     if ($width == 0 or $height == 0) {
@@ -141,7 +141,7 @@ function uploadFile($fileID) {
   
   $unique_name = unique_filename($_FILES[$fileID]['name']);
   
-  $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.flv', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3');
+  $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.swf', '.flv', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3', '.mid', '.wav', '.ram');
   foreach ($permitted as $extension) {
     if (preg_match("/$extension\$/i", $unique_name)) {
       $bad_file = false;
@@ -154,12 +154,13 @@ function uploadFile($fileID) {
       return false;
     } else {
       chmod($cfg_web_root . "media/$unique_name", 0664);
+      $getID3 = new getID3;
+      $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
+      
       switch ($_FILES[$fileID]['type']) {
         case 'application/msword':
         case 'application/vnd.ms-powerpoint':
         case 'application/vnd.ms-excel':
-          $getID3 = new getID3;
-          $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
           if (!isset($file_info['fileformat'])) {
             $bad_file = true;
           } elseif ($file_info['fileformat'] != 'msoffice') {
@@ -172,8 +173,16 @@ function uploadFile($fileID) {
         case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
         case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         case 'application/x-mspublisher':
-        case 'application/pdf':
         case 'text/plain':
+          $file_width = '100%';
+          $file_height = '350';
+          break;
+        case 'application/pdf':
+          if (!isset($file_info['fileformat'])) {
+            $bad_file = true;
+          } elseif ($file_info['fileformat'] != 'pdf') {
+            $bad_file = true;
+          }
           $file_width = '100%';
           $file_height = '350';
           break;
@@ -196,24 +205,27 @@ function uploadFile($fileID) {
           $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
           $file_width = $identifier_size[0];
           $file_height = $identifier_size[1];
+          if ($file_width == 0 or $file_height == 0) {
+            $bad_file = true;
+          }
           break;
         case 'video/mpeg':
         case 'video/x-ms-wmv':
         case 'video/avi':
         case 'video/quicktime':
         case 'video/x-flv':
-          $getID3 = new getID3;
-          $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
           $file_width = $file_info['video']['resolution_x'];
           $file_height = $file_info['video']['resolution_y'];
           if ($file_width == 0 or $file_height == 0) {
             $bad_file = true;
           }
           break;
+        case 'audio/wav':
+        case 'audio/x-wav':
+        case 'audio/mid':
+        case 'audio/x-pn-realaudio':
         case 'audio/mpeg3':
         case 'audio/x-mpeg-3':
-          $getID3 = new getID3;
-          $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
           if (!isset($file_info['playtime_seconds'])) {
             $bad_file = true;
           } elseif ($file_info['playtime_seconds'] == 0) {
@@ -229,26 +241,31 @@ function uploadFile($fileID) {
             case 'avi':
             case 'mov':
             case 'flv':
-              $getID3 = new getID3;
-              $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
               $file_width = $file_info['video']['resolution_x'];
               $file_height = $file_info['video']['resolution_y'];
               if ($file_width == 0 or $file_height == 0) {
                 $bad_file = true;
               }
               break;
+            case 'wav':
+            case 'mid':
+            case 'ram':
             case 'mp3':
-              $getID3 = new getID3;
-              $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
               if (!isset($file_info['playtime_seconds'])) {
                 $bad_file = true;
               } elseif ($file_info['playtime_seconds'] == 0) {
                 $bad_file = true;
               }
               break;
+            case 'docx':
+            case 'pptx':
+            case 'xlsx':
+              $file_width = '100%';
+              $file_height = '350';
+              break;
             default:
-              $file_width = '0';
-              $file_height = '0';
+              $file_width = 0;
+              $file_height = 0;
               break;
           }
           break;
@@ -256,12 +273,10 @@ function uploadFile($fileID) {
     }
   }
   if ($bad_file) {
-    if (file_exists($cfg_web_root . "media/$unique_name")) {
-      unlink ($cfg_web_root . "media/$unique_name");  // Remove the file from the server.
-    }
-    return array('filename' => '', 'width' => 0, 'height' => 0);
+    deleteMedia($unique_name);    // Remove the file from the server.
+    return array('filename'=>'', 'width'=>0, 'height'=>0, 'rejected_file'=>$unique_name);
   } else {
-    return array('filename' => $unique_name, 'width' => $file_width, 'height' => $file_height);
+    return array('filename'=>$unique_name, 'width'=>$file_width, 'height'=>$file_height, 'rejected_file'=>false);
   }
 }
 
