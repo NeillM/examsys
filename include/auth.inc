@@ -267,10 +267,9 @@ function db_auth($u, $p, $db, $changeuser = true) {
     }
   } else {
     $password = $userID = $userroles = $title = $surname = $username = $email = $grade = $year = '';
-    if ($stmt->num_rows == 0) {
+    if ($record_no == 0) {
       $db_errors = '<strong>' . $string['notsaccount'] . '</strong>';
     }
-    $stmt->close();
     return false;
   } 
 }
