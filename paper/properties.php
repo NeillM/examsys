@@ -558,13 +558,13 @@ if (isset($_POST['Submit'])) {
       }
       if (internal_set == true) {
         if (document.edit_form.int_tmonth.options[document.edit_form.int_tmonth.selectedIndex].value == '') {
-          alert("<?php echo $string['msg6']; ?>");
+          alert("<?php echo $string['msg6a']; ?>");
           return false;
         } else if (document.edit_form.int_tday.options[document.edit_form.int_tday.selectedIndex].value == '') {
-          alert("<?php echo $string['msg6']; ?>");
+          alert("<?php echo $string['msg6a']; ?>");
           return false;
         } else if (document.edit_form.int_tyear.options[document.edit_form.int_tyear.selectedIndex].value == '') {
-          alert("<?php echo $string['msg6']; ?>");
+          alert("<?php echo $string['msg6a']; ?>");
           return false;
         }        
       }
