@@ -19,7 +19,7 @@ require_once  $cfg_web_root . 'classes/personal_folders.php';
 global $cfg_long_date_time;
 
 
-function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false) {
+function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   global $cfg_long_date_time, $icons;
   $query_string = "SELECT DISTINCT crypt_name, paper_type, 'f', paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, title, initials, surname, retired, moduleID  FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN (0,1,3)  GROUP BY moduleID,paper_title ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
@@ -32,7 +32,11 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false) {
     $rt = $results2->num_rows();
     if (!$flat) {
       echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$moduleid: $paper_title ($rt)</a></div>\n";
-      echo "<div id=\"block$block_id\" style=\"display:none\">";
+      if ($explode === true) {
+        echo "<div id=\"block$block_id\">";
+      } else {
+        echo "<div id=\"block$block_id\" style=\"display:none\">";
+      }
     } else {
       echo "<div>";
     }
@@ -122,10 +126,11 @@ END;
 
   $plk = 0;
   $block_id = 0;
-  $personalfolders = new personal_folders($mysqli);
-  $personalfolders->loadpersonalfolders($userID);
-  $personalfolders->process();
+
   echo $string['describemodulechoice'];
+
+
+
   $info = $lti->getCourseKey(1);
   $stmt = $mysqli->prepare("SELECT c_internal_id FROM lti_context WHERE  oauth_consumer_key=? AND lti_context_id=?");
   $stmt->bind_param('ss', $info[0], $info[1]);
@@ -133,16 +138,27 @@ END;
   $stmt->store_result();
   $rows = $stmt->num_rows;
   $stmt->bind_result($c_internal_id);
+
   if ($rows > 0) {
     //if there is a context and therefore a course already selected display that
     $stmt->fetch();
-    echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    /*
+      echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     $moduleid = $c_internal_id;
     list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
+    */
   }
+
   $stmt->close();
+
+
+  $personalfolders = new personal_folders($mysqli);
+  $personalfolders->loadpersonalfolders($userID);
+  $personalfolders->process();
   echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['myfolders'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   list($block_id, $plk) = $personalfolders->listtree(0, 0, $plk, 0);
+
+
   echo "<table border=\"0\" style=\"padding-top:10px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['bymodulecode'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   $old_faculty = '';
   $old_letter = '';
@@ -152,7 +168,12 @@ END;
   foreach ($modlist as $value) {
     $moduleid = $value['id'];
     if ($moduleid !== '') {
-      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk);
+      $explode=false;
+      if($c_internal_id==$moduleid)
+      {
+        $explode=true;
+      }
+      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk,false,$explode);
     }
   }
   echo "</div>\n"; // -- End of 'content' div ------------------

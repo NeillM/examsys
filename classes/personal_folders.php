@@ -96,7 +96,7 @@ class personal_folders {
     $tests = array();
     if ($folder != 0) {
       $mysqli = $this->mysqli;
-      $results = $mysqli->prepare("SELECT property_id,paper_title,start_date,end_date,paper_type,paper_ownerID,deleted,crypt_name FROM properties WHERE folder=?");
+      $results = $mysqli->prepare("SELECT property_id,paper_title,start_date,end_date,paper_type,paper_ownerID,deleted,crypt_name FROM properties WHERE folder=? AND deleted IS NULL");
       $results->bind_param('i', $folder);
       $results->execute();
       $results->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted, $crypt_name);
