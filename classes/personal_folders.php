@@ -48,6 +48,8 @@ class personal_folders {
     $resulta->store_result();
     while ($resulta->fetch()) {
       $count = substr_count($name, ';');
+      $exp=explode(';',$name);
+      $name=array_pop($exp);
       $folderlst[] = array($id, $name, $team_name, $color, $count);
     }
     $resulta->close();
