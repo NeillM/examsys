@@ -63,28 +63,21 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
   session_start();
   $lti = new BLTI(array('table' => 'lti_keys', 'dbtype' => 'mysqli', 'db' => &$mysqli), true, false);
-
   if ($lti->valid) {
     //LTI Correct
     $check = usercheck($mysqli, $lti);
-
     list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
-
     db_change_user($mysqli);
   }
 
   if (isset($lti->message) AND $lti->message != 'Could not find context in session' AND $lti->message != false) {
     // DO WE WANT THIS??
-
-      $tempvar=$lti->message;
-      if(!isset($string[$lti->message])) {
-          $string[$lti->message]=$lti->message;
-      }
-      $message = $string['LTIFAILURE'] . "</p>\n<p>$string[$tempvar]</p>\n";
-
-
-
-      access_denied($message, true);
+    $tempvar = $lti->message;
+    if (!isset($string[$lti->message])) {
+      $string[$lti->message] = $lti->message;
+    }
+    $message = $string['LTIFAILURE'] . "</p>\n<p>$string[$tempvar]</p>\n";
+    access_denied($message, true);
   }
 
   if (!$lti->valid) {

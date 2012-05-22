@@ -66,7 +66,7 @@ function access_denied($message, $output_header = false) {
  * @return Bool TRUE on sucsess FALSE on failure
  *
  */
-function ldap_auth($u, $p, &$data){
+function ldap_auth($u, $p, &$data) {
   global $cfg_ldap_server, $cfg_ldap_search_dn, $cfg_ldap_bind_rdn, $cfg_ldap_bind_password, $cfg_ldap_user_prefix, $string;
   if ($u == '') {
     $data['error'] = $string['noldapusernamesupplied'];
@@ -81,7 +81,7 @@ function ldap_auth($u, $p, &$data){
   ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
   ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
   if (ldap_bind($ldap, $cfg_ldap_bind_rdn, $cfg_ldap_bind_password)) {
-    if (!($search=@ldap_search($ldap, $cfg_ldap_search_dn, $cfg_ldap_user_prefix . $u))) {
+    if (!($search = @ldap_search($ldap, $cfg_ldap_search_dn, $cfg_ldap_user_prefix . $u))) {
       $data['error'] = $string['ldapservernosearch'];
       return false;
     } else {
@@ -94,16 +94,16 @@ function ldap_auth($u, $p, &$data){
       }
     }
 
-    if (@ldap_bind( $ldap, $dn, utf8_encode($p))) {
-      ldap_unbind( $ldap );
+    if (@ldap_bind($ldap, $dn, utf8_encode($p))) {
+      ldap_unbind($ldap);
       return true;
     } else {
       $data['error'] = $string['incorrectpassword'];
-      return false;	
+      return false;
     }
   } else {
     $data['error'] = $string['ldapserverunavailable'];
-    return false;	
+    return false;
   }
 }
 
