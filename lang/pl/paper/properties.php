@@ -18,7 +18,7 @@ $string['msg2'] = 'Data ropoczęcia i zakończenia egzaminu końcowego musi być
 $string['msg3'] = 'Czas trwania egzaminu końcowego musi być określony.\nPowinien to być normalny czas trwania z wyłączeniem czasu dodatkowego dla osób studentów z dysleksją.';
 $string['msg4'] = 'Rok akademicki dla egzaminu końcowego musi być określony (zakładka \'Prawa dostępu\').';
 $string['msg5'] = 'OSCE muszą być przypisane do co najmniej jednego modułu.';
-$string['msg6a'] = 'You have set some internal reviewers but not specified a deadline.';  // Niko
+$string['msg6a'] = 'Wybrano egzaminatorów wewnętrznych, jednak nie określono terminu finalizacji.'; 
 $string['msg6'] = 'Wybrano egzaminatorów zewnętrznych, jednak nie określono terminu finalizacji.';
 $string['msg7'] = 'Proszę podać nazwę arkusza.';
 $string['msg8'] = 'To jest egzamin typu \'closed-book\', w czasie którego <em>niedozwolone jest</em> korzystanie ze środków i źródeł pomocniczych (także słowników) ani pomocy osób drugich. Niedozwolone jest też używanie urządzeń elektronicznych z wyjątkiem komputera egzaminacyjnego.';
@@ -100,4 +100,5 @@ $string['postscriptheading'] = "Tekst wyświetlany po tym jak student kliknie 'Z
 // Reference Material tab
 $string['referencematerial'] = 'Materiał pomocniczy';  
 $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostępne dla arkusza.'; 
+$string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
 ?>

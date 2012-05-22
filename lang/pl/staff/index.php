@@ -40,5 +40,5 @@ $string['mins'] = 'min.';
 $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['duplicatefoldername'] = 'Ta nazwa folderu jest już wykorzystywana, użyj innej.';
-$string['loggedinas'] = 'You are logged in as';  // Niko
+$string['loggedinas'] = 'Jesteś zalogowany jako';  
 ?>

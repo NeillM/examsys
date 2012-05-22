@@ -1,2 +1,2 @@
 <?php
-$string['ltikeydel']='LTI Key Deleted';  //Niko
+$string['ltikeydel']='Klucz LTI Usunięty'; 
