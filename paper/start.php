@@ -558,7 +558,7 @@ if ($current_screen < $no_screens) {
 }
 echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear navigation mode.
 ?>
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr><td valign="top">
 <?php
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {

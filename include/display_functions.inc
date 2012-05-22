@@ -167,10 +167,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
-      echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height']) . "</p>\n";
+      echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height']) . "</p>\n";
       $li_set = 1;
     }
-    //if ($question['q_type'] != 'likert' and $question['q_type'] != 'calculation') {
     if ($question['q_type'] != 'likert') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
@@ -934,24 +933,17 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
   } elseif ($question['q_type'] == 'calculation') {
     $score_array = explode(',', $question['display_method']);
-    if ($li_set == 1) {
-      echo '<tr><td></td><td>';
-    } else {
-      echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-      if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
-      echo '</td><td>';
-    }
     $new_leadin = '';
-    $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
-    $replace = array($A,$B,$C,$D,$E,$F,$G,$H,$I,$J);
+    $search = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J');
+    $replace = array($A, $B, $C, $D, $E, $F, $G, $H, $I, $J);
     $question['leadin'] = str_ireplace($search, $replace, $question['leadin']);
     if(strpos($question['leadin'],'class="mee"') !== false) {
       $question['leadin'] = str_replace('ERROR', $string['unanswered'] , $question['leadin']);
     } else {
       $question['leadin'] = str_replace('ERROR', '<span style="color:red; font-weight:bold">' . $string['unanswered'] . '</span>', $question['leadin']);
     }
-    echo "<p>" . $question['leadin'] . "</p>\n";
-    if (in_array('ERROR',$replace,true)) {
+    echo $question['leadin'];
+    if (in_array('ERROR', $replace, true)) {
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled />" . $score_array[3] .  "</p>\n";
     } else {
       if ($score_array[3] == 'Formula') {

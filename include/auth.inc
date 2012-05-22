@@ -230,30 +230,6 @@ function db_auth($u, $p, $db, $changeuser = true) {
         }
       }
 
-     /*
-      //select the aproprate database user
-      if (strpos($userroles,'SysAdmin') !== false) {
-        $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-      } else if (strpos($userroles,'Staff') !== false or strpos($userroles,'Admin') !== false) {           // Process staff first to get higher priority than students
-        $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
-      } else if (strpos($userroles,'Student') !== false) {
-        $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-      } else if (strpos($userroles,'External Examiner') !== false) {
-        $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
-      } else if (strpos($userroles,'Invigilator') !== false) {
-        $result = $db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
-      } else {
-        $result = false;
-      }
-
-      if ($result === false) {
-        $db_errors = '<strong>' . $string['nodatabaseconnection'] . '</strong>';
-        return false;
-      }
-
-      return true;
-      */
-      
       if ($changeuser){
         $ret=db_change_user($db);
       } else {
@@ -275,8 +251,8 @@ function db_auth($u, $p, $db, $changeuser = true) {
 }
 
 /**
- * This is function encpw encrpts a password using md5 and a different salt per user. For 
- * storage in the DB
+ * This is function encpw encrpts a password using SHA-512 for storage in the DB.
+ * MD5 encryption is kept for backwards compatibility.
  *
  * @param string $salt the salt as set in the config.inc.php file
  * @param string $u username
