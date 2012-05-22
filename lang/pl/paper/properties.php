@@ -21,7 +21,7 @@ $string['msg5'] = 'OSCE muszą być przypisane do co najmniej jednego modułu.';
 $string['msg6a'] = 'You have set some internal reviewers but not specified a deadline.';  // Niko
 $string['msg6'] = 'Wybrano egzaminatorów zewnętrznych, jednak nie określono terminu finalizacji.';
 $string['msg7'] = 'Proszę podać nazwę arkusza.';
-$string['msg8'] = 'To jest egzamin typu "closed-book", w czasie którego <em>niedozwolone jest</em> korzystanie ze środków i źródeł pomocniczych (także słowników) ani pomocy osób drugich. Niedozwolone jest też używanie urządzeń elektronicznych z wyjątkiem komputera egzaminacyjnego.';
+$string['msg8'] = 'To jest egzamin typu \'closed-book\', w czasie którego <em>niedozwolone jest</em> korzystanie ze środków i źródeł pomocniczych (także słowników) ani pomocy osób drugich. Niedozwolone jest też używanie urządzeń elektronicznych z wyjątkiem komputera egzaminacyjnego.';
 
 // General tab
 $string['generaltab'] = 'Ogólne';
