@@ -25,6 +25,15 @@
 */
 
 
+function display_notice($title, $msg, $icon, $title_color = 'black') {
+  global $cfg_root_path;
+
+  echo "<html>\n<head>\n<title>$title</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {color:#BF0000;font-size:150%}\n</style>\n</head>\n<body>\n";
+  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"" . $cfg_root_path . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
+  echo "<h1 style=\"margin-left:60px; color:$title_color\">$title</h1>\n";
+  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0; height:1px; border:0px\" />\n<p style=\"margin-left:60px\">$msg</p>"; 
+}
+
 /**
  * This function will output an access denied warning and terminate script execution
  *
@@ -39,10 +48,9 @@ function access_denied($message, $output_header = false) {
     Header("WWW-authenticate: basic realm=\"Rogo\"");
     Header("HTTP/1.0 401 Unauthorised");
   }
-  echo "<html>\n<head>\n<title>" . $string['accessdenied'] .  "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#BF0000;font-size:140%}\n</style>\n</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-  echo "<h1 style=\"margin-left:60px\">" . $string['accessdenied'] . "</h1>\n";
-  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0; height:1px; border:0px\" />\n<p style=\"margin-left:60px\">$message</p>\n</body>\n</html>"; 
+  display_notice($string['accessdenied'], $message, '/artwork/access_denied.png');
+  
+  echo "\n</body>\n</html>";
   
   $mysqli->close();
   exit;
