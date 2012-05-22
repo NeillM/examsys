@@ -279,10 +279,12 @@ require_once './classes/networkutils.class.php';
     }
     $info->close();
     echo "</li>\n";
-    echo "<li>" . $string['UserRoles'] . " - ";
+    echo '<li>' . $string['UserRoles'] . ' - ';
     $userRolesArray = explode(',', $userroles);
     foreach ($userRolesArray as $ur) {
       if ($ur != 'Student') {
+        $ur = str_replace('Demo', '', $ur);
+        
         echo '<span style="color:red">' . $string[strtolower($ur)] . '</span>,';
       } else {
         echo $string[strtolower($ur)] . ',';
