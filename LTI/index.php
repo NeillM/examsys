@@ -118,8 +118,8 @@ if ($returned === false AND !((strpos($userroles, 'SysAdmin') !== false) OR (str
     }
   </script>
 </head>
-<body>
-<div id="content" class="content" style="font-size:80%">
+<body style="padding-left: 21px;">
+<div id="content" class="content" style="font-size:80%;">
 
 END;
 
