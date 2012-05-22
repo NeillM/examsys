@@ -37,6 +37,6 @@ $string['ltifirstlogindesc'] = 'System egzaminowania Rogō wymaga identyfikacji 
 Dokonane to będzie tylko przy pierwszej wizycie i w nielicznych przypadkach, w celu zapewnienia bezpieczeństwa w przyszłości.<br /><a href="./">Kliknij, aby kontynuować</a> ';
 $string['unavailablepaper']='Próbujesz otworzyć <strong>niedostępny arkusz</strong>!';
 
-$string['LTIFAILURE']='LTI Failure'; //Niko
+$string['LTIFAILURE']='niepowodzenie LTI';
 
 ?>
