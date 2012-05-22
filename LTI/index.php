@@ -87,8 +87,7 @@ if ($returned === false AND !((strpos($userroles, 'SysAdmin') !== false) OR (str
   echo "<h1 style=\"margin-left:60px\">" . $string['unavailablepaper'] . "</h1>\n";
   //echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0;  background-color:#C0C0C0; height:1px; border:0px\" />\n<p style=\"margin-left:60px\">". $string['ltifirstlogindesc']. "</p>\n</body>\n</html>";
   exit();
-}
-elseif ($returned === false) {
+} elseif ($returned === false) {
   //paper choice display
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
   print <<<END
@@ -159,8 +158,7 @@ END;
   echo "</div>\n"; // -- End of 'content' div ------------------
   echo "</td></tr></table>";
   exit();
-}
-elseif ($returned[1] == 'paper') {
+} elseif ($returned[1] == 'paper') {
   header("location: ../user_index.php?id=" . $returned[0]);
 }
 exit();

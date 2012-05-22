@@ -3017,8 +3017,9 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
+  
   // 16/05/2012 - Add encryption salt to config file.
   $new_cfg_str = array();
   //$new_cfg_str[] =  "  \$cfg_encrypt_salt = 'K8m2hzflkgjzdfgj';\n";
@@ -3051,73 +3052,90 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
-    @ob_flush();
-    @flush();
+  @ob_flush();
+  @flush();
 
 
-    // 22/05/2012 -  Chnage LTI Tables
-    $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($column_type);
-    $result->fetch();
-    if ( $result->num_rows() == 0 ) {
-        $sql="ALTER TABLE `lti_keys` CHANGE `created_at` `deleted` DATETIME NULL , CHANGE `updated_at` `updated_at` DATETIME NOT NULL";
-        $adjust = $mysqli->prepare($sql);
-        $adjust->execute();
-        $adjust->close();
-        echo "<li>$sql</li>";
+  // 22/05/2012 -  Chnage LTI Tables
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ( $result->num_rows() == 0 ) {
+      $sql="ALTER TABLE `lti_keys` CHANGE `created_at` `deleted` DATETIME NULL , CHANGE `updated_at` `updated_at` DATETIME NOT NULL";
+      $adjust = $mysqli->prepare($sql);
+      $adjust->execute();
+      $adjust->close();
+      echo "<li>$sql</li>";
 
-        $sql="UPDATE `lti_keys` set `deleted`=NULL WHERE `deleted`='0000-00-00 00:00:00'";
-        $adjust = $mysqli->prepare($sql);
-        $adjust->execute();
-        $adjust->close();
-        echo "<li>$sql</li>";
-
-
-        $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated` DATETIME NOT NULL";
-        $adjust = $mysqli->prepare($sql);
-        $adjust->execute();
-        $adjust->close();
-        echo "<li>$sql</li>";
+      $sql="UPDATE `lti_keys` set `deleted`=NULL WHERE `deleted`='0000-00-00 00:00:00'";
+      $adjust = $mysqli->prepare($sql);
+      $adjust->execute();
+      $adjust->close();
+      echo "<li>$sql</li>";
 
 
-        $sql="ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` DATETIME NOT NULL";
-        $adjust = $mysqli->prepare($sql);
-        $adjust->execute();
-        $adjust->close();
-        echo "<li>$sql</li>";
+      $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated` DATETIME NOT NULL";
+      $adjust = $mysqli->prepare($sql);
+      $adjust->execute();
+      $adjust->close();
+      echo "<li>$sql</li>";
 
-    }
 
-    $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND TABLE_SCHEMA='$cfg_db_database'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($column_type);
-    $result->fetch();
-    if ($result->num_rows() == 0) {
-        $sql = "CREATE TABLE IF NOT EXISTS `touchstone`.`lti_context` (`oauth_consumer_key` VARCHAR( 255 ) NOT NULL ,`lti_context_id` VARCHAR( 255 ) NOT NULL ,`c_internal_id` VARCHAR( 255 ) NOT NULL ,`updated_on` DATETIME NOT NULL, PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`), KEY `c_internal_id` (`c_internal_id`))";
-        $adjust = $mysqli->prepare($sql);
-        $adjust->execute();
-        $adjust->close();
-        echo "<li>$sql</li>";
+      $sql="ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` DATETIME NOT NULL";
+      $adjust = $mysqli->prepare($sql);
+      $adjust->execute();
+      $adjust->close();
+      echo "<li>$sql</li>";
 
-        $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'";
-        $mysqli->query($sql);
-        echo "<li>$sql</li>\n";
+  }
 
-        $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
-        $mysqli->query($sql);
-        echo "<li>$sql</li>\n";
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $sql = "CREATE TABLE IF NOT EXISTS `touchstone`.`lti_context` (`oauth_consumer_key` VARCHAR( 255 ) NOT NULL ,`lti_context_id` VARCHAR( 255 ) NOT NULL ,`c_internal_id` VARCHAR( 255 ) NOT NULL ,`updated_on` DATETIME NOT NULL, PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`), KEY `c_internal_id` (`c_internal_id`))";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
 
-        $sql = "GRANT SELECT ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
-        $mysqli->query($sql);
-        echo "<li>$sql</li>\n";
-    }
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_sysadmin_user . "'@'" . $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
 
-    @ob_flush();
-    @flush();
+    $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
 
+    $sql = "GRANT SELECT ON " . $cfg_db_database . ".lti_context TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>$sql</li>\n";
+  }
+
+  @ob_flush();
+  @flush();
+
+  // 22/05/2012 - Addition of grey personal folder
+  $column_type = '';
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='folders' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='color'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($column_type == "enum('yellow','red','green','blue')") {
+    $adjust = $mysqli->prepare("ALTER TABLE folders CHANGE COLUMN color color enum('yellow','red','green','blue','grey')");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE folders CHANGE COLUMN color color enum('yellow','red','green','blue','grey')</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
