@@ -170,7 +170,7 @@ class BLTI {
               echo nl2br($e->getTraceAsString());
             }
           }
-          $stmt = $db->prepare("SELECT secret,context_id,name FROM lti_keys WHERE oauth_consumer_key=?");
+          $stmt = $db->prepare("SELECT secret,context_id,name FROM lti_keys WHERE oauth_consumer_key=? AND `deleted` IS NULL");
           /*
           if ($db->error) {
             try {
@@ -312,7 +312,7 @@ class BLTI {
     return $this->getUserEmail();
   }
 
-  function getUserKey($opt)
+  function getUserKey($opt=0)
   {
     $oauth = $this->info['oauth_consumer_key'];
     $id = $this->info['user_id'];
@@ -340,7 +340,7 @@ class BLTI {
     return $grav_url;
   }
 
-  function getResourceKey($opt)
+  function getResourceKey($opt=0)
   {
     $oauth = $this->info['oauth_consumer_key'];
     $id = $this->info['resource_link_id'];
@@ -355,6 +355,8 @@ class BLTI {
     return false;
   }
 
+
+
   function getResourceTitle()
   {
     $title = $this->info['resource_link_title'];
@@ -368,12 +370,21 @@ class BLTI {
     return $oauth;
   }
 
-  function getCourseKey()
+  function getCourseKey($opt=0)
   {
     if ($this->context_id) return $this->context_id;
     $oauth = $this->info['oauth_consumer_key'];
     $id = $this->info['context_id'];
-    if (strlen($id) > 0 and strlen($oauth) > 0) return $oauth . ':' . $id;
+      if($opt<1)
+      {
+          if (strlen($id) > 0 and strlen($oauth) > 0) return $oauth . ':' . $id;
+      }
+      else
+      {
+          if (strlen($id) > 0 and strlen($oauth) > 0) return (array($oauth , $id));
+      }
+
+
     return false;
   }
 

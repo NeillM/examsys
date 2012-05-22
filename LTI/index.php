@@ -17,14 +17,29 @@ require_once  $cfg_web_root . 'include/lti_func.php';
 
 global $cfg_long_date_time;
 
+
+
+if(!$lti->valid) {
+    $tempvar=$lti->message;
+    $message = $string['LTIFAILURE'] . "</p>\n<p>$string[$tempvar]</p>\n";
+
+
+
+    access_denied($message, true);
+}
+
 if (isset($_REQUEST['paperlinkID'])) {
   //  print_r($_SESSION);
-  $retlookup = $_SESSION['postlookup'][$_REQUEST['paperlinkID']];
+  list($retlookup,$retlookup2) = $_SESSION['postlookup'][$_REQUEST['paperlinkID']];
   unset($_SESSION['postlookup']);
 
   if ($retlookup > 0) {
-    $info = $lti->getResourceKey(1);
-    addltiresource($mysqli, $info[0], $info[1], $retlookup, 'paper');
+      $info = $lti->getResourceKey(1);
+      addltiresource($mysqli, $info[0], $info[1], $retlookup, 'paper');
+      if($retlookup2!=0)
+      {
+          addlticontext($mysqli, $info[0], $info[1], $retlookup1);
+      }
   }
 
 }
@@ -85,98 +100,273 @@ elseif ($returned === false) {
 
 
 END;
+class personal_folders {
+    private $folderlst;
+    private $folderlst2;
+    private $mysqli;
 
-    // -- Display personal folders --------------------------------------
-    if (!isset($teams)){
-        $teams = getUserTeams($userID, $mysqli);
+    function __construct($mysqli) {
+    $this->mysqli=$mysqli;
+}
+    function loadpersonalfolders($userID) {
+        // -- Display personal folders --------------------------------------
+        if (!isset($teams)){
+            $teams = getUserTeams($userID, $this->mysqli);
+        }
+        $module_sql = '';
+        foreach ($teams as $individual_team){
+            if (trim($individual_team) != '') $module_sql .= " OR team_name LIKE '%$individual_team%'";
+        }
+
+        $resulta = $this->mysqli->prepare("SELECT id, name, team_name, color FROM folders WHERE (ownerID=$userID $module_sql)  AND deleted IS NULL ORDER BY name, id"); //AND name NOT LIKE '%;%'
+        $resulta->execute();
+        $resulta->bind_result($id, $name, $team_name, $color);
+        $resulta->store_result();
+        while ($resulta->fetch()) {
+            $count=substr_count($name,';');
+            $folderlst[]=array($id, $name, $team_name, $color,$count);
+        }
+        $resulta->close();
+$this->folderlst=$folderlst;
     }
-    $module_sql = '';
-    foreach ($teams as $individual_team){
-        if (trim($individual_team) != '') $module_sql .= " OR team_name LIKE '%$individual_team%'";
+
+    function process() {
+    $folderlst=$this->folderlst;
+        $parent[0]=0;
+        foreach($folderlst as $v) {
+            list($id, $name, $team_name, $color,$count)=$v;
+
+ //           print "$name::$id::$count<br>";
+            $count1=$count+1;
+
+
+            $folderlst2[$id]=array($id,$name,$team_name,$color,$count,$parent[$count]);
+            $parent[$count1]=$id;
+        }
+    $this->folderlst2=$folderlst2;
     }
 
-    $resulta = $mysqli->prepare("SELECT id, name, team_name, color FROM folders WHERE (ownerID=$userID $module_sql)  AND deleted IS NULL ORDER BY name, id"); //AND name NOT LIKE '%;%'
-    $resulta->execute();
-    $resulta->bind_result($id, $name, $team_name, $color);
-    $resulta->store_result();
+    function dump() {
 
-    echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['myfolders'] . " (" . ($resulta->num_rows() + 1) . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    while ($resulta->fetch()) {
-        echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" />$name</a></div>\n";
-/*
+        print "FOLDERLST<pre>";
+        print_r($this->folderlst);
+        print "</pre><br>FOLDERLST2<pre>";
+        print_r($this->folderlst2);
+        print "</pre>";
 
-        $tmp_folder = $id;
+    }
 
-        $folder=$tmp_folder;
-        $result = $mysqli->prepare("SELECT ownerID, name, team_name FROM folders WHERE id=?");
-        $result->bind_param('i', $tmp_folder);
-        $result->execute();
-        $result->store_result();
-        $result->bind_result($folder_ownerID, $orig_folder_name, $team_name);
-        $result->fetch();
-        $result->close();
-
-        if (isset($folder_teams) and $folder_teams != '' and $module == '') $module = $folder_teams;
-
-        if (substr_count($orig_folder_name,';') > 0) {
-            $last_semicolon = strrpos($orig_folder_name,';');
-            $path = substr($orig_folder_name,0,$last_semicolon);
-            $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
-            $parent_results->bind_param('si', $path, $userID);
-            $parent_results->execute();
-            $parent_results->bind_result($parent_id, $parent_name);
-            $parent_results->fetch();
-            $parent_results->close();
+    function getfolders($folder) {
+        $retlst=array();
+        foreach($this->folderlst2 as $v) {
+            list($id,$name,$team_name,$color,$count,$parent)=$v;
+            if($parent==$folder)
+            {
+                $retlst[]=array($id,$name,$team_name,$color,$count,$parent);
+            }
         }
-        if ($folder != '') {
-            $folders_array = explode(';',$orig_folder_name);
-            $parts = count($folders_array) - 1;
-            $selfenrol = 0;
-        }
-        if ($folder != '') {
-            echo $folders_array[$parts];
-        }
-        if ($folder != '') {
-            $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
-        }
+        return($retlst);
+    }
 
-        $results = $mysqli->prepare($query_string);
-        $results->execute();
-        $results->bind_result($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
-        $results->store_result();
-        $old_p_type = '';
-        $sent_clear_all = false;
-             if ($results->num_rows > 0) {
-                while ($results->fetch()) {
-                    if ($old_p_type != $paper_type and (isset($_GET['module']) AND $_GET['module'] != '') ) {
-                        if ($sent_clear_all == true) {
-                            echo "<br clear=\"all\" />";
-                        }
-                        $sent_clear_all = true;
+    function countfolders($folder) {
+        $lst=$this->getfolders($folder);
+        return count($lst);
+    }
 
-                        echo "<table border=\"0\" style=\"margin-left:10px; padding-right:2px; padding-bottom:5px; color:#1E3287\"><tr><td><nobr>" . $string[strtolower($types_array[$paper_type])] . " (" . $paper_types[$paper_type] . ")";
-                        if ($paper_type == 2) {
-                            echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" border=\"0\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
-                        }
-                        echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-                        echo "<br />\n";
-                    }
-                    displayPaperIcon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
-                    $old_p_type = $paper_type;
-                    $file_no++;
+    function gettests($folder)
+    {
+        $tests = array();
+
+        if ($folder != 0) {
+
+
+            $mysqli = $this->mysqli;
+            $results = $mysqli->prepare("SELECT property_id,paper_title,start_date,end_date,paper_type,paper_ownerID,deleted,crypt_name FROM properties WHERE folder=?");
+            $results->bind_param('i', $folder);
+            $results->execute();
+            $results->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted,$crypt_name);
+            $results->store_result();
+            if ($results->num_rows() > 0) {
+
+
+                while ($results->fetch())
+                {
+                    $tests[] = array($property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted,$crypt_name);
+
                 }
-                $results->close();
+            }
+            $results->close();
+
+
+        }
+        return $tests;
+    }
+
+
+    function counttests($folder) {
+        $lst=$this->gettests($folder);
+        return count($lst);
+    }
+
+    function listtree($folder, $block_id, $plk,$level)
+    {
+global $icons;
+        $lst = $this->getfolders($folder);
+        foreach ($lst as $v) {
+            list($id, $name, $team_name, $color, $count, $parent) = $v;
+            $cntfold = $this->countfolders($id);
+            $cnttest = $this->counttests($id);
+            if (($cnttest + $cntfold) > 0) {
+                //subfolder or test
+                //              $block_id=$cntshow;
+                echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$name</a></div>\n";
+
+
+
+                echo "<div id=\"block$block_id\" style=\"display:none; padding-left:52px\">";
+
+                @ob_flush();
+                @flush();
+
+                if ($cntfold > 0) {
+                                     list($block_id,$plk)=$this->listtree($id,$block_id+1,$plk,0);
+                    //print "folder $id,$block_id,$plk";
+                }
+                if ($cnttest > 0) {
+                    $lst2 = $this->gettests($id);
+                    foreach ($lst2 as $v2) {
+                        list($property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted,$crypt_name) = $v2;
+
+                        echo "<div style=\"padding-left:52px\"><a href=\"?paperlinkID=" . $plk . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
+                        if (strpos($paper_title, '[deleted') !== false) {
+                            echo ' style="color:#808080"';
+                        }
+                        echo "href=\"?paperlinkID=" . $plk . "\">" . $paper_title . "</a></div>\n";
+
+                        @ob_flush();
+                        @flush();
+
+
+                        // $paper_title ." [" . $start_date_disp . " - " . $end_date_display . "]</a></div>\n";
+                        $_SESSION['postlookup'][$plk] = array($crypt_name,0);
+
+                        $plk++;
+
+                    }
+
+                }
+                $block_id++;
+                echo "</div>";
+            } else {
+                //no subfolders or tests
+                echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\"   />&nbsp;$name</div>\n";
+
             }
 
+        }
+        @ob_flush();
+        @flush();
+
+        return (array($block_id, $plk));
+
+    }
+
+
+}
+
+
+    function listtreemodules($mysqli,$moduleid,$block_id,$plk,$flat=false) {
+        global $cfg_long_date_time,$icons;
+        $query_string = "SELECT DISTINCT crypt_name, paper_type, 'f', paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, title, initials, surname, retired, moduleID  FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN (0,1,3)  GROUP BY moduleID,paper_title ORDER BY paper_type, paper_title";
+
+        $results2 = $mysqli->prepare($query_string);
+
+        $results2->execute();
+        $results2->bind_result($crypt_name, $paper_type, $screens, $paper_title, $start_date, $start_date_disp, $end_date_display, $title, $initials, $surname, $retired, $moduleID);
+
+        $results2->store_result();
+
+        if ($results2->num_rows() > 0) {
+
+            @ob_flush();
+            @flush();
+
+            $rt = $results2->num_rows();
+            if(!$flat) {
+            echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$moduleid: $paper_title ($rt)</a></div>\n";
+            echo "<div id=\"block$block_id\" style=\"display:none\">";
+            } else {
+                echo "<div>";
+            }
+            while ($results2->fetch()) {
+                echo "<div style=\"padding-left:52px\"><a href=\"?paperlinkID=" . $plk . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
+                if (strpos($paper_title, '[deleted') !== false) {
+                    echo ' style="color:#808080"';
+                }
+                echo "href=\"?paperlinkID=" . $plk . "\">" . $paper_title . "</a></div>\n";
+                // $paper_title ." [" . $start_date_disp . " - " . $end_date_display . "]</a></div>\n";
+                $_SESSION['postlookup'][$plk] = array($crypt_name,$moduleid);
+
+                $plk++;
+            }
+            echo "</div>";
+            $block_id++;
+        }
+        else {
+            //        echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" />&nbsp;$moduleid: $fullname</div>\n";
+        }
+        $results2->close();
+
+        return (array($block_id, $plk));
+    }
+
+
+    $plk=0;
+    $block_id=0;
+
+$personalfolders = new personal_folders($mysqli);
+    $personalfolders->loadpersonalfolders($userID);
+    $personalfolders->process();
+
+//$personalfolders->dump();
+
+    echo $string['describemodulechoice'];
+
+        $info=$lti->getCourseKey(1);
+
+        $stmt = $mysqli->prepare("SELECT c_internal_id FROM lti_context WHERE  oauth_consumer_key=? AND lti_context_id=?");
+
+        $stmt->bind_param('ss', $info[0], $info[1]);
+
+        $stmt->execute();
+
+        $stmt->store_result();
+
+        $rows = $stmt->num_rows;
+    $stmt->bind_result($c_internal_id);
+
+        if($rows>0)
+        {
+            $stmt->fetch();
+
+    echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+
+
+    //if there is a context and therefore a course already selected display that
+$moduleid=$c_internal_id;
+
+        list($block_id,$plk)=listtreemodules($mysqli,$moduleid,$block_id,$plk,true);
+
+
+    }
+    $stmt->close();
+
+
+    echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['myfolders'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
 
 
-*/
-
-
-   }
-    $resulta->close();
-
+list($block_id,$plk)=$personalfolders->listtree(0,0,$plk,0);
 
 
   echo "<table border=\"0\" style=\"padding-top:10px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['bymodulecode'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
@@ -184,9 +374,6 @@ END;
   $old_faculty = '';
   $old_letter = '';
   $module_block = false;
-  $block_id = 0;
-  $plk = 0;
-
 
   $teams = getUserTeams($userID, $mysqli);
   $modlist = SearchUtils::getTeams($teams, $userroles, $userID, $mysqli);
@@ -196,40 +383,17 @@ END;
     if ($moduleid !== '') {
 
 
-      $query_string = "SELECT DISTINCT crypt_name, paper_type, 'f', paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, title, initials, surname, retired, moduleID  FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN (0,1,3)  GROUP BY paper_title ORDER BY paper_type, paper_title";
+list($block_id,$plk)=listtreemodules($mysqli,$moduleid,$block_id,$plk);
 
-      $results2 = $mysqli->prepare($query_string);
 
-      $results2->execute();
-      $results2->bind_result($crypt_name, $paper_type, $screens, $paper_title, $start_date, $start_date_disp, $end_date_display, $title, $initials, $surname, $retired, $moduleID);
 
-      $results2->store_result();
 
-      if ($results2->num_rows() > 0) {
-        $rt = $results2->num_rows();
-        echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\" onclick=\"showHide($block_id)\"  /><a href=\"\" style=\"color:blue\" onclick=\"showHide($block_id); return false;\">&nbsp;$moduleid: $fullname ($rt)</a></div>\n";
-        echo "<div id=\"block$block_id\" style=\"display:none\">";
-        while ($results2->fetch()) {
-          echo "<div style=\"padding-left:52px\"><a href=\"?sss=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
-          if (strpos($paper_title, '[deleted') !== false) {
-            echo ' style="color:#808080"';
-          }
-          echo "href=\"?paperlinkID=" . $plk . "\">" . $paper_title . "</a></div>\n";
-          // $paper_title ." [" . $start_date_disp . " - " . $end_date_display . "]</a></div>\n";
-          $_SESSION['postlookup'][$plk] = $crypt_name;
 
-          $plk++;
-        }
-        echo "</div>";
-        $block_id++;
-      }
-      else {
-        //        echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" />&nbsp;$moduleid: $fullname</div>\n";
-      }
-      $results2->close();
     }
+
+
   }
-  $results->close();
+//  $results->close();
 
   echo "</div>\n"; // -- End of 'content' div ------------------
 

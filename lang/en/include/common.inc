@@ -36,4 +36,11 @@ $string['ltifirstlogindesc'] = 'Rogō e-assessment system needs to confirm your 
 you have the correct permissions.  This will only happen on your first visit and at infrequent intervals afterwards
  to ensure security.<br /><a href="./">Click Here to Continue</a> ';
 $string['unavailablepaper']='You are attempting to access a <strong>paper that is unavailable</strong>!';
+
+
+
+
+$string['LTIFAILURE']='LTI Failure';
+
+
 ?>

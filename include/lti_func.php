@@ -69,7 +69,7 @@ function addltiuser($db, $oauth_consumer_key, $user_id, $userID) {
 
 
 function usercheck($db, $lti) {
-  global $string, $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database;
+  global $string, $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_root_path, $cfg_install_type, $cfg_db_database,$cfg_use_ldap,$fp_link;
 
   $info = $lti->getUserKey(1);
 
@@ -87,7 +87,7 @@ function usercheck($db, $lti) {
       echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0; height:1px; border:0px\" />\n<p style=\"margin-left:60px\">" . $string['ltifirstlogindesc'] . "</p>\n</body>\n</html>";
 
       $_SESSION['lti']['track'] = 'logon';
-      $mysqli->close();
+      $db->close();
       exit;
 
 
@@ -113,6 +113,7 @@ function usercheck($db, $lti) {
       Header("WWW-authenticate: basic realm=\"Rogo\"");
       Header("HTTP/1.0 401 Unauthorised");
       $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
+
       if ($cfg_use_ldap == true) $message .= "<li>" . $string['tsonldap'] . "</li>\n";
       $message .= '<li>' . $string['pressf5'] . '</li>';
 
@@ -175,3 +176,33 @@ function addltiresource($db, $oauth_consumer_key, $lti_resource_id, $internal_id
 
 }
 
+function addlticontext($db, $oauth_consumer_key, $lti_context_id, $c_internal_id) {
+
+
+    $result = $db->prepare("SELECT c_internal_id FROM lti_context WHERE oauth_consumer_key = ? AND lti_context_id =?");
+
+    $result->bind_param('ss', $oauth_consumer_key, $lti_context_id);
+
+
+    $result->execute();
+
+    $result->store_result();
+
+    $rows = $result->num_rows();
+$result->close();
+    $ret=false;
+
+    if ($rows == 0) {
+
+        $result = $db->prepare("INSERT INTO lti_context (oauth_consumer_key, lti_context_id, c_internal_id, updated_on) VALUES (?, ?, ?, NOW()) ");
+
+        $result->bind_param('sss', $oauth_consumer_key, $lti_context_id, $c_internal_id);
+
+        $result->execute();
+        $ret = $db->insert_id;
+        $result->close();
+    }
+
+    return $ret;
+
+}

@@ -15,3 +15,8 @@ $string['mandatory'] = 'Indicates a <strong>mandatory</strong> field that must b
 $string['bymodulecode'] = 'By Module';
 
 $string['myfolders'] = 'My folders';
+
+
+$string['papersoncurrentmodule'] = 'Papers on this module';
+
+$string['describemodulechoice']='<p>Please choose a Paper to link this to</p>';

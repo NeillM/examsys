@@ -333,6 +333,8 @@ Class InstallUtils {
     $tables = new databaseTables($dbcharset);
     while ($sql = $tables->next()) {
       $res = self::$db->query($sql);
+        @ob_flush();
+        @flush();
       if (self::$db->errno != 0) {
         self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "</br> $sql"));
       }
@@ -378,6 +380,8 @@ Class InstallUtils {
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
+        @ob_flush();
+        @flush();
       if (self::$db->errno != 0) {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_username . $string['wnotpermission']));
       }
@@ -431,12 +435,15 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".announcements TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";    
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".standards_setting TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".state TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_resource TO '". self::$cfg_db_student_user . "'@'".
-      self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_resource TO '". self::$cfg_db_student_user . "'@'".self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_context TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
+
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
+        @ob_flush();
+        @flush();
       if (self::$db->errno != 0) {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotpermission']));
       }
@@ -473,6 +480,8 @@ Class InstallUtils {
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
+        @ob_flush();
+        @flush();
       if (self::$db->errno != 0) {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotpermission']));
       }
@@ -534,12 +543,14 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".temp_users TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sessions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".state TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_resource TO '". self::$cfg_db_staff_user . "'@'".
-      self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_resource TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_context TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
+        @ob_flush();
+        @flush();
       if (self::$db->errno != 0) {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotpermission']));
       }
@@ -587,6 +598,8 @@ Class InstallUtils {
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
+        @ob_flush();
+        @flush();
       if (self::$db->errno != 0) {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotpermission']));
       }
@@ -603,6 +616,8 @@ Class InstallUtils {
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
+        @ob_flush();
+        @flush();
       if (self::$db->errno != 0) {
 	    echo self::$db->error . "<br />";
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission']));
@@ -2030,7 +2045,7 @@ QUERY;
           `oauth_consumer_key` varchar(200) NOT NULL,
           `user_id` varchar(200) NOT NULL,
           `rogo_id` int(11) NOT NULL,
-          `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          `updated_on` datetime,
           PRIMARY KEY (`oauth_consumer_key`,`user_id`),
           KEY `rogo_id` (`rogo_id`)
          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2043,7 +2058,7 @@ QUERY;
         `lti_resource_id` varchar(255) NOT NULL,
         `internal_id` varchar(255) DEFAULT NULL,
         `itype` varchar(255) DEFAULT NULL,
-        `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        `updated` datetime,
         PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),
         KEY `destination2` (`itype`),
         KEY `destination` (`internal_id`)
@@ -2058,9 +2073,21 @@ QUERY;
           `secret` char(255)DEFAULT NULL,
           `name` char(255) DEFAULT NULL,
           `context_id` char(255) DEFAULT NULL,
-          `created_at` datetime NOT NULL,
-          `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-          PRIMARY KEY (`id`)
+          `deleted` datetime,
+          `updated_at` datetime,
+          PRIMARY KEY (`id`),
+          KEY `oauth_consumer_key` (`oauth_consumer_key`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+      $this->tableList['lti_context'] = <<<QUERY
+          CREATE TABLE IF NOT EXISTS `lti_context` (
+          `oauth_consumer_key` VARCHAR( 255 ) NOT NULL ,
+          `lti_context_id` VARCHAR( 255 ) NOT NULL ,
+          `c_internal_id` VARCHAR( 255 ) NOT NULL ,
+          `updated_on` DATETIME NOT NULL,
+          PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`),
+          KEY `c_internal_id` (`c_internal_id`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 

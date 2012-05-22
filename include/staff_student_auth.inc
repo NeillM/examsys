@@ -73,9 +73,18 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
     db_change_user($mysqli);
   }
 
-  if (isset($lti->message) AND $lti->message != 'Could not find context in session') {
+  if (isset($lti->message) AND $lti->message != 'Could not find context in session' AND $lti->message != false) {
     // DO WE WANT THIS??
-    echo $lti->message;
+
+      $tempvar=$lti->message;
+      if(!isset($string[$lti->message])) {
+          $string[$lti->message]=$lti->message;
+      }
+      $message = $string['LTIFAILURE'] . "</p>\n<p>$string[$tempvar]</p>\n";
+
+
+
+      access_denied($message, true);
   }
 
   if (!$lti->valid) {

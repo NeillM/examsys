@@ -111,7 +111,7 @@ require '../include/lti_keys_options.inc';
     <tr><th colspan="4" class="bevel"></th></tr>
     <?php
       $id=0;
-      $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, `name`, context_id FROM lti_keys ORDER BY name");
+      $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, `name`, context_id FROM lti_keys WHERE `deleted` IS NULL ORDER BY name");
       $result->execute();
       $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'],  $ltis['context_id']);
       while ($result->fetch()) {

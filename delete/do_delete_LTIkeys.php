@@ -30,7 +30,7 @@
 
   $tmp_LTIkeysID = $_POST['LTIkeysID'];
   
-  $result = $mysqli->prepare("DELETE FROM lti_keys WHERE id=?");
+  $result = $mysqli->prepare("UPDATE lti_keys set `deleted`=NOW() WHERE id=?");
   $result->bind_param('i', $tmp_LTIkeysID);
   $result->execute();  
   $result->close();
