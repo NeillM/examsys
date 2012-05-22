@@ -1220,7 +1220,7 @@ QUERY;
           `name` text,
           `team_name` varchar(255) default NULL,
           `created` datetime default NULL,
-          `color` enum('yellow','red','green','blue') default NULL,
+          `color` enum('yellow','red','green','blue','grey') default NULL,
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}

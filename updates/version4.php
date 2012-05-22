@@ -84,7 +84,7 @@ function gen_random_salt() {
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-    <title>TouchStone 4.x to Rogō update Script</title>
+    <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <style type="text/css">
       html {padding:0em; margin:0em; width:100%}
@@ -110,7 +110,7 @@ function gen_random_salt() {
   <body>
   <table class="header"> 
     <tr> 
-      <th><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:48px; top:-6px; font-size:10pt; color:#001979; font-weight:bold">version 4.x to <?php echo $version; ?></div></th> 
+      <th><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:48px; top:-6px; font-size:10pt; color:#001979; font-weight:bold">version <?php echo $rogo_version . ' to ' .$version; ?></div></th> 
       <th style="text-align:right; padding-top:10px; padding-right:10px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="Logo" border="0" />&nbsp;&nbsp;</th> 
     </tr> 
     <tr> 
@@ -134,7 +134,7 @@ if (!isset($_POST['update'])) {
     <?php
     if (!InstallUtils::configFileIsWriteable()) {
       ?>
-       <h2><?php echo $string['updatefromversion']; ?> 4.x to <?php echo $version; ?></h2>
+       <h2><?php echo $string['updatefromversion'] . ' ' . $rogo_version . ' to ' . $version; ?></h2>
        <div><?php echo $string['warning1']; ?></div>
        <div><?php echo $string['warning1']; ?></div>
       <?php
@@ -2907,7 +2907,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("TRUNCATE staff_help");
     $adjust->execute();
     $adjust->close();
-    echo "<li>DROP TABLE staff_help</li>\n";
+    echo "<li>TRUNCATE staff_help</li>\n";
   
     $query = file_get_contents('../install/staff_help.sql');
     $mysqli->query($query);
