@@ -44,7 +44,7 @@ function lookupltiuser($db, $oauth_consumer_key, $user_id) {
 }
 
 function addltiuser($db, $oauth_consumer_key, $user_id, $userID) {
-  $result = $db->prepare("INSERT INTO lti_user (oauth_consumer_key, user_id, rogo_id) VALUES (?,?,?) ");
+  $result = $db->prepare("INSERT INTO lti_user (oauth_consumer_key, user_id, rogo_id,updated_on) VALUES (?,?,?,NOW()) ");
   $result->bind_param('sss', $oauth_consumer_key, $user_id, $userID);
   $result->execute();
   $ret = $db->insert_id;

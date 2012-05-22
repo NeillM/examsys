@@ -66,11 +66,11 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   if ($lti->valid) {
     //LTI Correct
     $check = usercheck($mysqli, $lti);
-    list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
-    db_change_user($mysqli);
+  //  list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
+  //  db_change_user($mysqli);
   }
 
-  if (isset($lti->message) AND $lti->message != 'Could not find context in session' AND $lti->message != false) {
+  if (isset($lti->message) and $lti->message != 'Could not find context in session' and $lti->message != false) {
     // DO WE WANT THIS??
     $tempvar = $lti->message;
     if (!isset($string[$lti->message])) {
