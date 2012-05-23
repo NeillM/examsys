@@ -14,5 +14,5 @@ $string['mandatory'] = 'Oznacza pole <strong>wymagane</strong>, które musi być
 $string['bymodulecode'] = 'względem modułu';
 $string['myfolders'] = 'Moje foldery';
 $string['papersoncurrentmodule'] = 'Arkusze w tym module';
-$string['describemodulechoice'] = 'Select Paper for Link';  // Niko
+$string['describemodulechoice'] = 'Wybierz arkusz, który ma być przyłączony';  
 ?>
