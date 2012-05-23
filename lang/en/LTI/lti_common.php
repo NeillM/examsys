@@ -11,12 +11,8 @@ $string['administrativetools'] = 'Administrative Tools';
 $string['addltikeys'] = 'Add LTI Key';
 $string['editltikeys'] = 'Edit LTI Key';
 $string['mandatory'] = 'Indicates a <strong>mandatory</strong> field that must be completed.';
-
 $string['bymodulecode'] = 'By Module';
-
 $string['myfolders'] = 'My folders';
-
-
 $string['papersoncurrentmodule'] = 'Papers on this module';
-
-$string['describemodulechoice']='<p>Please choose a Paper to link this to</p>';
+$string['describemodulechoice'] = 'Select Paper for Link';
+?>

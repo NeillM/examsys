@@ -145,7 +145,7 @@ END;
   $plk = 0;
   $block_id = 0;
 
-  echo '<h1' . $string['describemodulechoice'] . '</h1>';
+  echo '<h1>' . $string['describemodulechoice'] . '</h1>';
 
   $info = $lti->getCourseKey(1);
   $stmt = $mysqli->prepare("SELECT c_internal_id FROM lti_context WHERE  oauth_consumer_key=? AND lti_context_id=?");
