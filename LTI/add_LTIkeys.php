@@ -16,7 +16,7 @@
 
 /**
  *
- * @author Simon Wilkinson
+ * @author Simon Atack
  * @version 1.0
  * @copyright Copyright (c) 2012 The University of Nottingham
  * @package

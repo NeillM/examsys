@@ -1,12 +1,28 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: cczsa1
- * Date: 30/04/12
- * Time: 13:02
- * To change this template use File | Settings | File Templates.
- */
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+* 
+* LTI landing page.
+* 
+* @author Simon Atack
+* @version 1.0
+* @copyright Copyright (c) 2012 The University of Nottingham
+* @package
+*/
 
 require '../include/staff_student_auth.inc';
 require '../include/sidebar_menu.inc';
@@ -46,7 +62,6 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
         echo ' style="color:#808080"';
       }
       echo "href=\"?paperlinkID=" . $plk . "\">" . $paper_title . "</a></div>\n";
-      // $paper_title ." [" . $start_date_disp . " - " . $end_date_display . "]</a></div>\n";
       $_SESSION['postlookup'][$plk] = array($crypt_name, $moduleid);
       $plk++;
     }
@@ -63,12 +78,16 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
 
 if (!$lti->valid) {
   $tempvar = $lti->message;
-  $message = $string['LTIFAILURE'] . "</p>\n<p>$string[$tempvar]</p>\n";
-  access_denied($message, true);
+  if (!isset($string[$tempvar])) {
+    $string[$tempvar]=$lti->message;
+  }
+  $message = $string[$tempvar];
+  display_notice($string['LTIFAILURE'], $message, '/artwork/access_denied.png', '#C00000');
+  $mysqli->close();
+  exit;
 }
 
 if (isset($_REQUEST['paperlinkID'])) {
-  //  print_r($_SESSION);
   list($retlookup, $retlookup2) = $_SESSION['postlookup'][$_REQUEST['paperlinkID']];
   unset($_SESSION['postlookup']);
   if ($retlookup > 0) {
@@ -82,14 +101,12 @@ if (isset($_REQUEST['paperlinkID'])) {
 
 
 // jump check
-
 $info = $lti->getResourceKey(1);
 $returned = lookupltiresource($mysqli, $info[0], $info[1]);
 if ($returned === false AND !((strpos($userroles, 'SysAdmin') !== false) OR (strpos($userroles, 'Staff') !== false))) {
   echo "<html>\n<head>\n<title>" . $string['unavailablepaper'] . "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#BF0000;font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 style=\"margin-left:60px\">" . $string['unavailablepaper'] . "</h1>\n";
-  //echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0;  background-color:#C0C0C0; height:1px; border:0px\" />\n<p style=\"margin-left:60px\">". $string['ltifirstlogindesc']. "</p>\n</body>\n</html>";
   exit();
 } elseif ($returned === false) {
   //paper choice display
@@ -128,8 +145,6 @@ END;
   $block_id = 0;
 
   echo $string['describemodulechoice'];
-
-
 
   $info = $lti->getCourseKey(1);
   $stmt = $mysqli->prepare("SELECT c_internal_id FROM lti_context WHERE  oauth_consumer_key=? AND lti_context_id=?");
