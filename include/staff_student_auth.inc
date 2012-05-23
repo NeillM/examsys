@@ -75,11 +75,16 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   if (isset($lti->message) and $lti->message != 'Could not find context in session' and $lti->message != false) {
     // DO WE WANT THIS??
     $tempvar = $lti->message;
+    if (strpos($tempvar,'Expired timestamp') !== false) {
+      $tempvar = 'expiredtimestamp';
+    }
     if (!isset($string[$lti->message])) {
       $string[$lti->message] = $lti->message;
     }
-    $message = $string['LTIFAILURE'] . "</p>\n<p>$string[$tempvar]</p>\n";
-    access_denied($message, true);
+    display_notice($string['LTIFAILURE'], $string[$tempvar], '/artwork/access_denied.png', '#C00000');
+    $mysqli->close();
+    exit;
+    //access_denied($message, true);
   }
 
   if (!$lti->valid) {

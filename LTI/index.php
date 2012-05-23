@@ -121,10 +121,11 @@ if ($returned === false AND !((strpos($userroles, 'SysAdmin') !== false) OR (str
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
+  h1 {font-size:150%}
   .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
   .sch {padding-left:32px; text-indent:-20px}
   .greysch {padding-left:12px; color:#808080}
-  .mod {padding-left:60px; text-indent:-20px}
+  .mod {padding-left:60px; text-indent:-30px}
   </style>
    $cfg_js_root
   <script language="JavaScript">
@@ -144,7 +145,7 @@ END;
   $plk = 0;
   $block_id = 0;
 
-  echo $string['describemodulechoice'];
+  echo '<h1' . $string['describemodulechoice'] . '</h1>';
 
   $info = $lti->getCourseKey(1);
   $stmt = $mysqli->prepare("SELECT c_internal_id FROM lti_context WHERE  oauth_consumer_key=? AND lti_context_id=?");
@@ -184,8 +185,7 @@ END;
     $moduleid = $value['id'];
     if ($moduleid !== '') {
       $explode=false;
-      if($c_internal_id==$moduleid)
-      {
+      if($c_internal_id==$moduleid) {
         $explode=true;
       }
       list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk,false,$explode);
