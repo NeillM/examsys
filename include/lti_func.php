@@ -69,8 +69,9 @@ function usercheck($db, $lti) {
       if ($returned2 !== false) {
         //insert ID into table
         $returned3 = addltiuser($db, $info[0], $info[1], $userID);
+        $returned4 = lookupltiuser($db, $info[0], $info[1]);
         $ret = db_change_user($db);
-        return $returned3;
+        return $returned4;
       }
       return $returned;
     }
