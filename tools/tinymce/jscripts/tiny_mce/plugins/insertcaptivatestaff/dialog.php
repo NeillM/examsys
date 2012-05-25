@@ -55,13 +55,7 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
       echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
       exit;
     }
-	$html = '<div>
-  <table style="CURSOR: pointer" onclick="openTutorial(\'' . $_FILES['FileName']['name'] . '\')" border="0" cellspacing="0" cellpadding="0">
-   <tbody>
-     <tr><td rowspan="2" style="width:70px"><img border="0" alt="Demo Movie" src="./large_play_icon.png" width="64" height="64" alt="play" /></td><td><div style="font-size:125%; color:blue">' . $_POST['title'] . '</div><div style="font-size:90%; color:#808080">Flash required</div></td></tr>
-  </tbody>
-  </table>
-  </div>';    
+    $html = '<div><table style="cursor:pointer" onclick="openTutorial(\'' . $_FILES['FileName']['name'] . '\')" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td rowspan="2" style="width:70px"><img border="0" alt="Demo Movie" src="./large_play_icon.png" width="64" height="64" alt="play" /></td><td><div style="font-size:125%; color:blue">' . $_POST['title'] . '</div><div style="font-size:90%; color:#808080">Flash required</div></td></tr></tbody></table></div>';
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
         <script type="text/javascript" language="javascript">
@@ -73,7 +67,7 @@ var ExampleDialog = {
 
 	insert : function() {
 		// Insert the contents from the input into the document
-        var html = "<?php echo   str_replace('"','\"',str_replace("\n",'',$html)) . "\";\n" ; ?>
+    var html = '<?php echo str_replace("'", "\'", $html); ?>';
 		tinyMCEPopup.editor.execCommand('mceInsertContent', false, html);
 		tinyMCEPopup.close();
 	}
