@@ -86,7 +86,6 @@ if (!$lti->valid) {
   $mysqli->close();
   exit;
 }
-
 if (isset($_REQUEST['paperlinkID'])) {
   list($retlookup, $retlookup2) = $_SESSION['postlookup'][$_REQUEST['paperlinkID']];
   unset($_SESSION['postlookup']);
@@ -94,6 +93,7 @@ if (isset($_REQUEST['paperlinkID'])) {
     $info = $lti->getResourceKey(1);
     addltiresource($mysqli, $info[0], $info[1], $retlookup, 'paper');
     if ($retlookup2 != 0) {
+	 $info = $lti->getCourseKey(1);
       addlticontext($mysqli, $info[0], $info[1], $retlookup1);
     }
   }

@@ -2956,20 +2956,23 @@ if (!isset($_POST['update'])) {
   $result->fetch();
   if ( $result->num_rows() == 0 ) {
     // Table to hold Reference material
-    $adjust = $mysqli->prepare("CREATE TABLE IF NOT EXISTS `lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) ");
+    $sql="CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) ENGINE=InnoDB";
+    $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
-    echo "<li>CREATE TABLE IF NOT EXISTS `lti_user` (  `oauth_consumer_key` varchar(200) NOT NULL,  `user_id` varchar(200) NOT NULL,  `rogo_id` int(11) NOT NULL,  `updated_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`user_id`),  KEY `rogo_id` (`rogo_id`)) </li>\n";
+    echo "<li>$sql</li>\n";
 
-    $adjust = $mysqli->prepare("CREATE TABLE IF NOT EXISTS `lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) ");
-    $adjust->execute();
+    $sql="CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) ENGINE=InnoDB";
+    $adjust = $mysqli->prepare();
+    $adjust->execute($sql);
     $adjust->close();
-    echo "<li>CREATE TABLE IF NOT EXISTS `lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) </li>\n";
+    echo "<li>$sql</li>\n";
 
-    $adjust = $mysqli->prepare("CREATE TABLE IF NOT EXISTS `lti_keys` (  `id` mediumint(9) NOT NULL AUTO_INCREMENT,  `oauth_consumer_key` char(255)NOT NULL,  `secret` char(255)DEFAULT NULL,  `name` char(255) DEFAULT NULL,  `context_id` char(255) DEFAULT NULL,  `created_at` datetime NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) ");
+    $sql="CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_keys` (  `id` mediumint(9) NOT NULL AUTO_INCREMENT,  `oauth_consumer_key` char(255)NOT NULL,  `secret` char(255)DEFAULT NULL,  `name` char(255) DEFAULT NULL,  `context_id` char(255) DEFAULT NULL,  `created_at` datetime NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) ENGINE=InnoDB";
+    $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
-    echo "<li>CREATE TABLE IF NOT EXISTS `lti_keys` (  `id` mediumint(9) NOT NULL AUTO_INCREMENT,  `oauth_consumer_key` char(255)NOT NULL,  `secret` char(255)DEFAULT NULL,  `name` char(255) DEFAULT NULL,  `context_id` char(255) DEFAULT NULL,  `created_at` datetime NOT NULL, `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`id`)) </li>\n";
+    echo "<li>$sql</li>\n";
 
     ob_flush();
     flush();
@@ -3097,7 +3100,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() == 0) {
-    $sql = "CREATE TABLE IF NOT EXISTS `touchstone`.`lti_context` (`oauth_consumer_key` VARCHAR( 255 ) NOT NULL ,`lti_context_id` VARCHAR( 255 ) NOT NULL ,`c_internal_id` VARCHAR( 255 ) NOT NULL ,`updated_on` DATETIME NOT NULL, PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`), KEY `c_internal_id` (`c_internal_id`))";
+    $sql = "CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_context` (`oauth_consumer_key` VARCHAR( 255 ) NOT NULL ,`lti_context_id` VARCHAR( 255 ) NOT NULL ,`c_internal_id` VARCHAR( 255 ) NOT NULL ,`updated_on` DATETIME NOT NULL, PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`), KEY `c_internal_id` (`c_internal_id`)) ENGINE=InnoDB";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
     $adjust->close();
