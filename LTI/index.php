@@ -92,7 +92,7 @@ if (isset($_REQUEST['paperlinkID'])) {
   if ($retlookup > 0) {
     $info = $lti->getResourceKey(1);
     addltiresource($mysqli, $info[0], $info[1], $retlookup, 'paper');
-    if ($retlookup2 != 0) {
+    if ($retlookup2 !== 0) {
 	 $info = $lti->getCourseKey(1);
       addlticontext($mysqli, $info[0], $info[1], $retlookup1);
     }
