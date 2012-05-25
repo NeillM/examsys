@@ -244,6 +244,16 @@ Class InstallUtils {
       self::displayError(array('001' => mysqli_connect_error()));
     }
     self::$db->set_charset(self::$cfg_db_charset);
+
+    //create salt as this is needed to generate the passwords that are created in the next function rather than created during config file settings
+    $salt = '';
+    $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    for ($i=0; $i<16; $i++) {
+      $salt .= substr($characters, rand(0,61), 1);
+    }
+    global $cfg_encrypt_salt;
+    $cfg_encrypt_salt=$salt;
+
     self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
 
     //LOAD help if requested
@@ -308,6 +318,8 @@ Class InstallUtils {
     $res = self::$db->prepare("SHOW DATABASES LIKE '$dbname'");
     $res->execute();
     $res->store_result();
+    @ob_flush();
+    @flush();
     if ($res->num_rows > 0) {
       self::displayError(array('010' => sprintf($string['displayerror1'],$dbname)));
     }
@@ -1096,11 +1108,11 @@ CONFIG;
     $config = str_replace('{cfg_ldap_user_prefix}', self::$cfg_ldap_user_prefix, $config);
     $config = str_replace('{cfg_use_ldap}', self::$cfg_use_ldap, $config);
     
-    $salt = '';
-    $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    for ($i=0; $i<16; $i++) {
-      $salt .= substr($characters, rand(0,61), 1);
-    }
+
+
+    global $cfg_encrypt_salt;
+    $salt=$cfg_encrypt_salt; //=$salt;
+
     $config = str_replace('{cfg_encrypt_salt}', $salt, $config);
 
     $config = str_replace('{SERVER_NAME}', $_SERVER['HTTP_HOST'], $config);

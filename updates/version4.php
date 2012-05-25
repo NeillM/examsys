@@ -2963,8 +2963,8 @@ if (!isset($_POST['update'])) {
     echo "<li>$sql</li>\n";
 
     $sql="CREATE TABLE IF NOT EXISTS  " . $cfg_db_database . ".`lti_resource` (  `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',  `lti_resource_id` varchar(255) NOT NULL,  `internal_id` varchar(255) DEFAULT NULL,  `itype` varchar(255) DEFAULT NULL,  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),  KEY `destination2` (`itype`),  KEY `destination` (`internal_id`)) ENGINE=InnoDB";
-    $adjust = $mysqli->prepare();
-    $adjust->execute($sql);
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
     $adjust->close();
     echo "<li>$sql</li>\n";
 
