@@ -752,7 +752,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
       echo "</select>&nbsp;";
     }
   }
-  echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"\" />\n";
+  echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"0\" />\n";
   if ($current_screen > $no_screens) {
     echo "<input type=\"submit\" style=\"width:120px; font-weight:bold\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;\n";
   } else {
