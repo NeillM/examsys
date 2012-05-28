@@ -1,7 +1,7 @@
 <?php
 require '../../lang/' . $language . '/include/months.inc';
 
-$string['dates'] = 'Dates';   // Niko
+$string['dates'] = 'Daty';  
 $string['page'] = 'Strona';
 $string['hits'] = 'Znaleziono';
 $string['tutorial'] = 'Instrukcja';
