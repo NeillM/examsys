@@ -27,6 +27,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Online Tutorial<?php echo " $cfg_install_type"; ?></title>
   <style type="text/css">
@@ -38,7 +39,7 @@
    
    echo "<embed width=\"100%\" height=\"100%\" src='./images/" . $_GET['tutorial'] . "' />";
   
-   if (strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
+   if (strpos($userroles,'SysAdmin') === false and strpos($userroles,'External') === false) {   // Don't record the homepage or SysAdmin activities.
     $result = $mysqli->prepare("INSERT INTO help_tutorial_log VALUES (NULL, ?, ?, NOW(), ?)");
     $result->bind_param('sis', 'student', $userID, $_GET['tutorial']);
     $result->execute();  

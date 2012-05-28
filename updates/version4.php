@@ -3142,9 +3142,6 @@ if (!isset($_POST['update'])) {
  // 28/05/2012 - Add permission for external examiners to view student help.
   $priv_SQL = array();
   $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
-  $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_log TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-  $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_searches TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
-  $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".help_tutorial_log TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
   $priv_SQL[] = "FLUSH PRIVILEGES";
   foreach ($priv_SQL as $sql) {
     $mysqli->query($sql);
