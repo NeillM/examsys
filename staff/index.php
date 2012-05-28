@@ -145,7 +145,6 @@ require '../include/staff_auth.inc';
   $as_pos = strpos($cfg_install_type,' as ');
   if ($as_pos !== false) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Locked\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($cfg_install_type, ($as_pos+4)) . "</div></td></tr></table>\n";
-  //var_dump($cfg_install_type);
   }
 ?>
 <div style="padding-left:14px; padding-right:14px">

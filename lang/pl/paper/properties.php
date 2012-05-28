@@ -2,11 +2,6 @@
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['displaycalculator-1'] = 'Stary kalkulator - calc98';
-$string['displaycalculator0'] = 'Bez kalkulatora';
-$string['displaycalculator1'] = 'Kalkulator naukowy';
-$string['displaycalculator2'] = 'Prosty kalkulator';
-
 $string['propertiestitle'] = 'Właściwości';
 $string['edittitle'] = 'Edytuj';
 $string['warning'] = 'Ostrzeżenie: nazwa arkusza jest już wykorzystywana w innym teście!';
