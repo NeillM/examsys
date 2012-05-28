@@ -16,9 +16,6 @@
 
 /**
 * 
-* Handles paper display and the recording of marks to the 'logX' tables. Uses functions within 'display_functions.inc' to process specific 
-* types of questions. Start.php continues calling itself while there are further screens to be displayed and then calls 'finish.php'
-* to end.
 * 
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
