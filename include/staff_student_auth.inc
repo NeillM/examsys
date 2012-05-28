@@ -33,10 +33,16 @@ require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'classes/networkutils.class.php';
-
 require_once $cfg_web_root . 'LTI/ims-blti/blti.php';
-
 require_once  $cfg_web_root . 'include/lti_func.php';
+
+// Check to see if the update script has been run.
+if ($rogo_version != '4.2.2') {
+  echo "<html>\n<head>\n<title>Update Required</title>\n</head>\n<body style=\"font-family:Arial,sans-serif;font-size:90%\">\n<table><tr><td><img src=\"../artwork/software_64.png\" width=\"64\" height=\"64\" alt=\"\" border=\"0\" /></td><td><div style=\"color:#C00000;font-weight:bold\">" . $string['warning'] . "</div>";
+  echo 'System needs configuring before use. Please contact your local system administrator.';
+  echo "</td></title>\n</body>\n</html>\n";
+  exit;
+}
 
 /*
 ini_set('display_errors', 1);
@@ -166,19 +172,6 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 } else {
   echo "<html>\n<body style=\"font-family:Arial,sans-serif\">\n<p style=\"font-size:150%;color:#C00000\"><strong>WARNING:</strong> Incompatible Browser</p>\n<p><strong>Rogo currently requires MS Internet Explorer 5 (or above) or Firefox 2 (or above).</strong></p>\n<p><strong>You are running </strong>" . $_SERVER['HTTP_USER_AGENT'] . "</p>\n</body>\n</html>\n";
   $mysqli->close();
-  exit;
-}
-
-// Check to see if the update script has been run.
-if ($rogo_version != '4.2.2') {
-  echo "<html>\n<head>\n<title>Update Required</title>\n</head>\n<body style=\"font-family:Arial,sans-serif;font-size:90%\">\n<table><tr><td><img src=\"../artwork/software_64.png\" width=\"64\" height=\"64\" alt=\"\" border=\"0\" /></td><td><div style=\"color:#C00000;font-weight:bold\">" . $string['warning'] . "</div>";
-  if (strpos($userroles, 'SysAdmin') !== false) {
-    echo 'Please run <a href="../updates/version4.php" style="color:blue">/updates/version4.php</a> before proceeding.';
-  }
-  else {
-    echo 'System needs configuring before use. Please contact your local system administrator.';
-  }
-  echo "</td></title>\n</body>\n</html>\n";
   exit;
 }
 ?>
