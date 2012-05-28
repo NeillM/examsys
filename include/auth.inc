@@ -275,13 +275,7 @@ function encpw($salt, $u, $p, $type='SHA-512') {
     $new_password = crypt($p, $full_salt);
     $new_password = '$6$' . substr($new_password, strlen($full_salt));
   } else {
-    $sys = strtoupper(PHP_OS);
-    if(substr($sys,0,3) == "WIN") {
-      $full_salt = '$1$' . substr(md5($u), 0, 8) . '$';   // Simple MD5, for barckwards compatibility
-    } else {
-      $full_salt = '$1$' . substr(md5($u), 0, 12) . '$';   // Simple MD5, for barckwards compatibility
-    }
-    
+    $full_salt = '$1$' . substr(md5($u), 0, 8) . '$';   // Simple MD5, for barckwards compatibility
     $new_password = crypt($p, $full_salt);
   }
   return $new_password;
