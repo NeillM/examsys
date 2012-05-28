@@ -1102,7 +1102,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     foreach ($matching_options as $single_option) {
       echo '<td>' . $single_option . '</td>';
     }
-    echo "<tr>\n";
+    echo "</tr>\n";
     foreach ($matching_scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
         if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {

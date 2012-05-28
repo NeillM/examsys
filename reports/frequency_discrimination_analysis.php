@@ -1083,7 +1083,6 @@
           echo "<tr><td>" . $tmp_pstat . "</td><td colspan=\"2\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'rank':
-          $std_part = 0;
           $rank_no = 0;
           foreach ($correct_buf as $individual_correct) {
             if ($individual_correct > $rank_no and $individual_correct != 0) $rank_no = $individual_correct;
@@ -1120,14 +1119,14 @@
 			
               if (!isset($log[$q_id][$i][$rank_position])) $log[$q_id][$i][$rank_position] = 0;
               if ($correct_buf[$i] == $rank_position) {
-                if (isset($tmp_std_array[$std_part])) {
-                  $tmp_std = $tmp_std_array[$std_part];
+                if (isset($tmp_std_array[$i])) {
+                  $tmp_std = $tmp_std_array[$i];
                 } else {
                   $tmp_std = '';
                 }
 			  
                 echo "<tr><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $tmp_std . "</span></td><td style=\"font-weight:bold\">$rank_position";
-                $std_part++;
+
                 if ($rank_position == 1) {
                   echo 'st';
                 } elseif ($rank_position == 2) {
@@ -1156,7 +1155,7 @@
             $i++;
           }
           $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
-          $std_val = (isset($tmp_std_array[$std_part])) ? $tmp_std_array[$std_part] : '';
+          $std_val = (isset($tmp_std_array[$i])) ? $tmp_std_array[$i] : '';
           $tmp_correct_no = (isset($top_log[$q_id]['all_correct'])) ? $top_log[$q_id]['all_correct'] : 0;
           $tmp_bottom_no = (isset($bottom_log[$q_id]['all_correct'])) ? $bottom_log[$q_id]['all_correct'] : 0;
           echo "<tr><td><strong>u=" . number_format(($tmp_correct_no/$candidate_no)*100,0) . "%</strong></td><td><strong>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</strong></td><td><span class=\"std\">" . $std_val . "</span></td><td style=\"font-weight:bold\">All items correct</td></tr>\n";
