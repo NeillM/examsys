@@ -22,7 +22,6 @@
 * @package
 */
   require '../config/config.inc.php';
-  require '../config/index.inc';
   require '../include/staff_student_auth.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -38,7 +37,7 @@ a {color:blue}
 
 <div style="position:absolute; top:20px; left:25px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="logo" border="0" /></div>
 
-<div style="position:absolute; top:10px; left:510px"><?php echo $logo_html; ?></div>
+<div style="position:absolute; top:10px; left:510px"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="University of Nottingham" /></div>
 
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:5px">
 <br />
