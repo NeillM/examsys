@@ -731,6 +731,7 @@
           echo '>';
           if ($correct_buf[0] == 't') {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
+            $p = $freq_log[$q_id][1]['t'] / $user_total;
             echo '<strong>True</strong>';
           } else {
             echo 'True';
@@ -740,14 +741,15 @@
           if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') echo ' class="excluded"';
           echo '>';
           if ($correct_buf[0] == 'f') {
-            $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
+            $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'f');
+            $p = $freq_log[$q_id][1]['f'] / $user_total;
             echo '<strong>False</strong>';
           } else {
             echo 'False';
           }
           echo "</td></tr>\n";
           echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-          echo "<tr><td>" . pStats($freq_log[$q_id][1]['f']/$user_total) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
+          echo "<tr><td>" . pStats($p) . "</td><td colspan=\"3\">" . dStats($d) . "</td></tr>\n";
           break;
         case 'labelling':
           if ($score_method == 'Mark per Question') {
