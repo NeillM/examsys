@@ -922,10 +922,10 @@ if ($moduleID != '') {
   $mod_query->close();
 }
 
-if ($_GET['studentsonly'] == 1) {
-  $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
-} else {
+if (isset($_GET['studentsonly']) and $_GET['studentsonly'] == 0) {
   $roles_sql = '';
+} else {
+  $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
 }
 
 // Get log data.
