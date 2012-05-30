@@ -195,7 +195,7 @@
     if (strpos($userroles,'Demo') !== false) {
       $owner = 'Dr J, Bloggs';
     } else {
-      $owner = '$title $initials, $surname';
+      $owner = "$title $initials, $surname";
     }
     echo "<td class=\"d\">$tmp_leadin <span class=\"owner\">($owner)</span></td>";
     echo "<td class=\"d\" onclick=\"qOff()\"><nobr>" . $string[$q_type] . "</nobr></td>";
