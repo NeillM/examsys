@@ -34,7 +34,7 @@ require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$version = '4.2.2';
+$version = '4.2.3';
 
 set_time_limit(0);
 
@@ -3065,33 +3065,30 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($column_type);
   $result->fetch();
-  if ( $result->num_rows() == 0 ) {
-      $sql="ALTER TABLE `lti_keys` CHANGE `created_at` `deleted` DATETIME NULL , CHANGE `updated_at` `updated_at` DATETIME NOT NULL";
-      $adjust = $mysqli->prepare($sql);
-      $adjust->execute();
-      $adjust->close();
-      echo "<li>$sql</li>";
+  if ($result->num_rows() == 0 ) {
+    $sql="ALTER TABLE `lti_keys` CHANGE `created_at` `deleted` DATETIME NULL , CHANGE `updated_at` `updated_at` DATETIME NOT NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
 
-      $sql="UPDATE `lti_keys` set `deleted`=NULL WHERE `deleted`='0000-00-00 00:00:00'";
-      $adjust = $mysqli->prepare($sql);
-      $adjust->execute();
-      $adjust->close();
-      echo "<li>$sql</li>";
+    $sql="UPDATE `lti_keys` set `deleted`=NULL WHERE `deleted`='0000-00-00 00:00:00'";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
 
+    $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated` DATETIME NOT NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
 
-      $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated` DATETIME NOT NULL";
-      $adjust = $mysqli->prepare($sql);
-      $adjust->execute();
-      $adjust->close();
-      echo "<li>$sql</li>";
-
-
-      $sql="ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` DATETIME NOT NULL";
-      $adjust = $mysqli->prepare($sql);
-      $adjust->execute();
-      $adjust->close();
-      echo "<li>$sql</li>";
-
+    $sql="ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` DATETIME NOT NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
   }
 
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND TABLE_SCHEMA='$cfg_db_database'");
@@ -3153,6 +3150,63 @@ if (!isset($_POST['update'])) {
       echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
     }  
   }
+
+  /*
+  // 29/05/2012 - Add 'scheduling' tables
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='scheduling' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    // Table to hold Reference material
+    $adjust = $mysqli->prepare("CREATE TABLE scheduling (id int not null primary key auto_increment, paperID int, period varchar(255), barriers_needed tinyint, cohort_size varchar(20), notes text, sittings tinyint)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE scheduling (id int not null primary key auto_increment, paperID int, period varchar(255), barriers_needed tinyint, cohort_size varchar(20), notes text, sittings tinyint)</li>\n";
+    ob_flush();
+    flush();
+    $adjust = $mysqli->prepare("ALTER TABLE state ADD UNIQUE idx_user_state (userID, state_name, page)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE scheduling ADD UNIQUE idx_paperID (paperID)</li>\n";
+    
+    $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    
+    $new_cfg_str = array();
+    $new_cfg_str[] =  "\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.";
+    $cfg = file($cfg_web_root . 'config/config.inc.php');
+    $found = false;
+    $cur_line = 0;
+    $target_line = 24;
+    foreach ($cfg as $line) {
+      if (strpos($line,'cfg_summative_mgmt') !== false) {
+        $found = true;
+      }
+      if (strpos($line,'cfg_tmpdir') !== false) {
+        $target_line = $cur_line + 1;
+      }
+      $cur_line++;
+    }
+    
+    if (!$found) {
+      array_splice($cfg,$target_line,0,$new_cfg_str);
+      if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+        rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+      }
+      
+      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+        echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+      }
+      echo "<li>Add \$cfg_summative_mgmt = false.</li>\n";
+      ob_flush();
+      flush();
+    }
+  }
+  $result->close();
+  */
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
