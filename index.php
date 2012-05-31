@@ -317,26 +317,6 @@ require_once './classes/networkutils.class.php';
       if (count($papers) > 0) {
 ?>
         <div id="summ_test">
-          <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-          <script language="JavaScript">
-            function startPaper(e) {
-              e.preventDefault();
-
-              var fullsc = $(this).attr('rel');
-              var url = $(this).attr('href');
-
-              if (fullsc == 0) {
-                window.open(url,"paper","width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-              } else {
-                window.open(url,"paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-              }
-            }
-
-            $(function () {
-              $('.blacklink').click(startPaper);
-            });
-          </script>
-          
           <h2><?php echo $string['summativetesting'] ?></h2>
           <p><?php echo $string['summativetestmsg'] ?></p>
 <?php
@@ -357,9 +337,9 @@ require_once './classes/networkutils.class.php';
             <div class="file">
               <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="width:60px" align="center"><a class="blacklink" href="paper/start.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" rel="<?php echo $paper['fullscreen'] ?>"><img src="artwork/summative.png" width="48" height="48" alt="Type: Summative Exam" border="0" /></a></td>
+                  <td style="width:60px" align="center"><a class="blacklink" href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" rel="<?php echo $paper['fullscreen'] ?>"><img src="artwork/summative.png" width="48" height="48" alt="Type: Summative Exam" border="0" /></a></td>
                   <td>
-                    <a href="paper/start.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" class="blacklink" rel="<?php echo $paper['fullscreen'] ?>"><?php echo $paper['title'] ?></a><br />
+                    <a href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" class="blacklink" rel="<?php echo $paper['fullscreen'] ?>"><?php echo $paper['title'] ?></a><br />
                     <span class="subtext"><?php echo $paper['screens'] . ' ' . ucfirst($string[$screen_plural]) . '<br />' . $start_warning . $paper['start_date'] . ', ' . display_duration($paper['duration'], $string) ?></span><?php echo $lab_html ?>
                   </td>
                 </tr>
