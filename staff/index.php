@@ -292,13 +292,12 @@ require '../include/staff_auth.inc';
     echo '<br clear="left" /><br />';
 
     // -- Display papers not assigned to a module -------------------
-    $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'%d/%m/%y %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper WHERE paper_ownerID=$userID AND moduleID='' AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
+    $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'$cfg_short_date') AS start_date, DATE_FORMAT(start_date,'$cfg_short_date %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper WHERE paper_ownerID=$userID AND moduleID='' AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
     $result->execute();
     $result->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
     $result->store_result();
-    $result->fetch();
     if ($result->num_rows > 0) {
-      echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $result->num_rows() . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $result->num_rows . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
       while ($result->fetch()) {
         displayPaperIcon($userID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID);
       }
