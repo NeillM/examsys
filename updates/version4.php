@@ -24,11 +24,6 @@
 
 require_once '../config/config.inc.php';
 
-// Override $cfg_web_root in case we're in a subdirectory
-require_once '../include/path_functions.inc.php';
-$cfg_web_root = get_root_path() . '/';
-$cfg_root_path = str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root);
-
 require_once '../classes/installutils.class.php';
 require_once '../classes/passwordutils.class.php';
 require_once '../classes/lang.class.php';
