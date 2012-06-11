@@ -648,7 +648,11 @@
                     } else {
                       $corr_index = ltrim($question['correct'], ',');
                       $correct_text_parts = explode("\t", $question['correct_text']);
-                      echo ',"' . $correct_text_parts[$corr_index] . '"';
+                      if (isset($correct_text_parts[$corr_index])) {
+                        echo ',"' . $correct_text_parts[$corr_index] . '"';
+                      } else {
+                        echo ',,';
+                      }
                     }
                   }
                 }
