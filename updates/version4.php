@@ -2440,7 +2440,6 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
-  */
 
   /*
    *  UPDATES for short int database feilds SHOULD not go live untill ver 4.3 - With full testing
