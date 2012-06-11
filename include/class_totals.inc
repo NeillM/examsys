@@ -800,7 +800,6 @@ while ($result->fetch()) {
           $old_correct = $last_random['correct'];
           $old_display_method = $last_random['display_method'];
           $old_score_method = $last_random['score_method'];
-          
           $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
           $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
         } else {
@@ -858,8 +857,18 @@ if ($old_status != 'Experimental') {
     $tmp_exclude = '';
   }
   if ($old_q_type == 'random') {
-    getRandomDetails($q_id, $random_q_ids);
-    $total_marks += $paper_buffer[$q_id]['random_questions'][$tmp_id]['marks'];
+    $tmp_id = getRandomDetails($old_q_id, $random_q_ids);
+
+    $last_random = $paper_buffer[$old_q_id]['random_questions'][$tmp_id];
+
+    $old_q_type = $last_random['q_type'];
+    $old_marks_correct = $last_random['marks_correct'];
+    $old_option_text = $last_random['option_text'];
+    $old_correct = $last_random['correct'];
+    $old_display_method = $last_random['display_method'];
+    $old_score_method = $last_random['score_method'];
+    $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+    $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
   } else {  $total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
     $orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
     $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -874,7 +883,7 @@ $out_of_range = 0;
 if ($_GET['absent'] == 1) {
   // Get students in the cohort.
   $student_cohort = array();
-  $result = $mysqli->prepare("SELECT users.id, users.username, title, surname, first_names, initials, student_id, grade, moduleid, gender FROM (student_modules, users, sid) WHERE student_modules.userID=sid.userID AND student_modules.userID=users.id AND users.roles LIKE '%Student%' AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') AND calendar_year=?");
+  $result = $mysqli->prepare("SELECT DISTINCT users.id, users.username, title, surname, first_names, initials, student_id, grade, moduleid, gender FROM (student_modules, users, sid) WHERE student_modules.userID=sid.userID AND student_modules.userID=users.id AND users.roles LIKE '%Student%' AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') AND calendar_year=?");
   $result->bind_param('s', $calendar_year);
   $result->execute();
   $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
