@@ -795,7 +795,9 @@
                         if ($mode == 'numeric') {
                           echo $answer_subparts[$k];
                         } else {
-                          echo $correct_text_parts[$subpart];
+                          if (isset($correct_text_parts[$subpart])) {
+                            echo $correct_text_parts[$subpart];
+                          }
                         }
                       }
                       if ($is_random) {
@@ -808,7 +810,6 @@
                     }
                     echo '"';
                   } else {
-//                    echo ',';
                     for ($k = 0; $k < count($correct_subparts); $k++) {
                       echo ',';
                       if ($is_random) {
