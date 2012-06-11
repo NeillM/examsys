@@ -2421,7 +2421,6 @@ if (!isset($_POST['update'])) {
 
 
   // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
-  /*
   echo "<li>UPDATEING TO InnoDB This may take some time please be patient ;-)</li>\n";
   ob_flush();
   flush();
@@ -3130,6 +3129,47 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
+
+  // 28/05/2012 - Add new autosave timeout.
+  $new_cfg_str =  array("\n//Paper auto saving time out in seconds - default 180s == 3 minutes\n",
+                        "  \$cfg_autosave_timeout = 180;\n");
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+
+  //remove refrances to old vars
+  $cfg_new = array();
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_autosave_timeout') !== false) {
+      $found = true;
+    }
+    $cfg_new[] = $line;
+  }
+
+  if (!$found) {
+    $index = 0;
+    foreach ($cfg as $line) {
+      if (strpos($line, '$cfg_hour_warning') !== false) {
+        $found = true;
+        break;
+      }
+      $index++;
+    }
+
+    if (!$found) $index = $index; //put at end of file
+
+    //add the new config chunk
+    array_splice($cfg_new, $index + 1, 0, $new_cfg_str);
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old9.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added  new autosave timeout to configuration file.</li>\n";
+  }
   
  // 28/05/2012 - Add permission for external examiners to view student help.
   $priv_SQL = array();
@@ -3211,6 +3251,6 @@ if (!isset($_POST['update'])) {
   ob_end_flush();
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"window.location='../staff/'\" /></div><blockquote>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"window.location('/staff/')\" /></div><blockquote>\n";
 }
 ?>
