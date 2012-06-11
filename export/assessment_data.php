@@ -1023,7 +1023,9 @@
                   if ($mode == 'numeric') {
                     echo $individual[$tmp_screen][$tmp_question_ID];
                   } else {
-                    echo $correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]];
+                    if (isset($correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]])) {
+                      echo $correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]];
+                    }
                   }
                 }
                 echo '"';
