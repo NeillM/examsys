@@ -48,6 +48,7 @@ $state = $stateutil->getState($userID, $mysqli);
 $folder_name = '';
 $folder_type = '';
 $file_no = 0;
+$parent_list = array();
 $add_member = false;
 if (isset($_GET['module'])) {
   $module = $_GET['module'];
