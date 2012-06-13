@@ -238,22 +238,21 @@ if ($special_needs == 1) {
 // Get how many screens make up the question paper.
 $screen_data = array();
 $row_no = 0;
-$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY screen");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $latex_needed, $password, $q_type);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $latex_needed, $password);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
   access_denied($string['error_paper'], $output_header = false);
 }
 while ($stmt->fetch()) {
   $row_no++;
   $no_screens = $screen;
-  $add_q = ($q_type == 'info') ? 0 : 1;
   if (!isset($screen_data[$no_screens])) { 
-    $screen_data[$no_screens] = $add_q;
+    $screen_data[$no_screens] = 1;
   } else {
-    $screen_data[$no_screens] += $add_q;
+    $screen_data[$no_screens]++;
   }
   if ($row_no == 1) {
     $original_paper_type = $paper_type;
