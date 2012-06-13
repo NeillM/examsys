@@ -50,7 +50,7 @@ ini_set('log_errors', 1);
 ini_set('xdebug.remote_autostart', 1);
 */
 
-$fp_link = "<p style=\"margin-left:60px\"><a href=\"{$cfg_root_path}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</p>\n";
+$fp_link = "<p style=\"margin-left:60px\"><a href=\"{$cfg_root_path}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
 if ($protocol == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
   echo "<html>\n<body style=\"font-family:Arial,sans-serif;font-size:100%;color:#C00000\">\n<p><strong>" . $string['warning'] . "</strong> " . $string['secureconnection'] . " <a href=\"https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "\">https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "</a>.\n</body>\n</html>\n";
