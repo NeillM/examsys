@@ -413,6 +413,7 @@ if ($css != '') {
     } else {
       echo "  resizeReference();\n";
     }
+    echo "$(window).resize(resizeReference);";
     echo "});\n";
   }
 ?>    
@@ -477,6 +478,10 @@ if ($css != '') {
     echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
     echo "      document.getElementById('framecontent' + i).style.height = (winH - $subtract) + 'px';\n";
     echo "    }\n";
+?>
+    var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
+    $('#maincontent').width(mainWidth);
+<?php
   }
 ?>  
   }
