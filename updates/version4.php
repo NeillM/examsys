@@ -2419,7 +2419,7 @@ if (!isset($_POST['update'])) {
     @ob_flush();
     @flush();
 
-
+  /*
   // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
   echo "<li>UPDATEING TO InnoDB This may take some time please be patient ;-)</li>\n";
   ob_flush();
@@ -2440,6 +2440,7 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
+  */
 
   /*
    *  UPDATES for short int database feilds SHOULD not go live untill ver 4.3 - With full testing
@@ -3185,7 +3186,7 @@ if (!isset($_POST['update'])) {
     }  
   }
 
-  /*
+  
   // 29/05/2012 - Add 'scheduling' tables
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='scheduling' AND TABLE_SCHEMA='$cfg_db_database'");
   $result->execute();
@@ -3240,7 +3241,6 @@ if (!isset($_POST['update'])) {
     }
   }
   $result->close();
-  */
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
