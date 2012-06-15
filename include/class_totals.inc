@@ -436,8 +436,10 @@ function extract_blank_correct($option_text, $display_method, $paper_buffer, $qu
   return $correct;
 }
 
-function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids) {
+function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status, &$tmp_mark, &$tmp_user_mark_array, $random_q_ids, $tmp_userID) {
   global $paper_buffer, $user_results, $tmp_array;
+  
+  $old_tmp_mark = $tmp_mark;
   
   if ($status == 'Experimental') $exclude[$q_id] = '1111111111111111111111111111111111111111';
 
@@ -527,7 +529,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       for ($a=0; $a<count($user_answers)-1; $a++) {
         if (substr($tmp_exclude, $a, 1) == '0') {
           if ($question['display_method'] == 'dropdown') {
-            if ($question['correct'][$a][0] == html_entity_decode(trim($user_answers[$a+1]))) {
+            if (strip_tags(str_replace('&nbsp;',' ',$question['correct'][$a][0])) == strip_tags(html_entity_decode(str_replace('&nbsp;',' ',trim($user_answers[$a+1]))))) {
               $tmp_mark += $question['marks_correct'];
               $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
             } elseif ($user_answers[$a+1] != 'u' and $user_answers[$a+1] != '') {
@@ -1050,7 +1052,7 @@ if ($log_query->num_rows > 0) {
       $tmp_array['duration'] = $user_duration;
       $tmp_array['paper_type'] = $paper_type;
     }
-    getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids);
+    getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
     
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {

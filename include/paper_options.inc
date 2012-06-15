@@ -26,29 +26,9 @@
 
 require $cfg_web_root . 'include/sidebar_menu.inc';
 $paperID = $_GET['paperID'];
-$max_screen = 0;
-
-$stmt = $mysqli->prepare("SELECT paper_title, moduleID, folder, paper_ownerID, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, externals, internal_reviewers, labs, calendar_year, exam_duration, crypt_name, display_question_mark FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? GROUP BY paper_title");
-$stmt->bind_param('i', $paperID);
-$stmt->execute();
-$stmt->bind_result($paper_title, $paper_moduleID, $tmp_folder, $paper_ownerID, $tmp_module, $start_date, $end_date, $created, $max_screen, $fullscreen, $max_display_pos, $paper_type, $externals, $internal_reviewers, $labs, $session, $exam_duration, $crypt_name, $display_question_mark);
-while ($stmt->fetch()) {
-  if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
-    $active_date = 1;
-  } else {
-    $active_date = 0;
-  }
-  if (date("YmdHis", time()) >= $start_date and $paper_type == '2') {
-    $summative_lock = 1;
-  } else {
-    $summative_lock = 0;
-  }
-}
-$stmt->close();
 
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $module = $_GET['module'];
-  $tmp_module = $_GET['module'];
 } else {
   $module = '';
 }
@@ -58,7 +38,7 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
   $folder = '';
 }
 
-$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE moduleid IN ('" . str_replace(",","','",$tmp_module) . "')");
+$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE moduleid IN ('" . str_replace(",","','",$moduleID) . "')");
 $stmt->execute();
 $stmt->bind_result($tmp_checklist);
 $check[] = array();
@@ -119,11 +99,11 @@ $stmt->close();
     <?php
     if ($paper_type == '6') {
     ?>
-    notice=window.open("<?php echo $cfg_root_path ?>/peer_review/properties.php?paperID=<?php echo $paperID; ?>","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("<?php echo $cfg_root_path ?>/peer_review/properties.php?paperID=<?php echo $paperID; ?>&caller=details","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     <?php
     } else {
     ?>
-    notice=window.open("<?php echo $cfg_root_path ?>/paper/properties.php?paperID=<?php echo $paperID; ?>","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("<?php echo $cfg_root_path ?>/paper/properties.php?paperID=<?php echo $paperID; ?>&caller=details","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     <?php
     }
     ?>
