@@ -50,3 +50,6 @@ pre {font-family:Arial,sans-serif;font-size:100%}
   background: -webkit-linear-gradient(top, #FEFEFE, #D9D9D9);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FEFEFE', endColorstr='#D0D0D0');
 }
+#next {width:120px}
+#finish {width:120px; font-weight:bold}
+#prevous {width:120px}

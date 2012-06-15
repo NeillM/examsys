@@ -3162,7 +3162,7 @@ if (!isset($_POST['update'])) {
     array_splice($cfg_new, $index + 1, 0, $new_cfg_str);
 
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old9.php');
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old10.php');
     }
 
     if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {

@@ -1057,6 +1057,8 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
 
 //Warnings
   \$cfg_hour_warning = 10;       // Warning for summative exams
+//Paper auto saving time out in seconds - default 180s
+  \$cfg_autosave_timeout = 180;
 
 //Assistance
   \$support_email = '{cfg_support_email}';
