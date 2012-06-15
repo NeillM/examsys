@@ -561,13 +561,13 @@ if ($css != '') {
   });
   
   //random page ID to stop IE caching results. arrrggg
-  <?php $randumPageID = uniqid(); php?>
+  <?php $randomPageID = uniqid(); ?>
 
   var userSubmit = function (event) {
     
     stopAutoSave();
 
-    $('#savemsg').html("<?php echo $string[saving]; ?>")
+    $('#savemsg').html("<?php echo $string['saving']; ?>")
     document.body.style.cursor = 'wait';
 
     //log which method the users submited the page via
@@ -584,7 +584,7 @@ if ($css != '') {
       return true;
     }
     startAutoSave();
-    $('#savemsg').html("<?php echo $string[saving_failed_try_again]; ?>");
+    $('#savemsg').html("<?php echo $string['saving_failed_try_again']; ?>");
     document.body.style.cursor = 'default';
     return false;
   }
@@ -598,7 +598,7 @@ if ($css != '') {
   }
 
   var autoSave = function() {
-    $('#savemsg').html("<?php echo $string[auto_saving]; ?>")
+    $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
     ajaxSave();
     //clear auto save message
     setTimeout("$('#savemsg').html(\"\")",5000);
@@ -611,7 +611,7 @@ if ($css != '') {
       tinyMCE.triggerSave();
     }
     $.ajax({
-          url: 'save_screen.php?id=<?php echo $_GET['id'] . "&rnd=" . $randumPageID; ?>',
+          url: 'save_screen.php?id=<?php echo $_GET['id'] . "&rnd=" . $randomPageID; ?>',
           type: 'post',
           data: $('#qForm').serialize(),
           dataType: 'html',
@@ -643,7 +643,7 @@ if ($css != '') {
           },
           success: function (data, jqXHR, textStatus) {
               submitPending = false
-              if(data == "<?php echo $randumPageID; ?>") {
+              if(data == "<?php echo $randomPageID; ?>") {
                   success = true;
               }
               return;
@@ -848,7 +848,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($current_screen - 1) . "\" />\n";
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
-  echo "<input type=\"hidden\" name=\"randumPageID\" value=\"$randumPageID\" />\n";
+  echo "<input type=\"hidden\" name=\"randumPageID\" value=\"$randomPageID\" />\n";
 
   if ($current_screen > $no_screens) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";

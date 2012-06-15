@@ -24,7 +24,6 @@
  * @package
  */
 
-
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . 'config/config.inc.php';
 require_once $cfg_web_root . 'include/auth.inc';
@@ -65,7 +64,6 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<ul style=\"margin-left:80px\">\n<li>Error message: " . mysqli_connect_error() . ".</li>\n<li>Error number: " . mysqli_connect_errno() . "</li>";
     exit;
   }
-
 
   session_start();
   $lti = new BLTI(array('table' => 'lti_keys', 'dbtype' => 'mysqli', 'db' => &$mysqli), true, false);
