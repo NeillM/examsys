@@ -567,11 +567,12 @@ if ($css != '') {
     
     stopAutoSave();
 
-    $('#savemsg').html("<?php echo $string['saving']; ?>")
+    //$('#savemsg').html("<?php echo $string['saving']; ?>")
+    $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
     document.body.style.cursor = 'wait';
 
     //log which method the users submited the page via
-    if(!!event) {
+    if (!!event) {
     $('#button_pressed').attr('value',event.target.id);
       if(event.target.id != 'finish') {
         $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
@@ -579,7 +580,7 @@ if ($css != '') {
     }
 
     var retVal = ajaxSave();
-    if(retVal == true) {
+    if (retVal == true) {
       $('#qForm').submit();
       return true;
     }

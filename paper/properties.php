@@ -685,35 +685,38 @@ if (isset($_POST['Submit'])) {
     }
 
     function buttonout(tabID) {
-      
       if (document.getElementById(tabID).style.backgroundImage != 'url("../artwork/2007_button_on.png")') {
         document.getElementById(tabID).style.backgroundImage='';
       }
     }
 
     function dateCopy(dropdownID) {
-      if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '2' || document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '4') {
+      <?php
+        if ($paper_type == '2' or $paper_type == '4') {
+      ?>
         switch(dropdownID) {
           case "fday":
-            document.edit_form.tday.value = document.edit_form.fday.options[document.edit_form.fday.selectedIndex].value;
+            $("#tday").val($("#fday").val());
             break;
           case "fmonth":
-            document.edit_form.tmonth.value = document.edit_form.fmonth.options[document.edit_form.fmonth.selectedIndex].value;
+            $("#tmonth").val($("#fmonth").val());
             break;
           case "fyear":
-            document.edit_form.tyear.value = document.edit_form.fyear.options[document.edit_form.fyear.selectedIndex].value;
+            $("#tyear").val($("#fyear").val());
             break;
           case "tday":
-            document.edit_form.fday.value = document.edit_form.tday.options[document.edit_form.tday.selectedIndex].value;
+            $("#fday").val($("#tday").val());
             break;
           case "tmonth":
-            document.edit_form.fmonth.value = document.edit_form.tmonth.options[document.edit_form.tmonth.selectedIndex].value;
+            $("#fmonth").val($("#tmonth").val());
             break;
           case "tyear":
-            document.edit_form.fyear.value = document.edit_form.tyear.options[document.edit_form.tyear.selectedIndex].value;
+            $("#fyear").val($("#tyear").val());
             break;
         }
-      }
+      <?php
+        }
+      ?>
     }
   </script>
 </head>
@@ -1085,7 +1088,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_minute = substr($start_date,14,2);
     
     // Available from Day
-    echo "<select name=\"fday\" onchange=\"dateCopy('fday')\">\n";
+    echo "<select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\">\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1109,7 +1112,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "</select>\n";
    // Available from Month
     $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
-    echo "<select name=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
+    echo "<select name=\"fmonth\" id=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1131,7 +1134,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</select>\n";
     // Available from Year
-    echo "<select name=\"fyear\" onchange=\"dateCopy('fyear')\">\n";
+    echo "<select name=\"fyear\" id=\"fyear\" onchange=\"dateCopy('fyear')\">\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1167,7 +1170,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
     
      // Available from Day
-    echo "<select name=\"tday\" onchange=\"dateCopy('tday')\">\n";
+    echo "<select name=\"tday\" id=\"tday\" onchange=\"dateCopy('tday')\">\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1191,7 +1194,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "</select>\n";
 
     // Available to Month
-    echo "<select name=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
+    echo "<select name=\"tmonth\" id=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1213,7 +1216,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</select>\n";
     // Available to Year
-    echo "<select name=\"tyear\" onchange=\"dateCopy('tyear')\">\n";
+    echo "<select name=\"tyear\" id=\"tyear\" onchange=\"dateCopy('tyear')\">\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }

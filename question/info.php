@@ -26,6 +26,70 @@
   require '../include/errors.inc';
   
   check_var('q_id', 'GET', true, false);
+  
+  function multiPartQuestion($type) {
+    if ($type == 'blank' or $type == 'dichotomous' or $type == 'extmatch' or $type == 'hotspot' or $type == 'labelling' or $type == 'matrix') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  function displayParts($perform_data, $q_type) {
+    $html = '';
+    $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
+    if (multiPartQuestion($q_type)) {
+      for ($i=0; $i<count($perform_data); $i++) {
+        $html .= $numerals[$i] . '.<br />';
+      }
+    }
+    
+    return $html;
+  }
+  
+  function displayP($perform_data, $q_type) {
+    $html = '';
+    
+    if (multiPartQuestion($q_type)) {
+      foreach ($perform_data as $single_data) {
+        $html .= pWarning(number_format($single_data['p']/100, 2)) . '<br />';
+      }
+    } else {
+      $html = pWarning(number_format($perform_data[1]['p']/100, 2));
+    }
+    
+    return $html;
+  }
+  
+  function pWarning($value) {
+    if ($value < 0.2) {
+      return '<span style="color:#C00000">' . $value . '</span>';
+    } else {
+      return $value;
+    }
+  }
+    
+  function displayD($perform_data, $q_type) {
+    $html = '';
+    
+    if (multiPartQuestion($q_type)) {
+      foreach ($perform_data as $single_data) {
+        $html .= dWarning(number_format($single_data['d']/100, 2)) . '<br />';
+      }
+    } else {
+      $html = dWarning(number_format($perform_data[1]['d']/100, 2));
+    }
+    
+    return $html;
+  }
+    
+  function dWarning($value) {
+    if ($value < 0.15) {
+      return '<span style="color:#C00000">' . $value . '</span>';
+    } else {
+      return $value;
+    }
+  }
     
   function check4Copies() {
     global $mysqli;
@@ -66,13 +130,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Information<?php echo " $cfg_install_type"; ?></title>
   <style type="text/css">
     body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; color:black; font-size:90%}
     table {font-size:100%}
     a {color:blue}
+    th {text-align:left}
+    td {vertical-align:top}
     .screen {font-size:90%; color:#808080}
+    .num {text-align:right; padding-right:6px}
   </style>
   
   <script type="text/javascript">
@@ -100,11 +168,22 @@
 <?php
   $line_no = 0;
   $icons = array('formative','progress','summative','survey','osce','offline');
+  
+  $performance = array();
 
-  $result = $mysqli->prepare("SELECT email, title, surname, initials, paper_title, paper_type, paper, screen, DATE_FORMAT(creation_date,\"$cfg_long_date_time\") AS creation_date, DATE_FORMAT(last_edited,\"$cfg_long_date_time\") AS last_edited, q_group, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, properties.deleted, status FROM (users, papers, questions, properties) WHERE properties.property_id=papers.paper AND users.id=questions.ownerID AND question=? AND papers.question=questions.q_id");
+  $result = $mysqli->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\"$cfg_short_date\"), part_no, p, d FROM performance_main, performance_details WHERE performance_main.id=performance_details.perform_id AND q_id=?");
   $result->bind_param('i', $_GET['q_id']);
   $result->execute();
-  $result->bind_result($email, $title, $surname, $initials, $paper_title, $paper_type, $paper, $screen, $creation_date, $last_edited, $q_group, $locked, $deleted, $status);
+  $result->bind_result($paperID, $cohort_size, $taken, $part_no, $p, $d);
+  while ($result->fetch()) {
+    $performance[$paperID][$part_no] = array('cohort'=>$cohort_size, 'taken'=>$taken, 'p'=>$p, 'd'=>$d);
+  }
+  $result->close();
+  
+  $result = $mysqli->prepare("SELECT email, title, surname, initials, paper_title, paper_type, paper, screen, DATE_FORMAT(creation_date,\"$cfg_long_date_time\") AS creation_date, DATE_FORMAT(last_edited,\"$cfg_long_date_time\") AS last_edited, q_group, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, properties.deleted, status, q_type FROM (users, papers, questions, properties) WHERE properties.property_id=papers.paper AND users.id=questions.ownerID AND question=? AND papers.question=questions.q_id");
+  $result->bind_param('i', $_GET['q_id']);
+  $result->execute();
+  $result->bind_result($email, $title, $surname, $initials, $paper_title, $paper_type, $paper, $screen, $creation_date, $last_edited, $q_group, $locked, $deleted, $status, $q_type);
   $result->store_result();
   if ($result->num_rows > 0) {
     while ($result->fetch()) {
@@ -127,23 +206,31 @@
       
         echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
         echo "<tr><td colspan=\"2\">" . $string['followingpapers'] . "</td></tr>\n";
-        echo "</table>\n<div style=\"margin:5px; display:block; height:150px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%; background-color:white; padding-left:28px; text-indent:-24px\">\n";
+        echo "</table>\n<div style=\"margin:5px; display:block; height:270px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%; background-color:white\">\n<table border=\"0\" style=\"width:100%\">";
+        echo "<tr><th></th><th>Paper Name</th><th>Screen No</th><th>Exam Date</th><th>Cohort</th><th></th><th>P</th><th>D</th></tr>\n";
       }
-      $title_split = explode('[deleted',$paper_title);
+      echo "<tr><td><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
+      $title_split = explode('[deleted', $paper_title);
       if (isset($title_split[1])) {
-        echo "<div><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" />&nbsp;&nbsp;<a href=\"\" style=\"color:#808080\" onclick=\"loadPaper('$paper')\">" . $title_split[0] . "</a>&nbsp;";
+        echo "<td><a href=\"\" style=\"color:#808080\" onclick=\"loadPaper('$paper')\">" . $title_split[0] . "</a></td>";
       } else {
-        echo "<div><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" />&nbsp;&nbsp;<a href=\"\" onclick=\"loadPaper('$paper')\">" . $title_split[0] . "</a>&nbsp;";
+        echo "<td><a href=\"\" onclick=\"loadPaper('$paper')\">" . $title_split[0] . "</a></td>";
       }
       if ($deleted != '') {
-        echo "<span style=\"color:red\">&lt;deleted " . str_replace(']','',$title_split[1]) . "&gt;";
+        echo "<td style=\"color:red\">&lt;deleted " . str_replace(']','',$title_split[1]) . "&gt;</td>";
       } else {
-        echo "<span class=\"screen\">(" . $string['screen'] . " $screen)";
+        echo "<td class=\"num\">$screen</td>";
       }
-      echo "</span></div>\n";
+      
+      if (isset($performance[$paper][1]['taken'])) {
+        echo "<td>" . $performance[$paper][1]['taken'] . "</td><td class=\"num\">" . $performance[$paper][1]['cohort'] . "</td><td>" . displayParts($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayP($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayD($performance[$paper], $q_type) . "</td>";
+      } else {
+        echo "<td></td><td></td><td></td><td></td><td></td>";
+      }
+      echo "</tr>\n";
       $line_no++;
     }
-    echo "</div>\n";
+    echo "</table>\n</div>\n";
   } else {
     $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, q_group FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=?");
     $question_data->bind_param('i', $_GET['q_id']);

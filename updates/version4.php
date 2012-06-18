@@ -3241,6 +3241,41 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
+  // 15/06/2012 - Add performance tables to store p and d values against questions in the bank.
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='performance_main' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $adjust = $mysqli->prepare("CREATE TABLE performance_main (id int not null primary key auto_increment, q_id int unsigned, paperID int unsigned, percentage tinyint, cohort_size int unsigned, taken date)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE performance_main (id int not null primary key auto_increment, q_id int unsigned, paperID int unsigned, percentage tinyint, cohort_size int unsigned, taken date)</li>\n";
+    ob_flush();
+    flush();
+    $adjust = $mysqli->prepare("ALTER TABLE performance_main ADD UNIQUE idx_q_id (q_id)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE performance_main ADD UNIQUE idx_q_id (q_id)</li>\n";
+    
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+    $adjust = $mysqli->prepare("CREATE TABLE performance_details (perform_id int, part_no tinyint, p tinyint, d tinyint)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE performance_details (perform_id int, part_no tinyint, p tinyint, d tinyint)</li>\n";
+    ob_flush();
+    flush();
+    
+    $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_details TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $mysqli->query($sql);
+    echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_details TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  }
+  $result->close();
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

@@ -8,4 +8,5 @@ $string['month'] = 'Month';
 $string['modules'] = 'Module(s)';
 $string['cohortsize'] = 'Cohort Size';
 $string['viewdetails'] = 'View Details';
+$string['campus'] = 'Campus';
 ?>
