@@ -84,7 +84,7 @@
   }
     
   function dWarning($value) {
-    if ($value < 0.15) {
+    if ($value <= 0.15) {
       return '<span style="color:#C00000">' . $value . '</span>';
     } else {
       return $value;
