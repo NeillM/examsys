@@ -361,7 +361,7 @@ $stmt->close();
     if ($paper_type == '4') {
       echo "<tr><td><a href=\"{$cfg_root_path}/osce/print.php?paperID=$paperID\"><img src=\"{$cfg_root_path}/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/osce/print.php?paperID=$paperID\">" . $string['printhardcopy'] . "</a></td></tr>\n";
     } else {
-      echo "<tr><td><a href=\"{$cfg_root_path}/paper/print.php?id=$crypt_name\"><img src=\"{$cfg_root_path}/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/paper/print.php?id=$crypt_name\">" . $string['printhardcopy'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"#\" onclick=\"hideAssStatsMenu(event); showMenu('popup6','papertasks','hardcopy',myOptions6,myURLs6,event); return false;\"><img src=\"{$cfg_root_path}/artwork/print_icon_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['printhardcopy'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><span id=\"hardcopy\"><a href=\"#\" onclick=\"hideAssStatsMenu(event); showMenu('popup6','papertasks','hardcopy',myOptions6,myURLs6,event); return false;\">" . $string['printhardcopy'] . "</a></span><img src=\"$cfg_root_path/artwork/submenu_arrow.png\" width=\"16\" height=\"16\" alt=\">\" border=\"0\" /></td></tr>\n";
     }
   }
 ?>
@@ -407,8 +407,8 @@ if ($summative_lock == 1) {
 <?php
   if ($paper_type != '4') {
 ?>
-  <li id="add_break" class="break greymenuitem">Add screen break</li>
-  <li id="delete_break" class="greymenuitem">Delete screen break</li>
+  <li id="add_break" class="break greymenuitem"><?php echo $string['addscreenbreak']; ?></li>
+  <li id="delete_break" class="greymenuitem"><?php echo $string['deletescreenbreak']; ?></li>
 <?php
   }
   echo '</ul>';
@@ -418,8 +418,8 @@ if ($summative_lock == 1) {
 <?php
   if ($paper_type != '4') {
 ?>
-  <li id="add_break" class="break greymenuitem"><a href="#">Add screen break</a></li>
-  <li id="delete_break" class="greymenuitem"><a href="#">Delete screen break</a></li>
+  <li id="add_break" class="break greymenuitem"><a href="#"><?php echo $string['addscreenbreak']; ?></a></li>
+  <li id="delete_break" class="greymenuitem"><a href="#"><?php echo $string['deletescreenbreak']; ?></a></li>
 <?php
   }
   echo '</ul>';
@@ -684,7 +684,8 @@ if ($paper_type == '2') {
   } else {
     makeMenu(array($string['import']=>"$cfg_root_path/qti/import.php?paperID=$paperID&module=$module",$string['export12']=>"$cfg_root_path/qti/export.php?dest=qti12&paperID=$paperID"));
   }
-  
+  makeMenu(array('Continuous'=>$cfg_root_path . "/paper/print.php?id=$crypt_name", 'Page-break per question'=>$cfg_root_path . "/paper/print.php?id=$crypt_name&break=1"));
+
   hideMenuScript($menuNo);
 
   require $cfg_web_root . 'include/reports_submenu.inc';
