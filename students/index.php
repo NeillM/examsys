@@ -133,7 +133,7 @@ $stmt->close();
 
 // Get any objectives-based feedback released.
 $feedback_query = <<< QUERY
-SELECT paper_id, calendar_year, paper_title, crypt_name, f.type FROM feedback_release f, properties p
+SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date FROM feedback_release f, properties p
 WHERE f.paper_id=p.property_id
 AND NOW() > f.date
 AND p.paper_type IN ('0','1','2')
@@ -149,11 +149,11 @@ for ($i = 0; $i < count($modules); $i++) {
 		$mod_string = '%'.$mod_id.'%';
 	  $stmt->bind_param('ss', $mod_string, $modules[$i]['year']);
 	  $stmt->execute();
-	  $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type);
+	  $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date);
 	  $stmt->store_result();
 	  while ($stmt->fetch()) {
       if (in_array($paper_id, $papers_taken)) {
-        $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => 0, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name);
+        $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name);
         $papers++;
         
         if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
@@ -281,17 +281,19 @@ if ($papers > 0) {
 	    					<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a><br />
 	    					<span style="color:#808080">
 	    						<?php 
-                    echo $paper['screens'] . ' ';
-                    if ($paper['screens'] == 1) {
-                      echo $string['screen'];
-                    } else {
-                      echo $string['screens'];
-                    }
-                    echo '<br />';
 
-                    if ($paper['type'] == 'objectives' or $paper['type'] == 'questions') {
-                      echo $string['feedbackonassessment'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start']));
+                    if ($paper['type'] == 'objectives') {
+                      echo $string['objectivesbased'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start']));
+                    } elseif ($paper['type'] == 'questions') {
+                      echo $string['questionsbased'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start']));
                     } else {
+                      echo $paper['screens'] . ' ';
+                      if ($paper['screens'] == 1) {
+                        echo $string['screen'];
+                      } else {
+                        echo $string['screens'];
+                      }
+                      echo '<br />';
                       echo date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start'])) . ' ' . $string['to'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['end']));
                     }
                   ?>
