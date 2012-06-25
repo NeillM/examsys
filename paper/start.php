@@ -320,6 +320,8 @@ if (isset($_POST['sessionid'])) {
     $current_screen = $_POST['current_screen'] - 2;
   } elseif ($_POST['button_pressed'] == 'jump_screen') {
     $current_screen = $_POST['jump_screen'];
+  } elseif ($_POST['fire_alarm'] == 1) {
+    $current_screen = $_POST['current_screen'];
   }
   $sessionid = $_POST['sessionid'];
 } else {
@@ -518,6 +520,8 @@ if ($css != '') {
         submitted = true;
         return true;
       } else {
+        $('#savemsg').html("");
+        document.body.style.cursor = 'default';
         return false;
       }
     } else {
@@ -539,6 +543,7 @@ if ($css != '') {
   var submitPending = false;
   var success = false;
   var usingAjax = false;
+  var submitType = '';
   var autoSaveRef = '';
   $(document).ready(function () {
       //we have javascript replace the form submit buttons to enable ajax saving 
@@ -560,14 +565,10 @@ if ($css != '') {
       startAutoSave();
   });
   
-  //random page ID to stop IE caching results. arrrggg
-  <?php $randomPageID = uniqid(); ?>
-
   var userSubmit = function (event) {
-    
+    submitType = 'userSubmit';
     stopAutoSave();
 
-    //$('#savemsg').html("<?php echo $string['saving']; ?>")
     $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
     document.body.style.cursor = 'wait';
 
@@ -578,16 +579,7 @@ if ($css != '') {
         $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
       }
     }
-
-    var retVal = ajaxSave();
-    if (retVal == true) {
-      $('#qForm').submit();
-      return true;
-    }
-    startAutoSave();
-    $('#savemsg').html("<?php echo $string['saving_failed_try_again']; ?>");
-    document.body.style.cursor = 'default';
-    return false;
+    ajaxSave();
   }
   
   var startAutoSave = function () {
@@ -599,6 +591,7 @@ if ($css != '') {
   }
 
   var autoSave = function() {
+    submitType = 'autoSave';
     $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
     ajaxSave();
     //clear auto save message
@@ -608,16 +601,20 @@ if ($css != '') {
   }
 
   var ajaxSave = function () {
+    submitPending = true;
+    //random page ID to stop IE caching results. arrrggg
+    date = new Date();
+    randomPageID = date.getTime();
+    $('#randomPageID').val(randomPageID);
     if(typeof(tinyMCE) != "undefined"){
       tinyMCE.triggerSave();
     }
     $.ajax({
-          url: 'save_screen.php?id=<?php echo $_GET['id'] . "&rnd=" . $randomPageID; ?>',
+          url: 'save_screen.php?id=<?php echo $_GET['id'] ?>&rnd=' + randomPageID,
           type: 'post',
           data: $('#qForm').serialize(),
           dataType: 'html',
-          timeout: 500,
-          async: false,
+          timeout: 1000,
           cache: false,
           tryCount : 0,    
           retryLimit : 5, //try 5 times b4 error
@@ -628,6 +625,7 @@ if ($css != '') {
           fail: function() {
               submitPending = false;
               success = false;
+              saveFail();
           },
           error: function(xhr, textStatus, errorThrown) {
               if (textStatus == 'timeout' || textStatus == 'error') {            
@@ -638,33 +636,49 @@ if ($css != '') {
                   return;            
                 }            
               }
+              saveFail();
               submitPending = false;
               success = false;
               return;
           },
           success: function (data, jqXHR, textStatus) {
               submitPending = false
-              if(data == "<?php echo $randomPageID; ?>") {
+              if(data == randomPageID) {
                   success = true;
+                  saveSuccess();
+                  return;
               }
+              saveFail();
               return;
           }
       });
-    return success;
+    submitPending = false;
+    return;
+  }
+
+  var saveSuccess = function () {
+    if (submitType == 'userSubmit') {
+      $('#qForm').submit();
+      return true;
+    }
+  }
+
+  var saveFail = function () {
+    startAutoSave();
+    $('#savemsg').html("<?php echo $string['saving_failed_try_again']; ?>");
+    document.body.style.cursor = 'default';
+    return false;
   }
 
   var fire = function (scrno) {
+    submitType = 'userSubmit';
     document.questions.button_pressed.value='fire_exit';
     if(usingAjax) {
         document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
     } else {
         document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
     }
-    var retVal = ajaxSave();
-    if(retVal == true) {
-      $('#qForm').submit();
-      return true;
-    }
+    ajaxSave();
   }
 </script>
 </head>
@@ -849,7 +863,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($current_screen - 1) . "\" />\n";
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
-  echo "<input type=\"hidden\" name=\"randumPageID\" value=\"$randomPageID\" />\n";
+  echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
 
   if ($current_screen > $no_screens) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";

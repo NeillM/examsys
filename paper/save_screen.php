@@ -64,5 +64,5 @@ $stmt->free_result();
 $stmt->close();
 //TODO we need to add some error checking in here. maby wrap this whole function in a transaction ??
 $ret = record_marks($property_id, $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
-echo $_POST['randumPageID'];
+echo $_POST['randomPageID'];
 ?>
