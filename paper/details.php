@@ -117,7 +117,7 @@ function randomDetails($questionID) {
     $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
     while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
-        $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
+        $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin,'<sub><sup><b><i>'))));
         if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
         $random_questions[$question_no]['theme'] = $old_theme;
         $random_questions[$question_no]['q_id'] = $old_q_id;
@@ -150,7 +150,7 @@ function randomDetails($questionID) {
     }
 
     // Write out the last question.
-    $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin))));
+    $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin,'<sub><sup><b><i>'))));
     if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
     $random_questions[$question_no]['theme'] = $old_theme;
     $random_questions[$question_no]['q_id'] = $old_q_id;
@@ -546,7 +546,7 @@ function random_qMarks($random_questions) {
       $temp_array[$row_no]['q_type'] = $q_type;
       $temp_array[$row_no]['leadin'] = $leadin;
       if (strpos($temp_array[$row_no]['leadin'],'class="mee"') === false and strpos($temp_array[$row_no]['leadin'],'class=mee') === false) {
-        $temp_array[$row_no]['leadin'] = strip_tags($temp_array[$row_no]['leadin']);                                     // No equation, strip all tags
+        $temp_array[$row_no]['leadin'] = strip_tags($temp_array[$row_no]['leadin'],'<sub><sup><b><i>');                                     // No equation, strip all tags
         if (strlen($temp_array[$row_no]['leadin']) > 160) {
           $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
         }
