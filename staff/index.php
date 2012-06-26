@@ -237,9 +237,10 @@ require '../include/staff_auth.inc';
   }
 
   // Work out if there is anything in the recycle bin.
+  // Limit 1 is included for speed. Just need to know it is not zero to display a full recycle bin icon.
   $recycle_bin_no = 0;
   
-  $stmt = $mysqli->prepare("SELECT COUNT(property_id) FROM properties WHERE (paper_ownerID=? OR moduleID IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
+  $stmt = $mysqli->prepare("SELECT property_id FROM properties WHERE (paper_ownerID=? OR moduleID REGEXP ('" . implode('|', $teams) . "')) AND deleted IS NOT NULL LIMIT 1");
   $stmt->bind_param('i', $userID);
   $stmt->execute();
   $stmt->bind_result($no_deleted);
@@ -247,16 +248,15 @@ require '../include/staff_auth.inc';
   $stmt->close();
   $recycle_bin_no += $no_deleted;
   
-  $stmt = $mysqli->prepare("SELECT COUNT(q_id) FROM questions WHERE (ownerID=? OR q_group IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
+  $stmt = $mysqli->prepare("SELECT q_id FROM questions WHERE (ownerID=? OR q_group REGEXP '" . implode('|', $teams) . "') AND deleted IS NOT NULL LIMIT 1");
   $stmt->bind_param('i', $userID);
   $stmt->execute();
   $stmt->bind_result($no_deleted);
   $stmt->fetch();
   $stmt->close();
   $recycle_bin_no += $no_deleted;
-
   
-  $stmt = $mysqli->prepare("SELECT COUNT(id) FROM folders WHERE (ownerID=? OR team_name IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
+  $stmt = $mysqli->prepare("SELECT id FROM folders WHERE (ownerID=? OR team_name REGEXP ('" . implode('|', $teams) . "')) AND deleted IS NOT NULL LIMIT 1");
   $stmt->bind_param('i', $userID);
   $stmt->execute();
   $stmt->bind_result($no_deleted);
