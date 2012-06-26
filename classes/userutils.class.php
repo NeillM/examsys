@@ -43,6 +43,11 @@ Class UserUtils {
       if ($password == '') {
         $password =  gen_password();
       }
+
+      //force valid value for gender or default to NULL
+      if(strtolower($gender) != 'male' or strtolower($gender) ! = 'female') {
+        $gender = 'NULL';
+      }
       
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?)");
