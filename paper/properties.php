@@ -57,6 +57,13 @@ if (isset($_POST['Submit'])) {
   $result->bind_result($paper_title);
   $result->store_result();
   if ($result->num_rows == 0 or $_POST['original_paper_title'] == $_POST['paper_title']) {
+    $paper_title = $_POST['paper_title'];
+    if (isset($_POST['paper_type'])) {
+      $paper_type = $_POST['paper_type'];
+    } else {
+      $paper_type = $_POST['old_paper_type'];
+    }
+
     if (isset($_POST['bidirectional']) AND $_POST['bidirectional'] == 1) {
       $bidirectional = 1;
     } else {
@@ -89,50 +96,55 @@ if (isset($_POST['Submit'])) {
       $hide_if_unanswered = '0';
     }
     
-    $local_time = new DateTimeZone($cfg_timezone);
-    $target_timezone = new DateTimeZone($_POST['timezone']);
-    
-    $null_start_date = false;
-    if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
-      $null_start_date = true;
-    } else {
-      if ((modulo($_POST['fyear'],4) == 0 and modulo($_POST['fyear'],100) != 0) or modulo($_POST['fyear'],400) == 0) {
-        $leap = true;
-      } else {
-        $leap = false;
-      }   
-      if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '29';
-      if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
-      if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
+    if (($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'SysAdmin') !== false) or !$cfg_summative_mgmt) {
+      $local_time = new DateTimeZone($cfg_timezone);
+      $target_timezone = new DateTimeZone($_POST['timezone']);
       
-      $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
-      $start_date->setTimezone($local_time);
-    }
-    
-    $null_end_date = false;
-    if ($_POST['tyear'] == '' and $_POST['tmonth'] == '' and $_POST['tday'] == '' and $_POST['ttime'] == '') {
-      $null_end_date = true;
-    } else {
-      if ((modulo($_POST['tyear'],4) == 0 and modulo($_POST['tyear'],100) != 0) or modulo($_POST['tyear'],400) == 0) {
-        $leap = true;
+      $null_start_date = false;
+      if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
+        $null_start_date = true;
       } else {
-        $leap = false;
-      }   
-      if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
-      if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
-      if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
-      
-      $end_date = new dateTime($_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'], $target_timezone);
-      $end_date->setTimezone($local_time);
-    }
+        if ((modulo($_POST['fyear'],4) == 0 and modulo($_POST['fyear'],100) != 0) or modulo($_POST['fyear'],400) == 0) {
+          $leap = true;
+        } else {
+          $leap = false;
+        }   
+        if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '29';
+        if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
+        if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
         
-    if ($_POST['timezone'] < 0) {
-      $start_date->modify("+" . abs($_POST['timezone']) . " hour");
-      $end_date->modify("+" . abs($_POST['timezone']) . " hour");
-    } elseif ($_POST['timezone'] > 0) {
-      $start_date->modify("-" . $_POST['timezone'] . " hour");
-      $end_date->modify("-" . $_POST['timezone'] . " hour");
-    } 
+        $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
+        $start_date->setTimezone($local_time);
+      }
+      
+      $null_end_date = false;
+      if ($_POST['tyear'] == '' and $_POST['tmonth'] == '' and $_POST['tday'] == '' and $_POST['ttime'] == '') {
+        $null_end_date = true;
+      } else {
+        if ((modulo($_POST['tyear'],4) == 0 and modulo($_POST['tyear'],100) != 0) or modulo($_POST['tyear'],400) == 0) {
+          $leap = true;
+        } else {
+          $leap = false;
+        }   
+        if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
+        if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
+        if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
+        
+        $end_date = new dateTime($_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'], $target_timezone);
+        $end_date->setTimezone($local_time);
+      }
+          
+      if ($_POST['timezone'] < 0) {
+        $start_date->modify("+" . abs($_POST['timezone']) . " hour");
+        $end_date->modify("+" . abs($_POST['timezone']) . " hour");
+      } elseif ($_POST['timezone'] > 0) {
+        $start_date->modify("-" . $_POST['timezone'] . " hour");
+        $end_date->modify("-" . $_POST['timezone'] . " hour");
+      }
+      
+      $tmp_start_date = $start_date->format("YmdHis");
+      $tmp_end_date = $end_date->format("YmdHis");
+    }
 
    if ((modulo($_POST['ext_tyear'],4) == 0 and modulo($_POST['ext_tyear'],100) != 0) or modulo($_POST['ext_tyear'],400) == 0) {
       $leap = true;
@@ -234,23 +246,7 @@ if (isset($_POST['Submit'])) {
     } else {
       $tmp_sound_demo = 0;
     }
-    
-    $paper_title = $_POST['paper_title'];
-    if (isset($_POST['paper_type'])) {
-      $paper_type = $_POST['paper_type'];
-    } else {
-      $paper_type = $_POST['old_paper_type'];
-    }
-    if ($null_start_date) {
-      $tmp_start_date = NULL;
-    } else {
-      $tmp_start_date = $start_date->format("YmdHis");
-    }
-    if ($null_end_date) {
-      $tmp_end_date = NULL;
-    } else {
-      $tmp_end_date = $end_date->format("YmdHis");
-    }
+
     $timezone = $_POST['timezone'];
     $bgcolor = $_POST['bgcolor'];
     $fgcolor = $_POST['fgcolor'];
@@ -262,10 +258,17 @@ if (isset($_POST['Submit'])) {
     $password = trim($_POST['password']);
     $paperID = $_POST['paperID'];
     
-    $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
-    $editProperties->bind_param('sssssssssssssssiisssisisssssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $_POST['calendar_year'], $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
-    $editProperties->execute();
-    $editProperties->close();
+    if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'SysAdmin') === false) {
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties->bind_param('sssssssssssiisssisissssssssssi', $paper_title, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
+      $editProperties->execute();
+      $editProperties->close();
+    } else {
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties->bind_param('sssssssssssssssiisssisisssssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $_POST['calendar_year'], $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
+      $editProperties->execute();
+      $editProperties->close();
+    }
     
     // Release objectives-based feedback
     $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='objectives'");
@@ -1049,8 +1052,14 @@ if ($paper_type != '4' and $paper_type != '5') {
 <tr>
 <td style="text-align:center; vertical-align:top" colspan="2">
 <?php
+    if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'SysAdmin') === false) {
+      $sum_disabled = ' disabled'; 
+    } else {
+      $sum_disabled = ''; 
+    }
+
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
-    echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\">\n<option value=\"\">" . $string['na'] .  "</option>\n";
+    echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n<option value=\"\">" . $string['na'] .  "</option>\n";
     $academic_years = array('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16');
     foreach ($academic_years as $value) {
       echo "<option value=\"" . $value . "\"";
@@ -1060,7 +1069,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }    
     echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"$password\" /></td></tr>\n";
 
-    echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\">";
+    echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled>";
     foreach ($timezone_array as $individual_zone => $display_zone) {
       if ($timezone == $individual_zone) {
         echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
@@ -1088,7 +1097,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_minute = substr($start_date,14,2);
     
     // Available from Day
-    echo "<select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\">\n";
+    echo "<select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1112,7 +1121,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "</select>\n";
    // Available from Month
     $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
-    echo "<select name=\"fmonth\" id=\"fmonth\" onchange=\"dateCopy('fmonth')\">\n";
+    echo "<select name=\"fmonth\" id=\"fmonth\" onchange=\"dateCopy('fmonth')\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1134,7 +1143,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</select>\n";
     // Available from Year
-    echo "<select name=\"fyear\" id=\"fyear\" onchange=\"dateCopy('fyear')\">\n";
+    echo "<select name=\"fyear\" id=\"fyear\" onchange=\"dateCopy('fyear')\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
     }
@@ -1145,7 +1154,7 @@ if ($paper_type != '4' and $paper_type != '5') {
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>\n<select name=\"ftime\">\n";
+    echo "</select>\n<select name=\"ftime\"$sum_disabled>\n";
     // Available from Hour
     $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
     if ($start_date == '') {
@@ -1170,7 +1179,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
     
      // Available from Day
-    echo "<select name=\"tday\" id=\"tday\" onchange=\"dateCopy('tday')\">\n";
+    echo "<select name=\"tday\" id=\"tday\" onchange=\"dateCopy('tday')\"$sum_disabled>\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1194,7 +1203,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "</select>\n";
 
     // Available to Month
-    echo "<select name=\"tmonth\" id=\"tmonth\" onchange=\"dateCopy('tmonth')\">\n";
+    echo "<select name=\"tmonth\" id=\"tmonth\" onchange=\"dateCopy('tmonth')\"$sum_disabled>\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1216,7 +1225,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</select>\n";
     // Available to Year
-    echo "<select name=\"tyear\" id=\"tyear\" onchange=\"dateCopy('tyear')\">\n";
+    echo "<select name=\"tyear\" id=\"tyear\" onchange=\"dateCopy('tyear')\"$sum_disabled>\n";
     if ($end_date == '') {
       echo '<option value=""></option>';
     }
@@ -1227,7 +1236,7 @@ if ($paper_type != '4' and $paper_type != '5') {
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>&nbsp;<select name=\"ttime\">\n";
+    echo "</select>&nbsp;<select name=\"ttime\"$sum_disabled>\n";
     // Available to Hour
     if ($end_date == '') {
       echo '<option value=""></option>';

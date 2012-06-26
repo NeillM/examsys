@@ -48,7 +48,7 @@ function access_denied($message, $output_header = false) {
     Header("WWW-authenticate: basic realm=\"Rogo\"");
     Header("HTTP/1.0 401 Unauthorised");
   }
-  display_notice($string['accessdenied'], $message, '/artwork/access_denied.png');
+  display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
   
   echo "\n</body>\n</html>";
   

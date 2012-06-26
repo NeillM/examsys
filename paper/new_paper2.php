@@ -488,7 +488,7 @@ if ($_POST['paper_type'] == 'summative') {
     for ($i=1; $i<=6; $i++) {
       echo "<option value=\"$i\">$i</option>";
     }
-    echo '</select></tr>';
+    echo '</select></td></tr>';
     
     echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td colspan="5"><select name="campus">';
     foreach ($cfg_campus_list as $campus) {
