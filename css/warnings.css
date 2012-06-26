@@ -12,7 +12,6 @@
 }
 
 .redwarn {
-  height:30px;
   background: -moz-linear-gradient(top, #FFC0C0, #FF8181);
   background: -webkit-linear-gradient(top, #FFC0C0, #FF8181);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFC0C0', endColorstr='#FF8181');

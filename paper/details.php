@@ -778,13 +778,13 @@ function random_qMarks($random_questions) {
     $tmp_hour = $tmp_start_hour;
     if (substr($tmp_hour,0,1) == '0') $tmp_hour = substr($tmp_hour,1,1);
     if (substr($display_start_date,6,4) > (date("Y")+1)) {
-      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['farfuturewarning'], $display_start_date); 
-      echo "</div></td></tr>\n";
+      echo "</td></tr>\n";
     } elseif ($tmp_hour < $cfg_hour_warning) {
-      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:1px; padding-right:10px\" width=\"28\" height=\"28\" alt=\"Locked\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['earlywarning'], $cfg_hour_warning);
-      echo "</div></td></tr>\n";
+      echo "</td></tr>\n";
     }
   }
 

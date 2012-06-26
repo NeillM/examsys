@@ -2416,12 +2416,8 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-    @ob_flush();
-    @flush();
-
-  /*
   // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
-  echo "<li>UPDATEING TO InnoDB This may take some time please be patient ;-)</li>\n";
+  echo "<li>UPDATING TO InnoDB This may take some time please be patient ;-)</li>\n";
   ob_flush();
   flush();
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
@@ -2440,10 +2436,10 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
-  */
+  
 
   /*
-   *  UPDATES for short int database feilds SHOULD not go live untill ver 4.3 - With full testing
+   *  UPDATES for short int database fields SHOULD not go live untill ver 4.3 - With full testing
 
   // 05/04/2012 - Enlarge the size of the integer for property_id in properties table.
   $data_type = '';
@@ -2892,10 +2888,6 @@ if (!isset($_POST['update'])) {
   }
 
 
-    @ob_flush();
-    @flush();
-
-
   // 02/05/2012 - Update the online help files.
   if (isset($_POST['update_staff_help'])) {
     $adjust = $mysqli->prepare("TRUNCATE staff_help");
@@ -3290,6 +3282,20 @@ if (!isset($_POST['update'])) {
       echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
     }  
   }
+  
+  // 26/06/2012 - add new index to review_comments
+  $result = $mysqli->prepare("SHOW INDEX FROM review_comments WHERE Key_name = 'idx_q_paper'");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    echo "<li>CREATE INDEX idx_q_paper ON review_comments (q_paper)</li>\n";
+    if (!$mysqli->real_query("CREATE INDEX idx_q_paper ON review_comments (q_paper)")) {
+      echo "<li>" . $mysqli->error . "</li>\n";
+    }
+  } 
+  $result->close();
+
     
 
   // End ------------------------------------------------------------------
