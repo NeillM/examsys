@@ -569,6 +569,7 @@ if ($css != '') {
     submitType = 'userSubmit';
     stopAutoSave();
 
+    $('#saveError').fadeOut('slow');
     $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
     document.body.style.cursor = 'wait';
 
@@ -665,7 +666,8 @@ if ($css != '') {
 
   var saveFail = function () {
     startAutoSave();
-    $('#savemsg').html("<?php echo $string['saving_failed_try_again']; ?>");
+    $('#saveError').fadeIn('fast');
+    $('#savemsg').html("")
     document.body.style.cursor = 'default';
     return false;
   }
@@ -864,7 +866,6 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
   echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
-
   if ($current_screen > $no_screens) {
     echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
     if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
@@ -877,6 +878,9 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     printf($string['pleasecomplete'], $current_screen);
     echo "</div>\n<br >\n";
   }
+ 
+  echo '<div id="saveError">' .  $string['saving_failed_try_again'] . '</div>';
+  
   echo $bottom_html;
   echo '<input type="text" style="background-color:transparent;text-align:center;font-size:80%;color:white;border:0px" id="theTime" size="8" /></td><td align="right">';
   echo '<span id="savemsg"></span>';

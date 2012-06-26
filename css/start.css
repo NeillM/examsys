@@ -54,3 +54,23 @@ pre {font-family:Arial,sans-serif;font-size:100%}
 #finish {width:120px; font-weight:bold}
 #prevous {width:120px}
 #savemsg {margin-right:5px;}
+#saveError {
+  display:none;
+  margin-left: 25%;
+  margin-bottom: 5px;
+  width:45%;
+  height:60px;
+  background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
+  background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
+  border: 2px solid red;
+}
+#saveError img {margin-top: 6px; margin-left: 16px}
+#saveError div { 
+    font-size:130%;
+    margin-top: -50px;
+    margin-left: 70px;
+    height:60px;
+    width: 80%;
+    text-align: center;
+  }

@@ -40,7 +40,7 @@ $string['msgselectable3'] = 'You have already selected';
 $string['msgselectable4'] = '.\n\nPlease select a different ranking.';
 $string['notregistered'] = '%s %s (%s) is not registered on <strong>%s</strong> in <strong>%s</strong>.';
 //ajax saving and auto saving messages
-$string['saving'] = "Saving";
-$string['auto_saving'] = "Auto saved";
-$string['saving_failed_try_again'] = "Saving failed please try again";
+$string['saving'] = 'Saving';
+$string['auto_saving'] = 'Auto saved';
+$string['saving_failed_try_again'] = '<img alt="Warning" src="/artwork/orange_alert_48.png" /> <div>Saving failed please try again, by moving to the next screen.</div>';
 ?>
