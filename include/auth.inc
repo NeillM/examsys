@@ -215,7 +215,7 @@ function db_auth($u, $p, $db, $changeuser = true) {
     $encrypt_password = encpw($cfg_encrypt_salt, $u, $p, $encrypt_type);
     
     if ($encrypt_password == $password) {
-      if ($encrypt_type == 'MD5') {
+      if ($encrypt_type == 'MD5') {          // Re-encrypt MD5 passwords using SHA-512.
         $encpw_details = encpw($cfg_encrypt_salt, $u, $p);
         $stmt = $db->prepare("UPDATE users SET password = ? WHERE username = ?");
         $stmt->bind_param('ss', $encpw_details, $u);
@@ -223,15 +223,15 @@ function db_auth($u, $p, $db, $changeuser = true) {
         $stmt->close();
       }     
 
-      if (strpos($userroles,'SysAdmin') !== false and count($split_username) > 1) {
+      if (strpos($userroles,'Staff') !== false and count($split_username) > 1) {
         //for Sysadmin only 
         if ($split_username[1] == 'staff') {
           //set the role to staff
           $userroles = 'Staff';
         } elseif ($split_username[1] == 'demo') {
-          //set the role to demmo: this will anonomise any user data for public demos
-          $userroles .= 'Demo';
-        } else {
+          //set the role to demo: this will anonomise any user data for public demos
+          $userroles .= ',Demo';
+        } elseif (strpos($userroles, 'SysAdmin') !== false) {
           // Look up all the authentication details of the user you are pretending to log in as.
           list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($split_username[1], $db);
           $cfg_install_type .= " as $title $surname";
