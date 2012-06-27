@@ -60,17 +60,18 @@ pre {font-family:Arial,sans-serif;font-size:100%}
   margin-bottom: 5px;
   width:45%;
   height:60px;
-  background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
-  background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
-  border: 2px solid red;
+  background: -moz-linear-gradient(top, #FF8181, #FFC0C0);
+  background: -webkit-linear-gradient(top, #FF8181, #FFC0C0);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF9595', endColorstr='#FFCBCB');
+  border: 1px solid #C00000;
 }
 #saveError img {margin-top: 6px; margin-left: 16px}
 #saveError div { 
-    font-size:130%;
+    font-size:110%;
     margin-top: -50px;
-    margin-left: 70px;
+    margin-left: 80px;
     height:60px;
     width: 80%;
-    text-align: center;
+    text-align: left;
+    line-height:150%
   }

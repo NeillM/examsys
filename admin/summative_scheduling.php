@@ -57,7 +57,7 @@ require '../include/sysadmin_auth.inc';
     }
     
     function desel() {
-      tmp_ID = document.myform.divID.value;
+      tmp_ID = document.getElementById('divID').value;
       if (tmp_ID != '') {
         document.getElementById(tmp_ID).style.backgroundColor = 'white';
       }
@@ -66,13 +66,13 @@ require '../include/sysadmin_auth.inc';
     }
 
     function lon(lineID) {
-      if (lineID != document.myform.divID.value) {
+      if (lineID != document.getElementById('divID').value) {
         document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
       }
     }
 
     function loff(lineID) {
-      if (lineID != document.myform.divID.value) {
+      if (lineID != document.getElementById('divID').value) {
         document.getElementById(lineID).style.backgroundColor = '';
       }
     }
@@ -98,6 +98,7 @@ require '../include/sysadmin_auth.inc';
 </tr>
 <tr><th colspan="5" class="bevel"></th></tr>
 <?php
+  $rowID = 0;
   $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
 
   $results = $mysqli->prepare("SELECT property_id, paper_title, moduleID, period, barriers_needed, cohort_size, campus FROM (properties, scheduling) WHERE (start_date IS NULL OR end_date IS NULL) AND properties.property_id=scheduling.paperID");
@@ -105,9 +106,10 @@ require '../include/sysadmin_auth.inc';
   $results->store_result();
   $results->bind_result($property_id, $paper_title, $moduleID, $period, $barriers_needed, $cohort_size, $campus);
   while ($results->fetch()) {
+    $rowID++;
     $cohort_size = str_replace('<', '&lt;', $cohort_size);
     $cohort_size = str_replace('>', '&gt;', $cohort_size);
-    echo "<tr onclick=\"sel($property_id)\" onmouseover=\"lon($property_id)\" onmouseout=\"loff($property_id)\" ondblclick=\"viewDetails()\" id=\"$property_id\"><td class=\"s\">$paper_title</td><td class=\"s\">" . $string[$months[$period]] . "</td><td class=\"s\">$campus</td><td class=\"s\">$moduleID</td><td class=\"s\">$cohort_size</td></tr>";
+    echo "<tr onclick=\"sel($property_id)\" onmouseover=\"lon($property_id)\" onmouseout=\"loff($property_id)\" ondblclick=\"viewDetails()\" id=\"$property_id\"><td class=\"s\">$paper_title</td><td class=\"s\">" . $string[$months[$period]] . "</td><td class=\"s\">$campus</td><td class=\"s\">$moduleID</td><td class=\"s\">$cohort_size</td></tr>\n";
   }
   $results->close();
 ?>

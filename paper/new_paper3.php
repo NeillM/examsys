@@ -105,6 +105,12 @@
       $barriers_needed = 0;
     }
     
+    // Do a delete just in case of double-submission of the form.
+    $result = $mysqli->prepare("DELETE FROM scheduling WHERE paperID=?");
+    $result->bind_param('i', $property_id);
+    $result->execute();  
+    $result->close();
+    
     $result = $mysqli->prepare("INSERT INTO scheduling VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
     $result->bind_param('isissis', $property_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
     $result->execute();  

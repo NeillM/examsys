@@ -548,7 +548,7 @@ if ($css != '') {
   $(document).ready(function () {
       //we have javascript replace the form submit buttons to enable ajax saving 
       usingAjax = true;
-      $('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
+      $('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
       $('#next').click(userSubmit);
 
       $('#prevous').replaceWith('<?php echo "<input id=\"prevous\" type=\"button\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 1) . "&nbsp;\" />&nbsp;";?>');
@@ -667,7 +667,7 @@ if ($css != '') {
   var saveFail = function () {
     startAutoSave();
     $('#saveError').fadeIn('fast');
-    $('#savemsg').html("")
+    $('#savemsg').html("");
     document.body.style.cursor = 'default';
     return false;
   }
@@ -675,7 +675,7 @@ if ($css != '') {
   var fire = function (scrno) {
     submitType = 'userSubmit';
     document.questions.button_pressed.value='fire_exit';
-    if(usingAjax) {
+    if (usingAjax) {
         document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
     } else {
         document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
@@ -879,7 +879,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     echo "</div>\n<br >\n";
   }
  
-  echo '<div id="saveError">' .  $string['saving_failed_try_again'] . '</div>';
+  echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
   
   echo $bottom_html;
   echo '<input type="text" style="background-color:transparent;text-align:center;font-size:80%;color:white;border:0px" id="theTime" size="8" /></td><td align="right">';
