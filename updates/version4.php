@@ -3296,7 +3296,23 @@ if (!isset($_POST['update'])) {
   } 
   $result->close();
 
-    
+  // Delete permission might be missing on papers and state (28/06/2012)
+  $priv_SQL = array();
+  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".papers TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".state TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $priv_SQL[] = "GRANT DELETE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $priv_SQL[] = "FLUSH PRIVILEGES";
+  foreach ($priv_SQL as $sql) {
+    $mysqli->query($sql);
+
+    @ob_flush();
+    @flush();
+
+    if ($mysqli->errno != 0) {
+      echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
+    }  
+  }
+   
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
