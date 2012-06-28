@@ -34,7 +34,7 @@ $tmp_questionIDs = explode(',', $_POST['questionID']);
 $tmp_paperID = $_POST['paperID'];
 
 for ($i=1; $i<count($tmp_pIDs); $i++) {
-  if ($result = $mysqli->prepare("sele WHERE p_id=?")) {
+  if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id=?")) {
     $result->bind_param('i', $tmp_pIDs[$i]);
     $result->execute();
     $result->close();
