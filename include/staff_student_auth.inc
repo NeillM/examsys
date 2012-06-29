@@ -65,7 +65,6 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
     exit;
   }
 
-  session_cache_limiter('');
   session_start();
   $lti = new BLTI(array('table' => 'lti_keys', 'dbtype' => 'mysqli', 'db' => &$mysqli), true, false);
   if ($lti->valid) {
