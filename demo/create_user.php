@@ -31,6 +31,11 @@ require_once $cfg_web_root . 'include/auth.inc';
 
 require_once $cfg_web_root . 'classes/lang.class.php';
 
+
+if (strcmp($cfg_install_type, 'demo') != 0) {
+  exit();
+}
+
 $userroles='SysAdmin';
 //$cfg_db_admin_user, $cfg_db_admin_passwd
 $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
