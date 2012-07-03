@@ -221,7 +221,6 @@ if (isset($_POST['submit'])) {
     $params .= 'i';
   } else {
     // If no specific owner set lock down by team (apart from SysAdmin).
-    //if (count($teams) > 0 and $_POST['team'] == '' and strpos($userroles,'SysAdmin') === false) {
     if (count($teams) > 0 and $_POST['team'] == '') {
       $user_string = ' AND (';
       foreach ($teams as $individual_team) {
@@ -295,9 +294,9 @@ if (isset($_POST['submit'])) {
   }
   
   if ($keywordsSQL == '') {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, q_id, theme, scenario_plain, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, options) WHERE questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, q_id, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, options) WHERE questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
   } else {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, theme, scenario_plain, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, q_id";
   }
 
   $result = $mysqli->prepare($sql);
@@ -310,7 +309,7 @@ if (isset($_POST['submit'])) {
   }
   $result->execute();
   $result->store_result();
-  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $theme, $scenario_plain, $leadin_plain, $last_edited, $ownerID, $locked, $status);
+  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin_plain, $last_edited, $ownerID, $locked, $status);
 
   $hits = $result->num_rows;
   
@@ -332,7 +331,6 @@ if (isset($_POST['submit'])) {
   <tr><th colspan="4" class="bevel"></td></tr>
 <?php
   while ($result->fetch()) {
-    
     echo '<tr class="qline';
     if ($status == 'Retired') {
       echo ' retired';
