@@ -29,7 +29,7 @@ require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$version = '4.2.4';
+$version = '4.3';
 
 set_time_limit(0);
 
@@ -176,7 +176,7 @@ if (!isset($_POST['update'])) {
     exit;
   }
   
-  echo "\n<blockquote>\n<h1>Starting update from version 4.x to $version</h1>\n<ol>";
+  echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
   ob_start();
   
   // 15/06/2011
@@ -2422,31 +2422,6 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
-  echo "<li>UPDATING TO InnoDB This may take some time please be patient ;-)</li>\n";
-  ob_flush();
-  flush();
-  $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($name);
-  $skip_table = Array('help_log'=>1,'help_searches'=>1,'help_tutorial_log'=>1,'staff_help'=>1,'student_help'=>1);
-  while ($result->fetch()) {
-    if(isset($skip_table[$name])) {
-      continue;
-    }
-    echo "<li>ALTER TABLE " . $name . " ENGINE=InnoDB</li>\n";
-    if(!$mysqli->real_query("ALTER TABLE $name ENGINE=InnoDB")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
-    }
-    ob_flush();
-    flush();
-  }
-  
-
-  /*
-   *  UPDATES for short int database fields SHOULD not go live untill ver 4.3 - With full testing
-
   // 05/04/2012 - Enlarge the size of the integer for property_id in properties table.
   $data_type = '';
   $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='properties' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='property_id'");
@@ -2759,10 +2734,6 @@ if (!isset($_POST['update'])) {
     flush();
   }
   $result->close();
-  */
-
-    @ob_flush();
-    @flush();
 
 
   // 19/04/2012 - Add 'state' tables
@@ -3319,6 +3290,24 @@ if (!isset($_POST['update'])) {
     }  
   }
    
+  // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($name);
+  $skip_table = Array('help_log'=>1,'help_searches'=>1,'help_tutorial_log'=>1,'staff_help'=>1,'student_help'=>1);
+  while ($result->fetch()) {
+    if (isset($skip_table[$name])) {
+      continue;
+    }
+    echo "<li>ALTER TABLE " . $name . " ENGINE=InnoDB</li>\n";
+    if (!$mysqli->real_query("ALTER TABLE $name ENGINE=InnoDB")) {
+      echo "<li>" . $mysqli->error . "</li>\n";
+    }
+    ob_flush();
+    flush();
+  }
+  
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
