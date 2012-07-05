@@ -92,8 +92,8 @@ function gen_random_salt() {
       p {clear:both}
       .submit {text-align:center; padding-top:2em}
       table {border:none}
-      .heading {margin-top:1.5em; margin-bottom:0.5em; width:100%; color:#1E3287}
-      .heading hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%}
+      .h {margin-top:1.5em; margin-bottom:0.5em; width:100%; color:#1E3287}
+      .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%}
       td.line {width:98%}
       input[type=text], input[type=password] {width:140px}
       form {padding:1em}
@@ -104,10 +104,16 @@ function gen_random_salt() {
   </head>
   <body>
   <table class="header"> 
-    <tr> 
-      <th><div style="font-size:26pt; font-weight:bold; color:#001979">&nbsp;<?php echo $string['systemupdate']; ?></div><div style="position:relative; left:48px; top:-6px; font-size:10pt; color:#001979; font-weight:bold">version <?php echo $rogo_version . ' to ' .$version; ?></div></th> 
-      <th style="text-align:right; padding-top:10px; padding-right:10px"><img src="../artwork/rogo_logo.gif" width="137" height="61" alt="Logo" border="0" />&nbsp;&nbsp;</th> 
-    </tr> 
+    <tr>
+      <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
+      <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
+      <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
+      <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $rogo_version . ' to ' . $version; ?>)</div>
+      </th>
+      <th style="text-align:right; padding-right:10px">
+      <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" />
+      </th>
+    </tr>
     <tr> 
       <th colspan="2" class="bevel"></th> 
     </tr> 
@@ -137,13 +143,13 @@ if (!isset($_POST['update'])) {
       ?>    
       <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
       <div><?php printf($string['msg1'], $version); ?></div>
-        <table class="heading"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
+        <table class="h"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table> 
           <div><?php echo $string['msg2']; ?></div>
           <br />
           <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" /> </div>
           <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass" /></div>
 
-          <table class="heading"><tr><td><nobr><?php echo $string['onlinehelpsystems']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+          <table class="h"><tr><td><nobr><?php echo $string['onlinehelpsystems']; ?></nobr></td><td class="line"><hr /></td></tr></table>
           <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" value="" name="update_staff_help" checked="checked" /></div>
           <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" value="" name="update_student_help" checked="checked" /></div>
      
