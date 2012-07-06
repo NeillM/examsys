@@ -99,7 +99,16 @@ Class InstallUtils {
       });
     </script>
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-
+    
+      <?php
+        if (!defined('PHP_VERSION_ID')) {
+          $version = explode('.', PHP_VERSION);
+          define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+        }
+        if (PHP_VERSION_ID < 50302) {
+          echo "<div class=\"warning\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" /> Current PHP version " . phpversion() . " is below recommended version 5.3.2</div>\n";
+        }
+      ?>
       <table class="h"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" id="company_name" name="company_name" value="University of" class="required" minlength="2" /></div>
 
@@ -237,6 +246,12 @@ Class InstallUtils {
     }
     self::$emergency_support_numbers = rtrim(self::$emergency_support_numbers, ', ');
     self::$emergency_support_numbers .= ')';
+    
+    // Check we can write to the config file first if not passwords will be lost!
+    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    if (!is_writable($rogo_path . '/config/config.inc.php')) {
+      self::displayError(array(300=>'Could not write config file!'));
+    }
 
     //CREATE and populate DB
     self::$db = new mysqli(self::$cfg_db_host , self::$db_admin_username, self::$db_admin_passwd,'',self::$cfg_db_port);
@@ -724,7 +739,7 @@ Class InstallUtils {
   *
   */
   static function configFile() {
-  global $string;
+    global $string;
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
     if (file_exists($rogo_path . '/config/config.inc.php')) {
@@ -855,7 +870,7 @@ Class InstallUtils {
     echo "<div class=\"error\">\n";
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
-        echo "\t<div>".$string['errors13']." $errCode:: $message</div>\n";
+        echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" /> " . $string['errors13'] . " $errCode: $message</div>\n";
       }
     }
     echo "</div>\n";
@@ -910,8 +925,8 @@ Class InstallUtils {
       <style type="text/css">
         html {padding:0px; margin:0px; width:100%}
         body {padding:0px; margin:0px; width:100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black }
-        .error {float:none; color:red; padding-left: .5em; vertical-align: top; }
-        .warning {float:none; color:red; padding-left: .5em; vertical-align: top; }
+        .error {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
+        .warning {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
         label {float:left; width:160px; padding-left:0em; text-align:right; padding-right:6px}
         p {clear:both}
         .submit {margin-left:42%; padding-top:2em}
@@ -1136,7 +1151,7 @@ CONFIG;
     }
 
     if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === false) {
-      self::displayError(array(300=>'Could not write config file !'));
+      self::displayError(array(300=>'Could not write config file!'));
     }
   }
 
