@@ -3308,6 +3308,20 @@ if (!isset($_POST['update'])) {
     flush();
   }
   
+  //update student_modules.moduleid to a char(25)
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='student_modules' AND TABLE_SCHEMA='touchstone' and COLUMN_NAME = 'moduleid' and COLUMN_TYPE = 'char(15)' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 1) {
+    echo "<li>ALTER TABLE student_modules CHANGE moduleid moduleid char(25)</li>\n";
+    if (!$mysqli->real_query("ALTER TABLE student_modules CHANGE moduleid moduleid char(25)")) {
+      echo "<li>" . $mysqli->error . "</li>\n";
+    }
+    ob_flush();
+    flush();
+  }
+  $result->close();
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

@@ -1940,7 +1940,7 @@ QUERY;
         CREATE TABLE `student_modules` (
           `id` int(11) NOT NULL auto_increment,
           `userID` mediumint(8) unsigned default NULL,
-          `moduleid` char(15) NOT NULL,
+          `moduleid` char(25) NOT NULL,
           `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
           `attempt` tinyint(4) default NULL,
           `auto_update` tinyint(4) default NULL,
