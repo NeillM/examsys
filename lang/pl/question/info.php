@@ -15,10 +15,10 @@ $string['beta'] = 'Beta';
 $string['close'] = 'Zamknięte';
 $string['notused'] = '(To pytanie nie jest obecnie wykorzystywane w żadnym arkuszu)';
 
-$string['papername'] = 'Paper Name';   // Niko, here downwards
-$string['screenno'] = 'Screen No';
-$string['examdate'] = 'Exam Date';
-$string['cohort'] = 'Cohort';
-$string['p'] = 'P';
-$string['d'] = 'D';
+$string['papername'] = 'Nazwa arkusza'; 
+$string['screenno'] = 'Numer ekranu';
+$string['examdate'] = 'Data egzaminu';
+$string['cohort'] = 'Grupa';
+$string['p'] = 'P'; //Niko? Item Difficulty 
+$string['d'] = 'D'; //Niko? discrimination value
 ?>
