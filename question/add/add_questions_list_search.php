@@ -164,10 +164,15 @@ require '../../include/media.inc';
   if (isset($_GET['search']) or isset($_GET['order'])) {
     $old_id = 0;
     $searchterm = '%' . $_GET['searchterm'] . '%';
-    $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM questions LEFT JOIN (keywords_question, keywords_user) ON questions.q_id=keywords_question.q_id LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE (keywords_question.keywordID=keywords_user.id OR keywords_question.keywordID is null) AND questions.ownerID LIKE ? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR keyword=?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
-    $result->bind_param('sssssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchterm'], $_GET['searchtype']);
+    if ($_GET['owner'] == '%') {
+      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM questions LEFT JOIN (keywords_question, keywords_user) ON questions.q_id=keywords_question.q_id LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE (keywords_question.keywordID=keywords_user.id OR keywords_question.keywordID is null) AND questions.q_group REGEXP '" . implode('|', $teams) . "' AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR keyword=?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
+      $result->bind_param('ssssss', $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchterm'], $_GET['searchtype']);
+    } else {
+      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM questions LEFT JOIN (keywords_question, keywords_user) ON questions.q_id=keywords_question.q_id LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE (keywords_question.keywordID=keywords_user.id OR keywords_question.keywordID is null) AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR keyword=?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
+      $result->bind_param('issssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchterm'], $_GET['searchtype']);
+    }
     $result->execute();  
-    $result->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked, $parts);
+    $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $parts);
     while ($result->fetch()) {
       if ($q_id != $old_id) {
         $tmp_leadin = str_replace('&nbsp;',' ',strip_tags($leadin));
