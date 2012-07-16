@@ -477,8 +477,8 @@ ob_start();
   }
   
   $xmean_total = 0;
-  $scatter_file = fopen($cfg_tmpdir . $userID. '_scatter.dat', 'w');              // Scatter plot data
   $absent_no = 0;
+  $scatter_data = '';
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['visible'] == 1) {
       if (strpos($user_results[$i]['username'], 'user') !== 0) {
@@ -505,8 +505,9 @@ ob_start();
         }
         echo '<tr';
         if ($user_results[$i]['questions'] < $question_no) {
-          fwrite($scatter_file,"0\n");
-          fwrite($scatter_file,"0\n");
+          $scatter_data .= "0\n0\n";
+          //fwrite($scatter_file,"0\n");
+          //fwrite($scatter_file,"0\n");
           $class = 'redln';
         } else {
           $class = 'greyln';
@@ -517,8 +518,9 @@ ob_start();
           } else {
             $distribution[$temp_location] = 1;
           }
-          fwrite($scatter_file,$temp_location . "\n");
-          fwrite($scatter_file,$user_results[$i]['duration'] . "\n");
+          $scatter_data .= $temp_location . "\n" . $user_results[$i]['duration'] . "\n";
+          //fwrite($scatter_file,$temp_location . "\n");
+          //fwrite($scatter_file,$user_results[$i]['duration'] . "\n");
         }
         if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
           $role_css = 'staff';
@@ -667,6 +669,8 @@ ob_start();
       }
     }
   }
+  $scatter_file = fopen($cfg_tmpdir . $userID. '_scatter.dat', 'w');              // Scatter plot data
+  fwrite($scatter_file,$scatter_data . "\n");
   fclose($scatter_file);
   
   $distribution_file = fopen($cfg_tmpdir . $userID . '_distribution.dat', 'w');         // Distribution data
