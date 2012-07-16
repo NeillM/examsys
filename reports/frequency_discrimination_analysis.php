@@ -1938,6 +1938,7 @@ td p:first-child {margin-top:0}
   </table>
   
   <?php
+  
     // Clear previous performance stats
     $id_list = array();
     $result = $mysqli->prepare("SELECT id FROM performance_main WHERE paperID=?");
@@ -1963,12 +1964,92 @@ td p:first-child {margin-top:0}
       $remove->close();
     }
     
+    if ($_GET['percent'] == 100) {
+      $tmp_percent = 27;  // The default for U/L analysis
+    } else {
+      $tmp_percent = $_GET['percent'];
+    }
+    
+    $sql = '';
+    $params = '';
+    $variables = array();
+    foreach ($dstats_array as $qid=>$question_data) {
+      if ($sql == '') {
+        $sql = 'INSERT INTO performance_main VALUES (NULL, ?, ?, ?, ?, ?)';
+      } else {
+        $sql .= ', (NULL, ?, ?, ?, ?, ?)';
+      }
+      $params .= 'iiiis';
+      $variables[] = $qid;
+      $variables[] = $_GET['paperID'];
+      $variables[] = $tmp_percent;
+      $variables[] = $user_total;
+      $variables[] = $date_started;
+    }
+    $record = $mysqli->prepare($sql);
+    
+    array_unshift($variables, $params);
+    foreach ($variables as $key => $value) {
+      $tmp[$key] = &$variables[$key];
+    }
+    call_user_func_array(array($record,'bind_param'), $tmp);
+    
+    $record->execute();
+    $record->close();
+    
+    // ---------------------
+    
+    $q_rec_ids = array();
+    $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID=? AND taken=?");
+    $result->bind_param('is', $_GET['paperID'], $date_started);
+    $result->execute();
+    $result->bind_result($id, $tmp_q_id);
+    while ($result->fetch()) {
+      $q_rec_ids[$tmp_q_id] = $id;
+    }
+    $result->close();
+
+    $sql = '';
+    $params = '';
+    $variables = array();
+
+    foreach ($dstats_array as $qid=>$question_data) {     
+      foreach ($question_data as $part_no=>$d_value) {
+        //$p_value = $pstats_array[$qid][$part_no];
+      
+        if ($sql == '') {
+          $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
+        } else {
+          $sql .= ', (?, ?, ?, ?)';
+        }
+        $params .= 'iiii';
+        $variables[] = $q_rec_ids[$qid];
+        $variables[] = $part_no;
+        $variables[] = $pstats_array[$qid][$part_no];
+        $variables[] = $d_value;
+      }
+    }
+
+    $record = $mysqli->prepare($sql);
+    
+    array_unshift($variables, $params);
+    foreach ($variables as $key => $value) {
+      $tmp[$key] = &$variables[$key];
+    }
+    call_user_func_array(array($record,'bind_param'), $tmp);
+    
+    $record->execute();
+    $record->close();
+
+
+
+    /*
     // Write in the performance stats to the database
     $record = $mysqli->prepare("INSERT INTO performance_main VALUES(NULL, ?, ?, ?, ?, ?)");
     $subRecord = $mysqli->prepare("INSERT INTO performance_details VALUES(?, ?, ?, ?)");
     foreach ($dstats_array as $qid=>$question_data) {
       
-      $record->bind_param('iiiis', $qid, $_GET['paperID'], $_GET['percent'], $user_total, $date_started);
+      $record->bind_param('iiiis', $qid, $_GET['paperID'], $tmp_percent, $user_total, $date_started);
       $record->execute();
       $perform_id = $record->insert_id;
       
@@ -1981,6 +2062,8 @@ td p:first-child {margin-top:0}
     }
     $subRecord->close();
     $record->close();
+    */
+    
   ?>
 
   <input type="hidden" name="question_no" value="<?php echo $ex_no; ?>" />

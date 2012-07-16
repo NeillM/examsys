@@ -314,6 +314,7 @@ function getUserTeams($userID, $db) {
   $teams = array();
   
   $result = $db->prepare("SELECT name FROM teams WHERE memberID=? AND name IS NOT NULL ORDER BY name");
+  echo $db->error;
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($team_name);
