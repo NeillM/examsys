@@ -216,8 +216,10 @@
         break;
       case 'dichotomous':
       case 'true_false':
-        for ($i=0; $i<strlen($answer); $i++) {
-          $tmp_individual_answer = substr($answer, $i, 1);
+        $count_answer = strlen($answer);
+        for ($i=0; $i<$count_answer; $i++) {
+          //$tmp_individual_answer = substr($answer, $i, 1);
+          $tmp_individual_answer = $answer{$i};
           if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
             $log_array[$qID][$i+1][$tmp_individual_answer]++;
           } else {
@@ -228,8 +230,8 @@
       case 'labelling':
         $tmp_first_split = explode(';', $answer);
         $tmp_second_split = explode('$', $tmp_first_split[1]);
-        $sections = count($tmp_second_split);
-        for ($i=2; $i<=count($tmp_second_split);$i+=4) {
+        $count_tmp_second_split = count($tmp_second_split);
+        for ($i=2; $i<=$count_tmp_second_split;$i+=4) {
           $x_coord = $tmp_second_split[$i-2];
           $y_coord = $tmp_second_split[$i-1];
           $tmp_individual_answer = trim($tmp_second_split[$i]);
@@ -281,8 +283,10 @@
         }
         break;
       case 'mrq':
-        for ($i=0; $i<strlen($answer); $i++) {
-          $tmp_individual_answer = substr($answer, $i, 1);
+        $count_answer = strlen($answer);
+        for ($i=0; $i<$count_answer; $i++) {
+          //$tmp_individual_answer = substr($answer, $i, 1);
+          $tmp_individual_answer = $answer{$i};
           if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
             $log_array[$qID][$i+1][$tmp_individual_answer]++;
           } else {
@@ -319,8 +323,8 @@
         break;
       case 'matrix':
         $tmp_answer_parts = explode('|',$answer);
-                
-        for ($i=0; $i<count($tmp_answer_parts); $i++) {
+        $count_tmp_answer_parts = count($tmp_answer_parts);        
+        for ($i=0; $i<$count_tmp_answer_parts; $i++) {
           $tmp_individual_answer = $tmp_answer_parts[$i];
           
           if ($tmp_individual_answer == 'u' or $tmp_individual_answer == '') {
@@ -1419,7 +1423,8 @@
           $specific_answers = array();
           $specific_answers = explode('$', $tmp_answers_array[$i-1]);
           $answer_match = false;
-          for ($x=0; $x<count($specific_answers); $x++) {
+          $count_specific_answers = count($specific_answers);
+          for ($x=0; $x<$count_specific_answers; $x++) {
             if ($option_no == $specific_answers[$x]) $answer_match = true;
           }
           if ($answer_match == true) $correct_stems++;
@@ -1440,7 +1445,8 @@
         foreach ($options as $individual_option) {
           $specific_answers = explode('$', $tmp_answers_array[$i-1]);
           $answer_match = false;
-          for ($x=0; $x<count($specific_answers); $x++) {
+          $count_specific_answers = count($specific_answers);
+          for ($x=0; $x<$count_specific_answers; $x++) {
             if ($option_no == $specific_answers[$x]) $answer_match = true;
           }
           if ($answer_match == true) {
@@ -1834,7 +1840,7 @@ td p:first-child {margin-top:0}
         $tmp_first_split = explode(';', $correct);
         $tmp_second_split = explode('$', $tmp_first_split[11]);
         for ($label_no = 4; $label_no <= 200; $label_no += 4) {
-          if (array_key_exists($label_no,$tmp_second_split)) {
+          if (isset($tmp_second_split[$label_no])) {
             if (substr($tmp_second_split[$label_no],0,1) != '|') {
               $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
               if ($tmp_second_split[$label_no-2] >= 220) {
@@ -1958,23 +1964,23 @@ td p:first-child {margin-top:0}
     }
     
     // Write in the performance stats to the database
-
+    $record = $mysqli->prepare("INSERT INTO performance_main VALUES(NULL, ?, ?, ?, ?, ?)");
+    $subRecord = $mysqli->prepare("INSERT INTO performance_details VALUES(?, ?, ?, ?)");
     foreach ($dstats_array as $qid=>$question_data) {
-      $record = $mysqli->prepare("INSERT INTO performance_main VALUES(NULL, ?, ?, ?, ?, ?)");
+      
       $record->bind_param('iiiis', $qid, $_GET['paperID'], $_GET['percent'], $user_total, $date_started);
       $record->execute();
       $perform_id = $record->insert_id;
-      $record->close();
       
-      $record = $mysqli->prepare("INSERT INTO performance_details VALUES(?, ?, ?, ?)");
       foreach ($question_data as $part_no=>$d_value) {
         $p_value = $pstats_array[$qid][$part_no];
-        $record->bind_param('iiii', $perform_id, $part_no, $p_value, $d_value);
-        $record->execute();
+        $subRecord->bind_param('iiii', $perform_id, $part_no, $p_value, $d_value);
+        $subRecord->execute();
       }
-      $record->close();
+      
     }
-    
+    $subRecord->close();
+    $record->close();
   ?>
 
   <input type="hidden" name="question_no" value="<?php echo $ex_no; ?>" />
