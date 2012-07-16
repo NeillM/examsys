@@ -153,7 +153,7 @@ Class SearchUtils {
         if ($old_letter != '') echo "</optgroup>\n";
         echo "<optgroup label=\"" . strtoupper(substr($details['surname'],0,1)) . "\">\n";
       }
-      if ((isset($state['owner']) and $state['owner'] == $ownerID) or (isset($_POST['owner']) and $_POST['owner'] == $ownerID)) {
+      if ((isset($state['owner']) and $state['owner'] == $ownerID) or (isset($_REQUEST['owner']) and $_REQUEST['owner'] == $ownerID)) {
         echo "<option value=\"$ownerID\" selected>" . $details['surname'] . ", " . $details['initials'] . ". " . $details['title'] . "</option>\n";
       } else {
         echo "<option value=\"$ownerID\">" . $details['surname'] . ", " . $details['initials'] . ". " . $details['title'] . "</option>\n";

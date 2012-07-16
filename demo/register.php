@@ -24,16 +24,18 @@
  * @package
  */
 
-
 require_once'../config/config.inc.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'include/auth.inc';
-
 require_once $cfg_web_root . 'classes/lang.class.php';
+require_once $cfg_web_root . 'include/mb_string.inc.php';
+require_once $cfg_web_root . 'classes/userutils.class.php';
+require_once $cfg_web_root . 'classes/moduleutils.class.php';
+require_once $cfg_web_root . 'classes/dateutils.class.php';
 
-
-if (strcmp($cfg_install_type, 'demo') != 0) {
-  exit();
+if (strcmp($cfg_install_type, 'demo') != 0) {  // If the installation type is not set to 'demo' then exit.
+  header("HTTP/1.0 404 Not Found");
+  exit;
 }
 
 $userroles='SysAdmin';
@@ -41,35 +43,6 @@ $userroles='SysAdmin';
 $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
 
 db_change_user($mysqli);
-
-require_once $cfg_web_root . 'include/mb_string.inc.php';
-//require_once $cfg_web_root . 'classes/installutils.class.php';
-
-require_once $cfg_web_root . 'classes/userutils.class.php';
-require_once $cfg_web_root . 'classes/moduleutils.class.php';
-require_once $cfg_web_root . 'classes/dateutils.class.php';
-/*
-if(!isset($_REQUEST['submit'])) {
-  $tabledata['username']=array(0,'Username:');
-  $tabledata['password']=array(0,'Password:');
-  $tabledata['title']=array(1,'Title:',array('Mr','Mrs','Miss','Ms','Dr','Professor'));
-  $tabledata['password']=array(0,'Password:');
-  $tabledata['password']=array(0,'Password:');
-
-  //createUser($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db) {
-
-
-
-  print <<<END
-  <html>
-  <body>
-  <table>
-  <tr><td>Username:</td>
-
-END;
-}
-*/
-
 
 function my_ucwords($s) {
   $s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", 'fixcase_callback', $s);
@@ -95,63 +68,8 @@ function fixcase_callback($word) {
   return $word;
 }
 
-if (isset($_POST['submit'])) {
-
-
-  $new_moduleid = '';
-  $result = $mysqli->prepare("SELECT MAX(id) FROM modules");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($maxmodid);
-  $result->fetch();
-  for ($a = 0; $a < strlen($_POST['new_grade2']); $a++) {
-    $b = substr($_POST['new_grade2'], $a, 1);
-    if (ctype_upper($b) or ctype_digit($b)) {
-      $new_moduleid = $new_moduleid . $b;
-    }
-  }
-  $new_moduleid = $new_moduleid . $maxmodid;
-
-}
-
-$unique_username = true;
-if (isset($_POST['submit'])) {
-  // Check for unique username
-  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
-  $result->bind_param('s', $_POST['new_moduleid']);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($tmp_username);
-  $result->fetch();
-  if ($result->num_rows > 0) $unique_username = false;
-  $result->free_result();
-  $result->close();
-}
-$unique_module =true;
-if (isset($_POST['submit'])) {
-
-  // replace with module utils function
-  $result = $mysqli->prepare("SELECT username FROM users WHERE username=? or username=?");
-  $newname=$_POST['new_username'] . '-stu';
-  $result->bind_param('ss', $_POST['new_username'],$newname);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($tmp_username);
-  $result->fetch();
-  if ($result->num_rows > 0) $unique_module = false;
-  $result->free_result();
-  $result->close();
-
-}
-if(isset($_POST['submit']) and $unique_module == true) {
-  //static function addModules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db)
-$new_modid=ModuleUtils::addModules($new_moduleid,$_POST['new_grade2'],1,5,NULL,NULL,true,true,true,false,false,true,false,$mysqli);
-
-}
-
 function adduser($tmp_roles,$new_username) {
-  global $mysqli;
-  global $cfg_encrypt_salt;
+  global $mysqli, $cfg_encrypt_salt;
   $initials = '';
   $first_names_array = explode(' ',$_POST['new_first_names']);
   foreach ($first_names_array as $individual_name) {
@@ -171,63 +89,90 @@ function adduser($tmp_roles,$new_username) {
   $result->close();
   $userid = $mysqli->insert_id;
 
-return $userid;
+  return $userid;
 }
 
-if (isset($_POST['submit']) and $unique_username == true) {
-
-  $_POST['new_grade']='Technical Staff';
-
-  switch($_POST['new_grade']) {
-    case 'University Lecturer':
-    case 'University Admin':
-    case 'Technical Staff':
-    case 'NHS Lecturer':
-    case 'NHS Admin':
-      $tmp_roles = 'Staff';
-      break;
-    case 'Invigilator':
-      $tmp_roles = 'Invigilator';
-      break;
-    case 'Staff External Examiner':
-      $tmp_roles = 'External Examiner';
-      break;
-    default:
-      $tmp_roles = 'Student';
-      break;
-  }
-  $new_username = trim($_POST['new_username']);
-  $useridstf=adduser('Technical Staff',$new_username);
-  $new_username = $new_username . '-stu';
-  $_POST['new_grade']=$new_moduleid;
-  $userid=adduser('Student',$new_username);
-  $result = $mysqli->prepare("SELECT MAX(id) as a FROM users");
+$unique_username = true;  
+$unique_module = true;
+  
+if (isset($_POST['submit'])) {
+  $new_moduleid = '';
+  $result = $mysqli->prepare("SELECT MAX(id) FROM modules");
   $result->execute();
-  $result->bind_result($max);
-$result->fetch();
-$result->close();
+  $result->store_result();
+  $result->bind_result($maxmodid);
+  $result->fetch();
+  for ($a = 0; $a < strlen($_POST['new_grade2']); $a++) {
+    $b = substr($_POST['new_grade2'], $a, 1);
+    if (ctype_upper($b) or ctype_digit($b)) {
+      $new_moduleid = $new_moduleid . $b;
+    }
+  }
+  $new_moduleid = $new_moduleid . $maxmodid;
 
-  $_POST['new_sid']=$max;
-  $to = trim($_POST['new_email']);
+  // replace with module utils function
+  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
+  $result->bind_param('s', $_POST['new_moduleid']);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($tmp_moduleid);
+  $result->fetch();
+  if ($result->num_rows > 0) $unique_module = false;
+  $result->free_result();
+  $result->close();
 
-  if ($_POST['new_sid'] != '') {
-    $result = $mysqli->prepare("INSERT INTO sid VALUES (?,?)");
-    $result->bind_param('si', $_POST['new_sid'], $userid);
-    $result->execute();
-    $result->close();
+  // Check for unique username
+  $result = $mysqli->prepare("SELECT id, username FROM users WHERE username=? or username=?");
+  $newname = $_POST['new_username'] . '-stu';
+  $result->bind_param('ss', $_POST['new_username'],$newname);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($userid, $tmp_username);
+  $result->fetch();
+  if ($result->num_rows > 0) $unique_username = false;
+  $result->free_result();
+  $result->close();
+
+
+  if ($unique_module == true) {
+    //static function addModules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db)
+    $new_modid = ModuleUtils::addModules($new_moduleid, $_POST['new_grade2'], 1, 5, NULL, NULL, true, true, true, false, false, true, false, $mysqli);
   }
 
-  //addUserToModule($userID, $module, $attempt, $session, $db)
+  if ($unique_username == true) {
+    $tmp_roles = 'Staff';
+    
+    $new_username = trim($_POST['new_username']);
+    $useridstf = adduser('Technical Staff',$new_username);
+    $new_username = $new_username . '-stu';
+    $_POST['new_grade'] = $new_moduleid;
+    $userid=adduser('Student', $new_username);
+    $result = $mysqli->prepare("SELECT MAX(id) as a FROM users");
+    $result->execute();
+    $result->bind_result($max);
+    $result->fetch();
+    $result->close();
+
+    $_POST['new_sid'] = $max;
+    $to = trim($_POST['new_email']);
+
+    if ($_POST['new_sid'] != '') {
+      $result = $mysqli->prepare("INSERT INTO sid VALUES (?,?)");
+      $result->bind_param('si', $_POST['new_sid'], $userid);
+      $result->execute();
+      $result->close();
+    }
+  }
 
   $session = DateUtils::get_current_academic_year();
 
-  UserUtils::addUserToModule($userid,$new_moduleid,1,$session,$mysqli);
+  UserUtils::addUserToModule($userid, $new_moduleid, 1, $session, $mysqli);
 
   $result = $mysqli->prepare("INSERT INTO teams VALUES (NULL, ?, ?, NULL, 'System')");
   $result->bind_param('si', $new_moduleid, $useridstf);
   $result->execute();
 
-  $nm='DEMO';
+  $nm = 'DEMO';
   $result->bind_param('si', $nm, $useridstf);
   $result->execute();
   $result->close();
@@ -268,31 +213,27 @@ h2 {font-size:120%}
 
 MESSAGE;
 
-    if (strpos($tmp_roles,'Staff') !== false) {
-      $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
-    } elseif (strpos($tmp_roles,'Student') !== false) {
-    } else {
-      $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
-      $message .= "<p>" . $string['email3'] . "</p>";
-    }
+    $to = $_POST['new_email'];
+    $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
     $message .= "</body>\n</html>";
     mail ($to, $subject, $message, $headers) or print "<p>" . $string['couldnotsend'] . " <strong>" . $_POST['new_email'] . "</strong>.</p>";
   }
+
   ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>Rogō: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
+  <title>Rogō: <?php echo $string['register'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <body>
-<?php
-//  include '../include/user_search_options.inc';
-  ?>
+
 <div id="content" class="content" style="font-size:80%">
   <p><?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
-  <p><a href="./">Click to Continue</a></p>
+  <p><input type="button" name="home" value="Staff Homepage" onclick="window.location='<?php echo $cfg_web_root; ?>staff/'" /></p>
 </div>
   <?php
 } else {
@@ -302,13 +243,14 @@ MESSAGE;
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>Rogō: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
+  <title>Rogō: <?php echo $string['register'] . ' ' . $cfg_install_type; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
     .title {font-size:160%; font-weight:bold}
-    .field {font-weight:bold}
+    .field {}
+    .h {font-weight:bold; padding-top:10px}
   </style>
 
   <script type="text/javascript">
@@ -359,9 +301,6 @@ MESSAGE;
 </head>
 
 <body>
-<?php
-//  require '../include/user_search_options.inc';
-  ?>
 <div id="content" class="content" style="font-size:80%">
 <br />
   <form method="post" name="newUser" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -369,16 +308,12 @@ MESSAGE;
       <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
         <tr><td>
           <table border="0" cellspacing="6" cellpadding="0" width="100%" style="background-color:white">
-            <tr><td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td><td class="title"><?php echo $string['createnewuser']; ?></td></tr>
+            <tr><td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td><td class="title"><?php echo $string['register']; ?></td></tr>
           </table>
         </td></tr>
         <tr><td>
           <table border="0" cellspacing="6" cellpadding="0" style="background-color:#F1F5FB">
-            <?php
-            if ($cfg_use_ldap == true) {
-              echo '<tr><td colspan=\"4\"><input type="button" name="lookup" value="' . $string['getldapdetails'] . '" onclick="ldaplookup();" /><td></tr>';
-            }
-            ?>
+            <tr><td colspan="2" class="h">Your Details</td></tr>
             <tr><td align="right"><span class="field"><?php echo $string['title']; ?></span></td><td>
               <select id="new_users_title" name="new_users_title" size="1">
 
@@ -406,12 +341,6 @@ MESSAGE;
 
             <input type="hidden" name="new_year" value="1" />
 
-
-
-
-            <tr><td align="right"><span class="field"><?php echo 'Module Name';//echo $string['typecourse']; ?></span></td><td>
-              <input type="text" id="new_grade2" name="new_grade2" size="40" value="<?php if (isset($_POST['new_grade2'])) echo $_POST['new_grade2']; ?>" /></td></tr>
-
             <tr>
               <td align="right"><span class="field"><?php echo $string['gender']; ?></span></td><td>
               <select id="new_gender" name="new_gender" size="1">
@@ -421,10 +350,11 @@ MESSAGE;
               </select>
             </td>
             </tr>
-
-            <input type="hidden" size="15" name="new_sid" />
             
+            <tr><td colspan="2" class="h"><?php echo $string['demomodule']; ?></td></tr>
 
+            <tr><td align="right"><span class="field"><?php echo $string['name']; ?></span></td><td>
+              <input type="text" id="new_grade2" name="new_grade2" size="40" value="<?php if (isset($_POST['new_grade2'])) echo $_POST['new_grade2']; ?>" /></td></tr>
 
             <tr><td colspan="2">&nbsp;</td></tr>
             <tr><td>&nbsp;</td><td><input type="hidden" name="new_welcome" value="1" />&nbsp;</td></tr>
@@ -434,6 +364,7 @@ MESSAGE;
         </td></tr>
       </table>
     </div>
+    <input type="hidden" size="15" name="new_sid" />
   </form>
 
   <?php
@@ -441,11 +372,9 @@ MESSAGE;
 $mysqli->close();
 
 if ($unique_username != true) {
-  echo '<script language="JavaScript">alert("' . sprintf($string['usernameinuse'],$_POST['new_username']) . '")</script>';
+  //echo '<script language="JavaScript">alert("' . sprintf($string['usernameinuse'],$_POST['new_username']) . '")</script>';
 }
 ?>
 </div>
-
 </body>
 </html>
-
