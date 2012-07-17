@@ -99,11 +99,23 @@ a.heading:hover {color:#428EFF; font-weight:bold}
   $result->close();
 
   echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-  echo "<tr><td colspan=\"2\" class=\"sechead\">" . $string['mysqlstatus'] . "</td><td colspan=\"2\"></td></tr>\n";
+  echo "<tr><td colspan=\"3\" class=\"sechead\">" . $string['mysqlstatus'] . "</td><td colspan=\"2\"></td></tr>\n";
   $status = explode('  ', $mysqli->stat());
   for ($i=0; $i<=7; $i++) {
     $parts = explode(': ', $status[$i]);
-    if ($i < 7) {
+    if ($i == 0) {
+      $hours = ($parts[1] / 60 / 60);
+      if ($hours < 1) {
+        $hours = ($parts[1] / 60); 
+        $units = 'miniytes';
+      } elseif ($hours < 24) {
+        $units = 'hours';
+      } else {
+        $hours = ($hours / 24);
+        $units = 'days';
+      }
+      echo "<tr><td>" . $string[strtolower($parts[0])] . "</td><td style=\"text-align:right\">" . number_format($hours) . "</td><td colspan=\"2\">$units</td></tr>\n";
+    } else if ($i < 7) {
       echo "<tr><td>" . $string[strtolower($parts[0])] . "</td><td style=\"text-align:right\">" . number_format($parts[1]) . "</td><td colspan=\"2\"></td></tr>\n";
     } else {
       echo "<tr><td>" . $string[strtolower($parts[0])] . "</td><td style=\"text-align:right\">" . $parts[1] . "</td><td colspan=\"2\"></td></tr>\n";
