@@ -1976,6 +1976,7 @@ td p:first-child {margin-top:0}
     $sql = '';
     $params = '';
     $variables = array();
+    $tmp = array();
     foreach ($dstats_array as $qid=>$question_data) {
       if ($sql == '') {
         $sql = 'INSERT INTO performance_main VALUES (NULL, ?, ?, ?, ?, ?)';
@@ -2016,7 +2017,7 @@ td p:first-child {margin-top:0}
     $sql = '';
     $params = '';
     $variables = array();
-
+    $tmp = array();
     foreach ($dstats_array as $qid=>$question_data) {     
       foreach ($question_data as $part_no=>$d_value) {
         if ($sql == '') {

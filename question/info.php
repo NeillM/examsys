@@ -107,7 +107,7 @@
       // Look up what paper it was used on.
       $copy_question_no = 0;
       $row_no = 1;
-      $copy_data = $mysqlidb->prepare("SELECT property_id, paper_title, question, q_type FROM (papers, properties, questions) WHERE properties.property_id=papers.paper AND papers.question=questions.q_id AND paper=(select paper from papers where question=? limit 1) ORDER BY screen, display_pos");
+      $copy_data = $mysqlidb->prepare("SELECT property_id, paper_title, question, q_type FROM (papers, properties, questions) WHERE properties.property_id=papers.paper AND papers.question=questions.q_id AND paper=(SELECT paper FROM papers WHERE question=? LIMIT 1) ORDER BY screen, display_pos");
       $copy_data->bind_param('i', $copyID);
       $copy_data->execute();
       $copy_data->bind_result($copy_paperID, $copy_paper_title, $copy_question, $copy_q_type);
@@ -118,14 +118,53 @@
       }
       $copy_data->close();
       if ($copy_question_no == 0) {
-        echo "<tr><td>Copy of</td><td>Question ID #$copyID</td></tr>\n";
+        echo "<tr><td>Copy of</td><td colspan=\"2\">Question ID #$copyID</td></tr>\n";
       } else {
-        echo "<tr><td>Copy of</td><td>Question No $copy_question_no. on <a href=\"\" onclick=\"loadPaper('$copy_paperID')\">$copy_paper_title</a></td></tr>\n";
+        echo "<tr><td>Copy of</td><td><a href=\"\" onclick=\"loadPaper('$copy_paperID')\">$copy_paper_title</a></td><td>$copy_question_no</td></tr>\n";
       }
     } else {
       echo "<tr><td></td><td></td></tr>\n";
     }
   }
+  
+  
+  function check4Copied($mysqlidb) {
+    // Get the ID of the original question.
+    $ids = array();
+    $copy_data = $mysqlidb->prepare("SELECT typeID FROM track_changes WHERE type='Copied Question' AND old = ? AND typeID != ?");
+    $copy_data->bind_param('ii', $_GET['q_id'], $_GET['q_id']);
+    $copy_data->execute();
+    $copy_data->bind_result($typeID);
+    $copy_data->store_result();
+    while ($copy_data->fetch()) {
+      $ids[] = $typeID;
+    }
+    $copy_data->close();
+    
+    foreach ($ids as $copyID) {
+      // Look up what paper it was used on.
+      $copy_question_no = 0;
+      $row_number = 0;
+      $row_no = 1;
+      $copy_data = $mysqlidb->prepare("SELECT property_id, paper_title, question, q_type FROM (papers, properties, questions) WHERE properties.property_id=papers.paper AND papers.question=questions.q_id AND paper=(SELECT paper FROM papers WHERE question=? LIMIT 1) ORDER BY screen, display_pos");
+      $copy_data->bind_param('i', $copyID);
+      $copy_data->execute();
+      $copy_data->bind_result($copy_paperID, $copy_paper_title, $copy_question, $copy_q_type);
+      $copy_data->store_result();
+      while ($copy_data->fetch()) {
+        if ($copy_q_type != 'info') $row_number++;
+        if ($copy_question == $copyID) $copy_question_no = $row_number;
+      }
+      $copy_data->close();
+      if ($copy_question_no == 0) {
+        echo "<tr><td>Source for</td><td colspan=\"2\">Question ID #$copyID</td></tr>\n";
+      } else {
+        echo "<tr><td>Source for</td><td><a href=\"\" onclick=\"loadPaper('$copy_paperID')\">$copy_paper_title</a></td><td>$copy_question_no</td></tr>\n";
+      }
+    }
+  }
+  
+  
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -202,12 +241,18 @@
   echo "<tr><td>" . $string['modified'] . "</td><td>$last_edited</td></tr>\n";
   echo "<tr><td>" . $string['locked'] . "</td><td>$locked</td></tr>\n";
   echo "<tr><td>" . $string['teams'] . "</td><td>$q_group</td></tr>\n";
-
+  echo "<tr><td>Copies:</td><td></td></tr>\n";
+  echo "</table>\n";
+  
+  echo "<div style=\"margin:5px; display:block; height:95px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" style=\"width:100%\">";
+  echo "<tr><th>Type</th><th>Paper Name</th><th>Question No</th></tr>\n";
   check4Copies($mysqli);
+  check4Copied($mysqli);
+  echo "</table>\n</div>\n<br />\n";
 
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"2\">" . $string['followingpapers'] . "</td></tr>\n";
-  echo "</table>\n<div style=\"margin:5px; display:block; height:285px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" style=\"width:100%\">";
+  echo "</table>\n<div style=\"margin:5px; display:block; height:210px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" style=\"width:100%\">";
   echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
 
   $result = $mysqli->prepare("SELECT paper_title, paper_type, paper, screen, properties.deleted FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=?");
