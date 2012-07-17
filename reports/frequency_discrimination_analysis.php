@@ -1970,6 +1970,9 @@ td p:first-child {margin-top:0}
       $tmp_percent = $_GET['percent'];
     }
     
+    
+    // Write records into performance_main
+    //----------------------------------------------------------------------------------------------
     $sql = '';
     $params = '';
     $variables = array();
@@ -1997,9 +2000,10 @@ td p:first-child {margin-top:0}
     $record->execute();
     $record->close();
     
-    // ---------------------
-    
+    // Write records into performance_details
+    //----------------------------------------------------------------------------------------------
     $q_rec_ids = array();
+    // First a quick query to get the IDs from performance_main to use in performance_details
     $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID=? AND taken=?");
     $result->bind_param('is', $_GET['paperID'], $date_started);
     $result->execute();
@@ -2015,8 +2019,6 @@ td p:first-child {margin-top:0}
 
     foreach ($dstats_array as $qid=>$question_data) {     
       foreach ($question_data as $part_no=>$d_value) {
-        //$p_value = $pstats_array[$qid][$part_no];
-      
         if ($sql == '') {
           $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
         } else {
@@ -2040,30 +2042,6 @@ td p:first-child {margin-top:0}
     
     $record->execute();
     $record->close();
-
-
-
-    /*
-    // Write in the performance stats to the database
-    $record = $mysqli->prepare("INSERT INTO performance_main VALUES(NULL, ?, ?, ?, ?, ?)");
-    $subRecord = $mysqli->prepare("INSERT INTO performance_details VALUES(?, ?, ?, ?)");
-    foreach ($dstats_array as $qid=>$question_data) {
-      
-      $record->bind_param('iiiis', $qid, $_GET['paperID'], $tmp_percent, $user_total, $date_started);
-      $record->execute();
-      $perform_id = $record->insert_id;
-      
-      foreach ($question_data as $part_no=>$d_value) {
-        $p_value = $pstats_array[$qid][$part_no];
-        $subRecord->bind_param('iiii', $perform_id, $part_no, $p_value, $d_value);
-        $subRecord->execute();
-      }
-      
-    }
-    $subRecord->close();
-    $record->close();
-    */
-    
   ?>
 
   <input type="hidden" name="question_no" value="<?php echo $ex_no; ?>" />
