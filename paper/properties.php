@@ -375,7 +375,6 @@ if (isset($_POST['Submit'])) {
           if ($_POST['caller'] == 'scheduling') {
         ?>
             window.opener.location = "../admin/summative_scheduling.php";
-            window.opener.close();
             window.close();
         <?php
           } elseif ($_POST['noadd'] == 'y') {

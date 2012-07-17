@@ -275,7 +275,7 @@
     }
     
     if (isset($performance[$paper][1]['taken'])) {
-      echo "<td>" . $performance[$paper][1]['taken'] . "</td><td class=\"num\">" . $performance[$paper][1]['cohort'] . "</td><td>" . displayParts($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayP($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayD($performance[$paper], $q_type) . "</td>";
+      echo "<td>" . $performance[$paper][1]['taken'] . "</td><td class=\"num\">" . $performance[$paper][1]['cohort'] . "</td><td style=\"text-align:right\">" . displayParts($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayP($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayD($performance[$paper], $q_type) . "</td>";
     } else {
       echo "<td></td><td></td><td></td><td></td><td></td>";
     }

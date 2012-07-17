@@ -12,6 +12,7 @@ $string['papername'] = 'Nazwa arkusza';
 $string['paperowner'] = 'Właściwości arkusza';
 $string['session'] = 'Sesja';
 $string['modules'] = 'Moduł(y)';
+$string['examduration'] = 'Exam Duration';  // Niko
 $string['cohortsize'] = 'Rozmiar grupy';
 $string['sittings'] = 'Sittings'; //Niko?
 $string['examperiod'] = 'Okres egzaminacyjny'; //Niko?
