@@ -3136,11 +3136,9 @@ if (!isset($_POST['update'])) {
   $sql = "GRANT DELETE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>GRANT DELETE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
-  $result->close();
   $sql = "GRANT DELETE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>GRANT DELETE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
-  $result->close();
 
   ob_flush();
   flush();
