@@ -125,12 +125,13 @@
   $end_month = substr($target_end_date,4,2);
   $end_day = substr($target_end_date,6,2);
   $end_hour = substr($target_end_date,8,2);
+  $end_minute = substr($target_end_date,10,2);
   if ($end_hour < 23) {
     $end_hour++;
     if ($end_hour < 10) $end_hour = '0' . $end_hour;
   }
-  $end_time = $end_hour . '0000';
-  
+  $end_time = $end_hour . $end_minute . '00';
+
   if ($end_year > date('Y') or ($end_year == date('Y') and $end_month > date('m'))) {
     $end_day = date('d');
     $end_month = date('m');
