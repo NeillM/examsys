@@ -56,7 +56,7 @@ function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
   <script type="text/javascript">
     function setSelectedIndex(s, v) {
       for ( var i = 0; i < s.options.length; i++ ) {
-        if ( s.options[i].value == v ) {
+        if ( s.options[i].value.toLowerCase() == v.toLowerCase() ) {
           s.options[i].selected = true;
           return;
         }
