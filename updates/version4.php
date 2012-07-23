@@ -3143,6 +3143,21 @@ if (!isset($_POST['update'])) {
   ob_flush();
   flush();
 
+  // 18/07/2012
+  // Add index to improve performance for finding question copying in the Information dialog box.
+  $result = $mysqli->prepare("SHOW INDEX FROM track_changes");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 1) {
+    $adjust = $mysqli->prepare("ALTER TABLE track_changes ADD INDEX(type)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE track_changes ADD INDEX(type)</li>\n";
+    ob_flush();
+    flush();
+  }
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
