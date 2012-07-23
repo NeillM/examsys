@@ -92,6 +92,7 @@ $string['wysiwyg'] = 'WYSIWYG';
 $string['changes'] = 'Zmiany'; 
 $string['comments'] = 'Komentarze';
 $string['mapping'] = 'Odwzorowanie'; //Mapowanie,odwzorowanie, projekcja
+$string['information'] = 'Information';
 $string['limitedsave'] = 'Ograniczone zapisywanie'; 
 $string['save'] = 'Zapisz zmiany';
 $string['correct'] = 'Poprawnie';

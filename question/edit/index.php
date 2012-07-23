@@ -29,6 +29,7 @@ require_once '../../classes/question.class.php';
 require_once '../../classes/logger.class.php';
 require_once '../../classes/viewhelper.class.php';
 require_once '../../classes/stateutils.class.php';
+require_once '../../classes/questioninfo.class.php';
 require '../../include/edit.inc';
 require '../../include/media.inc';
 require '../../include/metadata.inc';
@@ -462,6 +463,7 @@ if ($critical_error == '') {
           <li class="on"><a href="#" rel="editor"><?php echo $string['editor'] ?></a></li>
           <li><a href="#" rel="changes"><?php echo $string['changes'] ?></a></li>
           <li><a href="#" rel="comments"><?php echo $string['comments'] ?></a></li>
+          <li><a href="#" rel="information"><?php echo $string['information'] ?></a></li>
           <li<?php echo $mapping_enabled ?>><a href="#" rel="mapping"><?php echo $string['mapping'] ?></a></li>
         </ol>
       </div>
@@ -584,6 +586,12 @@ echo render_changes($changes, $string);
 <?php
 $comments = $question->get_comments($paper_id);
 echo render_comments($comments, $string);
+?>
+      </div>
+
+      <div id="information" class="tab-area">
+<?php
+echo questionInfo::get_full_querstion_information($question->id, $mysqli);
 ?>
       </div>
 

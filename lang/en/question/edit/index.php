@@ -92,6 +92,7 @@ $string['wysiwyg'] = 'WYSIWYG';
 $string['changes'] = 'Changes';
 $string['comments'] = 'Comments';
 $string['mapping'] = 'Mapping';
+$string['information'] = 'Information';
 $string['limitedsave'] = 'Limited Save';
 $string['save'] = 'Save Changes';
 $string['questionlocked'] = 'This question is currently locked for editing by';

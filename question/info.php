@@ -286,7 +286,9 @@
   $result->close();
   $mysqli->close();
 ?>
-</table></div>
+</table>
+
+</div>
 
 <div style="text-align:center; padding-top:5px">
 <form>
