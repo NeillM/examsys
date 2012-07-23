@@ -603,6 +603,8 @@ if ($css != '') {
 
   var ajaxSave = function () {
     submitPending = true;
+    //hide any errors
+    $('#saveError').fadeOut('fast');
     //random page ID to stop IE caching results. arrrggg
     date = new Date();
     randomPageID = date.getTime();
