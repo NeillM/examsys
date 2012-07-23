@@ -460,7 +460,7 @@ ob_start();
     }
   }
   if ($temp_user_no > 0) {
-    echo "<tr><td><div class=\"redwarn\" style=\"text-align:right\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:1px\" width=\"28\" height=\"28\" alt=\"Warning\" /></div></td><td colspan=\"$cols\"><div class=\"redwarn\">&nbsp;" . $string['temporaryaccountswarning'] . " <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">" . $string['moredetails'] . "</a></div></td></tr>\n";
+    echo "<tr><td class=\"redwarn\" style=\"width:28px; text-align:right\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:1px\" width=\"28\" height=\"28\" alt=\"Warning\" /></td><td colspan=\"$cols\" class=\"redwarn\">&nbsp;" . $string['temporaryaccountswarning'] . " <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">" . $string['moredetails'] . "</a></td></tr>\n";
   }
   
   if (count($log_late) > 0) {
