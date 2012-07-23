@@ -253,7 +253,9 @@
 
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"2\">" . $string['followingpapers'] . "</td></tr>\n";
-  echo "</table>\n<div style=\"margin:5px; display:block; height:210px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
+  echo "</table>\n"
+  
+  echo "<div style=\"margin:5px; display:block; height:210px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
   echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
 
   $result = $mysqli->prepare("SELECT paper_title, paper_type, paper, screen, properties.deleted FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=?");
@@ -287,7 +289,6 @@
   $mysqli->close();
 ?>
 </table>
-
 </div>
 
 <div style="text-align:center; padding-top:5px">
