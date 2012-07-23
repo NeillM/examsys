@@ -124,8 +124,7 @@ $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
 while ($result->fetch()) {
   if ($old_faculty != $faculty) {
     $del = ($faculty_deleted != '') ? ' class="deleted"' : '';
-    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td{$del}><nobr>$faculty</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; padding-bottom:5px; width:100%\"><tr><td{$del}><nobr>$faculty</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
   echo "<tr";
   if ($module_no == 0) {

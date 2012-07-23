@@ -390,15 +390,15 @@ if ($sortby == 'title') {
   $x = 0;
   while ($user_data->fetch()) {
     if ($old_letter != strtoupper(substr($tmp_surname, 0, 1)) and $sortby == 'surname') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . strtoupper(substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . strtoupper(substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_title != $tmp_title and $sortby == 'title') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_username != substr($tmp_username, 0, 4) and $sortby == 'username') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_grade != $tmp_grade and $sortby == 'grade') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_year != $tmp_yearofstudy and $sortby == 'yearofstudy') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     }
 
     if (strpos($userroles,'SysAdmin') !== false) {

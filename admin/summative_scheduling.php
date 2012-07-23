@@ -119,7 +119,7 @@ function getLabs($labs, $mysqlidb) {
 
 </tr>
 <tr><th colspan="6" class="bevel"></th></tr>
-  <tr><td colspan="6"><table border="0" style="padding-top:10px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>Unscheduled</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
+  <tr><td colspan="6"><table border="0" class="subsect" style="width:100%"><tr><td><nobr>Unscheduled</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
 <?php
   $rowID = 0;
   $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
@@ -138,7 +138,7 @@ function getLabs($labs, $mysqlidb) {
   $results->close();
 ?>
   <tr><td colspan="6">&nbsp;</td></tr>
-  <tr><td colspan="6"><table border="0" style="padding-top:10px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>Scheduled</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
+  <tr><td colspan="6"><table border="0" class="subsect" style="width:100%"><tr><td><nobr>Scheduled</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
 <?php
   $results = $mysqli->prepare("SELECT property_id, paper_title, moduleID, period, barriers_needed, cohort_size, campus, DATE_FORMAT(start_date,'$cfg_long_date_time'), end_date, labs FROM (properties, scheduling) WHERE start_date > NOW() AND properties.property_id=scheduling.paperID ORDER BY period");
   $results->execute();

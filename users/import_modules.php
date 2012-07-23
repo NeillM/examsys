@@ -30,6 +30,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['impmodtitle'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -65,7 +66,7 @@
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2"><?php echo $string['addingmodules']; ?> (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
+        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#4F81BD"><?php echo $string['addingmodules']; ?> (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
         </tr>
         <tr>
         <td align="left" style="background-color:#F1F5FB">

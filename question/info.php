@@ -172,11 +172,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Information<?php echo " $cfg_install_type"; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; color:black; font-size:80%}
     table {font-size:100%}
     a {color:blue}
-    th {text-align:left}
+    th {background-color:#CFDBEB; text-align:left; font-weight:normal}
     td {vertical-align:top}
     .screen {font-size:90%; color:#808080}
     .num {text-align:right; padding-right:6px}
@@ -200,7 +201,7 @@
 <tr>
 <td colspan="2" valign="middle" style="background-color:white; text-align:left; border-bottom:1px solid #CCD9EA">
 
-<img src="../artwork/lrg_info_icon.png" width="37" height="37" alt="Information" style="float:left" /><span style="font-family:Arial,sans-serif; font-size:18pt; font-weight:bold; color:#5582D2">&nbsp;&nbsp;<?php echo $string['questioninformation']; ?></span>
+<img src="../artwork/lrg_info_icon.png" width="37" height="37" alt="Information" style="float:left" /><span class="midblue_header" style="font-size:18pt; font-weight:bold">&nbsp;&nbsp;<?php echo $string['questioninformation']; ?></span>
 
 </td>
 </tr>
@@ -244,7 +245,7 @@
   echo "<tr><td>Copies:</td><td></td></tr>\n";
   echo "</table>\n";
   
-  echo "<div style=\"margin:5px; display:block; height:95px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" style=\"width:100%\">";
+  echo "<div style=\"margin:5px; display:block; height:95px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">";
   echo "<tr><th>Type</th><th>Paper Name</th><th>Question No</th></tr>\n";
   check4Copies($mysqli);
   check4Copied($mysqli);
@@ -252,7 +253,7 @@
 
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"2\">" . $string['followingpapers'] . "</td></tr>\n";
-  echo "</table>\n<div style=\"margin:5px; display:block; height:210px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" style=\"width:100%\">";
+  echo "</table>\n<div style=\"margin:5px; display:block; height:210px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
   echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
 
   $result = $mysqli->prepare("SELECT paper_title, paper_type, paper, screen, properties.deleted FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=?");

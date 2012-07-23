@@ -812,11 +812,11 @@ function random_qMarks($random_questions) {
       $screen_marks = 0;
       if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
         for ($missing=1; $missing<($temp_array[$x]['screen'] - $old_screen); $missing++) {
-          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque screen_no">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '</span></h4></td></tr>';
+          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '</span></h4></td></tr>';
           echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; background-color:#FFC0C0; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
         }
       }
-      echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque screen_no">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';
+      echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="subsect opaque">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';
     }
     $old_screen = $temp_array[$x]['screen'];
     $teamOK = false;

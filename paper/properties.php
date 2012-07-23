@@ -1047,7 +1047,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo '<table id="security" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">';
   }
 ?>
-<tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/security_heading_icon.png" width="30" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['securityheading']; ?></td></tr>
+<tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/security_heading_icon.png" width="32" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['securityheading']; ?></td></tr>
 <tr>
 <td style="text-align:center; vertical-align:top" colspan="2">
 <?php

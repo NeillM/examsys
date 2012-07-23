@@ -34,6 +34,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['loadstudents'] . " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -61,7 +62,7 @@
 
   require '../include/user_search_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%; padding-left:10px">
+<div id="content" class="content" style="font-size:90%; padding-left:10px">
 <br />
 <?php
   if (isset($_POST['submit'])) {
@@ -106,7 +107,7 @@
 
 <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; width:730px; margin-left:auto; margin-right:auto">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['importstudents']; ?></span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#4F81BD; width:90%"><?php echo $string['importstudents']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">

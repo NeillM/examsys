@@ -167,11 +167,11 @@ for ($i=0; $i<$course_no; $i++) {
   $id = $courses[$i]['id'];
   
   if ($sortby == 'code' and substr($courses[$i]['code'], 0, 1) != $old_code_letter) {
-    echo '<tr><td colspan="3"><table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td>' . substr($courses[$i]['code'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
+    echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:100%"><tr><td>' . substr($courses[$i]['code'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
   } elseif ($sortby == 'name' and substr($courses[$i]['name'], 0, 1) != $old_name_letter) {
-    echo '<tr><td colspan="3"><table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td>' . substr($courses[$i]['name'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
+    echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:100%"><tr><td>' . substr($courses[$i]['name'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
   } elseif ($sortby == 'school' and $courses[$i]['school'] != $old_school) {
-    echo '<tr><td colspan="3"><table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $courses[$i]['school'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
+    echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:100%"><tr><td><nobr>' . $courses[$i]['school'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
   }  
   echo "<tr id=\"$id\" onclick=\"selDeg($id,event)\" ondblclick=\"edit($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td class=\"col1\">" . $courses[$i]['code'] . "</td><td class=\"col\">" . $courses[$i]['name'] . "</td><td class=\"col\"><nobr>" . $courses[$i]['school'] . "</nobr></td></tr>\n";
 

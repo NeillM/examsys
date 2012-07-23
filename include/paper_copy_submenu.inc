@@ -65,7 +65,7 @@ require_once '../classes/dateutils.class.php';
   }
 </script>
 
-<div style="z-index:20; display:none; background-color:white; position:fixed; left:190px; top:100px; width:630px; height:320px; border:1px solid #C0C0C0;  box-shadow: 2px 2px 2px #808080" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div style="z-index:20; display:none; background-color:white; position:fixed; left:190px; top:100px; width:630px; height:320px; border:1px solid #C0C0C0;  box-shadow:2px 2px 2px rgba(0, 0, 0, 0.50)" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($cfg_summative_mgmt) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
