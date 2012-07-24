@@ -163,8 +163,6 @@ if ($critical_error == '') {
             } else {
               $correct_answers[$field][] = $question->get_answer_negative();
             }
-
-//            $correct_answers[$field][] = (isset($_POST[$field . $i])) ? $_POST[$field . $i] : $question->get_answer_negative();
           }
         }
         
@@ -354,15 +352,15 @@ if ($critical_error == '') {
     if (count($errors) == 0) redirect();
   }
 
-
-
   $q_type_display = '';
+  $q_type_full = '';
+  
   if ($question->get_type() != 'info' and !empty($q_no)) {
-    $q_type_display = ' ' . $q_no;
+    $q_type_display .= ' ' . $q_no;
   }
   if ($question->get_type() != '') {
-    $q_type_full = $string[$question->get_type()];
-    $q_type_display .= " &ndash; $q_type_full";
+    $q_type_full .= $string[$question->get_type()];
+    $q_type_display .= "&nbsp;</strong>$q_type_full";
   }
 
   // Set come classes and attributes that we're going to use to disable fields that aren't editable when locked
@@ -383,7 +381,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
 <link rel="stylesheet" href="../../css/screen.css" type="text/css" />
-<link rel="stylesheet" href="../../css/add_edit_new.css" type="text/css" />
+<link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 <link rel="stylesheet" href="../../css/tipTip.css" type="text/css" />
 
@@ -445,7 +443,10 @@ endif;
 			</a>
 		</div>
 		<div id="page-header-inner">
-			<h1><?php echo $mode . ' ' . $string['question'] . $q_type_display ?></h1>
+			<h1><strong><?php
+      if ($mode == 'Add') echo 'Add ';
+      echo $string['question'] . $q_type_display;
+      ?></h1>
 		</div>
 
 <?php 
@@ -463,7 +464,7 @@ if ($critical_error == '') {
           <li class="on"><a href="#" rel="editor"><?php echo $string['editor'] ?></a></li>
           <li><a href="#" rel="changes"><?php echo $string['changes'] ?></a></li>
           <li><a href="#" rel="comments"><?php echo $string['comments'] ?></a></li>
-          <li><a href="#" rel="information"><?php echo $string['information'] ?></a></li>
+          <li><a href="#" rel="performance"><?php echo $string['performance'] ?></a></li>
           <li<?php echo $mapping_enabled ?>><a href="#" rel="mapping"><?php echo $string['mapping'] ?></a></li>
         </ol>
       </div>
@@ -475,13 +476,7 @@ if ($critical_error == '') {
   if ($disabled != '') {
     $banner_spacer = ' class="banner-spaced"';
     
-    if ($disabled == 'mscaa') {
-?>
-    <div class="banner mscaa">
-      <p><?php echo $string['mscaamsg'] ?></p>
-    </div>
-<?php
-    } elseif ($disabled == 'locked') {
+    if ($disabled == 'locked') {
 ?>
     <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
 <?php
@@ -589,13 +584,29 @@ echo render_comments($comments, $string);
 ?>
       </div>
 
-      <div id="information" class="tab-area">
+      <div id="performance" class="tab-area">
+      <table style="font-size:90%; width:100%" class="data">
 <?php
-echo questionInfo::get_full_querstion_information($question->id, $mysqli);
+    echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
+    $performance_array = question_info::question_performance($_GET['q_id'], $mysqli);
+    
+    foreach ($performance_array as $paper => $performance) {
+      echo "<tr><td><img src=\"../../artwork/" . $performance['icon'] . "\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
+      echo "<td>" . $performance['title'] . "</td>";
+      echo "<td class=\"num\">" . $performance['screen'] . "</td>";
+      $q_type = $question->get_type();
+      if (isset($performance['performance'][1]['taken'])) {
+        echo "<td>" . $performance['performance'][1]['taken'] . "</td><td class=\"num\">" . $performance['performance'][1]['cohort'] . "</td><td style=\"text-align:right\">" . question_info::display_parts($performance['performance'], $q_type) . "</td><td class=\"num\">" . question_info::display_p($performance['performance'], $q_type) . "</td><td class=\"num\">" . question_info::display_d($performance['performance'], $q_type) . "</td>";
+      } else {
+        echo "<td></td><td></td><td></td><td></td><td></td>";
+      }
+      echo "</tr>\n";    
+    }
 ?>
+      </table>
       </div>
 
-      <div id="mapping" class="tab-area">
+      <div id="mapping" class="tab-area" style="padding-left:10px; padding-right:10px">
 <?php
 echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 ?>

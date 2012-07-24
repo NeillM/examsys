@@ -3,6 +3,7 @@ require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
 require '../../lang/' . $language . '/include/question_types.inc';
 require '../../lang/' . $language . '/question/sct_shared.php';
+require '../../lang/' . $language . '/question/info.php';
 
 $string['edit'] = 'Edytuj';
 $string['add'] = 'Dodaj';
@@ -92,7 +93,7 @@ $string['wysiwyg'] = 'WYSIWYG';
 $string['changes'] = 'Zmiany'; 
 $string['comments'] = 'Komentarze';
 $string['mapping'] = 'Odwzorowanie'; //Mapowanie,odwzorowanie, projekcja
-$string['information'] = 'Information';
+$string['performance'] = 'Performance';  // Niko
 $string['limitedsave'] = 'Ograniczone zapisywanie'; 
 $string['save'] = 'Zapisz zmiany';
 $string['correct'] = 'Poprawnie';

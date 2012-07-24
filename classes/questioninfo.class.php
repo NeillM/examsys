@@ -16,7 +16,7 @@
 
 /**
 * 
-* Utility class for question related functions
+* Utility class for question information related functions
 * 
 * @author Anthony Brown and Simon Wilkinson
 * @version 1.0
@@ -25,33 +25,20 @@
 */
 
 
-Class QuestionInfo {
-
+Class question_info {
   
   /**
    * Get the question information
-   * @paraminteger $q_id
+   * @param integer $q_id
    * @param resource $db
    * @return formated HTML for display of question information
    */
-  static function get_full_querstion_information($q_id, $db) {
+  static function full_question_information($q_id, $db) {
+    global $cfg_short_date, $cfg_long_date_time, $userroles, $string;
     
-    $html = "";
-    $line_no = 0;
-    $icons = array('formative','progress','summative','survey','osce','offline');
-    $performance = array();
-
-    //get performace data from all papers this question has appered on
-    $result = $mysqli->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\"$cfg_short_date\"), part_no, p, d FROM performance_main, performance_details WHERE performance_main.id=performance_details.perform_id AND q_id=?");
-    $result->bind_param('i', $_GET['q_id']);
-    $result->execute();
-    $result->bind_result($paperID, $cohort_size, $taken, $part_no, $p, $d);
-    while ($result->fetch()) {
-      $performance[$paperID][$part_no] = array('cohort'=>$cohort_size, 'taken'=>$taken, 'p'=>$p, 'd'=>$d);
-    }
-    $result->close();
-    
-    $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, q_group, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
+    $html = '';
+     
+    $question_data = $db->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, q_group, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
     $question_data->bind_param('i', $_GET['q_id']);
     $question_data->execute();
     $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_group, $q_type, $std, $status);
@@ -61,7 +48,6 @@ Class QuestionInfo {
     
     if ($q_group == '') $q_group = '<span style="color:#808080">N/A</span>';
     if ($locked == '') $locked = '<span style="color:#808080">N/A</span>';
-
 
     if (strpos($userroles,'Demo') !== false) {
       $owner = 'Dr J, Bloggs (<a href="">joe.bloggs@uni.ac.uk</a>)';
@@ -78,55 +64,99 @@ Class QuestionInfo {
     
     echo "<div style=\"margin:5px; display:block; height:95px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">";
     echo "<tr><th>Type</th><th>Paper Name</th><th>Question No</th></tr>\n";
-    check4Copies($mysqli);
-    check4Copied($mysqli);
+    
+    $data = question_info::check_copies($q_id, $db);  
+    $rows = count($data);
+    for ($i=0; $i<$rows; $i++) {
+      if (isset($data[$i]['question_id'])) {
+        echo "<tr><td>Copy of</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
+      } else {
+        echo "<tr><td>Copy of</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+      }
+    }
+    
+    unset($data);
+
+    $data = question_info::check_copied($q_id, $db);
+    $rows = count($data);
+    for ($i=0; $i<$rows; $i++) {
+      if (isset($data[$i]['question_id'])) {
+        echo "<tr><td>Source for</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
+      } else {
+        echo "<tr><td>Source for</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+      }
+    }
+    
     echo "</table>\n</div>\n<br />\n";
 
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"2\">" . $string['followingpapers'] . "</td></tr>\n";
-    echo "</table>\n"
+    echo "</table>\n";
     
     echo "<div style=\"margin:5px; display:block; height:210px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
     echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
 
-    $result = $mysqli->prepare("SELECT paper_title, paper_type, paper, screen, properties.deleted FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=?");
-    $result->bind_param('i', $_GET['q_id']);
-    $result->execute();
-    $result->bind_result($paper_title, $paper_type, $paper, $screen, $deleted);
-    $result->store_result();
-    while ($result->fetch()) {
-      echo "<tr><td><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
-      $title_split = explode('[deleted', $paper_title);
-      if (isset($title_split[1])) {
-        echo "<td><a href=\"\" style=\"color:#808080\" onclick=\"loadPaper('$paper')\">" . $title_split[0] . "</a></td>";
-      } else {
-        echo "<td><a href=\"\" onclick=\"loadPaper('$paper')\">" . $title_split[0] . "</a></td>";
-      }
-      if ($deleted != '') {
-        echo "<td style=\"color:red\">&lt;deleted " . str_replace(']','',$title_split[1]) . "&gt;</td>";
-      } else {
-        echo "<td class=\"num\">$screen</td>";
-      }
+    $performance_array = question_info::question_performance($q_id, $db);
+    
+    foreach ($performance_array as $paper => $performance) {
+      echo "<tr><td><img src=\"../artwork/" . $performance['icon'] . "\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
+      echo "<td><a href=\"\" onclick=\"loadPaper('$paper')\">" . $performance['title'] . "</a></td>";
+      echo "<td class=\"num\">" . $performance['screen'] . "</td>";
       
-      if (isset($performance[$paper][1]['taken'])) {
-        echo "<td>" . $performance[$paper][1]['taken'] . "</td><td class=\"num\">" . $performance[$paper][1]['cohort'] . "</td><td style=\"text-align:right\">" . displayParts($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayP($performance[$paper], $q_type) . "</td><td class=\"num\">" . displayD($performance[$paper], $q_type) . "</td>";
+      if (isset($performance['performance'][1]['taken'])) {
+        echo "<td>" . $performance['performance'][1]['taken'] . "</td><td class=\"num\">" . $performance['performance'][1]['cohort'] . "</td><td style=\"text-align:right\">" . question_info::display_parts($performance['performance'], $q_type) . "</td><td class=\"num\">" . question_info::display_p($performance['performance'], $q_type) . "</td><td class=\"num\">" . question_info::display_d($performance['performance'], $q_type) . "</td>";
       } else {
         echo "<td></td><td></td><td></td><td></td><td></td>";
       }
-      echo "</tr>\n";
-      $line_no++;
+      echo "</tr>\n";    
     }
-    $result->close();
-    $mysqli->close();
-  ?>
-  </table>
-  </div>
-
+ 
     return $html;
   }
 
+  /**
+   * Form an array of question performance data.
+   * @param integer $q_id
+   * @param object $db
+   * @return array of performance data
+   */
+  static function question_performance($q_id, $db) {
+    global $cfg_short_date, $cfg_long_date_time, $userroles, $string;
 
-  static function multiPartQuestion($type) {
+    $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer');
+    $performance = array();
+  
+    //get performace data from all papers this question has appered on
+    $result = $db->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\"$cfg_short_date\"), part_no, p, d FROM performance_main, performance_details WHERE performance_main.id=performance_details.perform_id AND q_id=?");
+    $result->bind_param('i', $q_id);
+    $result->execute();
+    $result->bind_result($paperID, $cohort_size, $taken, $part_no, $p, $d);
+    while ($result->fetch()) {
+      $performance[$paperID]['performance'][$part_no] = array('cohort'=>$cohort_size, 'taken'=>$taken, 'p'=>$p, 'd'=>$d);
+    }
+    $result->close();
+
+    $result = $db->prepare("SELECT property_id, paper_title, paper_type, screen FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=? AND deleted IS NULL");
+    $result->bind_param('i', $q_id);
+    $result->execute();
+    $result->bind_result($property_id, $paper_title, $paper_type, $screen);
+    $result->store_result();
+    while ($result->fetch()) {
+      $performance[$property_id]['title'] = $paper_title;
+      $performance[$property_id]['icon'] = $icons[$paper_type] . '_16.gif';
+      $performance[$property_id]['screen'] = $screen;
+    }
+    $result->close();
+  
+    return $performance;
+  }
+
+  /**
+   * Determine if a question type can have multiple parts.
+   * @param text $type
+   * @return true or false
+   */
+  static function multi_part_question($type) {
     if ($type == 'blank' or $type == 'dichotomous' or $type == 'extmatch' or $type == 'hotspot' or $type == 'labelling' or $type == 'matrix') {
       return true;
     } else {
@@ -134,10 +164,16 @@ Class QuestionInfo {
     }
   }
   
-  static function displayParts($perform_data, $q_type) {
+  /**
+   * If question is multipart then Roman numerals will be returned.
+   * @param array $perform_data
+   * @param text $q_type
+   * @return formatted HTML
+   */
+  static function display_parts($perform_data, $q_type) {
     $html = '';
     $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
-    if (multiPartQuestion($q_type)) {
+    if (question_info::multi_part_question($q_type)) {
       for ($i=0; $i<count($perform_data); $i++) {
         $html .= $numerals[$i] . '.<br />';
       }
@@ -146,21 +182,32 @@ Class QuestionInfo {
     return $html;
   }
   
-  static function displayP($perform_data, $q_type) {
+  /**
+   * Format and output P values for a question.
+   * @param array $perform_data
+   * @param text $q_type
+   * @return formatted value for P.
+   */
+  static function display_p($perform_data, $q_type) {
     $html = '';
     
-    if (multiPartQuestion($q_type)) {
+    if (question_info::multi_part_question($q_type)) {
       foreach ($perform_data as $single_data) {
-        $html .= pWarning(number_format($single_data['p']/100, 2)) . '<br />';
+        $html .= question_info::p_warning(number_format($single_data['p']/100, 2)) . '<br />';
       }
     } else {
-      $html = pWarning(number_format($perform_data[1]['p']/100, 2));
+      $html = question_info::p_warning(number_format($perform_data[1]['p']/100, 2));
     }
     
     return $html;
   }
   
-  static function pWarning($value) {
+  /**
+   * Check and add a warning to P values.
+   * @param real $value
+   * @return the original number or a warning if less than 0.2
+   */
+  static function p_warning($value) {
     if ($value < 0.2) {
       return '<span style="color:#C00000">' . $value . '</span>';
     } else {
@@ -168,21 +215,32 @@ Class QuestionInfo {
     }
   }
     
-  static function displayD($perform_data, $q_type) {
+  /**
+   * Format and output D values for a question.
+   * @param array $perform_data
+   * @param text $q_type
+   * @return formatted value for D.
+   */
+  static function display_d($perform_data, $q_type) {
     $html = '';
     
-    if (multiPartQuestion($q_type)) {
+    if (question_info::multi_part_question($q_type)) {
       foreach ($perform_data as $single_data) {
-        $html .= dWarning(number_format($single_data['d']/100, 2)) . '<br />';
+        $html .= question_info::d_warning(number_format($single_data['d']/100, 2)) . '<br />';
       }
     } else {
-      $html = dWarning(number_format($perform_data[1]['d']/100, 2));
+      $html = question_info::d_warning(number_format($perform_data[1]['d']/100, 2));
     }
     
     return $html;
   }
     
-  static function dWarning($value) {
+  /**
+   * Check and add a warning to D values.
+   * @param real $value
+   * @return the original number or a warning if less than 0.15
+   */
+  static function d_warning($value) {
     if ($value <= 0.15) {
       return '<span style="color:#C00000">' . $value . '</span>';
     } else {
@@ -190,12 +248,20 @@ Class QuestionInfo {
     }
   }
     
-  static function check4Copies($db) {
+  /**
+   * Find the details a 'source' question where the current question was copied from.
+   * @param integer $q_id
+   * @param object $db
+   * @return array with details of the source question.
+   */
+  static function check_copies($q_id, $db) {
     $row_number = 0;
+    $data_no = 0;
+    $data = array();
     
     // Get the ID of the original question.
-    $copy_data = $db->prepare("SELECT old FROM track_changes WHERE type='Copied Question' AND typeID=? LIMIT 1");
-    $copy_data->bind_param('i', $_GET['q_id']);
+    $copy_data = $db->prepare("SELECT old FROM track_changes WHERE type='Copied Question' AND typeID = ? LIMIT 1");
+    $copy_data->bind_param('i', $q_id);
     $copy_data->execute();
     $copy_data->bind_result($copyID);
     $copy_data->store_result();
@@ -217,21 +283,32 @@ Class QuestionInfo {
       }
       $copy_data->close();
       if ($copy_question_no == 0) {
-        return "<tr><td>Copy of</td><td colspan=\"2\">Question ID #$copyID</td></tr>\n";
+        $data[$data_no]['question_id'] = $copyID;
       } else {
-        return "<tr><td>Copy of</td><td><a href=\"\" onclick=\"loadPaper('$copy_paperID')\">$copy_paper_title</a></td><td>$copy_question_no</td></tr>\n";
+        $data[$data_no]['paperID'] = $copy_paperID;
+        $data[$data_no]['paper_title'] = $copy_paper_title;
+        $data[$data_no]['question_no'] = $copy_question_no;
       }
-    } else {
-      return "<tr><td></td><td></td></tr>\n";
+      $data_no++;
     }
+    
+    return $data;
   }
   
-  
- static function check4Copied($db) {
+  /**
+   * Find the details copied questions which use the current question as a 'source'.
+   * @param integer $q_id
+   * @param object $db
+   * @return array with details of the copied questions.
+   */
+  static function check_copied($q_id, $db) {
+    $data_no = 0;
+    $data = array();
+
     // Get the ID of the original question.
     $ids = array();
     $copy_data = $db->prepare("SELECT typeID FROM track_changes WHERE type='Copied Question' AND old = ? AND typeID != ?");
-    $copy_data->bind_param('ii', $_GET['q_id'], $_GET['q_id']);
+    $copy_data->bind_param('ii', $q_id, $q_id);
     $copy_data->execute();
     $copy_data->bind_result($typeID);
     $copy_data->store_result();
@@ -256,11 +333,16 @@ Class QuestionInfo {
       }
       $copy_data->close();
       if ($copy_question_no == 0) {
-        return "<tr><td>Source for</td><td colspan=\"2\">Question ID #$copyID</td></tr>\n";
+        $data[$data_no]['question_id'] = $copyID;
       } else {
-        return "<tr><td>Source for</td><td><a href=\"\" onclick=\"loadPaper('$copy_paperID')\">$copy_paper_title</a></td><td>$copy_question_no</td></tr>\n";
+        $data[$data_no]['paperID'] = $copy_paperID;
+        $data[$data_no]['paper_title'] = $copy_paper_title;
+        $data[$data_no]['question_no'] = $copy_question_no;
       }
+      $data_no++;
     }
+    
+    return $data;
   }
 
 }
