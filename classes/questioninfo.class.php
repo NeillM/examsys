@@ -46,8 +46,8 @@ Class question_info {
     $question_data->fetch();
     $question_data->close(); 
     
-    if ($q_group == '') $q_group = '<span style="color:#808080">N/A</span>';
-    if ($locked == '') $locked = '<span style="color:#808080">N/A</span>';
+    if ($q_group == '') $q_group = '<span style="color:#808080">' . $string['na'] . '</span>';
+    if ($locked == '') $locked = '<span style="color:#808080">' . $string['na'] . '</span>';
 
     if (strpos($userroles,'Demo') !== false) {
       $owner = 'Dr J, Bloggs (<a href="">joe.bloggs@uni.ac.uk</a>)';
@@ -59,19 +59,19 @@ Class question_info {
     echo "<tr><td>" . $string['modified'] . "</td><td>$last_edited</td></tr>\n";
     echo "<tr><td>" . $string['locked'] . "</td><td>$locked</td></tr>\n";
     echo "<tr><td>" . $string['teams'] . "</td><td>$q_group</td></tr>\n";
-    echo "<tr><td>Copies:</td><td></td></tr>\n";
+    echo "<tr><td>" . $string['copies'] . "</td><td></td></tr>\n";
     echo "</table>\n";
     
     echo "<div style=\"margin:5px; display:block; height:95px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">";
-    echo "<tr><th>Type</th><th>Paper Name</th><th>Question No</th></tr>\n";
+    echo "<tr><th>" . $string['type'] . "</th><th>" . $string['papername'] . "</th><th>" . $string['questionno'] . "</th></tr>\n";
     
     $data = question_info::check_copies($q_id, $db);  
     $rows = count($data);
     for ($i=0; $i<$rows; $i++) {
       if (isset($data[$i]['question_id'])) {
-        echo "<tr><td>Copy of</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
+        echo "<tr><td>" . $string['copyof'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
       } else {
-        echo "<tr><td>Copy of</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+        echo "<tr><td>" . $string['copyof'] . "</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
       }
     }
     
@@ -81,9 +81,9 @@ Class question_info {
     $rows = count($data);
     for ($i=0; $i<$rows; $i++) {
       if (isset($data[$i]['question_id'])) {
-        echo "<tr><td>Source for</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
+        echo "<tr><td>" . $string['sourcefor'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
       } else {
-        echo "<tr><td>Source for</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+        echo "<tr><td>" . $string['sourcefor'] . "</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
       }
     }
     

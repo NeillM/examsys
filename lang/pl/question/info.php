@@ -14,11 +14,16 @@ $string['experimental'] = 'Eksperymentalne';
 $string['beta'] = 'Beta';
 $string['close'] = 'Zamknięte';
 $string['notused'] = '(To pytanie nie jest obecnie wykorzystywane w żadnym arkuszu)';
-
 $string['papername'] = 'Nazwa arkusza'; 
 $string['screenno'] = 'Numer ekranu';
 $string['examdate'] = 'Data egzaminu';
 $string['cohort'] = 'Grupa';
-$string['p'] = 'P'; //Niko? Item Difficulty 
-$string['d'] = 'D'; //Niko? discrimination value
+$string['p'] = 'P'; 
+$string['d'] = 'D';
+$string['copyof'] = 'Copy of';  // Niko
+$string['sourcefor'] = 'Source for';
+$string['na'] = 'N/A';
+$string['type'] = 'Type';
+$string['questionno'] = 'Question No';
+$string['copies'] = 'Copies:';
 ?>
