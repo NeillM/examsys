@@ -212,7 +212,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo "</tr>\n";
       break;
     case 'mcq':
-      if (isset($user_answers[$current_screen][$q_id]) AND $user_answers[$current_screen][$q_id] == '0' AND $screen_pre_submitted == 1) {
+      if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
         echo '<blockquote class="unans">';
         $unanswered = true;
       } else {
@@ -346,6 +346,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   foreach ($question['options'] as $display_option) {
     $part_id++;
     switch ($question['q_type']) {
+      case 'area':
+        break;
       case 'dichotomous':
         if (isset($user_answers[$current_screen][$q_id])) {
           $tmp_user_answer = substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1);

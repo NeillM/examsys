@@ -99,7 +99,6 @@ $string['save'] = 'Zapisz zmiany';
 $string['correct'] = 'Poprawnie';
 $string['questionlocked'] = 'To pytanie jest zablokowane dla edycji przez';
 $string['isinreadonly'] = 'Jest ono dostępne tylko do odczytu.';
-$string['mscaamsg'] = '<strong>Pytania MSC-AA</strong> To pytanie było importowane z MSC-AA i nie może być zmienione.';
 $string['lockedmsg'] = '<strong>Pytanie zablokowane</strong> To pytanie jest zablokowane i nie może być zmienione. <a href="#" class="help-link" rel="161">Kliknij aby dowiedzieć się więcej.</a>';
 $string['date'] = 'Data';
 $string['duration'] = 'czas trwania';

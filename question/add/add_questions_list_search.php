@@ -73,6 +73,7 @@ require_once '../../classes/searchutils.class.php';
   &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input style="font-size:90%" type="text" size="30" name="searchterm" <?php if(isset($_GET['searchterm'])) echo 'value="' . $_GET['searchterm'] . '" '; ?>/> <strong><?php echo $string['in']; ?></strong> 
   <select name="searchtype" style="font-size:90%">
     <option value="%"><?php echo $string['anytype']; ?></option>
+    <option value="area" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'area') echo 'selected '; ?>><?php echo $string['area']; ?></option>
     <option value="calculation" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'calculation') echo 'selected '; ?>><?php echo $string['calculation']; ?></option>
     <option value="dichotomous" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'dichotomous') echo 'selected '; ?>><?php echo $string['dichotomous']; ?></option>
     <option value="extmatch" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'extmatch') echo 'selected '; ?>><?php echo $string['extmatch']; ?></option>
