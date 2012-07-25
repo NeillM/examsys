@@ -275,7 +275,7 @@ td.separated:last-child {
   text-decoration: none;
 }
 
-#changes, #comments, #mapping {
+#changes, #comments, #mapping, #performance {
 	display: none;
 }
 

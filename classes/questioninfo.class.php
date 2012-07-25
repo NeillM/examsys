@@ -68,10 +68,10 @@ Class question_info {
     $data = question_info::check_copies($q_id, $db);  
     $rows = count($data);
     for ($i=0; $i<$rows; $i++) {
-      if (isset($data[$i]['question_id'])) {
-        echo "<tr><td>" . $string['copyof'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
-      } else {
+      if (isset($data[$i]['paperID'])) {
         echo "<tr><td>" . $string['copyof'] . "</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+      } else {
+        echo "<tr><td>" . $string['copyof'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
       }
     }
     
@@ -80,20 +80,21 @@ Class question_info {
     $data = question_info::check_copied($q_id, $db);
     $rows = count($data);
     for ($i=0; $i<$rows; $i++) {
-      if (isset($data[$i]['question_id'])) {
-        echo "<tr><td>" . $string['sourcefor'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
-      } else {
+      if (isset($data[$i]['paperID'])) {
         echo "<tr><td>" . $string['sourcefor'] . "</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+      } else {
+        echo "<tr><td>" . $string['sourcefor'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
       }
     }
     
-    echo "</table>\n</div>\n<br />\n";
-
+    echo "</table>\n</div>\n";
+    
+    echo "<table style=\"width:100%\">\n";
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"2\">" . $string['followingpapers'] . "</td></tr>\n";
+    echo "<tr><td>" . $string['followingpapers'] . "</td><td style=\"text-align:right\"><input type=\"button\" name=\"longitudinal\" value=\"Longitudinal\" onclick=\"openLongitudinal($q_id);\" /></td></tr>\n";
     echo "</table>\n";
     
-    echo "<div style=\"margin:5px; display:block; height:210px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
+    echo "<div style=\"margin:5px; display:block; height:195px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
     echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
 
     $performance_array = question_info::question_performance($q_id, $db);
@@ -136,15 +137,16 @@ Class question_info {
     }
     $result->close();
 
-    $result = $db->prepare("SELECT property_id, paper_title, paper_type, screen FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=? AND deleted IS NULL");
+    $result = $db->prepare("SELECT property_id, paper_title, paper_type, screen, calendar_year FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=? AND deleted IS NULL");
     $result->bind_param('i', $q_id);
     $result->execute();
-    $result->bind_result($property_id, $paper_title, $paper_type, $screen);
+    $result->bind_result($property_id, $paper_title, $paper_type, $screen, $calendar_year);
     $result->store_result();
     while ($result->fetch()) {
       $performance[$property_id]['title'] = $paper_title;
       $performance[$property_id]['icon'] = $icons[$paper_type] . '_16.gif';
       $performance[$property_id]['screen'] = $screen;
+      $performance[$property_id]['calendar_year'] = $calendar_year;
     }
     $result->close();
   
@@ -285,9 +287,10 @@ Class question_info {
       if ($copy_question_no == 0) {
         $data[$data_no]['question_id'] = $copyID;
       } else {
-        $data[$data_no]['paperID'] = $copy_paperID;
+        $data[$data_no]['paperID'] = (int)$copy_paperID;
         $data[$data_no]['paper_title'] = $copy_paper_title;
         $data[$data_no]['question_no'] = $copy_question_no;
+        $data[$data_no]['question_id'] = (int)$copyID;
       }
       $data_no++;
     }
@@ -335,9 +338,10 @@ Class question_info {
       if ($copy_question_no == 0) {
         $data[$data_no]['question_id'] = $copyID;
       } else {
-        $data[$data_no]['paperID'] = $copy_paperID;
+        $data[$data_no]['paperID'] = (int)$copy_paperID;
         $data[$data_no]['paper_title'] = $copy_paper_title;
         $data[$data_no]['question_no'] = $copy_question_no;
+        $data[$data_no]['question_id'] = (int)$copyID;
       }
       $data_no++;
     }

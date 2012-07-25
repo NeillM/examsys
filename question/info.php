@@ -55,6 +55,10 @@
       window.opener.location = "../folder/details.php?module=" + moduleID;
       window.close();
     }
+    
+    function openLongitudinal(questionID) {
+      window.open("longitudinal_performance.php?q_id=" + questionID);
+    }
   </script>
 </head>
 
@@ -79,3 +83,4 @@
 </form>
 </div>
 </body>
+</html>
