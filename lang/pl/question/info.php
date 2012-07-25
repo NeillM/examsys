@@ -20,10 +20,10 @@ $string['examdate'] = 'Data egzaminu';
 $string['cohort'] = 'Grupa';
 $string['p'] = 'P'; 
 $string['d'] = 'D';
-$string['copyof'] = 'Copy of';  // Niko
-$string['sourcefor'] = 'Source for';
-$string['na'] = 'N/A';
-$string['type'] = 'Type';
-$string['questionno'] = 'Question No';
-$string['copies'] = 'Copies:';
+$string['copyof'] = 'Kopia z'; 
+$string['sourcefor'] = 'Źródło dla';
+$string['na'] = 'Brak';
+$string['type'] = 'Typ';
+$string['questionno'] = 'Numer pytania';
+$string['copies'] = 'Kopie:';
 ?>

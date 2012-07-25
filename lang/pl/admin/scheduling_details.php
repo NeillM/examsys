@@ -12,12 +12,12 @@ $string['papername'] = 'Nazwa arkusza';
 $string['paperowner'] = 'Właściwości arkusza';
 $string['session'] = 'Sesja';
 $string['modules'] = 'Moduł(y)';
-$string['examduration'] = 'Exam Duration';  // Niko
+$string['examduration'] = 'Czas trwania egzaminu'; 
 $string['cohortsize'] = 'Rozmiar grupy';
-$string['sittings'] = 'Sittings'; //Niko?
-$string['examperiod'] = 'Okres egzaminacyjny'; //Niko?
-$string['barriersneeded'] = 'Potrzebne bariery';//Niko?
+$string['sittings'] = 'Posiedzenia'; 
+$string['examperiod'] = 'Okres egzaminacyjny'; 
+$string['barriersneeded'] = 'Wymagane ścianki rozdzielające';
 $string['campus'] = 'Kampus';
 $string['notes'] = 'Notatki';
-$string['examtasks'] = 'Zadania egzaminacyjne'; //Niko?
+$string['examtasks'] = 'Zadania egzaminacyjne'; 
 ?>

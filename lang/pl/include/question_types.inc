@@ -23,5 +23,5 @@ $string['sct'] = 'Test scenariusza';//Test zgodności ze scenariuszem
 $string['sct_short'] = 'Test scenariusza'; 
 $string['textbox'] = 'Pytanie półotwarte';
 $string['true_false'] = 'Pytanie typu Prawda/Fałsz'; 
-$string['area'] = 'Area';  // Niko
+$string['area'] = 'Pytanie na obrys obszaru';  
 ?>
