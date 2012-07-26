@@ -36,7 +36,7 @@ a {color:blue}
 </head>
 <body style="margin:0px; color:black; background-color:white; background-image:url('./background.jpg'); font-size:100%; font-family:Arial,sans-serif">
 
-<div style="position:absolute; top:20px; left:25px">
+<div style="position:absolute; top:12px; left:25px">
   <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
   <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
   <div style="color:#1F497D; font-size:9pt">eAssessment Management System</div>
