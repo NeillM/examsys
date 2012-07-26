@@ -588,7 +588,7 @@ echo render_comments($comments, $string);
       <table style="font-size:90%; width:100%" class="data">
 <?php
     echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
-    $performance_array = question_info::question_performance($_GET['q_id'], $mysqli);
+    $performance_array = ($question->id > -1) ? question_info::question_performance($question->id, $mysqli) : array();
     
     foreach ($performance_array as $paper => $performance) {
       echo "<tr><td><img src=\"../../artwork/" . $performance['icon'] . "\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
