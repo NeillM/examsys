@@ -29,7 +29,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Credits</title>
+<title><?php echo $string['credits']; ?></title>
 <style type="text/css">
 a {color:blue}
 </style>
@@ -47,11 +47,11 @@ a {color:blue}
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:5px">
 <br />
 <br />
-<p>Rogō <?php echo $rogo_version; ?> is copyright &copy; 2012 and is held by the University of Nottingham. It is released under a <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GPL v3.0</a> open source license whereby partners can modify, extend and contribute to the project.</p>
+<p>Rogō <?php echo $rogo_version . ' ' . $string['msg']; ?></p>
 <br />
 <table cellpadding="0" cellspacing="0" border="0" style="width:650px">
 <tr><td style="vertical-align:top; width:250px">
-<strong>Design &amp; Programming</strong><br />
+<strong><?php echo $string['designprogramming']; ?></strong><br />
 Dr Simon Wilkinson<br />
 Dr Rob Ingram<br />
 Anthony Brown<br />
@@ -63,27 +63,27 @@ Fay Cross<br />
 <strong>QTI</strong><br />
 Adam Clarke<br />
 <br />
-<strong>Language Packs</strong><br />
+<strong><?php echo $string['languagepacks']; ?></strong><br />
 Dr Nikodem Miranowicz</td>
 
 <td style="vertical-align:top">
-<strong>3rd Party subsystems</strong><br />
+<strong><?php echo $string['3rdparty']; ?></strong><br />
 <table cellpaddding="0" cellspacing="0" border="0">
-<tr><td style="width:110px">WYSIWYG Editor</td><td>TinyMCE 3.4.2 - <a href="http://tinymce.moxiecode.com/" target="_blank">tinymce.moxiecode.com</a></td></tr>
+<tr><td style="width:110px"><?php echo $string['editor']; ?></td><td>TinyMCE 3.4.2 - <a href="http://tinymce.moxiecode.com/" target="_blank">tinymce.moxiecode.com</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>JavaScript library</td><td>jQuery 1.6.1 - <a href="http://jquery.com/" target="_blank">jquery.com/</a></td></tr>
+<tr><td><?php echo $string['javascriptlibrary']; ?></td><td>jQuery 1.6.1 - <a href="http://jquery.com/" target="_blank">jquery.com/</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>MP3 Player</td><td>MP3 Player 0.6.0 - <a href="http://flash-mp3-player.net/" target="_blank">flash-mp3-player.net</a></td></tr>
+<tr><td><?php echo $string['mp3player']; ?></td><td>MP3 Player 0.6.0 - <a href="http://flash-mp3-player.net/" target="_blank">flash-mp3-player.net</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>FLV Video Player</td><td>FLV Player 1.6.0 - <a href="http://flv-player.net/players/maxi/" target="_blank">flv-player.net/players/maxi/</a></td></tr>
+<tr><td><?php echo $string['videoplayer']; ?></td><td>FLV Player 1.6.0 - <a href="http://flv-player.net/players/maxi/" target="_blank">flv-player.net/players/maxi/</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>Metadata</td><td>GetID3 1.8.5 - <a href="http://getid3.sourceforge.net/">getid3.sourceforge.net</a></td></tr>
+<tr><td><?php echo $string['metadata']; ?></td><td>GetID3 1.8.5 - <a href="http://getid3.sourceforge.net/">getid3.sourceforge.net</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td style="vertical-align:top">Graphics</td><td><a href="http://www.iconfinder.com/" target="_blank">www.iconfinder.com</a><br />
+<tr><td style="vertical-align:top"><?php echo $string['graphics']; ?></td><td><a href="http://www.iconfinder.com/" target="_blank">www.iconfinder.com</a><br />
 <a href="http://www.psdgraphics.com/" target="_blank">www.psdgraphics.com</a><br />
 <a href="http://pixelmixer.ru/" target="_blank">pixel-mixer.com</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>Calculator</td><td><em>NOTE: Not open source but included with permission</em><br />
+<tr><td><?php echo $string['calculator']; ?></td><td><em><?php echo $string['calcmsg']; ?></em><br />
 <a href="http://www.calculator.org/default.aspx" target="_blank">http://www.calculator.org</a></td></tr>
 </table>
 
@@ -92,7 +92,7 @@ Dr Nikodem Miranowicz</td>
 </table>
 <br />
 <br />
-<input type="button" value="OK" name="OK" style="width:100px" onclick="window.close()" />
+<input type="button" value="OK" name="<?php echo $string['ok']; ?>" style="width:100px" onclick="window.close()" />
 </div>
 
 
