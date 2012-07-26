@@ -226,18 +226,15 @@ HEADING;
       }
       
       // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
-      $checked = $on = $disabled_mod = '';
+      $checked = $on = '';
       if (in_array($team_name, $current_teams) or $team_name == $module) {
         $checked = ' checked="checked"';
         $on = ' on';
       }
-      if (!in_array($team_name, $teams) and strpos($userroles,'SysAdmin') === false) {
-        $disabled_mod = ' disabled="disabled"';
-      }
-      
+            
       $enc_name = htmlentities($fullname);
       $html .= <<< META
-                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_name}" type="checkbox"{$checked}{$disabled_mod} /> {$team_name}: {$enc_name}</label></li>
+                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_name}" type="checkbox"{$checked} /> {$team_name}: {$enc_name}</label></li>
 
 META;
 
