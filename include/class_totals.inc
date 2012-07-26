@@ -36,6 +36,7 @@ if (strpos($userroles,'Demo') !== false) {
 }
 require_once '../include/calculate_marks.inc';
 require_once '../include/demo_replace.inc';
+require_once '../include/sort.inc';
 
 function getRandomDetails($questionID, &$random_q_ids) {
   global $cfg_short_date, $paper_buffer, $mysqli;
@@ -690,22 +691,6 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       $tmp_user_mark_array[$q_id] = $round_tmp_user_mark;
     }
   }
-}
-
-function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
-  foreach ($marray as $row) {
-    $sortarr[] = $row[$column];
-  }
-  
-  $sortarr = array_map('strtolower',$sortarr);
-  $sort_method = SORT_STRING;
-  if ($column == 'mark' or $column == 'duration') $sort_method = SORT_NUMERIC;
-  if ($sort_order == 'asc') {
-    array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
-  } else {
-    array_multisort($sortarr, SORT_DESC, $sort_method, $marray);
-  }
-  return $marray;
 }
 
 function formatsec($seconds) {

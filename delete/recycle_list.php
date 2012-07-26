@@ -23,18 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
-
-function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
-  foreach ($marray as $row) {
-    $sortarr[] = strtolower(trim($row[$column]));
-  }
-  if ($sort_order == 'asc') {
-    array_multisort($sortarr, SORT_ASC, $marray);
-  } else {
-    array_multisort($sortarr, SORT_DESC, $marray);
-  }
-  return $marray;
-}
+require '../include/sort.inc';
 
 function dateDisplay($tmp_date) {
   return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);

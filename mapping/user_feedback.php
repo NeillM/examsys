@@ -27,6 +27,7 @@
   require '../include/mapping.inc';
   require '../include/errors.inc';
   require '../include/feedback.inc';
+  require_once '../include/sort.inc';
   
   check_var('id', 'GET', true, false);
   

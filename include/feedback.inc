@@ -129,21 +129,6 @@ function getPaperProperties($db,$paperID) {
   $result->close();
 }
 
-function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
-  foreach ($marray as $row) {
-    $sortarr[] = $row[$column];
-  }
-  $sortarr = array_map('strtolower',$sortarr);
-  $sort_method = SORT_STRING;
-  if ($column == 'ratio') $sort_method = SORT_NUMERIC;
-  if ($sort_order == 'asc') {
-    array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
-  } else {
-    array_multisort($sortarr, SORT_DESC, $sort_method, $marray);
-  }
-  return $marray;
-}
-
 function formatsec($seconds) {
   $diff_hour = ($seconds / 60) / 60;
   $tmp_position = strpos($diff_hour, '.');

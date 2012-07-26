@@ -28,25 +28,12 @@
     $demo = false;
   }
   require_once '../include/demo_replace.inc';
+  require_once '../include/sort.inc';
 
-  function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
-    $sortarr = array();
-    foreach ($marray as $row) {
-      $sortarr[] = $row[$column];
-    }
-    $sortarr = array_map('strtolower',$sortarr);
-    $sort_method = SORT_STRING;
-    if ($column == 'numeric_score') $sort_method = SORT_NUMERIC;
-    if ($sort_order == 'asc') {
-      array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
-    } else {
-      array_multisort($sortarr, SORT_DESC, $sort_method, $marray);
-    }
-    return $marray;
-  }
   $paperID = '';
   $sortby = '';
   $ordering = '';
+  
   if (isset($_GET['paperID'])) $paperID = $_GET['paperID'];
   if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
   if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];

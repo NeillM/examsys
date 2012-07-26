@@ -26,27 +26,12 @@
 
 require '../include/staff_auth.inc';
 require '../include/sidebar_menu.inc';
+require '../include/sort.inc';
 
 if (isset($_GET['calyear'])) {
   $current_year = $_GET['calyear'];
 } else {
   $current_year = date("Y");
-}
-
-function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
-  $sortarr = array();
-  foreach ($marray as $row) {
-    $sortarr[] = $row[$column];
-  }
-  $sortarr = array_map('strtolower',$sortarr);
-  $sort_method = SORT_STRING;
-  if ($column == 'mark' or $column == 'duration') $sort_method = SORT_NUMERIC;
-  if ($sort_order == 'asc') {
-    array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
-  } else {
-    array_multisort($sortarr, SORT_DESC, $sort_method, $marray);
-  }
-  return $marray;
 }
 
 function echoButtons($year) {

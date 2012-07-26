@@ -29,6 +29,7 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   require '../include/demo_replace.inc';
+  require '../include/sort.inc';
   require_once '../classes/schoolutils.class.php';
   require_once '../classes/networkutils.class.php';
   
@@ -77,21 +78,6 @@
     }
     $html .= "</tr></table></td><td align=\"right\" style=\"background-color:#F1F5FB\">$right_text</td></tr>\n";
     return $html;
-  }
-
-  function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
-    foreach ($marray as $row) {
-      $sortarr[] = $row[$column];
-    }
-    $sortarr = array_map('strtolower',$sortarr);
-    $sort_method = SORT_STRING;
-    if ($column == 'mark') $sort_method = SORT_NUMERIC;
-    if ($sort_order == 'asc') {
-      array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
-    } else {
-      array_multisort($sortarr, SORT_DESC, $sort_method, $marray);
-    }
-    return $marray;
   }
 
   function formatsec($seconds) {
