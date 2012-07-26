@@ -83,7 +83,7 @@ if (isset($_GET['calendar_year'])) {
 <tr><td><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid']; ?></td></tr>
 <tr><td><input type="text" name="search_username" size="9" value="<?php if (isset($_GET['search_username'])) echo $_GET['search_username']; ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="9" value="<?php if (isset($_GET['student_id'])) echo $_GET['student_id']; ?>" /></td></tr>
 </table>
-<div><?php echo $string['module']; ?><br /><?php SearchUtils::displayTeamDropdown($teams, $userroles, $userID, $mysqli); ?></div>
+<div><?php echo $string['module']; ?><br /><?php search_utils::display_team_dropdown($teams, $userroles, $userID, $mysqli); ?></div>
 
 <div><?php echo $string['academicyear']; ?><br /><select name="calendar_year">
 <option value="%"><?php echo $string['anyyear']; ?></option>

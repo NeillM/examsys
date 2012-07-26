@@ -167,7 +167,6 @@ END;
 
   $stmt->close();
 
-
   $personalfolders = new personal_folders($mysqli);
   $personalfolders->loadpersonalfolders($userID);
   $personalfolders->process();
@@ -180,7 +179,7 @@ END;
   $old_letter = '';
   $module_block = false;
   $teams = getUserTeams($userID, $mysqli);
-  $modlist = SearchUtils::getTeams($teams, $userroles, $userID, $mysqli);
+  $modlist = search_utils::get_teams($teams, $userroles, $userID, $mysqli);
   foreach ($modlist as $value) {
     $moduleid = $value['id'];
     if ($moduleid !== '') {

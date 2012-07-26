@@ -25,9 +25,17 @@
 */
 
 
-Class SearchUtils {
+Class search_utils {
  
-  static function getTeams($teams, $userroles, $userID, $db) {
+  /**
+   * Get an array with team information the current user has access to.
+   * @param array $teams teams the current user is on
+   * @param string $userroles the role(s) of the current user
+   * @param integer $userID ID of the current user
+   * @param object $db database connection
+   * @return array of team information
+   */
+  static function get_teams($teams, $userroles, $userID, $db) {
     $teams_list = array();
 
     $team_sql = implode("','", $teams);
@@ -67,6 +75,13 @@ Class SearchUtils {
     return $teams_list;
   }
   
+  /**
+   * Get a list of personal and group keywords for the current user.
+   * @param object $db database connection
+   * @param array $teams teams the current user is on
+   * @param integer $user_id ID of the current user
+   * @return array of keywords
+   */
   static function get_keywords($db, $teams, $user_id) {
     $keywords = array('team' => array(), 'personal' => array());
     
@@ -91,10 +106,18 @@ Class SearchUtils {
     return $keywords;
   }
 
-  static function displayTeamDropdown($teams, $userroles, $userID, $db) {
+  /**
+   * Display a dropdown list of available teams for the current user.
+   * @param array $teams teams the current user is on
+   * @param string $userroles the role(s) of the current user
+   * @param integer $userID ID of the current user
+   * @param object $db database connection
+   * @return string HTML of the dropdown menu
+   */
+  static function display_team_dropdown($teams, $userroles, $userID, $db) {
     global $string;
     
-    $teams = self::getTeams($teams, $userroles, $userID, $db);
+    $teams = self::get_teams($teams, $userroles, $userID, $db);
     
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'team')\" name=\"team\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
@@ -115,7 +138,14 @@ Class SearchUtils {
     echo "</optgroup>\n</select>\n";
   }
   
-  static function getOwners($teams, $userroles, $db) {
+  /**
+   * Get a list of names for people in the current user teams.
+   * @param array $teams teams the current user is on
+   * @param string $userroles the role(s) of the current user
+   * @param object $db database connection
+   * @return array of name data
+   */
+  static function get_owners($teams, $userroles, $db) {
     if (strpos($userroles,'Admin') !== false) {
       $stmt = $db->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' ORDER BY surname, initials");
     } else {
@@ -134,9 +164,18 @@ Class SearchUtils {
     return $owners;
   }
 
-  static function displayOwnersDropdown($teams, $userroles, $userID, $db, $type) {
+  /**
+   * Display a dropdown list of owners in teams available for the current user.
+   * @param array $teams teams the current user is on
+   * @param string $userroles the role(s) of the current user
+   * @param integer $userID ID of the current user
+   * @param object $db database connection
+   * @param string $type used to control wording - whether dealing with papers or questions
+   * @return string HTML of the dropdown menu
+   */
+  static function display_owners_dropdown($teams, $userroles, $userID, $db, $type) {
     global $string, $state;
-    $owners = self::getOwners($teams, $userroles, $db);
+    $owners = self::get_owners($teams, $userroles, $db);
     
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
     echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
@@ -163,7 +202,11 @@ Class SearchUtils {
     echo "</optgroup>\n</select>\n";
   }
   
-  static function displayStatusDropdown() {
+  /**
+   * Display a dropdown menu of status options for a question.
+   * @return string HTML of the status dropdown menu
+   */
+  static function display_status_dropdown() {
     global $string, $state;
     
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'status')\" name=\"status\">\n";
@@ -173,7 +216,7 @@ Class SearchUtils {
     } else {
       echo "<option value=\"%\">" . $string['anystatus'] . "</option>\n";
     }
-    $status_array = array('Normal','Retired','Incomplete','Experimental','Beta');
+    $status_array = array('Normal', 'Retired', 'Incomplete', 'Experimental', 'Beta');
     foreach ($status_array as $individual_status) {
       if (isset($state['status']) and $state['status'] == $individual_status) {
         echo "<option value=\"$individual_status\" selected>" . $string[strtolower($individual_status)] . "</option>"; 
@@ -185,7 +228,11 @@ Class SearchUtils {
     
   }
 
-  static function displayBloomsDropdown() {
+  /**
+   * Display a dropdown menu of Bloom's Taxonomy options for a question.
+   * @return string HTML of the Bloom's Taxonomy dropdown menu
+   */
+  static function display_blooms_dropdown() {
     global $string, $state;
     
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";

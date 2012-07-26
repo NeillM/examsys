@@ -92,7 +92,7 @@ require_once '../../classes/searchutils.class.php';
     <option value="true_false" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'true_false') echo 'selected '; ?>><?php echo $string['true_false']; ?></option>
   </select>
   <?php
-    SearchUtils::displayOwnersDropdown($teams, $userroles, $userID, $mysqli, 'questions');
+    search_utils::display_owners_dropdown($teams, $userroles, $userID, $mysqli, 'questions');
   ?>
   &nbsp;<input type="submit" value=" <?php echo $string['search']; ?> " name="search" />
   </form>

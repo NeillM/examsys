@@ -350,10 +350,10 @@ require_once '../classes/stateutils.class.php';
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; SearchUtils::displayTeamDropdown($teams, $userroles, $userID, $mysqli); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; SearchUtils::displayOwnersDropdown($teams, $userroles, $userID, $mysqli, 'questions'); ?></div>
-  <div style="margin-left:4px"><br /><?php echo $string['status']; SearchUtils::displayStatusDropdown(); ?></div>
-  <div style="margin-left:4px"><br /><?php echo $string['blooms']; SearchUtils::displayBloomsDropdown(); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_team_dropdown($teams, $userroles, $userID, $mysqli); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($teams, $userroles, $userID, $mysqli, 'questions'); ?></div>
+  <div style="margin-left:4px"><br /><?php echo $string['status']; search_utils::display_status_dropdown(); ?></div>
+  <div style="margin-left:4px"><br /><?php echo $string['blooms']; search_utils::display_blooms_dropdown(); ?></div>
   
   <div style="margin-left:4px"><?php echo $string['keyword']; ?> <select style="width:175px" name="keywordID"><br />
   <option value=""></option>
