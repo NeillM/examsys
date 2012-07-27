@@ -16,7 +16,7 @@
 
 /**
 *
-* Load new users from SMS export
+* Load new users from CSV file.
 *
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
@@ -36,8 +36,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['loadstudents'] . " $cfg_install_type"; ?></title>
+  <title><?php echo $string['importusers'] . " $cfg_install_type"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <script type="text/javascript">
     function updateMsg() {
       document.getElementById('msg').innerHTML = '<?php echo $string['finished']; ?>';
@@ -107,16 +108,16 @@
 
 <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; width:730px; margin-left:auto; margin-right:auto">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#4F81BD; width:90%"><?php echo $string['importstudents']; ?></span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importusers']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">
 
 <p><?php echo $string['msg1']; ?></p>
-<blockquote>ID, First Names, Family Name, Title, Course, Year of Study and Email</blockquote>
+<blockquote>Type, ID, First Names, Family Name, Title, Course, Year of Study and Email</blockquote>
 <p><?php echo $string['msg2']; ?></p> 
 
-<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="695" height="59" alt="Headings" border="1" /></div>
+<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="749" height="59" alt="Headings" border="1" /></div>
 <br />
 <br />
 <div style="text-align:center">

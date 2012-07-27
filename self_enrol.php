@@ -29,7 +29,7 @@ require './classes/userutils.class.php';
 require './classes/smsutils.class.php';
 
 check_var('moduleid', 'GET', true, false);
-$session = DateUtils::get_current_academic_year();
+$session = date_utils::get_current_academic_year();
 
 //dose the user have an account?
 if (UserUtils::usernameExists($_SERVER['PHP_AUTH_USER'],$mysqli) === false ) {
@@ -72,7 +72,7 @@ if ($fullname == '') {
 
 if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils::isUserOnModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
   // Insert new module enrollment
-  UserUtils::addUserToModule($userID, $_GET['moduleid'], 1, $_POST['session'], $mysqli);
+  UserUtils::add_student_to_module($userID, $_GET['moduleid'], 1, $_POST['session'], $mysqli);
 }
 
 ?>

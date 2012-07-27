@@ -24,24 +24,19 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require '../classes/userutils.class.php';
 
 check_var('teamID', 'GET', true, false);
 $teamID = $_GET['teamID'];
 
 if (isset($_POST['submit'])) {
   // Clear the team of all members.
-  $result = $mysqli->prepare("DELETE FROM teams WHERE name=?");
-  $result->bind_param('s', $teamID);
-  $result->execute();  
-  $result->close();
+  UserUtils::clear_team_by_team_name($teamID, $mysqli);
   
   // Insert a record for each team member.
   for ($i=0; $i<$_POST['staff_no']; $i++) {
     if (isset($_POST["staff$i"]) and $_POST["staff$i"] != '') {
-      $result = $mysqli->prepare("INSERT INTO teams VALUES (NULL,?,?,NULL,'System')");
-      $result->bind_param('si', $teamID, $_POST["staff$i"]);
-      $result->execute();  
-      $result->close();
+      UserUtils::add_staff_to_team($_POST["staff$i"], $teamID, $mysqli);
     }
   }
 ?>
@@ -114,15 +109,7 @@ if (isset($_POST['submit'])) {
   </table>
 
 <?php
-  $team_members = array();
-  $result = $mysqli->prepare("SELECT memberID FROM teams WHERE name=?");
-  $result->bind_param('s', $_GET['teamID']);
-  $result->execute();
-  $result->bind_result($memberID);
-  while ($row = $result->fetch()) {
-    $team_members[] = $memberID;
-  }
-  $result->close();
+  $team_members = UserUtils::get_team_list_by_name($_GET['teamID'], $mysqli);
 
   echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:12px 4px 8px 4px; font-size:90%\" id=\"list\">";
   $staff_no = 0;

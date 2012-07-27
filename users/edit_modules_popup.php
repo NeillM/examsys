@@ -120,13 +120,11 @@
 </html>
 <?php
   } else {
-  
-  if (isset($_GET['session']) and $_GET['session'] != '') {
-    $session = $_GET['session'];
-  } else {
-    $session =  DateUtils::get_current_academic_year();
-
-  }
+    if (isset($_GET['session']) and $_GET['session'] != '') {
+      $session = $_GET['session'];
+    } else {
+      $session = date_utils::get_current_academic_year();
+    }
 ?>
 <html>
 <head>

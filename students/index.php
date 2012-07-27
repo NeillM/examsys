@@ -146,7 +146,7 @@ QUERY;
 for ($i = 0; $i < count($modules); $i++) {
   $mod_id = $modules[$i]['id'];
 	if ($stmt = $mysqli->prepare($feedback_query)) {
-		$mod_string = '%'.$mod_id.'%';
+		$mod_string = '%' . $mod_id . '%';
 	  $stmt->bind_param('ss', $mod_string, $modules[$i]['year']);
 	  $stmt->execute();
 	  $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date);

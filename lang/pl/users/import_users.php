@@ -2,10 +2,9 @@
 require '../lang/' . $language . '/include/user_search_options.inc';
 
 $string['sendwelcomeemail'] = 'Wyślij do użytkownika list powitalny';
-$string['importstudents'] = 'Importuj studentów';
 $string['csvfile'] = 'Plik CSV:';
 $string['import'] = 'Importuj';
-$string['msg1'] = 'Rogō może skomasować ładowanie danych studentów i tworzenie nowych kont z plików CSV. <br />Pierwszy wiersz powinien być wierszem nagłówkowym zawierającym następujące pola:';
+$string['msg1'] = 'New users accounts (staff or student) can be created from CSV files. The first row should be a header row containing the following fields:';  // Niko
 $string['msg2'] = "Dodatkowe pola 'Modules' i 'Session' mogą być dodane by zapisywać nowych studentów na wybrane moduły w tym samym czasie.";
 $string['loading'] = 'Ładowanie...';
 $string['followingerrors'] = 'Nie dodano żadnego użytkownika z powodu następujących błędów:';
@@ -13,7 +12,6 @@ $string['usersadded'] = 'Dodani użytkownicy';
 $string['usersupdated'] = 'Istniejący użytkownicy zaktualizowani';
 $string['missingcolumn'] = 'Brak kolumny \'%s\' w importowanym pliku - dodaj ją.';
 $string['finished'] = 'Zakończono';
-$string['loadstudents'] = 'Rogō: Ładowanie danych studentów';
 
 $string['emailmsg1'] = 'Utwórz nowe konto użytkownika';
 $string['emailmsg2'] = '';

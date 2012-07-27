@@ -25,9 +25,9 @@
 */
 
 
-Class SchoolUtils {
+Class school_utils {
  
-  static function addSchool($facultyID, $school, $db) {
+  static function add_school($facultyID, $school, $db) {
    
     $result = $db->prepare("INSERT INTO schools(school, facultyID) VALUES (?, ?)");
     $result->bind_param('si', $school, $facultyID);

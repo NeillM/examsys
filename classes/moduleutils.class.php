@@ -25,11 +25,11 @@
 */
 
 
-Class ModuleUtils {
+Class module_utils {
 
-  static function addModules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db) {
+  static function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db) {
     
-    if (ModuleUtils::moduleExists($moduleid,$db) === false) {
+    if (module_utils::module_exists($moduleid, $db) === false) {
       return false;
     }
     
@@ -51,7 +51,7 @@ Class ModuleUtils {
     return true;
   }
   
-  static function moduleExists($moduleid, $db) {
+  static function module_exists($moduleid, $db) {
     // Check for unique moduleID
     $unique_moduleid = false;
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid=?");

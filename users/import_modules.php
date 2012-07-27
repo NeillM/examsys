@@ -34,6 +34,7 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['impmodtitle'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-family:Arial,sans-serif; background-color:white; colour:black}
     p {margin:0px; padding:0px}
@@ -51,9 +52,11 @@
 <?php
   require '../include/user_search_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content" class="content" style="font-size:90%">
 <br />
 <br />
+<br />
+
 <?php
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
@@ -66,7 +69,7 @@
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#4F81BD"><?php echo $string['addingmodules']; ?> (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
+        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:160%; font-weight:bold" class="midblue_header"><?php echo $string['addingmodules']; ?> (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
         </tr>
         <tr>
         <td align="left" style="background-color:#F1F5FB">
@@ -148,7 +151,7 @@
               
               if ($require_insert) {
                 if (isset($students[$sid]['dbID'])) {
-                  UserUtils::addUserToModule($students[$sid]['dbID'], $module, $attempt, $session, $mysqli);
+                  UserUtils::add_student_to_module($students[$sid]['dbID'], $module, $attempt, $session, $mysqli);
                   $modulesAdded++;
                 } else {
                   $missing_users[$sid]['module'][] = $module;
@@ -182,9 +185,9 @@
     <?php
   } else {
 ?>
-<table border="0" cellpadding="4" cellspacing="0" style="width:650px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
+<table border="0" cellpadding="4" cellspacing="0" style="width:730px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['importmodules']; ?></span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importmodules']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">

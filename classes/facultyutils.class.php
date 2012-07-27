@@ -25,9 +25,9 @@
 */
 
 
-Class FacultyUtils {
+Class faculty_utils {
  
-  static function addFaculty($faculty, $db) {
+  static function add_faculty($faculty, $db) {
    
     $result = $db->prepare("INSERT INTO faculty(name) VALUES(?)");
     $result->bind_param('s', $faculty);

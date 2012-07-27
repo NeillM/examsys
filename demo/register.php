@@ -135,8 +135,7 @@ if (isset($_POST['submit'])) {
 
 
   if ($unique_module == true) {
-    //static function addModules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db)
-    $new_modid = ModuleUtils::addModules($new_moduleid, $_POST['new_grade2'], 1, 5, NULL, NULL, true, true, true, false, false, true, false, $mysqli);
+    $new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, 5, NULL, NULL, true, true, true, false, false, true, false, $mysqli);
   }
 
   if ($unique_username == true) {
@@ -164,9 +163,9 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  $session = DateUtils::get_current_academic_year();
+  $session = date_utils::get_current_academic_year();
 
-  UserUtils::addUserToModule($userid, $new_moduleid, 1, $session, $mysqli);
+  UserUtils::add_student_to_module($userid, $new_moduleid, 1, $session, $mysqli);
 
   $result = $mysqli->prepare("INSERT INTO teams VALUES (NULL, ?, ?, NULL, 'System')");
   $result->bind_param('si', $new_moduleid, $useridstf);

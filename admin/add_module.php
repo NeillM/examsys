@@ -82,13 +82,13 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   
   $ebel_grid_template = $_POST['ebel_grid_template'];
   
-  ModuleUtils::addModules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
+  module_utils::add_modules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
   
   if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     $enrolements = 0;
       
     // Get the current academic session
-    $session = DateUtils::get_current_academic_year();
+    $session = date_utils::get_current_academic_year();
     $session_parts = explode('/',$session);
 
     $module = trim($_POST['moduleid']);
@@ -128,7 +128,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
             $tmp_userID = UserUtils::createUser($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $student->YearofStudy, 'Student', $student->StudentID, $mysqli);
           }
           // Add student onto the module
-          UserUtils::addUserToModule($tmp_userID, $module, 1, $session, $mysqli);
+          UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli);
           
           $enrolements++;
           if ($enrolement_details == '') {

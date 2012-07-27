@@ -752,7 +752,7 @@ a.access:hover {color:white}
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
   
-  $current_schools = SchoolUtils::getAdminSchools($_GET['userID'], $mysqli);
+  $current_schools = school_utils::getAdminSchools($_GET['userID'], $mysqli);
    
   $old_faculty = '';
   $admin_school_no = 0;
@@ -765,12 +765,12 @@ a.access:hover {color:white}
     }
     
     if (strpos($userroles,'SysAdmin') === false) {
-      if (in_array($schoolID,$current_schools)) {
+      if (in_array($schoolID, $current_schools)) {
       echo "<tr><td style=\"padding-left:20px\">$school</td></tr>\n";
       }
     } else {
       echo '<tr><td class="sch_check">';
-      if (in_array($schoolID,$current_schools)) {
+      if (in_array($schoolID, $current_schools)) {
         echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" checked />";
       } else {
         echo "<input type=\"checkbox\" name=\"sch" . $admin_school_no . "\" value=\"$schoolID\" />";
@@ -783,7 +783,7 @@ a.access:hover {color:white}
   }
   $results->close();
   echo "</table>\n</td></tr>\n";
-  if (strpos($userroles,'SysAdmin') !== false) {
+  if (strpos($userroles, 'SysAdmin') !== false) {
     echo '<tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="' . $string['save'] . '" style="width:100px" /><input type="hidden" name="admin_school_no" value="' . $admin_school_no . '" /></td></tr>';
   }
   ?>

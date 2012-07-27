@@ -166,11 +166,11 @@ if ($paper_type == '2' and $cfg_summative_mgmt) {
   while ($module_details->fetch()) {
     if ($next_flag == 1) {
       $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
-      $sel = (DateUtils::get_current_academic_year() == $next_session) ? ' selected="selected"' : '';
+      $sel = (date_utils::get_current_academic_year() == $next_session) ? ' selected="selected"' : '';
       echo "<option value=\"$next_session\"$sel>$next_session</option>\n";
       $next_flag = 0;
     }
-    $sel = (DateUtils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
+    $sel = (date_utils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
     echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
   }
   echo "</select></td>\n";

@@ -214,7 +214,7 @@ if (isset($_GET['module'])) {
 <table style="text-align:left">
 <tr><td><?php echo $string['year']; ?></td><td><select name="session">
 <?php
-  $current_year = DateUtils::get_current_academic_year();
+  $current_year = date_utils::get_current_academic_year();
 
   $parts = explode('/', $current_year);
   echo "<option value=\"" . ($parts[0]-1) . "/" . ($parts[1]-1) . "\">" . ($parts[0]-1) . "/" . ($parts[1]-1) . "</option>\n";

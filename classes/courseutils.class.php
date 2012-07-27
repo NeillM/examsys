@@ -23,11 +23,19 @@
 */
 
 
-Class CourseUtils {
+Class course_utils {
 
-  static function addCourse($schoolid, $name, $description, $db) {
+  /**
+   * Check for already existing and then add new course data into the database.
+   * @param integer $schoolid ID of the school the course belongs to
+   * @param string $name code of the course e.g. B140
+   * @param string $description a title for the course e.g. Neuroscience BSc
+   * @param object $db database connection
+   * @return bool depending on insert success
+   */
+  static function add_course($schoolid, $name, $description, $db) {
     
-    if (CourseUtils::courseExists($name, $db) === false) {
+    if (course_utils::course_exists($name, $db) === false) {
       return false;
     }
     
@@ -43,7 +51,13 @@ Class CourseUtils {
     return true;
   }
   
-  static function courseExists($name, $db) {
+  /**
+   * Check to see if a course already exists.
+   * @param string $name name of the course to check
+   * @param object $db database connection
+   * @return bool false=course already exists, true=course does not exist
+   */
+  static function course_exists($name, $db) {
     // Check for unique course
     $unique_courseid = false;
     
