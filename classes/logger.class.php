@@ -48,15 +48,17 @@ Class Logger {
    * @return boolean Success or failure of the database operation
    */
   public function track_change($message, $object_id, $user_id, $orig_val, $new_val, $part) {
-    $query = <<< QUERY
-INSERT INTO track_changes(type, typeID, editor, old, new, changed, part) 
+    if ($object_id > 0) {
+      $query = <<< QUERY
+INSERT INTO track_changes(type, typeID, editor, old, new, changed, part)
 VALUES (?,?,?,?,?,NOW(),?)
 QUERY;
-    $result = $this->_mysqli->prepare($query);
-    $result->bind_param('siisss', $message, $object_id, $user_id, $orig_val, $new_val, $part);
-    $success = $result->execute();  
-    $result->close();
-    
+      $result = $this->_mysqli->prepare($query);
+      $result->bind_param('siisss', $message, $object_id, $user_id, $orig_val, $new_val, $part);
+      $success = $result->execute();
+      $result->close();
+    }
+
     return $success;
   }
   

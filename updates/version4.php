@@ -3174,7 +3174,23 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
-  // End ------------------------------------------------------------------
+  // 27/07/2012 - Remove invalid entries from track changes
+  $result = $mysqli->prepare("SELECT typeID FROM track_changes WHERE typeID < 1 LIMIT 1");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 1) {
+    $adjust = $mysqli->prepare("DELETE FROM track_changes WHERE typeID < 1");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>DELETE * FROM track_changes WHERE typeID < 1</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+
+    // End ------------------------------------------------------------------
   echo "</ol>\n";
 
   //Close the database
