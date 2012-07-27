@@ -1,10 +1,10 @@
-function sendTextToAS3(mode, image, correct, userv){
+function sendTextToAS3(mode, image, correct, user){
   var toSend = mode + ';' + image + ';';
   if (typeof 'correct' != 'undefined' && correct != '' && correct != undefined) {
     toSend += correct + ';';
   }
-  if (typeof 'userv' != 'undefined' && userv != '' && userv != undefined) {
-    toSend += userv + ';';
+  if (typeof 'user' != 'undefined' && user != '' && user != undefined) {
+    toSend += user + ';';
   }
 
   // Add small delay to get around race condition that was evident in Firefox
