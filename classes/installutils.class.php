@@ -685,17 +685,17 @@ Class InstallUtils {
      }
 
      //add traing school
-    $facultyID = faculty_utils::add_faculty('Administrative and Support Units',
+    $facultyID = FacultyUtils::add_faculty('Administrative and Support Units',
                                         self::$db
                                      );
 
-    $scoolID = school_utils::add_school(  $facultyID,
+    $scoolID = SchoolUtils::add_school(  $facultyID,
                                         'Training',
                                         self::$db
                                      );
 
      //create special modules
-     module_utils::add_modules( 'TRAIN',
+     ModuleUtils::add_modules( 'TRAIN',
                                 'Training Module',
                                 1,
                                 $scoolID,
@@ -711,7 +711,7 @@ Class InstallUtils {
                                 self::$db
                              );
 
-    module_utils::add_modules(  'SYSTEM',
+    ModuleUtils::add_modules(  'SYSTEM',
                                 'Online Help',
                                 1,
                                 $scoolID,

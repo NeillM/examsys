@@ -23,7 +23,7 @@
 */
 
 
-Class course_utils {
+Class CourseUtils {
 
   /**
    * Check for already existing and then add new course data into the database.
@@ -35,7 +35,7 @@ Class course_utils {
    */
   static function add_course($schoolid, $name, $description, $db) {
     
-    if (course_utils::course_exists($name, $db) === false) {
+    if (CourseUtils::course_exists($name, $db) === true) {
       return false;
     }
     
@@ -50,25 +50,43 @@ Class course_utils {
     
     return true;
   }
+
+  /**
+   * Deletes an existing course.
+   * @param string $name code of the course e.g. B140
+   * @param object $db database connection
+   * @return bool depending on  success
+   */
+  static function delete_course($name, $db) {
+    
+    $result = $db->prepare("DELETE FROM courses WHERE name = ? limit 1");
+    $result->bind_param('s', $name);
+    $result->execute();  
+    $result->close();
+    
+    if ($db->errno != 0) {
+      return false;
+    }
+    
+    return true;
+  }
   
   /**
    * Check to see if a course already exists.
    * @param string $name name of the course to check
    * @param object $db database connection
-   * @return bool false=course already exists, true=course does not exist
+   * @return bool false=course does not exists, true=course exist
    */
   static function course_exists($name, $db) {
     // Check for unique course
-    $unique_courseid = false;
+    $unique_courseid = true;
     
     $result = $db->prepare("SELECT id FROM courses WHERE name=?");
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();
-    $result->bind_result($tmp_courseid);
-    $result->fetch();
     if ($result->num_rows == 0) {
-      $unique_courseid = true;
+      $unique_courseid = false;
     }
     $result->free_result();
     $result->close();

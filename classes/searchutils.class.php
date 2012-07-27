@@ -45,7 +45,7 @@ Class search_utils {
       if (strpos($userroles,'SysAdmin') !== false) {
         $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
       } elseif (strpos($userroles,'Admin') !== false) {
-        $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $db));
+        $schoolIDs = implode(',', SchoolUtils::get_admin_schools($userID, $db));
         if ($schoolIDs != '') {
           $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID";
         } elseif ($team_sql != '') {

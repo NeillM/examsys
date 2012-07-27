@@ -512,7 +512,7 @@ if ($_POST['paper_type'] == 'summative') {
   if (strpos($userroles,'SysAdmin') !== false) {
     $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE moduleid != '' ORDER BY moduleID");
   } elseif (strpos($userroles,'Admin') !== false) {
-    $schoolIDs = implode(',', SchoolUtils::getAdminSchools($userID, $mysqli));
+    $schoolIDs = implode(',', SchoolUtils::get_admin_schools($userID, $mysqli));
     $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE (schoolid IN ($schoolIDs) OR moduleid IN ($team_sql)) AND moduleid != '' ORDER BY moduleID");
   } else {
     $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN ($team_sql) AND moduleid != '' ORDER BY moduleID");

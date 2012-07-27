@@ -752,7 +752,7 @@ a.access:hover {color:white}
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
   
-  $current_schools = school_utils::getAdminSchools($_GET['userID'], $mysqli);
+  $current_schools = SchoolUtils::get_admin_schools($_GET['userID'], $mysqli);
    
   $old_faculty = '';
   $admin_school_no = 0;

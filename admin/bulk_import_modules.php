@@ -131,7 +131,7 @@
                   $result->fetch();
                   $result->close();
 
-                  $unknown_schoolID = school_utils::add_school($facultyID, '', $mysqli);
+                  $unknown_schoolID = SchoolUtils::add_school($facultyID, '', $mysqli);
                 }
                 $schoolID = $unknown_schoolID;
               }              
