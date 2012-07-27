@@ -155,13 +155,13 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
           <tbody>
           <tr>
             <th class="align-left">&nbsp;</th>
-            <td class="align-left heavy">Answer Correct</td>
-            <td class="align-left heavy">Error</td>
-            <td class="align-left heavy">Mark</td>
+            <td class="align-left heavy"><?php echo $string['answercorrect'] ?></td>
+            <td class="align-left heavy"><?php echo ucfirst($string['error']) ?></td>
+            <td class="align-left heavy"><?php echo $string['marks'] ?></td>
           </tr>
           <tr>
             <th>
-              <strong>Full Marks</strong>
+              <strong><?php echo $string['tolerance_full'] ?></strong>
             </th>
             <td class="form-small">
               <select id="option_correct_full1" name="option_correct_full1">
@@ -191,7 +191,7 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
           ?>
           <tr class="marks-partial<?php echo $show_partial ?>">
             <th>
-              <strong>Partial Marks</strong>
+              <strong><?php echo $string['tolerance_partial'] ?></strong>
             </th>
             <td>
               <select id="option_correct_partial1" name="option_correct_partial1">
@@ -224,7 +224,7 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
           ?>
           <tr>
             <th>
-              <strong>Incorrect</strong>
+              <strong><?php echo $string['marksincorrect'] ?></strong>
             </th>
             <td colspan="2">&nbsp;</td>
             <td>

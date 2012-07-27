@@ -239,4 +239,6 @@ $string['keywordwarning'] = 'Warning no keywords found, cannot create question.'
 $string['mappingwarning'] = 'WARNING: All mappings will be lost if this question is not added to the paper!';
 $string['markchangewarning'] = 'Warning: changing mark allocations post-exam should only be undertaken if absolutely necessary. Are you sure you want to continue?';
 $string['percenttolerance'] = 'Tolerances may now be expressed as percentages (e.g. 5%) as well as absolute numbers';
+$string['answercorrect'] = 'Answer Correct';
+$string['marks'] = 'Marks';
 ?>
