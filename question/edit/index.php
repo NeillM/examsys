@@ -380,6 +380,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
+<link rel="stylesheet" href="../../css/header.css" type="text/css" />
 <link rel="stylesheet" href="../../css/screen.css" type="text/css" />
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
@@ -546,7 +547,7 @@ if (count($errors) > 0) {
 ?>
         <div id="question-holder" class="clearfix">
           <div class="form">
-            <h2><?php echo $string['question'] ?></h2>
+            <h2 class="midblue_header"><?php echo $string['question'] ?></h2>
           </div>
         
 <?php 
@@ -554,7 +555,7 @@ if ($question->get_type() != '') require_once '../../include/question/addedit/' 
 ?>
 
           <div class="form">
-            <h2><?php echo $string['metadata'] ?></h2>
+            <h2 class="midblue_header"><?php echo $string['metadata'] ?></h2>
           </div>
 
 <?php
