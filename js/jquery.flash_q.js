@@ -1,5 +1,5 @@
-function sendTextToAS3(mode, image, correct, user){
-  var toSend = mode + ';' + image + ';';
+function sendTextToAS3(q_no, mode, image, correct, user){
+  var toSend = q_no + ';' + mode + ';' + image + ';';
   if (typeof 'correct' != 'undefined' && correct != '' && correct != undefined) {
     toSend += correct + ';';
   }
@@ -9,28 +9,32 @@ function sendTextToAS3(mode, image, correct, user){
 
   // Add small delay to get around race condition that was evident in Firefox
   setTimeout(function() {
-    doSend(toSend);
-  }, 300)
+    doSend(q_no, toSend);
+  }, 500)
 }
 
-function doSend(toSend) {
+function doSend(q_no, toSend) {
   try
   {
-    var flash1 = document.getElementById("externalinterface1");
+    var flash1 = document.getElementById("externalinterface" + q_no + "_1");
     if (flash1) {
       flash1.sendTextFromJS(toSend);
     }
   }
   catch(error)
   {
-    var flash2 = document.getElementById("externalinterface2");
+    var flash2 = document.getElementById("externalinterface" + q_no + "_2");
     if (flash2) {
       flash2.sendTextFromJS(toSend);
     }
   }
 }
 
-// Requires flashTarget to be defined with ID of DOM element to receive text
 function receiveTextFromAS3(txt) {
-  $('#' + flashTarget).val(txt);
+  parts = txt.split(";");
+  
+  flashTarget = parts.shift();
+  data = parts.join(";");
+
+  $('#' + flashTarget).val(data);
 }

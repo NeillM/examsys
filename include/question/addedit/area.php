@@ -59,9 +59,8 @@ $error_range = range(0, 50);
 <script type="text/javascript">
 //<![CDATA[
 $(function () {
-  sendTextToAS3('2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
+  sendTextToAS3('option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
 });
-flashTarget = 'option_correct';
 //]]>
 </script>
 
@@ -86,7 +85,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 ?>
-                <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>" id="externalinterface1" align="top">
+                <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>" id="externalinterfaceoption_correct_1" align="top">
                   <param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />
                   <param name="quality" value="high" />
                   <param name="bgcolor" value="#ffffff" />
@@ -100,7 +99,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
                   <param name="allowScriptAccess" value="sameDomain" />
                   <!--<param name="FlashVars" value="imgtt=Isles" />-->
                   <!--[if !IE]>-->
-                  <object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterface2" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>">
+                  <object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceoption_correct_2" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>">
                     <param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />
                     <param name="quality" value="high" />
                     <param name="bgcolor" value="#ffffff" />
@@ -121,7 +120,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   <?php
 endif;
 ?>                
-                <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
+                <input name="optionid1" value="<?php echo $option_id; ?>" type="hidden" />
                 <input type="hidden" id="option_correct" name="option_correct" value="<?php echo $correct ?>" />
                 <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
                 <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />

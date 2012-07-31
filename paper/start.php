@@ -405,6 +405,7 @@ if ($css != '') {
 <?php }?>
 <script type="text/javascript" src="../js/start.js"></script>
 <script type="text/javascript" src="../js/flash_include.js"></script>
+<script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script language="javascript">
   window.history.go(1);
 <?php

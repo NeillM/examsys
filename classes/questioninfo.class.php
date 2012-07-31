@@ -30,7 +30,7 @@ Class question_info {
   /**
    * Get the question information
    * @param integer $q_id
-   * @param resource $db
+   * @param object $db
    * @return formated HTML for display of question information
    */
   static function full_question_information($q_id, $db) {

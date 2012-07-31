@@ -49,4 +49,6 @@ $string['no'] = 'Nie';
 $string['abstain'] = 'Wstrzymany';
 $string['iscorrect'] = 'jest poprawny';
 $string['isexcluded'] = 'jest wykluczony';
+$string['withinshape'] = 'Within shape';  // Niko
+$string['outsideshape'] = 'Outside shape';  // Niko
 ?>

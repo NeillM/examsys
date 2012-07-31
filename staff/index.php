@@ -26,6 +26,7 @@
 
   require '../include/staff_student_auth.inc';
   require '../include/sidebar_menu.inc';
+  require '../classes/recyclebin.class.php';
   require '../config/index.inc';
 
   // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
@@ -242,39 +243,7 @@ require '../include/staff_auth.inc';
     }
   }
 
-  // Work out if there is anything in the recycle bin.
-  // Limit 1 is included for speed. Just need to know it is not zero to display a full recycle bin icon.
-  $recycle_bin_no = 0;
-  
-  $stmt = $mysqli->prepare("SELECT property_id FROM properties WHERE (paper_ownerID=? OR moduleID REGEXP ('" . implode('|', $teams) . "')) AND deleted IS NOT NULL LIMIT 1");
-  $stmt->bind_param('i', $userID);
-  $stmt->execute();
-  $stmt->bind_result($no_deleted);
-  $stmt->fetch();
-  $stmt->close();
-  $recycle_bin_no += $no_deleted;
-  
-  $stmt = $mysqli->prepare("SELECT q_id FROM questions WHERE (ownerID=? OR q_group REGEXP '" . implode('|', $teams) . "') AND deleted IS NOT NULL LIMIT 1");
-  $stmt->bind_param('i', $userID);
-  $stmt->execute();
-  $stmt->bind_result($no_deleted);
-  $stmt->fetch();
-  $stmt->close();
-  $recycle_bin_no += $no_deleted;
-  
-  $stmt = $mysqli->prepare("SELECT id FROM folders WHERE (ownerID=? OR team_name REGEXP ('" . implode('|', $teams) . "')) AND deleted IS NOT NULL LIMIT 1");
-  $stmt->bind_param('i', $userID);
-  $stmt->execute();
-  $stmt->bind_result($no_deleted);
-  $stmt->fetch();
-  $stmt->close();
-  $recycle_bin_no += $no_deleted;
-
-  if ($recycle_bin_no > 0) {
-    echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
-  } else {
-    echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/empty_bin.png\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
-  }
+  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userID, $teams, $mysqli) . "\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
 ?>
 <br clear="left" />
 <?php

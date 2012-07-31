@@ -144,6 +144,7 @@ require '../config/finish.inc';
   }
 ?>
 <script type="text/javascript" src="../js/flash_include.js"></script>
+<script type="text/javascript" src="../js/jquery.flash_q.js"></script>
 <script language="JavaScript">
   window.history.go(1);
 

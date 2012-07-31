@@ -48,6 +48,8 @@ Class Logger {
    * @return boolean Success or failure of the database operation
    */
   public function track_change($message, $object_id, $user_id, $orig_val, $new_val, $part) {
+    $success = true;
+    
     if ($object_id > 0) {
       $query = <<< QUERY
 INSERT INTO track_changes(type, typeID, editor, old, new, changed, part)
@@ -76,7 +78,7 @@ QUERY;
   public function check_and_track_change($message, $object_id, $user_id, $orig_val, $new_val, $part, &$changes) {
     $success = true;
     
-    if($orig_val != $new_val) {
+    if ($orig_val != $new_val) {
       $success = $this->track_change($message, $object_id, $user_id, $orig_val, $new_val, $part);
       $changes = true;
     }

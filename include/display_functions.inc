@@ -161,7 +161,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
-    if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch') {
+    if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
         if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.gif" width="18" height="25" alt="' . $string['calculator'] . '" />';
@@ -347,10 +347,59 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $part_id++;
     switch ($question['q_type']) {
       case 'area':
+        if (isset($user_answers[$current_screen][$q_id])) {
+          $tmp_user_answer = $user_answers[$current_screen][$q_id];
+          $answer_parts = explode(';', $tmp_user_answer);
+          $tmp_user_answer = substr($answer_parts[1], 0, -2);
+        } else {
+          $tmp_user_answer = '';
+        }
+        
+        ?>
+        <br />
+        <script language="javascript">
+          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
+          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="quality" value="high" />');
+          write_string('<param name="bgcolor" value="#ffffff" />');
+          write_string('<param name="play" value="true" />');
+          write_string('<param name="loop" value="true" />');
+          write_string('<param name="wmode" value="opaque" />');
+          write_string('<param name="scale" value="showall" />');
+          write_string('<param name="menu" value="true" />');
+          write_string('<param name="devicefont" value="false" />');
+          write_string('<param name="salign" value="top" />');
+          write_string('<param name="allowScriptAccess" value="sameDomain" />');
+          write_string('<!--<param name="FlashVars" value="imgtt=Isles" />-->');
+          write_string('<!--[if !IE]>-->');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>">');
+          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="quality" value="high" />');
+          write_string('<param name="bgcolor" value="#ffffff" />');
+          write_string('<param name="play" value="true" />');
+          write_string('<param name="loop" value="true" />');
+          write_string('<param name="wmode" value="opaque" />');
+          write_string('<param name="scale" value="showall" />');
+          write_string('<param name="menu" value="true" />');
+          write_string('<param name="devicefont" value="false" />');
+          write_string('<param name="salign" value="top" />');
+          write_string('<param name="allowScriptAccess" value="sameDomain" />');
+          write_string('<!--<![endif]-->');
+          write_string('<a href="http://www.adobe.com/go/getflash"> <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>');
+          write_string('<!--[if !IE]>-->');
+          write_string('</object>');
+          write_string('<!--<![endif]-->');
+          write_string('</object>');
+          
+          sendTextToAS3('q<?php echo $question_no; ?>', 1, '<?php echo '../media/' . $question['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $tmp_user_answer; ?>');
+          
+        </script>
+        <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" />
+        <?php
         break;
       case 'dichotomous':
         if (isset($user_answers[$current_screen][$q_id])) {
-          $tmp_user_answer = substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1);
+          $tmp_user_answer = substr($user_answers[$current_screen][$q_id], $question['option_order'][$part_id-1], 1);
         } else {
           $tmp_user_answer = '';
         }
