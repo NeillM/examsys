@@ -1187,7 +1187,7 @@ QUERY;
    * @return array Associative array containing date, section, old value, new value and user for the change
    */
   public function get_changes() {
-    if ($this->id = -1) {
+    if ($this->id == -1) {
       return array();
     }
 
@@ -1244,7 +1244,7 @@ QUERY;
    * @return array Array of comments indexed by comment ID and containing paper ID, category,  comment text, date, reviewer name, action, response and type
    */
   public function get_comments($paper_id = -1) {
-    if ($this->id = -1) {
+    if ($this->id == -1) {
       return array();
     }
 
