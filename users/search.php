@@ -108,13 +108,13 @@ if (isset($_GET['submit'])) {
   $user_no = 0;
   if ($roles_sql != '') {
     if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
-      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN teams ON users.id=teams.memberID AND teams.name LIKE '" . $_GET['team'] . "' WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN teams ON users.id=teams.memberID AND teams.name LIKE '" . $_GET['team'] . "' WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
     } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
-      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
     } else {
       // Student search
       if ($moduleID == '%') {
-        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN sid ON users.id=sid.userID WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN sid ON users.id=sid.userID WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
       } else {
         $roles_sql = 'AND ' . $roles_sql;
         if ($moduleID == '%') {
@@ -127,7 +127,7 @@ if (isset($_GET['submit'])) {
         } else {
           $calendar_year_sql = " AND calendar_year LIKE '$calendar_year'";
         }
-        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql ORDER BY " . $sortby . " " . $ordering;
+        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
       }
     }
     

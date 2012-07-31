@@ -60,6 +60,14 @@ if (isset($_GET['calendar_year'])) {
   function viewProfileSingle() {
     document.location.href='details.php?userID=' + document.PapersMenu.userID.value;
   }
+  
+  function deleteUser() {
+    notice=window.open("<?php echo $cfg_root_path ?>/delete/check_delete_user.php?id=" + document.PapersMenu.userID.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    if (window.focus) {
+      notice.focus();
+    }
+  }
 
   function emailCohort() {
     var winwidth = 700;
@@ -213,7 +221,10 @@ if (isset($_GET['calendar_year'])) {
 <tr><td><img src="../artwork/user_file_icon_grey_16.gif" width="16" height="16" alt="User Details" /></td><td class="greymenuitem"><?php echo $string['viewuserfile']; ?></td></tr>
 <?php
   if (strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
-    echo '<tr><td class="ico"><a href="create_new_user.php" target="body"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create User" border="0" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
+    echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create User" border="0" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
+    if (strpos($userroles,'SysAdmin') !== false) {
+      echo '<tr><td class="ico"><img src="../artwork/delete_user_16_grey.png" width="16" height="16" alt="Create" border="0" /></a></td><td class="greymenuitem">Delete User</td></tr>';
+    }
   } else {
     echo '<tr><td class="ico"><img src="../artwork/small_user_icon_grey.gif" width="16" height="16" alt="Create User" /></td><td class="greymenuitem">' . $string['createnewuser'] . '</td></tr>';
   }
@@ -227,7 +238,12 @@ if (isset($_GET['calendar_year'])) {
 
 <table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu2c">
 <tr><td class="ico"><a onclick="viewProfileSingle(); return false;" href="#"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="Edit" border="0" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
-<tr><td class="ico"><a href="create_new_user.php" target="body"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create" border="0" /></a></td><td class="menuitem"><a href="create_new_user.php"><?php echo $string['createnewuser']; ?></a></td></tr>
+<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create" border="0" /></a></td><td class="menuitem"><a href="create_new_user.php"><?php echo $string['createnewuser']; ?></a></td></tr>
+<?php
+  if (strpos($userroles,'SysAdmin') !== false) {
+    echo '<tr><td class="ico"><a href="#" onclick="deleteUser(); return false;"><img src="../artwork/delete_user_16.png" width="16" height="16" alt="Delete" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deleteUser(); return false;">Delete User</a></td></tr>';
+  }
+?>
 </table>
 
 </td></tr>

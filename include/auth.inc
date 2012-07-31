@@ -136,9 +136,9 @@ function db_userlookup($u, $db, $useridlookup = false) {
   $tmp_u = $split_username[0];
 
   if ($useridlookup == false) {
-    $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE username=?");
+    $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND username=?");
   } else {
-    $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE id=?");
+    $stmt = $db->prepare("SELECT password, id, roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id=?");
   }
 
   $stmt->bind_param('s', $tmp_u);

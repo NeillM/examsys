@@ -1946,6 +1946,7 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
+  $result->close();
 
   // 19/01/2012 - Add LDAP user search prefix to config file.
   $new_cfg_str = array();
@@ -3189,6 +3190,20 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
+  // 31/07/2012 - Add deleted column to users
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    // Add new deleted column
+    $adjust = $mysqli->prepare("ALTER TABLE users ADD COLUMN user_deleted datetime");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE users ADD COLUMN user_deleted datetime</li>\n";
+  }
+  $result->close();
 
     // End ------------------------------------------------------------------
   echo "</ol>\n";
