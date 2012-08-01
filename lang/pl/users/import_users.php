@@ -4,7 +4,7 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 $string['sendwelcomeemail'] = 'Wyślij do użytkownika list powitalny';
 $string['csvfile'] = 'Plik CSV:';
 $string['import'] = 'Importuj';
-$string['msg1'] = 'New users accounts (staff or student) can be created from CSV files. The first row should be a header row containing the following fields:';  // Niko
+$string['msg1'] = 'Nowe konta użytkowników (pracowników lub studentów) mogą być utworzone na podstawie danych z pliku CSV. Pierwszy wiersz powinien być wierszem nagłówkowym zawierającym następujące pola:'; 
 $string['msg2'] = "Dodatkowe pola 'Modules' i 'Session' mogą być dodane by zapisywać nowych studentów na wybrane moduły w tym samym czasie.";
 $string['loading'] = 'Ładowanie...';
 $string['followingerrors'] = 'Nie dodano żadnego użytkownika z powodu następujących błędów:';

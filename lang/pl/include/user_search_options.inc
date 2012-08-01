@@ -41,5 +41,5 @@ $string['miss'] = 'Pani';
 $string['mrs'] = '';
 $string['ms'] = '';
 $string['professor'] = 'Prof.';
-$string['deleteuser'] = 'Usuń użytkownika';  // Niko
+$string['deleteuser'] = 'Usuń użytkownika';  
 ?>
