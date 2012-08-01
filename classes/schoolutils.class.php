@@ -43,7 +43,7 @@ Class SchoolUtils {
   static function get_school_list_by_id($db) {
     $school_list = array();
 
-    $stmt = $db->prepare("SELECT id, school, facultyID FROM schools WHERE deleted is null");
+    $stmt = $db->prepare("SELECT id, school, facultyID FROM schools WHERE deleted IS NULL");
     $stmt->execute();
     $stmt->bind_result($id, $school, $faculityID);
     while ($stmt->fetch()) {
@@ -58,7 +58,7 @@ Class SchoolUtils {
   static function get_school_list_by_name($db) {
     $school_list = array();
 
-    $stmt = $db->prepare("SELECT id, school FROM schools WHERE deleted is null");
+    $stmt = $db->prepare("SELECT id, school FROM schools WHERE deleted IS NULL");
     $stmt->execute();
     $stmt->bind_result($id, $school);
     while ($stmt->fetch()) {

@@ -96,7 +96,7 @@ if (isset($_POST['Submit'])) {
       $hide_if_unanswered = '0';
     }
     
-    if (($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'SysAdmin') !== false) or !$cfg_summative_mgmt) {
+    if (($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'SysAdmin') !== false) or $paper_type != '2') {
       $local_time = new DateTimeZone($cfg_timezone);
       $target_timezone = new DateTimeZone($_POST['timezone']);
       
@@ -146,7 +146,7 @@ if (isset($_POST['Submit'])) {
       $tmp_end_date = $end_date->format("YmdHis");
     }
 
-   if ((modulo($_POST['ext_tyear'],4) == 0 and modulo($_POST['ext_tyear'],100) != 0) or modulo($_POST['ext_tyear'],400) == 0) {
+    if ((modulo($_POST['ext_tyear'],4) == 0 and modulo($_POST['ext_tyear'],100) != 0) or modulo($_POST['ext_tyear'],400) == 0) {
       $leap = true;
     } else {
       $leap = false;
@@ -1119,7 +1119,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</select>\n";
    // Available from Month
-    $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
+    $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
     echo "<select name=\"fmonth\" id=\"fmonth\" onchange=\"dateCopy('fmonth')\"$sum_disabled>\n";
     if ($start_date == '') {
       echo '<option value=""></option>';
