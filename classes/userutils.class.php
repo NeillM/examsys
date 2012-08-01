@@ -45,12 +45,12 @@ Class UserUtils {
       }
 
       //force valid value for gender or default to NULL
-      if (strtolower($gender) != 'male' or strtolower($gender) != 'female') {
-        $gender = 'NULL';
+      if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
+        $gender = NULL;
       }
       
       //add new users
-      $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?)");
+      $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?, NULL)");
       $encrypt_password = encpw($cfg_encrypt_salt, $username, $password);
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
