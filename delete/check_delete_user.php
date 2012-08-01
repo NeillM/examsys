@@ -27,6 +27,9 @@
   
   check_var('id', 'GET', true, false);
 
+  $id_list = explode(',', $_GET['id']);
+  $user_no = count($id_list) - 1;
+  
   $mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -47,7 +50,15 @@
 <tr>
 <td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
-<td><p><strong><?php echo $string['msg']; ?></strong><p>
+<td><p><strong>
+<?php
+  if ($user_no == 1) {
+    echo $string['msg1'];
+  } else {
+    echo sprintf($string['msg2'], $user_no);
+  }
+?>
+</strong><p>
 <br />
 <br />
 <div style="text-align:right">

@@ -27,7 +27,6 @@ $string['emailuser'] = 'Wyślij Email do użytkownika';//???
 $string['cohorttasks'] = 'Działania dot. grupy';//???
 $string['importusers'] = 'Import Users';  // Niko
 $string['importmodules'] = 'Importuj moduły';//???
-$string['emailcohort'] = 'Wyślij Email do grupy';//???
 $string['anyyear'] = 'każdy rok';
 $string['anymodule'] = '(każdy moduł)';
 $string['title'] = 'Tytuł';
@@ -42,4 +41,5 @@ $string['miss'] = 'Pani';
 $string['mrs'] = '';
 $string['ms'] = '';
 $string['professor'] = 'Prof.';
+$string['deleteuser'] = 'Delete User';  // Niko
 ?>

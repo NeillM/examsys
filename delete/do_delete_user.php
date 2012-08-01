@@ -26,11 +26,18 @@
   require '../include/errors.inc';
 
   check_var('id', 'POST', true, false);
+  
+  $id_list = explode(',', $_POST['id']);
 
-  $result = $mysqli->prepare("UPDATE users SET user_deleted=NOW() WHERE id=?");
-  $result->bind_param('i', $_POST['id']);
-  $result->execute();  
-  $result->close();
+  foreach ($id_list as $single_id) {
+    if ($single_id != '') {
+      $result = $mysqli->prepare("UPDATE users SET user_deleted=NOW() WHERE id=?");
+      $result->bind_param('i', $single_id);
+      $result->execute();  
+      $result->close();
+    }
+  }
+  
   $mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
