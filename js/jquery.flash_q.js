@@ -1,5 +1,5 @@
-function sendTextToAS3(q_no, mode, image, correct, user){
-  var toSend = q_no + ';' + mode + ';' + image + ';';
+function sendTextToAS3(lang, q_no, mode, image, correct, user){
+  var toSend = lang + ';' + q_no + ';' + mode + ';' + image + ';';
   if (typeof 'correct' != 'undefined' && correct != '' && correct != undefined) {
     toSend += correct + ';';
   }
