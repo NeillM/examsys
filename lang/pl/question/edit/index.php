@@ -239,6 +239,6 @@ $string['keywordwarning'] = 'Ostrzeżenie: nie znaleziono słów kluczowych, utw
 $string['mappingwarning'] = 'Ostrzeżenie: wszystkie odwzorowania będą utracone jeśli to pytanie nie zostanie dodane do arkusza!';
 $string['markchangewarning'] = 'Ostrzeżenie: zmiana parametrów oceny po egzaminie powinna być podejmowana tylko w razie najwyższej konieczności. Czy na pewno kontynuować?'; 
 $string['percenttolerance'] = 'Tolerancja może być wyrażona procentowo (np. 5%) jak i wartościami bezwzględnymi';
-$string['answercorrect'] = 'Answer Correct'; // Niko
-$string['marks'] = 'Marks'; // Niko
+$string['answercorrect'] = 'Odpowiedź poprawna';
+$string['marks'] = 'Pynkty'; 
 ?>

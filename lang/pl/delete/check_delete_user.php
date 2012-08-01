@@ -1,6 +1,6 @@
 <?php
-$string['confirmuserdelete'] = 'Confirm User Delete';  // Niko, whole file please
-$string['recyclebin'] = 'Recycle Bin';
-$string['msg'] = 'Are you sure you wish to delete this user?';
-$string['delete'] = 'Delete';
+$string['confirmuserdelete'] = 'Potwierdź usunięcie użytkownika'; 
+$string['recyclebin'] = 'Kosz';
+$string['msg'] = 'Czy na pewno usunąć tego użytkownika?';
+$string['delete'] = 'Usuń';
 ?>

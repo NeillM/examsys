@@ -25,7 +25,7 @@ $string['viewuserfile'] = 'Podgląd plików użytkownika';
 $string['createnewuser'] = 'Utwórz nowego użytkownika';
 $string['emailuser'] = 'Wyślij Email do użytkownika';//???
 $string['cohorttasks'] = 'Działania dot. grupy';//???
-$string['importusers'] = 'Import Users';  // Niko
+$string['importusers'] = 'Importuj użytkowników';  
 $string['importmodules'] = 'Importuj moduły';//???
 $string['anyyear'] = 'każdy rok';
 $string['anymodule'] = '(każdy moduł)';
@@ -41,5 +41,5 @@ $string['miss'] = 'Pani';
 $string['mrs'] = '';
 $string['ms'] = '';
 $string['professor'] = 'Prof.';
-$string['deleteuser'] = 'Delete User';  // Niko
+$string['deleteuser'] = 'Usuń użytkownika';  // Niko
 ?>
