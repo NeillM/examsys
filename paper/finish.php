@@ -30,6 +30,7 @@ require '../include/marking_functions.inc';
 require '../include/calculate_marks.inc';
 require '../include/errors.inc';
 require '../include/mapping.inc';
+require '../include/media.inc';
 require '../include/finish_functions.inc';
 require '../include/paper_security.inc';
 

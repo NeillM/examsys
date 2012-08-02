@@ -469,7 +469,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       if ($display_option['option_text'] != '') echo $display_option['option_text'];
       if ($display_option['o_media'] != '') {
         if ($display_option['option_text'] != '') echo '<br />';
-        echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']);
+        echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
       }
       echo "</td>";
       echo '<td>';
@@ -535,17 +535,17 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
           if ($part_id == $display_option['correct']) {
             echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" checked=\"checked\" /></td><td";
             if ($qn_excluded) echo ' style="color:red; text-decoration:line-through"';
-            echo ">" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']) . "</td></tr>\n";
+            echo ">" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "</td></tr>\n";
           } else {
             echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td";
             if ($qn_excluded) echo ' style="color:red; text-decoration:line-through"';
-            echo ">" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']) . "</td></tr>\n";
+            echo ">" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "</td></tr>\n";
           }
         } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
           if ($part_id == $display_option['correct']) {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" checked=\"checked\" /></td><td>" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']) . "</td></tr>\n";
+            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" checked=\"checked\" /></td><td>" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "</td></tr>\n";
           } else {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td>" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']) . "</td></tr>\n";
+            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td>" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "</td></tr>\n";
           }
         }
       } elseif ($firstoption['display_method'] == 'horizontal') {
@@ -561,15 +561,15 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
           }
         } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
           if ($part_id == $display_option['correct']) {
-            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" checked=\"checked\" />&nbsp;" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']) . "&nbsp;&nbsp;";
+            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" checked=\"checked\" />&nbsp;" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "&nbsp;&nbsp;";
           } else {
-            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" />&nbsp;" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']) . "&nbsp;&nbsp;";
+            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" />&nbsp;" . $display_option['option_text'] . "<br />" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "&nbsp;&nbsp;";
           }
         } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
           if ($part_id == $display_option['correct']) {
-            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" checked=\"checked\" />&nbsp;" . display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height']) . "&nbsp;&nbsp;";
+            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" checked=\"checked\" />&nbsp;" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "&nbsp;&nbsp;";
           } else {
-            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" />&nbsp;" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height']) . "&nbsp;&nbsp;";
+            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $part_id . "\" />&nbsp;" . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '') . "&nbsp;&nbsp;";
           }
         }
       } else {

@@ -76,25 +76,6 @@ function init_feedback(&$strong_on, &$strong_off) {
   }
 }
 
-function display_media($filename, $width, $height) {
-  global $cfg_root_path;
-  if (strtolower(substr($filename, -4)) == '.gif' or strtolower(substr($filename, -4)) == '.jpg' or strtolower(substr($filename, -4)) == 'jpeg' or strtolower(substr($filename, -4)) == '.png') {
-    $html = "<img src=\"../media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" />";
-  } elseif (strtolower(substr($filename, -4)) == '.mp3') {
-    //Embed MP3 using a Flash plugin
-    $html = "<object type=\"application/x-shockwave-flash\" data=\"player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
-    $html .= "<param name=\"wmode\" value=\"transparent\" />\n";
-    $html .= "<param name=\"movie\" value=\"player_mp3_maxi.swf\" />\n";
-    $html .= "<param name=\"FlashVars\" value=\"mp3={$cfg_root_path}/media/$filename&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
-    $html .= "</object>\n";  
-  } elseif (strtolower(substr($filename, -4)) == '.doc' or strtolower(substr($filename, -4)) == '.ppt' or strtolower(substr($filename, -4)) == '.xls' or strtolower(substr($filename, -4)) == '.pdf') {
-    $html = "<iframe src=\"../media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
-  } else {
-    $html = "<embed src=\"../media/$filename\" width=\"$width\" height=\"$height\" border=\"0\"></embed>";
-  }
-  return $html;
-}
-
 function display_std($std_value, $inline=1) {
   $html = '';
   if ($std_value != '') {
@@ -473,7 +454,6 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           write_string('<param name="devicefont" value="false" />');
           write_string('<param name="salign" value="top" />');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
-          write_string('<!--<param name="FlashVars" value="imgtt=Isles" />-->');
           write_string('<!--[if !IE]>-->');
           write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo $paper[$question]['q_media_width']; ?>" height="<?php echo $paper[$question]['q_media_height']; ?>">');
           write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
@@ -494,15 +474,19 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           write_string('<!--<![endif]-->');
           write_string('</object>');
           
-          sendTextToAS3('q<?php echo $question_no; ?>', 3, '<?php echo '../media/' . $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php echo $tmp_user_answer; ?>');
+          sendTextToAS3('<?php echo $language; ?>', 'q<?php echo $question_no; ?>', 3, '<?php echo '../media/' . $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php echo $tmp_user_answer; ?>');
           
         </script>
         <br />
         <?php
-        echo "<table>\n";
-        echo "<tr><td>{$string['withinshape']}</td><td style=\"text-align:right\">" . $percents[1] . "%</td></tr>\n";
-        echo "<tr><td>{$string['outsideshape']}&nbsp;</td><td style=\"text-align:right\">" . $percents[2] . "%</td></tr>\n";
-        echo "</table>\n";
+        if ($tmp_user_answer == '') {
+          echo "<div style=\"color:#808080\">{$string['unanswered']}</div>\n";
+        } else {
+          echo "<table>\n";
+          echo "<tr><td>{$string['withinshape']}</td><td style=\"text-align:right\">" . $percents[1] . "%</td></tr>\n";
+          echo "<tr><td>{$string['outsideshape']}&nbsp;</td><td style=\"text-align:right\">" . $percents[2] . "%</td></tr>\n";
+          echo "</table>\n";
+        }
         break;
       case 'calculation':
         $paper[$question]['mark'] = 0;
@@ -581,7 +565,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
         
         if ($paper[$question]['scenario'] != '') echo "<p>" . $paper[$question]['scenario'] . "</p>\n";
-        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question) . "</p>\n";
+        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
         
         echo_content($tmp_leadin);
         
@@ -684,7 +668,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       
         $paper[$question]['mark'] = 0;
         if (!empty($paper[$question]['scenario'])) echo_content($paper[$question]['scenario']);
-        if (!empty($paper[$question]['q_media'])) echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question) . "</p>\n";
+        if (!empty($paper[$question]['q_media'])) echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
         echo '<table cellpadding="0" cellspacing="1" border="0">';
         
@@ -823,7 +807,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
            
         if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
-        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
+        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
         echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\">\n";
         for ($part_id=0; $part_id<$no_options; $part_id++) {
@@ -940,7 +924,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       case 'mrq':
         $std_part = 0;
         if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
-        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
+        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
         
         // Check to see if the user has answered any options.
@@ -983,7 +967,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
               if (substr($tmp_exclude,0,1) == '1') echo '</span>';
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
+                echo display_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id] ,$paper[$question]['o_media_height'][$tmp_part_id], '') . "\n";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
               }
               echo "</td></tr>\n";
@@ -1003,7 +987,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
               if (substr($tmp_exclude,0,1) == '1') echo '</span>';
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
+                echo display_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], '') . "\n";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
               }
               echo "</td></tr>\n";
@@ -1040,7 +1024,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
               if (substr($tmp_exclude,0,1) == '1') echo '</span>';
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
+                echo display_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], '') . "\n";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
               }
               if ($tmp_display_feedback == '1') {
@@ -1063,7 +1047,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
               }
               if (substr($tmp_exclude,0,1) == '1') echo '</span>';
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo display_media($paper[$question]['o_media'][$tmp_part_id],$paper[$question]['o_media_width'][$tmp_part_id],$paper[$question]['o_media_height'][$tmp_part_id],$question_no . '_' . $tmp_part_id) . "\n";
+                echo display_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], '') . "\n";
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and substr($tmp_exclude,0,1) == '1') echo '<span style="color:red">'. $string['isexcluded'] . '</span>';
               }
               echo "</td></tr>\n";
@@ -1082,7 +1066,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       case 'sct':
         $paper[$question]['mark'] = 0;
         echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td colspan=\"3\" style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['clinicalvignette'] . "</td></tr>\n<tr><td colspan=\"2\">" . $paper[$question]['scenario'] . "</td></tr>\n";
-        if ($paper[$question]['q_media'] != '') echo "<tr><td colspan=\"3\"><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'],$question_no) . "</p></td></tr>\n";
+        if ($paper[$question]['q_media'] != '') echo "<tr><td colspan=\"3\"><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p></td></tr>\n";
     
         $sct_parts = explode('~',$paper[$question]['leadin']);
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
@@ -1223,7 +1207,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $paper[$question]['totalpos'] = 0;
 
         if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
-        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question) . "</p>\n";
+        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
 
         $true_checked = '';
@@ -1366,7 +1350,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
 
         if ($paper[$question]['scenario'] != '') echo_content($paper[$question]['scenario']);
-        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], $question_no) . "</p>\n";
+        if ($paper[$question]['q_media'] != '') echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
         echo_content($paper[$question]['leadin']);
 
         $na_count = 0;
@@ -1558,7 +1542,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $total_scenarios = max($text_scenarios, $media_scenarios);
         
         if ($matching_media[0] != '') {
-          echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], $question) . "</p>\n";
+          echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '') . "</p>\n";
         }
         $i = 0;
         $section = 0;
@@ -1573,7 +1557,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo '<li>';
           if ($single_scenario != '') echo "$single_scenario<br />";
           if (isset($matching_media[$i+1]) and $matching_media[$i+1] != '') {
-            echo "<p>" . display_media($matching_media[$i+1], $matching_media_width[$i+1], $matching_media_height[$i+1], $question . '_' . ($i+1)) . "</p>\n";
+            echo "<p>" . display_media($matching_media[$i+1], $matching_media_width[$i+1], $matching_media_height[$i+1], '') . "</p>\n";
           }
           echo '<br />';
           $separate_answers = array();
@@ -1735,7 +1719,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $correct_answers = explode('|', $paper[$question]['correct'][0]);
         echo_content($paper[$question]['leadin']);
         if ($matching_media[0] != '') {
-          echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0],$question_no) . '</p>';
+          echo '<p align="center">' . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '') . '</p>';
         }
 
         echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
@@ -1822,14 +1806,14 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if ($paper[$question]['scenario'] != '') {
           echo echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') {
-            echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
+            echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
           }
           echo '<p';
           if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
           echo '>' . $paper[$question]['leadin'] . "</p>\n";
         } else {
           if ($paper[$question]['q_media'] != '') {
-            echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
+            echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
           }
           echo '<p class="leadin"';
           if (substr($tmp_exclude,0,1) == '1') echo ' class="exclude"';
@@ -1860,12 +1844,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if ($paper[$question]['scenario'] != '') {
           echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') {
-            echo "<p align=\"center\">" . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
+            echo "<p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
           }
           echo_content($paper[$question]['leadin']);
         } else {
           if ($paper[$question]['q_media'] != '') {
-            echo '<br /><p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
+            echo '<br /><p align="center">' . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
           }            
           echo_content($paper[$question]['leadin']);
         }
@@ -1877,12 +1861,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         if ($paper[$question]['scenario'] != '') {
           echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') {
-            echo '<p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
+            echo '<p align="center">' . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
           }
           echo_content($paper[$question]['leadin']);
         } else {
           if ($paper[$question]['q_media'] != '') {
-            echo '<br /><p align="center">' . display_media($paper[$question]['q_media'],$paper[$question]['q_media_width'],$paper[$question]['q_media_height'],$question_no) . "</p>\n";
+            echo '<br /><p align="center">' . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
           }
           echo_content($paper[$question]['leadin']);
         }

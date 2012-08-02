@@ -238,7 +238,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       $matching_answers = explode('|', $options[0]['correct']);
   
       if ($matching_media[0] != '') {
-        echo '<p align="center">' . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0]) . '</p>';
+        echo '<p align="center">' . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '') . '</p>';
       }
       $text_scenarios = 0;
       for ($part_id=0; $part_id<10; $part_id++) {
@@ -263,7 +263,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
           echo ">" . $matching_scenarios[$part_id - 1] . "</div>";
         }
         if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
-          echo "<p>" . display_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id]) . "</p>\n";
+          echo "<p>" . display_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '') . "</p>\n";
         }
         $sub_answers = explode('$',$matching_answers[$part_id - 1]);
         $list_size = 10;
@@ -381,7 +381,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
     case 'matrix':
       $part_id = 1;
       if ($matching_media[0] != '') {
-        echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0]) . "</p>\n";
+        echo "<p align=\"center\">" . display_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '') . "</p>\n";
       }
       echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
       echo "<tr><td colspan=\"2\">&nbsp;</td>\n";

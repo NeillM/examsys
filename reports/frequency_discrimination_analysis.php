@@ -144,6 +144,29 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
   if (!isset($log_array[$qID]['totalpos'])) $log_array[$qID]['totalpos'] = 0;
 
   switch ($q_type) {
+    case 'area':
+      if ($mark == $totalpos) {
+        if (isset($log_array[$qID]['correct'])) {
+          $log_array[$qID][1]['correct']++;
+        } else {
+          $log_array[$qID][1]['correct'] = 1;
+        }
+      } elseif ($mark < $totalpos and $mark > 0) {
+        if (isset($log_array[$qID]['partial'])) {
+          $log_array[$qID][1]['partial']++;
+        } else {
+          $log_array[$qID][1]['partial'] = 1;
+        }
+      } else {
+        if (isset($log_array[$qID]['incorrect'])) {
+          $log_array[$qID][1]['incorrect']++;
+        } else {
+          $log_array[$qID][1]['incorrect'] = 1;
+        }
+      }
+      $log_array[$qID]['mark'] += $mark;
+      $log_array[$qID]['totalpos'] += $totalpos;
+      break;
     case 'blank':      
       $tmp_answer_parts = array();
       $tmp_answer_parts = explode('|',$answer);
@@ -204,7 +227,6 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
     case 'true_false':
       $count_answer = strlen($answer);
       for ($i=0; $i<$count_answer; $i++) {
-        //$tmp_individual_answer = substr($answer, $i, 1);
         $tmp_individual_answer = $answer{$i};
         if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
           $log_array[$qID][$i+1][$tmp_individual_answer]++;
@@ -271,7 +293,6 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
     case 'mrq':
       $count_answer = strlen($answer);
       for ($i=0; $i<$count_answer; $i++) {
-        //$tmp_individual_answer = substr($answer, $i, 1);
         $tmp_individual_answer = $answer{$i};
         if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
           $log_array[$qID][$i+1][$tmp_individual_answer]++;
@@ -461,6 +482,7 @@ function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
     for ($i=0; $i<$marks; $i++) $html .= '0';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   }
+  
   return $html;
 }
 
@@ -497,14 +519,68 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
       echo '>';
       if (trim(str_replace('&nbsp;', '', $scenario)) != '') echo "$scenario<br /><br />\n";
-      if ($q_type != 'hotspot' and $q_type != 'timedate' and $q_type != 'calculation' and $q_type != 'flash') echo "$leadin</div>\n";
-      if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash') {
-        echo "<p align=\"center\">" . display_media($q_media,$q_media_width,$q_media_height) . "</p>\n";
+      if ($q_type != 'hotspot' and $q_type != 'timedate' and $q_type != 'calculation' and $q_type != 'flash' and $q_type != 'area') echo "$leadin</div>\n";
+      if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'area') {
+        echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
       }
-      if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'calculation' and $q_type != 'blank' and $q_type != 'flash') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+      if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'calculation' and $q_type != 'blank' and $q_type != 'flash' and $q_type != 'area') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
     }
 
     switch ($q_type) {
+      case 'area':
+        echo "<div id=\"q_" . ($ex_no+1) . "_1\"";
+        if (isset($excluded[$q_id])) {
+           echo ' class="excluded"';
+        }
+        echo ">$leadin\n";
+        if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') {
+          echo excludeButton($ex_no, $q_id, '1', 1, 1);
+        } else {
+          echo excludeButton($ex_no, $q_id, '0', 1, 1);
+        }
+        echo "</div><p>" . display_media($q_media, $q_media_width, $q_media_height, '#7F9DB9') . "</p>\n";
+        if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = 0;
+        if (!isset($freq_log[$q_id][1]['partial'])) $freq_log[$q_id][1]['partial'] = 0;
+        if (!isset($freq_log[$q_id][1]['incorrect'])) $freq_log[$q_id][1]['incorrect'] = 0;
+        
+        if (!isset($top_log[$q_id][1]['correct'])) $top_log[$q_id][1]['correct'] = 0;
+        if (!isset($top_log[$q_id][1]['partial'])) $top_log[$q_id][1]['partial'] = 0;
+        if (!isset($top_log[$q_id][1]['incorrect'])) $top_log[$q_id][1]['incorrect'] = 0;
+        
+        if (!isset($bottom_log[$q_id][1]['correct'])) $bottom_log[$q_id][1]['correct'] = 0;
+        if (!isset($bottom_log[$q_id][1]['partial'])) $bottom_log[$q_id][1]['partial'] = 0;
+        if (!isset($bottom_log[$q_id][1]['incorrect'])) $bottom_log[$q_id][1]['incorrect'] = 0;
+
+        //if (!isset($tmp_std_array[$std_part])) $tmp_std_array[$std_part] = '';
+
+        echo "<table>\n";
+        $t = number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0);
+        $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
+        $l = number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0);
+        echo "<tr style=\"font-weight:bold\"><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td><td>Full marks</td></tr>\n";
+        
+        $partial_t = number_format(($freq_log[$q_id][1]['partial']/$user_total)*100,0);
+        $partial_u = number_format(($top_log[$q_id][1]['partial']/$candidate_no)*100,0);
+        $partial_l = number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0);
+        echo "<tr><td>t=$partial_t%</td><td>u=$partial_u%</td><td>l=$partial_l%</td><td>Partial marks</td></tr>\n";
+        
+        $incorrect_t = number_format(($freq_log[$q_id][1]['partial']/$user_total)*100,0);
+        $incorrect_u = number_format(($top_log[$q_id][1]['partial']/$candidate_no)*100,0);
+        $incorrect_l = number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0);
+        echo "<tr><td>t=$incorrect_t%</td><td>u=$incorrect_u%</td><td>l=$incorrect_l%</td><td>Incorrect</td></tr>\n";
+        echo "</table>\n";
+        
+        echo "<table>\n";
+        if ($freq_log[$q_id]['totalpos'] == 0) {
+          $p = 0;
+        } else {
+          $p = $freq_log[$q_id]['mark'] / $freq_log[$q_id]['totalpos'];
+        }
+        
+        $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], 1, 'correct');
+        
+        echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1)  . "</td></tr>\n";
+        break;
       case 'blank':
         $blank_details = explode('[blank',$options[0]);
         $array_size = count($blank_details);
@@ -718,7 +794,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if (!isset($bottom_log[$q_id][1]['f'])) $bottom_log[$q_id][1]['f'] = 0;
         if (!isset($top_log[$q_id][1]['t'])) $top_log[$q_id][1]['t'] = 0;
         if (!isset($top_log[$q_id][1]['f'])) $top_log[$q_id][1]['f'] = 0;
-        //if (!isset($tmp_std_array[$std_part])) $tmp_std_array[$std_part] = '';
         
         if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '11', 2, 2) . "</td></tr>\n";
@@ -1013,7 +1088,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($individual_option != '') echo "$individual_option\n";
           if (is_array($o_media[$i - 1])) {
             echo '<br />';
-            echo display_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2]);
+            echo display_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2], '');
           }
           echo "</td></tr>\n";
         }
@@ -1071,7 +1146,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo ">$individual_option";
           if (is_array($o_media[$i - 1])) {
             echo '<br />';
-            echo display_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2]);
+            echo display_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2], '');
           }
           echo "</td></tr>\n";
         }
@@ -1391,7 +1466,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     echo "<ol class=\"extmatch\">";
     if ($tmp_media_array[0] != '') {
-      echo "<p align=\"center\">" . display_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0]) . "</p>\n";
+      echo "<p align=\"center\">" . display_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0], '') . "</p>\n";
     }
     $std_part = 0;
     $section = 0;
@@ -1400,7 +1475,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       $correct_stems = 0;
       echo "<li>\n";
       if (isset($tmp_media_array[$i]) and $tmp_media_array[$i] != '') {
-        echo "<p>" . display_media($tmp_media_array[$i],$tmp_media_width_array[$i],$tmp_media_height_array[$i]) . "</p>\n";
+        echo "<p>" . display_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</p>\n";
       }
       if (isset($tmp_ext_scenarios[$i-1])) echo "<div>" . $tmp_ext_scenarios[$i-1] . "</div>\n";
       
@@ -1662,11 +1737,9 @@ td p:first-child {margin-top:0}
   // Calculate top and bottom cohorts.
   $student_list = '';
   if ($paper_type == '0') {
-    //$result = $mysqli->prepare("(SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log0, users, log_metadata) WHERE log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND grade LIKE ? AND log0.started>=? AND log0.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log0.started) UNION ALL (SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log1, users, log_metadata) WHERE log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log1.started>=? AND log1.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE '%staff%' AND student_grade NOT LIKE '%nhs%' " . str_replace('log0', 'log1', $student_modules_sql) . " GROUP BY username, q_paper, log1.started) ORDER BY total_mark ASC, username");
     $result = $mysqli->prepare("(SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log0, users, log_metadata) WHERE log0.userID=log_metadata.userID AND log0.started=log_metadata.started AND log0.q_paper=log_metadata.paperID AND log0.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND grade LIKE ? AND log0.started>=? AND log0.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log0.started) UNION ALL (SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log1, users, log_metadata) WHERE log1.userID=log_metadata.userID AND log1.started=log_metadata.started AND log1.q_paper=log_metadata.paperID AND log1.userID=users.id AND (users.roles='Student' OR users.roles='graduate') AND q_paper=? AND log1.started>=? AND log1.started<=? " . str_replace('log0', 'log1', $student_modules_sql) . " GROUP BY username, q_paper, log1.started) ORDER BY total_mark ASC, username");
     $result->bind_param('isssiss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $startdate, $enddate);
   } else {
-    //$result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID $roles_sql AND log$paper_type.userID=users.id AND q_paper=? AND grade LIKE ? AND DATE_ADD(log$paper_type.started, INTERVAL 2 MINUTE)>=? AND log$paper_type.started<=? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%' $student_modules_sql GROUP BY username, q_paper, log$paper_type.started ORDER BY total_mark ASC, username");
     $result = $mysqli->prepare("SELECT username, sum(mark) AS total_mark, log_metadata.started FROM (log$paper_type, users, log_metadata) WHERE log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID $roles_sql AND log$paper_type.userID=users.id AND q_paper=? AND grade LIKE ? AND DATE_ADD(log$paper_type.started, INTERVAL 2 MINUTE)>=? AND log$paper_type.started<=? $student_modules_sql GROUP BY username, q_paper, log$paper_type.started ORDER BY total_mark ASC, username");
     $result->bind_param('isss',$paperID, $_GET['repcourse'], $startdate, $enddate);
   }
@@ -1928,6 +2001,7 @@ td p:first-child {margin-top:0}
     // Clear previous performance stats
     $id_list = array();
     $result = $mysqli->prepare("SELECT id FROM performance_main WHERE paperID=?");
+    echo $mysqli->error;
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
     $result->bind_result($id);

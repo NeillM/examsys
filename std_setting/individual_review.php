@@ -490,13 +490,13 @@ table {table-layout:auto}
         if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
           if ($li_set == 0) echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
           $li_set = 1;
-          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height) . "</p>\n";
+          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
         } else {
           if ($li_set == 0) {
             echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
           }
           $li_set = 1;
-          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height) . "</p>\n";
+          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
         }
       }
       if ($q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info' and $q_type != 'hotspot') {
