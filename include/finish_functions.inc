@@ -440,6 +440,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $tmp_user_answer = '';
         }
         
+        if ($tmp_user_answer == '') {
+          reset_feedback($hide_if_unanswered);
+        }
+        if ($tmp_display_correct_answer == '0') {
+          $paper[$question]['correct'][0] = '';
+        }
         ?>
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $paper[$question]['q_media_width']; ?>" height="<?php echo $paper[$question]['q_media_height']; ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
@@ -473,12 +479,17 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           write_string('</object>');
           write_string('<!--<![endif]-->');
           write_string('</object>');
-          
-          sendTextToAS3('<?php echo $language; ?>', 'q<?php echo $question_no; ?>', 3, '<?php echo '../media/' . $paper[$question]['q_media']; ?>', '<?php echo $paper[$question]['correct'][0]; ?>', '<?php echo $tmp_user_answer; ?>');
-          
+          <?php
+          if ($tmp_display_correct_answer == '1') {
+            echo "sendTextToAS3('$language', 'q$question_no', 3, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '$tmp_user_answer');\n";
+          } else {
+            echo "sendTextToAS3('$language', 'q$question_no', 1, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $paper[$question]['user_answer'] . "');\n";
+          }
+          ?>
         </script>
         <br />
         <?php
+        if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\">" . $paper[$question]['correct_fback'] . "</div>\n";
         if ($tmp_user_answer == '') {
           echo "<div style=\"color:#808080\">{$string['unanswered']}</div>\n";
         } else {

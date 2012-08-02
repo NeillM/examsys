@@ -5,7 +5,8 @@ select,input{font-family:$font,sans-serif;font-size:100%}
 table {font-size:100%;table-layout:fixed}
 p {margin-top:0px;padding-top:0px}
 pre {font-family:Arial,sans-serif;font-size:100%}
-.paper {margin-left:0px;font-size:180%;color:white;font-weight:bold}
+.paper {margin-left:5px;font-size:180%;color:white;font-weight:bold}
+.screens {margin-left:5px;font-weight:bold;color:white}
 .q_no {width:40px; text-align:right;vertical-align:top}
 .theme {font-size:150%;padding-left:4px;font-weight:bold;color:#316AC5}
 .note {color:#C00000}

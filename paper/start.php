@@ -656,7 +656,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
   $question_offset = 0;
   if ($no_screens > 1) {
-    echo '<table cellspacing="1" cellpadding="1" border="0" style="font-weight:bold;color:white"><tr>';
+    echo '<table cellspacing="1" cellpadding="1" border="0" class="screens"><tr>';
     for ($i=1; $i<=$no_screens; $i++) {
       echo "<td title=\"";
       if (isset($screen_data[$i])) {
