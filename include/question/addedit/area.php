@@ -25,6 +25,10 @@
 $media = $question->get_media();
 $plugin_height = $media['height'] + 21;
 $plugin_width = ($media['width'] < 235) ? 235 : $media['width'];
+$correct_full = ($question->get_correct_full() == '') ? 95 : $question->get_correct_full();
+$error_full = ($question->get_error_full() == '') ? 5 : $question->get_error_full();
+$correct_partial = ($question->get_correct_partial() == '') ? 90 : $question->get_correct_partial();
+$error_partial = ($question->get_error_partial() == '') ? 10 : $question->get_error_partial();
 if (count($question->options) > 0) {
   $option = reset($question->options);
   $correct = $option->get_correct();
@@ -33,20 +37,12 @@ if (count($question->options) > 0) {
   $mark_incorrect = $option->get_marks_incorrect();
   $mark_partial = $option->get_marks_partial();
   $mark_partial = ($mark_partial != '') ? number_format($mark_partial, 1) : 0;
-  $correct_full = $option->get_correct_full();
-  $error_full = $option->get_error_full();
-  $correct_partial = $option->get_correct_partial();
-  $error_partial = $option->get_error_partial();
 } else {
   $correct = '';
   $option_id = -1;
   $mark_correct = 1;
   $mark_incorrect = 0;
   $mark_partial = 0.5;
-  $correct_full = 95;
-  $error_full = 5;
-  $correct_partial = 90;
-  $error_partial = 10;
 }
 
 $marks_positive = range(1, 20);
@@ -163,14 +159,14 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
               <strong><?php echo $string['tolerance_full'] ?></strong>
             </th>
             <td class="form-small">
-              <select id="option_correct_full1" name="option_correct_full1">
+              <select id="correct_full" name="correct_full">
                 <?php
                 echo ViewHelper::render_options($mark_range, $correct_full, 3);
                 ?>
               </select> %
             </td>
             <td class="form-small">
-              <select id="option_error_full1" name="option_error_full1">
+              <select id="error_full" name="error_full">
                 <?php
                 echo ViewHelper::render_options($error_range, $error_full, 3);
                 ?>
@@ -193,14 +189,14 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
               <strong><?php echo $string['tolerance_partial'] ?></strong>
             </th>
             <td>
-              <select id="option_correct_partial1" name="option_correct_partial1">
+              <select id="correct_partial" name="correct_partial">
                 <?php
                 echo ViewHelper::render_options($mark_range, $correct_partial, 3);
                 ?>
               </select> %
             </td>
             <td>
-              <select id="option_error_partial1" name="option_error_partial1">
+              <select id="error_partial" name="error_partial">
                 <?php
                 // TODO: value from question
                 echo ViewHelper::render_options($error_range, $error_partial, 3);

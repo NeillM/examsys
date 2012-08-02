@@ -34,78 +34,88 @@ class AREACorrector extends Corrector {
    */
   public function execute($new_correct, $paper_id, &$changes, $paper_type) {
     $errors = array();
-//
-//    $old_points = $this->_question->get_points1();
-//    $option = reset($this->_question->options);
-//    $marks_correct = $option->get_marks_correct();
-//    $marks_incorrect = $option->get_marks_incorrect();
-//
-//    if ($old_points != $new_correct['points1']) {
-//      $changes = true;
-//
-//      $this->_question->set_points1($new_correct['points1']);
-//      $this->_question->add_unified_field_modification('points', 'points', $old_points, $new_correct['points1'], $this->_lang_strings['postexamchange']);
-//    }
-//
-//    if ($changes) {
-//      try {
-//    	  if(!$this->_question->save()) {
-//    	    $errors[] = $this->_lang_strings['datasaveerror'];
-//    	  } else {
-//          $student_records = explode(';', $new_correct['option_correct1']);
-//          $max_layers = 0;
-//
-//          foreach ($student_records as $student_record) {
-//            if (strlen($student_record) > 0) {
-//              $layers = explode('|',$student_record);
-//              $mark = 0;
-//              $correct_count = 0;
-//              $layer_no = 0;
-//              foreach ($layers as $layer) {
-//                $sub_parts = explode(',',$layer);
-//                if ($layer_no == 0) {
-//                  $database_id = $sub_parts[0];
-//                  $is_correct = $sub_parts[1];
-//                } else {
-//                  $is_correct = $sub_parts[0];
-//                }
-//
-//                if ($is_correct == 1) {
-//                  $mark += $marks_correct;
-//                  $correct_count++;
-//                } else {
-//                  $mark += $marks_incorrect;
-//                }
-//
-//                $layer_no++;
-//                $max_layers = ($layer_no > $max_layers) ? $layer_no : $max_layers;
-//              }
-//
-//              if ($this->_question->get_score_method() == 'Mark per Question') {
-//                $totalpos = $marks_correct;
-//                if ($correct_count == $max_layers) {
-//                  $mark = $marks_correct;
-//                } else {
-//                  $mark = $marks_incorrect;
-//                }
-//              } else {
-//                $totalpos = $marks_correct * $max_layers;
-//              }
-//
-//              $first_comma = strpos($student_record, ',') + 1;
-//              $tmp_user_answer = substr($student_record,$first_comma);
-//
-//              $result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=?, user_answer=? WHERE id=?");
-//              $result->bind_param('disi', $mark, $totalpos, $tmp_user_answer, $database_id);
-//              $result->execute();
-//              $result->close();
-//            }
-//          }
-//    	  }
-//    	} catch (ValidationException $vex) {
-//    	  $errors[] = $vex->getMessage();
-//    	}
-//    }
+
+    $first = reset($this->_question->options);
+    $marks_correct = $first->get_marks_correct();
+    $marks_incorrect = $first->get_marks_incorrect();
+    $marks_partial = $first->get_marks_partial();
+
+    $old_correct_full = $this->_question->get_correct_full();
+    if ($new_correct['correct_full'] != $old_correct_full) {
+      $this->_question->set_correct_full($new_correct['correct_full']);
+
+      $this->_question->add_unified_field_modification('correct_full', 'correct_full ', $old_correct_full, $new_correct['correct_full'], $this->_lang_strings['postexamchange']);
+      $changes = true;
+    }
+
+    $old_error_full = $this->_question->get_error_full();
+    if ($new_correct['error_full'] != $old_error_full) {
+      $this->_question->set_error_full($new_correct['error_full']);
+
+      $this->_question->add_unified_field_modification('error_full', 'error_full ', $old_error_full, $new_correct['error_full'], $this->_lang_strings['postexamchange']);
+      $changes = true;
+    }
+
+    $old_correct_partial = $this->_question->get_correct_partial();
+    if ($new_correct['correct_partial'] != $old_correct_partial) {
+      $this->_question->set_correct_partial($new_correct['correct_partial']);
+
+      $this->_question->add_unified_field_modification('correct_partial', 'correct_partial ', $old_correct_partial, $new_correct['correct_partial'], $this->_lang_strings['postexamchange']);
+      $changes = true;
+    }
+
+    $old_error_partial = $this->_question->get_error_partial();
+    if ($new_correct['error_partial'] != $old_error_partial) {
+      $this->_question->set_error_partial($new_correct['error_partial']);
+
+      $this->_question->add_unified_field_modification('error_partial', 'error_partial ', $old_error_partial, $new_correct['error_partial'], $this->_lang_strings['postexamchange']);
+      $changes = true;
+    }
+
+
+    if ($changes) {
+      try {
+    	  if(!$this->_question->save()) {
+    	    $errors[] = $this->_lang_strings['datasaveerror'];
+    	  } else {
+          $correct_full = $this->_question->get_correct_full();
+          $error_full = $this->_question->get_error_full();
+          $correct_partial = $this->_question->get_correct_partial();
+          $error_partial = $this->_question->get_error_partial();
+
+          // Remark the student's answers in 'log{$paper_type}'.
+          $result = $this->_mysqli->prepare("SELECT user_answer, id, mark FROM log{$paper_type} WHERE q_id=? AND q_paper=?");
+          $result->bind_param('ii', $this->_question->id, $paper_id);
+          $result->execute();
+          $result->store_result();
+          $result->bind_result($user_answer, $id, $user_mark);
+          while ($result->fetch()) {
+            // Split up the user answer into its constituent parts.
+            $answer_parts = explode(',', $user_answer);
+
+            $mark = 0;
+
+            if ($answer_parts[1] >= $correct_full and $answer_parts[2] <= $error_full) {
+              $mark = $marks_correct;
+            } elseif ($answer_parts[1] >= $correct_partial and $answer_parts[2] <= $error_partial) {
+              $mark = $marks_partial;
+            } else {
+              $mark = $marks_incorrect;
+            }
+
+            if ($mark != $user_mark) {
+              $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=? AND q_paper=?");
+              $updateLog->bind_param('sii', $mark, $id, $paper_id);
+              $updateLog->execute();
+              $updateLog->close();
+            }
+          }
+          $result->close();
+        }
+      } catch (ValidationException $vex) {
+    	  $errors[] = $vex->getMessage();
+    	}
+    }
 
     return $errors;
   }

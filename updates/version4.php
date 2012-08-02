@@ -3205,7 +3205,33 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-    // End ------------------------------------------------------------------
+  // 02/08/2012 - Move Area question settings into the question itself
+  $result = $mysqli->prepare("SELECT o_id, option_text FROM options o INNER JOIN questions q ON o.o_id=q.q_id WHERE q.q_type='area' AND o.option_text IS NOT NULL AND o.option_text!=''");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($o_id, $option_text);
+  $area_fixed = 0;
+  while ($result->fetch()) {
+    // Update question
+    $adjust1 = $mysqli->prepare("UPDATE questions SET display_method=? WHERE q_id=?");
+    $adjust1->bind_param('si', $option_text, $o_id);
+    $adjust1->execute();
+    $adjust1->close();
+
+    // Clear option
+    $adjust1 = $mysqli->prepare("UPDATE options SET option_text=NULL WHERE o_id=?");
+    $adjust1->bind_param('i', $o_id);
+    $adjust1->execute();
+    $adjust1->close();
+
+    $area_fixed++;
+  }
+  if ($area_fixed > 0) {
+    echo "<li>Moved area settings into question table</li>\n";
+  }
+  $result->close();
+
+  // End ------------------------------------------------------------------
   echo "</ol>\n";
 
   //Close the database

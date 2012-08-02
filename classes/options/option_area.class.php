@@ -25,12 +25,6 @@
  */
 
 Class OptionAREA extends Option {
-  protected $correct_full;
-  protected $error_full;
-  protected $correct_partial;
-  protected $error_partial;
-
-  protected $_fields_editable = array('correct_full', 'error_full', 'correct_partial', 'error_partial');
 
   /**
    * Is this option blank?
@@ -61,105 +55,6 @@ Class OptionAREA extends Option {
     }
     $value = rtrim($value, ', ');
     parent::set_correct($value);
-  }
-
-  /**
-   * @param $correct_full
-   */
-  public function set_correct_full($value) {
-    if ($value != $this->get_correct_full()) {
-      $this->set_modified_field('correct_full', $this->correct_full);
-      $this->correct_full = $value;
-      $this->set_text('dummy');
-    }
-  }
-
-  /**
-   * @return mixed
-   */
-  public function get_correct_full() {
-    $this->get_text();
-    return $this->correct_full;
-  }
-
-  /**
-   * @param $correct_partial
-   */
-  public function set_correct_partial($value) {
-    if ($value != $this->get_correct_partial()) {
-      $this->set_modified_field('correct_partial', $this->correct_partial);
-      $this->correct_partial = $value;
-      $this->set_text('dummy');
-    }
-  }
-
-  /**
-   * @return mixed
-   */
-  public function get_correct_partial() {
-    $this->get_text();
-    return $this->correct_partial;
-  }
-
-  /**
-   * @param $error_full
-   */
-  public function set_error_full($value) {
-    if ($value != $this->get_error_full()) {
-      $this->set_modified_field('error_full', $this->error_full);
-      $this->error_full = $value;
-      $this->set_text('dummy');
-    }
-  }
-
-  /**
-   * @return mixed
-   */
-  public function get_error_full() {
-    $this->get_text();
-    return $this->error_full;
-  }
-
-  /**
-   * @param $error_partial
-   */
-  public function set_error_partial($value) {
-    if ($value != $this->get_error_partial()) {
-      $this->set_modified_field('error_partial', $this->error_partial);
-      $this->error_partial = $value;
-      $this->set_text('dummy');
-    }
-  }
-
-  /**
-   * @return mixed
-   */
-  public function get_error_partial() {
-    $this->get_text();
-    return $this->error_partial;
-  }
-
-  /**
-   * Set the option text
-   * @param string $value
-   */
-  public function set_text($value) {
-    $this->text = $this->correct_full . ',' . $this->error_full . ',' . $this->correct_partial . ',' . $this->error_partial;
-  }
-
-  /**
-   * Extract the option text into pseudo-properties
-   * @return string
-   */
-  public function get_text() {
-    if ($this->text != '') {
-      $parts = explode(',', $this->text);
-      $this->correct_full = $parts[0];
-      $this->error_full = $parts[1];
-      $this->correct_partial = $parts[2];
-      $this->error_partial = $parts[3];
-    }
-    return $this->text;
   }
 }
 
