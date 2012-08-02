@@ -96,7 +96,7 @@ if (isset($_POST['Submit'])) {
       $hide_if_unanswered = '0';
     }
     
-    if (($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'SysAdmin') !== false) or $paper_type != '2') {
+    if (($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'SysAdmin') !== false) or !$cfg_summative_mgmt or $paper_type != '2') {
       $local_time = new DateTimeZone($cfg_timezone);
       $target_timezone = new DateTimeZone($_POST['timezone']);
       
