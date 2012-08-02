@@ -267,6 +267,11 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
     }
 
     switch ($q_type) {
+      case 'area':
+        if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+          $marks_array[$old_q_id][$partID] = $marks_correct;
+        }
+        break;
       case 'textbox':
         if (substr($exclude[$old_q_id], $partID, 1) == '0') {
           $marks_array[$old_q_id][$partID] = $marks_correct;
@@ -417,10 +422,57 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
 }
 
 function display_option($firstoption, $q_id, $question_no, &$part_id, $display_option, $std_method, $is_group, &$marks, $exclude, $review_val, &$matching_options, $review_mean, $tmp_reviews, $option_no, &$stdID, &$std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback) {
-  global $string, $language;
+  global $string, $language, $cfg_root_path;
   $qn_excluded = ($exclude == '1');
   
   switch ($firstoption['q_type']) {
+    case 'area':
+      if ($display_option['scenario'] == '') {
+        echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
+      } else {
+        echo '<tr><td></td><td>';
+      }
+      echo $display_option['leadin'] . '<br />';
+      ?>
+        <script language="javascript">
+          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 1); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
+          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="quality" value="high" />');
+          write_string('<param name="bgcolor" value="#ffffff" />');
+          write_string('<param name="play" value="true" />');
+          write_string('<param name="loop" value="true" />');
+          write_string('<param name="wmode" value="opaque" />');
+          write_string('<param name="scale" value="showall" />');
+          write_string('<param name="menu" value="true" />');
+          write_string('<param name="devicefont" value="false" />');
+          write_string('<param name="salign" value="top" />');
+          write_string('<param name="allowScriptAccess" value="sameDomain" />');
+          write_string('<!--[if !IE]>-->');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 1); ?>">');
+          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="quality" value="high" />');
+          write_string('<param name="bgcolor" value="#ffffff" />');
+          write_string('<param name="play" value="true" />');
+          write_string('<param name="loop" value="true" />');
+          write_string('<param name="wmode" value="opaque" />');
+          write_string('<param name="scale" value="showall" />');
+          write_string('<param name="menu" value="true" />');
+          write_string('<param name="devicefont" value="false" />');
+          write_string('<param name="salign" value="top" />');
+          write_string('<param name="allowScriptAccess" value="sameDomain" />');
+          write_string('<!--<![endif]-->');
+          write_string('<a href="http://www.adobe.com/go/getflash"> <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>');
+          write_string('<!--[if !IE]>-->');
+          write_string('</object>');
+          write_string('<!--<![endif]-->');
+          write_string('</object>');
+          
+          sendTextToAS3('<?php echo $language; ?>','q<?php echo $question_no; ?>', 1, '<?php echo '../media/' . $display_option['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $display_option['correct']; ?>');
+          
+        </script>
+        <br /><br />
+      <?php
+      break;
     case 'textbox':
       $textbox_size = explode('x',$display_option['display_method']);
       echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\"></textarea></blockquote>\n";
@@ -924,7 +976,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     $extra = 'exclude_';
     $std_excluded++;
   } else {
-    $bgcolor = '#D6DFF7';
+    $bgcolor = '#FFCEA3';
     $fgcolor = 'black';
   }
 

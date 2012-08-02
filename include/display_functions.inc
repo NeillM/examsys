@@ -406,6 +406,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         </div>
         <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" />
         <?php
+        $marks += $display_option['marks_correct'];
         break;
       case 'dichotomous':
         if (isset($user_answers[$current_screen][$q_id])) {
@@ -1150,7 +1151,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
       echo '</select>';
       if ($answer_no > 1) echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';
-      echo '</div><br /></li>';
+      echo '</div></li>';
     }
     echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" />';
     if ($question['score_method'] == 'Mark per Question') {
