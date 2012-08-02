@@ -59,7 +59,7 @@ $error_range = range(0, 50);
 <script type="text/javascript">
 //<![CDATA[
 $(function () {
-  sendTextToAS3('option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
+  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
 });
 //]]>
 </script>
