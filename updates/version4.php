@@ -3144,6 +3144,178 @@ if (!isset($_POST['update'])) {
   ob_flush();
   flush();
 
+
+
+  // 2012-07-30 cczsa1 alter lti tables to remove seperate oauth_consumer_key and combine with other index
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+
+    $sql="UPDATE `lti_context` SET `lti_context_id`=CONCAT(`oauth_consumer_key`,':',`lti_context_id`)";
+    $adjust = $mysqli->prepare($sql);
+    if ($mysqli->error) {
+      try {
+        throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $sql", $mysqli->errno);
+      }
+      catch (Exception $e) {
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+        echo nl2br($e->getTraceAsString());
+      }
+    }
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_context` DROP `oauth_consumer_key`";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_context` CHANGE `lti_context_id` `lti_context_key` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+
+  }
+
+  $result->close();
+  @ob_flush();
+  @flush();
+
+
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_resource' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+
+    $sql="UPDATE `lti_resource` SET `lti_resource_id`=CONCAT(`oauth_consumer_key`,':',`lti_resource_id`)";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` DROP `oauth_consumer_key`";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` CHANGE `lti_resource_id` `lti_resource_key` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` CHANGE `itype` `internal_type` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated_on` DATETIME";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+
+  @ob_flush();
+  @flush();
+
+
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_user' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+
+    $sql="UPDATE `lti_user` SET `user_id`=CONCAT(`oauth_consumer_key`,':',`user_id`)";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_user` DROP `oauth_consumer_key`";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_user` CHANGE `user_id` `lti_user_key` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_user` CHANGE `rogo_id` `lti_user_equ` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+
+  @ob_flush();
+  @flush();
+  $result->close();
+
+
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND COLUMN_NAME='updated_at' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+
+
+    $sql="ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+
+  @ob_flush();
+  @flush();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // End ------------------------------------------------------------------
   // 18/07/2012
   // Add index to improve performance for finding question copying in the Information dialog box.
   $result = $mysqli->prepare("SHOW INDEX FROM track_changes");

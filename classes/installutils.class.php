@@ -2085,24 +2085,22 @@ QUERY;
 
     $this->tableList['lti_user'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_user` (
-          `oauth_consumer_key` varchar(200) NOT NULL,
-          `user_id` varchar(200) NOT NULL,
-          `rogo_id` int(11) NOT NULL,
+          `lti_user_key` varchar(255) NOT NULL,
+          `lti_user_equ` int(11) NOT NULL,
           `updated_on` datetime,
-          PRIMARY KEY (`oauth_consumer_key`,`user_id`),
-          KEY `rogo_id` (`rogo_id`)
+          PRIMARY KEY (`lti_user_key`),
+          KEY `lti_user_equ` (`lti_user_equ`)
          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
 
     $this->tableList['lti_resource'] = <<<QUERY
         CREATE TABLE IF NOT EXISTS `lti_resource` (
-        `oauth_consumer_key` varchar(255) NOT NULL DEFAULT '',
-        `lti_resource_id` varchar(255) NOT NULL,
+        `lti_resource_key` varchar(255) NOT NULL,
         `internal_id` varchar(255) DEFAULT NULL,
         `itype` varchar(255) DEFAULT NULL,
         `updated` datetime,
-        PRIMARY KEY (`oauth_consumer_key`,`lti_resource_id`),
+        PRIMARY KEY (`lti_resource_key`),
         KEY `destination2` (`itype`),
         KEY `destination` (`internal_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2125,11 +2123,10 @@ QUERY;
 
       $this->tableList['lti_context'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_context` (
-          `oauth_consumer_key` VARCHAR( 255 ) NOT NULL ,
-          `lti_context_id` VARCHAR( 255 ) NOT NULL ,
+          `lti_context_key` VARCHAR( 255 ) NOT NULL ,
           `c_internal_id` VARCHAR( 255 ) NOT NULL ,
           `updated_on` DATETIME NOT NULL,
-          PRIMARY KEY (`oauth_consumer_key`,`lti_context_id`),
+          PRIMARY KEY (`lti_context_key`),
           KEY `c_internal_id` (`c_internal_id`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
