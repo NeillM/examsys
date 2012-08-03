@@ -1002,7 +1002,7 @@ require \$root . '/include/path_functions.inc.php';
 \$protocol = 'https://';
 \$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
-
+\$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
 // Local database
@@ -2064,6 +2064,7 @@ QUERY;
           `last_login` datetime default NULL,
           `special_needs` tinyint(4) default '0',
           `yearofstudy` tinyint(4) default NULL,
+          `user_deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
           KEY `username_index` (`username`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1

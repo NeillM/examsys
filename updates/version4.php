@@ -3231,6 +3231,31 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
+  // 03/08/2012 - Add session change over date.
+  $new_cfg_str = array();
+  $new_cfg_str[] =  "\$cfg_academic_year_start = '07/01';\n";
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_academic_year_start') !== false) {
+      $found = true;
+    }
+  }
+  
+  if (!$found) {
+    array_splice($cfg,20,0,$new_cfg_str);
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    }
+    
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added academic_year_start to config file.</li>\n";
+    ob_flush();
+    flush();
+  }
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

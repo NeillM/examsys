@@ -42,9 +42,14 @@ Class date_utils {
 	 * @return string
 	 */
 	static function get_academic_year($date) {
+    global $cfg_academic_year_start;
+    
 		$date_as_time = strtotime($date);
-		$start_this_year = strtotime(date('Y').'/'.self::$academic_year_start);
-		
+    if (isset($cfg_academic_year_start)) {
+      $start_this_year = strtotime(date('Y') . '/' . $cfg_academic_year_start);
+    } else {
+      $start_this_year = strtotime(date('Y') . '/' . self::$academic_year_start);
+    }
 		if ($date_as_time < $start_this_year) {
 			$session = (date('Y') - 1) . '/' . date('y');
 		} else {

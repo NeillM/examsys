@@ -22,9 +22,10 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/sidebar_menu.inc';
-  require_once '../classes/networkutils.class.php';
+require '../include/sysadmin_auth.inc';
+require '../include/sidebar_menu.inc';
+require_once '../classes/networkutils.class.php';
+require_once '../classes/dateutils.class.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -138,6 +139,7 @@ if ($cfg_use_ldap == true) {
   echo "<tr><td>" . $string['authentication'] . "</td><td>Internal</td></tr>\n";
 }
 ?>
+<tr><td>Session</td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 
 <tr><td colspan="2" class="sechead"><?php echo $string['serverinformation']; ?></td></tr>
