@@ -26,7 +26,7 @@
 
   require '../include/admin_auth.inc';
   require '../include/mb_string.inc.php';
-  require '../classes/userutils.class.php';
+  require_once '../classes/userutils.class.php';
 
   $unique_username = true;
   if (isset($_POST['submit'])) {
