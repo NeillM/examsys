@@ -3363,7 +3363,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 31/07/2012 - Add deleted column to users
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='user_deleted'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);

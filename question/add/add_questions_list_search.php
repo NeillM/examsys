@@ -146,7 +146,12 @@ require_once '../../classes/searchutils.class.php';
     $searchterm = '%' . $_GET['searchterm'] . '%';
     
     if ($_GET['owner'] == '') {
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND (questions.q_group REGEXP '" . implode('|', $teams) . "' OR questions.ownerID=$userID) AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
+      if (count($teams) > 0) { 
+        $team_sql = "OR questions.q_group REGEXP '" . implode('|', $teams) . "'";
+      } else {
+        $team_sql = '';
+      }
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND (questions.ownerID=$userID $team_sql) AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
       $result->bind_param('ssssss', $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     } else {
       $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");

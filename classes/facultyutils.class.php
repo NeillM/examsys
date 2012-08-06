@@ -25,7 +25,7 @@
 */
 
 
-Class faculty_utils {
+Class FacultyUtils {
  
   static function add_faculty($faculty, $db) {
    
