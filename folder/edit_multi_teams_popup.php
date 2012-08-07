@@ -24,7 +24,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require '../classes/userutils.class.php';
+require_once '../classes/userutils.class.php';
 
 if (isset($_POST['submit'])) {
   // Clear the team of all members.
