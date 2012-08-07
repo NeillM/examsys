@@ -28,7 +28,7 @@ static function user_add($username,$password) {
 
 }
 
-static function _user_time_check ($time) {
+static function user_time_check ($time) {
   return false;
 }
 

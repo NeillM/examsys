@@ -107,7 +107,7 @@ class lti_integration_extended extends lti_integration {
 
     $length = strlen($exploded[0]);
 
-    $selfreg = 0;
+
     $fin = strlen($course_title);
 
 
@@ -130,8 +130,8 @@ class lti_integration_extended extends lti_integration {
       if (isset($lti_school_list_lookup[$exploded[0]])) {
         $schoolname = $lti_school_list_lookup[$exploded[0]];
       }
-      $data[] = array('Manual', $modcode, $campus, $schoolname, 1, $course_title);
-      // I have school to lookup in $schoolname & new modcode as $modcode
+      $selfreg = 1;
+      $data[] = array('Manual', $modcode, $campus, $schoolname, $selfreg, $course_title);
 
 
     }
@@ -139,12 +139,13 @@ class lti_integration_extended extends lti_integration {
       $a = 0;
       $b = 0;
       $data = array();
+      $selfreg = 0;
       while (isset($exploded[$a])) {
-        print "[$exploded[$a]]";
         if (strlen($exploded[$a]) == 6) {
           //saturn codes are 6 chars
           // data is
-          $data[$b++] = array('System', $exploded[$a], 'CampusTODO', 'SchoolTODO', 0, "MISSING:$course_title");
+
+          $data[$b++] = array('SMS', $exploded[$a], 'CampusTODO', 'SchoolTODO', $selfreg, "MISSING:$course_title");
         }
         elseif (strlen($exploded[$a]) == 2) {
           // probably campus check
@@ -161,13 +162,24 @@ class lti_integration_extended extends lti_integration {
     }
 
 
-    // need to see if module exists if not create it
+    // returning an array containing an array, description of inner array
+    // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module
+    // second is the module code
+    // third is campus
+    // fourth is School it belongs to as text
+    // fifth is if its self registration module
+    // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
 
-    var_dump($data);
+    foreach ($data as $k => $v) {
+ //     $returned = lookup_module_description($v);
+ //      $data[$k] = $returned;
+    }
+    // return the data
+    return $data;
+  }
 
-
-    // return the first couse code
-    return $data[0][1];
+  static function lookup_module_description($moduledata) {
+    return $moduledata;
   }
 
   static function determine_std_module($modulecode, $campus, $year, $semstart) {
