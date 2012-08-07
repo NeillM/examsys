@@ -24,19 +24,19 @@
  * @package
  */
 
-require '../include/staff_student_auth.inc';
-require '../include/sidebar_menu.inc';
-require '../config/index.inc';
+require_once '../include/staff_student_auth.inc';
+require_once '../include/sidebar_menu.inc';
+require_once '../include/lti_func.php';
+
+require_once '../config/index.inc';
+
 require_once '../classes/searchutils.class.php';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
-require_once  $cfg_web_root . 'include/lti_func.php';
-require_once  $cfg_web_root . 'classes/personal_folders.php';
-
+require_once '../classes/personal_folders.php';
 
 global $cfg_long_date_time;
-
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   global $cfg_long_date_time, $icons;

@@ -24,14 +24,16 @@
  * @package
  */
 
-require_once'../config/config.inc.php';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
-require_once $cfg_web_root . 'include/auth.inc';
-require_once $cfg_web_root . 'classes/lang.class.php';
-require_once $cfg_web_root . 'include/mb_string.inc.php';
-require_once $cfg_web_root . 'classes/userutils.class.php';
-require_once $cfg_web_root . 'classes/moduleutils.class.php';
-require_once $cfg_web_root . 'classes/dateutils.class.php';
+require_once '../config/config.inc.php';
+
+require_once '../include/auth.inc';
+require_once '../include/mb_string.inc.php';
+
+require_once '../classes/dbutils.class.php';
+require_once '../classes/lang.class.php';
+require_once '../classes/userutils.class.php';
+require_once '../classes/moduleutils.class.php';
+require_once '../classes/dateutils.class.php';
 
 if (strcmp($cfg_install_type, 'demo') != 0) {  // If the installation type is not set to 'demo' then exit.
   header("HTTP/1.0 404 Not Found");

@@ -24,8 +24,8 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require_once '../classes/userutils.class.php';
+require_once '../include/admin_auth.inc';
+require_once '../classes/userutils.class.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

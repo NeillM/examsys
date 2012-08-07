@@ -24,8 +24,8 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require '../include/mb_string.inc.php';
+  require_once '../include/admin_auth.inc';
+  require_once '../include/mb_string.inc.php';
   require_once '../classes/userutils.class.php';
 
   $unique_username = true;

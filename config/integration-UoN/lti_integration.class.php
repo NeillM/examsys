@@ -9,9 +9,7 @@
 
 require_once $cfg_web_root . 'classes/userutils.class.php';
 
-
 class lti_integration_extended extends lti_integration {
-
 
   static function user_add($username, $password) {
     // take user and password and add user to system

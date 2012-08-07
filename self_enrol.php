@@ -22,12 +22,12 @@
 * @package
 */
 
-require './include/staff_student_auth.inc';
-require './include/errors.inc';
-require './classes/dateutils.class.php';
-require './classes/userutils.class.php';
-require './classes/moduleutils.class.php';
-require './classes/smsutils.class.php';
+require_once './include/staff_student_auth.inc';
+require_once './include/errors.inc';
+require_once './classes/dateutils.class.php';
+require_once './classes/userutils.class.php';
+require_once './classes/moduleutils.class.php';
+require_once './classes/smsutils.class.php';
 
 check_var('moduleid', 'GET', true, false);
 $session = date_utils::get_current_academic_year();

@@ -22,9 +22,9 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/errors.inc';
-require '../classes/userutils.class.php';
+require_once '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/userutils.class.php';
 
 check_var('teamID', 'GET', true, false);
 $teamID = $_GET['teamID'];
