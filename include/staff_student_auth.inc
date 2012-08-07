@@ -36,12 +36,10 @@ require_once $cfg_web_root . 'classes/networkutils.class.php';
 
 require_once $cfg_web_root . 'LTI/ims-lti/UoN_LTI.php';
 require_once  $cfg_web_root . 'include/lti_func.php';
-if (file_exists($cfg_web_root . 'config/integration/lti.php')) {
-  require_once $cfg_web_root . 'config/integration/lti.php';
-}
-else {
-  require_once $cfg_web_root . 'config/default-integration/lti.php';
-}
+
+
+require_once $cfg_web_root . 'classes/lti_integration.class.php';
+
 
 // Check to see if the update script has been run.
 if ($rogo_version != '4.3') {
