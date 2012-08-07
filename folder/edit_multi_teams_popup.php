@@ -39,6 +39,7 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Manage Teams</title>
   <script language="JavaScript">
@@ -56,6 +57,8 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Manage Teams</title>
 <style type="text/css">
   body {font-family:Arial,sans-serif; font-size:90%; background-color:#F1F5FB; color:black; margin:0px}
