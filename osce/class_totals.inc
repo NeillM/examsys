@@ -39,10 +39,10 @@
   if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
 
   // Get the module ID and calendar year of the OSCE station.
-  $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year, marking FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year, marking, crypt_name FROM properties WHERE property_id=?");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper, $moduleID, $calendar_year, $marking);
+  $result->bind_result($paper, $moduleID, $calendar_year, $marking, $crypt_name);
   $result->fetch();
   $result->close();
   

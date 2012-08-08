@@ -22,6 +22,7 @@
 * @package
 */
 function array_csort($marray, $column, $sort_order) {   //coded by Ichier2003
+  $sortarr = array();
   foreach ($marray as $row) {
     $sortarr[] = $row[$column];
   }
