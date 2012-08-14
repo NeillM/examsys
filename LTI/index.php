@@ -124,7 +124,7 @@ if (!$lti->isInstructor()) {
     // $c_internal_id is module code
     //    $module_id_out=i_lti_module_code_translate($c_internal_id);
 
-    $returned_check = module_utils::module_check_self_enrol($c_internal_id);
+    $returned_check = module_utils::module_check_self_enrol($c_internal_id, $mysqli);
 
     /*
     if(!UserUtils::isUserOnModule($userID, $c_internal_id, $session, $mysqli) and $returned_check === false ) {

@@ -69,11 +69,12 @@ Class module_utils {
     return $unique_moduleid;
   }
 
-  static function module_check_self_enrol($module_id) {
+  static function module_check_self_enrol($module_id, $db) {
     // returns false if not self enrol else returns needed data;
-    $result = $mysqli->prepare("SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
+    $result = $db->prepare("SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
     $result->bind_param('s', $module_id);
     $result->execute();
+    $result->store_result();
     $result->bind_result($fullname, $school, $active, $selfenroll);
     $result->fetch();
     if ($result->num_rows == 0) {
@@ -81,7 +82,8 @@ Class module_utils {
       return false;
     }
     $result->close();
-    return(array($fullname, $school, $active, $selfenroll));
+    
+    return array($fullname, $school, $active, $selfenroll);
   }
   
 }
