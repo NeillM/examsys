@@ -154,23 +154,23 @@ MESSAGE;
 
   <script type="text/javascript">
   function checkForm() {
-    if (document.newUser.new_first_names.value == "") {
+    if (document.getElementById('new_first_names').value == "") {
       alert("<?php echo $string['reqfirstname'] ?>");
       return false;
     }
-    if (document.newUser.new_surname.value == "") {
+    if (document.getElementById('new_surname').value == "") {
       alert("<?php echo $string['reqsurname'] ?>");
       return false;
     }
-    if (document.newUser.new_email.value == "" || document.newUser.new_email.value == "@nottingham.ac.uk") {
+    if (document.getElementById('new_email').value == "") {
       alert("<?php echo $string['reqemail'] ?>");
       return false;
     }
-    if (document.newUser.new_grade.options[document.newUser.new_grade.selectedIndex].value == "") {
+    if (document.getElementById('new_grade').options[document.getElementById('new_grade').selectedIndex].value == "") {
       alert("<?php echo $string['reqcourse'] ?>");
       return false;
     }
-    if (document.newUser.new_username.value == "") {
+    if (document.getElementById('new_username').value == "") {
       alert("<?php echo $string['requsername'] ?>");
       return false;
     } else {
@@ -183,10 +183,11 @@ MESSAGE;
         }
       }
     }
-    if (document.newUser.new_password.value == "") {
+    if (document.getElementById('new_password').value == "") {
       alert("<?php echo $string['reqpassword'] ?>");
       return false;
     }
+    return false;
   }
 
   function ldaplookup() {
@@ -233,10 +234,10 @@ foreach ($titles as $tmp_title) {
 }
 ?>
 </select></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input type="text" id="new_surname" name="new_surname" size="40" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input type="text" id="new_first_names" name="new_first_names" size="40" value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input type="text" id="new_email" name="new_email" size="40" value="<?php if (isset($_POST['email'])) { echo $_POST['email']; } else { echo '@nottingham.ac.uk'; } ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input type="text" id="new_username" name="new_username" size="12" <?php if (isset($_POST['username']) and $unique_username != true) echo ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['username'] . '"'; ?>/>
+<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>" /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($_POST['email'])) { echo $_POST['email']; } ?>" /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input type="text" id="new_username" name="new_username" size="12" maxlength="15" <?php if (isset($_POST['username']) and $unique_username != true) echo ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['username'] . '"'; ?>/>
 &nbsp;&nbsp;&nbsp;<span class="field"><?php echo $string['password']; ?></span> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
     echo $_POST['password'];
@@ -258,7 +259,7 @@ foreach ($titles as $tmp_title) {
 </select>
 </td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['typecourse']; ?></span></td><td>
-<select name="new_grade" size="1" style="width:350px">
+<select name="new_grade" id="new_grade" size="1" style="width:350px">
 <option value=""></option>
 <optgroup label="<?php echo $string['universitystaff']; ?>">
 <option value="University Lecturer"><?php echo $string['academiclecturer']; ?></option>
