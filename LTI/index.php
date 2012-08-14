@@ -35,6 +35,7 @@ require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/personal_folders.php';
+require_once '../classes/lti_integration.class.php';
 
 global $cfg_long_date_time;
 
@@ -90,6 +91,8 @@ if (!$lti->valid) {
   exit;
 }
 
+$lti_i = lti_integration::load();
+
 if (isset($_REQUEST['paperlinkID'])) {
   list($retlookup, $retlookup2) = $_SESSION['postlookup'][$_REQUEST['paperlinkID']];
   unset($_SESSION['postlookup']);
@@ -132,7 +135,7 @@ if (!$lti->isInstructor()) {
     }
     */
 
-    if (!UserUtils::isUserOnModule($userID, $c_internal_id, $session, $mysqli) and $returned_check !== false and !i_lti_allow_module_self_reg($c_internal_id)) {
+    if (!UserUtils::isUserOnModule($userID, $c_internal_id, $session, $mysqli) and $returned_check !== false and !$lti_i::allow_module_self_reg($c_internal_id)) {
       list($fullname, $school, $active, $selfenroll) = $returned_check;
       if ($active == 1 and $selfenroll == 1 and !UserUtils::isUserOnModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
         // Insert new module enrollment
@@ -151,7 +154,7 @@ else {
   //staff
   if ($returned !== false) {
     // goto link
-    if (!i_lti_allow_staff_edit_link()) {
+    if (!$lti_i::allow_staff_edit_link()) {
       $_SESSION['lti']['paperlink'] = $returned[0];
       header("location: ../user_index.php?id=" . $returned[0]);
       echo "Please click <a href='../user_index.php?id=" . $returned[0] . ".>here</a> to continue";
@@ -170,7 +173,7 @@ else {
     $returned2 = $lti->lookup_lti_context();
 
     if ($returned2 === false) {
-      $module_id = i_lti_module_code_translate($lti->getCourseName());
+      $module_id = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
 
       // TODO DEBUG ENABLE THE LINE BELOW
       //$lti->add_lti_context($module_id);

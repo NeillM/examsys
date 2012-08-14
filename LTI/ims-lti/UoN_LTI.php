@@ -209,9 +209,9 @@ class UoN_LTI extends BLTI {
           echo nl2br($e->getTraceAsString());
         }
       }
-    //  $result = $this->db->prepare("DELETE FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id=?");
+      //  $result = $this->db->prepare("DELETE FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id=?");
       $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys set deleted=NOW() WHERE id=?");
-      $stmt->bind_param('i',  $ltiid);
+      $stmt->bind_param('i', $ltiid);
       $stmt->execute();
       $stmt->close();
 
@@ -246,8 +246,8 @@ class UoN_LTI extends BLTI {
       $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE  lti_user_key=?");
       if ($this->db->error) {
         try {
-          $a=$this->db->error;
-          $b= $this->db->errno;
+          $a = $this->db->error;
+          $b = $this->db->errno;
           throw new Exception("0MySQL error $a <br /> Query:<br /> $query", $b);
         }
         catch (Exception $e) {
@@ -287,8 +287,8 @@ class UoN_LTI extends BLTI {
       $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on=NOW() WHERE lti_user_key=? ");
       if ($this->db->error) {
         try {
-          $a=$this->db->error;
-          $b= $this->db->errno;
+          $a = $this->db->error;
+          $b = $this->db->errno;
           throw new Exception("0MySQL error $a <br /> Query:<br /> $query", $b);
         }
         catch (Exception $e) {
@@ -343,7 +343,7 @@ class UoN_LTI extends BLTI {
       $stmt->execute();
       $rows = $stmt->affected_rows;
       $stmt->close();
-      if($rows>0) {
+      if ($rows > 0) {
         return $rows;
       }
     }

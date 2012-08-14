@@ -2121,7 +2121,7 @@ QUERY;
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-      $this->tableList['lti_context'] = <<<QUERY
+    $this->tableList['lti_context'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_context` (
           `lti_context_key` VARCHAR( 255 ) NOT NULL ,
           `c_internal_id` VARCHAR( 255 ) NOT NULL ,
