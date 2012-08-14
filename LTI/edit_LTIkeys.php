@@ -24,6 +24,8 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
+require_once 'ims-lti/UoN_LTI.php';
+$lti=new UoN_LTI($mysqli);
 check_var('LTIkeysid', 'GET', true, false);
 
 if (isset($_POST['submit'])) {
@@ -31,7 +33,7 @@ if (isset($_POST['submit'])) {
     $ltikey = trim($_POST['ltikey']);
     $ltisec = trim($_POST['ltisec']);
     $lticontext = trim($_POST['lticontext']);
-    $insert_id = BLTI::updateltikey(array('dbtype' => 'mysqli', 'db' => &$mysqli), $_GET['LTIkeysid'], $ltiname, $ltikey, $ltisec, $lticontext);
+    $insert_id = $lti->update_lti_key($_GET['LTIkeysid'], $ltiname, $ltikey, $ltisec, $lticontext);
     header("location: lti_keys_list.php");
 } else {
     ?>

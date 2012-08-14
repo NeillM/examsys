@@ -23,14 +23,14 @@
  */
 
 require '../include/sysadmin_auth.inc';
-require_once 'ims-blti/blti.php';
-
+require_once 'ims-lti/UoN_LTI.php';
+$lti=new UoN_LTI($mysqli);
 if (isset($_POST['submit'])) {
     $ltiname = trim($_POST['ltiname']);
     $ltikey = trim($_POST['ltikey']);
     $ltisec = trim($_POST['ltisec']);
     $lticontext = trim($_POST['lticontext']);
-    $insert_id = BLTI::addltikey(array('dbtype' => 'mysqli', 'db' => &$mysqli), $ltiname, $ltikey, $ltisec, $lticontext);
+    $insert_id = $lti->add_lti_key($ltiname, $ltikey, $ltisec, $lticontext);
     header("location: lti_keys_list.php");
 } else {
     ?>

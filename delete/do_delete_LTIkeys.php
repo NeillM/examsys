@@ -25,16 +25,13 @@
   require '../include/sysadmin_auth.inc';
   require '../include/errors.inc';
 
+require_once '../LTI/ims-lti/UoN_LTI.php';
+$lti=new UoN_LTI($mysqli);
 
   check_var('LTIkeysID', 'POST', true, false);
 
-  $tmp_LTIkeysID = $_POST['LTIkeysID'];
-  
-  $result = $mysqli->prepare("UPDATE lti_keys set `deleted`=NOW() WHERE id=?");
-  $result->bind_param('i', $tmp_LTIkeysID);
-  $result->execute();  
-  $result->close();
-  $mysqli->close();
+$lti->delete_lti_key($_POST['LTIkeysID']);
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

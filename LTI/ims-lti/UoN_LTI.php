@@ -16,8 +16,11 @@ class UoN_LTI extends BLTI {
   function __construct($db, $parm = false) {
     $this->db = $db;
     if (is_array($parm) or is_string($parm)) $this->parm = $parm;
+  }
 
-
+  public function get_context_title() {
+    $title = $this->info['context_title'];
+    return $title;
   }
 
   public function init_lti($usesession = true, $doredirect = false) {
@@ -206,8 +209,9 @@ class UoN_LTI extends BLTI {
           echo nl2br($e->getTraceAsString());
         }
       }
-      $result = $this->db->prepare("DELETE FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id=?");
-      $result->bind_param('i', $ltiid);
+    //  $result = $this->db->prepare("DELETE FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id=?");
+      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys set deleted=NOW() WHERE id=?");
+      $stmt->bind_param('i',  $ltiid);
       $stmt->execute();
       $stmt->close();
 

@@ -31,8 +31,8 @@
   }
 
   function deleteLTIkeys() {
-    notice=window.open("../delete/check_delete_LTIkeys.php?LTIkeysID=" + document.getElementById('divID').value + "","LTIkeyss","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("../delete/check_delete_LTIkeys.php?LTIkeysID=" + document.getElementById('divID').value + "","LTIkeyss","width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-270,screen.height/2-85);
     if (window.focus) {
       notice.focus();
     }
