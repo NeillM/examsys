@@ -39,13 +39,13 @@ class lti_integration_extended extends lti_integration {
       $role = 'Staff';
       $year = 1;
       $gender = '';
-      $id = UserUtils::createUser($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $mysqli);
+      $id = UserUtils::create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $mysqli);
     }
     else {
       $user_data = $SMS->getUserData($username);
       if (count($user_data) > 0) {
         //valid acount found create user
-        UserUtils::createUser(
+        UserUtils::create_user(
           $username,
           $password,
           $user_data['Title'],
@@ -65,8 +65,6 @@ class lti_integration_extended extends lti_integration {
         display_error($string['noaccountfound'], '', false, true);
       }
     }
-
-
   }
 
 

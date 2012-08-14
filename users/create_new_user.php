@@ -69,13 +69,13 @@
     }
     $initials = strtoupper($initials);
   
-    $new_password = encpw($cfg_encrypt_salt, $_POST['new_username'], trim($_POST['new_password']));
+    $new_password = trim($_POST['new_password']);
     $new_surname = UserUtils::my_ucwords(trim($_POST['new_surname']));
     $new_username = trim($_POST['new_username']);
     $new_email = trim($_POST['new_email']);
     $new_first_names = UserUtils::my_ucwords(trim($_POST['new_first_names']));
     
-    UserUtils::createUser($new_username, $new_password, $_POST['new_users_title'],$new_first_names, $new_surname, $new_email, $_POST['new_grade'], $_POST['new_gender'], 1, $tmp_roles, $_POST['new_sid'], $mysqli);
+    UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $_POST['new_grade'], $_POST['new_gender'], 1, $tmp_roles, $_POST['new_sid'], $mysqli);
     
     // Send out email welcome.
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {

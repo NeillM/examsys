@@ -107,7 +107,7 @@ require_once '../classes/userutils.class.php';
 
         // Query the modules for each student
         foreach ($students as $student) {
-          $student_databaseID = UserUtils::studentidExists($student['sid'], $mysqli);
+          $student_databaseID = UserUtils::studentid_exists($student['sid'], $mysqli);
           
           if ($student_databaseID !== false) {
             $students[$student['sid']]['dbID'] = $student_databaseID;

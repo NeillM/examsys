@@ -653,7 +653,7 @@ Class InstallUtils {
     }
 
     //create sysadmin user
-    UserUtils::createUser(  $_POST['SysAdmin_username'],
+    UserUtils::create_user( $_POST['SysAdmin_username'],
                             $_POST['SysAdmin_password'],
                             $_POST['SysAdmin_title'],
                             $_POST['SysAdmin_first'],
@@ -669,7 +669,7 @@ Class InstallUtils {
 
     //create 100 guest accounts
     for ($i=1; $i<=100; $i++) {
-      UserUtils::createUser(  'user' . $i,
+      UserUtils::create_user( 'user' . $i,
                               '', //blank password will be generated
                               'Dr',
                               'A',

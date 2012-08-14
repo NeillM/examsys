@@ -118,8 +118,7 @@ if (!$lti->isInstructor()) {
     echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"margin-left:60px\">" . $string['unavailablepaper'] . "</h1>\n";
     exit();
-  }
-  else {
+  } else {
     //valid data
     list($c_internal_id, $upd) = $lti->lookup_lti_context();
     $session = date_utils::get_current_academic_year();
@@ -129,15 +128,9 @@ if (!$lti->isInstructor()) {
 
     $returned_check = module_utils::module_check_self_enrol($c_internal_id, $mysqli);
 
-    /*
-    if(!UserUtils::isUserOnModule($userID, $c_internal_id, $session, $mysqli) and $returned_check === false ) {
-      display_error('Module ID error', 'Module code ' . $_GET['moduleid'] . ' not found.', false, true);
-    }
-    */
-
-    if (!UserUtils::isUserOnModule($userID, $c_internal_id, $session, $mysqli) and $returned_check !== false and !$lti_i::allow_module_self_reg($c_internal_id)) {
+    if (!UserUtils::is_user_on_module($userID, $c_internal_id, $session, $mysqli) and $returned_check !== false and !i_lti_allow_module_self_reg($c_internal_id)) {
       list($fullname, $school, $active, $selfenroll) = $returned_check;
-      if ($active == 1 and $selfenroll == 1 and !UserUtils::isUserOnModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
+      if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
         // Insert new module enrollment
         UserUtils::add_student_to_module($userID, $c_internal_id, 1, $session, $mysqli);
       }
@@ -149,8 +142,7 @@ if (!$lti->isInstructor()) {
     exit();
 
   }
-}
-else {
+} else {
   //staff
   if ($returned !== false) {
     // goto link
@@ -159,15 +151,12 @@ else {
       header("location: ../user_index.php?id=" . $returned[0]);
       echo "Please click <a href='../user_index.php?id=" . $returned[0] . ".>here</a> to continue";
       exit();
-    }
-    else
-    {
+    } else {
       // allow editing of the stored link
       //TODO NO SUPPORT YET DONE
     }
 
-  }
-  else {
+  } else {
     // no existing stored link so need to create one
 
     $returned2 = $lti->lookup_lti_context();

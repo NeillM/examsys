@@ -254,6 +254,7 @@ function encpw($salt, $u, $p, $type = 'SHA-512') {
     $full_salt = '$1$' . substr(md5($u), 0, 8) . '$'; // Simple MD5, for barckwards compatibility
     $new_password = crypt($p, $full_salt);
   }
+  
   return $new_password;
 }
 

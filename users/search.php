@@ -201,6 +201,7 @@ if (isset($_GET['submit'])) {
   <title>Rogō: <?php echo $string['usermanagement'] . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
   a {color:black}
   input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
@@ -385,7 +386,7 @@ if ($sortby == 'title') {
 <tr><th colspan="8" class="bevel"></th></tr>
 <?php
   if ($roles_sql == '') {
-    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:60px; height:32px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Locked\" />&nbsp;&nbsp;</td><td style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">".$string['msg1']."</td></tr></table>\n</body>\n</html>\n";
+    echo "</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:60px; height:32px; text-align:right\"><img src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Locked\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">".$string['msg1']."</td></tr></table>\n</body>\n</html>\n";
     exit;
   }
 

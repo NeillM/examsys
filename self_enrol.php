@@ -33,13 +33,13 @@ check_var('moduleid', 'GET', true, false);
 $session = date_utils::get_current_academic_year();
 
 //dose the user have an account?
-if (UserUtils::usernameExists($_SERVER['PHP_AUTH_USER'], $mysqli) === false ) {
+if (UserUtils::username_exists($_SERVER['PHP_AUTH_USER'], $mysqli) === false ) {
   //the user has no Rogo Account but has an LDAP acount so lets make one !
   $SMS = SMSutils::GetSmsUtils();
   $user_data = $SMS->getUserData($_SERVER['PHP_AUTH_USER']);
   if (count($user_data) > 0) {
     //valid acount found create user
-    UserUtils::createUser(
+    UserUtils::create_user(
                           $_SERVER['PHP_AUTH_USER'], 
                           $_SERVER['PHP_AUTH_PW'], 
                           $user_data['Title'], 
@@ -66,7 +66,7 @@ if ($returned_check === false) {
 
 list($fullname, $school, $active, $selfenroll) = $returned_check;
 
-if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils::isUserOnModule($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
+if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils::is_user_on_module($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
   // Insert new module enrollment
   UserUtils::add_student_to_module($userID, $_GET['moduleid'], 1, $_POST['session'], $mysqli);
 }
