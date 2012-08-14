@@ -53,19 +53,17 @@ Class UserUtils {
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?, NULL)");
       $encrypt_password = encpw($cfg_encrypt_salt, $username, $password);
       
-      
-      
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
       $userID = $db->insert_id;
       if (isset($sid) and $sid != '') {
         $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
-        $result->bind_param('si', $sid, $userID);
+        $result->bind_param('si', $sid, $tmp_userID);
         $result->execute();
         $result->close();
       }
-      return $userID;
+      return $tmp_userID;
     }
     
     return false;
