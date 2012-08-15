@@ -103,6 +103,8 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db) {
  */
 function get_teams($teams, $db) {
   global $cfg_root_path;
+  
+  $teams_array = array();
 
   if (count($teams) > 0) {
     $team_sql = implode("','", $teams);
