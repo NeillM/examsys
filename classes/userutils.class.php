@@ -15,44 +15,44 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* Utility class for user related functions
-* 
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for user related functions
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 
 Class UserUtils {
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db) {
     global $cfg_encrypt_salt;
-    
-    if (!self::username_exists($username, $db) and $username != '' and stristr('ps_',$username) === false) {
-      $initial = explode(' ',$forname);
+
+    if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
+      $initial = explode(' ', $forname);
       $initials = '';
       foreach ($initial as $name) {
-        $initials .= substr($name,0,1);
+        $initials .= substr($name, 0, 1);
       }
       $initials = strtoupper($initials);
       $surname = self::my_ucwords(trim($surname));
-      $title = self::my_ucwords(trim($title));  
+      $title = self::my_ucwords(trim($title));
 
       //if there is no password generate one
       if ($password == '') {
-        $password =  gen_password();
+        $password = gen_password();
       }
 
       //force valid value for gender or default to NULL
       if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
         $gender = NULL;
       }
-      
+
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?, NULL)");
       $encrypt_password = encpw($cfg_encrypt_salt, $username, $password);
-      
+
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
@@ -65,10 +65,10 @@ Class UserUtils {
       }
       return $tmp_userID;
     }
-    
+
     return false;
   }
-  
+
   /**
    * Check if username exists and if so return ID.
    *
@@ -86,7 +86,7 @@ Class UserUtils {
     $stmt->fetch();
     $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
     $stmt->close();
-    
+
     return $exists;
   }
 
@@ -107,10 +107,10 @@ Class UserUtils {
     $stmt->fetch();
     $exists = ($stmt->num_rows == 0) ? false : $tmp_userID;
     $stmt->close();
-    
+
     return $exists;
   }
-  
+
   /**
    * Add a member of staff onto a team.
    *
@@ -122,7 +122,7 @@ Class UserUtils {
   static function add_staff_to_team($tmp_userID, $module, $db) {
     $stmt = $db->prepare("INSERT INTO teams VALUES (NULL, ?, ?, NULL, 'System')");
     $stmt->bind_param('si', $module, $tmp_userID);
-    $stmt->execute();  
+    $stmt->execute();
     $stmt->close();
   }
 
@@ -136,10 +136,10 @@ Class UserUtils {
   static function clear_team_by_team_name($team_name, $db) {
     $result = $db->prepare("DELETE FROM teams WHERE name=?");
     $result->bind_param('s', $team_name);
-    $result->execute();  
+    $result->execute();
     $result->close();
   }
-  
+
   /**
    * Clear a user (staff) from all teams.
    *
@@ -150,7 +150,7 @@ Class UserUtils {
   static function clear_team_by_userID($tmp_userID, $db) {
     $result = $db->prepare("DELETE FROM teams WHERE memberID=?");
     $result->bind_param('i', $tmp_userID);
-    $result->execute();  
+    $result->execute();
     $result->close();
   }
 
@@ -186,7 +186,7 @@ Class UserUtils {
    *
    */
   static function add_student_to_module($tmp_userID, $module, $attempt, $session, $db) {
-    if (UserUtils::is_user_on_module($tmp_userID, $module,$session, $db)) {
+    if (UserUtils::is_user_on_module($tmp_userID, $module, $session, $db)) {
       //dont add a user to a module multiple times
       return true;
     } else {
@@ -199,7 +199,7 @@ Class UserUtils {
       }
       return true;
     }
-  } 
+  }
 
   /**
    * Test to see if a student is on a module.
@@ -219,32 +219,63 @@ Class UserUtils {
     $result->bind_result($tmp_userID);
     $exists = ($result->num_rows > 0);
     $result->close();
-    
+
     return $exists;
-  }   
- 
-  static function fixcase_callback($word) { 
-    $word = $word[1]; 
-    $word = strtolower($word); 
-          
-    if ($word == 'de') return $word; 
-     
-    $word = ucfirst($word); 
-         
-    if (substr($word,1,1) == "'") { 
-      if (substr($word,0,1) == "D") { 
-        $word = strtolower($word); 
-      } 
-      $next = substr($word,2,1); 
-      $next = strtoupper($next); 
-      $word = substr_replace($word, $next, 2, 1); 
-    }
-    return $word; 
-  } 
-  
-  static function my_ucwords($s) { 
-    $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils', 'fixcase_callback'), $s); 
-    return $s;         
   }
+
+  static function fixcase_callback($word) {
+    $word = $word[1];
+    $word = strtolower($word);
+
+    if ($word == 'de') return $word;
+
+    $word = ucfirst($word);
+
+    if (substr($word, 1, 1) == "'") {
+      if (substr($word, 0, 1) == "D") {
+        $word = strtolower($word);
+      }
+      $next = substr($word, 2, 1);
+      $next = strtoupper($next);
+      $word = substr_replace($word, $next, 2, 1);
+    }
+    return $word;
+  }
+
+  static function my_ucwords($s) {
+    $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils', 'fixcase_callback'), $s);
+    return $s;
+  }
+
+  static function staff_on_team($module, $db, $tmp_userID = -99) {
+    global $userID;
+    if ($tmp_userID == -99) {
+      $tmp_userID = $userID;
+    }
+
+    $teams = array();
+
+    $result = $db->prepare("SELECT name FROM teams WHERE memberID=? AND name IS NOT NULL ORDER BY name");
+    echo $db->error;
+    $result->bind_param('i', $tmp_userID);
+    $result->execute();
+    $result->bind_result($team_name);
+    while ($result->fetch()) {
+      $team_name = strtoupper($team_name);
+      $teams[$team_name] = $team_name;
+    }
+    $result->close();
+
+
+    if (isset($teams[$module])) {
+      return true;
+
+    }
+    else {
+      return false;
+    }
+  }
+
 }
+
 ?>

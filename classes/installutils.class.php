@@ -684,6 +684,17 @@ Class InstallUtils {
                             );
      }
 
+    //add unknown school & faculty
+
+    $facultyID = FacultyUtils::add_faculty('UNKNOWN Faculty',
+      self::$db
+    );
+
+    $scoolID = SchoolUtils::add_school(  $facultyID,
+      'UNKNOWN School',
+      self::$db
+    );
+
      //add traing school
     $facultyID = faculty_utils::add_faculty('Administrative and Support Units',
                                         self::$db

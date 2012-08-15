@@ -300,14 +300,14 @@ class UoN_LTI extends BLTI {
       $result->execute();
       $result->close();
     }
-    return $ret;
+    return;
   }
 
 
   function lookup_lti_resource($lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT internal_id,internal_type FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=?");
+      $stmt = $this->db->prepare("SELECT internal_id,internal_type,updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=?");
       $stmt->bind_param('s', $lti_resource_key);
       $stmt->execute();
       $stmt->store_result();
@@ -326,10 +326,10 @@ class UoN_LTI extends BLTI {
   function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type,updated_on) VALUES (?, ?, ?) ");
+      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type,updated_on) VALUES (?, ?, ?, NOW()) ");
       $result->bind_param('sss', $lti_resource_key, $internal_id, $internal_type);
       $result->execute();
-      $ret = $db->insert_id;
+      $ret = $this->db->insert_id;
       $result->close();
     }
     return $ret;
@@ -367,7 +367,7 @@ class UoN_LTI extends BLTI {
       $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_context (lti_context_key, c_internal_id, updated_on) VALUES (?, ?, NOW()) ");
       $result->bind_param('ss', $lti_context_key, $c_internal_id);
       $result->execute();
-      $ret = $db->insert_id;
+      $ret = $this->db->insert_id;
       $result->close();
       //   }
     }
@@ -377,8 +377,9 @@ class UoN_LTI extends BLTI {
   function lookup_lti_context($lti_context_key = false) {
     if ($lti_context_key === false) $lti_context_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT c_internal_id,updated_on FROM " . $this->parm['table_prefix'] . "lti_context WHERE lti_context_key=?");
-      $stmt->bind_param('s', $lti_resource_key);
+      $sql = "SELECT c_internal_id,updated_on FROM " . $this->parm['table_prefix'] . "lti_context WHERE lti_context_key=?";
+      $stmt = $this->db->prepare($sql);
+      $stmt->bind_param('s', $lti_context_key);
       $stmt->execute();
       $stmt->store_result();
       $rows = $stmt->num_rows;
