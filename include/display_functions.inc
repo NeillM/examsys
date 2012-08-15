@@ -404,7 +404,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           
         </script>
         </div>
-        <input type="text" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" />
+        <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" />
         <?php
         $marks += $display_option['marks_correct'];
         break;
