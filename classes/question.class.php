@@ -1191,7 +1191,7 @@ QUERY;
       return array();
     }
 
-    if(!is_array($this->_changes)) {
+    if (!is_array($this->_changes)) {
       $this->_changes = array();
       // Load the changes into an array
       $result = $this->_mysqli->prepare("SELECT type, part, old, new, DATE_FORMAT(changed, '%d/%m/%Y') AS display_changed, title, initials, surname FROM (track_changes, users) WHERE track_changes.editor=users.id AND typeID=? ORDER BY changed DESC, users.id LIMIT 200");
@@ -1212,7 +1212,7 @@ QUERY;
    * @return array Array of keyword IDs
    */
   public function get_keywords() {
-    if(!is_array($this->_keywords)) {
+    if (!is_array($this->_keywords)) {
       $this->_keywords = array();
       
       // Load the keywords into an array
@@ -1390,7 +1390,7 @@ QUERY;
     $result->bind_param('i', $this->id);
     $result->execute();
     $result->store_result();
-    call_user_func_array(array($result, "bind_result"), $this->_data);
+    call_user_func_array(array($result, 'bind_result'), $this->_data);
     if ($result->fetch()) {
       $success = true;
       $found = $result->num_rows;
@@ -1418,10 +1418,10 @@ QUERY;
       $result->bind_param('i', $this->id);
       $result->execute();
       $result->store_result();
-      call_user_func_array(array($result, "bind_result"), $opt_data);
+      call_user_func_array(array($result, 'bind_result'), $opt_data);
       // TODO: handle 'correctness' more nicely
       $i = 1;
-      while($success == true and $success = $result->fetch()) {
+      while ($success == true and $success = $result->fetch()) {
         $this->options[$opt_data['id']] = Option::option_factory($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, $opt_data);
         $i++;
       }
@@ -1461,8 +1461,7 @@ QUERY;
     
     // Call save() on the options too if successful
     $i = 1;
-    foreach($this->options as $oid => $option)
-    {
+    foreach($this->options as $oid => $option) {
       $media = $option->get_media();
       if ($option->is_blank()) {
         $success = $option->delete();
