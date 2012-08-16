@@ -60,6 +60,7 @@ Class Question extends TouchStoneObject {
   protected $status = 'Normal';
   public $options = array();
   public $max_options = 20;
+  protected $min_options = 1;
   public $max_stems = 0;
   protected $_answer_positive = 'y';
   protected $_answer_negative = 'n';
@@ -1435,12 +1436,14 @@ QUERY;
   
   /**
    * Validate the question object before saving
-   * @return Ambigous <boolean, string>
+   * @return Mixed <boolean, string>
    */
   private function validate() {
     $rval = true;
     
     // If there are errors return an appropriate message
+
+    // Required fields
     $missing_fields = '';
     foreach($this->_fields_required as $req) {
       if (empty($this->$req)) $missing_fields .= $this->_pretty_names[$req] . ', ';
@@ -1448,7 +1451,32 @@ QUERY;
     if ($missing_fields != '') {
       $rval = $this->_lang_strings['missingfieldserror'] . ' ' . rtrim($missing_fields, ', ');
     }
-    
+
+    // Number of options
+    $opt_error = false;
+    if (count($this->options) < $this->min_options) {
+      $opt_error = true;
+    } else {
+      $valid_opts = 0;
+      foreach ($this->options as $option) {
+        if (!$option->is_blank()) {
+          $valid_opts++;
+        }
+      }
+      if ($valid_opts < $this->min_options) {
+        $opt_error = true;
+      }
+    }
+
+    if ($opt_error) {
+      $messg = sprintf($this->_lang_strings['validanswers'], $this->min_options);
+      if ($rval == true) {
+        $rval = $messg;
+      } else {
+        $rval .= '<br />' . $messg;
+      }
+    }
+
     return $rval;
   }
   
