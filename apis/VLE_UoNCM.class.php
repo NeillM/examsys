@@ -24,9 +24,6 @@
 * @package
 */
 
-// TODO: Make URL configurable?
-// TODO: Add API key for connection as Moodle/Rogo user
-
 require_once 'VLEAPI.if.php';
 require_once $cfg_web_root . 'webServices/RestRequest.class';
 
