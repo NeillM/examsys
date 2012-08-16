@@ -464,7 +464,7 @@ a.access:hover {color:white}
         $display_val = str_replace(' ', '', $value);
         $display_val = str_replace(',', '', $display_val);
         $display_val = $string[strtolower($display_val)];
-        if ($value == $tmp_roles) {
+        if (strtolower($value) == strtolower($tmp_roles)) {
           echo "<option value=\"$value\" selected>$display_val</option>";
         } else {
           echo "<option value=\"$value\">$display_val</option>";

@@ -31,10 +31,14 @@
   
   set_time_limit(0);
   
-  require_once '../config/config.inc.php';
-  require_once '../classes/dateutils.class.php';
-  require_once '../classes/dbutils.class.php';
-  require_once '../classes/userutils.class.php';
+  $path = str_replace('/admin', '', str_replace('\\', '/', dirname(__FILE__)));
+  if ($path == '') {
+    $path = $_SERVER['DOCUMENT_ROOT'];
+  }
+  require_once $path . '/config/config.inc.php';
+  require_once $path . '/classes/dateutils.class.php';
+  require_once $path . '/classes/dbutils.class.php';
+  require_once $path . '/classes/userutils.class.php';
 
   $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
 

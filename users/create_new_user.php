@@ -29,6 +29,8 @@
   require_once '../classes/userutils.class.php';
 
   $unique_username = true;
+  $problem = false;
+  
   if (isset($_POST['submit'])) {
     // Check for unique username
     $result = $mysqli->prepare("SELECT username FROM users WHERE username=?");
@@ -74,24 +76,28 @@
     $new_username = trim($_POST['new_username']);
     $new_email = trim($_POST['new_email']);
     $new_first_names = UserUtils::my_ucwords(trim($_POST['new_first_names']));
+    $new_grade = $_POST['new_grade'];
     
-    UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $_POST['new_grade'], $_POST['new_gender'], 1, $tmp_roles, $_POST['new_sid'], $mysqli);
-    
-    // Send out email welcome.
-    if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
-      $result = $mysqli->prepare("SELECT email FROM users WHERE username=?");
-      $result->bind_param('s', $_SERVER['PHP_AUTH_USER']);
-      $result->execute();
-      $result->bind_result($tmp_email);
-      $result->fetch();
-      $result->close();
+    if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_grade == '') {
+      $problem = true;
+    } else {
+      UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], 1, $tmp_roles, $_POST['new_sid'], $mysqli);
       
-      $subject = "{$string['newrogoaccount']}";
-      $headers = "From: $tmp_email\n";
-      $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
-      $headers .= "bcc: $tmp_email\n";
-      $sname = ucwords($_POST['new_surname']);
-      $message = <<< MESSAGE
+      // Send out email welcome.
+      if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
+        $result = $mysqli->prepare("SELECT email FROM users WHERE username=?");
+        $result->bind_param('s', $_SERVER['PHP_AUTH_USER']);
+        $result->execute();
+        $result->bind_result($tmp_email);
+        $result->fetch();
+        $result->close();
+        
+        $subject = "{$string['newrogoaccount']}";
+        $headers = "From: $tmp_email\n";
+        $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
+        $headers .= "bcc: $tmp_email\n";
+        $sname = ucwords($_POST['new_surname']);
+        $message = <<< MESSAGE
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -135,8 +141,10 @@ MESSAGE;
 <div id="content" class="content" style="font-size:80%">
 <p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
 </div>
-    <?php
-  } else {
+      <?php
+    }
+  }
+  if (!isset($_POST['submit']) or $problem) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -147,9 +155,9 @@ MESSAGE;
 
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-  textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
   .title {font-size:160%; font-weight:bold}
   .field {font-weight:bold}
+  .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000!important}
   </style>
 
   <script type="text/javascript">
@@ -234,10 +242,10 @@ foreach ($titles as $tmp_title) {
 }
 ?>
 </select></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($_POST['email'])) { echo $_POST['email']; } ?>" /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input type="text" id="new_username" name="new_username" size="12" maxlength="15" <?php if (isset($_POST['username']) and $unique_username != true) echo ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['username'] . '"'; ?>/>
+<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input<?php if (isset($new_first_names) and $new_first_names == '') echo ' class="warn"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="warn"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="warn"'; ?> type="text" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" /></td></tr>
+<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false)) echo ' class="warn"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" />
 &nbsp;&nbsp;&nbsp;<span class="field"><?php echo $string['password']; ?></span> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
     echo $_POST['password'];
@@ -259,7 +267,7 @@ foreach ($titles as $tmp_title) {
 </select>
 </td></tr>
 <tr><td align="right"><span class="field"><?php echo $string['typecourse']; ?></span></td><td>
-<select name="new_grade" id="new_grade" size="1" style="width:350px">
+<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="warn"'; ?>>
 <option value=""></option>
 <optgroup label="<?php echo $string['universitystaff']; ?>">
 <option value="University Lecturer"><?php echo $string['academiclecturer']; ?></option>
