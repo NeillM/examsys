@@ -163,8 +163,8 @@ check_var('paperID', 'GET', true, false);
 </head>
 
 <body>
-  <div id="menudiv" style="font-size:80%; filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-  <table width="160" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #6593CF; font-size:100%; background-color:white">
+  <div id="menudiv" style="background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:2px 2px 2px rgba(100, 100, 100, 0.50)" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+  <table width="180" cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
     <tr><td>
       <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white">
         <tr>
