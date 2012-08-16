@@ -3099,7 +3099,6 @@ if (!isset($_POST['update'])) {
       echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
     }  
   }
-   
   // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
   $result->execute();
@@ -3133,237 +3132,45 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  //Fix DB permissions for staff users importing off-line paper marks
-  $sql = "GRANT DELETE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-  $mysqli->query($sql);
-  echo "<li>GRANT DELETE ON " . $cfg_db_database . ".log_metadata TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
-  $sql = "GRANT DELETE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-  $mysqli->query($sql);
-  echo "<li>GRANT DELETE ON " . $cfg_db_database . ".log5 TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+  // 05/07/2012 - Add VLE API reference to relationships table (for historical references) and update for modules using NLE
+  $result_col = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='relationships' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='vle_api'");
+  $result_col->execute();
+  $result_col->store_result();
+  $result_col->bind_result($column_type);
+  $result_col->fetch();
+  if ($result_col->num_rows() == 0) {
+    // First fix '0' values in modules table
+    $update_mod = $mysqli->prepare("UPDATE modules SET vle_api=NULL WHERE vle_api='0'");
+    $update_mod->execute();
+    $update_mod->close();
+    echo "<li>UPDATE modules SET vle_api=NULL WHERE vle_api='0'</li>\n";
 
-  ob_flush();
-  flush();
+    $adjust = $mysqli->prepare("ALTER TABLE relationships ADD COLUMN vle_api varchar(255) NOT NULL DEFAULT ''");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE relationships ADD COLUMN vle_api varchar(255) NOT NULL DEFAULT ''</li>\n";
 
-
-
-  // 2012-07-30 cczsa1 alter lti tables to remove seperate oauth_consumer_key and combine with other index
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
-
-    $sql="UPDATE `lti_context` SET `lti_context_id`=CONCAT(`oauth_consumer_key`,':',`lti_context_id`)";
-    $adjust = $mysqli->prepare($sql);
-    if ($mysqli->error) {
-      try {
-        throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $sql", $mysqli->errno);
-      }
-      catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-      }
+    $mod_count = 0;
+    $result_mod = $mysqli->prepare("SELECT moduleid FROM modules WHERE vle_api='NLE'");
+    $result_mod->execute();
+    $result_mod->store_result();
+    $result_mod->bind_result($moduleid);
+    while ($result_mod->fetch()) {
+      $update = $mysqli->prepare("UPDATE relationships SET vle_api='NLE' WHERE module_id=?");
+      $update->bind_param('s', $moduleid);
+      $update->execute();
+      $update->close();
+      $mod_count++;
     }
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
+    echo "<li>Updated relationships table for $mod_count modules</li>\n";
 
-    $sql="ALTER TABLE `lti_context` DROP `oauth_consumer_key`";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_context` CHANGE `lti_context_id` `lti_context_key` VARCHAR( 255 ) NOT NULL ";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-
+    $result_mod->close();
   }
+  $result_col->close();
 
-  $result->close();
-  @ob_flush();
-  @flush();
-
-
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_resource' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
-
-    $sql="UPDATE `lti_resource` SET `lti_resource_id`=CONCAT(`oauth_consumer_key`,':',`lti_resource_id`)";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_resource` DROP `oauth_consumer_key`";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_resource` CHANGE `lti_resource_id` `lti_resource_key` VARCHAR( 255 ) NOT NULL ";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_resource` CHANGE `itype` `internal_type` VARCHAR( 255 ) NOT NULL ";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated_on` DATETIME";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-  }
-  $result->close();
-
-  @ob_flush();
-  @flush();
-
-
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_user' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
-
-    $sql="UPDATE `lti_user` SET `user_id`=CONCAT(`oauth_consumer_key`,':',`user_id`)";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_user` DROP `oauth_consumer_key`";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_user` CHANGE `user_id` `lti_user_key` VARCHAR( 255 ) NOT NULL ";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-
-    $sql="ALTER TABLE `lti_user` CHANGE `rogo_id` `lti_user_equ` VARCHAR( 255 ) NOT NULL ";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-  }
-
-  @ob_flush();
-  @flush();
-  $result->close();
-
-
-  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND COLUMN_NAME='updated_at' AND TABLE_SCHEMA='$cfg_db_database'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  if ($result->num_rows() > 0) {
-
-
-    $sql="ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME";
-    $adjust = $mysqli->prepare($sql);
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>$sql</li>";
-  }
-  $result->close();
-
-  @ob_flush();
-  @flush();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // End ------------------------------------------------------------------
-  // 18/07/2012
-  // Add index to improve performance for finding question copying in the Information dialog box.
-  $result = $mysqli->prepare("SHOW INDEX FROM track_changes");
-  $result->execute();
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows() == 1) {
-    $adjust = $mysqli->prepare("ALTER TABLE track_changes ADD INDEX(type)");
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>ALTER TABLE track_changes ADD INDEX(type)</li>\n";
-    ob_flush();
-    flush();
-  }
-
-  // 24/07/2012 - Add new 'Area' question type
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='q_type'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($column_type);
-  $result->fetch();
-  $result->close();
-  if ($column_type == "enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false')") {
-    $adjust = $mysqli->prepare("ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area')");
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>ALTER TABLE questions CHANGE COLUMN q_type q_type enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area')</li>\n";
-    ob_flush();
-    flush();
-  }
-
-  // 27/07/2012 - Remove invalid entries from track changes
-  $result = $mysqli->prepare("SELECT typeID FROM track_changes WHERE typeID < 1 LIMIT 1");
-  $result->execute();
-  $result->store_result();
-  $result->fetch();
-  if ($result->num_rows() == 1) {
-    $adjust = $mysqli->prepare("DELETE FROM track_changes WHERE typeID < 1");
-    $adjust->execute();
-    $adjust->close();
-    echo "<li>DELETE * FROM track_changes WHERE typeID < 1</li>\n";
-    ob_flush();
-    flush();
-  }
-  $result->close();
 
   // 31/07/2012 - Add deleted column to users
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='user_deleted'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -3376,58 +3183,6 @@ if (!isset($_POST['update'])) {
     echo "<li>ALTER TABLE users ADD COLUMN user_deleted datetime</li>\n";
   }
   $result->close();
-
-  // 02/08/2012 - Move Area question settings into the question itself
-  $result = $mysqli->prepare("SELECT o_id, option_text FROM options o INNER JOIN questions q ON o.o_id=q.q_id WHERE q.q_type='area' AND o.option_text IS NOT NULL AND o.option_text!=''");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($o_id, $option_text);
-  $area_fixed = 0;
-  while ($result->fetch()) {
-    // Update question
-    $adjust1 = $mysqli->prepare("UPDATE questions SET display_method=? WHERE q_id=?");
-    $adjust1->bind_param('si', $option_text, $o_id);
-    $adjust1->execute();
-    $adjust1->close();
-
-    // Clear option
-    $adjust1 = $mysqli->prepare("UPDATE options SET option_text=NULL WHERE o_id=?");
-    $adjust1->bind_param('i', $o_id);
-    $adjust1->execute();
-    $adjust1->close();
-
-    $area_fixed++;
-  }
-  if ($area_fixed > 0) {
-    echo "<li>Moved area settings into question table</li>\n";
-  }
-  $result->close();
-
-  // 03/08/2012 - Add session change over date.
-  $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_academic_year_start = '07/01';\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
-  $found = false;
-  foreach ($cfg as $line) {
-    if (strpos($line,'cfg_academic_year_start') !== false) {
-      $found = true;
-    }
-  }
-  
-  if (!$found) {
-    array_splice($cfg,20,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
-    }
-    
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
-    }
-    echo "<li>Added academic_year_start to config file.</li>\n";
-    ob_flush();
-    flush();
-  }
-
 
   // 15/08/2012 - cczsa1 adding unknown school and faculty
 

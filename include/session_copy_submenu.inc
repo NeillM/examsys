@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once '../classes/dateutils.class.php';
-
 /**
  * Get a list of years for which the module has mapped objectives
  * @param debug_mysqli $mysqli

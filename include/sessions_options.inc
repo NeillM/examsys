@@ -22,40 +22,36 @@
 * @package
 */
 
-  if (in_array($_GET['module'], $teams) === false and strpos($userroles,'SysAdmin') === false) {
-    exit;
-  }
-  
-  $stmt = $mysqli->prepare("SELECT calendar_year, vle_api FROM student_modules, modules WHERE student_modules.moduleid=modules.moduleid AND student_modules.moduleid=? ORDER BY student_modules.id DESC LIMIT 1");
-  $stmt->bind_param('s', $_GET['module']);
-  $stmt->execute();
-  $stmt->bind_result($session, $vle_api);
-  $stmt->fetch();
-  $stmt->close(); 
+require_once $cfg_web_root . 'apis/VLEFactory.class.php';
+require_once '../classes/dateutils.class.php';
+require_once '../classes/mappingutils.class.php';
 
-  if ($vle_api != '') {
-    require_once("../apis/$vle_api.inc");
-    $objsBySession = getObjectives($_GET['module'], $session);
-  } else {
-    require_once '../include/mapping.inc';
-  }
+
+if (in_array($_GET['module'], $teams) === false and strpos($userroles,'SysAdmin') === false) {
+  exit;
+}
+
+$session = date_utils::get_current_academic_year();
+$vle_api_cache = array();
+$vle_api = MappingUtils::get_vle_api($_GET['module'], $session, $vle_api_cache, $mysqli);
+
+if ($vle_api != '') {
+  $vle = VLEFactory::GetVLEAPI($vle_api);
+  $objsBySession = $vle->getObjectives($_GET['module'], $session);
+  $vle_name = $vle->getFriendlyName();
+  $vle_name_a = $vle->getFriendlyName(true);
+} else {
+  require_once '../include/mapping.inc';
+  $objsBySession = getObjectives($_GET['module'], $session, '', '', $mysqli, 'all');
+}
 ?>
 <script language="JavaScript">
   function addSession() {
     <?php
-      if ($vle_api == 'NLE') {
-        echo "alert(\"This is an NLE-based module. To add a new session it must be added in the NLE.\");\n";
+      if ($vle_api != '') {
+        echo "alert(\"This is {$vle_name_a}-based module. To add a new session it must be added in the {$vle_name}.\");\n";
       } else {
         echo "document.location.href=\"add_session.php?module=" . $_GET['module'] . "\";\n";
-      }
-    ?>
-  }
-  function importFromNLE() {
-  <?php
-      if ($vle_api == 'NLE') {
-        echo "alert(\"This is an NLE-based module. To add a new session it must be added in the NLE.\");\n";
-      } else {
-        echo "document.location.href=\"copy_session_from_NLE.php?module=" . $_GET['module'] . "\";\n";
       }
     ?>
   }
@@ -65,7 +61,13 @@
   }
   
   function editNLESession() {
-    alert("This is an NLE-based module. To change its session objectives you must edit the NLE.");
+<?php
+  if ($vle_api != '') {
+?>
+    alert("This is <?php echo $vle_name_a ?>-based module. To change its session objectives you must edit the <?php echo $vle_name ?>.");
+<?php
+  }
+?>
   }
   
   function deleteSession() {
@@ -77,7 +79,13 @@
   }
   
   function deleteNLESession() {
-    alert("This is an NLE-based module. To delete this session it must be removed from the NLE.");
+<?php
+if ($vle_api != '') {
+?>
+    alert("This is <?php echo $vle_name_a ?>-based module. To delete this session it must be removed from the <?php echo $vle_name ?> system.");
+<?php
+}
+?>
   }
 
   function updateMenu(ID) {
@@ -121,23 +129,18 @@
 <table style="margin-left:9px; font-size:90%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
 <tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
 <?php
-if (strpos($userroles,'SysAdmin') !== false) {
-?>
-  <tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
-<?php
-}
-if ($vle_api != 'NLE') {
-  echo '<tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+if ($vle_api == '') {
+  echo '<tr><td class="ico"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
 }
 ?>
 <tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editsession']; ?></td></tr>
 <tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deletesession']; ?></td></tr>
 <?php
-if ($vle_api != 'NLE') {
+if ($vle_api == '') {
 	echo '<tr><td class="ico"><img onclick="showSessCopyMenu(event)" src="../artwork/copy_icon.gif" width="16" height="16" alt="Copy year" border="0" /></td><td class="menuitem"><a href="#" onclick="showSessCopyMenu(event); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
 }
 else {
-	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for NLE modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="#" onclick="alert(\'Copy year is not available for NLE modules\'); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
+	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
 }
 ?>
 </table>
@@ -145,23 +148,18 @@ else {
 <table style="margin-left:9px; font-size:90%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
 <tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
 <?php
-if (strpos($userroles,'SysAdmin') !== false) {
-?>
-  <tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
-<?php
-}
-if ($vle_api != 'NLE') {
-  echo '<tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+if ($vle_api == '') {
+  echo '<tr><td class="ico"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
 }
 ?>
 <tr><td class="ico"><img onclick="hideSessCopyMenu(event); editSession()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editSession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
 <tr><td class="ico"><img onclick="hideSessCopyMenu(event); deleteSession()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteSession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
 <?php
-if ($vle_api != 'NLE') {
+if ($vle_api == '') {
   echo '<tr><td class="ico"><img onclick="showSessCopyMenu(event)" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="showSessCopyMenu(event); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
 }
 else {
-	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for NLE modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="#" onclick="alert(\'Copy year is not available for NLE modules\'); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
+	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
 }
 ?>
 </table>
@@ -169,23 +167,18 @@ else {
 <table style="margin-left:9px; font-size:90%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu1c">
 <tr><td><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img src="../artwork/new_session_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><?php echo $string['createsession']; ?></a></td></tr>
 <?php
-if (strpos($userroles,'SysAdmin') !== false) {
-?>
-  <tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><?php echo $string['importnle']; ?></a></td></tr>
-<?php
-}
-if ($vle_api != 'NLE') {
-  echo '<tr><td class="ico"><a href="#" onclick="hideSessCopyMenu(event); importFromNLE(); return false;"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
+if ($vle_api == '') {
+  echo '<tr><td class="ico"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
 }
 ?>
 <tr><td class="ico"><img onclick="hideSessCopyMenu(event); editNLESession()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editNLESession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
 <tr><td class="ico"><img onclick="hideSessCopyMenu(event); deleteNLESession()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteNLESession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
 <?php
-if ($vle_api != 'NLE') {
+if ($vle_api == '') {
   echo '<tr><td class="ico"><img onclick="showSessCopyMenu(event)" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="showSessCopyMenu(event); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
 }
 else {
-	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for NLE modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="#" onclick="alert(\'Copy year is not available for NLE modules\'); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
+	echo '<tr><td class="ico"><img onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\') return false;" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';
 }
 ?>
 </table>
