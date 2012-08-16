@@ -156,7 +156,7 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
           </tr>
           <tr>
             <th>
-              <strong><?php echo $string['tolerance_full'] ?></strong>
+              <?php echo $string['tolerance_full'] ?>
             </th>
             <td class="form-small">
               <select id="correct_full" name="correct_full">
@@ -186,7 +186,7 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
           ?>
           <tr class="marks-partial<?php echo $show_partial ?>">
             <th>
-              <strong><?php echo $string['tolerance_partial'] ?></strong>
+              <?php echo $string['tolerance_partial'] ?>
             </th>
             <td>
               <select id="correct_partial" name="correct_partial">
@@ -219,7 +219,7 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
           ?>
           <tr>
             <th>
-              <strong><?php echo $string['marksincorrect'] ?></strong>
+              <?php echo $string['marksincorrect'] ?>
             </th>
             <td colspan="2">&nbsp;</td>
             <td>
