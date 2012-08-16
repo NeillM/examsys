@@ -204,7 +204,7 @@ MESSAGE;
 <?php
   require '../include/user_search_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content" class="content">
 <br />
 <form method="post" name="newUser" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <div align="center">

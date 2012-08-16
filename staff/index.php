@@ -88,7 +88,7 @@ require '../include/staff_auth.inc';
   require '../include/icon_display.inc';
 ?>
 
-<div id="content" class="content" style="font-size:80%">
+<div id="content" class="content">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <?php
   // -- Create new folder ---------------------------------------------------
@@ -122,7 +122,7 @@ require '../include/staff_auth.inc';
   $stmt->close();
 ?>
 <script language="JavaScript">
-  function startPaper(paperID,fullsc) {
+  function startPaper(paperID, fullsc) {
     var winwidth = screen.width-80;
     var winheight = screen.height-80;
     if (fullsc == 0) {
@@ -154,7 +154,7 @@ require '../include/staff_auth.inc';
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Locked\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($cfg_install_type, ($as_pos+4)) . "</div></td></tr></table>\n";
   }
 ?>
-<div style="padding-left:14px; padding-right:14px">
+<div style="padding-left:6px; padding-right:14px">
 <?php
 
   // Check for any news/announcements
@@ -178,7 +178,7 @@ require '../include/staff_auth.inc';
   $result->store_result();
   echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myrecentpapers'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   while ($result->fetch()) {
-    echo "<div style=\"padding-left:12px\"><a href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
+    echo "<div style=\"padding-left:22px\"><a href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
     echo "href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\">" . $paper_title . "</a></div>\n";
   }

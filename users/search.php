@@ -275,12 +275,16 @@ if (isset($_GET['submit'])) {
 <?php
   if (isset($_GET['submit']) or isset($_GET['paperID']) or isset($_GET['moduleID'])) {
     echo "<body>\n";
+    
     include '../include/user_search_options.inc';
-    echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
+    
+    echo "<div id=\"content\" class=\"content\">\n";
   } else {
     echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
+    
     include '../include/user_search_options.inc';
-    echo "<div id=\"content\" class=\"content\" style=\"font-size:80%\">\n";
+    
+    echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['usersearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(92); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>";
     echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n</div>\n</body></html>\n";
