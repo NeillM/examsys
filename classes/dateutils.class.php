@@ -35,7 +35,11 @@ Class date_utils {
 	static function get_current_academic_year()	{
 		return date_utils::get_academic_year(date('Y/m/d'));
 	}
-	
+
+  static function get_next_academic_year()	{
+    return date_utils::get_academic_year(date('Y/m/d',time()+31556926));
+  }
+
 	/**
 	 * Get the academic year for the given date in the format 'yyyy/yy', e.g. '2010/11'
 	 * @param string $date A date in a format that can be accepted by strtotime
