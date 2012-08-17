@@ -29,7 +29,7 @@ Class module_utils {
 
   static function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db) {
 
-    if (module_utils::module_exists($moduleid, $db) === false) {
+    if (module_utils::module_exists($moduleid, $db) !== false) {
       return false;
     }
 
@@ -53,7 +53,7 @@ Class module_utils {
 
   static function module_exists($moduleid, $db) {
     // Check for unique moduleID
-    $unique_moduleid = false;
+    $unique_moduleid = true;
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
     $result->bind_param('s', $moduleid);
     $result->execute();
@@ -61,7 +61,7 @@ Class module_utils {
     $result->bind_result($tmp_moduleid);
     $result->fetch();
     if ($result->num_rows == 0) {
-      $unique_moduleid = true;
+      $unique_moduleid = false;
     }
     $result->free_result();
     $result->close();

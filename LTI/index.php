@@ -187,7 +187,7 @@ if (!$lti->isInstructor()) {
 
       foreach ($data as $v) {
 
-        if (module_utils::module_exists($v[1], $mysqli)) {
+        if (!module_utils::module_exists($v[1], $mysqli)) {
 
           $selfEnroll = 0;
           if ($v[0] == 'Manual') {
