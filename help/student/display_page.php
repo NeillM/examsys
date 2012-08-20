@@ -81,46 +81,50 @@ if ($_GET['id'] != '1' and strpos($userroles,'SysAdmin') === false and strpos($u
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<title>Help and Support Center</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
-<link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
-<script language="JavaScript">
-  function updateToolbar(editID,deleteID) {
-    parent.frames['toolbar'].document.myform.editid.value=editID;
-    parent.frames['toolbar'].document.myform.deleteid.value=deleteID;
-    <?php
-    if (isset($_GET['section'])) {
-      echo "window.location='#" . $_GET['section'] . "'\">\n";
-    }
-    ?>
-  }
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
   
-  function updateTOC() {
-    if (parent.frames['navigation'].document.getElementById('old_highlight').value != 0) {
-      old_section = parent.frames['navigation'].document.getElementById('old_highlight').value;
-      parent.frames['navigation'].document.getElementById(old_section).style.fontWeight="normal";
-      parent.frames['navigation'].document.getElementById(old_section).style.textDecoration="none";
-    }
-    <?php
-    if ($_GET['id'] != 1) {
-      echo "parent.frames['navigation'].document.getElementById('title" . $_GET['id'] . "').style.fontWeight=\"bold\";\n";
-      echo "parent.frames['navigation'].document.getElementById('title" . $_GET['id'] . "').style.textDecoration=\"underline\";\n";
-    }
-    ?>
-    parent.frames['navigation'].document.getElementById('old_highlight').value = 'title<?php echo $_GET['id']; ?>';
-  }
+  <title>Help and Support Center</title>
   
- function openTutorial(file) {
-   var winheight = screen.height-30;
-    var winwidth = screen.width-20;
-    notice = window.open("./viewCaptivate.php?tutorial=" + file + "","Tutorial","width=" + winwidth + ",height="+winheight+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    notice.moveTo(0,0);
-    if (window.focus) {
-      notice.focus();
-    }  
- }
-</script>
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  
+  <script language="JavaScript">
+    function updateToolbar(editID,deleteID) {
+      parent.frames['toolbar'].document.myform.editid.value=editID;
+      parent.frames['toolbar'].document.myform.deleteid.value=deleteID;
+      <?php
+      if (isset($_GET['section'])) {
+        echo "window.location='#" . $_GET['section'] . "'\">\n";
+      }
+      ?>
+    }
+    
+    function updateTOC() {
+      if (parent.frames['navigation'].document.getElementById('old_highlight').value != 0) {
+        old_section = parent.frames['navigation'].document.getElementById('old_highlight').value;
+        parent.frames['navigation'].document.getElementById(old_section).style.fontWeight="normal";
+        parent.frames['navigation'].document.getElementById(old_section).style.textDecoration="none";
+      }
+      <?php
+      if ($_GET['id'] != 1) {
+        echo "parent.frames['navigation'].document.getElementById('title" . $_GET['id'] . "').style.fontWeight=\"bold\";\n";
+        echo "parent.frames['navigation'].document.getElementById('title" . $_GET['id'] . "').style.textDecoration=\"underline\";\n";
+      }
+      ?>
+      parent.frames['navigation'].document.getElementById('old_highlight').value = 'title<?php echo $_GET['id']; ?>';
+    }
+    
+   function openTutorial(file) {
+     var winheight = screen.height-30;
+      var winwidth = screen.width-20;
+      notice = window.open("./viewCaptivate.php?tutorial=" + file + "","Tutorial","width=" + winwidth + ",height="+winheight+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
+      notice.moveTo(0,0);
+      if (window.focus) {
+        notice.focus();
+      }  
+   }
+  </script>
 </head>
 
 <?php

@@ -29,9 +29,10 @@ require '../../include/staff_auth.inc';
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>TOC</title>
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 </head>
 <body style="margin:0px">
-<table cellpadding="0" cellspacing="0" border="0" style="font-size:75%; font-family:Verdana,sans-serif; font-weight:bold; width:100%; height:20px">
+<table cellpadding="0" cellspacing="0" border="0" style="font-size:75%; font-weight:bold; width:100%; height:20px">
 <tr>
 <td style="background-color:#B8CFE9; color:#154A93; border-left:2px solid #7699C7; border-top:2px solid #7699C7; border-right:2px solid #7699C7">&nbsp;<?php echo $string['toc']; ?></td>
 </tr>

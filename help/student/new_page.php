@@ -83,12 +83,15 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-  <title>New Help Page</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
+
+  <title>New Help Page</title>
+
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
     html {height:100%}
-    body {background-color:white; color:black; margin-left:0px; margin-right:0px; font-family:Arial,sans-serif; font-size:85%; line-height:150%; color:#484848}
+    body {font-size:85%; line-height:150%; color:#484848}
     p, div, td {text-align:justify}
     li {text-align:justify; list-style:square inside; color:#FF9900}
     td {font-size:85%}

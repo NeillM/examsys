@@ -2984,9 +2984,9 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>ALTER TABLE scheduling ADD UNIQUE idx_paperID (paperID)</li>\n";
     
-    $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+    $sql = "GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
     $mysqli->query($sql);
-    echo "<li>GRANT SELECT, INSERT ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+    echo "<li>GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
     
     $new_cfg_str = array();
     $new_cfg_str[] =  "\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.";

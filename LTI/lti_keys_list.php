@@ -33,27 +33,17 @@ require '../include/sysadmin_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>"/>
+  
   <title><?php echo $string['ltikeys'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css"/>
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <style type="text/css">
-    .mid {
-      padding-left: 30px
-    }
-
-    .l {
-      cursor: pointer
-    }
-
-    .no {
-      text-align: right;
-      padding-right: 10px
-    }
-
-    .deleted {
-      color: red;
-      text-decoration: line-through
-    }
+    .mid {padding-left:30px}
+    .l {cursor: pointer}
+    .no {text-align:right; padding-right:10px}
+    .deleted {color:red; text-decoration:line-through}
   </style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>

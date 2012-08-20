@@ -78,18 +78,22 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Help and Support Center</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
-  body {margin:6px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
-  ul {list-style-type:square; color:#FF9900}
-  a:link.title {color:#0560A6; font-weight:bold}
-  a:visited.title {color:#0560A6; font-weight:bold}
-  a:link.page {color:white}
-  a:visited.page {color:white}
-  .path {color:#808080}
-  .row1 {border-top:1px solid #A6CBEB; padding:2px; vertical-align:top; width:24px}
-  .row2 {border-top:1px solid #A6CBEB; padding:2px; padding-bottom:10px}
+    body {margin:6px; font-size:80%}
+    ul {list-style-type:square; color:#FF9900}
+    a:link.title {color:#0560A6; font-weight:bold}
+    a:visited.title {color:#0560A6; font-weight:bold}
+    a:link.page {color:white}
+    a:visited.page {color:white}
+    .path {color:#808080}
+    .row1 {border-top:1px solid #A6CBEB; padding:2px; vertical-align:top; width:24px}
+    .row2 {border-top:1px solid #A6CBEB; padding:2px; padding-bottom:10px}
   </style>
+  
   <script type="text/javascript">
     function displayPage(targetID, page_no) {
       for (page=1; page<=page_no; page++) {

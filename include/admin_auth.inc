@@ -25,7 +25,7 @@
 */
 require_once 'staff_student_auth.inc';
 
-if(strpos($userroles,'Admin') === false) {
+if (strpos($userroles,'Admin') === false) {
   access_denied($string['accessdeniedadmin'],true);
 } 
 
