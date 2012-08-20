@@ -21,7 +21,7 @@ a:hover {
 }
 
 img {
-  border:none
+  border:0px;
 }
 
 textarea, input[type=text], select {
