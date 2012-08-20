@@ -67,13 +67,14 @@ $result->close();
 ?>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['editfaculty']; ?></title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:#EEEEEE; color:black}
-h1 {font-size:120%}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['editfaculty']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+  body {padding:4px; font-size:90%; background-color:#EEEEEE}
+  h1 {font-size:120%}
+  </style>
 </head>
 
 <body onload="document.myform.new_keyword.focus();">
@@ -82,10 +83,10 @@ h1 {font-size:120%}
 <div>
 <?php
 if ($duplicate) {
-  echo '<input type="text" style="width:100%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $_POST['new_faculty'] . '" />';
+  echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $_POST['new_faculty'] . '" />';
   echo "<script language=\"JavaScript\">\nalert('" . $string['warning'] . "');\n</script>\n";
 } else {
-  echo '<input type="text" style="width:100%" name="new_faculty" value="' . $name . '" />';
+  echo '<input type="text" style="width:99%" name="new_faculty" value="' . $name . '" />';
 }
 ?>
 <input type="hidden" name="facultyID" value="<?php echo $_GET['facultyID']; ?>" />

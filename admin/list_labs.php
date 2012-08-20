@@ -27,48 +27,49 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['computerlabs']; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-.foldername {float:left; width:380px; height:60px; padding-left:22px; font-size:90%}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['computerlabs']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .foldername {float:left; width:380px; height:60px; padding-left:22px; font-size:90%}
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-  function selLab(labID,labNo,evt) {
-    tmp_ID = document.labform.oldLabNo.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      document.getElementById(tmp_ID).style.color = 'black';
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script language="javascript">
+    function selLab(labID,labNo,evt) {
+      tmp_ID = document.labform.oldLabNo.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+        document.getElementById(tmp_ID).style.color = 'black';
+      }
+      document.getElementById(labNo).style.backgroundColor = '#316AC5';
+      document.getElementById(labNo).style.color = 'white';
+
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+
+    
+      document.getElementById('labID').value = labID;
+      document.getElementById('labNo').value = labNo;
+      document.getElementById('oldLabNo').value = labNo;
+    
+      evt.cancelBubble = true;
     }
-    document.getElementById(labNo).style.backgroundColor = '#316AC5';
-    document.getElementById(labNo).style.color = 'white';
+    
+    function deselLab() {
+      tmp_ID = document.getElementById('oldLabNo').value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+        document.getElementById(tmp_ID).style.color = 'black';
+      }  
+      document.getElementById('menu1a').style.display = 'block';
+      document.getElementById('menu1b').style.display = 'none';
 
-    document.getElementById('menu1a').style.display = 'none';
-    document.getElementById('menu1b').style.display = 'block';
-
-  
-    document.getElementById('labID').value = labID;
-    document.getElementById('labNo').value = labNo;
-    document.getElementById('oldLabNo').value = labNo;
-  
-    evt.cancelBubble = true;
-  }
-  
-  function deselLab() {
-    tmp_ID = document.getElementById('oldLabNo').value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      document.getElementById(tmp_ID).style.color = 'black';
-    }  
-    document.getElementById('menu1a').style.display = 'block';
-    document.getElementById('menu1b').style.display = 'none';
-
-  }
-</script>
+    }
+  </script>
 </head>
 
 <body onclick="deselLab();">
@@ -111,7 +112,7 @@ if (count($labs) > 0) {
 
   foreach($labs as $lab) {
     if ($old_campus != $lab['campus']) {
-      echo "<table border=\"0\" class=\"subsect\" style=\"padding-left:10px; width:100%\"><tr><td><nobr>" . $lab['campus'] . " (" . $campus_sizes[$lab['campus']] . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n";
+      echo "<table class=\"subsect\" style=\"width:99%\"><tr><td><nobr>" . $lab['campus'] . " (" . $campus_sizes[$lab['campus']] . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n";
     }
     echo '<div class="foldername">';
     echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:66px; cursor:pointer" align="center">';
@@ -137,6 +138,5 @@ if (count($labs) > 0) {
 
 $mysqli->close();
 ?>
-</div>
 </body>
 </html>

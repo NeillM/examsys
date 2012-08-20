@@ -29,62 +29,63 @@ require '../include/sort.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['modules'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-.l {cursor:pointer}
-.t {color:black; text-decoration:none}
-.col {padding-left:5px}
-.col1 {padding-left:20px}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['modules'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .l {cursor:pointer}
+    .t {color:black; text-decoration:none}
+    .col {padding-left:5px}
+    .col1 {padding-left:20px}
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-  function selMod(divID, moduleID, evt) {
-    tmp_ID = document.myform.divID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="javascript">
+    function selMod(divID, moduleID, evt) {
+      tmp_ID = document.myform.divID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+      document.myform.divID.value = divID;
+      
+      document.myform.moduleID.value = moduleID;
+      
+      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      evt.cancelBubble = true;
     }
-
-    document.getElementById('menu1a').style.display = 'none';
-    document.getElementById('menu1b').style.display = 'block';
-    document.myform.divID.value = divID;
     
-    document.myform.moduleID.value = moduleID;
+    function deselMod() {
+      tmp_ID = document.myform.divID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+      document.myform.divID.value = '';
+      document.getElementById('menu1b').style.display = 'none';
+      document.getElementById('menu1a').style.display = 'block';
+    }
+
+    function lon(lineID) {
+      if (lineID != document.myform.divID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
+    }
+
+    function loff(lineID) {
+      if (lineID != document.myform.divID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
+    }
     
-    document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-    evt.cancelBubble = true;
-  }
-  
-  function deselMod() {
-    tmp_ID = document.myform.divID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function edit(moduleID) {
+      document.location.href='./edit_module.php?moduleid=' + moduleID;
     }
-    document.myform.divID.value = '';
-    document.getElementById('menu1b').style.display = 'none';
-    document.getElementById('menu1a').style.display = 'block';
-  }
-
-  function lon(lineID) {
-    if (lineID != document.myform.divID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-    }
-  }
-
-  function loff(lineID) {
-    if (lineID != document.myform.divID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
-    }
-  }
-  
-  function edit(moduleID) {
-    document.location.href='./edit_module.php?moduleid=' + moduleID;
-  }
-</script>
+  </script>
 </head>
 
 <body onclick="deselMod()">

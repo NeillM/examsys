@@ -22,37 +22,38 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/sidebar_menu.inc';
-  
-  function get_list($list, $db) {
-    $html = '';
-    if ($list != '') {
-      $result = $db->prepare("SELECT id, title, surname, first_names FROM users WHERE username IN ('" . str_replace(",","','",$list) . "') ORDER BY surname, initials");
-      $result->execute();
-      $result->store_result();
-      $result->bind_result($id, $title, $surname, $first_names);
-      while ($result->fetch()) {
-        $html .= '<a href="../users/details.php?userID=' . $id . '">' . $title . ' ' . $surname . ', ' . $first_names . '</a><br />';
-      }
+require '../include/sysadmin_auth.inc';
+require '../include/sidebar_menu.inc';
+
+function get_list($list, $db) {
+  $html = '';
+  if ($list != '') {
+    $result = $db->prepare("SELECT id, title, surname, first_names FROM users WHERE username IN ('" . str_replace(",","','",$list) . "') ORDER BY surname, initials");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $title, $surname, $first_names);
+    while ($result->fetch()) {
+      $html .= '<a href="../users/details.php?userID=' . $id . '">' . $title . ' ' . $surname . ', ' . $first_names . '</a><br />';
     }
-    
-    return $html;
   }
+  
+  return $html;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>SMS Update Summary<?php echo " $cfg_install_type"; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<style type="text/css">
-th {background-color:#F1F5FB; font-weight:normal}
-tr {vertical-align:top}
-.no {text-align:right}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>SMS Update Summary<?php echo " $cfg_install_type"; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+  tr {vertical-align:top}
+  .no {text-align:right}
+  </style>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
 </head>
 <body>
 <?php

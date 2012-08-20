@@ -31,8 +31,9 @@ require 'class_totals.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
@@ -135,20 +136,6 @@ require 'class_totals.inc';
       document.getElementById('menudiv').style.display = 'none';
       window.top.location = '/users/details.php?userID=' + document.getElementById('tmp_userID').value;
     }
-
-    function move_in(img_name) {
-      document[img_name].src=onImg.src;
-    }
-
-    function move_out(img_name) {
-      document[img_name].src=offImg.src;
-    }
-
-    onImg = new Image;
-    onImg.src = '../artwork/up_folder_icon_on.gif';
-    offImg = new Image;
-    offImg.src = '../artwork/up_folder_icon_off.gif';
-    document.onmousedown  = mouseSelect;
   </script>
   </head>
 
@@ -188,7 +175,7 @@ require 'class_totals.inc';
   if (isset($_GET['direction'])) $direction = $_GET['direction'];
   
   
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
+  echo "<table class=\"header\" style=\"font-size:80%\">\n";
   echo "<tr><th class=\"h\" colspan=\"7\">";
   if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = sprintf($string['classtotalsmodule'], $_GET['repmodule']);

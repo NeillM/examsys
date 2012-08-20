@@ -47,18 +47,18 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['addannouncement']; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:100%; background-color:white; color:black}
-textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-h1 {font-size:120%}
-.field {text-align:right; padding-right:6px; width:125px}
-</style>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['addannouncement']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    h1 {font-size:120%}
+    .field {text-align:right; padding-right:6px; width:125px}
+  </style>
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <?php
 // Override this variable with a specific configuration file for announcements.
 $cfg_editor_javascript = <<< SCRIPT
@@ -69,9 +69,8 @@ SCRIPT;
 
   echo $cfg_editor_javascript;
 ?>
-<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<script type="text/javascript" src="../js/staff_help.js"></script>
-
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
 </head>
 
 <body>

@@ -132,6 +132,7 @@ MESSAGE;
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <body>
@@ -153,6 +154,7 @@ MESSAGE;
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō: <?php echo "{$string['createnewuser']} $cfg_install_type"; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
   .title {font-size:160%; font-weight:bold}

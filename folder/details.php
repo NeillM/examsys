@@ -155,63 +155,64 @@ if ($folder != '') {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onclick="hideMenus()">
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style>
-<?php
-if (isset($state['showretired']) and $state['showretired'] == 'true') {
-  echo ".retired {display:block}\n";
-} else {
-  echo ".retired {display:none}\n";
-}
-?>
-</style>
-<?php echo $cfg_js_root ?>
-<script type="text/javascript" src="../js/sidebar.js"></script>
-<script type="text/javascript" src="../js/staff_help.js"></script>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/state.js"></script>
-<script language="JavaScript">
-  function addQuestion(qType) {
-    top.location.href='../question/edit/?type=' + qType + 'folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>';
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style>
+  <?php
+  if (isset($state['showretired']) and $state['showretired'] == 'true') {
+    echo ".retired {display:block}\n";
+  } else {
+    echo ".retired {display:none}\n";
   }
+  ?>
+  </style>
+  <?php echo $cfg_js_root ?>
+  <script type="text/javascript" src="../js/sidebar.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/state.js"></script>
+  <script language="JavaScript">
+    function addQuestion(qType) {
+      top.location.href='../question/edit/?type=' + qType + 'folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>';
+    }
 
-  function deleteFolder() {
-    notice=window.open("../delete/check_delete_folder.php?folderID=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
-    if (window.focus) {
-      notice.focus();
+    function deleteFolder() {
+      notice=window.open("../delete/check_delete_folder.php?folderID=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice.moveTo(screen.width/2-210,screen.height/2-85);
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
 
-  function folderProperties() {
-    notice=window.open("properties.php?folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
+    function folderProperties() {
+      notice=window.open("properties.php?folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
 
-  function newPaper(paperID) {
-    notice = window.open("../paper/new_paper1.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
+    function newPaper(paperID) {
+      notice = window.open("../paper/new_paper1.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
-  
-  function addTeamMember() {
-    notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
+    
+    function addTeamMember() {
+      notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
-  
-  function refreshPage() {
-    $('.retired').toggle();
-  }
-</script>
+    
+    function refreshPage() {
+      $('.retired').toggle();
+    }
+  </script>
 </head>
 
 <body onclick="hideMenus()">

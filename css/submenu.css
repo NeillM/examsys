@@ -1,4 +1,4 @@
- body {margin:0px; padding-top:0px; padding-bottom:0px; padding-right:0px; padding-left:213px; font-family:Arial,sans-serif; font-size:100%; background-color:white; color:black}
+ body {margin:0px; padding-top:0px; padding-bottom:0px; padding-right:0px; padding-left:213px}
  div#left-sidebar {position:absolute; top:0; left:0; width:195px; height:100%; padding-right:4px; padding-left:14px; padding-top:4px; padding-bottom:4px; background-color:#DFECFF; border-right: 1px solid #95AEC8; overflow:auto; font-size:75%}
  @media screen {body>div#left-sidebar{position:fixed}}
  * html body{overflow:hidden} 
@@ -9,11 +9,6 @@
  .f {float:left; width:375px; padding-left:10px; font-size:90%; height:50px}
  .file {float:left; width:375px; height:74px; padding-left:12px; font-size:90%}
  .mee {font-size:120%; display:inline}
-
- a {text-decoration:none}
- a:link {color:#0000FF}
- a:visited {color:#0000FF}
- a:hover {color:#0000FF; text-decoration:underline}
 
  a.blacklink:link {color:#000000}
  a.blacklink:visited {color:#000000}
@@ -59,9 +54,7 @@
 .menuitem a:visited {color:black; text-decoration:none; cursor:pointer}
 .menuitem a:hover {color:blue; text-decoration:underline; cursor:pointer}
 
-textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-
- .menu_list {
+.menu_list {
  margin: 4px 0 0 0;
  padding-left: 11px;
  list-style: none;

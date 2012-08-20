@@ -73,30 +73,29 @@ $result->close();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>New Reference Material</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-body {font-size:100%; font-family:Arial,sans-serif; margin:0px}
-table {font-size:100%}
-input, textarea {font-family:Arial,sans-serif; line-height:140%}
-.r1 {text-indent:-23px; padding-left:23px; background-color:white}
-.r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
-</style>
-<?php echo $cfg_js_root ?>
-<script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script language="JavaScript">
-  function toggle(objectID) {
-    if (document.getElementById(objectID).className == 'r2') {
-      document.getElementById(objectID).className = 'r1';
-    } else {
-      document.getElementById(objectID).className = 'r2';
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>New Reference Material</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+  input, textarea {line-height:140%}
+  .r1 {text-indent:-23px; padding-left:23px; background-color:white}
+  .r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
+  </style>
+  <?php echo $cfg_js_root ?>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script language="JavaScript">
+    function toggle(objectID) {
+      if (document.getElementById(objectID).className == 'r2') {
+        document.getElementById(objectID).className = 'r1';
+      } else {
+        document.getElementById(objectID).className = 'r2';
+      }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body>

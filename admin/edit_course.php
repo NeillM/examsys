@@ -65,15 +65,15 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $result->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html>
-  <head>
+<html>
+<head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Edit Course</title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    input, textarea {font-family:Arial,sans-serif; color:black}
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
@@ -92,8 +92,8 @@ if (isset($_POST['submit']) and $unique_course == true) {
     alert("<?php echo sprintf($string['coursecodeinuse'], $tmp_course); ?>");
   }
   </script>
-  </head>
-  <?php
+</head>
+<?php
   if ($unique_course == false) {
     echo "<body onload=\"codeWarning()\">\n";
   } else {

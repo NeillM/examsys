@@ -135,12 +135,13 @@ if (isset($_POST['Submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Properties<?php echo " $cfg_install_type"; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:0px; font-size:100%}
-    table {font-size:100%; text-align:left}
-    input,textarea {font-family:Arial,sans-serif; color:black}
+    body {background-color:#F1F5FB}
+    table {text-align:left}
     .indenton {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
     .indentoff {text-indent:-23px; padding-left:23px; background-color:white}
   </style>

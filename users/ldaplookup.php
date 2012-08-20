@@ -33,12 +33,12 @@ require '../include/sort.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>LDAP Lookup</title>
 
+  <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <style type="text/css">
-  body {background-color:#F1F5FB; color:black; font-family:Arial,sans-serif; font-size:90%; margin:0px}
-  table {font-size:100%}
-  textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
+    body {background-color:#F1F5FB; font-size:90%}
   </style>
   <script type="text/javascript">
     function setSelectedIndex(s, v) {

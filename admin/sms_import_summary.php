@@ -28,28 +28,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['smsimportsummary'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-th {background-color:#F1F5FB; font-weight:normal}
-.no {text-align:right}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-  function lon(lineID) {
-    if (lineID != document.myform.oldDivID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['smsimportsummary'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .no {text-align:right}
+  </style>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script language="javascript">
+    function lon(lineID) {
+      if (lineID != document.myform.oldDivID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-  }
 
-  function loff(lineID) {
-    if (lineID != document.myform.oldDivID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
+    function loff(lineID) {
+      if (lineID != document.myform.oldDivID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
     }
-  }
-</script>
+  </script>
 </head>
 <body>
 <?php

@@ -22,23 +22,24 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/sidebar_menu.inc';
+require '../include/sysadmin_auth.inc';
+require '../include/sidebar_menu.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Clear Guest Users</title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<script language="JavaScript" src="../js/staff_help.js"></script>
-<style type="text/css">
-.sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
-.l {border-bottom:1px solid #EEEEEE}
-.loff {border-bottom:1px solid #EEEEEE; color:#808080}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Clear Guest Users</title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <style type="text/css">
+    .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
+    .l {border-bottom:1px solid #EEEEEE}
+    .loff {border-bottom:1px solid #EEEEEE; color:#808080}
+  </style>
 </head>
 
 <body>

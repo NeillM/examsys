@@ -302,7 +302,7 @@ if (isset($_POST['Submit'])) {
     $result->bind_result($q_id);
     while ($result->fetch()) {
       $editPaper = $mysqli->prepare("UPDATE questions SET q_group=? WHERE q_id=?");
-      $editPaper->bind_param('si',$first_module, $q_id);
+      $editPaper->bind_param('si', $first_module, $q_id);
       $editPaper->execute();
       $editPaper->close();
     }

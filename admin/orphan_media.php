@@ -54,17 +54,19 @@ function getImages($html) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Orphan Media</title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-h1 {font-size:140%; margin-left:10px}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Orphan Media</title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    h1 {font-size:140%; margin-left:10px}
+  </style>
 
-<script language="JavaScript" src="../js/staff_help.js"></script>
-<?php echo $cfg_js_root ?>
-<script language="JavaScript" src="../js/sidebar.js"></script>
+  <script language="JavaScript" src="../js/staff_help.js"></script>
+  <?php echo $cfg_js_root ?>
+  <script language="JavaScript" src="../js/sidebar.js"></script>
 </head>
 
 <body>
@@ -73,7 +75,7 @@ h1 {font-size:140%; margin-left:10px}
   require '../include/admin_options.inc';
 ?>
 
-<div id="content" class="content" style="font-size:80%">
+<div id="content" class="content">
 
 <table class="header">
 <tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['removeorphanmedia']; ?></div></th>

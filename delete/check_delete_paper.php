@@ -22,30 +22,30 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/errors.inc';
-  
-  check_var('paperID', 'GET', true, false);
-  
-  $mysqli->close();
+require '../include/staff_auth.inc';
+require '../include/errors.inc';
+
+check_var('paperID', 'GET', true, false);
+
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['confirmdelete']; ?></title>
 
-  <style type="text/css">
-  body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 </head>
 
 <body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
+<table>
 <tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td><p><?php echo $string['msg'] ; ?><p>
 <br />

@@ -61,45 +61,46 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset; ?>" />
-<title><?php echo $string['teammembers'] . ' ' . $_GET['teamID'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:#F1F5FB; color:black; margin:0px}
-  hr {width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5}
-  .r1 {background-color:white}
-  .r2 {background-color:#B3C8E8}
-  .g {color:#808080}
-  .letter {padding-bottom:5px; width:95%; background-color:white; color:#1E3287}
-</style>
-<script language="JavaScript">
-  function toggle(objectID) {
-    if (document.getElementById(objectID).className == 'r2') {
-      document.getElementById(objectID).className = 'r1';
-    } else {
-      document.getElementById(objectID).className = 'r2';
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset; ?>" />
+  <title><?php echo $string['teammembers'] . ' ' . $_GET['teamID'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#F1F5FB}
+    hr {width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5}
+    .r1 {background-color:white}
+    .r2 {background-color:#B3C8E8}
+    .g {color:#808080}
+    .letter {padding-bottom:5px; width:95%; background-color:white; color:#1E3287}
+  </style>
+  <script language="JavaScript">
+    function toggle(objectID) {
+      if (document.getElementById(objectID).className == 'r2') {
+        document.getElementById(objectID).className = 'r1';
+      } else {
+        document.getElementById(objectID).className = 'r2';
+      }
     }
-  }
-  
-  function resizeList() {
-    var winW = 630, winH = 460;
-    if (document.body && document.body.offsetWidth) {
-      winW = document.body.offsetWidth;
-      winH = document.body.offsetHeight;
+    
+    function resizeList() {
+      var winW = 630, winH = 460;
+      if (document.body && document.body.offsetWidth) {
+        winW = document.body.offsetWidth;
+        winH = document.body.offsetHeight;
+      }
+      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
+        winW = document.documentElement.offsetWidth;
+        winH = document.documentElement.offsetHeight;
+      }
+      if (window.innerWidth && window.innerHeight) {
+        winW = window.innerWidth;
+        winH = window.innerHeight;
+      }
+      winH -= 105;
+      document.getElementById('list').style.height = winH + 'px';
     }
-    if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-      winW = document.documentElement.offsetWidth;
-      winH = document.documentElement.offsetHeight;
-    }
-    if (window.innerWidth && window.innerHeight) {
-      winW = window.innerWidth;
-      winH = window.innerHeight;
-    }
-    winH -= 105;
-    document.getElementById('list').style.height = winH + 'px';
-  }
-</script>
+  </script>
 </head>
 <body onload="resizeList()" onresize="resizeList()">
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
@@ -124,7 +125,7 @@ if (isset($_POST['submit'])) {
   $result->bind_result($tmp_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title);
   while ($result->fetch()) {
     if ($old_letter != strtoupper(substr($tmp_surname, 0, 1))) {
-      echo "<table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td><nobr>" . strtoupper(substr($tmp_surname, 0, 1)) . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
+      echo "<table border=\"0\" class=\"subsect\" style=\"width:98%\"><tr><td><nobr>" . strtoupper(substr($tmp_surname, 0, 1)) . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
     }
   
     $match = false;

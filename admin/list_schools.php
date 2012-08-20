@@ -34,65 +34,66 @@ $result->close();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['schools'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-.mid {padding-left:30px}
-.l {cursor:pointer}
-.no {text-align:right; padding-right:10px}
-.deleted {color: red; text-decoration: line-through}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['schools'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+  .mid {padding-left:30px}
+  .l {cursor:pointer}
+  .no {text-align:right; padding-right:10px}
+  .deleted {color:red; text-decoration:line-through}
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
-<script language="javascript">
-$(function () {
-  $('body').click(deselSch);
-});
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script language="javascript">
+    $(function () {
+      $('body').click(deselSch);
+    });
 
-  function selSch(divID, evt) {
-    tmp_ID = document.myform.divID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function selSch(divID, evt) {
+      tmp_ID = document.myform.divID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+      document.myform.divID.value = divID;
+         
+      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      evt.cancelBubble = true;
+    }
+    
+    function deselSch() {
+      tmp_ID = document.myform.divID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+  //    document.myform.oldDivID.value = '';
+      document.getElementById('menu1b').style.display = 'none';
+      document.getElementById('menu1a').style.display = 'block';
     }
 
-    document.getElementById('menu1a').style.display = 'none';
-    document.getElementById('menu1b').style.display = 'block';
-    document.myform.divID.value = divID;
-       
-    document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-    evt.cancelBubble = true;
-  }
-  
-  function deselSch() {
-    tmp_ID = document.myform.divID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function lon(lineID) {
+      if (lineID != document.myform.divID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-//    document.myform.oldDivID.value = '';
-    document.getElementById('menu1b').style.display = 'none';
-    document.getElementById('menu1a').style.display = 'block';
-  }
 
-  function lon(lineID) {
-    if (lineID != document.myform.divID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+    function loff(lineID) {
+      if (lineID != document.myform.divID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
     }
-  }
-
-  function loff(lineID) {
-    if (lineID != document.myform.divID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
+    
+    function edit(schoolID) {
+      document.location.href='./edit_school.php?schoolid=' + schoolID;
     }
-  }
-  
-  function edit(schoolID) {
-    document.location.href='./edit_school.php?schoolid=' + schoolID;
-  }
-</script>
+  </script>
 </head>
 
 <body>

@@ -199,12 +199,12 @@ if (isset($_GET['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Rogō: <?php echo $string['usermanagement'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
   a {color:black}
-  input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
   .coltitle {cursor:hand; background-color:#F1F5FB; color:black}
   #usertable td {padding-left:6px}
   .fn {color:#A5A5A5}

@@ -91,7 +91,10 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
 <title>Rogo: <?php echo $string['invigilatoraccess']; ?></title>
+
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <script language="JavaScript">
   // please keep these lines on when you copy the source
@@ -159,7 +162,7 @@
   
 </script>
 <style type="text/css">
-body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-serif}
+body {color:#000040}
 </style>
 </head>
 
@@ -204,7 +207,7 @@ body {margin:0px; background-color:white; color:#000040; font-family:Arial,sans-
   if ($paper_results->num_rows > 0 and $room_name != '') {
     $col_width = round(100 / ($paper_results->num_rows + 1));
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%\">\n<tr>\n";
-    while ($row = $paper_results->fetch()) {
+    while ($paper_results->fetch()) {
       echo "<td style=\"vertical-align:top; width:$col_width%\"><div><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a></div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
       get_students($moduleID, $calendar_year, $property_id, $exam_duration);
       echo "</td>";

@@ -28,23 +28,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['summativeexamstats'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-.stats {border-collapse:collapse}
-.stats th {color:white; background-image:url(../artwork/search_bar_background.png); background-repeat:repeat-x; border: 1px solid #6893CD}
-.stats td {border: 1px solid #6893CD}
-.n {text-align:right}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript">
-  function jumpTo() {
-    document.location = 'summative_stats.php?year=' + document.getElementById('year').value;
-  }
-</script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['summativeexamstats'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .stats {border-collapse:collapse}
+    .stats th {color:white; background-image:url(../artwork/search_bar_background.png); background-repeat:repeat-x; border: 1px solid #6893CD}
+    .stats td {border: 1px solid #6893CD}
+    .n {text-align:right}
+  </style>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="JavaScript">
+    function jumpTo() {
+      document.location = 'summative_stats.php?year=' + document.getElementById('year').value;
+    }
+  </script>
 </head>
 
 <body>

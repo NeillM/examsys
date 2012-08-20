@@ -51,39 +51,40 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
 <title><?php echo $string['editkeyword']; ?></title>
-<script language="JavaScript">
-  function illegalChar(codeID) {
-    if (codeID == 35) {
-      alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 38) {
-      alert("<?php echo $string['character']; ?> '&' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 59) {
-      alert("<?php echo $string['character']; ?> ';' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 63) {
-      alert("<?php echo $string['character']; ?> '?' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 64) {
-      alert("<?php echo $string['character']; ?> '@' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 94) {
-      alert("<?php echo $string['character']; ?> '^' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 126) {
-      alert("<?php echo $string['character']; ?> '~' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 13) {
-      document.myform.returnhit.value = '1';
-      document.myform.submit();
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#EEEEEE}
+    h1 {font-size:120%}
+  </style>
+  <script language="JavaScript">
+    function illegalChar(codeID) {
+      if (codeID == 35) {
+        alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 38) {
+        alert("<?php echo $string['character']; ?> '&' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 59) {
+        alert("<?php echo $string['character']; ?> ';' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 63) {
+        alert("<?php echo $string['character']; ?> '?' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 64) {
+        alert("<?php echo $string['character']; ?> '@' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 94) {
+        alert("<?php echo $string['character']; ?> '^' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 126) {
+        alert("<?php echo $string['character']; ?> '~' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 13) {
+        document.myform.returnhit.value = '1';
+        document.myform.submit();
+      }
     }
-  }
-</script>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:#EEEEEE; color:black}
-h1 {font-size:120%}
-</style>
+  </script>
 </head>
 
 <body onload="document.myform.new_keyword.focus();">

@@ -22,90 +22,91 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/errors.inc';
-  require '../config/campuses.inc';
-  
-  $bad_addresses = array();
-  if (isset($_POST['submit'])) {
-    // Insert into Lab table.
-    $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL,?,?,?,?,?,?,?)");
-    
-    $lab_name = $_POST['lab_name'];
-    $campus = $_POST['campus'];
-    $building = $_POST['building'];
-    $room_no = $_POST['room_no'];
-    $timetabling = $_POST['timetabling'];
-    $it_support = $_POST['it_support'];
-    $plagarism = $_POST['plagarism'];
-    
-    $result->bind_param('sssssss', $lab_name,$campus,$building,$room_no,$timetabling,$it_support,$plagarism);
-    $result->execute();  
-    $labID = $mysqli->insert_id;
-    $result->close();
+require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
+require '../config/campuses.inc';
 
-    // Insert the new IP addresses.
-    $addresses = explode('<br />',nl2br($_POST['addresses']));
-    foreach ($addresses as $individual_address) {
-      $ip_address = trim($individual_address);
-      if ($ip_address != '') {
-        if (preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $ip_address)) {
-          if ($ip_address != '') {
-            $hostname = gethostbyaddr($ip_address);
-            $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
-            $result->bind_param('issi', $labID, $ip_address, $hostname, $_POST['low_bandwidth']);
-            $result->execute();  
-            $result->close();
-          }
-        } else {
-          $bad_addresses[] = $ip_address;
+$bad_addresses = array();
+if (isset($_POST['submit'])) {
+  // Insert into Lab table.
+  $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL,?,?,?,?,?,?,?)");
+  
+  $lab_name = $_POST['lab_name'];
+  $campus = $_POST['campus'];
+  $building = $_POST['building'];
+  $room_no = $_POST['room_no'];
+  $timetabling = $_POST['timetabling'];
+  $it_support = $_POST['it_support'];
+  $plagarism = $_POST['plagarism'];
+  
+  $result->bind_param('sssssss', $lab_name,$campus,$building,$room_no,$timetabling,$it_support,$plagarism);
+  $result->execute();  
+  $labID = $mysqli->insert_id;
+  $result->close();
+
+  // Insert the new IP addresses.
+  $addresses = explode('<br />',nl2br($_POST['addresses']));
+  foreach ($addresses as $individual_address) {
+    $ip_address = trim($individual_address);
+    if ($ip_address != '') {
+      if (preg_match('/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $ip_address)) {
+        if ($ip_address != '') {
+          $hostname = gethostbyaddr($ip_address);
+          $result = $mysqli->prepare("INSERT INTO ip_addresses VALUES (NULL,?,?,?,?)");
+          $result->bind_param('issi', $labID, $ip_address, $hostname, $_POST['low_bandwidth']);
+          $result->execute();  
+          $result->close();
         }
+      } else {
+        $bad_addresses[] = $ip_address;
       }
     }
-    
-    if (count($bad_addresses) == 0) header("location: list_labs.php");
   }
+  
+  if (count($bad_addresses) == 0) header("location: list_labs.php");
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['createnewlab']; ?></title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-input, textarea {font-family:Arial,sans-serif; line-height:140%}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['createnewlab']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    input, textarea {line-height:140%}
+  </style>
 
-<script language="JavaScript">
-  function clearName() {
-    document.getElementById("lab_name").value = '';
-    document.getElementById("lab_name").style.color = 'black';    
-  }
-  
-  function checkForm() {
-    if (document.getElementById('addresses').value == '') {
-      alert('<?php echo $string['noipaddresses']; ?>');
-      return false;
+  <script language="JavaScript">
+    function clearName() {
+      document.getElementById("lab_name").value = '';
+      document.getElementById("lab_name").style.color = 'black';    
     }
-  }
-</script>
+    
+    function checkForm() {
+      if (document.getElementById('addresses').value == '') {
+        alert('<?php echo $string['noipaddresses']; ?>');
+        return false;
+      }
+    }
+  </script>
 </head>
 
 <body>
 <?php
   require '../include/lab_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content" class="content">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return checkForm()">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr><td style="background-color:#F1F5FB"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['createnewlab']; ?></div></td></tr>
-<tr><td style="height: 3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
+<table class="header">
+<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['createnewlab']; ?></div></th></tr>
+<tr><th class="bevel"></th></tr>
 <?php
 if (count($bad_addresses) > 0) {
 ?>
-<tr><td style="color: #f00; font-weight: bold;">
+<tr><td style="color: #f00; font-weight: bold">
 <?php
   $address_list = '';
   foreach ($bad_addresses as $bad) {

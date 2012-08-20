@@ -47,10 +47,10 @@ if (isset($_POST['moduleID'])) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['folderproperties']; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; color: black;margin:0px; background-color:#F1F5FB}
+    body {background-color:#F1F5FB}
     td {font-size:90%}
-    input, textarea {font-family:Arial,sans-serif}
   </style>
 
   <script language="JavaScript">
@@ -179,7 +179,7 @@ if ($unique_name) {
 <body>
 <table border="0" cellpadding="6" cellspacing="0" width="100%">
 <tr>
-<td valign="middle" style="background-color:white; text-align:left"><img src="../artwork/properties.png" width="48" height="48" alt="Properties" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:18pt; font-weight:bold; color:#5582D2"><?php echo $string['folderproperties']; ?></span></td>
+<td valign="middle" style="background-color:white; text-align:left"><img src="../artwork/properties.png" width="48" height="48" alt="Properties" />&nbsp;&nbsp;<span class="midblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['folderproperties']; ?></span></td>
 </tr>
 <tr>
 <td style="text-align:left">

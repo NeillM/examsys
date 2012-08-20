@@ -29,62 +29,65 @@ require '../include/sort.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['courses'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">.l {cursor:pointer}
-.t {color:black; text-decoration:none}
-.h {background-color:#F1F5FB; color:black}
-.col {padding-left:5px}
-.col1 {padding-left:20px}
-</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['courses'] . ' ' . $cfg_install_type; ?></title>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+  .l {cursor:pointer}
+  .t {color:black; text-decoration:none}
+  .h {background-color:#F1F5FB; color:black}
+  .col {padding-left:5px}
+  .col1 {padding-left:20px}
+  </style>
+  
+<script type="text/javascript" src="../js/staff_help.js"></script>
 <script language="javascript">
   function selDeg(divID, evt) {
-    tmp_ID = document.myform.oldID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      document.getElementById(tmp_ID).style.color = 'black';
-    }
+      tmp_ID = document.myform.oldID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+        document.getElementById(tmp_ID).style.color = 'black';
+      }
 
-    document.getElementById('menu1a').style.display = 'none';
-    document.getElementById('menu1b').style.display = 'block';
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+      
+      document.myform.oldID.value = divID;
+      document.myform.id.value = divID;
+      
+      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      evt.cancelBubble = true;
+    }
     
-    document.myform.oldID.value = divID;
-    document.myform.id.value = divID;
-    
-    document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-    evt.cancelBubble = true;
-  }
-  
-  function deselDeg() {
-    tmp_ID = document.myform.oldID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function deselDeg() {
+      tmp_ID = document.myform.oldID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+      document.myform.oldID.value = '';
+      document.getElementById('menu1b').style.display = 'none';
+      document.getElementById('menu1a').style.display = 'block';
     }
-    document.myform.oldID.value = '';
-    document.getElementById('menu1b').style.display = 'none';
-    document.getElementById('menu1a').style.display = 'block';
-  }
 
-  function lon(lineID) {
-    if (lineID != document.myform.oldID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+    function lon(lineID) {
+      if (lineID != document.myform.oldID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-  }
 
-  function loff(lineID) {
-    if (lineID != document.myform.oldID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
+    function loff(lineID) {
+      if (lineID != document.myform.oldID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
     }
-  }
 
-  function edit(courseID) {
-    document.location.href='./edit_course.php?courseID=' + courseID;
-  }
-</script>
+    function edit(courseID) {
+      document.location.href='./edit_course.php?courseID=' + courseID;
+    }
+  </script>
 </head>
 
 <body onclick="deselDeg()">

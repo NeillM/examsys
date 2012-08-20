@@ -37,21 +37,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['importusers'] . " $cfg_install_type"; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    label.error {display:block; color:#f00}
+  </style>
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
     function updateMsg() {
       document.getElementById('msg').innerHTML = '<?php echo $string['finished']; ?>';
     }
+  
+    $(function () { $('#import_form').validate(); });
   </script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-  $(function () { $('#import_form').validate(); });
-  </script>
-  <style type="text/css">
-  label.error {display:block; color:#f00}
-  </style>
 </head>
 
 <?php
@@ -106,18 +108,18 @@
 <br />
 <br />
 
-<table border="0" cellpadding="4" cellspacing="0" style="font-size:110%; border:1px solid #95AEC8; width:730px; margin-left:auto; margin-right:auto">
+<table style="width:730px" class="dialog_border">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importusers']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:90%" class="midblue_header"><?php echo $string['importusers']; ?></span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB" colspan="2">
+<td align="left" class="dialog_body" colspan="2">
 
 <p><?php echo $string['msg1']; ?></p>
 <blockquote>Type, ID, First Names, Family Name, Title, Course, Year of Study and Email</blockquote>
 <p><?php echo $string['msg2']; ?></p> 
 
-<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="749" height="59" alt="Headings" border="1" /></div>
+<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="749" height="59" alt="Headings" style="border:1px solid black" /></div>
 <br />
 <br />
 <div style="text-align:center">

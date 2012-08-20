@@ -115,44 +115,40 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['sctreview']; ?></title>
-<script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
-<?php
-  if (isset($_POST['submit'])) {
-?>
-<script language="JavaScript">
-   $(function() { alert('<?php echo $string['saved_msg']; ?>'); });
- </script>
- <?php
-  }
-?>
-<style type="text/css">
-body {background-color:white;color:black;padding:0px;margin:0px;border:0px;font-family:Arial,sans-serif;font-size:90%}
-textarea {font-family:Arial,sans-serif; font-size:100%; width:100%; border:1px solid #C0C0C0}
-li {margin-left:15px;margin-right:15px;font-size:100%}
-select,input{font-family:$font,sans-serif;font-size:100%}
-table {font-size:100%}
-pre {font-family:Arial,sans-serif; font-size:100%}
-.q_no {width:40px; text-align:right;vertical-align:top}
-.theme {font-size:150%; padding-left:4px;font-weight:bold;color:#316AC5}
-.note {color:#C00000}
-.mk {color:#808080;font-size:80%}
-.msg {
-  margin-left:auto;
-  margin-right:auto;
-  padding:20px;
-  width:90%;
-  color:black;
-  background-color:#FFFFC0;
-  background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
-  background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
-  border:5px solid white;
-}</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['sctreview']; ?></title>
+  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php
+    if (isset($_POST['submit'])) {
+  ?>
+  <script language="JavaScript">
+     $(function() { alert('<?php echo $string['saved_msg']; ?>'); });
+   </script>
+   <?php
+    }
+  ?>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/start.css" />
+  <style type="text/css">
+    .msg {
+      margin-left:auto;
+      margin-right:auto;
+      padding:20px;
+      width:90%;
+      color:black;
+      background-color:#FFFFC0;
+      background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
+      background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
+      border:5px solid white;
+    }
+  </style>
 </head>
 
 <body>
+<div id="maincontent">
+
 <?php
   // Get any previous answers for the current reviewer.
   $saved_data = array();
@@ -239,5 +235,7 @@ pre {font-family:Arial,sans-serif; font-size:100%}
 
   echo $bottom_html;
 ?>
+</div>
+
 </body>
 </html>

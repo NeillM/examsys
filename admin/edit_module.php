@@ -140,10 +140,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['editmodule'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    input, textarea {font-family:Arial,sans-serif; color:black}
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 

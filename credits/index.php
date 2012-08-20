@@ -29,12 +29,13 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['credits']; ?></title>
-<style type="text/css">
-a {color:blue}
-</style>
+  <title><?php echo $string['credits']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {background-image:url('./background.jpg')}
+  </style>
 </head>
-<body style="margin:0px; color:black; background-color:white; background-image:url('./background.jpg'); font-size:100%; font-family:Arial,sans-serif">
+<body>
 
 <div style="position:absolute; top:12px; left:25px">
   <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />

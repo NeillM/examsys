@@ -22,9 +22,9 @@
 * @package
 */
 
-require '../include/staff_student_auth.inc';
+require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
-require '../include/paper_security.inc';
+require_once '../include/paper_security.inc';
 
 check_var('id', 'GET', true, false);
 
@@ -248,16 +248,16 @@ if (isset($_POST['submit'] )) {
   <title><?php echo $string['peerreview']; ?></title>
 
   <style type="text/css">
-  body {margin:0px; font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-  table {font-size:100%}
-  td p {margin:0px; padding:0px}
-  p {margin:0px; padding:0px}
-  .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
-  .group {padding-left:5px; color:white}
-  .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
-  .col {text-align:center; color:<?php echo $labelcolor; ?>}
-  .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
-  .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
+    body {margin:0px; font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    table {font-size:100%}
+    td p {margin:0px; padding:0px}
+    p {margin:0px; padding:0px}
+    .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
+    .group {padding-left:5px; color:white}
+    .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
+    .col {text-align:center; color:<?php echo $labelcolor; ?>}
+    .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
+    .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
   </style>
   
   <script language="JavaScript">

@@ -34,22 +34,26 @@ check_var('paperID', 'GET', true, false);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>SCT Review</title>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-<script language="JavaScript">
-  $(document).ready(function(){
-    $("#myform").validate();
-  });
-</script>
-<style type="text/css">
-body {background-color:white;color:black;padding:0px;margin:0px;border:0px;font-family:Arial,sans-serif;font-size:90%}
-li {margin-left:15px;margin-right:15px;font-size:100%}
-select,input{font-family:$font,sans-serif;font-size:100%}
-table {font-size:100%}
-.error {color:red}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title>SCT Review</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+  body {font-size:90%}
+  li {margin-left:15px;margin-right:15px;font-size:100%}
+  select,input{font-family:$font,sans-serif;font-size:100%}
+  .error {color:red}
+  </style>
+
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script language="JavaScript">
+    $(document).ready(function(){
+      $("#myform").validate();
+    });
+  </script>
 </head>
 
 <body>

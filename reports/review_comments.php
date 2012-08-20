@@ -417,9 +417,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo ucfirst($type); ?> Comments Report</title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
+  body {font-size:80%}
   h1 {margin-left:15px; font-size:18pt}
   p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
   .figures {text-align:right}
@@ -596,7 +598,7 @@ if (isset($_GET['scrOfY'])) {
       echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
       echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
       if ($reviewers == '') {
-        echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:46px; height:32px; padding-left:6px; text-align:right; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\"><img src=\"../artwork/warning_user_icon.gif\" style=\"padding-top:1px\" width=\"32\" height=\"30\" alt=\"!\" />&nbsp;&nbsp;</td><td style=\"height:32px; vertical-align:middle; background-image:url('../artwork/non_owner_gradient.gif'); background-repeat:repeat-x\">" . $string['noreviewers'] . "</td></tr></table>\n</body>\n</html>\n";
+        echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:46px; height:32px; padding-left:6px; text-align:right\"><img src=\"../artwork/warning_user_icon.gif\" style=\"padding-top:1px\" width=\"32\" height=\"30\" alt=\"!\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\">" . $string['noreviewers'] . "</td></tr></table>\n</body>\n</html>\n";
         exit;
       }
       echo '<br /><table cellpadding="0" cellspacing="0" border="0" width="100%">';

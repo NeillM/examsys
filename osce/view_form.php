@@ -52,13 +52,14 @@
 ?>
   <html>
   <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['osceform']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; font-size:90%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    table {font-size:100%; border-collapse:collapse}
+    body {font-size:90%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    table {border-collapse:collapse}
     td {text-align:center}
-    textarea, input {font-size:100%}
     .question {text-align:left; border:1px solid #7F9DB9}
     .rating {border:1px solid #7F9DB9}
     .theme {text-align:left; font-size:125%; color:<?php echo $themecolor; ?>; padding-top:10px}
@@ -73,7 +74,7 @@
   <table cellpadding="2" cellspacing="0" border="0"><tr>
 <?php
   if (file_exists('../users/photos/' . $original_username . '.jpg')) {
-    if ($demo == true) {
+    if (isset($demo) and $demo == true) {
       echo '<td><img style="filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)" src="../users/photos/' . $original_username . '.jpg" width="180" height="270" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
     } else {
       echo '<td><img src="../users/photos/' . $original_username . '.jpg" width="180" height="270" style="border-top:1px solid #C0C0C0; border-right:1px solid #C0C0C0; border-bottom:1px solid #808080; border-top:1px solid #808080" alt="Photo" /></td>';

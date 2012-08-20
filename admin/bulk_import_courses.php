@@ -31,11 +31,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['bulkcourseimport'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; background-color:white; colour:black}
     p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
     label.error {display:block; color:#f00}
@@ -159,16 +163,16 @@
     <?php
   } else {
 ?>
-<table border="0" cellpadding="4" cellspacing="0" style="width:650px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
+<table class="dialog_border">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['bulkcourseimport']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:90%"><?php echo $string['bulkcourseimport']; ?></span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB" colspan="2">
+<td class="dialog_body" colspan="2">
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <blockquote>Course ID, Name, School</blockquote>
-<div style="text-align:center"><img src="../artwork/bulk_course_import_headings.png" width="361" height="60" alt="screenshot" border="1" /></div>
+<div style="text-align:center"><img src="../artwork/bulk_course_import_headings.png" width="361" height="60" alt="screenshot" style="border:1px solid black" /></div>
 <br />
 
 <div align="center">
@@ -176,6 +180,7 @@
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
 <p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<br />
 </form>
 </div>
 </td>

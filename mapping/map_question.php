@@ -78,13 +78,16 @@ function display_q($mysqlidb) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Objective Mapping</title>
   <?php echo $cfg_js_root ?>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/mapping_tab.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
+  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black}
+    body {font-size:90%}
     h1 {font-size:150%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
-    table {font-size:100%}
     p {margin-top:0px; padding-top:0px}
     .paper {margin-left:0px; font-size:180%; color:white; font-weight:bold}
     .q_no {width:40px; text-align:right; vertical-align:top}
@@ -108,13 +111,14 @@ if (isset($_POST['submit']) AND $_POST['submit'] == 'Save Changes') {
 } else {
   display_q($mysqli);
 
+  echo "<div style=\"margin-left:10px\">\n";
   echo "<form method=\"post\">";
   echo displayObjectivesMappingForm($paperID, $mysqli, $cfg_root_path);
   echo "<br />";
   echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"Save Changes\" />&nbsp;";
   echo "<input style=\"width:120px\" type=\"button\" value=\"Cancel\" onclick=\"window.close()\"/></div>";
 
-  echo "</form>";
+  echo "</form>\n</div>\n";
 }
 ?>
 </body>

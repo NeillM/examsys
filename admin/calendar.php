@@ -71,8 +71,9 @@ function echoButtons($year) {
     }
   }
 </script>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
+<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <style type="text/css">
   .month {font-size:140%; margin-left:10px; margin-right:10px}
 </style>

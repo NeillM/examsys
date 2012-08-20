@@ -28,52 +28,52 @@ require_once '../classes/stateutils.class.php';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title><?php echo $string['systemerrrorreport'] . ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-th {background-color:#F1F5FB; font-weight:normal; text-align:left}
-.no {text-align:right}
-.err {padding-left:6px; vertical-align:top}
-.errl {padding-right:6px; vertical-align:top; text-align:right}
-</style>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/state.js"></script>
-<script type="text/javascript" src="../js/staff_help.js"></script>
-<script language="JavaScript">
-  function refreshPage() {
-    window.location = 'sys_error_list.php';
-  }
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><?php echo $string['systemerrrorreport'] . ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .no {text-align:right}
+    .err {padding-left:6px; vertical-align:top}
+    .errl {padding-right:6px; vertical-align:top; text-align:right}
+  </style>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/state.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="JavaScript">
+    function refreshPage() {
+      window.location = 'sys_error_list.php';
+    }
 
-  function selErr(lineID) {
-    tmp_ID = document.getElementById('errorID').value;
-    if (tmp_ID != '') {
-      document.getElementById('link' + tmp_ID).style.backgroundColor = 'white';
+    function selErr(lineID) {
+      tmp_ID = document.getElementById('errorID').value;
+      if (tmp_ID != '') {
+        document.getElementById('link' + tmp_ID).style.backgroundColor = 'white';
+      }
+      document.getElementById('link' + lineID).style.backgroundColor = '#B3C8E8';
+      document.getElementById('errorID').value = lineID;   
     }
-    document.getElementById('link' + lineID).style.backgroundColor = '#B3C8E8';
-    document.getElementById('errorID').value = lineID;   
-  }
-  
-  function lon(lineID) {
-    if (lineID != document.getElementById('errorID').value) {
-      document.getElementById('link' + lineID).style.backgroundColor = '#EEEEEE';
+    
+    function lon(lineID) {
+      if (lineID != document.getElementById('errorID').value) {
+        document.getElementById('link' + lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-  }
 
-  function loff(lineID) {
-    if (lineID != document.getElementById('errorID').value) {
-      document.getElementById('link' + lineID).style.backgroundColor = '';
+    function loff(lineID) {
+      if (lineID != document.getElementById('errorID').value) {
+        document.getElementById('link' + lineID).style.backgroundColor = '';
+      }
     }
-  }
-</script>
+  </script>
 </head>
 <body>
 <?php
   require '../include/sys_errors_menu.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content" class="content">
 <table class="header">
 <tr>
 <th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['systemerrrorreport']; ?></th>

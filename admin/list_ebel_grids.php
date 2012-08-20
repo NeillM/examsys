@@ -27,54 +27,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Ebel Grids<?php echo ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-.mid {padding-left:10px}
-.l {cursor:pointer}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title>Ebel Grids<?php echo ' ' . $cfg_install_type; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
+    .mid {padding-left:10px}
+    .l {cursor:pointer}
+  </style>
 
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-  function selFac(divID, evt) {
-    tmp_ID = document.myform.divID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script language="javascript">
+    function selFac(divID, evt) {
+      tmp_ID = document.myform.divID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+      document.myform.divID.value = divID;
+         
+      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      evt.cancelBubble = true;
+    }
+    
+    function deselFac() {
+      tmp_ID = document.myform.divID.value;
+      if (tmp_ID != '') {
+        document.getElementById(tmp_ID).style.backgroundColor = 'white';
+      }
+      document.myform.oldDivID.value = '';
+      document.getElementById('menu1b').style.display = 'none';
+      document.getElementById('menu1a').style.display = 'block';
     }
 
-    document.getElementById('menu1a').style.display = 'none';
-    document.getElementById('menu1b').style.display = 'block';
-    document.myform.divID.value = divID;
-       
-    document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-    evt.cancelBubble = true;
-  }
-  
-  function deselFac() {
-    tmp_ID = document.myform.divID.value;
-    if (tmp_ID != '') {
-      document.getElementById(tmp_ID).style.backgroundColor = 'white';
+    function lon(lineID) {
+      if (lineID != document.myform.divID.value) {
+        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+      }
     }
-    document.myform.oldDivID.value = '';
-    document.getElementById('menu1b').style.display = 'none';
-    document.getElementById('menu1a').style.display = 'block';
-  }
 
-  function lon(lineID) {
-    if (lineID != document.myform.divID.value) {
-      document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
+    function loff(lineID) {
+      if (lineID != document.myform.divID.value) {
+        document.getElementById(lineID).style.backgroundColor = '';
+      }
     }
-  }
-
-  function loff(lineID) {
-    if (lineID != document.myform.divID.value) {
-      document.getElementById(lineID).style.backgroundColor = '';
-    }
-  }
-</script>
+  </script>
 </head>
 
 <body onclick="deselFac()">

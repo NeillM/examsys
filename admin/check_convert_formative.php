@@ -34,8 +34,9 @@ check_var('paperID', 'GET', true, false);
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['convert']; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:80%; text-align:justifed}
+  body {background-color:#F1F5FB; font-size:80%; text-align:justifed}
   </style>
 </head>
 

@@ -26,6 +26,7 @@ require_once '../config/config.inc.php';
 require_once $cfg_web_root . 'classes/formutils.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
+
 $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
 
 $email = (isset($_GET['email'])) ? $_GET['email'] : '';
@@ -118,10 +119,13 @@ EMAIL;
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['forgottenpassword']." $cfg_install_type"; ?></title>
+  
+  <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <style type="text/css">
-  body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
+  body {font-size:90%}
   .field {padding-top:4px; padding-left:6px; font-weight:bold}
   </style>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -144,17 +148,17 @@ EMAIL;
   	<table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">
     	<tr style="height:70px; width:100%; background-image:url(../artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="../artwork/key_48.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;<?php echo $string['forgottenpassword'] ?></td></tr>
 <?php
-if($message == '') {
+if ($message == '') {
 ?>
     	<tr><td colspan="2" style="padding-top:4px; padding-left:6px;"><?php echo $string['intromsg'] ?></td></tr>
     	<tr>
     		<td colspan="2" style="padding-top:4px; padding-left:6px;">
 <?php
-  if(count($errors) > 0) {
+  if (count($errors) > 0) {
 ?>
     			<ul>
 <?php
-    foreach($errors as $error) {
+    foreach ($errors as $error) {
 ?>
 						<li class="error"><?php echo $error ?></li>
 <?php

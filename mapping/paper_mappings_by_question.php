@@ -31,17 +31,19 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: <?php echo $string['mappingbyquestion'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    td {font-size:100%}
-    img {border:none}
     .q_no {text-align:right; vertical-align:top; cursor:pointer; width:40px}
-    .divider {font-family:Arial,sans-serif; font-size:90%; font-weight:bold}
+    .divider {font-size:90%; font-weight:bold}
     .mapping {font-size:90%;color:#FF6300;font-weight:normal}
     .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through;}
   </style>
+  
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="JavaScript">
     function mapQuestion(qNo, pid, qid, session) {

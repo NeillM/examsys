@@ -25,7 +25,7 @@
 ?>
 <script language="JavaScript">
   function displayDetails() {
-    details=window.open("/admin/sys_error_details.php?errorID=" + document.getElementById('errorID').value + "","properties","width=900,height=515,left="+(screen.width/2-450)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    details=window.open("/admin/sys_error_details.php?errorID=" + document.getElementById('errorID').value + "","properties","width=900,height=515,left="+(screen.width/2-450)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       details.focus();
     }

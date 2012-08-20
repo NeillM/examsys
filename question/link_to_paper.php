@@ -35,11 +35,14 @@ if (!isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['linktopaper']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; margin:0px; background-color:#F1F5FB}
-  td {font-size:80%}
+    body {font-size:80%}
   </style>
 
   <script language="JavaScript">
@@ -70,23 +73,23 @@ if (!isset($_POST['submit'])) {
         winW = window.innerWidth;
         winH = window.innerHeight;
       }
-      winH -= 170;
+      winH -= 155;
       document.getElementById('paperlist').style.height = winH + 'px';
     }
   </script>
 </head>
 
-<body onload="resizeList();" onresize="resizeList();">
+<body onload="resizeList();" onresize="resizeList();" class="inline_dialog_body">
 <?php
   echo "<form method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?q_id=" . $_GET['q_id'] . "\">\n";
 ?>  
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/link_to_paper.png" width="32" height="32" alt="<?php echo $string['linktopaper']; ?>" /></td><td class="midblue_header" style="background-color:white; font-size:150%; font-weight:bold; border-bottom:1px solid #CCD9EA"><?php echo $string['linktopaper']; ?></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/link_to_paper.png" width="32" height="32" alt="<?php echo $string['linktopaper']; ?>" /></td><td class="inline_dialog_header" style="border-bottom:1px solid #CCD9EA"><?php echo $string['linktopaper']; ?></td></tr>
   </table>
 
-  <p style="margin:4px; text-align:justify; font-size:70%"><img src="../artwork/small_warning_16.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /> <?php echo $string['msg1']; ?></p>
-  <p style="margin:4px; text-align:justify; font-size:70%"><img src="../artwork/small_padlock.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /> <?php echo $string['msg2']; ?></p>
+  <p style="margin:4px; text-align:justify; font-size:90%"><img src="../artwork/small_warning_16.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /> <?php echo $string['msg1']; ?></p>
+  <p style="margin:4px; text-align:justify; font-size:90%"><img src="../artwork/small_padlock.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /> <?php echo $string['msg2']; ?></p>
 
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:4px" id="paperlist">
   <table cellpadding="0" cellspacing="1" border="0">

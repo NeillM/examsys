@@ -68,16 +68,20 @@
 ?>
 <html>
 <head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
 <title>Note</title>
 
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <style type="text/css">
-body {background-color:#FFFFCC; color:black; margin:0px; font-size:90%; font-family:Arial,sans-serif}
+  body {background-color:#FFFFCC; font-size:90%}
 </style>
 </head>
 
 <body onload="document.myform.note.focus();">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform">
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
 <?php
   if (file_exists($cfg_web_root . 'users/photos/' . $student_username . '.jpg')) {
@@ -90,7 +94,7 @@ body {background-color:#FFFFCC; color:black; margin:0px; font-size:90%; font-fam
 
   echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
   echo "<strong>Note:</strong><br />\n";
-  echo "<textarea name=\"note\" cols=\"60\" rows=\"17\" style=\"font-family:Arial,sans-serif; font-size:110%; background-color:#FFFFCC; width:100%\">$note</textarea><br />\n";
+  echo "<textarea name=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; background-color:#FFFFCC; width:100%\">$note</textarea><br />\n";
 ?>
 </td>
 </table>

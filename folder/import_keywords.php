@@ -24,80 +24,82 @@
 
 require '../include/staff_auth.inc';
 
-  function keywords_from_file($fileName) {
-    global $mysqli, $userID;
-  
-    if ($_GET['module'] == '') {
-      $type = 'personal';
-      $tmp_userID = $userID;
-      
-      // Get the existing personal keywords.
-      $existing_keywords = array();
-      $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
-      $result->bind_param('i', $userID);
-      $result->execute();
-      $result->bind_result($keyword);
-      while ($result->fetch()) {
-        $existing_keywords[$keyword] = $keyword;
-      }
-      $result->close();
-    } else {
-      $type = 'team';
-      // Get the ID of the module
-      $result = $mysqli->prepare("SELECT id FROM modules WHERE moduleid=?");
-      $result->bind_param('s', $_GET['module']);
-      $result->execute();
-      $result->bind_result($tmp_userID);
-      $result->fetch();
-      $result->close();
+function keywords_from_file($fileName) {
+  global $mysqli, $userID;
 
-      // Get the existing team keywords for the folder.
-      $existing_keywords = array();
-      $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
-      $result->bind_param('i', $tmp_userID);
-      $result->execute();
-      $result->bind_result($keyword);
-      while ($result->fetch()) {
-        $existing_keywords[$keyword] = $keyword;
-      }
-      $result->close();
-    }
+  if ($_GET['module'] == '') {
+    $type = 'personal';
+    $tmp_userID = $userID;
     
-    // Process the file
-    $lines = file($fileName);    
-    foreach ($lines as $separate_line) {
-      $separate_line = trim($separate_line);
-      if (!isset($existing_keywords[$separate_line])) {
-        $result = $mysqli->prepare("INSERT INTO keywords_user VALUES(NULL, ?, ?, ?)");
-        $result->bind_param('iss', $tmp_userID, $separate_line, $type);
-        $result->execute();
-        $result->close();
-      }
-    }    
-  }
-
-  if (isset($_POST['submit'])) {
-    if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $cfg_tmpdir . $userID . "_keywords.txt"))  {
-        echo uploadError($_FILES['txtfile']['error']);
-        exit;
-      } else {
-        keywords_from_file($cfg_tmpdir . $userID . '_keywords.txt');
-        unlink($cfg_tmpdir . $userID . '_keywords.txt');
-        header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
-      }
+    // Get the existing personal keywords.
+    $existing_keywords = array();
+    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->bind_result($keyword);
+    while ($result->fetch()) {
+      $existing_keywords[$keyword] = $keyword;
     }
+    $result->close();
   } else {
+    $type = 'team';
+    // Get the ID of the module
+    $result = $mysqli->prepare("SELECT id FROM modules WHERE moduleid=?");
+    $result->bind_param('s', $_GET['module']);
+    $result->execute();
+    $result->bind_result($tmp_userID);
+    $result->fetch();
+    $result->close();
+
+    // Get the existing team keywords for the folder.
+    $existing_keywords = array();
+    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
+    $result->bind_param('i', $tmp_userID);
+    $result->execute();
+    $result->bind_result($keyword);
+    while ($result->fetch()) {
+      $existing_keywords[$keyword] = $keyword;
+    }
+    $result->close();
+  }
+  
+  // Process the file
+  $lines = file($fileName);    
+  foreach ($lines as $separate_line) {
+    $separate_line = trim($separate_line);
+    if (!isset($existing_keywords[$separate_line])) {
+      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES(NULL, ?, ?, ?)");
+      $result->bind_param('iss', $tmp_userID, $separate_line, $type);
+      $result->execute();
+      $result->close();
+    }
+  }    
+}
+
+if (isset($_POST['submit'])) {
+  if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
+    if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $cfg_tmpdir . $userID . "_keywords.txt"))  {
+      echo uploadError($_FILES['txtfile']['error']);
+      exit;
+    } else {
+      keywords_from_file($cfg_tmpdir . $userID . '_keywords.txt');
+      unlink($cfg_tmpdir . $userID . '_keywords.txt');
+      header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+    }
+  }
+} else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['loadkeywords']; ?></title>
-  <link rel="stylesheet" href="../css/submenu.css" type="text/css">
-  <style type="text/css">
-    body, p {color:#003366; font-family:Arial,sans-serif}
-  </style>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css">
 </head>
 
 <body>
@@ -108,16 +110,13 @@ require '../include/staff_auth.inc';
 <div id="content" class="content">
 <br />
 <br />
-<table border="0" width="100%" height="100%">
-<tr><td valign="middle">
-<div align="center">
 
-<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; width:600px">
+<table class="dialog_border" style="width:600px">
 <tr>
-<td style="background-color:white; width:54px;"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="background-color:white; text-align:left; width:90%; font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['loadkeywords']; ?></td>
+<td class="dialog_header" style="width:54px;"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:90%"><?php echo $string['importkeywords']; ?></td>
 </tr>
 <tr>
-<td align="left" colspan="2" style="background-color:#DFE8FF">
+<td align="left" colspan="2" class="dialog_body">
 
 <p><?php echo $string['msg1']; ?></p>
 
@@ -129,7 +128,7 @@ require '../include/staff_auth.inc';
 
 <p><input type="file" size="50" name="txtfile" /></p>
 
-<p><input type="submit" style="width:100px" value="<?php echo $string['loadkeywordsbtn']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" style="width:130px" value="<?php echo $string['loadkeywordsbtn']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>
@@ -137,9 +136,7 @@ require '../include/staff_auth.inc';
 </table>
 
 </div>
-</td></tr>
-</table>
-</div>
+
 
 </body>
 </html>

@@ -53,7 +53,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>Add Keyword</title>
+  <title><?php echo $string['newkeyword']; ?></title>
 </head>
 <?php
   if ($new_keyword != '') {
@@ -73,46 +73,46 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title><?php echo $string['newkeyword']; ?></title>
-<script language="JavaScript">
-  function illegalChar(codeID) {
-    if (codeID == 35) {
-      alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 38) {
-      alert("<?php echo $string['character']; ?> '&' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 59) {
-      alert("<?php echo $string['character']; ?> ';' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 63) {
-      alert("<?php echo $string['character']; ?> '?' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 64) {
-      alert("<?php echo $string['character']; ?> '@' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 94) {
-      alert("<?php echo $string['character']; ?> '^' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 126) {
-      alert("<?php echo $string['character']; ?> '~' <?php echo $string['illegal']; ?>");
-      event.returnValue = false;
-    } else if (codeID == 13) {
-      document.myform.returnhit.value = '1';
-      document.myform.submit();
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#EEEEEE; padding:4px}
+    h1 {font-size:120%}
+  </style>
+  <script language="JavaScript">
+    function illegalChar(codeID) {
+      if (codeID == 35) {
+        alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 38) {
+        alert("<?php echo $string['character']; ?> '&' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 59) {
+        alert("<?php echo $string['character']; ?> ';' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 63) {
+        alert("<?php echo $string['character']; ?> '?' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 64) {
+        alert("<?php echo $string['character']; ?> '@' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 94) {
+        alert("<?php echo $string['character']; ?> '^' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 126) {
+        alert("<?php echo $string['character']; ?> '~' <?php echo $string['illegal']; ?>");
+        event.returnValue = false;
+      } else if (codeID == 13) {
+        document.myform.returnhit.value = '1';
+        document.myform.submit();
+      }
     }
-  }
-</script>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:#EEEEEE; color:black}
-textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-h1 {font-size:120%}
-</style>
+  </script>
 </head>
 
 <body onload="document.myform.new_keyword.focus();">
 <h1><?php echo $string['newkeyword']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<div><input type="text" style="width:100%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" /></div>
+<div><input type="text" style="width:99%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" /></div>
 <div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 

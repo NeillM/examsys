@@ -46,7 +46,14 @@ $mysqli->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Lab Deleted</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {background-color:#F1F5FB; font-size:80%; text-align:justifed}
+  </style>
+  
   <script type="text/javascript">
     function closeWindow() {
       window.opener.location.href = 'summative_scheduling.php';
@@ -55,7 +62,7 @@ $mysqli->close();
   </script>
 </head>
 
-<body onload="closeWindow();" style="margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:80%; text-align:justifed">
+<body onload="closeWindow();">
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>

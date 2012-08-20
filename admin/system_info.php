@@ -30,19 +30,20 @@ require_once '../classes/dateutils.class.php';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['systeminformation']; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<script src="../js/staff_help.js" type="text/javascript"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['systeminformation']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <script src="../js/staff_help.js" type="text/javascript"></script>
 
-<style type="text/css">
-.sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
-a {font-family:Arial,sans-serif; color:#215DC6}
-a.heading {color:#215DC6; font-weight:bold}
-a.heading:hover {color:#428EFF; font-weight:bold}
-</style>
+  <style type="text/css">
+  .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
+  a {font-family:Arial,sans-serif; color:#215DC6}
+  a.heading {color:#215DC6; font-weight:bold}
+  a.heading:hover {color:#428EFF; font-weight:bold}
+  </style>
 </head>
 
 <body>

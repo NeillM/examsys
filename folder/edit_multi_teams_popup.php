@@ -60,36 +60,37 @@ if (isset($_POST['submit'])) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title>Manage Teams</title>
-<style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:#F1F5FB; color:black; margin:0px}
-</style>
-<script language="JavaScript">
-  function toggle(objectID) {
-    if (document.getElementById(objectID).style.backgroundColor == 'white') {
-      document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
-    } else {
-      document.getElementById(objectID).style.backgroundColor = 'white';
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#F1F5FB}
+  </style>
+  <script language="JavaScript">
+    function toggle(objectID) {
+      if (document.getElementById(objectID).style.backgroundColor == 'white') {
+        document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
+      } else {
+        document.getElementById(objectID).style.backgroundColor = 'white';
+      }
     }
-  }
-  
-  function resizeList() {
-    var winW = 630, winH = 460;
-    if (document.body && document.body.offsetWidth) {
-      winW = document.body.offsetWidth;
-      winH = document.body.offsetHeight;
+    
+    function resizeList() {
+      var winW = 630, winH = 460;
+      if (document.body && document.body.offsetWidth) {
+        winW = document.body.offsetWidth;
+        winH = document.body.offsetHeight;
+      }
+      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
+        winW = document.documentElement.offsetWidth;
+        winH = document.documentElement.offsetHeight;
+      }
+      if (window.innerWidth && window.innerHeight) {
+        winW = window.innerWidth;
+        winH = window.innerHeight;
+      }
+      winH -= 105;
+      document.getElementById('list').style.height = winH + 'px';
     }
-    if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-      winW = document.documentElement.offsetWidth;
-      winH = document.documentElement.offsetHeight;
-    }
-    if (window.innerWidth && window.innerHeight) {
-      winW = window.innerWidth;
-      winH = window.innerHeight;
-    }
-    winH -= 105;
-    document.getElementById('list').style.height = winH + 'px';
-  }
-</script>
+  </script>
 </head>
 <body onload="resizeList()" onresize="resizeList()">
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">

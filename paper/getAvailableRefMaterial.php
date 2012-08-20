@@ -21,11 +21,10 @@
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
+
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../lang/' . $language . '/paper/properties.php';
-
-check_var('modules', 'GET', true, false);
 ?>
 <table cellpadding="0" cellspacing="3" border="0" style="width:100%">
 <?php
@@ -57,7 +56,7 @@ if ($ref_line > 0) {
     $ref_line++;
   }
 } else {
-  echo "<div style=\"margin-top:16px; margin-left:10px\">" . $string['nomaterials'] . "</div>\n";
+  echo $string['nomaterials'];
 }
 $stmt->close();
 

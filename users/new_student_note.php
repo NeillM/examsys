@@ -67,11 +67,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Note</title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {background-color:#FFFFCC; color:black; margin:0px; font-size:90%; font-family:Arial,sans-serif}
+    body {background-color:#FFFFCC; font-size:90%;padding-right:4px}
   </style>
 </head>
 
@@ -102,7 +105,7 @@
   }
   
   echo "<br />" . $string['note'] . "<br />\n";
-  echo "<textarea name=\"note\" cols=\"60\" rows=\"12\" style=\"width:100%; height:310px;font-family:Arial,sans-serif; font-size:100%; background-color:#FFFFCC; width:100%\"></textarea><br />\n";
+  echo "<textarea name=\"note\" cols=\"60\" rows=\"12\" style=\"width:100%; height:300px; background-color:#FFFFCC; width:100%\"></textarea><br />\n";
 ?>
 <br />
 <div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>

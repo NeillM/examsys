@@ -31,79 +31,82 @@ set_time_limit(0);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Rogō: <?php echo $string['questionsearch'] . " $cfg_install_type"; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-  input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-  .o {color:#A5A5A5}
-  .l {padding-left:6px; vertical-align:top}
-  .retired {color:#808080}
-  .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-  .qline:hover {background-color:#eee}
-  .qline.highlight {background-color:#B3C8E8}
-</style>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript">
-  function addQID(qID, clearall) {
-    if (clearall) {
-      document.PapersMenu.questionID.value = ',' + qID;
-    } else {
-      document.PapersMenu.questionID.value = document.PapersMenu.questionID.value + ',' + qID;
-    }
-  }
-
-  function subQID(qID) {
-    var tmpq = ',' + qID;
-    document.PapersMenu.questionID.value = document.PapersMenu.questionID.value.replace(tmpq, '');
-  }
-
-  function clearAll() {
-    $('.highlight').removeClass('highlight');
-  }
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  function selQ(questionID, qType, menuID, evt) {
-    document.getElementById('menu2a').style.display = 'none';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    document.getElementById('menu' + menuID).style.display = 'block';
-
-    lineID = questionID;
-    
-    if (evt.ctrlKey == false) {
-      clearAll();
-      $('#id' + lineID).addClass('highlight');
-      addQID(questionID, true);
-    } else {
-      if ($('#id' + lineID).hasClass('highlight')) {
-        $('#id' + lineID).removeClass('highlight');
-        subQID(questionID);
+  <title>Rogō: <?php echo $string['questionsearch'] . " $cfg_install_type"; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+    .o {color:#A5A5A5}
+    .l {padding-left:6px; vertical-align:top}
+    .retired {color:#808080}
+    .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
+    .qline:hover {background-color:#eee}
+    .qline.highlight {background-color:#B3C8E8}
+  </style>
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript">
+    function addQID(qID, clearall) {
+      if (clearall) {
+        document.PapersMenu.questionID.value = ',' + qID;
       } else {
-        $('#id' + lineID).addClass('highlight');
-        addQID(questionID, false);
+        document.PapersMenu.questionID.value = document.PapersMenu.questionID.value + ',' + qID;
       }
     }
-    document.PapersMenu.qType.value = qType;
-    document.PapersMenu.oldQuestionID.value = lineID;
-    
-    if (evt != null) {
-      evt.cancelBubble = true;
+
+    function subQID(qID) {
+      var tmpq = ',' + qID;
+      document.PapersMenu.questionID.value = document.PapersMenu.questionID.value.replace(tmpq, '');
     }
 
-  }
-  
-  function qOff() {
-    document.getElementById('menu2a').style.display = 'block';
-    document.getElementById('menu2b').style.display = 'none';
-    document.getElementById('menu2c').style.display = 'none';
-    tmp_ID = document.PapersMenu.oldQuestionID.value;
-    if (tmp_ID != '') {
-      document.getElementById('link_' + tmp_ID).style.backgroundColor = 'white';
+    function clearAll() {
+      $('.highlight').removeClass('highlight');
     }
-  }
-</script>
+    
+    function selQ(questionID, qType, menuID, evt) {
+      document.getElementById('menu2a').style.display = 'none';
+      document.getElementById('menu2b').style.display = 'none';
+      document.getElementById('menu2c').style.display = 'none';
+      document.getElementById('menu' + menuID).style.display = 'block';
+
+      lineID = questionID;
+      
+      if (evt.ctrlKey == false) {
+        clearAll();
+        $('#id' + lineID).addClass('highlight');
+        addQID(questionID, true);
+      } else {
+        if ($('#id' + lineID).hasClass('highlight')) {
+          $('#id' + lineID).removeClass('highlight');
+          subQID(questionID);
+        } else {
+          $('#id' + lineID).addClass('highlight');
+          addQID(questionID, false);
+        }
+      }
+      document.PapersMenu.qType.value = qType;
+      document.PapersMenu.oldQuestionID.value = lineID;
+      
+      if (evt != null) {
+        evt.cancelBubble = true;
+      }
+
+    }
+    
+    function qOff() {
+      document.getElementById('menu2a').style.display = 'block';
+      document.getElementById('menu2b').style.display = 'none';
+      document.getElementById('menu2c').style.display = 'none';
+      tmp_ID = document.PapersMenu.oldQuestionID.value;
+      if (tmp_ID != '') {
+        document.getElementById('link_' + tmp_ID).style.backgroundColor = 'white';
+      }
+    }
+  </script>
 </head>
 
 <?php

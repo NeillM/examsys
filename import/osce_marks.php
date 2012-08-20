@@ -187,7 +187,7 @@ if (isset($_POST['submit'])) {
       <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
       <title><?php echo $string['importoscemarks']; ?></title>
       </head>
-      <body style="font-family:Arial,sans-serif">
+      <body>
       <p><?php echo $string['marksloaded']; ?></p>
       <p><input type="submit" name="submit" onclick="window.location='../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'" value="<?php echo $string['ok']; ?>" style="width:100px" /></p>
       <?php
@@ -198,13 +198,14 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['importoscemarks']; ?></title>
+  
+  <link rel="stylesheet" href="../css/body.css" type="text/css">
+  <link rel="stylesheet" href="../css/dialog.css" type="text/css">
   <link rel="stylesheet" href="../css/submenu.css" type="text/css">
-  <style type="text/css">
-    body, p {color:black; font-family:Arial,sans-serif}
-    .content {font-size:90%}
-  </style>
 </head>
 
 <body onclick="hideMenus()">
@@ -216,20 +217,19 @@ if (isset($_POST['submit'])) {
 <br />
 <br />
 
-<div style="text-align:center">
-<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; width:600px">
+<table class="dialog_border" style="width:600px">
 <tr>
-<td style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td>
-<td style="width:552px; font-size:16pt; font-weight:bold; color:#5582D2; background-color:white; text-align:left"><?php echo $string['importoscemarks']; ?></td>
+<td class="dialog_header" style="width:52px"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td>
+<td class="dialog_header" style="width:90%"><?php echo $string['importoscemarks']; ?></td>
 </tr>
 <tr>
-<td colspan="2" align="left" style="background-color:#F1F5FB">
+<td colspan="2" class="dialog_body">
 
 <p><?php echo $string['topmsg']; ?></p>
 
 <blockquote>ID, Q1, Q2, Q3..., Examiner, Classification</blockquote>
 
-<div style="text-align:center"><img src="../artwork/osce_import.png" width="386" height="139" border="1" alt="<?php echo $string['import']; ?>" /></div>
+<div style="text-align:center"><img src="../artwork/osce_import.png" width="386" height="139" style="border:1px solid black" alt="<?php echo $string['import']; ?>" /></div>
 
 <div align="center">
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
@@ -243,7 +243,7 @@ if (isset($_POST['submit'])) {
 </td>
 </tr>
 </table>
-</div>
+
 
 </div>
 

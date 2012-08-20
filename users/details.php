@@ -186,7 +186,6 @@ if (isset($_POST['update']) and $demo == false) {
   $result->close();
 
   if ($background != 'NULL' or $foreground != 'NULL' or $marks_color != 'NULL' or $textsize != 'null' or $extra_time != 'null' or $themecolor != 'NULL' or $labelcolor != 'NULL') {
-    //echo "Database update<br />";
     $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL,?,?,?,?,?,?,?,?,?)");
     $result->bind_param('issiissss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $_POST['font']);
     $result->execute();
@@ -199,7 +198,6 @@ if (isset($_POST['update']) and $demo == false) {
   }
 } elseif (isset($_POST['save_metadata'])) {
   for ($i=0; $i<$_POST['metadata_no']; $i++) {
-    //echo $i . '=' . $_POST["meta_value$i"] . ' (' . $_POST["meta_id$i"] . ')<br />';
     $result = $mysqli->prepare("UPDATE users_metadata SET value=? WHERE id=?");
     $result->bind_param('si', $_POST["meta_value$i"], $_POST["meta_id$i"]);
     $result->execute();
@@ -210,83 +208,80 @@ if (isset($_POST['update']) and $demo == false) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['usermanagement'] ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<style type="text/css">
-body {font-size:100%}
-td {padding-top:1px}
-.coltitle {cursor:hand; background-color:#1E3C7B; color:white}
-.sch_check {text-align:right; width:40px; padding-right:6px}
-a.paper {color:black}
-a.paper:hover {color:white; background-color:#000080}
-a.access:link {color:blue}
-a.access:visited {color:blue}
-a.access:hover {color:white}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['usermanagement'] ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+  td {padding-top:1px}
+  .coltitle {cursor:hand; background-color:#1E3C7B; color:white}
+  .sch_check {text-align:right; width:40px; padding-right:6px}
+  a.paper {color:black}
+  a.paper:hover {color:white; background-color:#000080}
+  </style>
 
-<script language="javascript">
-  function reviewPaper(started, userid, surname, papername, log_type) {
-    var winwidth = screen.width-80;
-    var winheight = screen.height-80;
-    window.open("../paper/finish.php?id="+papername+"&previous="+started+"&userid="+userid+"&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-  }
+  <script language="javascript">
+    function reviewPaper(started, userid, surname, papername, log_type) {
+      var winwidth = screen.width-80;
+      var winheight = screen.height-80;
+      window.open("../paper/finish.php?id="+papername+"&previous="+started+"&userid="+userid+"&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    }
 
-  function showTab(tabID) {
-    document.getElementById('Log_tab').style.display = 'none';
-    document.getElementById('Modules_tab').style.display = 'none';
-    document.getElementById('Admin_tab').style.display = 'none';
-    document.getElementById('Notes_tab').style.display = 'none';
-    document.getElementById('Accessibility_tab').style.display = 'none';
-    document.getElementById('Teams_tab').style.display = 'none';
-    document.getElementById('Metadata_tab').style.display = 'none';
+    function showTab(tabID) {
+      document.getElementById('Log_tab').style.display = 'none';
+      document.getElementById('Modules_tab').style.display = 'none';
+      document.getElementById('Admin_tab').style.display = 'none';
+      document.getElementById('Notes_tab').style.display = 'none';
+      document.getElementById('Accessibility_tab').style.display = 'none';
+      document.getElementById('Teams_tab').style.display = 'none';
+      document.getElementById('Metadata_tab').style.display = 'none';
+      
+      document.getElementById(tabID).style.display = '';
+    }
+
+    function newStudentNote() {
+      note = window.open("new_student_note.php?userID=<?php echo $_GET['userID']; ?>","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        note.focus();
+      }
+    }
+
+    function addModule() {
+      note = window.open("add_student_module.php?userID=<?php echo $_GET['userID']; ?>","module","width=600,height=" + (screen.height - 120) + ",left="+(screen.width/2-300)+",top=50,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        note.focus();
+      }
+    }
     
-    document.getElementById(tabID).style.display = '';
-  }
-
-  function newStudentNote() {
-    note = window.open("new_student_note.php?userID=<?php echo $_GET['userID']; ?>","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      note.focus();
+    function editModules(session, grade) {
+      editwin=window.open("edit_modules_popup.php?userID=<?php echo $_GET['userID']; ?>&session=" + session + "&grade=" + grade + "","editmodule","width=650,height=750,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      if (window.focus) {
+        editwin.focus();
+      }  
     }
-  }
-
-  function addModule() {
-    note = window.open("add_student_module.php?userID=<?php echo $_GET['userID']; ?>","module","width=600,height=" + (screen.height - 120) + ",left="+(screen.width/2-300)+",top=50,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      note.focus();
+    
+    function editMultiTeams() {
+      editwin=window.open("../folder/edit_multi_teams_popup.php?userID=<?php echo $_GET['userID']; ?>","editmodule","width=550,height=750,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        editwin.focus();
+      }  
     }
-  }
-  
-  function editModules(session, grade) {
-    editwin=window.open("edit_modules_popup.php?userID=<?php echo $_GET['userID']; ?>&session=" + session + "&grade=" + grade + "","editmodule","width=650,height=750,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-    if (window.focus) {
-      editwin.focus();
-    }  
-  }
-  
-  function editMultiTeams() {
-    editwin=window.open("../folder/edit_multi_teams_popup.php?userID=<?php echo $_GET['userID']; ?>","editmodule","width=550,height=750,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      editwin.focus();
-    }  
-  }
-  
-  function forceResetPassword(username) {
-    editwin=window.open("reset_pwd.php?userID=<?php echo $_GET['userID']; ?>&username=" + username + "","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      editwin.focus();
-    }
-  }    
-
-  function resetPassword(email) {
-    editwin=window.open("forgotten_password.php?email=" + email + "","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      editwin.focus();
+    
+    function forceResetPassword(username) {
+      editwin=window.open("reset_pwd.php?userID=<?php echo $_GET['userID']; ?>&username=" + username + "","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        editwin.focus();
+      }
     }    
-  }
-</script>
+
+    function resetPassword(email) {
+      editwin=window.open("forgotten_password.php?email=" + email + "","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        editwin.focus();
+      }    
+    }
+  </script>
 </head>
 
 <body>

@@ -22,61 +22,65 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/std_set_shared_functions.inc';
+require '../include/staff_auth.inc';
+require '../include/std_set_shared_functions.inc';
+
+$paperID = $_GET['paperID'];
+
+function displayReview($review) {
+  global $userID, $userroles;
   
-  $paperID = $_GET['paperID'];
-
-  function displayReview($review) {
-    global $userID, $userroles;
-    
-    $setter_id = $review['setter_id'];
-    
-    if ($review['review_total'] == $review['total_marks']) {
-      $icon = '../artwork/std_set_icon_16.gif';
-      $text_color  = 'black';
-      $background = 'white';
-    } else {
-      $icon = '../artwork/std_set_icon_problem.gif';
-      $text_color  = '#800000';
-      $background = '#FFC0C0';
-    }
-    if ($review['group_review'] != 'No') {
-      $icon = '../artwork/small_users_icon.png';
-      $setter_id = $review['setter_id'] . ',' . $review['date'] . ';' . $review['group_review'];
-    }
-    
-    $html = '';
-    if ($setter_id == $userID or strpos($userroles,'SysAdmin') !== false) {
-      $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
-    } else {
-      $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
-    }
-    if ($review['distinction_score'] != 'n/a') $review['distinction_score'] .= '%';
-    if ($review['group_review'] != 'No') {
-      $html .= "&lt;group review&gt;</a>";
-    } else {
-      $html .= "{$review['name']}</a>";
-    }
-    if ($review['review_total'] == $review['total_marks']) {
-      $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
-    } else {
-      $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
-    }
-    return $html;
+  $setter_id = $review['setter_id'];
+  
+  if ($review['review_total'] == $review['total_marks']) {
+    $icon = '../artwork/std_set_icon_16.gif';
+    $text_color  = 'black';
+    $background = 'white';
+  } else {
+    $icon = '../artwork/std_set_icon_problem.gif';
+    $text_color  = '#800000';
+    $background = '#FFC0C0';
   }
+  if ($review['group_review'] != 'No') {
+    $icon = '../artwork/small_users_icon.png';
+    $setter_id = $review['setter_id'] . ',' . $review['date'] . ';' . $review['group_review'];
+  }
+  
+  $html = '';
+  if ($setter_id == $userID or strpos($userroles,'SysAdmin') !== false) {
+    $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
+  } else {
+    $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
+  }
+  if ($review['distinction_score'] != 'n/a') $review['distinction_score'] .= '%';
+  if ($review['group_review'] != 'No') {
+    $html .= "&lt;group review&gt;</a>";
+  } else {
+    $html .= "{$review['name']}</a>";
+  }
+  if ($review['review_total'] == $review['total_marks']) {
+    $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+  } else {
+    $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+  }
+  return $html;
+}
 
-  ?>
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['listsettings'] . ' ' . $cfg_install_type; ?></title>
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script language="JavaScript" type="text/javascript">
+  
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="JavaScript">
     var groupReview;
 
     function selReview(setterID, dateID, reviewID, methodType, menuID, group, evt) {

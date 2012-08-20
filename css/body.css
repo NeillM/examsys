@@ -1,0 +1,43 @@
+body {
+  color:black;
+  background-color:white;
+  font-family:Arial;
+  font-size:100%;
+  margin:0px;
+}
+
+a {
+  text-decoration:none;
+}
+a:link {
+  color:#0000FF;
+}
+a:visited {
+  color:#0000FF;
+}
+a:hover {
+  color:#0000FF;
+  text-decoration:underline;
+}
+
+img {
+  border:none
+}
+
+textarea, input[type=text], select {
+  font-family:Arail,sans-serif;
+  font-size:100%;
+  border: 1px solid #7F9DB9;
+}
+
+table {
+  font-size:100%;
+}
+
+.dkblue_header {
+  color:#1F497D
+}
+
+.midblue_header {
+  color:#4F81BD
+}

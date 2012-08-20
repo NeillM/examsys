@@ -26,9 +26,6 @@
   require '../include/question_types.inc';
   require '../include/errors.inc';
   
-  //include lang files
-  require $cfg_web_root . "lang/$language/include/paper_options.inc"; 
-  
   $summative_lock = 0; 
   
   function marks_from_file($fileName) {
@@ -152,10 +149,10 @@
         <html>
         <head>
         <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-        <title>Load Spotter Marks</title>
+        <title><?php echo $string['loadofflinemarks']; ?></title>
         </head>
-        <body style="font-family:Arial,sans-serif">
-        <p>Marks loaded.</p>
+        <body>
+        <p><?php echo $string['marksloaded']; ?></p>
         <p><input type="submit" name="submit" onclick="window.location='../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'" value="OK" style="width:100px" /></p>
         <?php
       }
@@ -165,12 +162,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>Load Spotter Marks</title>
+  
+  <title><?php echo $string['loadofflinemarks']; ?></title>
+  
+  <link rel="stylesheet" href="../css/body.css" type="text/css">
+  <link rel="stylesheet" href="../css/dialog.css" type="text/css">
   <link rel="stylesheet" href="../css/submenu.css" type="text/css">
-  <style type="text/css">
-    body, p {color:#003366; font-family:Arial,sans-serif}
-  </style>
 </head>
 
 <body onclick="hideMenus()">
@@ -182,38 +181,31 @@
 <br />
 <br />
 
-<table border="0" width="100%" height="100%">
-<tr><td valign="middle">
-<div align="center">
-
-<table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #5582D2; width:85%">
+<table class="dialog_border" style="width:600px">
 <tr>
-<td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_csv_32.gif" width="32" height="32" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2">Load Spotter Marks (CSV) File</span></td>
+<td class="dialog_header" style="width:52px"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:90%"><?php echo $string['loadofflinemarks']; ?></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#DFE8FF">
+<td class="dialog_body" colspan="2">
 
-<p>CSV file should contain the columns in the following order: student_id, Question 1, Question 2...</p>
+<p><?php echo $string['msg1']; ?></p>
 
-<div>Please select the CVS file you wish to load:</div>
+<div><?php echo $string['msg2']; ?></div>
 
 
 <div align="center">
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
 
 <p><input type="file" size="50" name="csvfile" /><br />
-<input type="checkbox" name="header_row" value="1" checked />&nbsp;File contains header row</p>
+<input type="checkbox" name="header_row" value="1" checked />&nbsp;<?php echo $string['headerrow']; ?></p>
 
-<p><input type="submit" style="width:100px" value="Load Marks" name="submit" />&nbsp;<input style="width:100px" type="button" value="Cancel" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" style="width:100px" value="<?php echo $string['loadmarks']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>
 </tr>
 </table>
 
-</div>
-</td></tr>
-</table>
 </div>
 
 </body>

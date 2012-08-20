@@ -27,62 +27,45 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
 	<title><?php echo $string['importfromqti'] ?></title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/highlight.css" /> 
-	<link rel="stylesheet" type="text/css" href="css/wizard.css" /> 
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+	<link rel="stylesheet" type="text/css" href="../css/highlight.css" /> 
+	<link rel="stylesheet" type="text/css" href="../css/wizard.css" /> 
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 	<style type="text/css">
-		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
 		a {color:black}
 		a:hover {color:blue}
 		.f {float:left; width:375px; padding-left:12px; font-size:80%}
 		.recent {color:blue; font-size:90%}
 		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
-
-	.exp_table 
-	{
-		border-left: 1px solid #dddddd;
-		border-top: 1px solid #dddddd;
-	}
-
-	.exp_table tr td,.exp_table tr th
-	{
-		border-bottom: 1px solid #dddddd;
-		border-right: 1px solid #dddddd;
-		padding: 1px;
-		font-size:80%;
-	}
-	
-	.paper_head {
-		font-size:140%;
-	}
-	
-	.screen_head {
-		font-size:120%;
-	}
-label.error {
-  display: block;
-  color: #f00;
-}
-	</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript">
-  // Popup window code
-  function newPopup(url) {
-    notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
+    .exp_table {border-left: 1px solid #dddddd;	border-top: 1px solid #dddddd}
+    .exp_table tr td,.exp_table tr th	{border-bottom: 1px solid #dddddd; border-right: 1px solid #dddddd; padding: 1px;	font-size:80%}
+    .paper_head {font-size:140%}
+    .screen_head {font-size:120%}
+    label.error {display:block; color:#f00}
+	</style
+  
+	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script language="JavaScript">
+    // Popup window code
+    function newPopup(url) {
+      notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
-$(function () { $('#file_form').validate(); });
-</script>
+    
+    $(function () { $('#file_form').validate(); });
+  </script>
 </head>
 
 <?php
@@ -108,14 +91,13 @@ echo "</table>";
 <br/>
 <br/>
 <br/>
-<div style="margin:9px;" align="center">
 
-<table border="0" cellpadding="0" cellspacing="0" style="width:500px; border:1px solid #95AEC8; text-align:left"> 
+<table cellspacing="0" cellpadding="0" border="0" style="width:500px; text-align:left" class="dialog_border"> 
 	<tr> 
-		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2">QTI <?php echo $string['import'] ?></span></td> 
+		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px">QTI <?php echo $string['import'] ?></td> 
 	</tr> 
 	<tr> 
-		<td align="left" style="background-color:#DFE8FF" colspan="2"> 
+		<td class="dialog_body" colspan="2"> 
 			
 			<div style="padding-top:16px;padding-left:16px;padding-right:16px;">
 				<form id="file_form" action="import.php?<?php echo $_SERVER['QUERY_STRING'];?>" method="post" enctype="multipart/form-data">
@@ -139,8 +121,6 @@ echo "</table>";
 		</td>
 	</tr>
 </table>
-
-</div>
 
 </div>
 </body>

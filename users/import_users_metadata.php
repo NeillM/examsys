@@ -60,8 +60,13 @@ if (isset($_GET['module'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: <?php echo $string['importmetadata'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  
   <?php echo $cfg_js_root ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script type="text/javascript">
@@ -70,10 +75,8 @@ if (isset($_GET['module'])) {
     }
   </script>
   <style type="text/css">
-    body {font-family:Arial,sans-serif; background-color:white; colour:black}
     p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
-    img { border-style:none; border-width:0px)
   </style>
 </head>
 
@@ -195,23 +198,20 @@ if (isset($_GET['module'])) {
   } else {
 ?>
 
-<table border="0" width="100%" height="100%" style="width:700px; margin-left:auto; margin-right:auto">
-<tr><td valign="middle">
-<div align="center">
-<table border="0" cellpadding="4" cellspacing="0" style="width:100%; border:1px solid #95AEC8">
+<table border="0" cellpadding="4" cellspacing="0" class="dialog_border" style="width:700px">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#4F81BD; width:90%"><?php echo $string['importmetadata']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td class="dialog_header"><?php echo $string['importmetadata']; ?></span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB" colspan="2">
+<td class="dialog_body" colspan="2">
 
 <p style="text-align:justify"><?php echo $string['msg']; ?></p>
 <br />
-<div align="center">
+<div style="text-align:center">
 <img src="../artwork/user_metadata_sheet.png" width="350" height="165" style="border:1px solid black" alt="" />
 <br />
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?module=' . $_GET['module']; ?>" enctype="multipart/form-data">
-<table style="text-align:left">
+<table style="margin-left:auto; margin-right:auto; text-align:left">
 <tr><td><?php echo $string['year']; ?></td><td><select name="session">
 <?php
   $current_year = date_utils::get_current_academic_year();
@@ -233,9 +233,6 @@ if (isset($_GET['module'])) {
 </tr>
 </table>
 
-</td></tr>
-</table>
-</div>
 <?php
   $mysqli->close();
   ob_end_flush();

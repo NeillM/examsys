@@ -24,7 +24,7 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
+require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
 check_var('errorID', 'GET', true, false);
@@ -62,9 +62,10 @@ if (isset($_POST['submit'])) {
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 <title><?php printf($string['errordetails'], $error_id); ?></title>
 
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <style type="text/css">
-body {color:black; background-color:white; font-family:Arial; font-size:90%; margin:0px}
-table {font-size:100%; border-collapse:collapse; width:100%}
+body {font-size:80%}
+table {border-collapse:collapse; width:100%}
 td {border: 1px solid #C0C0C0; padding:2px}
 .f {background-color:#EEEEEE; width:250px}
 </style>
@@ -72,7 +73,7 @@ td {border: 1px solid #C0C0C0; padding:2px}
 
 <body>
 
-<table style="">
+<table>
 <tr><td class="f"><?php echo $string['date']; ?></td><td><?php echo $occurred; ?></td></tr>
 <tr><td class="f"><?php echo $string['staff']; ?></td><td><?php echo $title . ' ' . $initials . ' ' . $surname; ?></td></tr>
 <tr><td class="f"><?php echo $string['username']; ?></td><td><?php echo $auth_user; ?></td></tr>

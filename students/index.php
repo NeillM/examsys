@@ -172,11 +172,14 @@ for ($i = 0; $i < count($modules); $i++) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō<?php echo " $cfg_install_type"; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
   <style type="text/css">
-  body {padding-left:0px}
+    body {padding-left:0px}
   </style>
 
   <script src="../js/student_help.js" type="text/javascript"></script>
@@ -197,7 +200,7 @@ for ($i = 0; $i < count($modules); $i++) {
   </script>
 </head>
 <body>
-<div id="content" class="content" style="font-size:80%">
+<div id="content" class="content">
 	<table cellpadding="0" cellspacing="0" border="0" width="100%">
 		<tr>
       <td rowspan="2"style="background-color:#F1F5FB; height:70px; padding-left:10px">
@@ -208,7 +211,7 @@ for ($i = 0; $i < count($modules); $i++) {
       <td style="background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></td>
     </tr>
 	  <tr>
-	    <td style="background-color:#F1F5FB; text-align:right; vertical-align: bottom">
+	    <td style="background-color:#F1F5FB; text-align:right; vertical-align:bottom">
 <?php
 $default_session = '';
 if (count($sessions_with_papers) > 0) {

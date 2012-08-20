@@ -50,15 +50,15 @@ function getLabs($labs, $mysqlidb) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['summativescheduling'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  
-  <style>
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style type="text/css">
   .s {padding-left:6px}
   .grey {color:#808080}
   </style>
   
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="javascript">
     $(function () {
       $('body').click(desel);

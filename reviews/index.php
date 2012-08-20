@@ -29,34 +29,29 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<style type="text/css">
-body {font-size:90%; margin:0px; background-color:white; color:black; font-family:Arial,sans-serif}
-p {line-height:150%}
-</style>
-<title><?php echo $string['externalexaminerarea']; ?></title>
-<script language="JavaScript">
-  function startPaper(paperID, fullsc) {
-    var winwidth = screen.width-80;
-    var winheight = screen.height-80;
-    if (fullsc == 0) {
-      window.open("start.php?id="+paperID+"","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    } else {
-      window.open("start.php?id="+paperID+"","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-  }
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 
-  function launchHelp() {
-    var winheight = screen.height-100;
-    var winwidth = screen.width-100;
-    notice = window.open("../help/student/index.php","help","width=" + winwidth + ",height="+winheight+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    notice.moveTo(10,10);
-    if (window.focus) {
-      notice.focus();
+  <title><?php echo $string['externalexaminerarea']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%}
+    p {line-height:150%}
+  </style>
+  
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="JavaScript">
+    function startPaper(paperID, fullsc) {
+      var winwidth = screen.width-80;
+      var winheight = screen.height-80;
+      if (fullsc == 0) {
+        window.open("start.php?id="+paperID+"","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      } else {
+        window.open("start.php?id="+paperID+"","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body>

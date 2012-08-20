@@ -34,6 +34,7 @@
 <title>Rogō: Admin<?php echo " $cfg_install_type"; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <style type="text/css">
   a.highlight {color:black}
   a.highlight:hover {background-color:#000080; color:white}

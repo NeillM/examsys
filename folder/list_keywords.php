@@ -32,10 +32,11 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['keywords'] . ' ' . $cfg_install_type; ?></title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-  .l {cursor:pointer}
+    .l {cursor:pointer}
   </style>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script language="javascript">

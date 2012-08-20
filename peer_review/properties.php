@@ -215,10 +215,9 @@ if (isset($_POST['Submit'])) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['propertiestitle'] . ' ' . $cfg_install_type; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; color:black; background-color:#F1F5FB; margin:0px; font-size:100%}
-    table {font-size:100%; text-align:left}
-    input,textarea {font-family:Arial,sans-serif; color:black}
+    body {background-color:#F1F5FB}
     .indenton {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
     .indentoff {text-indent:-23px; padding-left:23px; background-color:white}
   </style>
@@ -456,7 +455,7 @@ if (isset($_POST['Submit'])) {
 ?>
 <tr><td style="background-image:url('../artwork/blank_heading.png'); color:#001687; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/security_heading_icon.png" width="30" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['securityheading']; ?></td></tr>
 <tr>
-<td style="text-align:center; vertical-align:top" colspan="2">
+<td style="text-align:left; vertical-align:top" colspan="2">
 <?php
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
     echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMetadataDropdowns();\">\n<option value=\"\">" . $string['na'] .  "</option>\n";
@@ -510,7 +509,7 @@ if (isset($_POST['Submit'])) {
     echo "</select>\n";
    // Available from Month
     echo "<select name=\"fmonth\"\">\n";
-    $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
+    $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
     for ($i=0; $i<12; $i++) {
       $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
       if (($split_month-1) == $i) {
@@ -620,7 +619,7 @@ if (isset($_POST['Submit'])) {
     echo "</select>\n</td></tr>\n";
     echo "</table>\n";
 
-    echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"text-align:left\">\n";
     echo "<tr><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px; width:400px\">&nbsp;" . $string['modules'] . "</td><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;" . $string['restricttolabs'] . "</td></tr>";
     echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
     

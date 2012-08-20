@@ -72,14 +72,15 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['addfaculty']; ?></title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:#EEEEEE; color:black}
-textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-h1 {font-size:120%}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <title><?php echo $string['addfaculty']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {padding:4px; font-size:90%; background-color:#EEEEEE}
+    textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
+    h1 {font-size:120%}
+  </style>
 </head>
 
 <body onload="document.myform.new_faculty.focus();">
@@ -87,10 +88,10 @@ h1 {font-size:120%}
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div><?php
 if ($duplicate) {
-  echo '<input type="text" style="width:100%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="add_faculty" value="' . $_POST['add_faculty'] . '" />';
+  echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="add_faculty" value="' . $_POST['add_faculty'] . '" />';
   echo "<script language=\"JavaScript\">\nalert('" . $string['facultywarning'] . "');\n</script>\n";
 } else {
-  echo '<input type="text" style="width:100%" name="add_faculty" />';
+  echo '<input type="text" style="width:99%" name="add_faculty" />';
 }
 ?>
 </div>

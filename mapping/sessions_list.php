@@ -24,6 +24,7 @@
 
   require_once '../include/staff_auth.inc';
   require_once '../include/errors.inc';
+  
   check_var('module', 'GET', true, false);
 
   if (in_array($_GET['module'], $teams) === false and strpos($userroles,'SysAdmin') === false) {
@@ -35,17 +36,20 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: <?php echo $string['manageobjectives'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-  .obj_no {text-align:right; padding-right:6px}
-  .zero_obj_no {text-align:right; padding-right:6px; color:#C00000}
-  .title {padding-left:6px}
-  .indent {padding-left:24px}
+    .obj_no {text-align:right; padding-right:6px}
+    .zero_obj_no {text-align:right; padding-right:6px; color:#C00000}
+    .title {padding-left:6px}
+    .indent {padding-left:24px}
   </style>
 
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript">
     function selSession(divID, identifier, session, VLE, evt) {
       hideSessCopyMenu(evt);
@@ -107,9 +111,10 @@
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
   echo "<tr><th style=\"padding-left:10px\">" . $string['date'] . "&nbsp;</th>\n";
-  echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['name'] . "&nbsp;</th>\n";
-  echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['objectives'] . "&nbsp;</th><th>&nbsp;</th></tr>\n";
-  echo "<tr><th colspan=\"4\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></th></tr>\n";
+  echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" />&nbsp;" . $string['name'] . "&nbsp;</th>\n";
+  echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" />&nbsp;" . $string['objectives'] . "&nbsp;</th><th>&nbsp;</th></tr>\n";
+  echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
+  
   $old_session = '';
   $id = 0;
 	$first = true;
@@ -126,7 +131,7 @@
 	      	echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
       	}
 	      $first = false;
-      	echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:100%\"><tr><td><nobr>" . $session['calendar_year'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+      	echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $session['calendar_year'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
       }
       if (isset($session['identifier'])) {
         $identifier = $session['identifier'];

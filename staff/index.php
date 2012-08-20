@@ -46,39 +46,42 @@ require '../include/staff_auth.inc';
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
-<title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<link rel="stylesheet" type="text/css" href="../css/announcements.css" />
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<?php echo $cfg_js_root ?>
-<script src="../js/sidebar.js" type="text/javascript"></script>
-<script language="JavaScript">
-  function illegalChar(codeID) {
-    if (codeID == 59) {
-      alert("Character ';' illegal - please use alternative characters in folder name.");
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
+  <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+  <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
+  
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <?php echo $cfg_js_root ?>
+  <script src="../js/sidebar.js" type="text/javascript"></script>
+  <script language="JavaScript">
+    function illegalChar(codeID) {
+      if (codeID == 59) {
+        alert("Character ';' illegal - please use alternative characters in folder name.");
+      }
+      event.returnValue = false;
     }
-    event.returnValue = false;
-  }
 
-  function newPaper(paperID) {
-    notice = window.open("../paper/new_paper1.php?folder=","properties","width=750,height=500,left="+(screen.width/2-375)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
+    function newPaper(paperID) {
+      notice = window.open("../paper/new_paper1.php?folder=","properties","width=750,height=500,left="+(screen.width/2-375)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
 
-  function displayCredits(){
-    notice=window.open("../credits/index.php","credits","width=696,height=500,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
-    notice.moveTo(screen.width/2-350,screen.height/2-250)
-    if (window.focus) {
-      notice.focus();
+    function displayCredits(){
+      notice=window.open("../credits/index.php","credits","width=696,height=500,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
+      notice.moveTo(screen.width/2-350,screen.height/2-250)
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body onclick="hideMenus()">

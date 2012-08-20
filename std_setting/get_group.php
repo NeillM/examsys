@@ -47,12 +47,12 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['selectreviewers'] . ' ' . $cfg_install_type; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; color:black; padding:0;margin-top:0px; margin-left:0px; margin-right:0px}
-  table {font-size:100%}
-  .heading {background-color:#EBEADB; color:black}
+  body {font-size:90%}
+  .heading {background-color:#EBEADB}
   </style>
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>

@@ -24,14 +24,14 @@
 
 /**
  * Get a list of years for which the module has mapped objectives
- * @param debug_mysqli $mysqli
+ * @param debug_mysqli $db
  * @param string $module The module ID
  * @return array List of years
  */
-function get_existing_years($mysqli, $module) {
+function get_existing_years($db, $module) {
 	$years = array();
 	
-	$result = $mysqli->prepare("SELECT DISTINCT calendar_year FROM objectives WHERE moduleID = ? ORDER BY calendar_year DESC");
+	$result = $db->prepare("SELECT DISTINCT calendar_year FROM objectives WHERE moduleID = ? ORDER BY calendar_year DESC");
 	$result->bind_param('s', $module);
   $result->execute();
   $result->bind_result($year);
@@ -44,32 +44,32 @@ function get_existing_years($mysqli, $module) {
 }
 ?>
 <script type="text/javascript">
-function checkCopyYearForm() {
-	var formOK = true;
-	
-	sourceList = document.getElementById('source_y');
-	destList = document.getElementById('dest_y');
+  function checkCopyYearForm() {
+    var formOK = true;
+    
+    sourceList = document.getElementById('source_y');
+    destList = document.getElementById('dest_y');
 
-	sourceYear = sourceList.options[sourceList.selectedIndex].value;
-	destYear = destList[destList.selectedIndex].value;
+    sourceYear = sourceList.options[sourceList.selectedIndex].value;
+    destYear = destList[destList.selectedIndex].value;
 
-	if (typeof(sourceYear) != 'undefined' && typeof(destYear) != 'undefined' && sourceYear != '' && destYear != '') {
-		if (sourceYear == destYear) {
-			alert('<?php echo $string['msg1']; ?>');
-			formOK = false;
-		}
-	}	else {
-		alert('<?php echo $string['msg2']; ?>');
-		formOK = false;
-	}
+    if (typeof(sourceYear) != 'undefined' && typeof(destYear) != 'undefined' && sourceYear != '' && destYear != '') {
+      if (sourceYear == destYear) {
+        alert('<?php echo $string['msg1']; ?>');
+        formOK = false;
+      }
+    }	else {
+      alert('<?php echo $string['msg2']; ?>');
+      formOK = false;
+    }
 
-	return formOK;
-}
+    return formOK;
+  }
 </script>
-<div style="display:none; position:fixed; left:190px; top:135px; filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=4)" id="session_copy_menu" onclick="showSessCopyMenu(event);">
-<table border="0" cellpadding="3" cellspacing="1" style="width:300px; border:1px solid #C0C0C0; font-size:80%; background-color:white">
+<div class="popup" style="display:none; position:fixed; left:190px; top:135px" id="session_copy_menu" onclick="showSessCopyMenu(event);">
+<table border="0" cellpadding="2" cellspacing="0" style="width:300px; border:0px solid #C0C0C0; background-color:white">
 <tr>
-<td style="background-color:#F2B100; height:5px"> </td>
+<td style="background-color:#F2B100; height:3px"></td>
 </tr>
 <tr>
 <td align="left">
@@ -85,7 +85,8 @@ function checkCopyYearForm() {
 
 	// Should never be a case where we don't have a source year but check anyway
 	if (count($source_years) > 0) {
-		$dest_years = array(end($source_years));
+    $cur_year = date_utils::get_current_academic_year();
+		$dest_years = array(date_utils::inc_academic_year($cur_year));
 
 		// Get a list of destination years. Selected year will be removed by JS
 		$start_year = substr(end($source_years), 0, 4);
@@ -93,7 +94,7 @@ function checkCopyYearForm() {
 		if (is_numeric($start_year)) {
 			for ($i = $start_year + 1; $i <= $session_parts[0]; $i++) {
 				$next = $i + 1;
-				array_unshift($dest_years, $i . '/' . substr($next, 2, 2));
+				//array_unshift($dest_years, $i . '/' . substr($next, 2, 2));
 			}
 		} else {
 			$message = $string['msg3'];
@@ -115,7 +116,7 @@ function checkCopyYearForm() {
 				<td>
 					<select id="source_y" name="source_y">
 <?php
-foreach($source_years as $s_year) {
+foreach ($source_years as $s_year) {
 ?>
 						<option value="<?php echo $s_year ?>"><?php echo $s_year ?></option>
 <?php
@@ -136,16 +137,14 @@ if (count($dest_years) == 1) {
 	$sel_mod = ' selected="selected"';
 	$sel_shown = true;
 }
-?>
-						<option value=""<?php echo $sel_mod ?>>&nbsp;</option>
-<?php
+
 foreach ($dest_years as $d_year) {
-if ($sel_mod == '' and !$sel_shown and $d_year != $source_years[0]) {
-	$sel_mod = ' selected="selected"';
-	$sel_shown = true;
-} else {
-	$sel_mod = '';
-}
+  if ($sel_mod == '' and !$sel_shown and $d_year != $source_years[0]) {
+    $sel_mod = ' selected="selected"';
+    $sel_shown = true;
+  } else {
+    $sel_mod = '';
+  }
 ?>
 						<option value="<?php echo $d_year ?>"<?php echo $sel_mod ?>><?php echo $d_year ?></option>
 <?php

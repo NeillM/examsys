@@ -36,8 +36,15 @@ Class date_utils {
 		return date_utils::get_academic_year(date('Y/m/d'));
 	}
 
-  static function get_next_academic_year()	{
-    return date_utils::get_academic_year(date('Y/m/d',time()+31556926));
+  static function inc_academic_year($year) {
+    $first_part = substr($year, 0, 4);
+    $first_part++;
+    $second_part = substr($year, 5, 2);
+    $second_part++;
+    
+    $next_year = $first_part . '/' . $second_part;
+    
+    return $next_year;
   }
 
 	/**

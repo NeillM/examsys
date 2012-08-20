@@ -35,15 +35,14 @@ check_var('paperID', 'GET', true, false);
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?php echo $string['reviewsummary'] . ' ' . $cfg_install_type; ?></title>
   
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:100%; margin:0px}
     .fn {color:#808080}
     .num {padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
     .errnum {color:#C00000; padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
     .title {padding-left:10px}
     .line {padding-top:1px; padding-bottom:1px; padding-left:6px; border-bottom:solid #EEEEEE 1px}
-    td {font-size:110%}
   </style>
   
   <script language="JavaScript">
@@ -188,7 +187,7 @@ check_var('paperID', 'GET', true, false);
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a>';
-  echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
+  echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['reviewsummary'] . "</div>";
   echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 ?>
 <?php

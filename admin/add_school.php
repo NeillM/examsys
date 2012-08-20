@@ -51,12 +51,11 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['addschools'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; color:black; background-color:white; margin:0px}
     td {text-align:left}
-    input, textarea {font-family:Arial,sans-serif; color:black}
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 

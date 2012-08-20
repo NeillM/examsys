@@ -35,13 +35,14 @@ check_var('q_id', 'GET', true, false);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Longitudinal Performance<?php echo ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/add_edit.css" />
   <style type="text/css">
-    body {margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; color:black; font-size:80%}
-    table {font-size:100%}
-    a {color:blue}
+    body {background-color:#F1F5FB; font-size:80%}
     th {background-color:#CFDBEB; text-align:left; font-weight:normal}
     td {vertical-align:top; padding-top:3px; padding-bottom:3px}
     .num {text-align:right}

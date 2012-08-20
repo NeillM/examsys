@@ -78,8 +78,10 @@
       window.location = 'list.php?type=<?php echo $_GET['type']; ?>&checked=' + content;
     }
   </script>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .d {padding-left:6px; padding-right:2px; padding-top:4px; padding-bottom:2px; vertical-align:top}
     .owner {color:#A5A5A5}

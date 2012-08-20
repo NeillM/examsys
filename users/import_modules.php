@@ -33,10 +33,11 @@ require_once '../classes/userutils.class.php';
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['impmodtitle'] . ' ' . $cfg_install_type; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; background-color:white; colour:black}
     p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
     label.error {display:block; color:#f00}
@@ -66,13 +67,12 @@ require_once '../classes/userutils.class.php';
       } else {
         ?>
         <br /><br /><br />
-        <div align="center">
-        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
+        <table class="dialog_border" style="width:600px">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:160%; font-weight:bold" class="midblue_header"><?php echo $string['addingmodules']; ?> (<?php echo $_FILES['csvfile']['name'] ;?>)</span></td>
+        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['addingmodules']; ?> (<?php echo $_FILES['csvfile']['name'] ;?>)</td>
         </tr>
         <tr>
-        <td align="left" style="background-color:#F1F5FB">
+        <td class="dialog_body">
 
         <?php
         // Get a list of modules held by Rogo.
@@ -185,7 +185,7 @@ require_once '../classes/userutils.class.php';
     <?php
   } else {
 ?>
-<table border="0" cellpadding="4" cellspacing="0" style="font-size:110%; width:730px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
+<table class="dialog_border" style="width:730px">
 <tr>
 <td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importmodules']; ?></span></td>
 </tr>
@@ -194,7 +194,7 @@ require_once '../classes/userutils.class.php';
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <br />
-<div style="text-align:center"><img src="../artwork/module_import_headings.png" width="290" height="60" alt="Headings" border="1" /></div>
+<div style="text-align:center"><img src="../artwork/module_import_headings.png" width="290" height="60" alt="Headings" style="border:1px solid black" /></div>
 <br />
 <div><?php echo $string['msg2']; ?></div>
 <br />
@@ -203,13 +203,13 @@ require_once '../classes/userutils.class.php';
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
 <p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<br />
 </form>
 </div>
 </td>
 </tr>
 </table>
 
-</div>
 <?php
   }
 ?>

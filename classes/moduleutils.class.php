@@ -41,7 +41,7 @@ Class module_utils {
     $tmp_checklist = substr($checklist, 1);
     $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     echo $db->error;
-    $result->bind_param('ssiissiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template);
+    $result->bind_param('ssisssiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {

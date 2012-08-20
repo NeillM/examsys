@@ -118,12 +118,16 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['resetpassword'] . " $cfg_install_type"; ?></title>
+  
+  <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <style type="text/css">
-  body {background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
-  .field {padding-top:4px; padding-left:6px; font-weight:bold}
+    body {font-size:90%}
+    .field {padding-top:4px; padding-left:6px; font-weight:bold}
   </style>
+  
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
