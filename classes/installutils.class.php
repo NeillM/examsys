@@ -249,7 +249,12 @@ Class InstallUtils {
     
     // Check we can write to the config file first if not passwords will be lost!
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
-    if (!is_writable($rogo_path . '/config/config.inc.php')) {
+
+    if (file_exists($rogo_path . '/config/config.inc.php')) {
+      if (!is_writable($rogo_path . '/config/config.inc.php')) {
+        self::displayError(array(300=>'Could not write config file!'));
+      }
+    } elseif (!is_writable($rogo_path . '/config')) {
       self::displayError(array(300=>'Could not write config file!'));
     }
 
@@ -696,7 +701,7 @@ Class InstallUtils {
     );
 
      //add traing school
-    $facultyID = faculty_utils::add_faculty('Administrative and Support Units',
+    $facultyID = FacultyUtils::add_faculty('Administrative and Support Units',
                                         self::$db
                                      );
 
