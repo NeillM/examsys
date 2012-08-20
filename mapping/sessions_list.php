@@ -77,10 +77,6 @@
       window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $_GET['module']; ?>&calendar_year=" + calendar_year;
     }
 
-    function editNLESession(calendar_year) {
-      alert("<?php echo $string['thisisnle']; ?>");
-    }
-
     function highlight(lineID) {
       if (lineID != document.myform.oldDivID.value) {
         document.getElementById(lineID).style.backgroundColor = '#EEEEEE';

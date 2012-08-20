@@ -17,5 +17,4 @@ $string['msg4'] = 'No years available to copy';
 $string['msg5'] = 'Copy objectives from';
 $string['msg6'] = 'Copy objectives to';
 $string['copy'] = 'Copy';
-$string['thisisnle'] = 'This is an NLE-based module. To change its session objectives you must edit the NLE.';
 ?>
