@@ -86,7 +86,6 @@ foreach ($_GET as $key => $value) {
   }
 }
 
-
 // Load basic user information
 $user_data = array();
 $groups = array();
@@ -137,6 +136,7 @@ if ($review_type == '1') {
 
 
 function parse_group_data($questions, &$user_data) {
+  global $reviewers;
   foreach ($user_data as $studentID => $student) {
     $available_marks = 0;
     $student_marks = 0;
@@ -166,12 +166,15 @@ function parse_group_data($questions, &$user_data) {
         }
         $user_data[$studentID]['review_total'][$questionID] = $student_marks;
         $user_data[$studentID]['total_percent'][$questionID] = ($student_marks / $available_marks) * 100;
+        $user_data[$studentID]['have_review'] = $review_no;
       }
     }
+     $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
   }
 }
 
 function parse_single_data($questions, &$user_data) {
+  global $reviewers;
   foreach ($user_data as $studentID => $student) {
     $available_marks = 0;
     $student_marks = 0;
@@ -200,5 +203,6 @@ function parse_single_data($questions, &$user_data) {
         $user_data[0]['total_percent'][$questionID] = ($student_marks / $available_marks) * 100;
       }
     }
+    $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
   }
 }

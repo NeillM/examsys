@@ -24,6 +24,10 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
+require_once '../include/sort.inc';
+
+
+
 require 'summary_report.inc';
 
 check_var('paperID', 'GET', true, false);
@@ -191,31 +195,58 @@ check_var('paperID', 'GET', true, false);
   echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 ?>
 <?php
-  // write out headings
-  echo '<tr><th></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['name'] . '</th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['studentid'] . '</th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviewed'] . '</th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $type . '</th>';
-  if ($review_type == 1) {
-    echo '<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['reviews'] . '</th>';
-  }
-  for ($i=1; $i<=$heading_no; $i++) {
-    echo '<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['q'] . $i . '</th>';
-  }
-  if ($review_type == 1) {
-    echo '<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;' . $string['overall'] . '</th><th style="width:20%">&nbsp;</th></tr>';
+  //work out ordring
+  if(isset($_GET['ordering']) and $_GET['ordering'] == 'asc') {
+    $ordering = 'desc';
+    $ordering_img = "<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" />";
   } else {
-    echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;</th><th class=\"num\">&nbsp;</th><th class=\"num\">&nbsp;</th></tr>\n";
+    $ordering = 'asc';
+    $ordering_img = "<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" />";
   }
-  echo '<tr><th colspan="' . ($heading_no + 8) . '" class="bevel"></th></tr>';
+  if(isset($_GET['sortby'])) {
+    $sortby = $_GET['sortby'];
+  } else {
+    $sortby = 'surname';
+  }
+
+  // write out headings
+  $query_string = "percent=" . $_GET['percent'] . "&paperID=" . $_GET['paperID'] . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
+  $heading = array('surname'=>$string['name'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
+  if($review_type == 1) {
+    $heading['review_no'] = $string['reviews'];
+  }
+  $i = 1;
+  foreach ($questions as $questionID => $tmp_data) {
+    $heading[$questionID] = $string['q'] . $i;
+    $i++;
+  }
+  $heading['overall'] = $string['overall'];
+
+  echo '<tr><th></th>';
+  foreach($heading as $k => $h) {
+    echo '<th class="' . $k . '"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
+    echo "<a style=\"color:black;text-decoration:none\" href=\"" . $_SERVER['PHP_SELF'] . '?' . $query_string . "&sortby=$k&ordering=$ordering" . "\">";
+    echo  $h; 
+    if($k == $sortby) {
+      echo $ordering_img;
+    }
+    echo "</a>";
+    echo '</th>';
+  }
+  echo "<th class=\"num\">&nbsp;</th></tr>\n<tr><th colspan=\"" . ($heading_no + 8) . "\" class=\"bevel\"></th></tr>";
+
+  //$user_data = array_csort($user_data, $sortby, $ordering);
+  var_dump($user_data[18812]);
 
   foreach ($user_data as $student_userID => $student) {
     if ($student_userID > 0) {
-      $have_review = isset($reviewers[$student['userID']]);
-      $icon = ($have_review) ? 'peer_review_16.gif' : 'peer_review_retired_16.png';
+      $icon = ($user_data[$student_userID]['have_review']) ? 'peer_review_16.gif' : 'peer_review_retired_16.png';
       $mean_total = 0;
       echo '<tr>';
       echo '<td class="line"><img src="../artwork/' . $icon . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $student_userID . ', event);" /></td>';
       echo '<td class="line" onclick="ItemSelMenu(' . $student_userID . ', event);">' . $student['title'] . ' ' . $student['surname'] . ', <span class="fn">' . $student['first_names'] . '</span></td>';
       echo '<td class="line">' . $student['student_id'] . '</td>';
-      if ($have_review) {
+      if ($user_data[$student_userID]['have_review']) {
         echo '<td class="line">Complete</td>';
       } else {
         echo '<td class="line" style="color:#C00000">Missing</td>';
