@@ -3020,9 +3020,6 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
   
-  $sql = "GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-  $mysqli->query($sql);
-  echo "<li>GRANT SELECT, INSERT, DELETE ON " . $cfg_db_database . ".scheduling TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
     
   // 15/06/2012 - Add performance tables to store p and d values against questions in the bank.
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='performance_main' AND TABLE_SCHEMA='$cfg_db_database'");
