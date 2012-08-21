@@ -31,7 +31,6 @@ $string['createnewquestion'] = 'Utwórz nowe pytanie';
 $string['questions'] = 'Pytania';
 $string['papers'] = 'Arkusze';
 $string['people'] = 'Osoby';
-$string['mins'] = 'min.';
 $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['create'] = 'Utwórz';

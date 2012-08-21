@@ -9,7 +9,6 @@ $string['searches'] = 'Searches';
 $string['term'] = 'Term';
 $string['results'] = 'Results';
 $string['pagehits'] = 'Page Hits';
-$string['searches'] = 'Searches';
 $string['tutorialstats'] = 'Tutotial Stats';
 $string['filter'] = 'Filter';
 $string['nohits'] = 'There were no hits';

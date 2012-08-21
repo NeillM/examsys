@@ -12,7 +12,6 @@ $string['databaseupdateerror'] = 'Database error updating password';
 $string['login'] = 'Log in';
 $string['pleaseenterpassword'] = 'Please enter a password';
 $string['pleaseconfirmpassword'] = 'Please confirm your password';
-$string['passwordsnotmatch'] = 'Passwords do not match';
 $string['enternewpassword'] = 'Enter a new password.';
 $string['confirmpassword'] = 'Confirm password';
 $string['reset'] = 'Reset';

@@ -10,7 +10,6 @@ $string['graduate'] = 'Absolwent';
 $string['left'] = 'Skreślony'; //???
 $string['suspended'] = 'Zawieszony';
 $string['staff'] = 'Kadra';
-$string['student'] = 'Student';
 $string['externalauth'] = '[zastosowanie zewnętrznej autoryzacji]';
 $string['gender'] = 'Płeć';
 $string['male'] = 'Mężczyzna';

@@ -10,7 +10,6 @@ $string['graduate'] = 'Graduate';
 $string['left'] = 'Left University';
 $string['suspended'] = 'Suspended';
 $string['staff'] = 'Staff';
-$string['student'] = 'Student';
 $string['externalauth'] = '[Using external auth]';
 $string['gender'] = 'Gender';
 $string['male'] = 'Male';

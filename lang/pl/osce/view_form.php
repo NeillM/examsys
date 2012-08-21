@@ -4,7 +4,6 @@ $string['overallclassification'] = 'Klasyfikacja całościowa:';
 $string['feedback'] = 'Odzew';
 $string['borderline'] = 'niepewne';
 $string['clear fail'] = 'jednoznaczne niezaliczenie';
-$string['borderline'] = 'niepewne';
 $string['clear pass'] = 'jednoznaczne zaliczenie';
 $string['fail'] = 'niezaliczenie';
 $string['borderline fail'] = 'niepewne niezaliczenie';

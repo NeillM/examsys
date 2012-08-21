@@ -10,4 +10,6 @@ $string['error2'] = "Plik <strong>'%s'</strong> nie może być skopiowany.<br />
 $string['error3'] = "Plik <strong>'%s'</strong> nie może być skopiowany.<br />Pliku nie znaleziono.";
 $string['success'] = 'Pytania przekopiowane do <strong>%s</strong>.';
 $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używana.";
+$string['cancel'] = 'Cancel';
+$string['ok'] = 'OK';
 ?>

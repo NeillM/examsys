@@ -27,5 +27,6 @@ $string['na'] = 'Brak';
 $string['screen'] = 'Ekran';
 $string['note'] = 'Uwaga:';
 $string['notpossibletostandard'] = 'Nie jest możliwe wyznaczenie standardu dla testów zgodności scenariusza.';
+$string['cancel'] = 'Cancel';
 
 ?>

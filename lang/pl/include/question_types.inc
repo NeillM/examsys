@@ -1,7 +1,7 @@
 <?php
 $string['anytype'] = '(każdy typ)';
 $string['alltypes'] = 'wszystkie typy'; 
-$string['branching'] = 'Branching';
+$string['branching'] = 'Rozgałęzienie';
 $string['info'] = 'Blok informacji';
 $string['keyword_based'] = 'Pytanie ze słowem kluczowym';
 $string['keyword_based_short'] = 'Ze słowem kluczowym'; 

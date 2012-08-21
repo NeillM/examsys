@@ -5,7 +5,6 @@ $string['But_your_answer'] = 'Your answer';
 $string['But_correct_answer'] = 'Correct answer';
 $string['But_show_error'] = 'Show error';
 $string['Start_over'] = 'Start over';
-$string['Finished'] = 'Finish';
 $string['Eraser'] = 'Eraser';
 $string['Magnify'] = 'Magnify';
 $string['popUp_msg'] = 'Do you want to clear all lines?';

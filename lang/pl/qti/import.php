@@ -12,3 +12,6 @@ $string['questionproblems'] = 'Niektóre z pytań nie zostały zaimportowane pop
 $string['hadproblemsimporting'] = 'Błąd importowania %d z %d pytań.';
 $string['importedquestions'] = 'Zaimportowano %d pytań.';
 $string['backtopaper'] = 'Powrót do arkusza';
+$string['errmsg1'] = 'Ten typ eksportu nie jest obsługiwany';
+$string['errmsg2'] = 'Ten typ importu nie jest obsługiwany';
+?>

@@ -44,6 +44,5 @@ $string['email1'] = 'A new account has been created to access the online assessm
 $string['email2'] = 'To log into the system goto:';
 $string['email3'] = 'When you log in you will be taken to a personal screen listing all the papers that require your attention for review.';
 $string['casesensitive'] = '(case-sensitive)';
-$string['rogoaccount'] = 'Rogō Account';
 $string['couldnotsend'] = 'Could not send mail to';
 ?>

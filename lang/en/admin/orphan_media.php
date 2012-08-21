@@ -5,7 +5,6 @@ $string['notremoving'] = 'NOT Removing:';
 $string['inexamptionslist'] = 'in examptions list';
 $string['deletefailed'] = 'Delete Failed:';
 $string['removed'] = 'Removed:';
-$string['notremoving'] = 'NOT Removing:';
 $string['toonew'] = 'It is too new';
 $string['missingfiles'] = 'Missing Files!';
 $string['cleanupsummary'] = 'Clean-up Summary';

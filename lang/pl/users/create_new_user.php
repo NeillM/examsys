@@ -44,6 +44,5 @@ $string['email1'] = 'Utworzone zostało nowe konto w Rogō - systemie elektronic
 $string['email2'] = 'Aby zalogować się do systemu przejdź do:';
 $string['email3'] = 'Gdy już się zalogujesz przedstawiona będzie strona twoich osobistych danych wymieniająca wszystkie przeznaczone dla Ciebie arkusze .';
 $string['casesensitive'] = '(wielkość liter ma znaczenie)';
-$string['rogoaccount'] = 'Konto Rogō';
 $string['couldnotsend'] = 'Nie można było wysłać Emaila do';
 ?>

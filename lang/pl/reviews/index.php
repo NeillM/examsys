@@ -15,4 +15,6 @@ $string['helpandsupportext'] = 'Pomoc i wsparcie dla zewnętrznych egzaminatoró
 $string['rogodetails'] = 'Rogō %s jest elektronicznym systemem egzaminacyjnym open source przygotowanym przez Information Services Uniwersytetu Nottingham.<br />Więcej szczegółów poznasz na stronie projektu:';
 $string['onlinesupportsystem'] = 'System pomocy online dla studentów';
 $string['email'] = 'Email';
+$string['deadline'] = 'Termin finalizacji:';
+$string['notset'] = '&lt;brak&gt;';
 ?>

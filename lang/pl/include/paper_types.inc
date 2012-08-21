@@ -11,4 +11,5 @@ $string['summative exams'] = 'Egzaminy końcowe';
 $string['surveys'] = 'Ankiety';
 $string['osce stations'] = 'Stacje OSCE';
 $string['offline papers'] = 'Arkusze Offline';
+$string['peer review'] = 'Recenzja wewnętrzna';
 ?>
