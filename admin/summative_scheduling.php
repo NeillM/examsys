@@ -126,7 +126,7 @@ function getLabs($labs, $mysqlidb) {
 <?php
   $rowID = 0;
   $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-
+  
   $results = $mysqli->prepare("SELECT property_id, paper_title, moduleID, period, barriers_needed, cohort_size, campus FROM (properties, scheduling) WHERE start_date IS NULL AND properties.property_id=scheduling.paperID ORDER BY period");
   $results->execute();
   $results->store_result();
@@ -135,8 +135,15 @@ function getLabs($labs, $mysqlidb) {
     $rowID++;
     $cohort_size = str_replace('<', '&lt;', $cohort_size);
     $cohort_size = str_replace('>', '&gt;', $cohort_size);
+    
+    if ($period != '') {
+      $display_month = $string[$months[$period]];
+    } else {
+      $display_month = '&lt;unknown&gt;';
+    }
+    
     echo "<tr onclick=\"sel($property_id)\" onmouseover=\"lon($property_id)\" onmouseout=\"loff($property_id)\" ondblclick=\"viewDetails()\" id=\"$property_id\">";
-    echo "<td class=\"s\" style=\"padding-left:24px\">$paper_title</td><td class=\"s\">" . $string[$months[$period]] . "</td><td class=\"s\">$campus</td><td class=\"s\">$moduleID</td><td class=\"s\">$cohort_size</td></tr>\n";
+    echo "<td class=\"s\" style=\"padding-left:24px\">$paper_title</td><td class=\"s\">$display_month</td><td class=\"s\">$campus</td><td class=\"s\">$moduleID</td><td class=\"s\">$cohort_size</td></tr>\n";
   }
   $results->close();
 ?>
