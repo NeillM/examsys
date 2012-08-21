@@ -146,8 +146,6 @@ function db_change_user($db) {
 }
 
 function db_auth($u, $p, $db, $changeuser = true) {
-
-
   // return 0 if password or user missing, -1 if no user in table, -2 if password doesnt match, -3 if cant change user
 
 
