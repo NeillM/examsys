@@ -22,26 +22,27 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
+require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
-
-
-
-require 'summary_report.inc';
+require_once 'summary_report.inc';
 
 check_var('paperID', 'GET', true, false);
+check_var('startdate', 'GET', true, false);
+check_var('enddate', 'GET', true, false);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['reviewsummary'] . ' ' . $cfg_install_type; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
+    td {font-size:110%}
     .fn {color:#808080}
     .num {padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
     .errnum {color:#C00000; padding-top:1px; padding-bottom:1px; padding-left:15px; text-align:right; border-bottom:solid #EEEEEE 1px}
@@ -102,7 +103,7 @@ check_var('paperID', 'GET', true, false);
       //IE6 standards compliant mode
       scrollOfX = document.documentElement.scrollLeft;
     }
-	return scrollOfX;
+    return scrollOfX;
   }
   
   function getScrollY() {
@@ -117,8 +118,9 @@ check_var('paperID', 'GET', true, false);
       //IE6 standards compliant mode
       scrollOfY = document.documentElement.scrollTop;
     }
-	return scrollOfY;
+    return scrollOfY;
   }
+  
   function menuRowOn(rowID) {
     // Left menu column
     document.getElementById('item'+rowID+'a').style.backgroundColor='#FFE7A2';
@@ -196,14 +198,14 @@ check_var('paperID', 'GET', true, false);
 ?>
 <?php
   //work out ordring
-  if(isset($_GET['ordering']) and $_GET['ordering'] == 'asc') {
+  if (isset($_GET['ordering']) and $_GET['ordering'] == 'asc') {
     $ordering = 'desc';
-    $ordering_img = "<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" />";
+    $ordering_img = "<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" />";
   } else {
     $ordering = 'asc';
-    $ordering_img = "<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" />";
+    $ordering_img = "<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" />";
   }
-  if(isset($_GET['sortby'])) {
+  if (isset($_GET['sortby'])) {
     $sortby = $_GET['sortby'];
   } else {
     $sortby = 'surname';
@@ -212,7 +214,7 @@ check_var('paperID', 'GET', true, false);
   // write out headings
   $query_string = "percent=" . $_GET['percent'] . "&paperID=" . $_GET['paperID'] . "&startdate=" . $_GET['startdate'] . "&enddate=" . $_GET['enddate'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
   $heading = array('surname'=>$string['name'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
-  if($review_type == 1) {
+  if ($review_type == 1) {
     $heading['review_no'] = $string['reviews'];
   }
   $i = 1;
@@ -223,11 +225,11 @@ check_var('paperID', 'GET', true, false);
   $heading['overall'] = $string['overall'];
 
   echo '<tr><th></th>';
-  foreach($heading as $k => $h) {
+  foreach ($heading as $k => $h) {
     echo '<th class="' . $k . '"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
     echo "<a style=\"color:black;text-decoration:none\" href=\"" . $_SERVER['PHP_SELF'] . '?' . $query_string . "&sortby=$k&ordering=$ordering" . "\">";
     echo  $h; 
-    if($k == $sortby) {
+    if ($k == $sortby) {
       echo $ordering_img;
     }
     echo "</a>";
@@ -235,28 +237,28 @@ check_var('paperID', 'GET', true, false);
   }
   echo "<th class=\"num\">&nbsp;</th></tr>\n<tr><th colspan=\"" . ($heading_no + 8) . "\" class=\"bevel\"></th></tr>";
 
-  //$user_data = array_csort($user_data, $sortby, $ordering);
-  var_dump($user_data[18812]);
-  
+  // Take the arrays and form one master array which can be sorted for on-screen display.
   $master_array = array();
   $user_number = 0;
   foreach ($user_data as $student_userID => $student) {
     if ($student_userID > 0) {
       $master_array[$user_number]['icon'] = ($user_data[$student_userID]['have_review']) ? 'peer_review_16.gif' : 'peer_review_retired_16.png';
       $mean_total = 0;
-      $master_array[$user_number]['student_userID'] = $student_userID;
+      $master_array[$user_number]['student_id'] = $student_userID;
       $master_array[$user_number]['title'] = $student['title'];
       $master_array[$user_number]['surname'] = $student['surname'];
       $master_array[$user_number]['first_names'] = $student['first_names'];
 
       if ($user_data[$student_userID]['have_review']) {
-        $master_array[$user_number]['status'] = 'Complete';
+        $master_array[$user_number]['have_review'] = 'Complete';
       } else {
-        $master_array[$user_number]['status'] = 'Missing';
+        $master_array[$user_number]['have_review'] = 'Missing';
       }
       $master_array[$user_number]['group'] = $student['group'];
       if ($review_type == 1) {
         if (isset($student['review_no'])) {
+          $master_array[$user_number]['review_no'] = $student['review_no'];
+          $master_array[$user_number]['group_no'] = (count($groups[$student['group']])-1);
           if ($student['review_no'] < (count($groups[$student['group']])-1)) {
             $master_array[$user_number]['reviews'] = $student['review_no'] . '/' . (count($groups[$student['group']])-1);
           } else {
@@ -265,19 +267,19 @@ check_var('paperID', 'GET', true, false);
         } else {
           $master_array[$user_number]['reviews'] = '0';
         }
+        $q_no = 1;
         foreach ($questions as $questionID => $tmp_data) {
           if (isset($student['means'][$questionID])) {
-            echo '<td class="num">';
             if ($_GET['percent'] == '1') {
-              echo round($student['percent'][$questionID],0) . '%';
+              $master_array[$user_number]["q$q_no"] = round($student['percent'][$questionID],0) . '%';
             } else {
-              echo padDecimals($student['means'][$questionID],1);
+              $master_array[$user_number]["q$q_no"] = padDecimals($student['means'][$questionID],1);
             }
-            echo '</td>';
             $mean_total += $student['means'][$questionID];
           } else {
-            echo '<td class="num">&nbsp;</td>';
+            $master_array[$user_number]["q$q_no"] = '';
           }
+          $q_no++;
         }
         if ($_GET['percent'] == '1') {
           $master_array[$user_number]['overall'] = round($student['total_percent'][$questionID], 0);
@@ -285,75 +287,68 @@ check_var('paperID', 'GET', true, false);
           $master_array[$user_number]['overall'] = padDecimals($mean_total / $heading_no, 2);
         }
       } else {
+        $q_no = 1;
         foreach ($questions as $questionID => $tmp_data) {
           if (isset($user_data[0]['data'][$questionID][$student_userID])) {
-            echo '<td class="num">' . $user_data[0]['data'][$questionID][$student_userID] . '</td>';
+            $master_array[$user_number]["q$q_no"] = $user_data[0]['data'][$questionID][$student_userID];
           } else {
-            echo '<td class="num">&nbsp;</td>';
+            $master_array[$user_number]["q$q_no"] = '';
           }
+          $q_no++;
         }
-        echo "<td>&nbsp;</td><td>&nbsp;</td>\n";
       }
-      echo "<td class=\"num\">&nbsp;</td></tr>\n";
       
       $user_number++;
     }
   }
   
-  foreach ($i=0; $i<$user_number; $i++) {
+  // Sort the data.
+  $master_array = array_csort($master_array, $sortby, $ordering);
+
+  for ($i=0; $i<$user_number; $i++) {
     if ($student_userID > 0) {
-      $icon = ($user_data[$student_userID]['have_review']) ? 'peer_review_16.gif' : 'peer_review_retired_16.png';
       echo '<tr>';
-      echo '<td class="line"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $master_array[$i]['student_userID'] . ', event);" /></td>';
-      echo '<td class="line" onclick="ItemSelMenu(' . $master_array[$i]['student_userID'] . ', event);">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';
-      echo '<td class="line">' . $master_array[$i]['student_userID'] . '</td>';
-      if ($master_array[$i]['status'] == 'Complete') {
+      echo '<td class="line"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" border="0" onclick="ItemSelMenu(' . $master_array[$i]['student_id'] . ', event);" /></td>';
+      echo '<td class="line" onclick="ItemSelMenu(' . $master_array[$i]['student_id'] . ', event);">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';
+      echo '<td class="line">' . $master_array[$i]['student_id'] . '</td>';
+      if ($master_array[$i]['have_review'] == 'Complete') {
         echo '<td class="line">Complete</td>';
       } else {
         echo '<td class="line" style="color:#C00000">Missing</td>';
       }
       echo '<td class="line">' . $master_array[$i]['group'] . '</td>';
       if ($review_type == 1) {
-        if (isset($student['review_no'])) {
-          if ($student['review_no'] < (count($groups[$student['group']])-1)) {
-            echo '<td class="errnum">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+        if (isset($master_array[$i]['review_no'])) {
+          if ($master_array[$i]['review_no'] < $master_array[$i]['group_no']) {
+            echo '<td class="errnum">' . $master_array[$i]['reviews'] . '</td>';
           } else {
-            echo '<td class="num">' . $student['review_no'] . '/' . (count($groups[$student['group']])-1) . '</td>';
+            echo '<td class="num">' . $master_array[$i]['reviews'] . '</td>';
           }
         } else {
           echo '<td class="errnum">0</td>';
         }
+        $q_no = 1;
         foreach ($questions as $questionID => $tmp_data) {
-          if (isset($student['means'][$questionID])) {
-            echo '<td class="num">';
-            if ($_GET['percent'] == '1') {
-              echo round($student['percent'][$questionID],0) . '%';
-            } else {
-              echo padDecimals($student['means'][$questionID],1);
-            }
-            echo '</td>';
-          } else {
-            echo '<td class="num">&nbsp;</td>';
-          }
+          echo '<td class="num">' . $master_array[$i]["q$q_no"] . '</td>';
+          $q_no++;
         }
         if ($_GET['percent'] == '1') {
-          echo "<td class=\"num\">" . $master_array[$user_number]['overall'] . "%</td>\n";
+          echo "<td class=\"num\">" . $master_array[$i]['overall'] . "%</td>\n";
         } else {
-          echo '<td class="num">' . $master_array[$user_number]['overall'] . '</td>';
+          echo '<td class="num">' . $master_array[$i]['overall'] . '</td>';
         }
       } else {
+        $q_no = 1;
         foreach ($questions as $questionID => $tmp_data) {
-          if (isset($user_data[0]['data'][$questionID][$student_userID])) {
-            echo '<td class="num">' . $user_data[0]['data'][$questionID][$student_userID] . '</td>';
-          } else {
-            echo '<td class="num">&nbsp;</td>';
-          }
+          echo '<td class="num">' . $master_array[$i]["q$q_no"] . '</td>';
+          $q_no++;
         }
         echo "<td>&nbsp;</td><td>&nbsp;</td>\n";
       }
       echo "<td class=\"num\">&nbsp;</td></tr>\n";
     }
   }
+  /*
   if ($review_type != '1') {
     echo '<tr>';
     echo '<td class="line">&nbsp;</td>';
@@ -367,6 +362,7 @@ check_var('paperID', 'GET', true, false);
     }
     echo "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
   }
+  */
 ?>
 </table>
 
