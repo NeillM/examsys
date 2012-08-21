@@ -36,8 +36,12 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title></title>
+
+  <title>Help and Support Center</title>
+
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <script type="text/javascript">
     function reloadHelp() {
       window.top.location='index.php?id=<?php echo $page_id; ?>';
