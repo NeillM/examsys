@@ -9,4 +9,6 @@ $string['modules'] = 'Module(s)';
 $string['cohortsize'] = 'Cohort Size';
 $string['viewdetails'] = 'View Details';
 $string['campus'] = 'Campus';
+$string['unscheduled'] = 'Unscheduled';
+$string['scheduled'] = 'Scheduled';
 ?>

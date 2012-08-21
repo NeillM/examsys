@@ -89,6 +89,7 @@ foreach ($_GET as $key => $value) {
 // Load basic user information
 $user_data = array();
 $groups = array();
+
 if ($group == '%') {
   $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? ORDER BY surname, initials");
   $result->bind_param('iss', $moduleID, $calendar_year, $type);
@@ -132,7 +133,6 @@ if ($review_type == '1') {
 } else {
   parse_single_data($questions, $user_data);
 }
-
 
 
 function parse_group_data($questions, &$user_data) {

@@ -29,12 +29,12 @@ require '../include/staff_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['createnewpaper'] . $cfg_install_type; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; color:black; background-color:#F0F0F0; margin:6px; font-size:90%}
-    table {font-size:100%}
-    textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
+    body {background-color:#F0F0F0; margin:6px; font-size:90%}
     .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; height:74px; font-size:8pt; background-repeat:no-repeat}
   </style>
 

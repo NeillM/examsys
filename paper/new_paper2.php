@@ -33,7 +33,8 @@ require '../lang/' . $language. '/include/timezones.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['createnewpaper'] . $cfg_install_type; ?></title>
+  
+  <title><?php echo $string['createnewpaper'] . $cfg_install_type; ?></title>
 <?php
   // Delete any half completed papers owned by current user.
   $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID=?");
@@ -52,12 +53,12 @@ require '../lang/' . $language. '/include/timezones.inc';
   
   if ($rows_found > 0) {
 ?>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; color:black; background-color:#F0F0F0; margin:6px; font-size:90%}
-    table {font-size:100%}
-    textarea, input[type=text], select {font-family: Arail,sans-serif; border: 1px solid #7F9DB9}
+    body {background-color:#F0F0F0; margin:6px; font-size:90%}
     .icon {color:#001687; padding-top:15px; padding-bottom:15px; padding-left:0px; padding-right:0px; vertical-align:top; width:98px; font-size:8pt}
   </style>
+  
   <script type="text/javascript">
     function over(id) {
       if (id != document.getElementById('paper_type').value) {
@@ -207,11 +208,10 @@ require '../lang/' . $language. '/include/timezones.inc';
   $property_id = $mysqli->insert_id;
   $result->close();
 ?>
-<style type="text/css">
-  body {font-family:Arial,sans-serif; color:black; background-color:#F0F0F0; margin:4px; font-size:90%}
-  table {font-size:100%}
-  input,textarea {font-family:Arial,sans-serif; color:black}
-</style>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {background-color:#F0F0F0; margin:4px; font-size:90%}
+  </style>
 
 <script language="JavaScript">
   function toggle(objectID) {
@@ -277,13 +277,13 @@ require '../lang/' . $language. '/include/timezones.inc';
     
     durationSelect = document.getElementById('duration');
     if (durationSelect.options[durationSelect.selectedIndex].text == '') {
-      alert (""<?php echo $string['msg8']; ?>"");
+      alert ("<?php echo $string['msg8']; ?>");
       return false;
     }
     
     cohortsizeSelect = document.getElementById('cohort_size');
     if (cohortsizeSelect.options[cohortsizeSelect.selectedIndex].text == '') {
-      alert (""<?php echo $string['msg9']; ?>"");
+      alert ("<?php echo $string['msg9']; ?>");
       return false;
     }
     
@@ -499,7 +499,7 @@ if ($_POST['paper_type'] == 'summative') {
       }
     }
     echo '</select></td></tr>';
-    echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:100%" cols="40" rows="5" name="notes"></textarea></td></tr>';
+    echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:100%" cols="40" rows="4" name="notes"></textarea></td></tr>';
   }
     
   echo "</table>\n";

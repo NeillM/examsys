@@ -368,7 +368,9 @@ if (isset($_POST['Submit'])) {
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    
     <title><?php echo $string['edittitle']; ?></title>
+    
     <meta http-equiv="pragma" content="no-cache" />
     <script type="text/javascript">
       function closeWindow() {
@@ -409,6 +411,7 @@ if (isset($_POST['Submit'])) {
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    
     <title><?php echo $string['edittitle']; ?></title>
   </head>
   <body>

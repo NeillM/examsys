@@ -65,19 +65,19 @@ $results->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['summativeexamdetails'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
-  .data {border-collapse:collapse; margin-left:30px; margin-top:20px}
-  .data td {border:1px solid #C0C0C0}
-  .f1 {background-color:#EAEAEA}
+    .data {border-collapse:collapse; margin-left:30px; margin-top:20px}
+    .data td {border:1px solid #C0C0C0}
+    .f1 {background-color:#EAEAEA}
   </style>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="javascript">
-
-</script>
+  
+  <script type="text/javascript" src="../js/staff_help.js"></script>
 </head>
 
 <body>
@@ -115,6 +115,11 @@ $results->close();
         $cohort_size .= '<br />' . $extra_time . '% x' . $number;
       }
     }
+  }
+  
+  $cohort_size = $string['cohortsize'];
+  if ($cohort_size == 0) {
+    $cohort_size = '&lt;whole cohort&gt;';
   }
 
   echo "<tr><td class=\"f1\">" . $string['papername'] . "</td><td>$paper_title</td></tr>\n";  
