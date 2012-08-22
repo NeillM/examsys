@@ -112,7 +112,7 @@ $stmt->close();
     }
     echo '</tr></table>';
   }
-  echo '</td><td width="160"><img src="../artwork/uni_logo.png" width="160" height="67" alt="UoN Logo" border="0" /></td></tr></table>';
+  echo '</td><td width="160">'.$logo_html.'</td></tr></table>';
 
   
   $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
