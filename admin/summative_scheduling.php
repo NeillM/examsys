@@ -25,6 +25,8 @@
 require '../include/sysadmin_auth.inc';
 
 function getLabs($labs, $mysqlidb) {
+  global $string;
+  
   $html = '';
   
   if ($labs != '') {
