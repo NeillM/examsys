@@ -27,53 +27,34 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-	<title>Export to QTI</title>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  
+  <title>Export to QTI</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
-	<style type="text/css">
-		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}
-		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-		a {color:black}
-		a:hover {color:blue}
-		.f {float:left; width:375px; padding-left:12px; font-size:80%}
-		.recent {color:blue; font-size:90%}
-		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
-
-	.exp_table 
-	{
-		border-left: 1px solid #dddddd;
-		border-top: 1px solid #dddddd;
-	}
-
-	.exp_table tr td,.exp_table tr th
-	{
-		border-bottom: 1px solid #dddddd;
-		border-right: 1px solid #dddddd;
-		padding: 1px;
-		font-size:80%;
-	}
-	
-	.paper_head {
-		font-size:140%;
-	}
-	
-	.screen_head {
-		font-size:120%;
-	}
-
-	</style>
-<script language="JavaScript">
-  // Popup window code
-  function newPopup(url) {
-    notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
+  <style type="text/css">
+	.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
+	a {color:black}
+	a:hover {color:blue}
+	.f {float:left; width:375px; padding-left:12px; font-size:80%}
+	.recent {color:blue; font-size:90%}
+	.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
+	.exp_table  {border-left: 1px solid #dddddd; border-top: 1px solid #dddddd}
+	.exp_table tr td,.exp_table tr th {border-bottom: 1px solid #dddddd; border-right: 1px solid #dddddd; padding: 1px; font-size:80%}
+	.paper_head {font-size:140%}
+	.screen_head {font-size:120%}
+  </style>
+  <script language="JavaScript">
+    // Popup window code
+    function newPopup(url) {
+      notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
-</script>
+  </script>
 </head>
 <?php
 // paper_options.inc modifies result!  Store it temporarily
