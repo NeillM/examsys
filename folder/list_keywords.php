@@ -29,18 +29,68 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['keywords'] . ' ' . $cfg_install_type; ?></title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title><?php echo $string['keywords'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .l {cursor:pointer}
+    .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
+    .qline:hover {background-color:#eee}
+    .qline.highlight {background-color:#B3C8E8}
   </style>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="javascript">
-    function selKey(divID, evt) {
+    function getLastID(IDs) {
+      var id_list = IDs.split(",");
+      last_elm = id_list.length - 1;
+      
+      return id_list[last_elm];
+    }
+
+    function addKeyID(keyID, clearall) {
+      if (clearall) {
+        document.getElementById('keywordID').value = ',' + keyID;
+      } else {
+        document.getElementById('keywordID').value = document.getElementById('keywordID').value + ',' + keyID;
+      }
+    }
+
+    function subKeyID(keyID) {
+      var tmpq = ',' + keyID;
+      document.getElementById('keywordID').value = document.getElementById('keywordID').value.replace(tmpq, '');
+    }
+    
+    function clearAll() {
+      $('.highlight').removeClass('highlight');
+    }
+  
+    function selKey(questionID, evt) {
+
+      document.getElementById('menu1a').style.display = 'none';
+      document.getElementById('menu1b').style.display = 'block';
+
+      if (evt.ctrlKey == false) {
+        clearAll();
+        $('#link_' + questionID).addClass('highlight');
+        addKeyID(questionID, true);
+      } else {
+        if ($('#link_' + questionID).hasClass('highlight')) {
+          $('#link_' + questionID).removeClass('highlight');
+          subKeyID(questionID);
+        } else {
+          $('#link_' + questionID).addClass('highlight');
+          addKeyID(questionID, false);
+        }
+      }
+    }
+    
+    function selKey2(divID, evt) {
       tmp_ID = document.myform.oldID.value;
       if (tmp_ID != '') {
         document.getElementById(tmp_ID).style.backgroundColor = 'white';
@@ -56,32 +106,10 @@
       document.getElementById(divID).style.backgroundColor = '#B3C8E8';
       evt.cancelBubble = true;
     }
-
-    function deselKey() {
-      tmp_ID = document.myform.oldID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-      document.myform.oldID.value = '';
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
-    }
-
-    function lon(lineID) {
-      if (lineID != document.myform.oldID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.myform.oldID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
-    }
   </script>
 </head>
 
-<body onclick="deselDeg()">
+<body>
 <?php
   $keyword_list = array();
   
@@ -125,7 +153,7 @@
 <tr><th colspan="2" class="bevel"></th></tr>
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {
-  echo "<tr id=\"$keywordID\" onclick=\"selKey($keywordID,event)\" ondblclick=\"editKeyword($keywordID)\" onmouseover=\"lon($keywordID)\" onmouseout=\"loff($keywordID)\" class=\"l\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";
+  echo "<tr class=\"qline\" id=\"link_$keywordID\" onclick=\"selKey($keywordID, event)\" ondblclick=\"editKeyword($keywordID)\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";
 }
 $mysqli->close();
 ?>

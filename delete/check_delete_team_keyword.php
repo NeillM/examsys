@@ -27,11 +27,13 @@
 
   check_var('keywordID', 'GET', true, false);
   
-  $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id=?");
-  $result->bind_param('i',  $_GET['keywordID']);
+  $keyword_names = array();
+  $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id IN (" . substr($_GET['keywordID'], 1) . ")");
   $result->execute();
   $result->bind_result($keyword);
-  $result->fetch();
+  while ($result->fetch()) {
+    $keyword_names[] = $keyword;
+  }
   $result->close();
 
   $mysqli->close();
@@ -42,7 +44,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  <title><?php echo $string['deletekeyword']; ?></title>
+  <title><?php echo $string['deletekeyword'] . ' ' . $cfg_install_type; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -55,7 +57,17 @@
 <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td>
-<p><strong><?php printf($string['msg'], $keyword); ?></strong><p>
+<p><strong>Are you sure you wish to delete:</strong> <?php
+$i = 0;
+foreach ($keyword_names as $keyword_name) {
+  if ($i == 0) {
+    echo $keyword_name;
+  } else {
+    echo ', ' . $keyword_name;
+  }
+  $i++;
+}
+?><p>
 
 <div style="text-align:right">
 <form action="do_delete_team_keyword.php" method="post">

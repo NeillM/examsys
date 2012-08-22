@@ -22,25 +22,29 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/errors.inc';
+require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
 
-  check_var('schoolID', 'POST', true, false);
+check_var('schoolID', 'POST', true, false);
 
-  $tmp_schoolID = $_POST['schoolID'];
-  
-  $result = $mysqli->prepare("UPDATE schools SET deleted=NOW() WHERE id=?");
-  $result->bind_param('i', $tmp_schoolID);
-  $result->execute();  
-  $result->close();
-  $mysqli->close();
+$tmp_schoolID = $_POST['schoolID'];
+
+$result = $mysqli->prepare("UPDATE schools SET deleted=NOW() WHERE id=?");
+$result->bind_param('i', $tmp_schoolID);
+$result->execute();  
+$result->close();
+$mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>School Deleted</title>
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+
   <script type="text/javascript">
     function updateParent() {
       window.opener.location.reload();
@@ -49,11 +53,11 @@
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed">
+<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="Recycle Bin" /></td>
 
 <td><p>School successfully deleted.<p>
 

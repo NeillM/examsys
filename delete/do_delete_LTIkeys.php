@@ -38,8 +38,12 @@ $lti->delete_lti_key($_POST['LTIkeysID']);
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>"/>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['ltikeydel']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+
   <script type="text/javascript">
     function updateParent() {
       window.opener.location.reload();
@@ -48,16 +52,13 @@ $lti->delete_lti_key($_POST['LTIkeysID']);
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="margin:0px; background-color:#F1F5FB; font-family:Arial,
-sans-serif; font-size:90%; text-align:justifed">
+<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
   <tr>
     <td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="Recycle Bin"/></td>
 
-    <td><p>LTI Key successfully deleted.
-
-      <p>
+    <td><p>LTI Key successfully deleted.<p>
 
       <div style="text-align: center">
         <form action="" method="get">

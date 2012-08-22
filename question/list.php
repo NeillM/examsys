@@ -22,8 +22,8 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../lang/' . $language . '/include/question_types.inc';
+  require_once '../include/staff_auth.inc';
+  require_once '../lang/' . $language . '/include/question_types.inc';
   require_once '../classes/stateutils.class.php';
   
   $typeSQL = '';

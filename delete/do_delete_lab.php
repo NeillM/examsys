@@ -44,7 +44,11 @@ $mysqli->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Lab Deleted</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+
   <script type="text/javascript">
     function closeWindow() {
       window.opener.location.href = '../admin/list_labs.php';
@@ -53,11 +57,11 @@ $mysqli->close();
   </script>
 </head>
 
-<body onload="closeWindow();" style="margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:80%; text-align:justifed">
+<body onload="closeWindow();" style="background-color:#F1F5FB; font-size:80%; text-align:justifed">
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/assessment_bin.png" width="32" height="32" border="0" alt="Recycle Bin" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="Recycle Bin" /></td>
 
 <td><p>Lab successfully deleted.<p>
 

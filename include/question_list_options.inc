@@ -81,7 +81,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
       }
     }
     <?php 
-    if(isset($_GET['type']) AND $_GET['type'] == '%') {
+    if (isset($_GET['type']) and $_GET['type'] == '%') {
       echo "document.PapersMenu.qType.value = '%';\n";
     } else {
       echo "document.PapersMenu.qType.value = qType;\n";
@@ -92,10 +92,10 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
   function editQ() {
     var url = '<?php echo $cfg_root_path ?>/question/edit/index.php?q_id=' + getLastID(document.PapersMenu.questionID.value) + '&paperID=list:' + document.PapersMenu.qType.value + '&calling=list';
     <?php 
-      if(isset($_GET['team']) AND $_GET['team'] != '') {
+      if (isset($_GET['team']) and $_GET['team'] != '') {
           echo "url = url + '&team=" . $_GET['team'] . "';\n";
       }
-      if(isset($_GET['keyword']) AND $_GET['keyword'] != '') {
+      if(isset($_GET['keyword']) and $_GET['keyword'] != '') {
           echo "url = url + '&keyword=" . $_GET['keyword'] . "';\n";
       }
     ?>
