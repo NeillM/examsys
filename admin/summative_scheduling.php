@@ -28,6 +28,7 @@ function getLabs($labs, $mysqlidb) {
   $html = '';
   
   if ($labs != '') {
+  
     var_dump($labs);
   
     $results = $mysqlidb->prepare("SELECT room_no FROM labs WHERE id IN ($labs)");
