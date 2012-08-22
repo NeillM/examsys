@@ -11,4 +11,5 @@ $string['viewdetails'] = 'View Details';
 $string['campus'] = 'Campus';
 $string['unscheduled'] = 'Unscheduled';
 $string['scheduled'] = 'Scheduled';
+$string['nolabsset'] = 'No labs set';
 ?>

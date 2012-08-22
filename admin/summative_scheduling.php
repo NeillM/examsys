@@ -42,7 +42,7 @@ function getLabs($labs, $mysqlidb) {
     
     $html = '<span style="color:#FF6300">' . $html . '</span>';
   } else {
-    $html = '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" /> <span style="color:#C00000">No labs set</span>';
+    $html = '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" /> <span style="color:#C00000">' . $string['nolabsset'] . '</span>';
   }
   
   return $html;
