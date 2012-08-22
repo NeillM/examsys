@@ -67,6 +67,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogo: <?php echo $string['questionbank'] . ' ' . $cfg_install_type; ?></title>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -109,10 +110,10 @@
     $bank_type = ": '" . $parts[1] . "'";
   }
   if ($team != '') {
-    $bank_type = ": team $team";
+    $bank_type = ': ' . $team;
   }
-  if ($type != '%' and $keyword == '%') {
-    $bank_type = ": " . $type;
+  if ($_GET['type'] != '%') {
+    $bank_type = ': ' . $_GET['type'];
   }
 
   if ($team != '') {
