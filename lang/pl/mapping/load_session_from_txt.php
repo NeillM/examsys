@@ -8,5 +8,5 @@ $string['msg'] = 'Użyj # do określenia nagłówka sesji.';
 $string['objectivesfile'] = 'Plik celów';
 $string['session'] = 'Sesja';
 $string['import'] = 'Importuj';
-$string['cancel'] = 'Cancel';
+$string['cancel'] = 'Anuluj';
 ?>

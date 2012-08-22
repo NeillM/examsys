@@ -1,4 +1,4 @@
 <?php
-$string['passwordreset'] = 'Password Reset';  // Niko
-$string['msg'] = 'Password reset to:';  // Niko
+$string['passwordreset'] = 'Resetowanie hasła';  
+$string['msg'] = 'Resetuj hasło do:';  
 ?>

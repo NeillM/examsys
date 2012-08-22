@@ -11,5 +11,5 @@ $string['viewdetails'] = 'Ogląd szczegółów';
 $string['campus'] = 'Kampus';
 $string['unscheduled'] = 'Nieplanowane';
 $string['scheduled'] = 'Planowane';
-$string['nolabsset'] = 'No labs set';  // Niko
+$string['nolabsset'] = 'Nie określono pracowni';
 ?>
