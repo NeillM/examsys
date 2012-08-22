@@ -67,8 +67,8 @@ $result = $import_result;
 ?>
 <div id="content" class="content">
 
-<?php
 <table class="header">
+<?php
 echo "<tr><th style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
 if ($module != '') {
   echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
