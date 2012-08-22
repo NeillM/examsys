@@ -2,8 +2,8 @@
 require '../lang/' . $language . '/include/paper_options.inc';
 require 'shared.inc';
 
-$string['exporttoqti'] = 'Export to QTI';
-$string['qtiexport'] = 'Eksport %s QTI';//ąę
-$string['exportsready'] = 'Eksport %s QTI jest gotowy';
+$string['exporttoqti'] = 'Eksport do QTI';
+$string['qtiexport'] = 'Eksport QTI %s';//ąę
+$string['exportsready'] = 'Eksport QTI %s jest gotowy';
 $string['download'] = 'Pobierz';
 ?>
