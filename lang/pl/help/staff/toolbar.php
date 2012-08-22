@@ -8,7 +8,7 @@ $string['new'] = 'Nowa strona';
 $string['pointer'] = 'Wskaźnik';
 $string['edit'] = 'Edytuj stronę';
 $string['recyclebin'] = 'Kosz';
-$string['info'] = 'Info';
+$string['info'] = 'Info'; //cognate
 $string['search'] = 'Szukaj';
 $string['confirmdelete'] = 'Czy na pewno usunąć aktualną stronę?';
 ?>

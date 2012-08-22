@@ -3,7 +3,7 @@ require '../lang/' . $language . '/include/paper_options.inc';
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/paper/new_paper2.php';
 
-$string['start'] = 'Start';
+$string['start'] = 'Start'; //cognate
 $string['owner'] = 'Właściciel';
 $string['question'] = 'Pytanie';
 $string['type'] = 'Typ';
@@ -27,8 +27,8 @@ $string['mcqsurvey'] = "Pytania wielokrotnego wyboru z opcją 'inne' powinny by�
 $string['dichotomouswarning'] = '%d z %d';
 $string['warning'] = 'Ostrzeżenie';
 $string['variablenomarks'] = 'Ostrzeżenie: Zmienna liczba punktów';
-$string['export12'] = 'Eksport 1.2';
-$string['import'] = 'Import';
+$string['export12'] = 'Eksport 1.2'; //cognate
+$string['import'] = 'Import'; //cognate
 $string['papernotfound'] = 'Nie odnaleziono arkusza';
 $string['paperdeleted'] = 'Arkusz usunięty';
 $string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj się z: <a href="mailto:%s">%s</a>';

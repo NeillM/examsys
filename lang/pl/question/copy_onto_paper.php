@@ -11,5 +11,5 @@ $string['error3'] = "Plik <strong>'%s'</strong> nie może być skopiowany.<br />
 $string['success'] = 'Pytania przekopiowane do <strong>%s</strong>.';
 $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używana.";
 $string['cancel'] = 'Anuluj';
-$string['ok'] = 'OK';
+$string['ok'] = 'OK'; //cognate
 ?>

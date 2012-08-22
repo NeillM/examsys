@@ -5,5 +5,5 @@ $string['studentid'] = 'Numer legitymacji';
 $string['reviewed'] = 'Przejrzany';
 $string['reviews'] = 'Recenzje';
 $string['overall'] = 'Całościowo';
-$string['q'] = 'Q';
+$string['q'] = 'Q'; //cognate
 ?>

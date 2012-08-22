@@ -2,7 +2,7 @@
 require '../lang/' . $language . '/include/paper_options.inc';
 require 'shared.inc';
 
-$string['import'] = 'Import';
+$string['import'] = 'Import'; //cognate
 $string['import2'] = 'Importuj';
 $string['importfromqti'] = 'Importuj z QTI';
 $string['file'] = 'plik';

@@ -1,7 +1,7 @@
 <?php
 require '../lang/' . $language . '/paper/details.php';
 
-$string['start'] = 'Start';
+$string['start'] = 'Start'; //cognate
 $string['owner'] = 'Właściciel';
 $string['question'] = 'Pytanie';
 $string['objectives'] = 'Cele';

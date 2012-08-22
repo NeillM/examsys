@@ -1,5 +1,5 @@
 <?php
-$string['student'] = 'Student:';
+$string['student'] = 'Student:'; //cognate
 $string['examiner'] = 'Egzaminator:';
 $string['overallclassification'] = 'Klasyfikacja całościowa:';
 $string['feedback'] = 'Odzew';

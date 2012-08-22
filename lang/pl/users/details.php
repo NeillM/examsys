@@ -3,8 +3,8 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
  
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
-$string['status'] = 'Status';
-$string['student'] = 'Student';
+$string['status'] = 'Status'; //cognate //Status, Stan
+$string['student'] = 'Student'; //cognate
 $string['externalexaminer'] = 'Zewnętrzny egzaminator';
 $string['graduate'] = 'Absolwent';
 $string['left'] = 'Skreślony'; //???
@@ -18,7 +18,7 @@ $string['year'] = 'Rok';
 $string['yearofstudy'] = 'Rok studiów';
 $string['course'] = 'Kurs';
 $string['databaseid'] = 'ID bazy danych';
-$string['log'] = 'Log';
+$string['log'] = 'Log'; //cognate
 $string['teams'] = 'Zespoły';
 $string['team'] = 'Zespół';
 $string['modules'] = 'Moduły';
@@ -36,7 +36,7 @@ $string['telephone'] = 'Telefon';
 $string['ldapunavailable'] = 'Serwer LDAP niedostępny';
 $string['unknown'] = '&lt;nieznany&gt;';
 $string['password'] = 'Hasło';
-$string['email'] = 'Email';
+$string['email'] = 'Email'; //cognate
 $string['formative'] = 'Ocena formatywna';
 $string['progresstest'] = 'Ocena diagnostyczna';
 $string['summative'] = 'Ocena końcowa';
@@ -68,7 +68,7 @@ $string['save'] = 'Zachowaj'; //zapisz?
 $string['dateadded'] = 'Data przypisania';
 $string['editteams'] = 'Edytuj zespoły...';
 $string['editmodules'] = 'Edytuj Moduły...';
-$string['system'] = 'System';
+$string['system'] = 'System'; //cognate
 $string['na'] = 'Brak'; //brak danych?
 $string['universitylecturer'] = 'Wykładowca uniwersytecki';
 $string['universitylibrarian'] = 'Bibliotekarz uniwersytecki';
