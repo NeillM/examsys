@@ -53,11 +53,25 @@ function file_array_read($files,$lang)
 				$file_line_parts = preg_split('/=/',$file_line);
 				$line_string = $file_line_parts[0];
 				$line_text = trim(substr($file_line,strlen($line_string),-1));
+				if (strpos($line_text,'//')!==false) 
+				{
+					//var_dump(strpos($line_text,'//'));
+					$line_text = trim(substr($line_text,0,strpos($line_text,'//')));
+					//var_dump($line_text);
+				}
 				$line_text = preg_replace('/^[\s=\s\"\']+/','',$line_text);
 				$line_text = preg_replace('/[\'\";\s]+$/','',$line_text);
 				$line_string = substr($line_string,7,-1);
 				$line_string = preg_replace('/^[\[][\']/','',$line_string);
 				$line_string = preg_replace('/[\'][\]]$/','',$line_string);
+				
+				/*
+				if ($filepath_parts[1]=='users/reset_pwd.php')
+					{
+					var_dump($line_text);
+					var_dump($strings[$line_string]);
+					}
+				*/
 				if (!isset($strings[$line_string]))
 					{
 					$strings[$line_string] = Array($filepath_parts[1],$line_string,$line_text,1);
@@ -196,12 +210,33 @@ foreach ($lang_array as $lang)
 						if ($data_path3_elem>1)  display_this(Array($data_path3_key,$strings_data[1],$strings_data[2],$strings_data[3]),'');
 			}
 		}
-echo '</table>';
+	echo '</table>';
 
 	echo '<h2>Identical texts?:</h2>';
 	echo '<table>';
 	foreach ($strings_en as $strings_key => $strings_data)
 		if (isset($strings_pl[$strings_key]) && ($strings_pl[$strings_key]==$strings_en[$strings_key]))  display_this($strings_data,'');		
+	echo '</table>';
+
+	
+	echo '<h2>Identical strings in files?:</h2>';
+	echo '<table>';
+	foreach ($strings_en as $strings_key => $strings_data)
+		{
+		if ($strings_en[$strings_key][3]>1)	
+			{
+				$data_path1 = explode("|",$strings_data[2]);
+				$data_path2 = explode("|",$strings_pl[$strings_key][2]);
+				if (count($data_path2)==count($data_path1)) 
+					foreach ($data_path1 as $data_path1_key => $data_path1_elem)
+						if (($data_path1[$data_path1_key]==$data_path2[$data_path1_key])) 
+						{
+						//var_dump($data_path1);
+						//var_dump($data_path2);
+						display_this($strings_pl[$strings_key],$data_path1_key);
+						}
+			}
+		}
 	echo '</table>';
 }
 
