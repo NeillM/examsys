@@ -52,11 +52,12 @@ function file_array_read($files,$lang)
 			{
 				$file_line_parts = preg_split('/=/',$file_line);
 				$line_string = $file_line_parts[0];
-				$line_text = trim(substr($file_line,strlen($line_string),-1));
-				if (strpos($line_text,'//')!==false) 
+				$line_text = trim(substr($file_line,strlen($line_string)));
+				//remove comments except for '//cognate'
+				if ((strpos($line_text,'//')!==false) && (strpos($line_text,'//cognate')===false)) 
 					$line_text = trim(substr($line_text,0,strpos($line_text,'//')));
-					
-				$line_text = preg_replace('/^[\s=\s\"\']+/','',$line_text);
+
+					$line_text = preg_replace('/^[\s=\s\"\']+/','',$line_text);
 				$line_text = preg_replace('/[\'\";\s]+$/','',$line_text);
 				$line_string = substr($line_string,7,-1);
 				$line_string = preg_replace('/^[\[][\']/','',$line_string);
@@ -108,7 +109,7 @@ function display_this($data,$data_index)
 		}
 		else
 		{
-			echo '<tr><td>'.$data_index.'<em>'.$data_part1[$data_index].'</em></td><td><strong>'.$data_part2.'</strong></td><td>'.$data_part3[$data_index].'</td></tr>';
+			echo '<tr><td><em>'.$data_part1[$data_index].'</em></td><td><strong>'.$data_part2.'</strong></td><td>'.$data_part3[$data_index].'</td></tr>';
 		}
 	}
 }
