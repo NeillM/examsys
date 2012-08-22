@@ -9,6 +9,6 @@ $string['modules'] = 'Moduł(y)';
 $string['cohortsize'] = 'Rozmiar grupy';
 $string['viewdetails'] = 'Ogląd szczegółów';
 $string['campus'] = 'Kampus';
-$string['unscheduled'] = 'Unscheduled';  // Niko
-$string['scheduled'] = 'Scheduled';  // Niko
+$string['unscheduled'] = 'Nieplanowane';
+$string['scheduled'] = 'Planowane';
 ?>
