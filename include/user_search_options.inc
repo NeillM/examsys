@@ -216,7 +216,7 @@ if (isset($_GET['calendar_year'])) {
   if (strpos($userroles, 'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
     echo '<tr><td class="ico"><a href="create_new_user.php"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="Create User" /></td><td class="menuitem"><a href="create_new_user.php">' . $string['createnewuser'] . '</a></td></tr>';
     if (strpos($userroles, 'SysAdmin') !== false) {
-      echo '<tr><td class="ico"><img src="../artwork/delete_user_16_grey.png" width="16" height="16" alt="Create" /></a></td><td class="greymenuitem">Delete User</td></tr>';
+      echo '<tr><td class="ico"><img src="../artwork/delete_user_16_grey.png" width="16" height="16" alt="Create" /></a></td><td class="greymenuitem">' . $string['deleteuser'] . '</td></tr>';
     }
   }
 ?>
