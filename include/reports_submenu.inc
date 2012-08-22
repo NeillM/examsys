@@ -342,7 +342,7 @@
 
   if ($paper_type == '3') {
     echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\">\n";
-    $years = array('%'=>'Any Year','1'=>'Year 1','2'=>'Year 2','3'=>'Year 3','4'=>'Year 4','5'=>'Year 5');
+    $years = array('%'=>$string['anyyear'],'1'=>$string['year'].' 1','2'=>$string['year'].' 2','3'=>$string['year'].' 3','4'=>$string['year'].' 4','5'=>$string['year'].' 5');
     foreach ($years as $key => $value) {
       echo "<option value=\"$key\">$value</option>\n";
     }

@@ -97,6 +97,7 @@ $string['qualitativeanalysis'] = 'Qualitative Analysis';
 $string['incabsentcandidates'] = 'inc. absent candidates';
 $string['studentsonly'] = 'student attempts only';
 $string['completedatasets'] = 'Show complete datasets only';
+$string['anyyear'] = 'Any Year';
 
 $string['copyname'] = 'Copy Name:';
 $string['paperonly'] = 'Paper Only';

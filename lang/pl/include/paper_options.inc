@@ -97,6 +97,7 @@ $string['qualitativeanalysis'] = 'Analiza jakościowa';
 $string['incabsentcandidates'] = 'uwzgl. kandydatów nieobecnych';
 $string['studentsonly'] = 'tylko próby studenckie'; 
 $string['completedatasets'] = 'Pokaż tylko pełne zbiory danych';
+$string['anyyear'] = 'Każdy rok';
 
 $string['copyname'] = 'Nazwa kopii:';
 $string['paperonly'] = 'Tylko arkusze';
