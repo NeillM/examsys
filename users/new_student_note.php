@@ -70,7 +70,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  <title>Note</title>
+  <title><?php echo $string['note']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -104,7 +104,7 @@
     $result->close();
   }
   
-  echo "<br />" . $string['note'] . "<br />\n";
+  echo "<br />" . $string['note'] . ":<br />\n";
   echo "<textarea name=\"note\" cols=\"60\" rows=\"12\" style=\"width:100%; height:300px; background-color:#FFFFCC; width:100%\"></textarea><br />\n";
 ?>
 <br />
