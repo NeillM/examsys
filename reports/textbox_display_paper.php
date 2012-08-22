@@ -22,6 +22,8 @@
 * @package
 */
 
+require_once '../config/index.inc';
+
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
