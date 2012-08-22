@@ -464,7 +464,7 @@ ob_start();
   }
   
   if (count($log_late) > 0) {
-    echo "<tr><td class=\"redwarn\" style=\"width:28px; text-align:right\"><img src=\"../artwork/late_warning_icon.png\" width=\"28\" height=\"28\" /></td><td colspan=\"$cols\" class=\"redwarn\" style=\"padding-left:6px\">" . $string['latesubmissions'] . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>): ";
+    echo "<tr><td class=\"redwarn\" style=\"width:28px; text-align:right\"><img src=\"../artwork/late_warning_icon.png\" width=\"28\" height=\"28\" /></td><td colspan=\"$cols\" class=\"redwarn\" style=\"padding-left:6px\">" . $string['latesubmissionsmsg'] . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>): ";
     $html = '';
     foreach ($log_late as $student_userID => $student_name) {
       if ($html == '') {
