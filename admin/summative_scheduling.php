@@ -27,22 +27,23 @@ require '../include/sysadmin_auth.inc';
 function getLabs($labs, $mysqlidb) {
   $html = '';
   
-  $results = $mysqlidb->prepare("SELECT room_no FROM labs WHERE id IN ($labs)");
-  $results->execute();
-  $results->bind_result($room_no);
-  while ($results->fetch()) {
-    if ($html == '') {
-      $html = $room_no;
-    } else {
-      $html .= ', ' . $room_no;
+  if ($labs != '') {
+    $results = $mysqlidb->prepare("SELECT room_no FROM labs WHERE id IN ($labs)");
+    $results->execute();
+    $results->bind_result($room_no);
+    while ($results->fetch()) {
+      if ($html == '') {
+        $html = $room_no;
+      } else {
+        $html .= ', ' . $room_no;
+      }
     }
+    $results->close();
+    
+    $html = '<span style="color:#FF6300">' . $html . '</span>';
   }
-  $results->close();
-  
-  $html = '<span style="color:#FF6300">' . $html . '</span>';
   
   return $html;
-
 }
 ?>
 <html>
