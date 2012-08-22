@@ -480,7 +480,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo '</select></td><td style="text-align:right">' . $string['cohortsize'] . '</td><td><select name="cohort_size" id="cohort_size">';
     echo "<option value=\"\"></option>\n";
-    $sizes = array('&lt;whole cohort&gt', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300', '301-400', '401-500');
+    $sizes = array('&lt;'.$string['wholecohort'].'&gt', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300', '301-400', '401-500');
     foreach ($sizes as $size) {
       echo "<option value=\"$size\">$size</option>\n";
     }

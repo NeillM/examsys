@@ -17,6 +17,7 @@ $string['msg6'] = 'This is a closed-book examination and students may not refer 
 $string['barriersneeded'] = 'Barriers Needed';
 $string['daterequired'] = 'Date required';
 $string['cohortsize'] = 'Cohort Size';
+$string['wholecohort'] = 'whole cohort';
 $string['sittings'] = 'Sittings';
 $string['campus'] = 'Campus';
 $string['notes'] = 'Notes';
