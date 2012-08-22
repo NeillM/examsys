@@ -869,7 +869,9 @@ function random_qMarks($random_questions) {
 
     $prevous_screen = '';
     $next_screen = '';
-    $q_screen[$temp_array[$x]['q_id']][] = ($question_number+1);
+    if ($temp_array[$x]['q_type'] != 'info') {
+      $q_screen[$temp_array[$x]['q_id']][] = ($question_number+1);
+    }
     if ($teamOK == true) {
       if (isset($temp_array[$x - 1]['screen'])) {
         $prevous_screen = $temp_array[$x - 1]['screen'];

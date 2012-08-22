@@ -61,7 +61,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
         echo "<div id=\"block$block_id\" style=\"display:none\">";
       }
     } else {
-      echo "<div>";
+      echo '<div>';
     }
     while ($results2->fetch()) {
       echo "<div style=\"padding-left:52px\"><a href=\"?paperlinkID=" . $plk . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
@@ -72,10 +72,9 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
       $_SESSION['postlookup'][$plk] = array($crypt_name, $moduleid);
       $plk++;
     }
-    echo "</div>";
+    echo '</div>';
     $block_id++;
-  }
-  else {
+  } else {
     // no papers
   }
   $results2->close();
@@ -103,11 +102,6 @@ if (isset($_REQUEST['paperlinkID'])) {
   if ($retlookup > 0) {
     $info = $lti->getResourceKey(1);
     $lti->add_lti_resource($retlookup, 'paper');
-
-    //      if ($retlookup2 !== 0) {
-    //        $info = $lti->getCourseKey(1);
-    //        addlticontext($mysqli, $info[0], $info[1], $retlookup1);
-    //      }
   }
 }
 
@@ -126,9 +120,6 @@ if (!$lti->isInstructor()) {
     //valid data
     list($c_internal_id, $upd) = $lti->lookup_lti_context();
     $session = date_utils::get_current_academic_year();
-
-    // $c_internal_id is module code
-    //    $module_id_out=i_lti_module_code_translate($c_internal_id);
 
     $returned_check = module_utils::module_check_self_enrol($c_internal_id, $mysqli);
 
@@ -219,15 +210,18 @@ if (!$lti->isInstructor()) {
     $moduleid = $c_internal_id;
 
     $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
-    print <<<END
+    echo <<<END
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=$cfg_page_charset" />
+  
   <title>Rogō $cfg_install_type</title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
   h1 {font-size:150%}
   .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
@@ -249,12 +243,10 @@ if (!$lti->isInstructor()) {
 
 END;
 
-
     $plk = 0;
     $block_id = 0;
 
     echo '<h1>' . $string['describemodulechoice'] . '</h1>';
-
 
     //if there is a context and therefore a course already selected display that
 
@@ -274,14 +266,12 @@ END;
     $personalfolders = new personal_folders($mysqli);
     $personalfolders->loadpersonalfolders($userID);
     $personalfolders->process();
-    //    echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['myfolders'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    //    list($block_id, $plk) = $personalfolders->listtree(0, $block_id, $plk, 0);
   }
 }
 exit();
 
 
-if ($returned === false AND !$lti->isInstructor()) { //!((strpos($userroles, 'SysAdmin') !== false) OR (strpos($userroles, 'Staff') !== false))) {
+if ($returned === false AND !$lti->isInstructor()) {
   echo "<html>\n<head>\n<title>" . $string['unavailablepaper'] . "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#BF0000;font-size:140%}\n</style>\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 style=\"margin-left:60px\">" . $string['unavailablepaper'] . "</h1>\n";
@@ -289,13 +279,15 @@ if ($returned === false AND !$lti->isInstructor()) { //!((strpos($userroles, 'Sy
 } elseif ($returned === false) {
   //paper choice display
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
-  print <<<END
+  echo <<<END
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html>
       <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta http-equiv="content-type" content="text/html;charset=$cfg_page_charset" />
+        
         <title>Rogō $cfg_install_type</title>
+        
         <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
         <link rel="stylesheet" type="text/css" href="../css/header.css" />
         <style type="text/css">
@@ -325,29 +317,6 @@ END;
 
   echo '<h1>' . $string['describemodulechoice'] . '</h1>';
 
-  /*
-     *
-     *
-    $info = $lti->getCourseKey(1);
-    $stmt = $mysqli->prepare("SELECT c_internal_id FROM lti_context WHERE  oauth_consumer_key=? AND lti_context_id=?");
-    $stmt->bind_param('ss', $info[0], $info[1]);
-    $stmt->execute();
-    $stmt->store_result();
-    $rows = $stmt->num_rows;
-    $stmt->bind_result($c_internal_id);
-
-    if ($rows > 0) {
-      //if there is a context and therefore a course already selected display that
-      $stmt->fetch();
-      /*
-        echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-      $moduleid = $c_internal_id;
-      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
-      * /
-    }
-
-    $stmt->close();
-  */
   list($c_internal_id, $upd) = $lti->lookup_lti_context();
 
 

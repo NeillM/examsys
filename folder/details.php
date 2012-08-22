@@ -24,11 +24,11 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/icon_display.inc';
-require '../include/sidebar_menu.inc';
-require '../include/errors.inc';
-require '../include/demo_replace.inc';
+require_once '../include/staff_auth.inc';
+require_once '../include/icon_display.inc';
+require_once '../include/sidebar_menu.inc';
+require_once '../include/errors.inc';
+require_once '../include/demo_replace.inc';
 require_once '../classes/stateutils.class.php';
 
 function getLastFolder($path) {
@@ -157,11 +157,13 @@ if ($folder != '') {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style>
+  <style type="text/css">
   <?php
   if (isset($state['showretired']) and $state['showretired'] == 'true') {
     echo ".retired {display:block}\n";
@@ -170,6 +172,7 @@ if ($folder != '') {
   }
   ?>
   </style>
+  
   <?php echo $cfg_js_root ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>

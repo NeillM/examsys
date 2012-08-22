@@ -54,11 +54,22 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['paperretired'] . ' ' . $cfg_install_type; ?></title>
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+
+  <script language="JavaScript">
+    function closeWindow() {
+      window.opener.location.reload(true);
+      window.close();
+    }
+  </script>
 </head>
 
-<body onload="closeWindow();" style="margin:0px; background-color:#F1F5FB; font-family:Arial,sans-serif; font-size:90%; text-align:justifed">
+<body onload="closeWindow();" style="background-color:#F1F5FB; font-size:90%">
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
