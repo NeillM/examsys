@@ -28,23 +28,24 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  <title>Export to QTI</title>
+  <title><?php echo $string['exporttoqti'] . ' ' . $cfg_install_type; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
   <style type="text/css">
-	.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-	a {color:black}
-	a:hover {color:blue}
-	.f {float:left; width:375px; padding-left:12px; font-size:80%}
-	.recent {color:blue; font-size:90%}
-	.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
-	.exp_table  {border-left: 1px solid #dddddd; border-top: 1px solid #dddddd}
-	.exp_table tr td,.exp_table tr th {border-bottom: 1px solid #dddddd; border-right: 1px solid #dddddd; padding: 1px; font-size:80%}
-	.paper_head {font-size:140%}
-	.screen_head {font-size:120%}
+    .divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
+    a {color:black}
+    a:hover {color:blue}
+    .f {float:left; width:375px; padding-left:12px; font-size:80%}
+    .recent {color:blue; font-size:90%}
+    .param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
+    .exp_table  {border-left: 1px solid #dddddd; border-top: 1px solid #dddddd}
+    .exp_table tr td,.exp_table tr th {border-bottom: 1px solid #dddddd; border-right: 1px solid #dddddd; padding: 1px; font-size:80%}
+    .paper_head {font-size:140%}
+    .screen_head {font-size:120%}
   </style>
   <script language="JavaScript">
     // Popup window code
@@ -72,9 +73,6 @@ $tozip = array();
 if (count($result['save']['data']->files) > 1) {
 
   foreach ($result['save']['data']->files as $title => $file) {
-    //if ($dest == "qti12" && ($file->type == "xml" || $file->type == "question" || $file->type == "test" || $file->type == "manifest"))
-    //	$files[] = $file;
-
     $tozip[] = $file;
   }
 
@@ -82,20 +80,13 @@ if (count($result['save']['data']->files) > 1) {
   $res = $zip->open($base_dir.$dir.'/export.zip', ZipArchive::CREATE);
   if ($res === TRUE) {
     foreach ($tozip as $file) {
-      //echo "Adding : " . $base_dir.$dir.'/'.$file->filename . "<br />";
       if (file_exists($base_dir.$dir.'/'.$file->filename)) {
         $zip->addFile($base_dir.$dir.'/'.$file->filename, $file->filename);
-      } else {
-        //echo "File doesnt exist<br />";
-        }
+      }
     }
     $zip->close();
     $files[] = new ST_File("export.zip", $paper_row['paper_title'], $dir, 'zip');
-    //echo 'ok';
-    } else {
-    //echo 'failed';
-    }
-
+  }
 } else {
   $files = $result['save']['data']->files;
 }
@@ -113,20 +104,19 @@ if ($module != '') {
 }
 echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-echo "<div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . sprintf($string['qtiexport'], $qti_ver) . "</div>";
+echo "<div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['exporttoqti'] . "</div>";
 echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 echo "<tr><th colspan=\"6\" class=\"bevel\"></th></tr>";
 echo "</table>";
 ?>
 
-<div style="margin:9px;" align="center">
 <br />
-<table border="0" cellpadding="0" cellspacing="0" width="500" style="border:1px solid #95AEC8; text-align:left"> 
+<table border="0" cellpadding="0" cellspacing="0" width="500" class="dialog_border" style="text-align:left"> 
 	<tr> 
-		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php printf($string['qtiexport'], $qti_ver) ?></span></td> 
+		<td class="dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><?php echo $string['exporttoqti']; ?></td> 
 	</tr> 
 	<tr> 
-		<td style="background-color:#F1F5FB" colspan="2">
+		<td class="dialog_body" colspan="2">
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php printf($string['exportsready'], $qti_ver) ?></div>
 			<?php foreach ($files as $file) : ?>
 				<?php $path = $file->path; ?>
@@ -158,11 +148,5 @@ echo "</table>";
 	</tr>
 </table>
 
-</div>
-
-</td></tr></table>
-
-</div>
 </body>
-
 </html>

@@ -31,7 +31,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Rogō: Admin<?php echo " $cfg_install_type"; ?></title>
+<title>Rogō: Admin<?php echo ' ' . $cfg_install_type; ?></title>
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -138,6 +138,12 @@
   $paths = array('calendar.php#' . date("n"), 'clear_guest_users.php', 'clear_old_logs.php', 'orphan_media.php', 'clear_training_module.php', 'list_labs.php', 'list_courses.php', 'list_ebel_grids.php', 'list_faculties.php', '../LTI/lti_keys_list.php', 'list_modules.php', 'list_announcements.php', 'optimize_tables.php', 'list_schools.php', 'sms_import_summary.php', 'summative_scheduling.php', 'summative_stats.php?year=' . $summative_year, 'sys_error_list.php', 'system_info.php', 'https://suivarro.nottingham.ac.uk/trac/rogo/', '../users/search.php');
   $images = array('calendar_icon.png', 'clear_guest_users.png', 'clear_logs.png', 'remove_orphan_icon.png', 'training.png', 'computer_lab_48.png', 'courses_icon.png', 'grid_48.png', 'faculty.png', 'ims_logo_64.png', 'modules_icon.png', 'news_48.png', 'optimize_tables_icon.png', 'school_icon.png', 'sms_import_icon.png', 'summative_scheduling.png', 'summative_stats.png', 'bug.png', 'information.png', 'trac_logo.png', 'user_accounts_icon.png');
 
+  if (!$cfg_summative_mgmt) {
+    array_splice($titles, 15, 1);
+    array_splice($paths, 15, 1);
+    array_splice($images, 15, 1);
+  }
+  
   for ($icon_no=0; $icon_no<count($titles); $icon_no++) {
     echo "<div class=\"icon\"><table align=\"center\" id=\"" . $icon_no . "\" onmouseover=\"highlightResource('" . $icon_no . "','#316AC5')\" onmouseout=\"unhighlightResource('" . $icon_no . "')\" onclick=\"callPage('" . $paths[$icon_no] . "')\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"cursor:hand; background-color:white; width:95px; height:95px; border:1px solid #EEEEEE; text-align:center; vertical-align:middle\"><tr><td style=\"text-align:center\">";
     echo "<img src=\"../artwork/" . $images[$icon_no] . "\" width=\"48\" height=\"48\" border=\"0\" alt=\"\"  />";

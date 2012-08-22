@@ -22,80 +22,85 @@
 * @package
 */
 
-  require '../include/invigilator_auth.inc';
-  require_once '../classes/networkutils.class.php';
-  
-  function get_students($modules, $session, $paperID, $exam_length) {
-    global $string, $mysqli;
-    
-    // Get any student notes;
-    $notes_array = array();
-    $notes_results = $mysqli->prepare("SELECT note_id, userID FROM student_notes WHERE paper_id=?");
-    $notes_results->bind_param('i', $paperID);
-    $notes_results->execute();
-    $notes_results->store_result();
-    $notes_results->bind_result($note_id, $tmp_userID);
-    while ($notes_results->fetch()) {
-      $notes_array[$tmp_userID] = true;
-    }
-    $notes_results->close();
+require '../include/invigilator_auth.inc';
+require_once '../classes/networkutils.class.php';
 
-    echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";    
-    $results = $mysqli->prepare("SELECT DISTINCT extra_time, student_modules.userID, surname, first_names, title FROM student_modules, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ('" . str_replace(",","','",$modules) . "') AND calendar_year=? AND student_modules.userID=users.id ORDER BY surname, initials");
-    $results->bind_param('s', $session);
-    $results->execute();
-    $results->store_result();
-    $results->bind_result($extra_time, $tmp_userID, $surname, $first_names, $title);
-    while ($results->fetch()) {
-      if ($extra_time == '') {
-        echo "<tr><td></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span>";
-      } else {
-        echo "<tr><td><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['extratime'] . "\" border=\"0\" /></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span> <span style=\"color:#C00000\">+ " . round(($exam_length/100) * $extra_time) . $string['mins'] . "</span>";
-      }
-      if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) echo ' <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0" />';
-      echo "</td></tr>\n";
-    }
-    $results->close();
+function get_students($modules, $session, $paperID, $exam_length) {
+  global $string, $mysqli;
+  
+  // Get any student notes;
+  $notes_array = array();
+  $notes_results = $mysqli->prepare("SELECT note_id, userID FROM student_notes WHERE paper_id=?");
+  $notes_results->bind_param('i', $paperID);
+  $notes_results->execute();
+  $notes_results->store_result();
+  $notes_results->bind_result($note_id, $tmp_userID);
+  while ($notes_results->fetch()) {
+    $notes_array[$tmp_userID] = true;
+  }
+  $notes_results->close();
 
-    $results = $mysqli->prepare("SELECT DISTINCT extra_time, log2.userID, surname, first_names, title FROM log2, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE log2.q_paper=? AND log2.userID=users.id and users.username LIKE 'user%' ORDER BY surname, initials");
-    $results->bind_param('i', $paperID);
-    $results->execute();
-    $results->store_result();
-    $results->bind_result($extra_time, $tmp_userID, $surname, $first_names, $title);
-    while ($results->fetch()) {
-      if ($extra_time == '') {
-        echo "<tr><td></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span>";
-      } else {
-        echo "<tr><td><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['extratime'] . "\" border=\"0\" /></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span> <span style=\"color:#C00000\">+ " . round(($exam_length/100) * $extra_time) . $string['mins'] . "</span>";
-      }
-      if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) echo ' <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0" />';
-      echo "</td></tr>\n";
+  echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";    
+  $results = $mysqli->prepare("SELECT DISTINCT extra_time, student_modules.userID, surname, first_names, title FROM student_modules, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ('" . str_replace(",","','",$modules) . "') AND calendar_year=? AND student_modules.userID=users.id ORDER BY surname, initials");
+  $results->bind_param('s', $session);
+  $results->execute();
+  $results->store_result();
+  $results->bind_result($extra_time, $tmp_userID, $surname, $first_names, $title);
+  while ($results->fetch()) {
+    if ($extra_time == '') {
+      echo "<tr><td></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span>";
+    } else {
+      echo "<tr><td><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['extratime'] . "\" border=\"0\" /></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span> <span style=\"color:#C00000\">+ " . round(($exam_length/100) * $extra_time) . $string['mins'] . "</span>";
     }
-    $results->close();
-    echo "</table>\n</div>\n";
+    if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) echo ' <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0" />';
+    echo "</td></tr>\n";
   }
-  
-  function emergencyNumbers($support_numbers) {
-    global $string;
-  
-    echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px\">\n";
-    echo "<tr><td colspan=\"3\" style=\"border-bottom: 1px solid #C0C0C0; font-weight:bold\">" . $string['emergencynumbers'] . "</td></tr>\n";
-    foreach ($support_numbers as $number => $contact) {
-      echo "<tr><td><img src=\"../artwork/call_icon.png\" width=\"53\" height=\"25\" alt=\"call\" border=\"0\" /></td><td>$number</td><td>$contact</td></tr>\n";
+  $results->close();
+
+  $results = $mysqli->prepare("SELECT DISTINCT extra_time, log2.userID, surname, first_names, title FROM log2, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE log2.q_paper=? AND log2.userID=users.id and users.username LIKE 'user%' ORDER BY surname, initials");
+  $results->bind_param('i', $paperID);
+  $results->execute();
+  $results->store_result();
+  $results->bind_result($extra_time, $tmp_userID, $surname, $first_names, $title);
+  while ($results->fetch()) {
+    if ($extra_time == '') {
+      echo "<tr><td></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span>";
+    } else {
+      echo "<tr><td><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['extratime'] . "\" border=\"0\" /></td><td style=\"cursor:hand\" onclick=\"newStudentNote('$tmp_userID', $paperID, '$title " . addslashes($surname) . "')\">$surname<span style=\"color:#808080\">, $first_names $title</span> <span style=\"color:#C00000\">+ " . round(($exam_length/100) * $extra_time) . $string['mins'] . "</span>";
     }
-    echo "</table>\n";
+    if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == true) echo ' <img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" border="0" />';
+    echo "</td></tr>\n";
   }
+  $results->close();
+  echo "</table>\n</div>\n";
+}
+  
+function emergencyNumbers($support_numbers) {
+  global $string;
+
+  echo "<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px\">\n";
+  echo "<tr><td colspan=\"3\" style=\"border-bottom: 1px solid #C0C0C0; font-weight:bold\">" . $string['emergencynumbers'] . "</td></tr>\n";
+  foreach ($support_numbers as $number => $contact) {
+    echo "<tr><td><img src=\"../artwork/call_icon.png\" width=\"53\" height=\"25\" alt=\"call\" border=\"0\" /></td><td>$number</td><td>$contact</td></tr>\n";
+  }
+  echo "</table>\n";
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 
-<title>Rogo: <?php echo $string['invigilatoraccess']; ?></title>
+  <title>Rogo: <?php echo $string['invigilatoraccess']; ?></title>
 
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style type="text/css">
+    body {color:#000040}
+    .cohortlist {border:1px solid #95AEC8}
+  </style>
+
 <script language="JavaScript">
   // please keep these lines on when you copy the source
   // made by: Nicolas - http://www.javascript-page.com
@@ -149,7 +154,7 @@
       //IE 4 compatible
       myHeight = document.body.clientHeight;
     }
-    myHeight = myHeight - 175;
+    myHeight = myHeight - 180;
 
     var mysheet=document.styleSheets[0];
     var totalrules=mysheet.cssRules? mysheet.cssRules.length : mysheet.rules.length
@@ -161,9 +166,7 @@
   }
   
 </script>
-<style type="text/css">
-body {color:#000040}
-</style>
+
 </head>
 
 <body onload="StartClock(); resizeLists();" onunload="KillClock()">
@@ -194,21 +197,24 @@ body {color:#000040}
 <tr><th colspan="2" class="bevel"></th></tr>
 </table>
 <br />
-<br />
 <?php
 
   $current_lab = '%' . $lab . '%';
   
-  $paper_results = $mysqli->prepare("SELECT property_id, paper_title, moduleID, date_format(start_date,'%d/%m/%Y %T'), exam_duration, calendar_year FROM properties WHERE paper_type='2' AND labs LIKE ? AND start_date < DATE_ADD(NOW(), interval 30 minute) AND end_date > NOW() AND deleted IS NULL");
+  $paper_results = $mysqli->prepare("SELECT property_id, paper_title, moduleID, date_format(start_date,'%d/%m/%Y %T'), exam_duration, calendar_year, password FROM properties WHERE paper_type='2' AND labs LIKE ? AND start_date < DATE_ADD(NOW(), interval 30 minute) AND end_date > NOW() AND deleted IS NULL");
   $paper_results->bind_param('s', $current_lab);
   $paper_results->execute();
   $paper_results->store_result();
-  $paper_results->bind_result($property_id, $paper_title, $moduleID, $start_date, $exam_duration, $calendar_year);
+  $paper_results->bind_result($property_id, $paper_title, $moduleID, $start_date, $exam_duration, $calendar_year, $password);
   if ($paper_results->num_rows > 0 and $room_name != '') {
     $col_width = round(100 / ($paper_results->num_rows + 1));
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%\">\n<tr>\n";
     while ($paper_results->fetch()) {
-      echo "<td style=\"vertical-align:top; width:$col_width%\"><div><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a></div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
+      echo "<td style=\"vertical-align:top; width:$col_width%\"><div style=\"display:inline\"><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /></div><div style=\"margin-left:52px; display:block\"><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a>";
+      if ($password != '') {
+        echo "<br />Password: $password";
+      }
+      echo "</div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
       get_students($moduleID, $calendar_year, $property_id, $exam_duration);
       echo "</td>";
     }
