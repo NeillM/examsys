@@ -94,7 +94,7 @@ echo "</table>";
 	<tr> 
 		<td align="left" class="dialog_body" colspan="2"> 
 <?php
-$total = count($result['load']['data']->questions);
+if (isset($result['load']['data'])) $total = count($result['load']['data']->questions);
 $bad = count($result['load']['errors']);
 $num_load_errors = (isset($result['load']['errors'][0])) ? count($result['load']['errors'][0]) : 0;
 $num_save_errors = (isset($result['save']['errors'][0])) ? count($result['save']['errors'][0]) : 0;
