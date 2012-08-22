@@ -24,11 +24,53 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/add_edit.inc';  // to clear MS Office tags
+require_once '../include/staff_auth.inc';
+require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
-require '../lang/' . $language. '/include/timezones.inc';
+require_once '../lang/' . $language. '/include/timezones.inc';
+
+function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userroles, $db) {
+  if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'Admin') === false) {
+    $r1class = 'r1disabled';
+    $r2class = 'r2disabled';
+    $disabled = ' disabled';
+    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
+  } else {
+    $r1class = 'r1';
+    $r2class = 'r2';
+    $disabled = '';
+    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
+  }
+  
+  $current_labs = explode(',',$labs);
+  
+  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
+  $result->execute();
+  $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
+  $lab_no = 0;
+  $old_campus = '';
+  while ($result->fetch()) {
+    if ($old_campus != $lab_campus) {
+      $html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
+    }
+    $match = false;
+    foreach ($current_labs as $individual_lab) {
+      if ($lab_id == $individual_lab) $match = true;
+    }
+    if ($match) {
+      $html .= "<div class=\"$r2class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
+    } else {
+      $html .= "<div class=\"$r1class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\">&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
+    }
+    $lab_no++;
+    $old_campus = $lab_campus;
+  }
+  $result->close();
+  $html .= "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div>";
+  
+  return $html;
+}
 
 function getSchools($teams, $db) {
   $schools = array();
@@ -103,6 +145,7 @@ if (isset($_POST['Submit'])) {
       $null_start_date = false;
       if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
         $null_start_date = true;
+        $tmp_start_date = NULL;
       } else {
         if ((modulo($_POST['fyear'],4) == 0 and modulo($_POST['fyear'],100) != 0) or modulo($_POST['fyear'],400) == 0) {
           $leap = true;
@@ -115,11 +158,20 @@ if (isset($_POST['Submit'])) {
         
         $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
         $start_date->setTimezone($local_time);
+        
+        if ($_POST['timezone'] < 0) {
+          $start_date->modify("+" . abs($_POST['timezone']) . " hour");
+        } elseif ($_POST['timezone'] > 0) {
+          $start_date->modify("-" . $_POST['timezone'] . " hour");
+        }
+        
+        $tmp_start_date = $start_date->format("YmdHis");
       }
       
       $null_end_date = false;
       if ($_POST['tyear'] == '' and $_POST['tmonth'] == '' and $_POST['tday'] == '' and $_POST['ttime'] == '') {
         $null_end_date = true;
+        $tmp_end_date = NULL;
       } else {
         if ((modulo($_POST['tyear'],4) == 0 and modulo($_POST['tyear'],100) != 0) or modulo($_POST['tyear'],400) == 0) {
           $leap = true;
@@ -132,18 +184,14 @@ if (isset($_POST['Submit'])) {
         
         $end_date = new dateTime($_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'], $target_timezone);
         $end_date->setTimezone($local_time);
+        
+        if ($_POST['timezone'] < 0) {
+          $end_date->modify("+" . abs($_POST['timezone']) . " hour");
+        } elseif ($_POST['timezone'] > 0) {
+          $end_date->modify("-" . $_POST['timezone'] . " hour");
+        }
+        $tmp_end_date = $end_date->format("YmdHis");
       }
-          
-      if ($_POST['timezone'] < 0) {
-        $start_date->modify("+" . abs($_POST['timezone']) . " hour");
-        $end_date->modify("+" . abs($_POST['timezone']) . " hour");
-      } elseif ($_POST['timezone'] > 0) {
-        $start_date->modify("-" . $_POST['timezone'] . " hour");
-        $end_date->modify("-" . $_POST['timezone'] . " hour");
-      }
-      
-      $tmp_start_date = $start_date->format("YmdHis");
-      $tmp_end_date = $end_date->format("YmdHis");
     }
 
     if ((modulo($_POST['ext_tyear'],4) == 0 and modulo($_POST['ext_tyear'],100) != 0) or modulo($_POST['ext_tyear'],400) == 0) {
@@ -259,8 +307,8 @@ if (isset($_POST['Submit'])) {
     $paperID = $_POST['paperID'];
     
     if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'Admin') === false) {
-      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
-      $editProperties->bind_param('sssssssssssiisssisissssssssssi', $paper_title, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties->bind_param('sssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
       $editProperties->close();
     } else {
@@ -480,6 +528,8 @@ if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'Admin') ==
     table {text-align:left}
     .r1 {text-indent:-23px; padding-left:23px; background-color:white}
     .r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
+    .r1disabled {text-indent:-23px; padding-left:23px; background-color:white; color:#808080}
+    .r2disabled {text-indent:-23px; padding-left:23px; background-color:#DDDDDD; color:#808080}
   </style>
 
   <?php echo $cfg_editor_javascript; ?>
@@ -812,7 +862,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      $team_query->execute();
      $team_query->store_result();
      $team_query->bind_result($team_name);
-     while ($row = $team_query->fetch()) {
+     while ($team_query->fetch()) {
        if ($team_name != '') {
          if ($additional == '') {
            $additional = ' OR team_name IN ("' . $team_name . '"';
@@ -1090,7 +1140,7 @@ if ($paper_type != '4' and $paper_type != '5') {
       }
     }
     echo '</select></td>';
-    echo '<td align="right">' . $string['duration'] . '</td><td><select name="exam_duration">';
+    echo "<td align=\"right\">" . $string['duration'] . "</td><td><select name=\"exam_duration\"$sum_disabled>";
     $minutes = array('NULL'=>$string['na'],'15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
     foreach ($minutes as $key => $value) {
       echo "<option value=\"" . $key . "\"";
@@ -1305,32 +1355,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</td>\n";
     
-    echo "<td><div style=\"height:278px; overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
-    $current_labs = explode(',',$labs);
-    
-    $lab_details = $mysqli->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
-    $lab_details->execute();
-    $lab_details->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
-    $lab_no = 0;
-    $old_campus = '';
-    while ($lab_details->fetch()) {
-      if ($old_campus != $lab_campus) {
-        echo "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
-      }
-      $match = false;
-      foreach ($current_labs as $individual_lab) {
-        if ($lab_id == $individual_lab) $match = true;
-      }
-      if ($match) {
-        echo "<div class=\"r2\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
-      } else {
-        echo "<div class=\"r1\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\" onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" value=\"$lab_id\">&nbsp;$lab_name <span style=\"color:#808080\">($computer_no)</span></div>\n";
-      }
-      $lab_no++;
-      $old_campus = $lab_campus;
-    }
-    $lab_details->close();
-    echo "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div></td>\n</tr>";
+    echo "<td>" . output_labs($labs, $cfg_summative_mgmt, $paper_type, $userroles, $mysqli) . "</td></tr>\n";
 
   ?>
   </td></tr>
