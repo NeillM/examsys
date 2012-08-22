@@ -34,8 +34,8 @@ function file_array_read($files,$lang)
 	foreach($files as $filepath)
 	{
 	//if ($lang!='en') $filepath=preg_replace('/\/en\//','/'.$lang.'/',$filepath);
-	$filepath_parts = preg_split('/\/en\//',$filepath);
-	$filepath = $filepath_parts[0].'/'.$lang.'/'.$filepath_parts[1];
+	$filepath_parts = preg_split('/\\\\en\\\\/',$filepath);
+	$filepath = $filepath_parts[0].'\\'.$lang.'\\'.$filepath_parts[1];
 	
 	if (file_exists($filepath))
 		{
@@ -54,24 +54,14 @@ function file_array_read($files,$lang)
 				$line_string = $file_line_parts[0];
 				$line_text = trim(substr($file_line,strlen($line_string),-1));
 				if (strpos($line_text,'//')!==false) 
-				{
-					//var_dump(strpos($line_text,'//'));
 					$line_text = trim(substr($line_text,0,strpos($line_text,'//')));
-					//var_dump($line_text);
-				}
+					
 				$line_text = preg_replace('/^[\s=\s\"\']+/','',$line_text);
 				$line_text = preg_replace('/[\'\";\s]+$/','',$line_text);
 				$line_string = substr($line_string,7,-1);
 				$line_string = preg_replace('/^[\[][\']/','',$line_string);
 				$line_string = preg_replace('/[\'][\]]$/','',$line_string);
 				
-				/*
-				if ($filepath_parts[1]=='users/reset_pwd.php')
-					{
-					var_dump($line_text);
-					var_dump($strings[$line_string]);
-					}
-				*/
 				if (!isset($strings[$line_string]))
 					{
 					$strings[$line_string] = Array($filepath_parts[1],$line_string,$line_text,1);
@@ -103,7 +93,7 @@ function display_this($data,$data_index)
 	$data_part3= explode('|',$data[2]);
 	if ($data_part2!='')
 	{
-		if ($data_index=='') 
+		if ($data_index=='-1') 
 		{
 		foreach ($data_part1 as $data_key => $data_element)
 			{
@@ -118,14 +108,15 @@ function display_this($data,$data_index)
 		}
 		else
 		{
-			echo '<tr><td><em>'.$data_part1[$data_index].'</em></td><td><strong>'.$data_part2.'</strong></td><td>'.$data_part3[$data_index].'</td></tr>';
+			echo '<tr><td>'.$data_index.'<em>'.$data_part1[$data_index].'</em></td><td><strong>'.$data_part2.'</strong></td><td>'.$data_part3[$data_index].'</td></tr>';
 		}
 	}
 }
 //----------------------------------------------------------------------------------------------
 //list of lang folders
 $lang_array=Array('pl');
-$path=getcwd().'/en/';
+$path=getcwd();
+$path=preg_replace('/testing/','',$path).'lang\\en\\';
 
 //exclusion list
 $excluded = explode("|", ".|..|.ds_store|.svn");
@@ -164,7 +155,7 @@ foreach ($lang_array as $lang)
 	echo '<h2>Missing strings?:</h2>';
 	echo '<table>';
 	foreach ($strings_en as $strings_key => $strings_data)
-		if (!isset($strings_pl[$strings_key]) && (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data,'');
+		if (!isset($strings_pl[$strings_key]) && (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data,-1);
 	echo '</table>';
 
 	echo '<h2>Missing strings from file?:</h2>';
@@ -172,11 +163,10 @@ foreach ($lang_array as $lang)
 	foreach ($strings_en as $strings_key => $strings_data)
 		if (isset($strings_pl[$strings_key]) && ($strings_pl[$strings_key][0]!=$strings_data[0])) 
 			{
-			//echo $strings_pl[$strings_key][0].':'.$strings_data[0].'<br>';
 			$data_path1 = explode("|",$strings_data[0]);
 			$data_path2 = explode("|",$strings_pl[$strings_key][0]);
 			$data_path3 = array_diff($data_path1,$data_path2);
-			display_this(Array(implode(", ",$data_path3),$strings_data[1],$strings_data[2],$strings_data[3]),'');
+			display_this(Array(implode(", ",$data_path3),$strings_data[1],$strings_data[2],$strings_data[3]),-1);
 			}
 	echo '</table>';
 
@@ -203,11 +193,9 @@ foreach ($lang_array as $lang)
 				$data_path1 = explode("|",$strings_data[0]);
 				$data_path2 = array_unique($data_path1);
 				$data_path3 = array_count_values($data_path1);
-				//var_dump($data_path2);
-				//if (count($data_path2)!=count($data_path1)) display_this(Array(implode(", ",$data_path3),$strings_data[1],$strings_data[2],$strings_data[3]),'');
 				if (count($data_path2)!=count($data_path1)) 
 					foreach ($data_path3 as $data_path3_key => $data_path3_elem)
-						if ($data_path3_elem>1)  display_this(Array($data_path3_key,$strings_data[1],$strings_data[2],$strings_data[3]),'');
+						if ($data_path3_elem>1)  display_this(Array($data_path3_key,$strings_data[1],$strings_data[2],$strings_data[3]),-1);
 			}
 		}
 	echo '</table>';
@@ -215,7 +203,7 @@ foreach ($lang_array as $lang)
 	echo '<h2>Identical texts?:</h2>';
 	echo '<table>';
 	foreach ($strings_en as $strings_key => $strings_data)
-		if (isset($strings_pl[$strings_key]) && ($strings_pl[$strings_key]==$strings_en[$strings_key]))  display_this($strings_data,'');		
+		if (isset($strings_pl[$strings_key]) && ($strings_pl[$strings_key]==$strings_en[$strings_key]))  display_this($strings_data,-1);		
 	echo '</table>';
 
 	
@@ -231,8 +219,6 @@ foreach ($lang_array as $lang)
 					foreach ($data_path1 as $data_path1_key => $data_path1_elem)
 						if (($data_path1[$data_path1_key]==$data_path2[$data_path1_key])) 
 						{
-						//var_dump($data_path1);
-						//var_dump($data_path2);
 						display_this($strings_pl[$strings_key],$data_path1_key);
 						}
 			}
@@ -267,11 +253,9 @@ foreach ($strings_en as $strings_key => $strings_data)
 			$data_path1 = explode("|",$strings_data[0]);
 			$data_path2 = array_unique($data_path1);
 			$data_path3 = array_count_values($data_path1);
-			//var_dump($data_path2);
-			//if (count($data_path2)!=count($data_path1)) display_this(Array(implode(", ",$data_path3),$strings_data[1],$strings_data[2],$strings_data[3]),'');
 			if (count($data_path2)!=count($data_path1)) 
 				foreach ($data_path3 as $data_path3_key => $data_path3_elem)
-					if ($data_path3_elem>1)  display_this(Array($data_path3_key,$strings_data[1],$strings_data[2],$strings_data[3]),'');
+					if ($data_path3_elem>1)  display_this(Array($data_path3_key,$strings_data[1],$strings_data[2],$strings_data[3]),-1);
 		}
 	}
 echo '</table>';
@@ -283,7 +267,7 @@ foreach ($strings_en as $strings_key => $strings_data)
 	{
 	if ($strings_en[$strings_key][3]>1)	
 		{
-		display_this($strings_data,'');
+		display_this($strings_data,-1);
 		}
 	}
 echo '</table>';
