@@ -322,7 +322,7 @@ if ($_POST['paper_type'] == 'summative') {
   if (!$cfg_summative_mgmt or $_POST['paper_type'] != 'summative') {
     echo "<tr><td><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['availability'] . "<span></td></tr>\n";
   } else {
-    echo "<tr><td colspan=\"3\"><span style=\"font-weight:bold; color:#001687; font-size:120%\">Summative Exam Details<span></td></tr>\n";
+    echo "<tr><td colspan=\"3\"><span style=\"font-weight:bold; color:#001687; font-size:120%\">".$string['summativeexamdetails']."<span></td></tr>\n";
   }
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
     $next_flag = 1;

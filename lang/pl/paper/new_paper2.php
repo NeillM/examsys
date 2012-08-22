@@ -4,6 +4,7 @@ require_once '../lang/' . $language . '/paper/new_paper1.php';
 require_once '../lang/' . $language . '/include/months.inc';
 
 $string['availability'] = 'Dostępność';
+$string['summativeexamdetails'] = 'Szczegóły egzaminu końcowego';
 $string['academicsession'] = 'Sesja akademicka';
 $string['timezone'] = 'Strefa czasowa';
 $string['from'] = 'Od';
