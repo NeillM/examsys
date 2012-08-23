@@ -79,11 +79,13 @@ function gen_random_salt() {
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    
     <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
+    
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <style type="text/css">
-      html {padding:0em; margin:0em; width:100%}
-      body {padding:0em; margin:0em; width:100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black}
+      body {font-size:90%}
       h1 {font-size:140%; color:#1F497D}
       h2 {font-size:120%; color:#1F497D}
       .error {color:red; font-weight:bold}
@@ -99,8 +101,8 @@ function gen_random_salt() {
       form {padding:1em}
       form div {padding-left:2em}
     </style>
-    <script language="text/javascript" type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-    <script language="text/javascript" type="text/javascript" src="../js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
   <table class="header"> 

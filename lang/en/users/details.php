@@ -43,6 +43,7 @@ $string['summative'] = 'Summative Exam';
 $string['survey'] = 'Survey';
 $string['oscestation'] = 'OSCE Station';
 $string['offlinepaper'] = 'Offline Paper';
+$string['peerreview'] = 'Peer Review';
 $string['noassessmentstaken'] = '&lt;no assessments/surveys taken&gt;';
 $string['moduleid'] = 'Module ID';
 $string['name'] = 'Name';

@@ -43,6 +43,7 @@ $string['summative'] = 'Ocena końcowa';
 $string['survey'] = 'Ankieta';
 $string['oscestation'] = 'Stacja OSCE'; //??
 $string['offlinepaper'] = 'Arkusz offline';
+$string['peerreview'] = 'Peer Review';  // Niko
 $string['noassessmentstaken'] = '&lt;brak testów/ankiet&gt;';
 $string['moduleid'] = 'ID modułu';
 $string['name'] = 'Nazwisko';

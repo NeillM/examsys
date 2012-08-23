@@ -26,10 +26,10 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/errors.inc';
-require '../include/demo_replace.inc';
-require '../include/sort.inc';
+require_once '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../include/demo_replace.inc';
+require_once '../include/sort.inc';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
@@ -210,15 +210,17 @@ if (isset($_POST['update']) and $demo == false) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['usermanagement'] ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-  td {padding-top:1px}
-  .coltitle {cursor:hand; background-color:#1E3C7B; color:white}
-  .sch_check {text-align:right; width:40px; padding-right:6px}
-  a.paper {color:black}
-  a.paper:hover {color:white; background-color:#000080}
+    td {padding-top:1px}
+    .coltitle {cursor:hand; background-color:#1E3C7B; color:white}
+    .sch_check {text-align:right; width:40px; padding-right:6px}
+    a.paper {color:black}
+    a.paper:hover {color:white; background-color:#000080}
   </style>
 
   <script language="javascript">
@@ -335,9 +337,9 @@ if (isset($_POST['update']) and $demo == false) {
       $row_no = 7;
       if (file_exists($student_photo)) {
         if ($demo == true) {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;Name</td><td colspan=\"3\">";
+          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         } else {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;Name</td><td colspan=\"3\">";
+          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         }
       } else {
         echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
@@ -579,10 +581,12 @@ if (isset($_POST['update']) and $demo == false) {
     $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 2 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(log_metadata.started,'$cfg_long_date_time') AS display_started, duration, screen, ipaddress FROM properties, log2, log_metadata WHERE log2.q_paper=log_metadata.paperID AND log2.started=log_metadata.started AND log2.userID=log_metadata.userID AND properties.property_id=log2.q_paper AND log2.userID=?)";
     $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 3 AS paper_type, q_paper, DATE_FORMAT(log_metadata.started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(log_metadata.started,'$cfg_long_date_time') AS display_started, duration, screen, ipaddress FROM properties, log3, log_metadata WHERE log3.q_paper=log_metadata.paperID AND log3.started=log_metadata.started AND log3.userID=log_metadata.userID AND properties.property_id=log3.q_paper AND log3.userID=?)";
     $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id=log4_overall.q_paper AND userID=?)";
+    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 5 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log5 WHERE properties.property_id=log5.q_paper AND log5.userID=?)";
+    $query_sql .= " UNION ALL (SELECT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, NULL AS duration, NULL AS screen, NULL AS ipaddress FROM properties, log6 WHERE properties.property_id=log6.paperID AND reviewerID=?)";
     $query_sql .= " ORDER BY q_paper, started, screen";
     
     $stmt = $mysqli->prepare($query_sql);
-    $stmt->bind_param('iiiii', $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id);
+    $stmt->bind_param('iiiiiii', $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id, $tmp_id);
   }
   
   $stmt->execute();
@@ -656,28 +660,33 @@ if (isset($_POST['update']) and $demo == false) {
       }
       switch ($paper[$i]['paper_type']) {
         case 0:
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" border=\"0\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['formative'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['formative'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case 1:
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" border=\"0\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['progresstest'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['progresstest'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case 2:
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" border=\"0\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\"";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "','" . $_GET['userID'] . "','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\"";
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
           echo ">" . $paper[$i]['q_paper'] . "</a></td><td";
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
-          echo ">Summative</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo ">" . $string['summative'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case 3:
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/survey_16.gif\" width=\"16\" height=\"16\" alt=\"Survey data is anonymous, no entry.\" border=\"0\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>Survey</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/survey_16.gif\" width=\"16\" height=\"16\" alt=\"Survey data is anonymous, no entry.\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['survey'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . formatsec($paper[$i]['duration']) . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case 4:
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewOSCE('" . $paper[$i]['started'] . "','$username','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" border=\"0\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['oscestation'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewOSCE('" . $paper[$i]['started'] . "','$username','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['paper_type'] . "); return false;\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['oscestation'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          break;
+        case 5:
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/offline_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $string['offlinepaper'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          break;
+        case 6:
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/peer_review_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $string['peerreview'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
       }
     }
     if ($results_no == 0) {
-      //echo '<tr><td class="coltitle" align="right">&nbsp;</td><td class="coltitle" style="width:240px">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['papername'] . '&nbsp;<img src="../artwork/desc.gif" width="9" height="7" border="0" /></td><td class="coltitle">' . $string['type'] . '&nbsp;</td><td class="coltitle">' . $string['started'] . '&nbsp;</td><td class="coltitle">' . $string['duration'] . '&nbsp;</td><td class="coltitle">' . $string['ipaddress'] . '&nbsp;</td></tr>';
       echo "<tr><td colspan=\"8\" style=\"color:#808080; text-align:center\">" . $string['noassessmentstaken'] . "</td></tr>\n";
     }
   } else {
@@ -699,7 +708,7 @@ if (isset($_POST['update']) and $demo == false) {
   $results->fetch();
   $results->close();
   
-  echo drawTabs('Modules',4,'',$tmp_roles);
+  echo drawTabs('Modules', 4, '', $tmp_roles);
   echo "<tr><td class=\"coltitle\" style=\"width:20px\">&nbsp;</td><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['name'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td></tr>\n";
   $old_year = '';
   $html = '';
@@ -745,7 +754,7 @@ if (isset($_POST['update']) and $demo == false) {
   }
   echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=admin\" method=\"post\">";
   
-  echo drawTabs('Admin',1,'',$tmp_roles);
+  echo drawTabs('Admin', 1, '', $tmp_roles);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
   
@@ -761,7 +770,7 @@ if (isset($_POST['update']) and $demo == false) {
       echo '<tr><td colspan="2"><table border="0" style="padding-top:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $faculty . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
     }
     
-    if (strpos($userroles,'SysAdmin') === false) {
+    if (strpos($userroles, 'SysAdmin') === false) {
       if (in_array($schoolID, $current_schools)) {
       echo "<tr><td style=\"padding-left:20px\">$school</td></tr>\n";
       }
