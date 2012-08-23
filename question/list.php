@@ -70,16 +70,6 @@
   
   <title>Rogo: <?php echo $string['questionbank'] . ' ' . $cfg_install_type; ?></title>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script type="text/javascript" src="../js/state.js"></script>
-  <script language="JavaScript">
-    function myQuestions(thisObj) {
-      var content = $(thisObj).is(':checked');
-      window.location = 'list.php?type=<?php echo $_GET['type']; ?>&checked=' + content;
-    }
-  </script>
-  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -90,6 +80,16 @@
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
   </style>
+  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/state.js"></script>
+  <script language="JavaScript">
+    function myQuestions(thisObj) {
+      var content = $(thisObj).is(':checked');
+      window.location = 'list.php?type=<?php echo $_GET['type']; ?>&checked=' + content;
+    }
+  </script>
 </head>
 
 <body onclick="hideMenus(event)" onselectstart="return false">
