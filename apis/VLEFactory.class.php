@@ -35,7 +35,7 @@ class VLEFactory {
     $classfile = 'VLE_' . $vleapi . '.class.php';
 
     try {
-      include $classfile;
+      include_once $classfile;
       $object = new $classname();
     } catch (Exception $ex) {
       throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
