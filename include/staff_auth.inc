@@ -49,12 +49,17 @@ if (strpos($userroles, 'External Examiner') !== false) {
   }
 }
 
-// Get teams.
-$teams = getUserTeams($userID, $mysqli);
+// Get teams if the user is not an External Examiner.
+if(strpos($userroles, 'External Examiner') !== false) {  
+  $teams = array();
+} else {
+  $teams = getUserTeams($userID, $mysqli);
+}
+
 $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
 
 //
-//default security checkes
+//default security checks
 //
 
 if (strpos($userroles, 'SysAdmin') !== false) {
