@@ -883,7 +883,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   </div>
 <?php        
         echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
-        $marks += $display_option['marks'];
+        $marks += $display_option['marks_correct'];
         break;
     }                  // End switch
   }                    // End foreach loop
