@@ -31,8 +31,16 @@ if (strpos($userroles, 'Staff') === false AND strpos($userroles, 'External Exami
 }
 
 // Redirect External Examiners if they are straying
+// $external_allowed_pages is an array that contains the set of scripts that External Examiners 
+// CAN access all other pages should redirect to the /reviews/ section
+$external_allowed_pages = array(   
+                              '/help/staff/index.php'=>1,
+                              '/reviews/index.php'=>1,
+                              '/reviews/start.php'=>1,
+                              '/reviews/finish.php'=>1
+                            );
 if (strpos($userroles, 'External Examiner') !== false) {
-  if ($_SERVER['PHP_SELF'] != '/staff/index.php' and $_SERVER['PHP_SELF'] != '/reviews/index.php' and $_SERVER['PHP_SELF'] != '/reviews/start.php' and $_SERVER['PHP_SELF'] != '/reviews/finish.php') {
+  if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/reviews/");
   }
 }
