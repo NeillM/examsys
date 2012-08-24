@@ -572,6 +572,7 @@ if (!isset($_POST['update'])) {
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".teams TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".student_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".staff_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log0 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log1 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".log2 TO '" . $cfg_db_external_user . "'@'". $cfg_db_host . "'";
@@ -3218,6 +3219,29 @@ if (!isset($_POST['update'])) {
     echo "<li>Adding Unknown School</li>\n";
   }
 
+  // 24/08/2012 -- add access to on External Examiners 
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".staff_help TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".users TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".special_needs TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
+  $sql = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".help_log TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
+  $sql = "GRANT SELECT,INSERT ON " . $cfg_db_database . ".help_searches TO '". $cfg_db_external_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+  
+  $sql = "FLUSH PRIVILEGES";
+  $mysqli->query($sql);
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
