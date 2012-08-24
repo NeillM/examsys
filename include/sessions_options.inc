@@ -60,7 +60,7 @@ if ($vle_api != '') {
     document.location.href='./edit_session.php?identifier=' + document.myform.identifier.value + '&module=<?php echo $_GET['module']; ?>&calendar_year=' + document.myform.session.value;
   }
   
-  function editNLESession() {
+  function editVLESession() {
 <?php
   if ($vle_api != '') {
 ?>
@@ -78,7 +78,7 @@ if ($vle_api != '') {
     }
   }
   
-  function deleteNLESession() {
+  function deleteVLESession() {
 <?php
 if ($vle_api != '') {
 ?>
@@ -171,8 +171,8 @@ if ($vle_api == '') {
   echo '<tr><td class="ico"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img src="../artwork/import_16.gif" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '">' . $string['importfile'] . '</a></td></tr>';
 }
 ?>
-<tr><td class="ico"><img onclick="hideSessCopyMenu(event); editNLESession()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editNLESession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="hideSessCopyMenu(event); deleteNLESession()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteNLESession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="hideSessCopyMenu(event); editVLESession()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); editVLESession(); return false;"><?php echo $string['editsession']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="hideSessCopyMenu(event); deleteVLESession()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="hideSessCopyMenu(event); deleteVLESession(); return false;"><?php echo $string['deletesession']; ?></a></td></tr>
 <?php
 if ($vle_api == '') {
   echo '<tr><td class="ico"><img onclick="showSessCopyMenu(event)" src="../artwork/copy_icon.gif" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="showSessCopyMenu(event); return false;"><span>' . $string['copyyear'] . '</span></a><img src="' . $cfg_root_path . '/artwork/submenu_arrow.png" width="16" height="16" alt=">" border="0" /></td></tr>';

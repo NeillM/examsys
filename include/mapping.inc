@@ -382,17 +382,10 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
     $vle_api = MappingUtils::get_vle_api($thisModuleid, $session, $vle_api_cache, $rogodb);
 
     if ($vle_api != '') {
-      // Get objectives from the NLE via REST request
+      // Get objectives from the VLE via REST request
       if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
         $vle = VLEFactory::GetVLEAPI($vle_api);
         $resp = $vle->getObjectives($thisModuleid, $session);
-
-//        $req = new RestRequest("http://www.nle.nottingham.ac.uk/webServices/getObjectives/$thisModuleid/$session");
-//        $split_username = explode('_', $_SERVER['PHP_AUTH_USER']);
-//        $req->setUsername($split_username[0]);
-//        $req->setPassword($_SERVER['PHP_AUTH_PW']);
-//        $req->execute();
-//        $resp = $req->getResponseBody();
         if ($resp != '') {
           $objsBySession_cache[$thisModuleid][$session] = $resp;
         }
@@ -426,7 +419,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
         $objsBySession[$thisModuleid][$identifier]['identifier'] = $identifier;
         $objsBySession[$thisModuleid][$identifier]['source_url'] = $source_url;
         $objsBySession[$thisModuleid][$identifier]['calendar_year'] = $calendar_year;
-        $objsBySession[$thisModuleid][$identifier]['VLE'] = 'TouchStone';
+        $objsBySession[$thisModuleid][$identifier]['VLE'] = '';
       }
       $stmt->close();
       if (isset($objsBySession[$thisModuleid]) and count($objsBySession[$thisModuleid]) > 0) {
