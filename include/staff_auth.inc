@@ -35,6 +35,10 @@ if (strpos($userroles, 'Staff') === false AND strpos($userroles, 'External Exami
 // CAN access all other pages should redirect to the /reviews/ section
 $external_allowed_pages = array(   
                               '/help/staff/index.php'=>1,
+                              '/help/staff/toolbar.php'=>1,
+                              '/help/staff/toc_title.php'=>1,
+                              '/help/staff/toc.php'=>1,
+                              '/help/staff/display_page.php'=>1,
                               '/reviews/index.php'=>1,
                               '/reviews/start.php'=>1,
                               '/reviews/finish.php'=>1
