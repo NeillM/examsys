@@ -394,7 +394,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
         $objsBySession[$thisModuleid] = $objsBySession_cache[$thisModuleid][$session][$thisModuleid];
       }
     } else {
-      // Use TouchStone's internally stored objectves
+      // Use Rogō's internally stored objectves
       if ($scope == 'all') {
       	$sql = "SELECT sess_id, identifier, moduleID, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE moduleID=? ORDER BY calendar_year, sess_id";
       	$stmt = $rogodb->prepare($sql);

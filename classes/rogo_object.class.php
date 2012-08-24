@@ -16,7 +16,7 @@
 
 /**
  *
- * Base class for modifyable objects in TouchStone
+ * Base class for modifyable objects in Rogō
  *
  * @author Rob Ingram
  * @version 1.0

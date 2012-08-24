@@ -76,7 +76,7 @@ class Wizard {
 			<div id="pageheader" class="wizard_header">
 				<table cellpadding="0" cellspacing="0" border="0" width="100%">
 					<tr>
-						<td style="background-color:#EBEADB"><div style="font-size:220%; font-weight:bold">&nbsp;TouchStone Import Export Wizard</td>
+						<td style="background-color:#EBEADB"><div style="font-size:220%; font-weight:bold">&nbsp;Rog&#333; Import Export Wizard</td>
 						<td style="background-color:#EBEADB; text-align:right"><img src="../artwork/black_uon_logo.png" width="151" height="47" alt="Logo" border="0" />&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
