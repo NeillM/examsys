@@ -106,7 +106,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school">
     <option value=""></option>
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND deleted IS NULL ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY name, school");
       $result->execute();
       $result->bind_result($schoolid, $school, $faculty);
       
