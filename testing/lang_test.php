@@ -127,7 +127,6 @@ function display_this($data, $data_index) {
 $lang_array=Array('pl');
 $path=getcwd();
 $path=preg_replace('/testing/', '', $path) . 'lang/en/';
-echo $path;
 
 //exclusion list
 $excluded = explode("|",  ".|..|.ds_store|.svn");
@@ -296,5 +295,6 @@ echo '<h2>Duplicate strings:</h2>';
 if ($display_text=='') $display_text='none';
 echo '<table>'.$display_text.'</table>';
 
+echo '<hr>';
 ?>
 </body>
