@@ -118,7 +118,7 @@ MESSAGE;
         $message .= "<p>" . $string['email3'] . "</p>";
       }
       $message .= "</body>\n</html>";
-      mail ($to, $subject, $message, $headers) or print "<p>" . $string['couldnotsend'] . " <strong>" . $_POST['new_email'] . "</strong>.</p>";
+      mail ($new_email, $subject, $message, $headers) or print "<p>" . $string['couldnotsend'] . " <strong>" . $new_email . "</strong>.</p>";
     }
     ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
