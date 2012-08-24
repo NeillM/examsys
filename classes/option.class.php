@@ -25,10 +25,10 @@
  */
 
 require_once 'exceptions.inc.php';
-require_once 'touchstone_object.class.php';
+require_once 'rogo_object.class.php';
 require_once $cfg_web_root . '/include/path_functions.inc.php';
 
-Class Option extends TouchStoneObject {
+Class Option extends RogoObject {
 
   public $id = -1;
   protected $question_id = null;

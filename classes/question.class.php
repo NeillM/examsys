@@ -25,11 +25,11 @@
  */
 
 require_once 'exceptions.inc.php';
-require_once 'touchstone_object.class.php';
+require_once 'rogo_object.class.php';
 require_once 'option.class.php';
 require_once 'logger.class.php';
 
-Class Question extends TouchStoneObject {
+Class Question extends RogoObject {
 
   public $id = -1;
   protected $type = null;

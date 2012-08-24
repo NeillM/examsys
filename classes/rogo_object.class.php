@@ -26,7 +26,7 @@
 
 require_once 'exceptions.inc.php';
 
-Class TouchStoneObject {
+Class RogoObject {
   protected $_fields_editable = array();
   protected $_modified_fields = array();
   
