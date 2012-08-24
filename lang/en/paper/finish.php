@@ -19,6 +19,7 @@ $string['incorrectanswer'] = 'Incorrect answer';
 $string['boldwords'] = "<strong>Emboldened</strong> words represent the correct response for each question (not the user's answer).";
 $string['feedbackinred'] = 'Feedback is displayed in dark red italics';
 $string['note'] = 'Note';
+$string['mousereveal'] = '(Move the mouse over incorrect labels to reveal the correct answer)';
 $string['screen'] = 'Screen';
 $string['unanswered'] = 'unanswered';
 $string['summaryofmarks'] = 'Summary of Marks:';

@@ -1,7 +1,7 @@
 <?php
 require '../lang/' . $language . '/question/sct_shared.php';
 
-$string['examscript'] = 'Skrypt egzaminacyjny';
+$string['examscript'] = 'Zapis egzaminu';
 $string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
 $string['specificpassword'] = 'Do tego arkusza przypisane jest specyficzne hasło.';
 $string['denied_location'] = 'Dostęp do tego arkusza nie jest dozwolony z aktualnej lokalizacji.';
@@ -19,6 +19,7 @@ $string['incorrectanswer'] = 'Nieprawidłowa odpowiedź';
 $string['boldwords'] = "<strong>Pogrubione</strong> słowa reprezentują prawidłowe odpowiedzi dla każdego pytania (nie są to odpowiedzi respondentów).";
 $string['feedbackinred'] = 'Odzew wyświetlony jest ciemno-czerwonymi italikami';
 $string['note'] = 'Uwaga';//??
+$string['mousereveal'] = '(Przesuń mysz nad niewłaściwe etykiety, aby wyświetlić poprawną odpowiedź)';
 $string['screen'] = 'Ekran';
 $string['unanswered'] = 'brak odpowiedzi';
 $string['summaryofmarks'] = 'Zestawienie punktacji:';

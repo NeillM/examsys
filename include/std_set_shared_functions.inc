@@ -884,7 +884,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
 <?php
       echo "</script>\n";
       echo "</div>\n";
-       echo '<div align="center" style="color:#808080">(Move the mouse over incorrect labels to reveal the correct answer)</div>';
+       echo '<div align="center" style="color:#808080">'.$string['mousereveal'].'</div>';
       for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
         if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 200) {
           $matching_options[] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));

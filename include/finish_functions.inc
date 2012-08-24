@@ -2248,7 +2248,7 @@ echo '</script>';
         if ($answered == 0) {
           echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
         } else {
-          echo '<div align="center" style="color:#808080">(Move the mouse over incorrect labels to reveal the correct answer)</div>';
+          echo '<div align="center" style="color:#808080">'.$string['mousereveal'].'</div>';
         }
 
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
