@@ -41,8 +41,8 @@ function file_array($path, $exclude) {
   global $files;
 
   $path = rtrim($path, "/") . "/";
-  $folder_handle = opendir($path);
   $result = array();
+  $folder_handle = opendir($path);
   while(false !== ($filename = readdir($folder_handle))) {
     if (!in_array(strtolower($filename), $exclude)) {
       if (is_dir($path . $filename . "/")) {
@@ -59,8 +59,8 @@ function file_array($path, $exclude) {
 function file_array_read($files, $lang) {
   $strings = array(array());
 	foreach($files as $filepath) {
-    $filepath_parts = preg_split('/\\\\en\\\\/', $filepath);
-    $filepath = $filepath_parts[0] . '\\' . $lang . '\\' . $filepath_parts[1];
+    $filepath_parts = preg_split('/\/en\//', $filepath);
+    $filepath = $filepath_parts[0] . '/' . $lang . '/' . $filepath_parts[1];
     if (file_exists($filepath)) {
       $file_contents = file_get_contents($filepath);
       $file_contents = preg_replace('/</', '&lt;', $file_contents);
@@ -126,7 +126,8 @@ function display_this($data, $data_index) {
 //list of lang folders
 $lang_array=Array('pl');
 $path=getcwd();
-$path=preg_replace('/testing/', '', $path) . 'lang\\en\\';
+$path=preg_replace('/testing/', '', $path) . 'lang/en/';
+echo $path;
 
 //exclusion list
 $excluded = explode("|",  ".|..|.ds_store|.svn");
