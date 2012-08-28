@@ -466,7 +466,7 @@
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-  
+  table {font-size:100%;table-layout:auto}
   h1 {margin-left:15px; font-size:18pt}
   p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
   .figures {text-align:right}
@@ -559,7 +559,7 @@ if (isset($_GET['scrOfY'])) {
   $result->bind_result($paper_type, $paper, $marking, $pass_mark, $external_reviewers, $internal_reviewers);
   $result->fetch();
   $result->close();
-  if($type == 'external') {
+  if ($type == 'external') {
     $reviewers = $external_reviewers;
   } else {
     $reviewers = $internal_reviewers;
@@ -577,7 +577,7 @@ if (isset($_GET['scrOfY'])) {
     $result->bind_param('si', $type,$paperID);
     $result->execute();
     $result->bind_result($title, $initials, $surname, $tmp_q_id, $comment, $category, $reviewed, $tmp_reviewer, $action, $response);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       if (isset($incomplete_array[$tmp_reviewer])) {
         unset($incomplete_array[$tmp_reviewer]);
       }
