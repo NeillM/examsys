@@ -111,8 +111,9 @@ h2 {font-size:120%}
 MESSAGE;
 
       if (strpos($tmp_roles,'Staff') !== false) {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
+        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/staff/</a></p>";
       } elseif (strpos($tmp_roles,'Student') !== false) {
+        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/students/</a></p>";
       } else {
         $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
         $message .= "<p>" . $string['email3'] . "</p>";

@@ -66,25 +66,25 @@ require '../lang/' . $language. '/include/timezones.inc';
       }
       switch (id) {
         case 'formative':
-          document.getElementById('description').innerHTML = 'Self-assessment quizzes that be normally be accessed by students at any time.';
+          document.getElementById('description').innerHTML = '<?php echo $string['description0']; ?>';
           break;
         case 'progress':
-          document.getElementById('description').innerHTML = 'Normally used for mid-term tests where feedback is not provided at the end of the assessment.';
+          document.getElementById('description').innerHTML = '<?php echo $string['description1']; ?>';
           break;
         case 'summative':
-          document.getElementById('description').innerHTML = 'High-stakes exams where marks contribute to a student\'s course.';
+          document.getElementById('description').innerHTML = '<?php echo $string['description2']; ?>';
           break;
         case 'survey':
-          document.getElementById('description').innerHTML = 'A questionnaire used for eliciting views and feedback from students.';
+          document.getElementById('description').innerHTML = '<?php echo $string['description3']; ?>';
           break;
         case 'osce':
-          document.getElementById('description').innerHTML = 'Objective Structured Clinical Examination (OSCE) assessment type used for medical and health sciences fields.';
+          document.getElementById('description').innerHTML = '<?php echo $string['description4']; ?>';
           break;
         case 'offline':
-          document.getElementById('description').innerHTML = 'This paper type allows marks from offline papers to be loaded into Rogo.';
+          document.getElementById('description').innerHTML = '<?php echo $string['description5']; ?>';
           break;
         case 'peer_review':
-          document.getElementById('description').innerHTML = 'Generates a form for students to review their peers.';
+          document.getElementById('description').innerHTML = '<?php echo $string['description6']; ?>';
           break;
       }
     }
@@ -455,7 +455,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select>\n</td></tr>\n";
 
-    echo "<tr><td align=\"right\">" . $string['timezone'] . "</td><td><select name=\"timezone\">";
+    echo "<tr><td align=\"right\">" . $string['timezone'] . "</td><td colspan=\"3\"><select name=\"timezone\">";
     foreach ($timezone_array as $individual_zone => $display_zone) {
       if ($individual_zone == $cfg_timezone) {
         echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
@@ -473,7 +473,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo '</select> ' . $string['mins'] . '</td></tr>';
     echo '<tr><td style="text-align:right">' . $string['daterequired'] . '</td><td><select name="period" id="period">';
-    $months = array('january','february','march','april','may','june','july','august','september','october','november','december');
+    $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
     echo "<option value=\"\"></option>\n";
     for ($i=0; $i<12; $i++) {
       echo "<option value=\"$i\">" . $string[$months[$i]] . "</option>\n";
