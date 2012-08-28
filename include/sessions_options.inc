@@ -57,6 +57,7 @@ if ($vle_api != '') {
   }
 
   function editSession() {
+    alert("Hi");
     document.location.href='./edit_session.php?identifier=' + document.myform.identifier.value + '&module=<?php echo $_GET['module']; ?>&calendar_year=' + document.myform.session.value;
   }
   

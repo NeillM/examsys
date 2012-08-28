@@ -291,8 +291,8 @@ require_once '../classes/stateutils.class.php';
       }
     }
   }
-  if (isset($_POST['tday'])) {
-    $target = $_POST['tday'];
+  if (isset($_POST['tmonth'])) {
+    $target = $_POST['tmonth'];
   } else {
     $target = date("m");
   }
