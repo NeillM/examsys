@@ -356,7 +356,7 @@ if (isset($_POST['submit'] )) {
     
     echo "</select>\n";
   }
-  echo '</div></td><td width="160"><img src="../artwork/uni_logo.png" width="160" height="67" alt="Logo" /></td></tr>';
+  echo '</div></td><td width="160"><img src="../config/logo.png" width="160" height="67" alt="Logo" /></td></tr>';
   echo '</table>';
 
   echo "<br />\n<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"margin-left:auto; margin-right:auto\">\n";
