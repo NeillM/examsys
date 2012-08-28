@@ -2184,28 +2184,6 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         echo '<script language="JavaScript">';
         $extra = ',' . $tmp_exclude;
 
-    
-        if ($tmp_display_correct_answer == '0' or $tmp_display_students_response == '0') {
-          if (!empty($paper[$question]['user_answer'])) {
-            $paper[$question]['user_answer'] = str_replace('"','&#034;',$paper[$question]['user_answer']);
-            $paper[$question]['user_answer'] = str_replace("'",'&#039;',$paper[$question]['user_answer']);
-          }
-          $paper[$question]['correct'][0] = str_replace('"','&#034;',$paper[$question]['correct'][0]);
-          $paper[$question]['correct'][0] = str_replace("'",'&#039;',$paper[$question]['correct'][0]);
-?> 
-    function swfLoaded<?php echo $question_no; ?>(message) {
-      var num = message.substring(5,message.length);
-      setUpFlash(num, message, '<?php echo $language; ?>', '<?php echo $paper[$question]['q_media']; ?>', '<?php echo trim($paper[$question]['correct'][0]); ?>', '<?php if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']); ?>','<?php echo $extra; ?>');
-    }
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
-    write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/paper/label_question.swf" />');
-    write_string('<param name="quality" value="high" />');
-    write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-    write_string('<embed src="<?php echo $cfg_root_path ?>/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-    write_string('</object>');
-<?php
-} else {
   $tmp_std = '';
   if (is_array($paper[$question]['std'])) {
     foreach ($paper[$question]['std'] as $tmp_std_part) {
@@ -2224,7 +2202,34 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   $paper[$question]['correct'][0] = str_replace('"','&#034;',$paper[$question]['correct'][0]);
   $paper[$question]['correct'][0] = str_replace("'",'&#039;',$paper[$question]['correct'][0]);
 
-$extra = $tmp_std . ',' . $tmp_exclude;
+  $tmp_feedback = '';
+  if ($tmp_display_students_response) {
+    $tmp_feedback .= '1';
+  } else {
+    $tmp_feedback .= '0';
+  }
+  if ($tmp_display_correct_answer) {
+    $tmp_feedback .= '1';
+  } else {
+    $tmp_feedback .= '0';
+  }
+  if ($tmp_display_question_mark) {
+    $tmp_feedback .= '1';
+  } else {
+    $tmp_feedback .= '0';
+  }
+  if ($tmp_display_feedback) {
+    $tmp_feedback .= '1';
+  } else {
+    $tmp_feedback .= '0';
+  }
+  if ($hide_if_unanswered) {
+    $tmp_feedback .= '1';
+  } else {
+    $tmp_feedback .= '0';
+  }
+  
+  $extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
 ?> 
   function swfLoaded<?php echo $question_no; ?>(message) {
     var num = message.substring(5,message.length);
@@ -2238,7 +2243,7 @@ $extra = $tmp_std . ',' . $tmp_exclude;
   write_string('<embed src="<?php echo $cfg_root_path ?>/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
   write_string('</object>');
 <?php
-}
+
 echo '</script>';
   ?>
   <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="" />
