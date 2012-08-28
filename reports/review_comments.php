@@ -463,9 +463,10 @@
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-  body {font-size:80%}
+  
   h1 {margin-left:15px; font-size:18pt}
   p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
   .figures {text-align:right}
@@ -474,14 +475,8 @@
   .OK {}
   .Minor {}
   .Major {}
-  .breadcrumb {margin-left:10px; font-size:90%}
-  .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-  .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-  .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
-  .matrix {border:1px solid #808080; border-collapse:collapse}
-  .matrix td {border:1px solid #808080}
-  .scr_no {margin-left:25px}
-  .mee {font-size:120%; display:inline}
+  
+  
   .screenbrk {
     color:#15428B;
     font-weight:bold;
@@ -553,6 +548,7 @@ if (isset($_GET['scrOfY'])) {
   if ($_GET['scrOfY'] > 0) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ')"';
 }
 ?>>
+<div id="maincontent">
 <form name="theform">
 <table class="header">
 <?php
@@ -726,5 +722,6 @@ if (isset($_GET['scrOfY'])) {
 </table>
 <input type="hidden" name="scrOfY" id="scrOfY" value="0" />
 </form>
+</div>
 </body>
 </html>
