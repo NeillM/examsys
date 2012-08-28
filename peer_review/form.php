@@ -57,10 +57,10 @@ function display_question($qID, $details, $member_userID, &$row_no, $columns, $m
 }
 
 // Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, modules.id, properties.moduleID, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, display_question_mark as review, labs FROM (properties, modules) WHERE properties.moduleID=modules.moduleid AND crypt_name=? LIMIT 1");
+$result = $mysqli->prepare("SELECT property_id, paper_title, modules.id, properties.moduleID, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, bgcolor, fgcolor, themecolor, labelcolor, rubric, paper_prologue AS type, marking, display_correct_answer AS display_photos, display_question_mark as review, labs, password FROM (properties, modules) WHERE properties.moduleID=modules.moduleid AND crypt_name=? LIMIT 1");
 $result->bind_param('s', $_GET['id']);
 $result->execute();
-$result->bind_result($property_id, $paper_title, $moduleID, $moduleID_text, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $review, $labs);
+$result->bind_result($property_id, $paper_title, $moduleID, $moduleID_text, $start_date, $end_date, $calendar_year, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $type, $paper_prologue, $marking, $display_photos, $review, $labs, $password);
 $result->fetch();
 $result->close();
 
@@ -97,6 +97,9 @@ if (stripos($userroles,'Student') !== false) {
   // Check room security
   $paper_type = '6';
   $low_bandwidth = check_labs($paper_type, $labs, '', $mysqli);
+
+  // Check for additional password on the paper
+  check_paper_password($password, true);
 }
 
 // Get questions on the paper

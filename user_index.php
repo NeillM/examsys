@@ -26,7 +26,8 @@
 
 require './include/staff_student_auth.inc';
 require './include/errors.inc';
-  
+require './include/paper_security.inc';
+
 check_var('id', 'GET', true, false);
 
 function display_duration($normal, $extra) {
@@ -118,11 +119,7 @@ $display_end_date = $display_end_date->format($tmp_cfg_long_date_time);
 $previously_submitted = 0;
 
 // Check for additional password on the paper
-if ($password != '') {
-  if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) { 
-    access_denied($string['specificpassword'], false);  
-  }
-}
+check_paper_password($password, true);
 
 $low_bandwidth = 0;
 //Check this PC is registered for this exam

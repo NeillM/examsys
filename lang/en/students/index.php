@@ -8,4 +8,5 @@ $string['questionsbased'] = 'Questions-based feedback<br />on assessment at';
 $string['screen'] = 'screen';
 $string['screens'] = 'screens';
 $string['eassessmentmanagementsystem'] = 'eAssessment Management System';
+$string['passwordRequired'] = 'password required';
 ?>

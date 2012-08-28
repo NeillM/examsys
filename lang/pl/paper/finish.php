@@ -1,14 +1,9 @@
 <?php
 require '../lang/' . $language . '/question/sct_shared.php';
+require_once '../lang/' . $language . '/include/paper_security.inc';
 
 $string['examscript'] = 'Zapis egzaminu';
 $string['error_paper'] = 'Wskazany arkusz nie mógł być odnaleziony.';
-$string['specificpassword'] = 'Do tego arkusza przypisane jest specyficzne hasło.';
-$string['denied_location'] = 'Dostęp do tego arkusza nie jest dozwolony z aktualnej lokalizacji.';
-$string['error_time'] = 'Arkusz, który chcesz zobaczyć dostępny jest tylko pomiędzy %s i %s';
-$string['error_module'] = 'Ten arkusz nie występuje w żadnym module.';
-$string['error_metadata'] = 'Metadane użytkownika nie są zgodne <strong>%s: %s</strong>';
-$string['notregistered'] = '%s %s (%s) nie jest zarejestrowany na <strong>%s</strong> w <strong>%s</strong>.';
 $string['thankyoumsg'] = 'Dziękujemy za wypełnienie <strong>%s</strong>. Twoje odpowiedzi zostały zarejestrowane.';
 $string['studentviewend'] = 'Ogląd studencki tu się kończy';
 $string['staffviewbelow'] = '<strong>Ogląd dla kadry dostępny poniżej </strong>(studenci tego nie widzą)';

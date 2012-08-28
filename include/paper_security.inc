@@ -46,12 +46,25 @@ function check_labs($paper_type, $labs, $pword, $mysqlidb) {
   return $low_bandwidth;
 }
 
-function check_paper_password($password) {
+function check_paper_password($password, $show_form=false) {
   global $string;
   
   if ($password != '') {
-    if ($password != $_COOKIE['paperpwd']) {
-      access_denied($string['specificpassword'], $output_header = false);
+    if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
+      if ($show_form) {
+        if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $password) {
+          setcookie('paperpwd', $_POST['paperpwd']);
+        } else {
+          display_notice($string['passwordrequired'], '', '/artwork/key_48.png', '#C00000');
+
+          $html = render_password_form($string);
+
+          echo $html;
+          exit;
+        }
+      } else {
+        access_denied($string['specificpassword'], false);
+      }
     }
   }
 }
@@ -114,5 +127,26 @@ function check_metadata($property_id, $userID, $moduleID, $mysqlidb) {
     $check_security->close();
   }      
   $stmt->close();
+}
+
+function render_password_form($string) {
+  $url = $_SERVER['PHP_SELF'];
+  if ($_SERVER['QUERY_STRING'] != '') {
+    $url .= '?' . $_SERVER['QUERY_STRING'];
+  }
+
+  $html = <<< FORM
+    <form action="{$url}" method="post">
+      <p style="margin-left:60px">
+        <label for="paperpwd">{$string['enterpw']}</label><br />
+        <input type="password" name="paperpwd" id="paperpwd" /><br />
+        <input type="submit" value="{$string['pwcontinue']}" />
+      </p>
+    </form>
+  </body>
+</html>
+FORM;
+
+  return $html;
 }
 ?>

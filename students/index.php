@@ -80,7 +80,7 @@ $sessions_with_papers = array();
 // Get papers for this module - types 0,1,3, valid for this date
 $papers = 0;
 $papers_query = <<< QUERY
-SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, crypt_name FROM properties p
+SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM properties p
 INNER JOIN papers pa ON p.property_id = pa.paper
 WHERE p.paper_type IN ('0','1','3','6')
 AND p.moduleID LIKE ? AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
@@ -96,7 +96,7 @@ for ($i = 0; $i < count($modules); $i++) {
 		$mod_string = '%'.$mod_id.'%';
 	  $stmt->bind_param('ss', $mod_string, $modules[$i]['year']);
 	  $stmt->execute();
-	  $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year, $crypt_name);
+	  $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year, $crypt_name, $password);
 	  $stmt->store_result();
 	  while ($stmt->fetch()) {
 	  	// Check if the user is able to access the paper from their current location
@@ -106,7 +106,7 @@ for ($i = 0; $i < count($modules); $i++) {
 	  		
 	  		// Don't show if 0 screens
 	  		if ($screens > 0) {
-					$modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name);
+					$modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
 					$papers++;
 					
 					if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
@@ -285,7 +285,14 @@ if ($papers > 0) {
 								<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo(displayIcon($paper['type'], $paper['title'], '', '', '', '')); ?></a>
 							</td>
 	    				<td>
-	    					<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a><br />
+	    					<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a>
+<?php
+if ($paper['password'] != '') {
+?>
+  <img src="../artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%"><?php echo $string['passwordRequired'] ?></span><?php
+}
+?>
+                <br />
 	    					<span style="color:#808080">
 	    						<?php 
 

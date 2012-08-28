@@ -1,14 +1,9 @@
 <?php
-require '../lang/' . $language . '/question/sct_shared.php';
+require_once '../lang/' . $language . '/include/paper_security.inc';
+require_once '../lang/' . $language . '/question/sct_shared.php';
 
 $string['examscript'] = 'Exam Script';
 $string['error_paper'] = 'The requested paper cannot be found.';
-$string['specificpassword'] = 'There is a specific password assigned to this paper.';
-$string['denied_location'] = 'Access to this paper is not permitted from your current location.';
-$string['error_time'] = 'The paper you are attempting to access is only available between %s and %s';
-$string['error_module'] = 'This paper is not on any module.';
-$string['error_metadata'] = 'User metadata does not match <strong>%s: %s</strong>';
-$string['notregistered'] = '%s %s (%s) is not registered on <strong>%s</strong> in <strong>%s</strong>.';
 $string['thankyoumsg'] = 'Thank you for completing <strong>%s</strong>. Your responses have been recorded.';
 $string['studentviewend'] = 'Student view ends here';
 $string['staffviewbelow'] = '<strong>Staff only view below here </strong>(students will not see this)';

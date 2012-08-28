@@ -1,4 +1,6 @@
 <?php
+require_once './lang/' . $language . '/include/paper_security.inc';
+
 $string['startscreen'] = 'Ekran startowy';
 $string['availability'] = 'Dostępność';
 $string['candidates'] = 'Kandydaci';
@@ -22,8 +24,4 @@ $string['nottakenpaper'] = '(Nie podjąłeś się jeszcze rozwiązania tego arku
 $string['donotstart'] = "<strong>Nie</strong> wybieraj przycisku 'Start &gt;&gt;' do czasu decyzji osoby nadzorującej.";
 $string['minutes'] = 'minut(y)';
 $string['papernotfound'] = 'Wybrany arkusz nie jest dostępny.';
-$string['specificpassword'] = 'Do danego arkusza przypisane jest specyficzne hasło.';
-$string['denied_location'] = 'Dostęp do tego arkusza nie jest dozwolony z tej lokalizacji.';
-$string['error_module'] = 'Nie ma tego arkusza w żadnym module.';
-$string['notregistered'] = '%s %s (%s) nie jest zarejestrowany na <strong>%s</strong> w <strong>%s</strong>.';
 ?>

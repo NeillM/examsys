@@ -1,4 +1,6 @@
 <?php
+require_once './lang/' . $language . '/include/paper_security.inc';
+
 $string['startscreen'] = 'Start Screen';
 $string['availability'] = 'Availability';
 $string['candidates'] = 'Candidates';
@@ -22,8 +24,4 @@ $string['nottakenpaper'] = '(You have not yet taken this paper.)';
 $string['donotstart'] = "Do <strong>not</strong> click 'Start &gt;&gt;' until instructed to by an invigilator.";
 $string['minutes'] = 'minutes';
 $string['papernotfound'] = 'The requested paper cannot be found.';
-$string['specificpassword'] = 'There is a specific password assigned to this paper.';
-$string['denied_location'] = 'Access to this paper is not permitted from your current location.';
-$string['error_module'] = 'This paper is not on any module.';
-$string['notregistered'] = '%s %s (%s) is not registered on <strong>%s</strong> in <strong>%s</strong>.';
 ?>

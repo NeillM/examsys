@@ -369,17 +369,6 @@ require_once './classes/networkutils.class.php';
   <head>
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
     <title><?php echo $string['exams']; ?></title>
-    <script type="text/javascript">
-      function enterPassword() {
-        var password = prompt("<?php echo $string['requirespassword'] ?>","");
-        if (password == '' || password == null) {
-          return false;
-        } else {
-          document.cookie = "paperpwd=" + password + "; secure";
-          return true;
-        }
-      }
-    </script>
   </head>
   <body style="font-family:Arial,sans-serif">
 <?php
@@ -393,8 +382,8 @@ require_once './classes/networkutils.class.php';
         echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
         echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
       } else {
-        echo "<tr><td width=\"66\" style=\"text-align:right\"><a onclick=\"return enterPassword();\" href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
-        echo "<td><a onclick=\"return enterPassword();\" href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
+        echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . displayIcon($paper_display[$i]['paper_type']) . "</a></td>\n";
+        echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
         echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
       }
       echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];

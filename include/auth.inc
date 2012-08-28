@@ -41,7 +41,7 @@ function display_notice($title, $msg, $icon, $title_color = 'black') {
  * @param string $output_header if true output 401 headers
  *
  */
-function access_denied($message, $output_header = false) {
+function access_denied($message, $output_header = false, $output_footer = true) {
   global $mysqli, $string, $cfg_root_path;
 
   if ($output_header == true) {
@@ -50,10 +50,12 @@ function access_denied($message, $output_header = false) {
   }
   display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
-  echo "\n</body>\n</html>";
+  if ($output_footer) {
+    echo "\n</body>\n</html>";
 
-  $mysqli->close();
-  exit;
+    $mysqli->close();
+    exit;
+  }
 }
 
 

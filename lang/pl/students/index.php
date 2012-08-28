@@ -8,5 +8,6 @@ $string['objectivesbased'] = 'Odzew dot. celów<br />dla oceny w';
 $string['questionsbased'] = 'Odzew dot. pytań<br />dla oceny w';
 $string['screen'] = 'ekran';
 $string['screens'] = 'ekrany';
-$string['eassessmentmanagementsystem'] = 'System zarządzania oceną';  
+$string['eassessmentmanagementsystem'] = 'System zarządzania oceną';
+$string['passwordRequired'] = 'wymagane hasło';
 ?>

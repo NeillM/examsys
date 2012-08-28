@@ -1,6 +1,7 @@
 <?php
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/question/sct_shared.php';
+require_once '../lang/' . $language . '/include/paper_security.inc';
 
 $string['survey'] = 'Survey';
 $string['assessment'] = 'Assessment';
@@ -28,17 +29,11 @@ $string['javacheck1'] = 'Have you completed all the questions on this screen, yo
 $string['javacheck2'] = "Are you sure you wish to finish. After clicking 'OK' you will not be able to go back.";
 $string['error_keywords'] = 'ERROR: unable to find unique question for supplied keywords';
 $string['error_paper'] = 'The requested paper cannot be found.';
-$string['specificpassword'] = 'There is a specific password assigned to this paper.';
-$string['denied_location'] = 'Access to this paper is not permitted from your current location.';
-$string['error_time'] = 'The paper you are attempting to access is only available between %s and %s';
-$string['error_module'] = 'This paper is not on any module.';
-$string['error_metadata'] = 'User metadata does not match <strong>%s: %s</strong>';
 $string['holddownctrlkey'] = '(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)';
 $string['msgselectable1'] = 'Too many options selected!\n\nOnly';
 $string['msgselectable2'] = 'items can be selected in this question.';
 $string['msgselectable3'] = 'You have already selected';
 $string['msgselectable4'] = '.\n\nPlease select a different ranking.';
-$string['notregistered'] = '%s %s (%s) is not registered on <strong>%s</strong> in <strong>%s</strong>.';
 //ajax saving and auto saving messages
 $string['saving'] = 'Saving';
 $string['auto_saving'] = 'Auto saved';
