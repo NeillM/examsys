@@ -59,6 +59,7 @@ echo ViewHelper::render_options($question->get_option_orders(), $question->get_o
         
 <?php
 require_once 'detail_parts/details_marking.php';
+require_once 'detail_parts/details_general_feedback.php';
 ?>
         <div class="form">
           <h2 class="midblue_header"><?php echo $string['options'] ?></h2>
