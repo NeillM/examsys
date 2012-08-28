@@ -932,18 +932,22 @@ Class InstallUtils {
   *
   */
   static function displayHeader() {
-  global $string, $version;
+    global $string, $version;
+    
     ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     <head>
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+      
       <title>Rog&#333; Install script</title>
+      
+      <link rel="stylesheet" type="text/css" href="../css/body.css" />
       <link rel="stylesheet" type="text/css" href="../css/header.css" />
+      <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
       <style type="text/css">
-        html {padding:0px; margin:0px; width:100%}
-        body {padding:0px; margin:0px; width:100%; font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black }
+        body {font-size:90%}
         .error {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
         .warning {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
         label {float:left; width:160px; padding-left:0em; text-align:right; padding-right:6px}
@@ -957,10 +961,10 @@ Class InstallUtils {
         form {padding:1em}
         form div {padding-left:2em}
       </style>
-      <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
-      <script language="text/javascript" type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-      <script language="text/javascript" type="text/javascript" src="../js/jquery.validate.min.js"></script>
-      <script language="text/javascript" type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
+      
+      <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+      <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+      <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
       <script type="text/javascript">
         $(function(){
           $(".tipright").tipTip({defaultPosition: 'right'});
@@ -1643,7 +1647,7 @@ QUERY;
 
     $this->tableList['properties'] = <<<QUERY
         CREATE TABLE `properties` (
-          `property_id` smallint(5) unsigned NOT NULL auto_increment,
+          `property_id` mediumint(10) unsigned NOT NULL auto_increment,
           `paper_title` varchar(255) default NULL,
           `start_date` datetime default NULL,
           `end_date` datetime default NULL,
@@ -1711,7 +1715,7 @@ QUERY;
     $this->tableList['questions'] = <<<QUERY
         CREATE TABLE `questions` (
           `q_id` int(4) NOT NULL auto_increment,
-          `q_type` enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false') default NULL,
+          `q_type` enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area') default NULL,
           `theme` text,
           `scenario` text,
           `leadin` text,
@@ -1865,7 +1869,7 @@ QUERY;
     $this->tableList['sid'] = <<<QUERY
         CREATE TABLE `sid` (
           `student_id` char(15) default NULL,
-          `userID` mediumint(8) unsigned NOT NULL default '0',
+          `userID` int(10) unsigned NOT NULL default '0',
           PRIMARY KEY  (`userID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
@@ -2078,7 +2082,7 @@ QUERY;
           `username` char(15) default NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
-          `id` smallint(6) NOT NULL auto_increment,
+          `id` mediumnint(10) unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female') default NULL,
           `last_login` datetime default NULL,
