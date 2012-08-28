@@ -2243,10 +2243,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned primary key auto_increment");
+    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned primary key auto_increment</li>\n";
+    echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned</li>\n";
     ob_flush();
     flush();
   }
@@ -2277,10 +2277,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned primary key auto_increment");
+    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned primary key auto_increment</li>\n";
+    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned</li>\n";
     ob_flush();
     flush();
   }
@@ -2294,10 +2294,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'mediumint') {
-    $adjust = $mysqli->prepare("ALTER TABLE sid CHANGE COLUMN userID userID int unsigned primary key");
+    $adjust = $mysqli->prepare("ALTER TABLE sid CHANGE COLUMN userID userID int unsigned");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE sid CHANGE COLUMN userID userID int unsigned primary key</li>\n";
+    echo "<li>ALTER TABLE sid CHANGE COLUMN userID userID int unsigned</li>\n";
     ob_flush();
     flush();
   }
@@ -3172,9 +3172,8 @@ if (!isset($_POST['update'])) {
   }
   $result_col->close();
 
-
   // 31/07/2012 - Add deleted column to users
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='deleted'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='user_deleted'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -3203,9 +3202,7 @@ if (!isset($_POST['update'])) {
   if ($rows == 0) {
     $facultyID = FacultyUtils::add_faculty('UNKNOWN Faculty', $mysqli );
     echo "<li>Adding Unknown Faculty</li>\n";
-
   }
-
 
   $result = $mysqli->prepare("SELECT id FROM " . $cfg_db_database . ".`schools`  WHERE school='UNKNOWN School'");
   $result->execute();

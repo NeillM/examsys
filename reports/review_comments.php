@@ -99,19 +99,61 @@
         if ($scenario != '') {
           echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
           echo $leadin;
-          if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
+          if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
             echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
           }
           if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
         } else {
           echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
-          if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
+          if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
             echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
           }
           if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
         }
       }
       switch ($q_type) {
+        case 'area':
+        ?>
+        <br />
+        <script language="javascript">
+          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($q_media_width + 2); ?>" height="<?php echo ($q_media_height + 1); ?>" id="externalinterfaceq<?php echo $q_no; ?>_1" align="top">');
+          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="quality" value="high" />');
+          write_string('<param name="bgcolor" value="#ffffff" />');
+          write_string('<param name="play" value="true" />');
+          write_string('<param name="loop" value="true" />');
+          write_string('<param name="wmode" value="opaque" />');
+          write_string('<param name="scale" value="showall" />');
+          write_string('<param name="menu" value="true" />');
+          write_string('<param name="devicefont" value="false" />');
+          write_string('<param name="salign" value="top" />');
+          write_string('<param name="allowScriptAccess" value="sameDomain" />');
+          write_string('<!--[if !IE]>-->');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $q_no; ?>_2" width="<?php echo ($q_media_width + 2); ?>" height="<?php echo ($q_media_height + 1); ?>">');
+          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="quality" value="high" />');
+          write_string('<param name="bgcolor" value="#ffffff" />');
+          write_string('<param name="play" value="true" />');
+          write_string('<param name="loop" value="true" />');
+          write_string('<param name="wmode" value="opaque" />');
+          write_string('<param name="scale" value="showall" />');
+          write_string('<param name="menu" value="true" />');
+          write_string('<param name="devicefont" value="false" />');
+          write_string('<param name="salign" value="top" />');
+          write_string('<param name="allowScriptAccess" value="sameDomain" />');
+          write_string('<!--<![endif]-->');
+          write_string('<a href="http://www.adobe.com/go/getflash"> <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>');
+          write_string('<!--[if !IE]>-->');
+          write_string('</object>');
+          write_string('<!--<![endif]-->');
+          write_string('</object>');
+          
+          sendTextToAS3('<?php echo $language; ?>','q<?php echo $q_no; ?>', 1, '<?php echo '../media/' . $q_media; ?>', '<?php echo $correct; ?>', '<?php echo $correct; ?>');
+          
+        </script>
+        <input type="hidden" name="q<?php echo $q_no; ?>" id="q<?php echo $q_no; ?>" />
+        <?php
+          break;
         case 'blank':
           $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$options[0]);
           $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|","",$options[0]);
@@ -416,7 +458,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo ucfirst($type); ?> Comments Report</title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
@@ -464,10 +508,12 @@
   }
   </style>
 
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script src="../js/flash_include.js" type="text/javascript"></script>
-  <script src="../js/ie_fix.js" type="text/javascript"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/flash_include.js"></script>
+  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+  <script type="text/javascript" src="../js/ie_fix.js"></script>
+  <script language="JavaCcript">
     function getScrollXY() {
       var scrOfX = 0, scrOfY = 0;
       if( typeof( window.pageYOffset ) == 'number' ) {
