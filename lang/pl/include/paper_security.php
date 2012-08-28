@@ -1,8 +1,8 @@
 <?php
-$string['passwordrequired'] = 'Password required'; // Niko
+$string['passwordrequired'] = 'Wymagane haso'; 
 $string['specificpassword'] = 'Do tego arkusza przypisane jest specyficzne hasło.';
-$string['enterpw'] = 'Please enter the password for this paper'; // Niko
-$string['pwcontinue'] = 'Continue'; // Niko
+$string['enterpw'] = 'Wprowadź hasło dla tego arkusza';
+$string['pwcontinue'] = 'Dalej'; 
 $string['denied_location'] = 'Dostęp do tego arkusza nie jest dozwolony z tej lokalizacji.';
 $string['error_time'] = 'Arkusz, który chcesz zobaczyć dostępny jest tylko pomiędzy %s i %s';
 $string['notregistered'] = '%s %s (%s) nie jest zarejestrowany na <strong>%s</strong> w <strong>%s</strong>.';
