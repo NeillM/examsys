@@ -2243,7 +2243,7 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned");
+    $adjust = $mysqli->prepare("ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint UNSIGNED NOT NULL AUTO_INCREMENT");
     $adjust->execute();
     $adjust->close();
     echo "<li>ALTER TABLE properties CHANGE COLUMN property_id property_id mediumint unsigned</li>\n";
@@ -2277,10 +2277,10 @@ if (!isset($_POST['update'])) {
   $result->bind_result($data_type);
   $result->fetch();
   if ($data_type == 'smallint') {
-    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int unsigned");
+    $adjust = $mysqli->prepare("ALTER TABLE users CHANGE COLUMN id id int UNSIGNED NOT NULL AUTO_INCREMENT");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE users CHANGE COLUMN id id int unsigned</li>\n";
+    echo "<li>ALTER TABLE users CHANGE COLUMN id id int UNSIGNED NOT NULL AUTO_INCREMENT</li>\n";
     ob_flush();
     flush();
   }

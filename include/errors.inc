@@ -91,11 +91,11 @@ function check_var($var_name, $method, $mandatory, $headers, $type = '') {
   
   if ($mandatory) {
     if ($method == 'GET') {
-      if (empty($_GET[$var_name])) {
+      if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'],$string['fatalerrormsg1'],$headers);
       }
     } else {
-      if (empty($_POST[$var_name])) {
+      if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'],$string['fatalerrormsg2'],$headers);
       }
     }
