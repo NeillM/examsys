@@ -280,8 +280,6 @@ if (isset($_POST['sessionid'])) {
       $restart = 1;
       if ($paper_type == '3') {
         $current_screen = 1;
-      } elseif ($current_screen < $no_screens) {
-        $current_screen++;
       }
     } else {
       $sessionid = date("YmdHis", time());
