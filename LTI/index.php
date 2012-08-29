@@ -176,7 +176,7 @@ if (!$lti->isInstructor()) {
 
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
 
-
+var_dump($data);
       foreach ($data as $v) {
 
         if (!module_utils::module_exists($v[1], $mysqli)) {

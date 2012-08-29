@@ -68,7 +68,7 @@ function usercheck($db, $lti) {
   }
   $returned = $lti->lookup_lti_user();
   if ($returned === false) {
-    if (!isset($_SERVER['PHP_AUTH_USER']) AND !isset($_SESSION['lti']['track'])) {
+    if (!isset($_SERVER['PHP_AUTH_USER']) AND $_SESSION['lti']['track']=='') {
       display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
       $_SESSION['lti']['track'] = 'logon';
       $db->close();
@@ -76,6 +76,17 @@ function usercheck($db, $lti) {
     }
     if (isset($_SERVER['PHP_AUTH_USER'])) {
       $returned2 = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $db, false);
+      if ($cfg_use_ldap == true and $returned2 <= 0 and ($db_errors != '<strong>' . $string['notsaccount'] . '</strong>' or $returned2 == -2)) {
+        $ldap_user_data = array();
+        if (ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true) {
+          //Ad Account OK
+          global $cfg_encrypt_salt;
+          $encpw_details = encpw($cfg_encrypt_salt, $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+          $stmt = $db->prepare("UPDATE users SET password = ? WHERE username = ?");
+          $stmt->bind_param('ss', $encpw_details, $_SERVER['PHP_AUTH_USER']);
+          $stmt->execute();
+        }
+      }
       if ($returned2 == -1) {
         // create user
         $lti_i->user_add($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
