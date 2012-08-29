@@ -40,8 +40,8 @@ $string['computerlabs'] = 'Pracownie komputerowe';
 $string['peerreviewed'] = 'Recenzje wewnętrzne';// 'Zrecenzowano wewnętrznie'
 $string['peerreviewes'] = 'Recenzje wewnętrzne';
 $string['externalreviews'] = 'Recenzje zewnętrzne';
-$string['standardsset'] = 'Standard wyznaczony';
-$string['mapping'] = 'Odwzorowanie';
+$string['standardsset'] = 'Wyznaczone standardy';
+$string['mapping'] = 'Odwzorowania';
 
 $string['questionbanktasks'] = 'Działania dot. banku pytań';
 $string['questionsbytype'] = 'Pytania wg. typu';
