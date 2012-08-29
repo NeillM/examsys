@@ -266,11 +266,11 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
 
     foreach ($modules as $moduleid) {
       $moduleid_forform = str_replace(' ', '_', $moduleid);
-      if(isset($_POST[$moduleid_forform . '_session'])) {
+      if (isset($_POST[$moduleid_forform . '_session'])) {
         $session = $_POST[$moduleid_forform . '_session'];
         $old_mappings = $_POST[$moduleid_forform . '_old_mappings'];
-        $vle_api = $_POST[$moduleid . '_vle_api'];
-        if(isset($_POST[$moduleid_forform . '_objectives'])) {
+        $vle_api = $_POST[$moduleid_forform . '_vle_api'];
+        if (isset($_POST[$moduleid_forform . '_objectives'])) {
           foreach ($_POST[$moduleid_forform . '_objectives'] as $objective_id) {
             $sql[] = "INSERT INTO relationships VALUES (NULL, '$moduleid', $paper_id, $question_id, $objective_id, '$session', '$vle_api')";
             $new_mappings .= $objective_id . ',';
@@ -278,7 +278,7 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
         }
     
         //check for none of the above
-        if (isset($_POST['none_of_the_above']) and $_POST['none_of_the_above'] == -1 AND count($sql) == 0) {
+        if (isset($_POST['none_of_the_above']) and $_POST['none_of_the_above'] == -1 and count($sql) == 0) {
           $sql[] = "INSERT INTO relationships VALUES (NULL, '$moduleid', $paper_id, $question_id, -1, '$session','$vle_api')";
           $new_mappings .= '-1,';
         } else {
