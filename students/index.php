@@ -287,7 +287,7 @@ if ($papers > 0) {
 	    				<td>
 	    					<a href="<?php echo $script_name; ?>?id=<?php echo $paper['crypt_name']; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a>
 <?php
-if ($paper['password'] != '') {
+if (isset($paper['password']) and $paper['password'] != '') {
 ?>
   <img src="../artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%"><?php echo $string['passwordRequired'] ?></span><?php
 }
