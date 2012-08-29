@@ -930,11 +930,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       } else {
         echo $string['marks'];
       }
-      if ($neg_marking) echo ', ' . $string['negmarking'];
       if ($question['score_method'] == 'Bonus Mark') {
         $plural = ($display_option['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
         echo ' ' . sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
       }
+      if ($neg_marking) echo ', ' . $string['negmarking'];
       echo ")</div>\n<br /></td></tr>\n";
     }
   } else {
