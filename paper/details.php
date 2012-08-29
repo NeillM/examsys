@@ -956,7 +956,7 @@ function random_qMarks($random_questions) {
         }
         $marks_incorrect_error = true;
       } elseif ($temp_array[$x]['status'] === 'Experimental') {
-        echo '<td style="text-align:right; vertical-align:top">N/A</td>';
+        echo '<td style="text-align:right; vertical-align:top">' . $string['na'] . '</td>';
       } else {
         echo '<td class="m">' . $temp_array[$x]['marks'] . '</td>';
       }
