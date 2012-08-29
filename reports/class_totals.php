@@ -797,7 +797,7 @@ ob_start();
     echo "<tr><td class=\"field\">" . $string['bottom10'] . "</td><td class=\"r\">$bottom_10%</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
 
     if ($completed_no <= 1) {
-      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">n/a</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"grey r\">" . $string['na'] . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     } else {
       echo "<tr><td class=\"field\">" . $string['averagetime'] . "</td><td class=\"r\">" . formatsec(round($total_time / $completed_no,0)) . "</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
     }

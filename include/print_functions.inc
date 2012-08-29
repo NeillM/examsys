@@ -264,7 +264,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         echo '<tr><td></td><td></td>';
         if ($na == true) {
-          echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">N/A</td>";
+          echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">" . $string['na'] . "</td>";
         }
         echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[0]</td>";
         $temp_end = substr_count($question['display_method'],'|') - 1;
