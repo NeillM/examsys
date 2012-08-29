@@ -1257,9 +1257,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo "</select>\n";
           if ($tmp_display_correct_answer == '1') {
             if ($paper[$question]['correct'][0] == 't') {
-              echo ' <strong>" . $string['true'] . "</strong>';
+              echo ' <strong>' . $string['true'] . '</strong>';
             } else {
-              echo ' <strong>" . $string['false'] . "</strong>';
+              echo ' <strong>' . $string['false'] . '</strong>';
             }
           }
           echo '</td></tr>';
