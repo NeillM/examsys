@@ -692,8 +692,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $false_label = mb_substr($string['false'],0,1);
         } else {
           echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['no'] . "</td>";
-          $true_label = $string['abbryes'];
-          $false_label = $string['abbrno'];
+          $true_label = mb_substr($string['yes'],0,1);
+          $false_label = mb_substr($string['no'],0,1);
         }
         if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'YN_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf') {
           echo "<td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . "</td>";
@@ -1277,9 +1277,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             echo '<td>';
           }
           if ($paper[$question]['correct'][0] == 't') {
-            echo $strong_on . 'True' . $strong_off;
+            echo $strong_on . $string['true'] . $strong_off;
           } else {
-            echo 'True';
+            echo $string['true'];
           }
           if ($paper[$question]['display_method'] == 'horizontal') {
             echo '&nbsp;&nbsp;&nbsp;';
