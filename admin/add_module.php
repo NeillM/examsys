@@ -105,7 +105,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $xml = new SimpleXMLElement($returned_data);
       $enrolement_details = '';
       
-      if (isset($xml->Module)) {
+      if (isset($xml->Module->Membership->Student)) {
         foreach ($xml->Module->Membership->Student as $student) {
           $student->Title = trim($student->Title);
           $student->Surname = trim($student->Surname);
