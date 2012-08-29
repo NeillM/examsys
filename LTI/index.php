@@ -44,10 +44,11 @@ global $cfg_long_date_time;
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   global $cfg_long_date_time, $icons;
-  $query_string = "SELECT DISTINCT crypt_name, paper_type, 'f', paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, title, initials, surname, retired, moduleID  FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN (0,1,3)  GROUP BY moduleID,paper_title ORDER BY paper_type, paper_title";
+  //$query_string = "SELECT DISTINCT crypt_name, paper_type, 'f', paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, title, initials, surname, retired, moduleID  FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN (0,1,3)  GROUP BY moduleID,paper_title ORDER BY paper_type, paper_title";
+  $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN (0,1,3) ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
   $results2->execute();
-  $results2->bind_result($crypt_name, $paper_type, $screens, $paper_title, $start_date, $start_date_disp, $end_date_display, $title, $initials, $surname, $retired, $moduleID);
+  $results2->bind_result($crypt_name, $paper_type, $paper_title, $retired, $moduleID);
   $results2->store_result();
   if ($results2->num_rows() > 0) {
     @ob_flush();
