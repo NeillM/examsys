@@ -27,7 +27,7 @@
 class MappingUtils {
   public static function get_vle_api($module_id, $session, &$vle_api_cache, $rogodb) {
 
-    if(!isset($vle_api_cache[$module_id])) {
+    if (!isset($vle_api_cache[$module_id])) {
       // Are there any existing relationships for the module in this session?
       $stmt = $rogodb->prepare("SELECT vle_api FROM relationships WHERE module_id LIKE ? AND calendar_year=? LIMIT 1");
       $mod_like = '%' . $module_id . '%';

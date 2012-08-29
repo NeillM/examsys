@@ -22,18 +22,16 @@
 * @package
 */
 
-// TODO: replace comment OK etc. icons with CSS BG image?
-
-require '../../include/staff_auth.inc';
+require_once '../../include/staff_auth.inc';
 require_once '../../classes/question.class.php';
 require_once '../../classes/logger.class.php';
 require_once '../../classes/viewhelper.class.php';
 require_once '../../classes/stateutils.class.php';
 require_once '../../classes/questioninfo.class.php';
-require '../../include/edit.inc';
-require '../../include/media.inc';
-require '../../include/metadata.inc';
-require '../../include/mapping.inc';
+require_once '../../include/edit.inc';
+require_once '../../include/media.inc';
+require_once '../../include/metadata.inc';
+require_once '../../include/mapping.inc';
 
 $question = null;
 $logger = new Logger($mysqli);
