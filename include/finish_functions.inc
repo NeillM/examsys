@@ -688,12 +688,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $no_incorrect = 0;
         if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf' or $paper[$question]['display_method'] == 'TF_Positive') {
           echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['false'] . "</td>";
-          $true_label = 'T';
-          $false_label = 'F';
+          $true_label = mb_substr($string['true'],0,1);
+          $false_label = mb_substr($string['false'],0,1);
         } else {
           echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['no'] . "</td>";
-          $true_label = 'Y';
-          $false_label = 'N';
+          $true_label = $string['abbryes'];
+          $false_label = $string['abbrno'];
         }
         if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'YN_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf') {
           echo "<td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . "</td>";
@@ -1300,9 +1300,9 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             echo '<td>';
           }
           if ($paper[$question]['correct'][0] == 'f') {
-            echo $strong_on . 'False' . $strong_off;
+            echo $strong_on . $string['false'] . $strong_off;
           } else {
-            echo 'False';
+            echo $string['false'];
           }
           echo '</td></tr>';
           if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u') {

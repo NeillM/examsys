@@ -47,12 +47,11 @@ Class QuestionDICHOTOMOUS extends Question {
    */
   public function get_tf_labels() {
     if (substr($this->get_display_method(), 0, 2) == 'YN') {
-      $labels = array('true' => $this->_lang_strings['abbryes'], 'false' => $this->_lang_strings['abbrno']);
+      $labels = array('true' => $this->mb_substr(_lang_strings['yes'],0,1), 'false' => $this->mb_substr(_lang_strings['no'],0,1));
     } else {
-      $labels = array('true' => $this->_lang_strings['abbrtrue'], 'false' => $this->_lang_strings['abbrfalse']);
+      $labels = array('true' => $this->mb_substr(_lang_strings['true'],0,1), 'false' => $this->mb_substr(_lang_strings['false'],0,1));
     }
     
     return $labels;
   }
 }
-
