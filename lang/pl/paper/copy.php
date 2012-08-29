@@ -1,6 +1,6 @@
 <?php
 $string['copypaper'] = 'Kopiuj arkusz';
-$string['warning'] = 'Ostrzeżenie';
+$string['warning'] = 'Uwaga';
 $string['titlewarning'] = 'Ostrzeżenie dot. tytułu';
 $string['nameused'] = 'Nazwa \'<strong>%s</strong>\' już jest wykorzystywana.<br />Wybierz nową i unikalną nazwę.';
 $string['back'] = '&lt; Wstecz';

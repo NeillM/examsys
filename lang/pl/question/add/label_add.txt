@@ -20,7 +20,7 @@ $string['standardcolours'] = 'Kolory standardowe';
 
 $string['yes'] = 'Tak';
 $string['no'] = 'Nie';
-$string['warning'] = 'Ostrzeżenie';
+$string['warning'] = 'Uwaga';
 $string['errormessage'] = 'Jeśli zmienisz typ etykiety z pojedynczej na wielokrotną niektóre z etykiet na ekranie mogą zniknąć.';
 $string['continue'] = 'Czy chcesz kontynuować?';
 

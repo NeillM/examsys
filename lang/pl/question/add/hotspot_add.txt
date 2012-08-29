@@ -16,7 +16,7 @@ $string['standardcolours'] = 'Kolory standardowe';
 
 $string['yes'] = 'Tak';
 $string['no'] = 'Nie';
-$string['warning'] = 'Ostrzeżenie';
+$string['warning'] = 'Uwaga';
 $string['errormessage1'] = 'Linie wielościanu zachodzą na siebie.';
 $string['errormessage2'] = 'Może to skutkować w ubytkach w miejscach aktywnych i nieprawidłowej punktacji odpowiedzi studentów.';
 $string['cancel'] = 'Czy chcesz anulować ostatnią linię?';

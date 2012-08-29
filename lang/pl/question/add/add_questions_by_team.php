@@ -5,7 +5,7 @@ $string['byteam'] = 'wg. zespołu';
 $string['question'] = 'Pytanie';
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
-$string['warningnoleadin'] = 'Ostrzeżenie: brak sformułowania pytania!';
+$string['warningnoleadin'] = 'Uwaga: brak sformułowania pytania!';
 $string['locked'] = 'Zablokowane';
 $string['warningnoquestion'] = 'Nie znaleziono pytania należącego do zespołu';
 ?>

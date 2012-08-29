@@ -11,7 +11,7 @@ $string['d_definition'] = 'moc różnicująca';
 $string['t_definition'] = 'procent <strong>całości</strong> grupy odpowiadającej';
 $string['u_definition'] = 'procent <strong>górnej</strong> części grupy odpowiadającej';
 $string['l_definition'] = 'procent <strong>dolnej</strong> części grupy odpowiadającej';
-$string['warning'] = 'Ostrzeżenie';
+$string['warning'] = 'Uwaga';
 $string['p_warning'] = '<strong>p < 0.2</strong> (tj. bardzo trudne)';
 $string['d_warning'] = "<strong>d < 0.15</strong> (tj. małe rożnicowanie)<br />Przeanalizuj każdy element z czerwoną flagą i jeśli uznasz, że jest on słaby wyklucz go wybierając ikonę <img src=\"../artwork/exclude_off.gif\" style=\"cursor:pointer\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" />, a następnie 'Zapisz'";
 $string['summary'] = 'Podsumowanie';
@@ -31,6 +31,6 @@ $string['intermediate'] = 'Umiarkowane';
 $string['low'] = 'Małe';
 $string['save'] = 'Zapisz wykluczenia';
 $string['screen'] = 'Ekran';
-$string['warning1'] = 'Ostrzeżenie: Trudność jest mniejsza niż 0.2';
-$string['warning2'] = 'Ostrzeżenie: Różnicowanie jest mniejsze niż 0.15';
+$string['warning1'] = 'Uwaga: Trudność jest mniejsza niż 0.2';
+$string['warning2'] = 'Uwaga: Różnicowanie jest mniejsze niż 0.15';
 ?>

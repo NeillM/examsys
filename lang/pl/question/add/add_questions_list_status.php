@@ -6,5 +6,5 @@ $string['question'] = 'Pytanie';
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
 $string['locked'] = 'Zablokowane';
-$string['warningnoleadin'] = 'Ostrzeżenie: brak sformułowania pytania!';
+$string['warningnoleadin'] = 'Uwaga: brak sformułowania pytania!';
 ?>

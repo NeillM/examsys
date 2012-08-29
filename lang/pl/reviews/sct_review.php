@@ -5,7 +5,7 @@ require '../lang/' . $language . '/question/sct_shared.php';
 $string['sctreview'] = 'Recenzja SCT';
 $string['clinicalvignette'] = 'Przypadek kliniczny';
 $string['newinformation'] = 'Nowe informacje';
-$string['note'] = 'Uwaga:';
+$string['note'] = 'Notatka:';
 $string['sct_msg1'] = 'Wtedy ta hipoteza staje się:';
 $string['sct_msg2'] = 'Wtedy to badanie staje się:';
 $string['sct_msg3'] = 'Wtedy to zalecenie staje się:';

@@ -24,7 +24,7 @@ $string['campus'] = 'Kampus';
 $string['notes'] = 'Notatki';
 $string['mins'] = 'min.';
 
-$string['msg7'] = 'OSTRZEŻENIE: Musisz określić datę przeprowadzenia egzaminu.';
-$string['msg8'] = 'OSTRZEŻENIE: Musisz określić czas trwania egzaminu (w minutach).';
-$string['msg9'] = 'OSTRZEŻENIE: Musisz okreslić rozmiar grupy.';
+$string['msg7'] = 'Uwaga: Musisz określić datę przeprowadzenia egzaminu.';
+$string['msg8'] = 'Uwaga: Musisz określić czas trwania egzaminu (w minutach).';
+$string['msg9'] = 'Uwaga: Musisz okreslić rozmiar grupy.';
 ?>

@@ -4,7 +4,7 @@ require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['propertiestitle'] = 'Właściwości';
 $string['edittitle'] = 'Edytuj';
-$string['warning'] = 'Ostrzeżenie: nazwa arkusza jest już wykorzystywana w innym teście!';
+$string['warning'] = 'Uwaga: nazwa arkusza jest już wykorzystywana w innym teście!';
 $string['availablefromyear'] = 'Zaplanowany rok \'od\' jest późniejszy niż rok \'do\' co jest nielogiczne!';
 $string['availablefrommonth'] = 'Zaplanowany miesiąc \'od\' jest późniejszy niż miesiąc \'do\' co jest nielogiczne!';
 $string['availablefromday'] = 'Zaplanowany dzień \'od\' jest późniejszy niż dzień \'do\' co jest nielogiczne!';

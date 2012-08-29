@@ -1,7 +1,7 @@
 <?php
 $string['copyontopaper'] = 'Przekopiuj do arkusza';
 $string['back'] = 'Wstecz';
-$string['warning'] = 'Ostrzeżenie';
+$string['warning'] = 'Uwaga';
 $string['msg1'] = "= Arkusz jest właśnie używany. Aktualna data znajduje się pomiędzy datą rozpoczęcia i ukończenia. Jest to zabezpieczenie przez zmienianiem używanych ('aktywnych') arkuszy.";
 $string['msg2'] = '= Arkusz egzaminu końcowego jest zablokowany i nie może być zmieniany.';
 $string['newassessmentpaper'] = 'Nowy arkusz oceny';

@@ -1,7 +1,7 @@
 <?php
 require '../lang/' . $language . '/question/sct_shared.php';
 
-$string['note'] = 'Uwaga:';
+$string['note'] = 'Notatka:';
 $string['nocomments'] = 'brak komentarzy';
 $string['outof'] = 'z';
 $string['briefreasonwhy'] = 'Krótkie uzasadnienie?';

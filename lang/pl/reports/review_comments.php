@@ -15,6 +15,6 @@ $string['Read - actioned'] = 'Przeczytano - podjęto działania';
 $string['Not actioned'] = 'Nie podjęto działań';
 $string['notreviewed'] = 'Nieprzejrzany';
 $string['noresponse'] = 'Brak reakcji';
-$string['noreviewers'] = '<strong>Ostrzeżenie:</strong> Tego arkusza jeszcze nie recenzowano.';
+$string['noreviewers'] = '<strong>Uwaga:</strong> Tego arkusza jeszcze nie recenzowano.';
 $string['screen'] = 'Ekran';
 ?>

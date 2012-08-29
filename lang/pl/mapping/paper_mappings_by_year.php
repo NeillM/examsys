@@ -13,6 +13,6 @@ $string['bysession'] = 'wg. sesji';
 $string['byquestion'] = 'wg. pytania'; 
 $string['longitudinal'] = 'dalekosiężne';
 $string['screen'] = 'Ekran';
-$string['warning'] = 'Ostrzeżenie';
+$string['warning'] = 'Uwaga';
 $string['nomatchsession'] = 'Sesja w tytule arkusza (%s) nie odpowiada sesji arkusza (%s).';
 ?>

@@ -3,7 +3,7 @@ require_once '../lang/' . $language . '/include/status.inc';
 
 $string['question'] = 'Pytanie';
 $string['questionbank'] = 'Bank pytań';
-$string['notinteam'] = 'Ostrzeżenie: nie jesteś w zespole';
+$string['notinteam'] = 'Uwaga: nie jesteś w zespole';
 $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
 $string['status'] = 'Status'; //cognate //Status, Stan
