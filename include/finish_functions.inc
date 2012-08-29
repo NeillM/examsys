@@ -1245,21 +1245,21 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             echo "<option value=\"\" style=\"color:#808080\">unanswered</option>\n";
           }
           if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't') {
-            echo "<option value=\"t\" selected>True</option>\n";
+            echo "<option value=\"t\" selected>" . $string['true'] . "</option>\n";
           } else {
-            echo "<option value=\"t\">True</option>\n";
+            echo "<option value=\"t\">" . $string['true'] . "</option>\n";
           }
           if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'f') {
-            echo "<option value=\"f\" selected>False</option>\n";
+            echo "<option value=\"f\" selected>" . $string['false'] . "</option>\n";
           } else {
-            echo "<option value=\"f\">False</option>\n";
+            echo "<option value=\"f\">" . $string['false'] . "</option>\n";
           }
           echo "</select>\n";
           if ($tmp_display_correct_answer == '1') {
             if ($paper[$question]['correct'][0] == 't') {
-              echo ' <strong>True</strong>';
+              echo ' <strong>" . $string['true'] . "</strong>';
             } else {
-              echo ' <strong>False</strong>';
+              echo ' <strong>" . $string['false'] . "</strong>';
             }
           }
           echo '</td></tr>';

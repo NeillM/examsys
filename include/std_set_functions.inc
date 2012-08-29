@@ -60,19 +60,19 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
     if ($marking < 2) {
       if (($options[0]['display_method'] == 'TF_NegativeAbstain') or ($options[0]['display_method'] == 'TF_PostiveAbstain')) {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">True</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">False</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Abstain</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['false'] . "</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Abstain</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
       } elseif (($options[0]['display_method'] == 'TF_Negative') or ($options[0]['display_method'] == 'TF_Positive')) {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">True</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">False</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['false'] . "</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
       } elseif (($options[0]['display_method'] == 'YN_NegativeAbstain') or ($options[0]['display_method'] == 'YN_PostiveAbstain')) {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">No</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Abstain</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['no'] . "</td><td width=\"40\" align=\"center\" style=\"color: $labelcolor; font-size: 90%\">Abstain</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
       } else {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">No</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['no'] . "</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     } else {
       if ($options[0]['display_method'] == 'TF_Positive' or $options[0]['display_method'] == 'TF_Negative' or $options[0]['display_method'] == 'TF_NegativeAbstain') {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">True</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">False</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['false'] . "</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
       } else {
-        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">Yes</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">No</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
+        echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['no'] . "</td><td width=\"45%\">&nbsp;</td><td>&nbsp;</td></tr>\n";
       }
     }
   } elseif ($options[0]['q_type'] == 'mcq') {
@@ -187,14 +187,14 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         echo "<select name=\"q" . $question_no . "\">\n";
         echo "<option value=\"\"></option>\n";
         if ($options[0]['correct'] == 't') {
-          echo "<option value=\"t\" selected>True</option>\n";
+          echo "<option value=\"t\" selected>" . $string['true'] . "</option>\n";
         } else {
-          echo "<option value=\"t\">True</option>\n";
+          echo "<option value=\"t\">" . $string['true'] . "</option>\n";
         }
         if ($options[0]['correct'] == 'f') {
-          echo "<option value=\"f\" selected>False</option>\n";
+          echo "<option value=\"f\" selected>" . $string['false'] . "</option>\n";
         } else {
-          echo "<option value=\"f\">False</option>\n";
+          echo "<option value=\"f\">" . $string['false'] . "</option>\n";
         }
         echo "</select>\n";
         echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);

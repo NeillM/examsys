@@ -335,14 +335,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo "<select name=\"q" . $question_no . "\">\n";
         echo "<option value=\"\"></option>\n";
         if ($question['options'][0]['correct'] == 't') {
-          echo "<option value=\"t\" selected>True</option>\n";
+          echo "<option value=\"t\" selected>" . $string['true'] . "</option>\n";
         } else {
-          echo "<option value=\"t\">True</option>\n";
+          echo "<option value=\"t\">" . $string['true'] . "</option>\n";
         }
         if ($question['options'][0]['correct'] == 'f') {
-          echo "<option value=\"f\" selected>False</option>\n";
+          echo "<option value=\"f\" selected>" . $string['false'] . "</option>\n";
         } else {
-          echo "<option value=\"f\">False</option>\n";
+          echo "<option value=\"f\">" . $string['false'] . "</option>\n";
         }
         echo "</select>\n";
       } else {
