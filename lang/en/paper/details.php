@@ -10,6 +10,7 @@ $string['type'] = 'Type';
 $string['marks'] = 'Marks';
 $string['modified'] = 'Modified';
 $string['passmark'] = 'Pass Mark';
+$string['randommark'] = 'random mark';
 $string['screen'] = 'Screen';
 $string['paperlockedwarning'] = '<strong>Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified.';
 $string['paperlockedclick'] ='Click for more details';

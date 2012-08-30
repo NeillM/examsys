@@ -10,6 +10,7 @@ $string['type'] = 'Typ';
 $string['marks'] = 'Punkty';
 $string['modified'] = 'Zmodyfikowano';
 $string['passmark'] = 'Liczba punktów<br />na zaliczenie';
+$string['randommark'] = "punktów na 'chybił-trafił'";
 $string['screen'] = 'Ekran';
 $string['paperlockedwarning'] = '<strong>Arkusz zablokowany</strong>&nbsp;&nbsp;&nbsp;Ten arkusz jest teraz zablokowany i nie może być modyfikowany.';
 $string['paperlockedclick'] ='Kliknij po więcej informacji';
