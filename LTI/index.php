@@ -113,9 +113,8 @@ if (!$lti->isInstructor()) {
   //student
   if ($returned === false) {
     // no data selected for this
-    echo "<html>\n<head>\n<title>" . $string['unavailablepaper'] . "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#BF0000;font-size:140%}\n</style>\n</head>\n<body>\n";
-    echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 style=\"margin-left:60px\">" . $string['unavailablepaper'] . "</h1>\n";
+    display_notice($string['warning'], $string['ltinotconfigured'], $cfg_root_path . '/artwork/access_denied.png', $title_color = '#C00000');
+    echo "\n</body>\n</html>\n";
     exit();
   } else {
     //valid data
@@ -255,10 +254,8 @@ END;
     echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
 
-    foreach ($data as $v)
-    {
+    foreach ($data as $v) {
       $moduleid = $v[1];
-
 
       list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
     }
@@ -269,85 +266,4 @@ END;
     $personalfolders->process();
   }
 }
-exit();
-
-
-if ($returned === false AND !$lti->isInstructor()) {
-  echo "<html>\n<head>\n<title>" . $string['unavailablepaper'] . "</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#BF0000;font-size:140%}\n</style>\n</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-  echo "<h1 style=\"margin-left:60px\">" . $string['unavailablepaper'] . "</h1>\n";
-  exit();
-} elseif ($returned === false) {
-  //paper choice display
-  $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
-  echo <<<END
-      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-      <html>
-      <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta http-equiv="content-type" content="text/html;charset=$cfg_page_charset" />
-        
-        <title>Rogō $cfg_install_type</title>
-        
-        <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-        <link rel="stylesheet" type="text/css" href="../css/header.css" />
-        <style type="text/css">
-        h1 {font-size:150%}
-        .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
-        .sch {padding-left:32px; text-indent:-20px}
-        .greysch {padding-left:12px; color:#808080}
-        .mod {padding-left:60px; text-indent:-30px}
-        </style>
-         $cfg_js_root
-        <script language="JavaScript">
-          function showHide(sectionID) {
-            sectionID = 'block' + sectionID;
-            current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
-            document.getElementById(sectionID).style.display = current;
-          }
-        </script>
-      </head>
-      <body style="padding-left: 21px;">
-      <div id="content" class="content" style="font-size:80%;">
-
-END;
-
-
-  $plk = 0;
-  $block_id = 0;
-
-  echo '<h1>' . $string['describemodulechoice'] . '</h1>';
-
-  list($c_internal_id, $upd) = $lti->lookup_lti_context();
-
-
-  $personalfolders = new personal_folders($mysqli);
-  $personalfolders->loadpersonalfolders($userID);
-  $personalfolders->process();
-  echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['myfolders'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-  list($block_id, $plk) = $personalfolders->listtree(0, 0, $plk, 0);
-
-
-  echo "<table border=\"0\" style=\"padding-top:10px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['bymodulecode'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-  $old_faculty = '';
-  $old_letter = '';
-  $module_block = false;
-  $teams = getUserTeams($userID, $mysqli);
-  $modlist = search_utils::get_teams($teams, $userroles, $userID, $mysqli);
-  foreach ($modlist as $value) {
-    $moduleid = $value['id'];
-    if ($moduleid !== '') {
-      $explode = false;
-      if ($c_internal_id == $moduleid) {
-        $explode = true;
-      }
-      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, false, $explode);
-    }
-  }
-  echo "</div>\n"; // -- End of 'content' div ------------------
-  echo "</td></tr></table>";
-  exit();
-} elseif ($returned[1] == 'paper') {
-  header("location: ../user_index.php?id=" . $returned[0]);
-}
-exit();
+?>

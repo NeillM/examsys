@@ -161,10 +161,13 @@ require_once './classes/networkutils.class.php';
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset; ?>" />
+
 <title><?php echo $string['exams']; ?></title>
+
+<link rel="stylesheet" type="text/css" href="./css/body.css" />
 <link rel="stylesheet" type="text/css" href="./css/header.css" />
 <style type="text/css">
-  body {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}
+  body {font-size:90%; background-color:#FCFCFC; color:#575757}
   h1 {font-weight:normal; font-size:140%}
   #summ_test {
     margin: 36px 0 0 58px;

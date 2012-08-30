@@ -24,22 +24,25 @@
 
 require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
 
+/**
+ * Display an error to the screen.
+ * @param string $error_title - brief title or summary of the error
+ * @param string $error_description - detailed description of what has happed to cause the error
+ * @param bool $headers - if true output HTML header code
+ * @param bool $stop_execution - if true exit the script
+ * @param bool $display_support_email - if true display the support email address (if it is set)
+ */
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true, $display_support_email = true) {
-  // $error_title - heading which is displayed
-  // $error_description - discription of the error together with any information that the user can
-  // use to avoid it happening again
-  // $eaders - if true output HTML header code
-  // $stop_execution - if true exit the script
-
   global $mysqli, $support_email, $string, $cfg_root_path;
   
   if ($headers == false) {
-    echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<title>" . $string['error'] . "</title>\n</head>\n<body style=\"font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black\">\n";
+    echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset=$cfg_page_charset\" />\n<title>$title</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/notice.css\" />\n</head>\n<body>\n";
   }
-  if ($display_support_email) {
+  if ($display_support_email and $support_email != '') {
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';
   }
-  display_notice($error_title, $error_description, '/artwork/bomb.png', '#C00000');
+  
+  display_notice($error_title, $error_description, $cfg_root_path . '/artwork/bomb.png', '#C00000');
 
   if ($headers == false) {
     echo "</body>\n</html>\n";
@@ -81,22 +84,25 @@ function uploadError($errCode) {
   return $engDescription;  
 }
 
+/**
+ * Check that a variable exists of not.
+ * @param string $var_name - name of the variable to check
+ * @param string $method - $_GET or $_POST
+ * @param bool $mandatory - if true then exit if the variable does not exist
+ * @param bool $headers - if true then output HTML header code
+ * @param string $type - currently unused
+ */
 function check_var($var_name, $method, $mandatory, $headers, $type = '') {
   global $string;
-  // $var_name - name of the variable to check
-  // $method - $_GET or $_POST
-  // $mandatory - if true then exit if the variable does not exist
-  // $headers - if true then output HTML header code
-  // $type - unused currently
   
   if ($mandatory) {
     if ($method == 'GET') {
       if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
-        display_error($string['fatalerrormsg0'],$string['fatalerrormsg1'],$headers);
+        display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
       }
     } else {
       if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
-        display_error($string['fatalerrormsg0'],$string['fatalerrormsg2'],$headers);
+        display_error($string['fatalerrormsg0'], $string['fatalerrormsg2'], $headers);
       }
     }
   }

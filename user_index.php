@@ -156,17 +156,22 @@ if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['startscreen']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <style type="text/css">
-  body {font-family:<?php echo $font; ?>,sans-serif;color:black;font-size:<?php echo $textsize; ?>%}
-  input {font-family:<?php echo $font; ?>,sans-serif;font-size:90%}
+  body {font-size:<?php echo $textsize; ?>%}
+  input {font-size:90%}
   td {text-align:left}
   .f {font-weight:bold; text-align:right;line-height:180%;padding-right:6px}
   .w {font-size:90%;color:#C00000;font-weight:bold}
   p { margin: 2px 0 8px 0 }
   </style>
-  <script type="text/javascript">
+  
+  <script language="JavaScript">
   function startPaper() {
     var paperURL = "./paper/start.php?id=<?php echo $_GET['id']; ?>";
 <?php

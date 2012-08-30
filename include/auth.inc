@@ -26,12 +26,12 @@
 
 
 function display_notice($title, $msg, $icon, $title_color = 'black') {
-  global $cfg_root_path;
+  global $cfg_root_path, $cfg_page_charset;
 
-  echo "<html>\n<head>\n<title>$title</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {color:#BF0000;font-size:150%}\n</style>\n</head>\n<body>\n";
+  echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset=$cfg_page_charset\" />\n<title>$title</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/notice.css\" />\n</head>\n<body>\n";
   echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"" . $cfg_root_path . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
-  echo "<h1 style=\"margin-left:60px; color:$title_color\">$title</h1>\n";
-  echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0; height:1px; border:0px\" />\n<p style=\"margin-left:60px\">$msg</p>";
+  echo "<h1 style=\"color:$title_color\">$title</h1>\n";
+  echo "<hr />\n<p>$msg</p>";
 }
 
 /**

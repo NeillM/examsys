@@ -475,8 +475,8 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       break;
     case 'textbox':
       $textbox_size = explode('x',$display_option['display_method']);
-      echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\"></textarea></blockquote>\n";
-      echo "<pre style=\"width:90%; font-family:Arial,sans-serif; font-style:italic; color:#C00000\">" . wordwrap($feedback, 150) . "</pre>";
+      echo "<blockquote><textarea cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\"></textarea></blockquote>\n";
+      echo "<pre style=\"width:90%; font-style:italic; color:#C00000\">" . wordwrap($feedback, 150) . "</pre>";
       $marks = $display_option['marks_correct'];
       
       $plural = 's';

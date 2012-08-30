@@ -34,7 +34,7 @@ $result->bind_result($name);
 $result->fetch();
 $result->close();
 
-$directories = explode(';',$name);
+$directories = explode(';', $name);
 $parent = '';
 if (count($directories) > 1) {
   for ($i=1; $i<count($directories); $i++) {
@@ -47,13 +47,14 @@ if (count($directories) > 1) {
 }
 
 if ($parent != '') {
-  $result = $mysqli->prepare("SELECT id FROM folders WHERE name=?");
+  $result = $mysqli->prepare("SELECT id FROM folders WHERE name=? AND ownerID=$userID");
   $result->bind_param('s', $parent);
   $result->execute();
   $result->bind_result($parentID);
   $result->fetch();
   $result->close();
 }
+
 if (strpos($userroles,'SysAdmin') !== false) {
   $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id=?");
 } else {
@@ -81,7 +82,7 @@ $mysqli->close();
       if ($parent == '') {
         echo "window.opener.location.href = '../staff/index.php'\n";
       } else {
-        echo "window.opener.location.href = '../folder.php?folder=$parentID'\n";
+        echo "window.opener.location.href = '../folder/details.php?folder=$parentID'\n";
       }
       ?>
       self.close();
