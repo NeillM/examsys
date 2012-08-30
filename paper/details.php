@@ -996,7 +996,7 @@ function random_qMarks($random_questions) {
         echo $total_marks;
       }
       echo "</td><td><nobr>&nbsp;&nbsp;" . $string['passmark'] . ":&nbsp;$pass_mark%&nbsp;</nobr></td></tr>\n";
-      echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($total_random_mark,2) . "&nbsp;</td><td style=\"color:#808080\">(" . round(((round($total_random_mark,2) / $total_marks) * 100), 0) . "%) random mark</td></tr>\n";
+      echo "<tr><td colspan=\"4\"></td><td style=\"color:#808080; text-align:right\">" . round($total_random_mark,2) . "&nbsp;</td><td style=\"color:#808080\">(" . round(((round($total_random_mark,2) / $total_marks) * 100), 0) . "%) " . strtolower($string['randommark']) . "</td></tr>\n";
     }
   }
   
