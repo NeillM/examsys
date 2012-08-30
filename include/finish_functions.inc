@@ -1380,6 +1380,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         for ($i=0; $i<count($rank_answers); $i++) {
           if ($rank_answers[$i] != 'u') {
             $answered = true;
+            break;
           }
         }
         if ($answered  == false) {
@@ -1499,16 +1500,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
         }
         echo "</table>\n";
-        if ($tmp_display_feedback == '1') {
-          if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
-            echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['incorrect_fback'] . "</div>\n";
-          } else {
-            if ($paper[$question]['correct_fback'] != '') {
-              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
-            }
-          }
-        }
-        
+
         if ($paper[$question]['score_method'] == 'Mark per Question') {
           if ($all_correct) {
             $paper[$question]['mark'] = $paper[$question]['marks_correct'];
@@ -1519,7 +1511,17 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
         
         if (substr($tmp_exclude,0,1) == '1') $paper[$question]['mark'] = 0;
-        
+
+        if ($tmp_display_feedback == '1') {
+          if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
+            echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['incorrect_fback'] . "</div>\n";
+          } else {
+            if ($paper[$question]['correct_fback'] != '') {
+              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
+            }
+          }
+        }
+
         break;
       case 'extmatch':
         $paper[$question]['mark'] = 0;
