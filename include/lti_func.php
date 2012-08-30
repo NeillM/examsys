@@ -25,10 +25,10 @@
  */
 
 /**
- * Functions to support LTI capability
- * @param object $db
- * @param string $lti
- * @return 
+ * Function to support LTI capability
+ * @param object $db database object
+ * @param object $lti lti object
+ * @return false if issue else array of userid and last updated data
  */
 function usercheck($db, $lti) {
   global $string, $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_root_path, $cfg_install_type, $cfg_db_database, $cfg_use_ldap, $fp_link, $cfg_encrypt_salt;
@@ -121,24 +121,4 @@ function usercheck($db, $lti) {
     return ($returned);
 
   }
-}
-
-
-function lookupltiuser($lti) {
-  global $mysqli;
-  $ret = $lti->lookup_lti_user();
-  if ($ret === false) {
-    return false;
-  }
-  $stmt = $mysqli->prepare("SELECT username FROM users WHERE users.id=?");
-  $stmt->bind_param('i', $ret[0]);
-  $stmt->execute();
-  $stmt->store_result();
-  $rows = $stmt->num_rows;
-  if ($rows < 1) {
-    return false;
-  }
-  $stmt->bind_result($username);
-  $stmt->fetch();
-  return (array($ret[0], $ret[1], $username));
 }

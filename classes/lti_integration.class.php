@@ -48,4 +48,14 @@ class lti_integration {
     // return false if not, else return string with a campus.
   }
 
+  function sms_api($data) {
+    if ($data[0] != ' SMS') {
+      return '';
+    }
+    $SMS = SmsUtils::GetSmsUtils();
+
+    $SMS->set_module($data[2]);
+    return $SMS->url;
+  }
+
 }

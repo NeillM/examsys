@@ -8,9 +8,15 @@
  */
 
 require_once 'lti_util.php';
+/**
+ * Class to support LTI extends upon base LTI from IMS sample implimentation
+ */
 class UoN_LTI extends BLTI {
 
   private $db;
+  /**
+   * @var array|bool
+   */
   private $parm = array('dbtype' => 'mysqli', 'table_prefix' => '');
 
   function __construct($db, $parm = false) {
@@ -18,11 +24,21 @@ class UoN_LTI extends BLTI {
     if (is_array($parm) or is_string($parm)) $this->parm = $parm;
   }
 
+  /**
+   * Function to get context title
+   * @return lti context title
+   */
   public function get_context_title() {
     $title = $this->info['context_title'];
     return $title;
   }
 
+  /**
+   * Function to initilise the lti class
+   * @param bool $usesession
+   * @param bool $doredirect
+   * @return
+   */
   public function init_lti($usesession = true, $doredirect = false) {
 
     if (!isset($_REQUEST["lti_message_type"])) $_REQUEST["lti_message_type"] = '';
@@ -175,6 +191,14 @@ class UoN_LTI extends BLTI {
   }
 
 
+  /**
+   * Function to update lti key
+   * @param int $ltiid unique id of lti key
+   * @param string $ltiname name field of lti key
+   * @param string $ltikey key field of lti key
+   * @param string $ltisec secret field of lti key
+   * @param string optional lticontext override field of lti key
+   */
   function update_lti_key($ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {
     if ($this->parm['dbtype'] == 'mysqli') {
       $db = $this->db;
@@ -197,6 +221,10 @@ class UoN_LTI extends BLTI {
 
   }
 
+  /**
+   * Function to delete lti key
+   * @param int $ltiid the unique id of lti key to delete
+   */
   function delete_lti_key($ltiid) {
     if ($this->parm['dbtype'] == 'mysqli') {
       $db = $this->db;
@@ -220,6 +248,16 @@ class UoN_LTI extends BLTI {
 
   }
 
+
+  /**
+   * Function to add new lti key
+   * @param string $ltiname name field of lti key
+   * @param string $ltikey key field of lti key
+   * @param string $ltisec secret field of lti key
+   * @param string $lticontext
+   * @internal param int $ltiid unique id of lti key
+   * @internal param \optional $string lticontext override field of lti key
+   */
   function add_lti_key($ltiname, $ltikey, $ltisec, $lticontext = '') {
     if ($this->parm['dbtype'] == 'mysqli') {
       $db = $this->db;
@@ -239,7 +277,11 @@ class UoN_LTI extends BLTI {
     }
   }
 
-
+  /**
+   * Function to lookup lti user association
+   * @param bool|string $lti_user_key optional lti user key
+   * @return false if not found else array containing the associated id and last update time
+   */
   function lookup_lti_user($lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -269,6 +311,12 @@ class UoN_LTI extends BLTI {
     return (array($rogo_id, $updated));
   }
 
+  /**
+   * Function to add lti user association
+   * @param string $lti_user_equ the associated id to link to
+   * @param bool|string $lti_user_key optional the lti key to lookup against
+   * @return int of insert id
+   */
   function add_lti_user($lti_user_equ, $lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -281,6 +329,11 @@ class UoN_LTI extends BLTI {
     return $ret;
   }
 
+  /**
+   * Function to update lti user association date
+   * @param bool|string $lti_user_key optional key to update
+   * @return
+   */
   function update_lti_user($lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -303,7 +356,11 @@ class UoN_LTI extends BLTI {
     return;
   }
 
-
+  /**
+   * Function to lookup lti resource association
+   * @param bool|string $lti_resource_key optional resource key
+   * @return false if missing else array of the internal_id, and the internal type plus when it was updated.
+   */
   function lookup_lti_resource($lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -322,7 +379,13 @@ class UoN_LTI extends BLTI {
     return (array($paperret, $otherret, $updated_on));
   }
 
-
+  /**
+   * Function to add a new lti resource association
+   * @param string $internal_id is the internal id
+   * @param string $internal_type is the internal type
+   * @param bool|string $lti_resource_key optional is the lti resource key
+   * @return record id
+   */
   function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -335,6 +398,13 @@ class UoN_LTI extends BLTI {
     return $ret;
   }
 
+  /**
+   * Function to update lti resource association
+   * @param string $internal_id is the internal id
+   * @param string $internal_type is the internal type
+   * @param bool|string $lti_resource_key optional is the lti resource key
+   * @return false if not found else number of rows
+   */
   function update_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -350,20 +420,15 @@ class UoN_LTI extends BLTI {
     return false;
   }
 
-
+  /**
+   * Function to add lti context association
+   * @param string $c_internal_id is the internal context id
+   * @param bool|string $lti_context_key optional is the lti context key
+   * @return new row id
+   */
   function add_lti_context($c_internal_id, $lti_context_key = false) {
     if ($lti_context_key === false) $lti_context_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      /*
-         $result = $this->db->prepare("SELECT c_internal_id FROM ".$this->parm['table_prefix']."lti_context WHERE lti_context_key =?");
-         $result->bind_param('s', $lti_context_key);
-         $result->execute();
-         $result->store_result();
-         $rows = $result->num_rows();
-         $result->close();
-         $ret = false;
-         if ($rows == 0) {
-      */
       $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_context (lti_context_key, c_internal_id, updated_on) VALUES (?, ?, NOW()) ");
       $result->bind_param('ss', $lti_context_key, $c_internal_id);
       $result->execute();
@@ -374,6 +439,12 @@ class UoN_LTI extends BLTI {
     return $ret;
   }
 
+
+  /**
+   * Function to lookup lti context
+   * @param bool|string $lti_context_key optional the lti context key
+   * @return array|bool if false else array with context id and last updated time
+   */
   function lookup_lti_context($lti_context_key = false) {
     if ($lti_context_key === false) $lti_context_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
