@@ -28,6 +28,7 @@ $string['msg2'] = '<strong>University Rules</strong><br />1) no leaving in first
 $string['closewindow'] = 'Close Window';
 $string['overallcorrectorder'] = 'Overall correct order (Bonus Mark)';
 $string['outof'] = 'out of';
+$string['learningobjectives'] = 'Learning Objectives';
 $string['experimentalquestion'] = '0 - Experimental Question';
 $string['unmarked'] = 'unmarked';
 $string['tdiagnosis'] = 'diagnosis';

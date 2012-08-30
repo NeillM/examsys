@@ -28,6 +28,7 @@ $string['msg2'] = '<strong>Zasady uniwersyteckie</strong><br />1) zakaz opuszcza
 $string['closewindow'] = 'Zamknij okno';
 $string['overallcorrectorder'] = 'Poprawna kolejność całości (Punkt dodatkowy)';
 $string['outof'] = 'z';
+$string['learningobjectives'] = 'Cele kształcenia';
 $string['experimentalquestion'] = '0 - Pytanie eksperymentalne';
 $string['unmarked'] = 'niepunktowane';
 $string['tdiagnosis'] = 'diagnozie';
