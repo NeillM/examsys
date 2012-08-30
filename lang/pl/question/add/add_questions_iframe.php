@@ -1,3 +1,3 @@
 <?php
-$string['browsererr'] = 'Twoja przegladarka nie obsluguje ramek typu iframes.';
+$string['browsererr'] = 'Twoja przeglądarka nie obsługuje ramek typu iframes.';
 ?>

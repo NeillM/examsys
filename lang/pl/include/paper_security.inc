@@ -1,5 +1,5 @@
 <?php
-$string['passwordrequired'] = 'Wymagane haso'; 
+$string['passwordrequired'] = 'Wymagane hasło'; 
 $string['specificpassword'] = 'Do tego arkusza przypisane jest specyficzne hasło.';
 $string['enterpw'] = 'Wprowadź hasło dla tego arkusza';
 $string['pwcontinue'] = 'Dalej'; 

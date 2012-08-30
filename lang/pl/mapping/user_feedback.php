@@ -2,8 +2,8 @@
 $string['examfeedback'] = 'Informacje zwrotne egzaminu';// Informacje zwrotne? odzew? dobre kontra krótkie
 $string['feedback'] = '- informacje zwrotne';
 $string['learningobjectives'] = 'Cele kształcenia';
-$string['explanation'] = 'Poniższa lista zawiera wszystkie unikalne cele kształcenia testowane w tym arkuszu. Ponieważ wiele pytań może odnosić się do współnych celów możliwe jest częściowe osiągnięcie celów. Na podstawie poniższych wyników możesz skupić się na czerownych <img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /> i pomarańczowych <img src="../artwork/minor_comment.png" width="16" height="16" alt="Mostly not acquired" /> celach, których nie wypracowałeś w wystarczającym stopniu.';
-$string['notmapped'] = 'Ten arkusz nie został odzworowany względem celów.';
+$string['explanation'] = 'Poniższa lista zawiera wszystkie unikalne cele kształcenia testowane w tym arkuszu. Ponieważ wiele pytań może odnosić się do wspólnych celów możliwe jest częściowe osiągnięcie celów. Na podstawie poniższych wyników możesz skupić się na czerwonych <img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /> i pomarańczowych <img src="../artwork/minor_comment.png" width="16" height="16" alt="Mostly not acquired" /> celach, których nie wypracowałeś w wystarczającym stopniu.';
+$string['notmapped'] = 'Ten arkusz nie został odwzorowany względem celów.';
 $string['yourmark'] = 'Twój wynik';
 $string['relative'] = 'Wzgl.';
 $string['qno'] = 'L.Pyt.';
@@ -11,7 +11,7 @@ $string['objective'] = 'Cel';
 $string['summaryinformation'] = 'Informacja podsumowująca';
 $string['papertitle'] = 'Tytuł arkusza';
 $string['startedat'] = 'Otwarty o';
-$string['examlength'] = 'Czas trwania egazminu';
+$string['examlength'] = 'Czas trwania egzaminu';
 $string['timespent'] = 'Czas wykorzystany';
 $string['outof'] = 'z';
 $string['adjusted'] = 'skorygowany';

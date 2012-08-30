@@ -5,5 +5,5 @@ $string['standardssetting'] = 'Wyznaczanie standardu';
 $string['date'] = 'Data';
 $string['passscore'] = 'Wynik zaliczający';//??
 $string['method'] = 'Metoda';
-$string['review'] = 'Recencja';//??
+$string['review'] = 'Recenzja';//??
 ?>

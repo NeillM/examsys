@@ -18,5 +18,5 @@ $string['description2'] = "Egzaminy dużej wagi, których stopnie składają si�
 $string['description3'] = 'Ankiety używane do poznania poglądów i pozyskania informacji od studentów.';
 $string['description4'] = 'Sprawdziany OSCE (Objective Structured Clinical Examination) używane w medycynie.';
 $string['description5'] = 'Ten typ arkusza umożliwia załadowanie do Rogo ocen z testów offline.';
-$string['description6'] = 'Generuje formularz pozwalający studentom oceniać się wajemnie.';
+$string['description6'] = 'Generuje formularz pozwalający studentom oceniać się wzajemnie.';
 ?>

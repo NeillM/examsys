@@ -1242,7 +1242,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             echo "<select name=\"q" . $question_no . "\">\n";
           }
           if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u') {
-            echo "<option value=\"\" style=\"color:#808080\">unanswered</option>\n";
+            echo "<option value=\"\" style=\"color:#808080\">" . $string['unanswered'] . "</option>\n";
           }
           if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't') {
             echo "<option value=\"t\" selected>" . $string['true'] . "</option>\n";

@@ -26,5 +26,5 @@ $string['mins'] = 'min.';
 
 $string['msg7'] = 'Uwaga: Musisz określić datę przeprowadzenia egzaminu.';
 $string['msg8'] = 'Uwaga: Musisz określić czas trwania egzaminu (w minutach).';
-$string['msg9'] = 'Uwaga: Musisz okreslić rozmiar grupy.';
+$string['msg9'] = 'Uwaga: Musisz określić rozmiar grupy.';
 ?>
