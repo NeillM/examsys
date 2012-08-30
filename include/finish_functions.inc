@@ -2302,7 +2302,7 @@ echo '</script>';
       $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $mysqlidb);
       
       if (count($objByModule) > 0) {
-        echo "<br />\n<div class=\"objH\">Learning Objectives</div>\n<ul>\n";
+        echo "<br />\n<div class=\"objH\">" . $string['learningobjectives'] . "</div>\n<ul>\n";
         $module_list = explode(',',$moduleID);
         foreach ($module_list as $thisModuleid) {
           if (isset($objByModule[$thisModuleid])) {
