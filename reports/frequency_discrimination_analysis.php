@@ -1594,76 +1594,79 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['frequencydiscrimination'] . " $cfg_install_type"; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
+<title><?php echo $string['frequencydiscrimination'] . " $cfg_install_type"; ?></title>
+
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-h1 {margin-left:15px; font-size:18pt}
-p {margin-left:0px; margin-right:0px}
-.figures {text-align:right}
-.q_no {text-align:right; vertical-align:top; width:50px}
-.grey {color:#808080}
-.extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:lower-roman}
-.correct {color:#000; font-weight:bold}
-.excluded {color:red; text-decoration:line-through}
-.excluded img { border: 2px solid red}
-.excluded img.in-exclusion {border:0}
-td p:first-child {margin-top:0}
-.matrix {border:1px solid #808080; border-collapse:collapse}
-.matrix td {border:1px solid #808080}
-.std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
-.scr_no {margin-left:25px}
-.screenbrk {
-  color:#15428B;
-  font-weight:bold;
-  font-size:90%;
-  height:70px;
-  width:100%;
-  border-top: 1px solid #B5C4DF;
-  background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-  background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-}
-</style>
+  <style type="text/css">
+    body {font-size:90%}
+    h1 {margin-left:15px; font-size:18pt}
+    p {margin-left:0px; margin-right:0px}
+    .figures {text-align:right}
+    .q_no {text-align:right; vertical-align:top; width:50px}
+    .grey {color:#808080}
+    .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:lower-roman}
+    .correct {color:#000; font-weight:bold}
+    .excluded {color:red; text-decoration:line-through}
+    .excluded img { border: 2px solid red}
+    .excluded img.in-exclusion {border:0}
+    td p:first-child {margin-top:0}
+    .matrix {border:1px solid #808080; border-collapse:collapse}
+    .matrix td {border:1px solid #808080}
+    .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
+    .scr_no {margin-left:25px}
+    .screenbrk {
+      color:#15428B;
+      font-weight:bold;
+      font-size:90%;
+      height:70px;
+      width:100%;
+      border-top: 1px solid #B5C4DF;
+      background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
+      background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+    }
+  </style>
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<script type="text/javascript" src="../js/ie_fix.js"></script>
-<script type="text/javascript" src="../js/flash_include.js"></script>
-<script language="JavaScript">
-  function toggle(qID, parts, marks) {
-    for (i=1; i<=parts; i++) {
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/ie_fix.js"></script>
+  <script type="text/javascript" src="../js/flash_include.js"></script>
+  <script language="JavaScript">
+    function toggle(qID, parts, marks) {
+      for (i=1; i<=parts; i++) {
+        if ($('#status_' + qID).val().substr(0,1) == '1') {
+          $('#q_' + qID + '_' + i).removeClass('excluded');
+        } else {
+          $('#q_' + qID + '_' + i).addClass('excluded');
+        }
+      }
+
+      var new_value = '';
       if ($('#status_' + qID).val().substr(0,1) == '1') {
-        $('#q_' + qID + '_' + i).removeClass('excluded');
+        for (i=1; i<=marks; i++) {
+          new_value += '0';
+        }
+        $('#status_' + qID).val(new_value);
+        $('#button_' + qID).attr('src', '../artwork/exclude_off.gif');
       } else {
-        $('#q_' + qID + '_' + i).addClass('excluded');
+        for (i=1; i<=marks; i++) {
+          new_value += '1';
+        }
+        $('#status_' + qID).val(new_value);
+        $('#button_' + qID).attr('src', '../artwork/exclude_on.gif');
       }
     }
-
-    var new_value = '';
-    if ($('#status_' + qID).val().substr(0,1) == '1') {
-      for (i=1; i<=marks; i++) {
-        new_value += '0';
-      }
-      $('#status_' + qID).val(new_value);
-      $('#button_' + qID).attr('src', '../artwork/exclude_off.gif');
-    } else {
-      for (i=1; i<=marks; i++) {
-        new_value += '1';
-      }
-      $('#status_' + qID).val(new_value);
-      $('#button_' + qID).attr('src', '../artwork/exclude_on.gif');
-    }
-  }
-  
-  function manCorrect(q_id, part_no) {
-    window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
     
-    return false;
-  }
-</script>
+    function manCorrect(q_id, part_no) {
+      window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      
+      return false;
+    }
+  </script>
 </head>
 
 <body>

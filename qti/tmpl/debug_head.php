@@ -24,15 +24,15 @@
 ?>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
 	<title>Rog&#333; Import to QTI</title>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="P3Pv1" href="https://touchstone.nottingham.ac.uk/w3c/p3p.xml">
+
 	<script type="text/javascript" src="/qti/js/mootools-1.2.4.js"></script> 
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<style type="text/css">
-		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px}
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
 		a {color:black}
 		a:hover {color:blue}
@@ -40,14 +40,12 @@
 		.recent {color:blue; font-size:90%}
 		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
 
-	.exp_table 
-	{
+	.exp_table {
 		border-left: 1px solid #dddddd;
 		border-top: 1px solid #dddddd;
 	}
 
-	.exp_table tr td,.exp_table tr th
-	{
+	.exp_table tr td,.exp_table tr th {
 		border-bottom: 1px solid #dddddd;
 		border-right: 1px solid #dddddd;
 		padding: 1px;
@@ -62,42 +60,41 @@
 		font-size:120%;
 	}
 
-	</style>
-<style type="text/css">
-.print_cont {
-	/*border: 1px solid #CCCCCC;*/
-	margin:6px;
-	background-color:#EEFFEE;
-}
+  .print_cont {
+    /*border: 1px solid #CCCCCC;*/
+    margin:6px;
+    background-color:#EEFFEE;
+  }
 
-.print_head {
-	/*font-size:100%;*/
-	padding: 4px;
-}
+  .print_head {
+    /*font-size:100%;*/
+    padding: 4px;
+  }
 
-.print_body {
-	display: none;
-	/*border-top: 1px solid #CCCCCC;*/
-}
+  .print_body {
+    display: none;
+    /*border-top: 1px solid #CCCCCC;*/
+  }
 
-.print_label {
-	font-weight: bold;
-	/*font-size:80%;*/
-}
+  .print_label {
+    font-weight: bold;
+    /*font-size:80%;*/
+  }
 
-.print_variable {
-	/*font-size:80%;*/
-}
+  .print_variable {
+    /*font-size:80%;*/
+  }
 
-.print_raw {
-	font-size:85%;
-}
+  .print_raw {
+    font-size:85%;
+  }
 
-.print_raw pre {
-	background-color:#FFEEEE;
-	padding:6px;
-}
+  .print_raw pre {
+    background-color:#FFEEEE;
+    padding:6px;
+  }
 </style>
+
 <script type="text/javascript">
 
 function print_nice_expand(id)

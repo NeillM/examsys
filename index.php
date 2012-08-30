@@ -26,7 +26,7 @@
 * @package
 */
 
-require './include/staff_student_auth.inc';
+require_once './include/staff_student_auth.inc';
 require_once './classes/networkutils.class.php';
 
 // Redirect External Exminers and Invigilators to their own areas.
@@ -370,10 +370,14 @@ require_once './classes/networkutils.class.php';
 ?>
 <html>
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    
     <title><?php echo $string['exams']; ?></title>
+    
+    <link rel="stylesheet" type="text/css" href="./css/body.css" />
   </head>
-  <body style="font-family:Arial,sans-serif">
+  <body>
 <?php
     if ($paper_no > 1) {
       echo "<h1>" . $string['multipleExams'] . "</h1>\n";

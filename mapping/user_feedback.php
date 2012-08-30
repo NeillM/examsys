@@ -117,14 +117,16 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['examfeedback']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; font-size:90%; color:black; background-color:white; margin:0px}
+    body {font-size:90%}
     h1 {margin-left:5px;}
     td {font-size:100%}
-    img {border: none;}
     .q_no {text-align:right; vertical-align:top; cursor:pointer}
     .divider {font-family:Arial,sans-serif; font-size:90%; font-weight:bold}
     .mapping {font-size:90%;color:#FF6300;font-weight:normal}

@@ -35,17 +35,23 @@
   $result->bind_result($paper_title);
   if ($result->num_rows > 0) {
     ?>
+    <html>
+    <head>
+    <title>Rog&#333;</title>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    </head>
+    <body>
     <table border="0" width="100%" height="100%">
     <tr><td valign="middle">
     <div align="center">
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#FF0000">
     <tr>
-    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
+    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
     </tr>
     <tr>
     <td style="background-color:#FFC0C0">
-    <p style="font-family:Arial,sans-serif; font-size:90%"><?php printf($string['nameused'], $_POST['new_paper']); ?></p>
+    <p style="font-size:90%"><?php printf($string['nameused'], $_POST['new_paper']); ?></p>
 
     <div align="center"><input style="width:120px" type="button" value="<?php echo $string['back']; ?>" name="back" onclick="javascript: window.history.go(-1);"></div>
     </td>
@@ -300,8 +306,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: <?php echo $string['copypaper'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../body.css" />
   <link rel="stylesheet" type="text/css" href="../submenu.css" />
 </head>
 <?php
@@ -320,14 +330,14 @@
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#C0C0C0; text-align:left">
     <tr>
-    <td valign="middle" style="background-color:white"><img src="../artwork/orange_alert_32.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['filecopywarning']; ?></span></td>
+    <td valign="middle" style="background-color:white"><img src="../artwork/orange_alert_32.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['filecopywarning']; ?></span></td>
    </tr>
    <tr>
    <td style="background-color:#EAEAEA"><ul>
    <?php
-    echo "<li style=\"font-family:Arial,sans-serif; font-size:90%\">" . $string['completemsg'] . "</li>\n";
+    echo "<li style=\"font-size:90%\">" . $string['completemsg'] . "</li>\n";
     foreach ($error as $msg) {
-      echo "<li style=\"font-family:Arial,sans-serif; font-size:90%\">$msg</li>\n";
+      echo "<li style=\"font-size:90%\">$msg</li>\n";
     }
    ?>
     </ul>

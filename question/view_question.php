@@ -37,42 +37,26 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Preview</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title>Preview</title>
 
-<style type="text/css">
-  body {background-color:white; color:black; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:90%}
-  li {margin-left:15px; margin-right:15px; font-size:100%}
-  select, input {font-family:Arial,sans-serif; font-size:100%}
-  table {font-size:100%}
-  pre {font-family:Arial,sans-serif; font-size:100%}
-  p {margin-top:0px; padding-top:0px}
-  .paper {margin-left:0px; font-size:180%; color:white; font-weight:bold}
-  .q_no {width:40px; text-align:right; vertical-align:top}
-  .theme {font-size:150%; padding-left:4px; font-weight:bold; color:#316AC5}
-  .note {font-size:80%; color:#C00000}
-  .mk {color:#808080; font-size:80%}
-  .act {color:black}
-  .inact {color:#C0C0C0}
-  .s0 {width:18px; text-align:center; background-color:#003366; font-size:80%}
-  .s1 {width:18px; text-align:center; background-color:#C00000; font-size:80%}
-  .likert_button {text-align:center; width:40px; vertical-align:top}
-  .unans {background-color:#FFC0C0}
-  .mee {font-size:120%; display:inline}
-</style>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/start.css" />
 
-<script type="text/javascript" src="../js/flash_include.js"></script>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery.flash_q.js"></script>
-<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<script language="JavaScript">
-function write_string(p_string) {
-  document.write(p_string);
-}
-</script>
+  <script type="text/javascript" src="../js/flash_include.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script language="JavaScript">
+    function write_string(p_string) {
+      document.write(p_string);
+    }
+  </script>
 </head>
 <body>
+<div id="maincontent">
 <?php
   $old_q_id = '';
   $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
@@ -111,6 +95,7 @@ function write_string(p_string) {
   $question_nos[] = $old_q_id;
   echo "<table>\n";
  ?>
+ </div>
  </body>
  </html>
  

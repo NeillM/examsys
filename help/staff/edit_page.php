@@ -142,7 +142,7 @@
     $edit_id = $_GET['id'];
   }
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"padding-left:20px\"><input type=\"text\" style=\"font-family:Arial,sans-serif; color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></td><td style=\"text-align:right\"><select name=\"page_roles\">\n";
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"padding-left:20px\"><input type=\"text\" style=\"color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></td><td style=\"text-align:right\"><select name=\"page_roles\">\n";
   $categories = array('Staff','Admin','SysAdmin');
   foreach ($categories as $category) {
     if ($category == $roles) {
@@ -186,7 +186,7 @@
   }
   ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID; ?>" />
-  <div style="text-align:center; padding-top:8px"><input style="font-family:Arial,sans-serif; width:120px" type="submit" name="save_changes" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> />&nbsp;&nbsp;<input style="font-family:Arial,sans-serif; width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
+  <div style="text-align:center; padding-top:8px"><input style="width:120px" type="submit" name="save_changes" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> />&nbsp;&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
   <input type="hidden" name="edit_id" value="<?php echo $edit_id; ?>" /><input type="hidden" name="original_id" value="<?php echo $_GET['id']; ?>" />
 </form>
 </body>

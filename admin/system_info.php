@@ -22,8 +22,8 @@
 * @package
 */
 
-require '../include/sysadmin_auth.inc';
-require '../include/sidebar_menu.inc';
+require_once '../include/sysadmin_auth.inc';
+require_once '../include/sidebar_menu.inc';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
 ?>
@@ -32,18 +32,21 @@ require_once '../classes/dateutils.class.php';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['systeminformation']; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-
   <style type="text/css">
-  .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
-  a {font-family:Arial,sans-serif; color:#215DC6}
-  a.heading {color:#215DC6; font-weight:bold}
-  a.heading:hover {color:#428EFF; font-weight:bold}
+    .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
+    a {color:#215DC6}
+    a.heading {color:#215DC6; font-weight:bold}
+    a.heading:hover {color:#428EFF; font-weight:bold}
   </style>
+  
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+
 </head>
 
 <body>

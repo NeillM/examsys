@@ -114,22 +114,22 @@
   <title><?php echo $string['sctresponses'] . " $cfg_install_type"; ?></title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {background-color:white;color:black;padding:0px;margin:0px;border:0px;font-family:Arial,sans-serif;font-size:90%}
-  li {margin-left:15px;margin-right:15px;font-size:100%}
-  select,input{font-family:$font,sans-serif;font-size:100%}
-  table {font-size:100%}
-  pre {font-family:Arial,sans-serif; font-size:100%}
-  .q_no {width:40px; text-align:right;vertical-align:top}
-  .theme {font-size:150%; padding-left:4px;font-weight:bold;color:#316AC5}
-  .note {color:#C00000}
-  .mk {color:#808080;font-size:80%}
-  .h {background-color:#F1F5FB; color:black}
-  .breadcrumb {margin-top:2px; margin-left:10px; font-size:90%}
-  .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-  .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-  .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+    body {font-size:90%}
+    li {margin-left:15px;margin-right:15px;font-size:100%}
+    select,input{font-family:$font,sans-serif;font-size:100%}
+    table {font-size:100%}
+    pre {font-family:Arial,sans-serif; font-size:100%}
+    .q_no {width:40px; text-align:right;vertical-align:top}
+    .theme {font-size:150%; padding-left:4px;font-weight:bold;color:#316AC5}
+    .note {color:#C00000}
+    .mk {color:#808080;font-size:80%}
+    .h {background-color:#F1F5FB; color:black}
   </style>
+
+  <script type="text/javascript" src="../js/staff_help.js"></script>
 </head>
 
 <body>
@@ -142,8 +142,6 @@
   $stmt->fetch();
   $stmt->close();
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td class=\"h\">";
     
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
@@ -155,6 +153,9 @@
     $result->fetch();
     $result->close();
   }
+  
+  echo "<table class=\"header\">\n";
+  echo "<tr><th>";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
@@ -163,12 +164,12 @@
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></td></tr>\n";
-  echo '<tr style="height:4px"><td valign="top" colspan="2"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="' . $string['line'] . '" /></td></tr>';
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></th></tr>\n";
+  echo '<tr><th class="bevel" colspan="2"></th></tr>';
 
 ?>
 
-<table cellspacing="0" cellpadding="2" border="0" style="width:100%; font-size:100%">
+<table cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <col width="40"><col>
 <?php
   //Capture reviewer data

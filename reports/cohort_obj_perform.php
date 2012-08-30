@@ -37,21 +37,22 @@ $enddate = $_GET['enddate'];
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: <?php echo $string['learningobjectiveanalysis'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-  h1 {margin-left:15px; font-size:18pt}
-  p {margin-left:15px; margin-right:15px}
-  .q_no {text-align:right; vertical-align:top}
-  .grey {color:#808080}
-  img {border: none;}
-  li {list-style:none; padding-bottom:5px}
+    h1 {margin-left:15px; font-size:18pt}
+    p {margin-left:15px; margin-right:15px}
+    .q_no {text-align:right; vertical-align:top}
+    .grey {color:#808080}
+    img {border: none;}
+    li {list-style:none; padding-bottom:5px}
   </style>
-  <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
 </head>
 <body>
-<table class="header" style="font-size:90%">
+<table class="header">
 <?php
   // Get some paper properties
   getPaperProperties($mysqli, $paperID);
@@ -105,7 +106,7 @@ $enddate = $_GET['enddate'];
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
   unset($objByModule['none_of_the_above']);  
   if (count($objByModule) == 0) {
-    echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;".$string['msg2']."</td></tr></table>\n";
+    echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"font-size:80%; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;".$string['msg2']."</td></tr></table>\n";
   } else {
     foreach ($objByModule as $module => $mappings) {
       foreach ($mappings as $id => $mappingData) {

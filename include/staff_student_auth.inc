@@ -57,7 +57,7 @@ if ($protocol == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SER
   echo "\n</body>\n</html>\n";
   exit;
 }
-if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version)) {
+if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version)) {
   $mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
 
   session_start();
@@ -180,8 +180,8 @@ if (preg_match('|MSIE ([5-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
     }
   }
 } else {
-  echo "<html>\n<body style=\"font-family:Arial,sans-serif\">\n<p style=\"font-size:150%;color:#C00000\"><strong>WARNING:</strong> Incompatible Browser</p>\n<p><strong>Rogo currently requires MS Internet Explorer 5 (or above) or Firefox 2 (or above).</strong></p>\n<p><strong>You are running </strong>" . $_SERVER['HTTP_USER_AGENT'] . "</p>\n</body>\n</html>\n";
-  $mysqli->close();
+  display_notice('Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', '../artwork/browser.png', $title_color = '#C00000');
+  echo "\n</body>\n</html>\n";
   exit;
 }
 ?>

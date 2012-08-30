@@ -227,7 +227,10 @@ MESSAGE;
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: <?php echo $string['register'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <body>
@@ -244,11 +247,12 @@ MESSAGE;
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: <?php echo $string['register'] . ' ' . $cfg_install_type; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
     .title {font-size:160%; font-weight:bold}
     .field {}
     .h {font-weight:bold; padding-top:10px}

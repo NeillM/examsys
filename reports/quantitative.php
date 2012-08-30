@@ -399,18 +399,23 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['quantitativereport']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-  h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#316AC5}
-  table {font-size:100%}
-  p {margin-right:15px}
-  td {vertical-align:top}
-  .figures {text-align:right; width:60px}
-  .q_no {text-align:right; width:40px}
+    body {font-size:90%}
+    h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#316AC5}
+    table {font-size:100%}
+    p {margin-right:15px}
+    td {vertical-align:top}
+    .figures {text-align:right; width:60px}
+    .q_no {text-align:right; width:40px}
   </style>
+  
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 

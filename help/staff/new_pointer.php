@@ -57,32 +57,33 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
-<title>Help and Support Center</title>
-<style type="text/css">
-body {margin:0px; font-size:85%; background-color:white; color:black; font-family:Arial,sans-serif}
-div {line-height:180%}
-a:link {color:black}
-a:visited {color:black}
-</style>
+  <title>Help and Support Center</title>
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <style type="text/css">
+  body {font-size:85%}
+  div {line-height:180%}
+  a:link {color:black}
+  a:visited {color:black}
+  </style>
 
-<script language="Javascript">
-  function updateMenu(sectionID,imageID) {
-    current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
-    document.getElementById(sectionID).style.display = current;
+  <script language="Javascript">
+    function updateMenu(sectionID,imageID) {
+      current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
+      document.getElementById(sectionID).style.display = current;
 
-    icon = (document.getElementById(imageID).getAttribute('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
-    document.getElementById(imageID).setAttribute('src',icon);
-  }
-  function resizeTOC() {
-    var frHeight = parent.document.getElementById("content").height;
-    frHeight = frHeight - 120;
-    document.getElementById("toc").style.height = frHeight + 'px';
-  }
-</script>
+      icon = (document.getElementById(imageID).getAttribute('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
+      document.getElementById(imageID).setAttribute('src',icon);
+    }
+    function resizeTOC() {
+      var frHeight = parent.document.getElementById("content").height;
+      frHeight = frHeight - 120;
+      document.getElementById("toc").style.height = frHeight + 'px';
+    }
+  </script>
 </head>
 <body onload="resizeTOC()">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<p style="margin-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." /></p>
+<p style="margin-left:20px"><input type="text" style="color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." /></p>
 
 <div id="toc" style="margin-left:20px; padding:2px; border:#C0C0C0 solid 1px; width:400px; height:500px; overflow-y:scroll">
 <?php

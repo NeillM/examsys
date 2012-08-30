@@ -73,7 +73,7 @@
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:140%; font-weight:bold; color:#5582D2"><?php echo $string['bulkcourseimport']; ?></span></td>
+        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:140%; font-weight:bold; color:#5582D2"><?php echo $string['bulkcourseimport']; ?></span></td>
         </tr>
         <tr>
         <td align="left" style="background-color:#F1F5FB">

@@ -408,10 +408,10 @@ table {table-layout:auto}
   echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">" . $string['standardssetting'] . "</a></div>";
   if ($_GET['method'] == 'modified_angoff') {
     $helpID = 98;
-    echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['modifiedangoffmethod'] . '</div>';
+    echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['modifiedangoffmethod'] . '</div>';
   } elseif ($_GET['method'] == 'ebel') {
     $helpID = 99;
-    echo '<div style="font-family:Arial,sans-serif; font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['ebelmethod'] . '</div>';
+    echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['ebelmethod'] . '</div>';
   }
   echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
   echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";

@@ -25,13 +25,13 @@
 require '../../include/staff_auth.inc';    // Only let staff create links.
   
 if (isset($_POST['submit'])) {
-$insertQuery = "INSERT INTO student_help VALUES (NULL, \"" . $_POST['title'] . "\", '" . $_POST['pageid'] . "', NULL, 'pointer', NULL, NULL, NULL)";
-if (!$mysqli->query($insertQuery)) {
-  echo "<p>" . $mysqli->error . "</p>\n";
-  echo "<p>$insertQuery</p>\n";
-  exit;
-}
-$page_id = $mysqli->insert_id;
+  $insertQuery = "INSERT INTO student_help VALUES (NULL, \"" . $_POST['title'] . "\", '" . $_POST['pageid'] . "', NULL, 'pointer', NULL, NULL, NULL)";
+  if (!$mysqli->query($insertQuery)) {
+    echo "<p>" . $mysqli->error . "</p>\n";
+    echo "<p>$insertQuery</p>\n";
+    exit;
+  }
+  $page_id = $mysqli->insert_id;
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -153,7 +153,7 @@ $page_id = $mysqli->insert_id;
 ?>
 </div>
 <br />
-<div align="center"><input style="font-family:Arial,sans-serif; width:120px" type="submit" name="submit" value="Create Link" />&nbsp;&nbsp;<input style="font-family:Arial,sans-serif; width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+<div align="center"><input style="font-family:Arial,sans-serif; width:120px" type="submit" name="submit" value="Create Link" />&nbsp;&nbsp;<input style="width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
 </form>
 </body>
 </html>

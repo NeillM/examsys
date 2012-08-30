@@ -40,7 +40,10 @@ ob_start();
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
 <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
+
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
@@ -302,16 +305,23 @@ ob_start();
 </script>
 </head>
 
+
 <body>
 <div id="noteDiv" style="position:absolute; background-color:#FDFDCB; top:0px; left:0px; width:350px; z-index:10000; display:none; font-size:90%">
 <div style="background-color:#F8F7B6; text-align:right; padding:2px"><img onclick="document.getElementById('noteDiv').style.display='none'" src="../artwork/close_note.png" width="16" height="16" alt="Close" border="0" style="cursor:pointer" /></div>
 <div id="noteMsg"></div>
 </div>
 
-<div id="menudiv" style="background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:2px 2px 2px rgba(100, 100, 100, 0.50)" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table width="180" cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white">
+<?php
+$popup_width = 180;
+if ($language != 'en') {
+  $popup_width = 300;
+}
+?>
+<div id="menudiv" style="width:<?php echo $popup_width; ?>px; background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:2px 2px 2px rgba(100, 100, 100, 0.50)" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
   <tr><td>
-    <table width="180" cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white">
+    <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
       <tr>
         <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
       </tr>

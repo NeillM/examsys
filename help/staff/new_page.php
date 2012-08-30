@@ -146,7 +146,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
   <textarea class="mceEditor" id="edit1" name="edit1" style="width:100%; height:500px"></textarea>
 
-  <div style="text-align:center; padding-top:8px""><input style="font-family:Arial,sans-serif; width:120px" type="submit" name="save_changes" value="Save" />&nbsp;&nbsp;<input style="font-family:Arial,sans-serif; width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+  <div style="text-align:center; padding-top:8px""><input style="width:120px" type="submit" name="save_changes" value="Save" />&nbsp;&nbsp;<input style="width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
 </form>
 </body>
 </html>
