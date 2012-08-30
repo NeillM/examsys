@@ -28,12 +28,12 @@ $string['tsonldap'] = 'W Rogō stosowane są hasła LDAP';
 $string['ifstuckinvigilator'] = 'W razie dalszych problemów poproś osobę nadzorującą o';
 $string['forgottenpassword'] = 'Zapomniane hasło';
 $string['warning'] = 'Uwaga:';
-$string['secureconnection'] = 'Secure Connection Required';  // Niko
+$string['secureconnection'] = 'Wymagane bezpieczne połączenie';  
 $string['secureconnectionmsg'] = 'Rogō jest dostępny wyłącznie przez połączenie bezpieczne. W zamian użyj:';
 $string['errormsg'] = 'Jeśli kolejny raz napotkałeś ten błąd skontaktuj się z:';
 $string['ltifirstlogin'] = 'Autoryzacja Rogō';
 $string['ltifirstlogindesc'] = 'System egzaminowania Rogō wymaga identyfikacji Twojej osoby, aby upewnić się co do posiadanych przez Ciebie przywilejów. Dokonane to będzie tylko przy pierwszej wizycie i w nielicznych przypadkach, w celu zapewnienia bezpieczeństwa w przyszłości.<br /><a href="./">Kliknij, aby kontynuować</a> ';
-$string['ltinotconfigured'] = 'The link you have followed has not yet been configured.';  // Niko
+$string['ltinotconfigured'] = 'Hiperłącze, które wybrałeś nie jest jeszcze skonfigurowane.';  
 $string['LTIFAILURE'] = 'niepowodzenie LTI';
 $string['expiredtimestamp'] = 'Datownik tego połączenia jest już przeterminowany. Powróć do poprzedniej strony i ponownie wybierz ten link (nie odświeżaj przeglądarki).'; 
 ?>
