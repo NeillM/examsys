@@ -26,34 +26,25 @@
 
 /**
  * Functions to support LTI capability
- *
+ * @param object $db
+ * @param string $lti
+ * @return 
  */
-
-
 function usercheck($db, $lti) {
+  global $string, $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_root_path, $cfg_install_type, $cfg_db_database, $cfg_use_ldap, $fp_link, $cfg_encrypt_salt;
+  
   $lti_i = lti_integration::load();
   if (!isset($_SESSION['lti']['track'])) $_SESSION['lti']['track'] = '';
-  global $string, $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_root_path, $cfg_install_type, $cfg_db_database, $cfg_use_ldap, $fp_link;
-  // $info = $lti->getUserKey(1);
-  //  if( $_SESSION['lti']['track'] == 'reauth') {
-  //    display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
-  //    $_SESSION['lti']['track'] = 'reauth1';
-  //    $db->close();
-  //    exit;
-  //  }
+  
   if ($_SESSION['lti']['track'] == 'reauth2') {
     $returned2 = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $db, false);
     if ($returned2 > 0) {
       $lti->update_lti_user();
       $_SESSION['lti']['track'] = 'reauth3';
-    }
-    else {
+    } else {
       $_SESSION['lti']['track'] = 'reauth';
     }
-
-
-  }
-  elseif ($_SESSION['lti']['track'] == 'reauth') {
+  } elseif ($_SESSION['lti']['track'] == 'reauth') {
     Header("WWW-authenticate: basic realm=\"Rogo\"");
     Header("HTTP/1.0 401 Unauthorised");
     $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
@@ -80,7 +71,6 @@ function usercheck($db, $lti) {
         $ldap_user_data = array();
         if (ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true) {
           //Ad Account OK
-          global $cfg_encrypt_salt;
           $encpw_details = encpw($cfg_encrypt_salt, $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
           $stmt = $db->prepare("UPDATE users SET password = ? WHERE username = ?");
           $stmt->bind_param('ss', $encpw_details, $_SERVER['PHP_AUTH_USER']);
@@ -152,70 +142,3 @@ function lookupltiuser($lti) {
   $stmt->fetch();
   return (array($ret[0], $ret[1], $username));
 }
-
-/*
-function lookupltiuser($db, $oauth_consumer_key, $user_id) {
-  $stmt = $db->prepare("SELECT rogo_id, updated_on, username FROM lti_user,users WHERE lti_user.rogo_id=users.id AND oauth_consumer_key=? AND user_id=?");
-  $stmt->bind_param('ss', $oauth_consumer_key, $user_id);
-  $stmt->execute();
-  $stmt->store_result();
-  $rows = $stmt->num_rows;
-  if ($rows < 1) {
-    return false;
-  }
-  $stmt->bind_result($rogo_id, $updated, $username);
-  $stmt->fetch();
-  return (array($rogo_id, $updated, $username));
-}
-
-function addltiuser($db, $oauth_consumer_key, $user_id, $userID) {
-  $result = $db->prepare("INSERT INTO lti_user (oauth_consumer_key, user_id, rogo_id,updated_on) VALUES (?,?,?,NOW()) ");
-  $result->bind_param('sss', $oauth_consumer_key, $user_id, $userID);
-  $result->execute();
-  $ret = $db->insert_id;
-  $result->close();
-  return $ret;
-}
-
-function lookupltiresource($db, $oauth_consumer_key, $resource_id) {
-  $stmt = $db->prepare("SELECT internal_id,itype FROM lti_resource WHERE  oauth_consumer_key=? AND lti_resource_id=?");
-  $stmt->bind_param('ss', $oauth_consumer_key, $resource_id);
-  $stmt->execute();
-  $stmt->store_result();
-  $rows = $stmt->num_rows;
-  if ($rows < 1) {
-    return false;
-  }
-  $stmt->bind_result($paperret, $otherret);
-  $stmt->fetch();
-  return (array($paperret, $otherret));
-}
-
-
-function addltiresource($db, $oauth_consumer_key, $lti_resource_id, $internal_id, $itype) {
-  $result = $db->prepare("INSERT INTO lti_resource (oauth_consumer_key, lti_resource_id, internal_id, itype) VALUES (?, ?, ?, ?) ");
-  $result->bind_param('ssss', $oauth_consumer_key, $lti_resource_id, $internal_id, $itype);
-  $result->execute();
-  $ret = $db->insert_id;
-  $result->close();
-  return $ret;
-}
-
-function addlticontext($db, $oauth_consumer_key, $lti_context_id, $c_internal_id) {
-  $result = $db->prepare("SELECT c_internal_id FROM lti_context WHERE oauth_consumer_key = ? AND lti_context_id =?");
-  $result->bind_param('ss', $oauth_consumer_key, $lti_context_id);
-  $result->execute();
-  $result->store_result();
-  $rows = $result->num_rows();
-  $result->close();
-  $ret = false;
-  if ($rows == 0) {
-    $result = $db->prepare("INSERT INTO lti_context (oauth_consumer_key, lti_context_id, c_internal_id, updated_on) VALUES (?, ?, ?, NOW()) ");
-    $result->bind_param('sss', $oauth_consumer_key, $lti_context_id, $c_internal_id);
-    $result->execute();
-    $ret = $db->insert_id;
-    $result->close();
-  }
-  return $ret;
-}
-*/
