@@ -25,7 +25,7 @@
 require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
 function calcPreParse($inputVal, $user_answers, $tmp_vars) {
-  global $A, $B, $C, $D, $E, $F, $G, $H;
+  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
   if (substr($inputVal,0,3) == 'ans') {
     //its a question refrance get previous user answer          
     $find_qid = intval(substr($inputVal,3));
@@ -64,30 +64,13 @@ function calcPreParse($inputVal, $user_answers, $tmp_vars) {
 }
 
 function checkVariables($number) {
-  global $A, $B, $C, $D, $E, $F, $G, $H;
+  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
   eval("\$new_number = \"$number\";");
   return $new_number;
 }
 
-function output_Math_Editor($id) {
-    ?>
-    <script language="Javascript">
-    DragMath.push('<?php echo $id; ?>');	
-    document.write('<applet id="DragMath_<?php echo $id; ?>" codebase="/editor/DragMath/applet" code="Display.MainApplet.class" archive="DragMath.jar" width=540 height=310>',
-                  '<param name= hideMenu value= "true" >',
-                  '<param name= customToolbar value= "0 3 4 | 5 6 7" >',
-                  '<param name=language value="en">',
-                  '<param name=implicitMultiplication value="false">',
-                  '<param name=outputFormat value="Maxima">',
-	              '<param name=openWithExpression value="' + document.getElementById('<?php echo $id; ?>').value + '">',
-	              'To use this page you need a Java-enabled browser. Download the latest Java plug-in from <a href="http://www.java.com">Java.com</a>',
-	              '</applet>');
-	</script>
-	<?php
-}
-
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $user_answers) {
-  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language;
+  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language;
 
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\" class=\"qtable\">\n";
   echo "<col width=\"40\"><col>\n";
@@ -780,27 +763,15 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if (in_array('ERROR',$replace,true)) {
       echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"\" disabled />" . $score_array[3] .  "</p>\n";
     } else {
-      if ($score_array[3] == 'Formula') {
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '') {
-          echo "<p><input type=\"hidden\" style=\"text-align:right; border:1px solid black\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" />";
-          output_Math_Editor("q$question_no");
-          echo "</p>\n";
-        } else {
-          echo "<p><input type=\"hidden\" style=\"text-align:right; border:1px solid black\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $tmp_user_answers[0] . "\" />";
-          output_Math_Editor("q$question_no");
-          echo "</p>\n";
-        }
+      if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '') {
+        echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[3] .  "</div>\n";
       } else {
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '') {
-          echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[3] .  "</div>\n";
-        } else {
-          if ((isset($tmp_user_answers[0]) and $tmp_user_answers[0] != '') or $screen_pre_submitted == 0) {
-            $ans = '';
-            if(isset($tmp_user_answers[0])){
-              $ans = $tmp_user_answers[0];
-            }
-            echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" />" . $score_array[3] .  "</div>\n";
+        if ((isset($tmp_user_answers[0]) and $tmp_user_answers[0] != '') or $screen_pre_submitted == 0) {
+          $ans = '';
+          if(isset($tmp_user_answers[0])){
+            $ans = $tmp_user_answers[0];
           }
+          echo "<div><input type=\"text\" style=\"text-align:right; border:1px solid black\" name=\"q" . $question_no . "\" size=\"10\" value=\"" . $ans . "\" />" . $score_array[3] .  "</div>\n";
         }
       }
     }
