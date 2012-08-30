@@ -92,7 +92,7 @@
 </script>
 
 <div class="popup" style="z-index:20; display:none; position:fixed; left:190px; top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
-<table border="0" cellpadding="2" cellspacing="0" style="width:530px; border:0px solid #C0C0C0; font-size:100%">
+<table border="0" cellpadding="2" cellspacing="0" style="width:530px; border:0px solid #C0C0C0; font-size:110%">
 <tr>
 <td style="background-color:#F2B100; height:5px; padding:0px"></td>
 </tr>
