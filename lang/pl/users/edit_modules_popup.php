@@ -1,8 +1,8 @@
 <?php
-$string['nomodules'] = 'No modules found for academic session';  // Niko, whole file please
-$string['modules'] = 'Modules';
-$string['modulesfor'] = 'Modules for';
-$string[1] = '1st Attempt';
-$string[2] = 'Resit 1';
-$string[3] = 'Resit 2'
+$string['nomodules'] = 'Brak modułów dla sesji akademickiej'; 
+$string['modules'] = 'Moduły';
+$string['modulesfor'] = 'Moduły dla';
+$string[1] = 'Pierwsze podejście';
+$string[2] = 'Pierwsza powtórka';
+$string[3] = 'Druga powtórka'
 ?>
