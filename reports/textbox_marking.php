@@ -58,7 +58,7 @@
     return $html;
   }
   
-  if ((isset($_POST['submit']) and $_POST['submit'] == 'Save & Exit') or (isset($_POST['continue']) and $_POST['continue'] == 'Save & Continue')) {
+  if ((isset($_POST['submit']) and $_POST['submit'] == $string['saveexit']) or (isset($_POST['continue']) and $_POST['continue'] == $string['savecontinue'])) {
     $paper_type = $_POST['paper_type'];
     
     // Delete previous records from the marks table.
@@ -78,7 +78,7 @@
       }
     }
    
-    if (isset($_POST['submit']) and $_POST['submit'] == 'Save & Exit') {
+    if (isset($_POST['submit']) and $_POST['submit'] == $string['saveexit']) {
       $mysqli->close();
       ?>
       <html>
