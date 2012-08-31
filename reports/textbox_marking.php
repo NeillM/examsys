@@ -34,12 +34,6 @@
   $enddate = $_GET['enddate'];
   $ws = $_GET['ws'];
   $phase = $_GET['phase'];
-  
-  if (isset($_POST['submit']) or isset($_POST['continue'])) {
-    var_dump($_POST);
-    
-    exit;
-  }
     
   function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username) {
     global $marks_correct, $string;
@@ -84,7 +78,7 @@
       }
     }
    
-    if (isset($_POST['submit']) and $_POST['submit'] == $string['saveexit']) {
+    if (isset($_POST['submit'])) {
       $mysqli->close();
       ?>
       <html>
