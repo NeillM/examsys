@@ -24,8 +24,6 @@
 
 require '../include/staff_auth.inc';
 require '../classes/stateutils.class.php';
-
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -38,9 +36,9 @@ require '../classes/stateutils.class.php';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {font-size:90%}
+  body {font-size:90%}
   </style>
-
+  
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
@@ -71,11 +69,11 @@ require '../classes/stateutils.class.php';
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT log_metadata.userID FROM (log$paper_type, log_metadata) WHERE log$paper_type.started=log_metadata.started AND log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND q_paper=? AND DATE_ADD(log_metadata.started, INTERVAL 2 MINUTE)>=? AND log_metadata.started<=? AND (student_grade='Student' OR student_grade='graduate')");
+    $result = $mysqli->prepare("SELECT DISTINCT userID FROM (log$paper_type, users) WHERE log$paper_type.userID=users.id AND q_paper=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=? AND (users.roles='Student' OR users.roles='graduate')");
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
     $result->execute();
     $result->bind_result($tmp_userID);
-    while ($result->fetch()) {
+    while ($row = $result->fetch()) {
       $candidate_no++;
     }
     $result->close();
@@ -91,7 +89,7 @@ require '../classes/stateutils.class.php';
     $phase_description = $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  if ($candidate_no > 0) $phase_description .= " - $candidate_no " . $string['candidates'];
+  $phase_description .= " - $candidate_no " . $string['candidates'];
 
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
