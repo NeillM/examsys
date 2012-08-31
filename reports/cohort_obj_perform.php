@@ -36,6 +36,7 @@ $enddate = $_GET['enddate'];
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
   <title>Rogō: <?php echo $string['learningobjectiveanalysis'] . ' ' . $cfg_install_type; ?></title>
@@ -43,6 +44,7 @@ $enddate = $_GET['enddate'];
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
+    body {font-size:90%}
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:15px; margin-right:15px}
     .q_no {text-align:right; vertical-align:top}
