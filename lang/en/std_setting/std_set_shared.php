@@ -8,4 +8,5 @@ $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['negmarking'] = 'negative marking';
 $string['bonusmark'] = 'for correct options, plus %d bonus %s for fully correct order';
+$string['mousereveal'] = '(Move the mouse over incorrect labels to reveal the correct answer)';
 ?>
