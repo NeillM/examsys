@@ -163,7 +163,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
       echo ">" . str_ireplace($search,$replace,$current_leadin) . "</p>\n";
       
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[2] .  "</p>\n";
+      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[3] .  "</p>\n";
       echo "<div>";
       echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
       echo "</div>\n";
