@@ -67,7 +67,7 @@ if (count($errors) == 0) {
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#FF0000">
     <tr>
-    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="Warning" />&nbsp;&nbsp;<span style="font-family:Arial,sans-serif; font-size:150%; font-weight:bold; color:#C00000">Error</span></td>
+    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="Warning" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000">Error</span></td>
     </tr>
     <tr>
     <td style="background-color:#FFC0C0">

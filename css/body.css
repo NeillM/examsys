@@ -1,7 +1,7 @@
 body {
   color:black;
   background-color:white;
-  font-family:Arial;
+  font-family:Arial,sans-serif;
   font-size:100%;
   margin:0px;
 }
@@ -28,6 +28,7 @@ textarea, input[type=text], select {
   font-family:Arail,sans-serif;
   font-size:100%;
   border: 1px solid #7F9DB9;
+  padding:0px;
 }
 
 table {

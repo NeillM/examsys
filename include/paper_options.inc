@@ -132,11 +132,11 @@ $stmt->close();
     <?php
     if ($paper_type == '6') {
     ?>
-    notice=window.open("<?php echo $cfg_root_path ?>/peer_review/properties.php?paperID=<?php echo $paperID; ?>&caller=details","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("<?php echo $cfg_root_path ?>/peer_review/properties.php?paperID=<?php echo $paperID; ?>&caller=details","properties","width=882,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     <?php
     } else {
     ?>
-    notice=window.open("<?php echo $cfg_root_path ?>/paper/properties.php?paperID=<?php echo $paperID; ?>&caller=details","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("<?php echo $cfg_root_path ?>/paper/properties.php?paperID=<?php echo $paperID; ?>&caller=details","properties","width=882,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     <?php
     }
     ?>
