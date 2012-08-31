@@ -54,7 +54,7 @@ $enddate = $_GET['enddate'];
   </style>
 </head>
 <body>
-<table class="header">
+<table class="header" style="font-size:90%">
 <?php
   // Get some paper properties
   getPaperProperties($mysqli, $paperID);
