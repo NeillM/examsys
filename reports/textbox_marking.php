@@ -38,6 +38,7 @@
   if (isset($_POST)) {
     var_dump($_POST);
   }
+  exit;
     
   function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username) {
     global $marks_correct, $string;
