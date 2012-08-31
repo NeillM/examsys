@@ -499,7 +499,7 @@ if ($_POST['paper_type'] == 'summative') {
       }
     }
     echo '</select></td></tr>';
-    echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:100%" cols="40" rows="4" name="notes"></textarea></td></tr>';
+    echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:100%; height:75px" cols="40" rows="3" name="notes"></textarea></td></tr>';
   }
     
   echo "</table>\n";

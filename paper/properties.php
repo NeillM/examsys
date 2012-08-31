@@ -793,7 +793,7 @@ if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'Admin') ==
 <table border="0" cellpadding="1" cellspacing="5" style="width:100%; height:645px; font-size:90%">
 <tr><td valign="top" style="background-color:white; border:1px solid #7F9DB9; width:120px">
 
-<table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:120px">
+<table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:140px">
 <?php
 if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
   echo "<tr><td id=\"tab1\" style=\"height:25px; color:#00156E; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
