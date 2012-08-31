@@ -37,7 +37,14 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>My Questions</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+	<style type="text/css">
+    body {background-color:#EEEEEE; font-size:90%}
+  </style>
+  
   <script language="javascript">
     function paperProperties() {
       notice=window.open("../../paper/properties.php?paperID=<?php echo $_GET['paperID']; ?>&noadd=y","properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
@@ -48,7 +55,7 @@
   </script>
 </head>
 
-<body style="background-color:#EEEEEE; font-family:Arial,sans-serif; font-size:90%">
+<body>
 <div align="center">
 <form>
 <table cellpadding="0" cellspacing="5" border="0" style="width:570px font-size:100%">

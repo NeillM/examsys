@@ -30,16 +30,19 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['bykeywords']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
-  html {height:100%; border-left:1px solid #95AEC8}
-  body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
-  a:link {color:black}
-  a:visited {color:black}
-  a:hover {color:black}
-  .f {padding-left:2px}
-  .n {text-align:right; padding-right:2px}
+    html {height:100%; border-left:1px solid #95AEC8}
+    body {font-size:80%}
+    a:link {color:black}
+    a:visited {color:black}
+    a:hover {color:black}
+    .f {padding-left:2px}
+    .n {text-align:right; padding-right:2px}
   </style>
   <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>

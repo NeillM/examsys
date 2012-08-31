@@ -29,14 +29,17 @@ require '../../include/staff_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>by Paper</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
-  body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
-  a:link {color:black}
-  a:visited {color:black}
-  a:hover {color:black}
-  .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-  .f {float:left; width:375px; padding-left:12px; font-size:90%}
+    body {font-size:90%}
+    a:link {color:black}
+    a:visited {color:black}
+    a:hover {color:black}
+    .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
+    .f {float:left; width:375px; padding-left:12px; font-size:90%}
   </style>
 </head>
 
@@ -44,12 +47,12 @@ require '../../include/staff_auth.inc';
 <br />
 <table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr><?php echo $string['papersbytype']; ?> (6)</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%" /></td></tr></table>
 <br />
-<div class="f"><a href="add_questions_paper_list.php?paper_type=0" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=0"><?php echo $string['formative self-assessment']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=1" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=1"><?php echo $string['progress test']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=2" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=2"><?php echo $string['summative exam']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=3" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=3"><?php echo $string['survey']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=4" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=4"><?php echo $string['osce station']; ?></a></div>
-<div class="f"><a href="add_questions_paper_list.php?paper_type=5" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=5"><?php echo $string['offline paper']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=0" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=0"><?php echo $string['formative self-assessment']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=1" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=1"><?php echo $string['progress test']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=2" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=2"><?php echo $string['summative exam']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=3" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=3"><?php echo $string['survey']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=4" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=4"><?php echo $string['osce station']; ?></a></div>
+<div class="f"><a href="add_questions_paper_list.php?paper_type=5" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?paper_type=5"><?php echo $string['offline paper']; ?></a></div>
 <br clear="all" />
 
 <br />

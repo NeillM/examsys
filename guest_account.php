@@ -61,12 +61,12 @@ if ($ip_match == false) {
 
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['guestaccount']; ?></title>
-<style type="text/css">
-body {color:black; background-color:white; font-family:Arial,sans-serif}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title><?php echo $string['guestaccount']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
 </head>
 
 <body>
@@ -129,12 +129,12 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $string['guestaccount']; ?></title>
-<style type="text/css">
-body {color:black; background-color:white; font-family:Arial,sans-serif}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title><?php echo $string['guestaccount']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
 </head>
 
 <body>

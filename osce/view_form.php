@@ -179,7 +179,7 @@
 
   <br />
   <div><strong><?php echo $string['feedback']; ?></strong></div>
-  <textarea name="feedback" id="feedback" style="font-family:Arial,sans-serif; border:1px solid #7F9DB9; width:100%" cols="60" rows="4"><?php echo $feedback; ?></textarea>
+  <textarea name="feedback" id="feedback" style="border:1px solid #7F9DB9; width:100%" cols="60" rows="4"><?php echo $feedback; ?></textarea>
 <?php
   $mysqli->close();
 ?>

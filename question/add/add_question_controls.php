@@ -26,58 +26,66 @@ require '../../include/staff_auth.inc';
 ?>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Rogō</title>
-<script language="JavaScript">
-  var selected_q = Array();
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title>Rogō</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+	<style type="text/css">
+    body {margin-top:0px; margin-left:0px; margin-right:4px; margin-bottom:2px; background-color:#DFECFF; font-size:90%}
+  </style>
+  
+  <script language="JavaScript">
+    var selected_q = Array();
 
-  function in_array (needle, haystack) { 
-    for (i=0; i<haystack.length; i++) { 
-      if (haystack[i] == needle) { 
-        return true; 
+    function in_array (needle, haystack) { 
+      for (i=0; i<haystack.length; i++) { 
+        if (haystack[i] == needle) { 
+          return true; 
+        } 
       } 
-    } 
-    return false; 
-  }
+      return false; 
+    }
 
-  function myToString(haystack) {
-    var str = '';
-    for (i=0; i<haystack.length; i++) {
-      if (i == 0) {
-        str = haystack[i];
-      } else {
-        str = str + ',' + haystack[i];
-      }
-    } 
-    return str;
-  }
-  
-  function myDelete(needle, haystack) {
-    var new_haystack = Array();
-    for (i=0; i<haystack.length; i++) {
-      if (haystack[i] != needle) {
-        new_haystack[new_haystack.length] = haystack[i];
-      }
+    function myToString(haystack) {
+      var str = '';
+      for (i=0; i<haystack.length; i++) {
+        if (i == 0) {
+          str = haystack[i];
+        } else {
+          str = str + ',' + haystack[i];
+        }
+      } 
+      return str;
     }
     
-    return new_haystack;
-  }
-  
-  function checkStatus(questionObj) {
-    var q_id = questionObj.name;
-    
-    if (in_array(q_id, selected_q) == true && questionObj.checked == false) {          // Question in array but user has unchecked
-      selected_q = myDelete(q_id, selected_q);
-    } else if (in_array(q_id, selected_q) == false && questionObj.checked == true) {   // User has checked question but it is not in the array
-      selected_q.push(q_id);
+    function myDelete(needle, haystack) {
+      var new_haystack = Array();
+      for (i=0; i<haystack.length; i++) {
+        if (haystack[i] != needle) {
+          new_haystack[new_haystack.length] = haystack[i];
+        }
+      }
+      
+      return new_haystack;
     }
     
-    document.theform.questions_to_add.value = myToString(selected_q);
-  }
-</script>
+    function checkStatus(questionObj) {
+      var q_id = questionObj.name;
+      
+      if (in_array(q_id, selected_q) == true && questionObj.checked == false) {          // Question in array but user has unchecked
+        selected_q = myDelete(q_id, selected_q);
+      } else if (in_array(q_id, selected_q) == false && questionObj.checked == true) {   // User has checked question but it is not in the array
+        selected_q.push(q_id);
+      }
+      
+      document.theform.questions_to_add.value = myToString(selected_q);
+    }
+  </script>
 </head>
-<body style="font-family:Arial,sans-serif; margin-top:0px; margin-left:0px; margin-right:4px; margin-bottom:2px; background-color:#DFECFF; font-size:90%">
+
+<body>
 <?php
   echo "<form name=\"theform\" method=\"post\" action=\"do_add_questions.php?paperID=" . $_GET['paperID'] . "&display_pos=" . $_GET['display_pos'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&scrOfY=" . $_GET['scrOfY'] . "&max_screen=" . $_GET['max_screen'] . "\">\n";
   echo "<div align=\"right\">" . $string['screen'] . "&nbsp;<select name=\"screen\">\n";

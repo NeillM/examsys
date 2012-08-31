@@ -27,16 +27,20 @@ require '../include/staff_auth.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['textboxmarking'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-  table {font-size:100%}
-  a {color:blue;text-decoration:none;cursor:pointer}
-  p {margin-top:0px;padding-top:0px}
+    body {font-size:90%}
+    table {font-size:100%}
+    a {color:blue;text-decoration:none;cursor:pointer}
+    p {margin-top:0px;padding-top:0px}
   </style>
-  <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+
   <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
@@ -95,9 +99,9 @@ require '../include/staff_auth.inc';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $phase_description . '</div></th>';
   echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(214); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
-  echo "<tr><td colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
+  echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
 
-  echo "<br />\n<div style=\"margin:20px; background-color:#E4EEFC; border:1px solid #B5C4DF; padding:10px; font-size:80%\">" . $string['msg'] . "</div>\n";
+  echo "<br />\n<div style=\"margin:20px; background-color:#E4EEFC; border:1px solid #B5C4DF; padding:10px; font-size:90%\">" . $string['msg'] . "</div>\n";
 
   echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
 

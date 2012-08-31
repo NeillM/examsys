@@ -29,14 +29,17 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['bykeyword'];?></title>
+  
+  <title><?php echo $string['bykeyword']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
-  body {margin:2px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:80%}
-  h1 {font-size:100%; background-color:#DDE7EE; color:#00156E; font-weight:bold; border-bottom:1px solid #C5C5C5; margin-bottom:0px; padding-bottom:0px}
-  a:link {color:black}
-  a:visited {color:black}
-  a:hover {color:black}
-  .k {padding-left:2px}
+    body {margin:2px; font-size:80%}
+    h1 {font-size:100%; background-color:#DDE7EE; color:#00156E; font-weight:bold; border-bottom:1px solid #C5C5C5; margin-bottom:0px; padding-bottom:0px}
+    a:link {color:black}
+    a:visited {color:black}
+    a:hover {color:black}
+    .k {padding-left:2px}
   </style>
 
   <script language="JavaScript">

@@ -124,7 +124,7 @@ if (!isset($_POST['submit'])) {
 <head>
 <title><?php echo $string['linktopaper']; ?></title>
 </head>
-<body style="font-family:Arial,sans-serif;font-size:90%;background-color:EEECDC;text-align:center">
+<body style="font-size:90%;background-color:EEECDC;text-align:center">
 <?php
   $property_id = $_POST['property_id'];
   $q_id = $_GET['q_id'];

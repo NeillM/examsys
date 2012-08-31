@@ -36,11 +36,14 @@ if (!isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['copyontopaper']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; margin:0px; background-color:#F1F5FB}
-  td {font-size:80%}
+    body {background-color:#F1F5FB}
+    td {font-size:80%}
   </style>
 
   <script type="text/javascript">

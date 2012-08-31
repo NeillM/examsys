@@ -22,20 +22,24 @@
 * @package
 */
 
-  require '../../include/staff_auth.inc';
+require '../../include/staff_auth.inc';
 
-  $paperID = $_GET['paperID'];
+$paperID = $_GET['paperID'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Add new Question</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
-    body {background-color:white; margin:0px; font-family:Arial,sans-serif; color:black; font-size:80%}
+    body {font-size:80%}
   </style>
+  
   <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">

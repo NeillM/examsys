@@ -117,9 +117,7 @@
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {font-size:90%}
     li {margin-left:15px;margin-right:15px;font-size:100%}
-    select,input{font-family:$font,sans-serif;font-size:100%}
     table {font-size:100%}
     pre {font-family:Arial,sans-serif; font-size:100%}
     .q_no {width:40px; text-align:right;vertical-align:top}

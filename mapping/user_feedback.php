@@ -128,7 +128,7 @@
     h1 {margin-left:5px;}
     td {font-size:100%}
     .q_no {text-align:right; vertical-align:top; cursor:pointer}
-    .divider {font-family:Arial,sans-serif; font-size:90%; font-weight:bold}
+    .divider {font-size:90%; font-weight:bold}
     .mapping {font-size:90%;color:#FF6300;font-weight:normal}
     a {text-decoration:none}
     li {list-style:none; padding-bottom:5px}

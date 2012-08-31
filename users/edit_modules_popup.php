@@ -29,13 +29,14 @@
   require_once '../classes/dateutils.class.php';
   
   function drawTabs($current_tab) {
-    $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>Modules for ' . $_GET['session'] . ':</strong></td>';
-    $tab_array = array('','1st Attempt','Resit 1','Resit 2');
+    global $string;
+    
+    $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
     for ($i=1; $i<=3; $i++) {
       if ($i == $current_tab) {
-        $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('list$i')\">" . $tab_array[$i] . "</td>";
+        $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
       } else {
-        $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('list$i')\">" . $tab_array[$i] . "</td>";
+        $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
       }
     }
     $html .= "</tr></table>\n";
@@ -66,7 +67,6 @@
       
       if ($old_letter != strtoupper(substr($moduleid,0,1))) {
         echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-        //echo "<div style=\"background-color:white; font-weight:bold\">&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</div>\n<div style=\"background-color:white; padding-top:2px\"><img src=\"../artwork/divider_bar.gif\" width=\"290\" height=\"1\" /></div>\n";
       }
 
       $match = false;
@@ -108,7 +108,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $_POST['session']; ?> Modules</title>
+  
+  <title><?php echo $_POST['session'] . ' ' . $string['modules']; ?></title>
+  
   <script type="text/javascript">
     function closeWindow() {
       window.opener.location.href = 'details.php?userID=<?php echo $_POST['userID']; ?>&tab=modules';
@@ -131,48 +133,51 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title><?php echo $session; ?> Modules</title>
-<style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:#E3EFFF; color:black; margin:8px 4px 4px 4px}
-  td {font-size:90%}
-</style>
-<script language="JavaScript">
-  function toggle(objectID) {
-    if (document.getElementById(objectID).style.backgroundColor == 'white') {
-      document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
-    } else {
-      document.getElementById(objectID).style.backgroundColor = 'white';
-    }
-  }
   
-  function showTab(tabID) {
-    document.getElementById('list1').style.display = 'none';
-    document.getElementById('list2').style.display = 'none';
-    document.getElementById('list3').style.display = 'none';
+  <title><?php echo $session; ?> Modules</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#E3EFFF; margin:8px 4px 4px 4px}
+    td {font-size:90%}
+  </style>
+  <script language="JavaScript">
+    function toggle(objectID) {
+      if (document.getElementById(objectID).style.backgroundColor == 'white') {
+        document.getElementById(objectID).style.backgroundColor = '#B3C8E8';
+      } else {
+        document.getElementById(objectID).style.backgroundColor = 'white';
+      }
+    }
     
-    document.getElementById(tabID).style.display = 'block';
-  }
-  
-  function resizeList() {
-    var winW = 630, winH = 460;
-    if (document.body && document.body.offsetWidth) {
-      winW = document.body.offsetWidth;
-      winH = document.body.offsetHeight;
+    function showTab(tabID) {
+      document.getElementById('list1').style.display = 'none';
+      document.getElementById('list2').style.display = 'none';
+      document.getElementById('list3').style.display = 'none';
+      
+      document.getElementById(tabID).style.display = 'block';
     }
-    if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-      winW = document.documentElement.offsetWidth;
-      winH = document.documentElement.offsetHeight;
+    
+    function resizeList() {
+      var winW = 630, winH = 460;
+      if (document.body && document.body.offsetWidth) {
+        winW = document.body.offsetWidth;
+        winH = document.body.offsetHeight;
+      }
+      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
+        winW = document.documentElement.offsetWidth;
+        winH = document.documentElement.offsetHeight;
+      }
+      if (window.innerWidth && window.innerHeight) {
+        winW = window.innerWidth;
+        winH = window.innerHeight;
+      }
+      winH -= 80;
+      document.getElementById('list1').style.height = winH + 'px';
+      document.getElementById('list2').style.height = winH + 'px';
+      document.getElementById('list3').style.height = winH + 'px';
     }
-    if (window.innerWidth && window.innerHeight) {
-      winW = window.innerWidth;
-      winH = window.innerHeight;
-    }
-    winH -= 80;
-    document.getElementById('list1').style.height = winH + 'px';
-    document.getElementById('list2').style.height = winH + 'px';
-    document.getElementById('list3').style.height = winH + 'px';
-  }
-</script>
+  </script>
 </head>
 <body onload="resizeList()" onresize="resizeList()">
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
@@ -185,7 +190,7 @@
   $result->bind_param('is', $_GET['userID'], $session);
   $result->execute();
   $result->bind_result($moduleid, $attempt);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $student_modules[$student_mod_count]['id'] = $moduleid;
     $student_modules[$student_mod_count]['attempt'] = $attempt;
     $student_mod_count++;
@@ -201,7 +206,7 @@
   $result->execute();
   $result->store_result();
   $result->bind_result($moduleid, $fullname);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $modules[$mod_count]['id'] = $moduleid;
     $modules[$mod_count]['fullname'] = $fullname;
     $mod_count++;
@@ -209,11 +214,11 @@
   $result->close();
   
   if ($mod_count == 0) {
-    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;No modules found for academic session <strong>" . $_GET['session'] . "</strong>.</div>";
+    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;" . $string['nomodules'] . " <strong>" . $_GET['session'] . "</strong>.</div>";
   } else {
-    list_modules($modules,1,$student_modules);
-    list_modules($modules,2,$student_modules);
-    list_modules($modules,3,$student_modules);
+    list_modules($modules, 1, $student_modules);
+    list_modules($modules, 2, $student_modules);
+    list_modules($modules, 3, $student_modules);
   }
  
   echo "<input type=\"hidden\" name=\"mod_count\" value=\"$mod_count\" /></div></td>\n</tr>\n";
@@ -221,7 +226,7 @@
   echo "<input type=\"hidden\" name=\"session\" value=\"" . $session . "\" /></div></td>\n</tr>\n";
 ?>
 <br /><br />
-<div align="center"><input style="width:120px" type="submit" name="submit" value="OK" />&nbsp;<input style="width:120px" type="submit" name="cancel" value="Cancel" onclick="window.close()" /></div>
+<div align="center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

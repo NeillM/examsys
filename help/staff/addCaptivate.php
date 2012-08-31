@@ -65,12 +65,15 @@ function unique_filename($filename, $path) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
-<title>New Captivate Tutorial</title>
-<style type="text/css"> 
-body {background-color:#EEECDC; color:black; font-family:Arial,sans-serif; font-size:90%; margin:0px}
-input, textarea {font-family:Arial,sans-serif}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
+  
+  <title>New Captivate Tutorial</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <style type="text/css"> 
+    body {background-color:#EEECDC; font-size:90%}
+  </style>
 <?php
 if ($_FILES['FileName'] != '') {
     //proc upload
@@ -106,9 +109,9 @@ $html = '<div>
                 self.close();
                  
         }
-        </script>
-        </head>
-        <body onload="retunHtmlToMainWindow();" >
+      </script>
+      </head>
+      <body onload="retunHtmlToMainWindow();" >
     <?php    
 } else {
   //defaut state
@@ -134,7 +137,7 @@ function showForm($error) {
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td></td><td>Browse for the flash file you wish to add (SWF).</td></tr>
 <tr><td><strong>File</strong></td><td>
-  <div id="waitmsg" style="display:none; filter:progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=4); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color:white; border:black 1px solid; color:black; font-size:20pt; font-family:Arial,sans-serif; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size: 10pt">This could take a few minutes<br />depending on network speed.</div><br /><div align="center"><img src="../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
+  <div id="waitmsg" style="display:none; filter:progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=4); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color:white; border:black 1px solid; color:black; font-size:20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size: 10pt">This could take a few minutes<br />depending on network speed.</div><br /><div align="center"><img src="../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
     <input type="file" name="FileName" size="45" /><br />
 </td></tr>
 <tr><td><strong>Title</strong></td><td><input name="title" type="text" value="" size="50" style="width:100%" /></td></tr>

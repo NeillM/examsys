@@ -48,7 +48,10 @@ if(empty($_POST['source_y']) || empty($_POST['dest_y']) || empty($_POST['moduleI
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō: Copy Objectives<?php echo ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../body.css" />
   <link rel="stylesheet" type="text/css" href="../submenu.css" />
 </head>
 <?php
@@ -73,7 +76,7 @@ if (count($errors) == 0) {
 <?php
 	foreach($errors as $error) {
 ?>
-    		<li style="font-family:Arial,sans-serif; font-size:90%"><?php echo $error; ?></li>
+    		<li style="font-size:90%"><?php echo $error; ?></li>
 <?php
 	}
 ?>

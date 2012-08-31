@@ -28,7 +28,14 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Buttons</title>
+
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <style type="text/css">
+    html {height:100%}
+    body {height:100%; background-color:#DFECFF; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
+  </style>
 
   <script language="JavaScript">
     var selectedButton = 'unused';
@@ -61,11 +68,6 @@
       }
     }
   </script>
-  
-  <style type="text/css">
-  html {height:100%}
-  body {height:100%; font-size:100%; font-family:Arial,sans-serif; background-color:#DFECFF; color:black; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
-  </style>
 </head>
 <body>
 

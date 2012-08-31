@@ -28,12 +28,17 @@ require '../../include/staff_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Rogō</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style>
-  html {height:99.2%}
+    html {height:99.2%}
+    body {height:100%; margin-top:4px; margin-left:0px; margin-right:6px; margin-bottom:2px; background-color:#DFECFF}
   </style>
 </head>
-<body style="height:100%; font-family:Arial,sans-serif; margin-top:4px; margin-left:0px; margin-right:6px; margin-bottom:2px; background-color:#DFECFF">
+
+<body>
 
 <iframe src="add_questions_list_unused.php" name="iframeurl" width="100%" height="60%" style="border:1px solid #95AEC8" frameborder="0">
   <p><?php echo $string['browsererr'];?></p>

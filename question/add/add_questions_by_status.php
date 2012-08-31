@@ -28,24 +28,27 @@ require '../../include/staff_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['bystatus']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
-  body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
-  a:link {color:black}
-  a:visited {color:black}
-  a:hover {color:black}
-  .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-  .f {float:left; width:375px; padding-left:12px; font-size:90%}
+    body {font-size:90%}
+    a:link {color:black}
+    a:visited {color:black}
+    a:hover {color:black}
+    .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
+    .f {float:left; width:375px; padding-left:12px; font-size:90%}
   </style>
 </head>
 
 <body>
 <br />
-<div class="f"><a href="add_questions_list_status.php?status=Normal" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Normal"><?php echo $string['normal']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Retired" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Retired"><?php echo $string['retired']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Incomplete" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Incomplete"><?php echo $string['incomplete']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Experimental" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Experimental"><?php echo $string['experimental']; ?></a></div>
-<div class="f"><a href="add_questions_list_status.php?status=Beta" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Beta"><?php echo $string['beta']; ?></a></div>
+<div class="f"><a href="add_questions_list_status.php?status=Normal" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Normal"><?php echo $string['normal']; ?></a></div>
+<div class="f"><a href="add_questions_list_status.php?status=Retired" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Retired"><?php echo $string['retired']; ?></a></div>
+<div class="f"><a href="add_questions_list_status.php?status=Incomplete" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Incomplete"><?php echo $string['incomplete']; ?></a></div>
+<div class="f"><a href="add_questions_list_status.php?status=Experimental" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Experimental"><?php echo $string['experimental']; ?></a></div>
+<div class="f"><a href="add_questions_list_status.php?status=Beta" target="_top"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list_status.php?status=Beta"><?php echo $string['beta']; ?></a></div>
 
 </body>
 </html>

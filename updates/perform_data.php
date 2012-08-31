@@ -77,12 +77,17 @@ $result->close();
 ?>
 <html>
 <head>
-<title>Upgrade: Populating Performance Data</title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%}
-table {font-size:100%}
-.n {text-align:right}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
+  <title>Upgrade: Populating Performance Data</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%}
+    table {font-size:100%}
+    .n {text-align:right}
+  </style>
 </head>
 <body>
 <?php

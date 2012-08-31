@@ -60,14 +60,17 @@ if (isset($_GET['scrOfY'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['byteam']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
-  body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
-  a:link {color:black}
-  a:visited {color:black}
-  a:hover {color:black}
-  .foldername {float:left; width:380px; height:60px; padding-left:12px; font-size:80%}
+    body {font-size:90%}
+    a:link {color:black}
+    a:visited {color:black}
+    a:hover {color:black}
+    .foldername {float:left; width:380px; height:60px; padding-left:12px; font-size:80%}
   </style>
 </head>
 

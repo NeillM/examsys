@@ -29,9 +29,11 @@ require '../../include/staff_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>by Paper</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
-  body {margin:0px; font-family:Arial,sans-serif; color:black; background-color:white; font-size:80%}
+  body {font-size:80%}
   a:link {color:black}
   a:visited {color:black}
   a:hover {color:black}
@@ -51,7 +53,7 @@ require '../../include/staff_auth.inc';
     $my_teams .= " OR moduleID LIKE '%$individual_team%'";
   }
 
-  $paper_icons = array('formative_16.gif','progress_16.gif','summative_16.gif','survey_16.gif','osce_16.gif','offline_16.gif','peer_review_16.gif');
+  $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_review_16.gif');
   
   if (isset($_GET['paper_type'])) {
     $sql = "SELECT property_id, paper_title, paper_type, moduleID, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname FROM (properties, users) WHERE paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=$userID $my_teams) ORDER BY paper_title";
@@ -63,7 +65,7 @@ require '../../include/staff_auth.inc';
   $result->execute();
   $result->bind_result($property_id, $paper_title, $paper_type, $moduleID, $created, $tmp_title, $tmp_initials, $tmp_surname);
   while ($result->fetch()) {
-    echo '<tr><td class="f"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '"><img src="../../artwork/' . $paper_icons[$paper_type] . '" width="16" height="16" alt="Folder" border="0" align="middle" /></a></td><td class="s"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '">' . $paper_title . '</a></td><td class="s">' . $moduleID . '</td><td class="s">' . $tmp_surname . ', ' . $tmp_initials . '. ' . $tmp_title . '</td><td class="s">' . $created . '</td></tr>';
+    echo '<tr><td class="f"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '"><img src="../../artwork/' . $paper_icons[$paper_type] . '" width="16" height="16" alt="Folder" align="middle" /></a></td><td class="s"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '">' . $paper_title . '</a></td><td class="s">' . $moduleID . '</td><td class="s">' . $tmp_surname . ', ' . $tmp_initials . '. ' . $tmp_title . '</td><td class="s">' . $created . '</td></tr>';
   }
   $result->close();
 ?>

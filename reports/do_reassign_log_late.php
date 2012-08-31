@@ -29,10 +29,10 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Reassign Script to User</title>
-  <style type="text/css">
-  body {color:black; font-family:Arial,sans-serif}
-  </style>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
   <script type="text/javascript">
     function reloadClose() {

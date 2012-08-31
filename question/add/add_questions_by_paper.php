@@ -27,37 +27,40 @@
 ?>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>by Paper</title>
-<link rel="stylesheet" type="text/css" href="../../css/header.css" />
-<style type="text/css">
-body {margin:0px; background-color:white; color:black; font-family:Arial,sans-serif; font-size:90%}
-table {font-size:100%}
-a:link {color:black}
-a:visited {color:black}
-a:hover {color:black}
-.divider {font-family:Arial,sans-serif; font-size:80%; font-weight:bold; padding-left:6px}
-.s {padding-left:6px}
-.q_no {text-align:right; width:35px}
-</style>
-<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
-<script language="JavaScript">  
-  function Qpreview(qID) {
-    parent.previewurl.location = '../view_question.php?q_id=' + qID;
-  }
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title>by Paper</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/header.css" />
+  <style type="text/css">
+    body {font-size:90%}
+    a:link {color:black}
+    a:visited {color:black}
+    a:hover {color:black}
+    .divider {font-size:80%; font-weight:bold; padding-left:6px}
+    .s {padding-left:6px}
+    .q_no {text-align:right; width:35px}
+  </style>
+  
+  <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+  <script language="JavaScript">  
+    function Qpreview(qID) {
+      parent.previewurl.location = '../view_question.php?q_id=' + qID;
+    }
 
-  function populateTicks() {
-    q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
-    for (i=0; i<q_array.length; i++) { 
-      var obj = document.getElementById(q_array[i]);
-      if (obj != null) {
-        obj.checked = true;
+    function populateTicks() {
+      q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
+      for (i=0; i<q_array.length; i++) { 
+        var obj = document.getElementById(q_array[i]);
+        if (obj != null) {
+          obj.checked = true;
+        }
       }
     }
-  }
-</script>
+  </script>
 </head>
 
 <body onload="populateTicks()">

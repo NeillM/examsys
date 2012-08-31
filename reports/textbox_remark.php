@@ -49,12 +49,15 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title><?php echo $string['secondmark']; ?></title>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
-  .pad {padding-left:40px; width:20px}
+    body {font-size:90%}
+    .pad {padding-left:40px; width:20px}
   </style>
+  
+  <script src="../js/staff_help.js" type="text/javascript"></script>  
 </head>
 
 <body>

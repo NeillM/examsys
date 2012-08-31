@@ -147,7 +147,7 @@ if (isset($_POST['submit'])) {
 ?>
 </div>
 <br />
-<div align="center"><input style="font-family:Arial,sans-serif; width:120px" type="submit" name="submit" value="Create Link" />&nbsp;&nbsp;<input style="font-family:Arial,sans-serif; width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+<div align="center"><input style="width:120px" type="submit" name="submit" value="Create Link" />&nbsp;&nbsp;<input style="width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
 </form>
 </body>
 </html>

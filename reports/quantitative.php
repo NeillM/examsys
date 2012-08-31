@@ -408,7 +408,7 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-size:90%}
-    h1 {margin-left:15px; font-family:Arial,sans-serif; font-size:18pt; color:#316AC5}
+    h1 {margin-left:15px; font-size:18pt; color:#316AC5}
     table {font-size:100%}
     p {margin-right:15px}
     td {vertical-align:top}
