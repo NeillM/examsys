@@ -101,7 +101,7 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Textbox Marking</title>
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:white; color:black; margin:0px}
+  body {font-size:90%}
   td {line-height:150%; text-align:justify}
   .heading {background-color:#EBEADB; color:black}
   <?php
@@ -174,28 +174,19 @@
   if ($result->num_rows == 0) {
     echo "<p>No students</p>";
   }
+  echo $result->num_rows ;
   while ($result->fetch()) {
     if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {
       $style = '';
       if (trim($user_answer) != '') {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
-          if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
-            //$style = ' style="display:none"';
-          } else {
-            //$style = ' style="color:#808080"';
-          }
-          $style = ' class="marked"';
+           $style = ' class="marked"';
         }
         echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
       } else {
         $answer_no++;
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
-          if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
-            //$style = ' style=" display:none"';
-          } else {
-            //$style = ' style="color:#808080"';
-          }
           $style = ' class="marked"';
         }
         echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td style=\"border-bottom:1px solid #CBC7B8; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID) . "</td></tr>\n";
