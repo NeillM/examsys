@@ -34,6 +34,10 @@
   $enddate = $_GET['enddate'];
   $ws = $_GET['ws'];
   $phase = $_GET['phase'];
+  
+  if (isset($_POST)) {
+    var_dump($_POST);
+  }
     
   function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username) {
     global $marks_correct, $string;
@@ -58,7 +62,7 @@
     return $html;
   }
   
-  if ((isset($_POST['submit']) and $_POST['submit'] == $string['saveexit']) or (isset($_POST['continue']) and $_POST['continue'] == $string['savecontinue'])) {
+  if (isset($_POST['submit']) or isset($_POST['continue'])) {
     $paper_type = $_POST['paper_type'];
     
     // Delete previous records from the marks table.
