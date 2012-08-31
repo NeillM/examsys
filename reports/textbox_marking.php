@@ -99,11 +99,14 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Textbox Marking</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {font-size:90%}
-  td {line-height:150%; text-align:justify}
-  .heading {background-color:#EBEADB; color:black}
+    body {font-size:90%}
+    td {line-height:150%; text-align:justify}
+    .heading {background-color:#EBEADB; color:black}
   <?php
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     echo ".marked {color:#808080;display:none}\n";
@@ -161,7 +164,7 @@
 <table cellpadding="4" cellspacing="0" border="0" style="margin-right:10px">
 <?php
   if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT 0 AS logtype, log0.id, log0.userID, user_answer, textbox_marking.mark FROM (log0, users) LEFT JOIN textbox_marking ON log0.id=textbox_marking.answer_id AND log0.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND users.roles='Student' AND users.id=log0.userID AND log0.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?) UNION ALL (SELECT 1 AS logtype, log1.id, log1.userID, user_answer, textbox_marking.mark FROM (log1, users) LEFT JOIN textbox_marking ON log1.id=textbox_marking.answer_id AND log1.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND users.roles='Student' AND users.id=log1.userID AND log1.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?)");
+    $result = $mysqli->prepare("(SELECT 0 AS logtype, log0.id, log0.userID, user_answer, textbox_marking.mark FROM (log0, users) LEFT JOIN textbox_marking ON log0.id=textbox_marking.answer_id AND log0.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND users.roles NOT IN ('university lecturer','University Secretary','IT Support','University Admin','Technical Staff') AND users.id=log0.userID AND log0.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?) UNION ALL (SELECT 1 AS logtype, log1.id, log1.userID, user_answer, textbox_marking.mark FROM (log1, users) LEFT JOIN textbox_marking ON log1.id=textbox_marking.answer_id AND log1.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND users.roles='Student' AND users.id=log1.userID AND log1.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?)");
     $result->bind_param('iiissiiiss', $phase, $paperID, $q_id, $startdate, $enddate, $phase, $paperID, $q_id, $startdate, $enddate);
   } else {
     $result = $mysqli->prepare("SELECT $paper_type AS logtype, log$paper_type.id, log$paper_type.userID, user_answer, textbox_marking.mark FROM (log$paper_type, users) LEFT JOIN textbox_marking ON log$paper_type.id=textbox_marking.answer_id AND log$paper_type.q_paper=textbox_marking.paperID AND phase=? WHERE q_paper=? AND users.roles NOT IN ('university lecturer','University Secretary','IT Support','University Admin','Technical Staff') AND users.id=log$paper_type.userID AND log$paper_type.q_id=? AND DATE_ADD(started, INTERVAL 2 MINUTE)>=? AND started<=?");
@@ -174,7 +177,6 @@
   if ($result->num_rows == 0) {
     echo "<p>No students</p>";
   }
-  echo $result->num_rows ;
   while ($result->fetch()) {
     if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {
       $style = '';
