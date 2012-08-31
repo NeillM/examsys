@@ -1,22 +1,21 @@
- body {margin:0px; padding-top:0px; padding-bottom:0px; padding-right:0px; padding-left:213px}
- div#left-sidebar {position:absolute; top:0; left:0; width:195px; height:100%; padding-right:4px; padding-left:14px; padding-top:4px; padding-bottom:4px; background-color:#DFECFF; border-right: 1px solid #95AEC8; overflow:auto; font-size:75%}
- @media screen {body>div#left-sidebar{position:fixed}}
- * html body{overflow:hidden} 
- #content{height:100px; background-colour:#FFFFFF; font-size:80%}
+body {padding-top:0px; padding-bottom:0px; padding-right:0px; padding-left:223px}
+div#left-sidebar {position:absolute; top:0; left:0; width:205px; height:100%; padding-right:4px; padding-left:14px; padding-top:4px; padding-bottom:4px; background-color:#DFECFF; border-right: 1px solid #95AEC8; overflow:auto; font-size:75%}
+@media screen {body>div#left-sidebar{position:fixed}}
+* html body{overflow:hidden} 
+#content{height:100px; background-colour:#FFFFFF; font-size:80%}
  
- img {margin:0px; padding:0px;}
- .divider {padding-left:10px; padding-bottom:2px; font-weight:bold}
- .f {float:left; width:375px; padding-left:10px; font-size:90%; height:50px}
- .file {float:left; width:375px; height:74px; padding-left:12px; font-size:90%}
- .mee {font-size:120%; display:inline}
+.divider {padding-left:10px; padding-bottom:2px; font-weight:bold}
+.f {float:left; width:375px; padding-left:10px; font-size:90%; height:50px}
+.file {float:left; width:375px; height:74px; padding-left:12px; font-size:90%}
+.mee {font-size:120%; display:inline}
 
- a.blacklink:link {color:#000000}
- a.blacklink:visited {color:#000000}
- a.blacklink:hover {color:#000000}
+a.blacklink:link {color:#000000}
+a.blacklink:visited {color:#000000}
+a.blacklink:hover {color:#000000}
 
- a.greylink:link {color:#808080}
- a.greylink:visited {color:#808080}
- a.greylink:hover {color:#808080}
+a.greylink:link {color:#808080}
+a.greylink:visited {color:#808080}
+a.greylink:hover {color:#808080}
 
 .menuheading {padding-left:6px; color:#215DC6; font-weight:bold; cursor:pointer}
 .menuheading a:link {color:#215DC6; cursor:pointer}
@@ -48,48 +47,48 @@
 .greymenuitem a:visited {color:#808080; text-decoration:none; cursor:pointer}
 .greymenuitem a:hover {color:#808080; text-decoration:none; cursor:pointer}
 
-.menuitem {width:190px}
-.menuitem span {width:120px; float:left}
+.menuitem {width:100%}
+.menuitem span {width:150px; float:left}
 .menuitem a:link {color:black; text-decoration:none; cursor:pointer}
 .menuitem a:visited {color:black; text-decoration:none; cursor:pointer}
 .menuitem a:hover {color:blue; text-decoration:underline; cursor:pointer}
 
 .menu_list {
- margin: 4px 0 0 0;
- padding-left: 11px;
- list-style: none;
+  margin: 4px 0 0 0;
+  padding-left: 11px;
+  list-style: none;
 }
 
 .menu_list li {
- padding-left: 24px;
- width: 120px;
- font-size: 90%;
- margin: 0;
+  padding-left: 24px;
+  width: 120px;
+  font-size: 90%;
+  margin: 0;
 }
 
 #break_controls {
- list-style: none;
+  list-style: none;
 }
 
 #break_controls li {
- height: 16px;
- margin-bottom: 6px;
+  height: 16px;
+  margin-bottom: 6px;
 }
 
 .menu_list .break {
- background: transparent url('../artwork/screen_icon.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon.png') no-repeat left center;
 }
 
 .menu_list .break.greymenuitem {
- background: transparent url('../artwork/screen_icon_grey.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon_grey.png') no-repeat left center;
 }
 
 #delete_break {
- background: transparent url('../artwork/screen_icon_delete.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon_delete.png') no-repeat left center;
 }
 
 #delete_break.greymenuitem {
- background: transparent url('../artwork/screen_icon_delete_off.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon_delete_off.png') no-repeat left center;
 }
 
 a.checklist {
@@ -97,13 +96,9 @@ a.checklist {
   text-decoration:none;
 }
 
- .ico {
-   text-align:center;
-   width:16px;
- }
-
-.ico img {
-  border: 0;
+.ico {
+  text-align:center;
+  width:16px;
 }
 
 .submenuheading {
@@ -112,7 +107,7 @@ a.checklist {
   margin-left:2px;
 }
 
- #menu2b, #menu2c {
+#menu2b, #menu2c {
   display: none;
 }
 
