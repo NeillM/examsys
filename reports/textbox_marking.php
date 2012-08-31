@@ -35,10 +35,11 @@
   $ws = $_GET['ws'];
   $phase = $_GET['phase'];
   
-  if (isset($_POST)) {
+  if (isset($_POST['submit']) or isset($_POST['continue'])) {
     var_dump($_POST);
+    
+    exit;
   }
-  exit;
     
   function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username) {
     global $marks_correct, $string;
