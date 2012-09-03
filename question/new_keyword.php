@@ -38,8 +38,13 @@ require '../include/errors.inc';
 ?>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Add Keyword</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  
   <script type="text/javascript">
     function updateKeywords() {
       var keywordNo = parseInt(window.opener.document.getElementById('keywordno').value);
@@ -67,40 +72,47 @@ require '../include/errors.inc';
 ?>
 <html>
 <head>
-<title>Add Keyword</title>
-<script language="JavaScript">
-  function illegalChar(codeID) {
-    if (codeID == 35) {
-      alert("Character '#' illegal - please use alternative characters in keyword.");
-      event.returnValue = false;
-    } else if (codeID == 38) {
-      alert("Character '&' illegal - please use alternative characters in keyword.");
-      event.returnValue = false;
-    } else if (codeID == 59) {
-      alert("Character ';' illegal - please use alternative characters in keyword.");
-      event.returnValue = false;
-    } else if (codeID == 63) {
-      alert("Character '?' illegal - please use alternative characters in keyword.");
-      event.returnValue = false;
-    } else if (codeID == 64) {
-      alert("Character '@' illegal - please use alternative characters in keyword.");
-      event.returnValue = false;
-    } else if (codeID == 94) {
-      alert("Character '^' illegal - please use alternative characters in keyword.");
-      event.returnValue = false;
-    } else if (codeID == 126) {
-      alert("Character '~' illegal - please use alternative characters in keyword.");
-      event.returnValue = false;
-    } else if (codeID == 13) {
-      document.myform.returnhit.value = '1';
-      document.myform.submit();
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
+  <title>Add Keyword</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#EEEEEE}
+    h1 {font-size:120%}
+  </style>
+
+  <script language="JavaScript">
+    function illegalChar(codeID) {
+      if (codeID == 35) {
+        alert("Character '#' illegal - please use alternative characters in keyword.");
+        event.returnValue = false;
+      } else if (codeID == 38) {
+        alert("Character '&' illegal - please use alternative characters in keyword.");
+        event.returnValue = false;
+      } else if (codeID == 59) {
+        alert("Character ';' illegal - please use alternative characters in keyword.");
+        event.returnValue = false;
+      } else if (codeID == 63) {
+        alert("Character '?' illegal - please use alternative characters in keyword.");
+        event.returnValue = false;
+      } else if (codeID == 64) {
+        alert("Character '@' illegal - please use alternative characters in keyword.");
+        event.returnValue = false;
+      } else if (codeID == 94) {
+        alert("Character '^' illegal - please use alternative characters in keyword.");
+        event.returnValue = false;
+      } else if (codeID == 126) {
+        alert("Character '~' illegal - please use alternative characters in keyword.");
+        event.returnValue = false;
+      } else if (codeID == 13) {
+        document.myform.returnhit.value = '1';
+        document.myform.submit();
+      }
     }
-  }
-</script>
-<style type="text/css">
-body {font-family:Arial,sans-serif; font-size:90%; background-color:#EEEEEE; color:black}
-h1 {font-size:120%}
-</style>
+  </script>
+
 </head>
 
 <body onload="document.myform.new_keyword.focus();">
