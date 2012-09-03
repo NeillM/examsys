@@ -7,4 +7,5 @@ $string['back'] = '&lt; Wstecz';
 $string['copyerror'] = 'Pytanie numer $q_no) Błąd kopiowania (pytania). Plik <strong>\'%s\'</strong> nie mógł być skopiowany.';
 $string['completemsg'] = 'Twój arkusz i pytania zostały skopiowane lecz następujący obraz nie.';
 $string['filecopywarning'] = 'Ostrzeżenie dot. kopiowania plików';
+$string['caculation_link_update_error'] = 'niko Error recaculating links for linked caculation questions - <strong>\'%s\'</strong>';
 ?>

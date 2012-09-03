@@ -105,7 +105,7 @@
     }
     $result->close();
 
-    //if we are copying in the same session we can copy the objctives
+    //if we are copying in the same session we can copy the objectives
     if ($new_calendar_year == $calendar_year) {
       $qids = implode(',', $qids);
       $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, module_id, $new_paper_id as paper_id, question_id, obj_id, calendar_year, vle_api FROM relationships WHERE question_id IN ($qids) AND paper_id = ?)");
@@ -182,7 +182,7 @@
               if (file_exists("../media/$individual_media")) {
                 if (!copy("../media/$individual_media","../media/$new_media_name")) {
                   $error[] = sprintf($string['copyerror'], $individual_media);
-                  //if the image is missing dont put the file name in the new question
+                  //if the image is missing don't put the file name in the new question
                   $new_media_name = '';
                 }
               } else {
@@ -205,6 +205,7 @@
           $addQuestion->bind_param('sssssssssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
           $addQuestion->execute();
           $new_qids[] = $question_id = $mysqli->insert_id;
+          if($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;
           $addQuestion->close();
 
           // Add in a record to the papers table.
@@ -239,6 +240,34 @@
           }
           $keyword_result->close();
         }
+
+        //Look for and fix links in linked calculation questions
+        if($q_type == 'calculation') {
+          $options = explode(',',$option_text);
+          $new_option_text = array();
+          foreach($options as $opt) {
+            if(stristr($opt,'var') !== false) {
+              $old_calc_q_id = substr($opt,4);
+              if(!isset($caculation_qid_map[$old_calc_q_id])) {
+                $error[] = sprintf($string['caculation_link_update_error'], $opt);
+                $new_option_text[] = $opt;
+              } else {
+                $new_option_text[] = substr($opt,0,4) . $caculation_qid_map[$old_calc_q_id];
+              }
+            } else if(stristr($opt,'ans') !== false){
+              $old_calc_q_id = substr($opt,3);
+              if(!isset($caculation_qid_map[$old_calc_q_id])) {
+                $error[] = sprintf($string['caculation_link_update_error'], $opt);
+                $new_option_text[] = $opt;
+              } else {
+                $new_option_text[] = substr($opt,0,3) . $caculation_qid_map[$old_calc_q_id];
+              }
+            } else {
+              $new_option_text[] = $opt;
+            }
+          }
+          $option_text = implode(',',$new_option_text);
+        }
       
         $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
         $addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
@@ -252,7 +281,7 @@
     $result->free_result();
     $result->close();
 
-    //if we are copying in the same session we can copy the objctives
+    //if we are copying in the same session we can copy the objectives
     if ($new_calendar_year == $calendar_year) {
       $i = 0;
       foreach ($old_qids as $old_id) {
