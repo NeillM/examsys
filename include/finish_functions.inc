@@ -1348,7 +1348,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         for ($i=0; $i<count($paper[$question]['correct']); $i++) {
           if ($paper[$question]['correct'][$i] != 0) $correct_no++;
         }
-        if (substr($tmp_exclude,0,1) == '0') {
+        if ($tmp_exclude{0} == '0') {
           if ($paper[$question]['score_method'] == 'Mark per Option') {
             $paper[$question]['totalpos'] += count($paper[$question]['option_text']) * $paper[$question]['marks_correct'];
           } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
@@ -1510,7 +1510,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           $paper[$question]['totalpos'] = $paper[$question]['marks_correct'];
         }
         
-        if (substr($tmp_exclude,0,1) == '1') $paper[$question]['mark'] = 0;
+        if ($tmp_exclude{0} == '1') {
+          $paper[$question]['mark'] = 0;
+          $paper[$question]['totalpos'] = 0;
+        }
 
         if ($tmp_display_feedback == '1') {
           if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
