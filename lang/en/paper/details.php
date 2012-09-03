@@ -39,4 +39,5 @@ $string['deleted_msg3'] = 'You do not own this paper, you will need to get <a hr
 $string['addscreenbreak'] = 'Add screen break';
 $string['deletescreenbreak'] = 'Delete screen break';
 $string['next'] = 'Next >>';
+$string['na'] = 'N/A';
 ?>

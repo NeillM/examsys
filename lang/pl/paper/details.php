@@ -39,4 +39,5 @@ $string['deleted_msg3'] = 'Nie jesteś właścicielem tego arkusza, musisz skont
 $string['addscreenbreak'] = 'Wprowadź podzielniki ekranowe';  
 $string['deletescreenbreak'] = 'Usuń podzielniki ekranowe';
 $string['next'] = 'Dalej >>';  
+$string['na'] = 'Brak'; 
 ?>
