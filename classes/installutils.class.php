@@ -2082,7 +2082,7 @@ QUERY;
           `username` char(15) default NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
-          `id` mediumnint(10) unsigned NOT NULL auto_increment,
+          `id` mediumint(10) unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female') default NULL,
           `last_login` datetime default NULL,
