@@ -2,10 +2,12 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+  <title>Calculator</title>
   <script language="javascript">
     var isNS4 = (navigator.appName == "Netscape") ? 1 : 0;
   </script>
   <link rel="stylesheet" type="text/css" href="calc.css"/>
+  <link rel="stylesheet" type="text/css" href="../../css/body.css"/>
   <!--[if IE ]>
   <style type="text/css">
     .label-button {

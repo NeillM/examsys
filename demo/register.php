@@ -70,7 +70,7 @@ function fixcase_callback($word) {
   return $word;
 }
 
-function adduser($tmp_roles,$new_username) {
+function adduser($tmp_roles, $new_username) {
   global $mysqli, $cfg_encrypt_salt;
   $initials = '';
   $first_names_array = explode(' ',$_POST['new_first_names']);

@@ -119,9 +119,17 @@ if (!isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['copyontopaper']; ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
+  <title><?php echo $string['copyontopaper']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; text-align:center}
+  </style>
 </head>
-<body style="font-family:Arial,sans-serif; font-size:90%; background-color:white; text-align:center">
+<body>
 <?php
   $property_id = $_POST['property_id'];
   $q_id = $_GET['q_id'];

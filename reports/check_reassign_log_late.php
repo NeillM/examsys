@@ -29,9 +29,12 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['latesubmission']. ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {font-size:90%; background-color:#F1F5FB; color:black; font-family:Arial,sans-serif; margin:4px}
+    body {font-size:90%; background-color:#F1F5FB; margin:4px}
   </style>
 
   <script type="text/javascript">

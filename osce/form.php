@@ -120,12 +120,14 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  
   <title>OSCE Form</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; font-size:60%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; margin:0px}
-    table {font-size:100%; border-collapse:collapse}
+    body {font-size:60%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    table {border-collapse:collapse}
     td {text-align:center}
-    textarea, input {font-size:100%; font-family:Arial,sans-serif}
     .q {border:1px solid #C0C0C0; text-align:left; width:80%}
     .r {border:1px solid #C0C0C0}
     .t {text-align:left; font-size:125%; color:<?php echo $themecolor; ?>; padding-top:10px}

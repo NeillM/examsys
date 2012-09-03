@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once '../config/index.inc';
-
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
@@ -71,27 +69,20 @@ $stmt->close();
 
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/start.css" />
+  <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
-    body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:<?php echo $textsize; ?>%}
-    li {margin-left:15px; margin-right:15px; font-size:100%}
+    body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; font-size:<?php echo $textsize; ?>%}
     <?php
     if (($bgcolor != 'white' and $bgcolor != '#FFFFFF') or ($fgcolor != 'black' and $fgcolor != '#000000')) {
-      echo "select, input {background-color:$bgcolor; color:$fgcolor; font-family:Arial,sans-serif; font-size:100%}\n";
+      echo "select, input {background-color:$bgcolor; color:$fgcolor; font-size:100%}\n";
     } else {
-      echo "select, input {font-family:Arial,sans-serif; font-size:100%}\n";
+      echo "select, input {font-size:100%}\n";
     }
     ?>
-    table {font-size:100%}
-    .paper {margin-left:0px; font-size:180%; color:white; font-weight:bold}
-    .question_no {width:40px; text-align:right; vertical-align:top}
-    .theme {font-size:150%; padding-left:4px; font-weight:bold; color:<?php echo $themecolor; ?>}
-    .notes {font-size:80%; color:<?php echo $labelcolor; ?>}
-    .no_marks {color:<?php echo $marks_color; ?>; font-size:80%}
-    .active {color:<?php echo $fgcolor; ?>}
-    .inactive {color:#C0C0C0}
-    .scrno {width:18px; text-align:center; background-color:#003366; font-size:80%}
-    .scrnocur {width:18px; text-align:center; background-color:#C00000; font-size:80%}
-    .feedback {font-family:Arial,sans-serif; font-style:italic; color:<?php echo $labelcolor; ?>}
+    .fback {font-style:italic; color:<?php echo $labelcolor; ?>}
   </style>
   <script type="text/javascript">
     function jumpTo() {
@@ -100,6 +91,7 @@ $stmt->close();
   </script>
 </head>
 <body onload="jumpTo()">
+  <div id="maincontent">
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
   <?php
@@ -110,11 +102,11 @@ $stmt->close();
   if ($no_screens > 1) {
     echo '<table cellspacing="1" cellpadding="1" border="0" style="font-weight:bold; color:white"><tr>';
     for ($i=1; $i<=$no_screens; $i++) {
-      echo "<td class=\"scrno\">$i</td>\n";
+      echo "<td class=\"s0\">$i</td>\n";
     }
     echo '</tr></table>';
   }
-  echo '</td><td width="160">'.$logo_html.'</td></tr></table>';
+  echo '</td></tr></table>';
 
   
   $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
@@ -131,10 +123,7 @@ $stmt->close();
   while ($question_data->fetch()) {
     if ($old_screen != $screen) {
       echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-      echo '<tr><td colspan="2"><table cellpadding="0" cellspacing="1" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
-      echo "<tr>\n<td width=\"20\">&nbsp;</td>\n";
-      echo "<td style=\"vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;$screen</td>\n</tr>\n";
-      echo '</table></td></tr>';
+      echo '<tr><td colspan="2"><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div></td></tr>';
     }
 
     if ($old_q_id != $q_id) {
@@ -148,10 +137,10 @@ $stmt->close();
       echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
       if ($theme != '') echo '<tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>';
-      if (trim($notes) != '') echo '<tr><td></td><td class="notes"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . strtoupper($string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
+      if (trim($notes) != '') echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . strtoupper($string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
 
       if ($scenario != '') {
-        echo "<tr style=\"background-color:$tmp_color\"><td class=\"question_no\">";
+        echo "<tr style=\"background-color:$tmp_color\"><td class=\"q_no\">";
         if ($q_type != 'info') {
           $q_no++;
           echo "<a name=\"q$q_no\">$q_no.&nbsp;</a>";
@@ -166,7 +155,7 @@ $stmt->close();
         $li_set = 0;
       } elseif ($q_type != 'info' and $li_set == 0) {
         $q_no++;
-        echo "<tr style=\"background-color:$tmp_color\"><td class=\"question_no\">";
+        echo "<tr style=\"background-color:$tmp_color\"><td class=\"q_no\">";
         echo "<a name=\"q$q_no\">$q_no.&nbsp;</a>";
       }
       if ($li_set == 0) {
@@ -185,8 +174,8 @@ $stmt->close();
       echo "$leadin</td></tr>\n";
       
       if ($q_type != 'info') {
-        echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"no_marks\"><br />($marks_correct ". $string['marks'] .")</td></tr>\n";
-        echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"feedback\"><br />" . nl2br($correct_fback) . "</td></tr>\n";
+        echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"mk\"><br />($marks_correct ". $string['marks'] .")</td></tr>\n";
+        echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"fback\"><br />" . nl2br($correct_fback) . "</td></tr>\n";
       }
     }    
     $old_q_id = $q_id;
@@ -195,13 +184,10 @@ $stmt->close();
 
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
 
-  echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%; border-top:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
-  echo '<tr><td style="color:white; font-size:80%; width:250px">&nbsp;&#169; 2011, The University of Nottingham</td><td style="color:white; width:75px; text-align:center">';
-  echo '<input type="text" style="background-color:transparent; text-align:center; font-size:80%; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
-  echo '</td></tr></table>';
   $mysqli->close();
 ?>
 </td></tr></table>
-</form>
+</div>
+
 </body>
 </html>

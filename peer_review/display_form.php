@@ -127,9 +127,9 @@ $result->close();
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <title>Form</title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {margin:0px; font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    table {font-size:100%}
+    body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
     td p {margin:0px}
     .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
     .group {padding-left:5px; color:white}

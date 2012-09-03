@@ -744,9 +744,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $textbox_size = explode('x',$question['display_method']);
         if ($display_option['option_text'] == 'plain') {
           if ($textbox_size[1] == 1) {
-            echo "<blockquote><input style=\"font-family:Arial,sans-serif\" type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $question['correct_fback'] . "\" />";
+            echo "<blockquote><input type=\"text\" name=\"q" . $question_no . "\" size=\"" . $textbox_size[0] . "\" value=\"" . $question['correct_fback'] . "\" />";
           } else {
-            echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $question['correct_fback'] . "</textarea>";
+            echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $question['correct_fback'] . "</textarea>";
           }
         } else {
           include_once('wysiwyg_editor.inc');

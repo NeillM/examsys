@@ -577,13 +577,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $textbox_size = explode('x',$question['display_method']);
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-          echo "<blockquote><textarea style=\"font-family:Arial,sans-serif\" class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
+          echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
         } else {
           $ans = '';
-          if(isset($user_answers[$current_screen][$q_id])) {
+          if (isset($user_answers[$current_screen][$q_id])) {
             $ans = $user_answers[$current_screen][$q_id];
           }
-          echo "<blockquote><textarea style=\"font-family:Arial,sans-serif; border:1px solid black; overflow:hidden; width:100%\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . ($textbox_size[1] * 2) . "\"></textarea></blockquote>\n";
+          echo "<blockquote><textarea style=\"border:1px solid black; overflow:hidden; width:100%\" name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . ($textbox_size[1] * 2) . "\"></textarea></blockquote>\n";
         }
         $marks += $display_option['marks_correct'];
         break;

@@ -174,45 +174,50 @@ if (isset($_POST['submit'])) {
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['remark'] . ' ' . $cfg_install_type; ?></title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:#F1F5FB; color:black; margin:0px}
-  th {font-weight:normal; color:#001687}
-  .o {text-align:right; padding-right:10px}
-  .c1 {width:65px; text-align:center}
-  .c2 {width:250px}
-  .r1 {background-color:white}
-  .r2 {background-color:#B3C8E8}
-  .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
-</style>
-<script language="JavaScript">
-  function toggle(objectID) {
-    if (document.getElementById(objectID).className == 'r2') {
-      document.getElementById(objectID).className = 'r1';
-    } else {
-      document.getElementById(objectID).className = 'r2';
-    }
-  }
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  function resizeList() {
-    var winW = 630, winH = 460;
-    if (document.body && document.body.offsetWidth) {
-      winW = document.body.offsetWidth;
-      winH = document.body.offsetHeight;
+  <title><?php echo $string['remark'] . ' ' . $cfg_install_type; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:90%; background-color:#F1F5FB}
+    th {font-weight:normal; color:#001687}
+    .o {text-align:right; padding-right:10px}
+    .c1 {width:65px; text-align:center}
+    .c2 {width:250px}
+    .r1 {background-color:white}
+    .r2 {background-color:#B3C8E8}
+    .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
+  </style>
+  
+  <script language="JavaScript">
+    function toggle(objectID) {
+      if (document.getElementById(objectID).className == 'r2') {
+        document.getElementById(objectID).className = 'r1';
+      } else {
+        document.getElementById(objectID).className = 'r2';
+      }
     }
-    if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-      winW = document.documentElement.offsetWidth;
-      winH = document.documentElement.offsetHeight;
+    
+    function resizeList() {
+      var winW = 630, winH = 460;
+      if (document.body && document.body.offsetWidth) {
+        winW = document.body.offsetWidth;
+        winH = document.body.offsetHeight;
+      }
+      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
+        winW = document.documentElement.offsetWidth;
+        winH = document.documentElement.offsetHeight;
+      }
+      if (window.innerWidth && window.innerHeight) {
+        winW = window.innerWidth;
+        winH = window.innerHeight;
+      }
+      winH -= 160;
+      document.getElementById('list').style.height = winH + 'px';
     }
-    if (window.innerWidth && window.innerHeight) {
-      winW = window.innerWidth;
-      winH = window.innerHeight;
-    }
-    winH -= 160;
-    document.getElementById('list').style.height = winH + 'px';
-  }
-</script>
+  </script>
 </head>
 
 <body onload="resizeList()" onresize="resizeList()">

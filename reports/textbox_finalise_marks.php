@@ -109,13 +109,17 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['finalisemarks'] . ' ' . $cfg_install_type; ?></title>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:80%; background-color:white; color:black; margin:0px}
+  body {font-size:80%}
   .l {font-size:110%}
   </style>
+  
+  <script src="../js/staff_help.js" type="text/javascript"></script>
 </head>
 
 <body>

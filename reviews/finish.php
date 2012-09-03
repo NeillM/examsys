@@ -63,29 +63,29 @@ if ($userroles == 'External Examiner') {
 ?>
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Rogō</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="imagetoolbar" content="no">
-<meta http-equiv="imagetoolbar" content="false">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="imagetoolbar" content="no">
+  <meta http-equiv="imagetoolbar" content="false">
+  
+  <title>Rogō</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; font-size:<?php echo $textsize; ?>%}
+    li {margin-left:15px; margin-right:15px; font-size:100%}
+    blockquote {font-size:90%}
+    .paper {font-size:180%; color:white; font-weight:bold}
+  </style>
 
-<style type="text/css">
-  body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; padding:0px; margin:0px; border:0px; font-family:Arial,sans-serif; font-size:<?php echo $textsize; ?>%}
-  li {margin-left:15px; margin-right:15px; font-family:Arial,sans-serif; font-size:100%}
-  select, input {font-size:100%}
-  blockquote {font-size:90%}
-  table {font-size:100%}
-  .paper {margin-left:0px; font-family:Arial,sans-serif; font-size:180%; color:white; font-weight:bold}
-</style>
+  <script src="../js/ie_fix.js" type="text/javascript"></script>
+  <script language="JavaScript">
+    window.history.go(1);
 
-<script src="../js/ie_fix.js" type="text/javascript"></script>
-<script language="JavaScript" type="text/javascript">
-  window.history.go(1);
-
-  function refreshparent() {
-    window.opener.location.reload();
-  }
-</script>
+    function refreshparent() {
+      window.opener.location.reload();
+    }
+  </script>
 </head>
 
 <body oncontextmenu="return false;" onload="refreshparent()">

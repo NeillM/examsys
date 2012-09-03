@@ -43,17 +43,17 @@
   $result->fetch();
   $result->close();
 ?>
-  <html>
+<html>
   <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['frequencyanalysis']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; font-size:90%; color:black; margin-top:0px; margin-left:0px; margin-right:0px}
-    .h {background-color:#F1F5FB; color:black}
-    .breadcrumb {margin-left:10px; font-size:90%}
-    .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
-    .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
-    .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}
+    body {font-size:90%}
     .question {text-align:left; border:1px solid #7F9DB9}
     .rating {width:40px; text-align:right; border:1px solid #7F9DB9}
     .theme {text-align:left; font-size:125%; color:<?php echo $themecolor; ?>; padding-top:10px}
@@ -66,26 +66,13 @@
       var winheight = screen.height-80;
       window.open("view_form.php?paperID=<?php echo $paperID; ?>&username="+userid+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
-
-    function move_in(img_name) {
-      document[img_name].src=onImg.src;
-    }
-
-    function move_out(img_name) {
-      document[img_name].src=offImg.src;
-    }
-
-    onImg = new Image;
-    onImg.src = '../artwork/up_folder_icon_on.gif';
-    offImg = new Image;
-    offImg.src = '../artwork/up_folder_icon_off.gif';
   </script>
   </head>
   
   <body>
 <?php
- echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-  echo "<tr><td class=\"h\">";
+  echo "<table class=\"header\">\n";
+  echo "<tr><th>";
   if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = 'Frequency Analysis (' . $_GET['repmodule'] . ' students only)';
   } else {
@@ -110,11 +97,11 @@
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></td><td class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
 
-  echo '<tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" /></td></tr></table>';
+  echo '<tr><th colspan="2" class="bevel"></th></tr></table>';
   
-  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse; font-size:100%\"><tr>\n";
+  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
 
   // Query Log4 to get stored ratings per question.
   $old_userID = '';

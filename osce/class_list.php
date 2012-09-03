@@ -32,12 +32,16 @@ $result->bind_result($paper_title, $moduleID, $calendar_year);
 $result->fetch();
 $result->close();
 ?>
-  <html>
-  <head>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>OSCE: Class List</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-family:Arial,sans-serif; font-size:70%; background-color:white; color:black; margin:0px}
+    body {font-size:70%}
     table {font-size:100%; border-collapse:collapse; width:100%}
     tr {border:1px solid #7F9DB9}
     a {color:black}
@@ -45,6 +49,7 @@ $result->close();
     .bl {font-weight:bold}
     .l {color:#808080}
   </style>
+  
   <script language="JavaScript">
     function load(userID) {
       window.location.href = "form.php?paperID=<?php echo $_GET['paperID']; ?>&userID=" + userID;
@@ -70,7 +75,7 @@ $result->close();
     $result->bind_param('iss', $_GET['paperID'], $moduleID, $calendar_year);
     $result->execute();
     $result->bind_result($tmp_userID, $surname, $first_names, $title, $student_id, $started);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       if ($started == '') {
         echo "<tr class=\"bl\" onclick=\"load('$tmp_userID')\"><td>$title</td><td>$surname, <span class=\"n\">$first_names</span</td><td>$student_id</td></tr>\n";
       } else {

@@ -31,8 +31,9 @@ $html = <<< HTML
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset={$cfg_page_charset}" />
   <title>{$string['preview']}</title>
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 </head>
-<body style='background-color:white; color:#808080; font-family:Arial,sans-serif; font-size:100%'>
+<body style='color:#808080'>
 <p>{$string['previewmsg']}</p>
 </body>
 </html>
