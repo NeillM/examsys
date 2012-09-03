@@ -52,293 +52,293 @@ if (isset($_POSR['paperID'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Standards Setting<?php echo ' ' . $cfg_install_type; ?></title>
-<?php
-// Get any questions to exclude.
-$excluded = array();
-$result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($q_id, $parts);
-while ($result->fetch()) {
-  $excluded[$q_id] = $parts;
-}
-$result->close();
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 
-// Get how many screens make up the question paper.
-$screen_data = array();
-$result = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, paper_prologue, marking, screen, leadin, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, bidirectional FROM (properties, papers, questions) WHERE papers.question=questions.q_id AND properties.property_id=papers.paper AND paper=? ORDER BY screen, p_id");
-$result->bind_param('i', $_GET['paperID']);
-$result->execute();
-$result->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $leadin, $start_date, $end_date, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
-while ($result->fetch()) {
-  $no_screens = strval($screen);
-  if (isset($screen_data[$no_screens])) {
-    $screen_data[$no_screens] += 1;
-  } else {
-    $screen_data[$no_screens] = 1;
+  <title>Standards Setting<?php echo ' ' . $cfg_install_type; ?></title>
+  <?php
+  // Get any questions to exclude.
+  $excluded = array();
+  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($q_id, $parts);
+  while ($result->fetch()) {
+    $excluded[$q_id] = $parts;
   }
-}
-$result->close();
-$current_screen = 1;
-?>
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<link rel="stylesheet" type="text/css" href="../css/start.css" />
-<link rel="stylesheet" type="text/css" href="../css/finish.css" />
-<style>
-table {table-layout:auto}
-</style>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/state.js"></script>
-<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<script type="text/javascript" src="../js/ie_fix.js"></script>
-<script type="text/javascript" src="../js/flash_include.js"></script>
-<script type="text/javascript" src="../js/jquery.flash_q.js"></script>
-<script type="text/javascript" src="../js/staff_help.js"></script>
-<script language="JavaScript">
-<?php
-  if ($_GET['method'] == 'ebel') {
-?>
-  function roundNumber(num, dec) {
-    var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-    return result;
+  $result->close();
+
+  // Get how many screens make up the question paper.
+  $screen_data = array();
+  $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper_type, paper_prologue, marking, screen, leadin, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, bidirectional FROM (properties, papers, questions) WHERE papers.question=questions.q_id AND properties.property_id=papers.paper AND paper=? ORDER BY screen, p_id");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($paper_title, $paper_type, $paper_prologue, $marking, $screen, $leadin, $start_date, $end_date, $bgcolor, $fgcolor, $themecolor, $labelcolor, $bidirectional);
+  while ($result->fetch()) {
+    $no_screens = strval($screen);
+    if (isset($screen_data[$no_screens])) {
+      $screen_data[$no_screens] += 1;
+    } else {
+      $screen_data[$no_screens] = 1;
+    }
   }
+  $result->close();
+  $current_screen = 1;
+  ?>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/start.css" />
+  <link rel="stylesheet" type="text/css" href="../css/finish.css" />
+  <style>
+  table {table-layout:auto}
+  </style>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/state.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/ie_fix.js"></script>
+  <script type="text/javascript" src="../js/flash_include.js"></script>
+  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="JavaScript">
+  <?php
+    if ($_GET['method'] == 'ebel') {
+  ?>
+    function roundNumber(num, dec) {
+      var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+      return result;
+    }
 
-  function recountCategories() {
-    var EE = 0;
-    var EI = 0;
-    var EN = 0;
-    var ME = 0;
-    var MI = 0;
-    var MN = 0;
-    var HE = 0;
-    var HI = 0;
-    var HN = 0;
+    function recountCategories() {
+      var EE = 0;
+      var EI = 0;
+      var EN = 0;
+      var ME = 0;
+      var MI = 0;
+      var MN = 0;
+      var HE = 0;
+      var HI = 0;
+      var HN = 0;
 
-    var origEE = 0;
-    var origEI = 0;
-    var origEN = 0;
-    var origME = 0;
-    var origMI = 0;
-    var origMN = 0;
-    var origHE = 0;
-    var origHI = 0;
-    var origHN = 0;
+      var origEE = 0;
+      var origEI = 0;
+      var origEN = 0;
+      var origME = 0;
+      var origMI = 0;
+      var origMN = 0;
+      var origHE = 0;
+      var origHI = 0;
+      var origHN = 0;
 
-    var question_no = parseInt(document.questions.stdIDNo.value);
+      var question_no = parseInt(document.questions.stdIDNo.value);
 
-    for (i=0; i<question_no; i++) {
-      var question_marks = parseInt(document.getElementById('std' + i + '_marks').value);
-      switch (document.getElementById('valstd' + i).value) {
-        case 'EE':
-          EE += question_marks;
-          break;
-        case 'EI':
-          EI += question_marks;
-          break;
-        case 'EN':
-          EN += question_marks;
-          break;
-        case 'ME':
-          ME += question_marks;
-          break;
-        case 'MI':
-          MI += question_marks;
-          break;
-        case 'MN':
-          MN += question_marks;
-          break;
-        case 'HE':
-          HE += question_marks;
-          break;
-        case 'HI':
-          HI += question_marks;
-          break;
-        case 'HN':
-          HN += question_marks;
-          break;
+      for (i=0; i<question_no; i++) {
+        var question_marks = parseInt(document.getElementById('std' + i + '_marks').value);
+        switch (document.getElementById('valstd' + i).value) {
+          case 'EE':
+            EE += question_marks;
+            break;
+          case 'EI':
+            EI += question_marks;
+            break;
+          case 'EN':
+            EN += question_marks;
+            break;
+          case 'ME':
+            ME += question_marks;
+            break;
+          case 'MI':
+            MI += question_marks;
+            break;
+          case 'MN':
+            MN += question_marks;
+            break;
+          case 'HE':
+            HE += question_marks;
+            break;
+          case 'HI':
+            HI += question_marks;
+            break;
+          case 'HN':
+            HN += question_marks;
+            break;
+        }
+        switch (document.getElementById('valstd' + i).value) {
+          case 'EE':
+          case 'exclude_EE':
+            origEE += question_marks;
+            break;
+          case 'EI':
+          case 'exclude_EI':
+            origEI += question_marks;
+            break;
+          case 'EN':
+          case 'exclude_EN':
+            origEN += question_marks;
+            break;
+          case 'ME':
+          case 'exclude_ME':
+            origME += question_marks;
+            break;
+          case 'MI':
+          case 'exclude_MI':
+            origMI += question_marks;
+            break;
+          case 'MN':
+          case 'exclude_MN':
+            origMN += question_marks;
+            break;
+          case 'HE':
+          case 'exclude_HE':
+            origHE += question_marks;
+            break;
+          case 'HI':
+          case 'exclude_HI':
+            origHI += question_marks;
+            break;
+          case 'HN':
+          case 'exclude_HN':
+            origHN += question_marks;
+            break;
+        }
       }
-      switch (document.getElementById('valstd' + i).value) {
-        case 'EE':
-        case 'exclude_EE':
-          origEE += question_marks;
-          break;
-        case 'EI':
-        case 'exclude_EI':
-          origEI += question_marks;
-          break;
-        case 'EN':
-        case 'exclude_EN':
-          origEN += question_marks;
-          break;
-        case 'ME':
-        case 'exclude_ME':
-          origME += question_marks;
-          break;
-        case 'MI':
-        case 'exclude_MI':
-          origMI += question_marks;
-          break;
-        case 'MN':
-        case 'exclude_MN':
-          origMN += question_marks;
-          break;
-        case 'HE':
-        case 'exclude_HE':
-          origHE += question_marks;
-          break;
-        case 'HI':
-        case 'exclude_HI':
-          origHI += question_marks;
-          break;
-        case 'HN':
-        case 'exclude_HN':
-          origHN += question_marks;
-          break;
+      document.questions.ee.value = EE + ' <?php echo $string['marks']; ?>';
+      if (origEE != EE) {
+        document.questions.origee.value = origEE;
+        document.questions.origee2.value = origEE;
+      } else {
+        document.questions.origee.value = '';
+        document.questions.origee2.value = '';
       }
+
+      document.questions.ei.value = EI + ' <?php echo $string['marks']; ?>';
+      if (origEI != EI) {
+        document.questions.origei.value = origEI;
+        document.questions.origei2.value = origEI;
+      } else {
+        document.questions.origei.value = '';
+        document.questions.origei2.value = '';
+      }
+
+      document.questions.en.value = EN + ' <?php echo $string['marks']; ?>';
+      if (origEN != EN) {
+        document.questions.origen.value = origEN;
+        document.questions.origen2.value = origEN;
+      } else {
+        document.questions.origen.value = '';
+        document.questions.origen2.value = '';
+      }
+
+      document.questions.me.value = ME + ' <?php echo $string['marks']; ?>';
+      if (origME != ME) {
+        document.questions.origme.value = origME;
+        document.questions.origme2.value = origME;
+      } else {
+        document.questions.origme.value = '';
+        document.questions.origme2.value = '';
+      }
+
+      document.questions.mi.value = MI + ' <?php echo $string['marks']; ?>';
+      if (origMI != MI) {
+        document.questions.origmi.value = origMI;
+        document.questions.origmi2.value = origMI;
+      } else {
+        document.questions.origmi.value = '';
+        document.questions.origmi2.value = '';
+      }
+
+      document.questions.mn.value = MN + ' <?php echo $string['marks']; ?>';
+      if (origMN != MN) {
+        document.questions.origmn.value = origMN;
+        document.questions.origmn2.value = origMN;
+      } else {
+        document.questions.origmn.value = '';
+        document.questions.origmn2.value = '';
+      }
+
+      document.questions.he.value = HE + ' <?php echo $string['marks']; ?>';
+      if (origHE != HE) {
+        document.questions.orighe.value = origHE;
+        document.questions.orighe2.value = origHE;
+      } else {
+        document.questions.orighe.value = '';
+        document.questions.orighe2.value = '';
+      }
+
+      document.questions.hi.value = HI + ' <?php echo $string['marks']; ?>';
+      if (origHI != HI) {
+        document.questions.orighi.value = origHI;
+        document.questions.orighi2.value = origHI;
+      } else {
+        document.questions.orighi.value = '';
+        document.questions.orighi2.value = '';
+      }
+
+      document.questions.hn.value = HN + ' <?php echo $string['marks']; ?>';
+      if (origHN != HN) {
+        document.questions.orighn.value = origHN;
+        document.questions.orighn2.value = origHN;
+      } else {
+        document.questions.orighn.value = '';
+        document.questions.orighn2.value = '';
+      }
+
+      document.questions.easy_total.value = (EE + EI + EN) + ' <?php echo $string['marks']; ?>';
+      document.questions.medium_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
+      document.questions.hard_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
+      document.questions.essential_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
+      document.questions.important_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
+      document.questions.nice_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
+
+      document.questions.easy2_total.value = (EE + EI + EN) + '<?php echo $string['marks']; ?>';
+      document.questions.medium2_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
+      document.questions.hard2_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
+      document.questions.essential2_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
+      document.questions.important2_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
+      document.questions.nice2_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
+
+      document.questions.ee2.value = EE + ' <?php echo $string['marks']; ?>';
+      document.questions.ei2.value = EI + ' <?php echo $string['marks']; ?>';
+      document.questions.en2.value = EN + ' <?php echo $string['marks']; ?>';
+      document.questions.me2.value = ME + ' <?php echo $string['marks']; ?>';
+      document.questions.mi2.value = MI + ' <?php echo $string['marks']; ?>';
+      document.questions.mn2.value = MN + ' <?php echo $string['marks']; ?>';
+      document.questions.he2.value = HE + ' <?php echo $string['marks']; ?>';
+      document.questions.hi2.value = HI + ' <?php echo $string['marks']; ?>';
+      document.questions.hn2.value = HN + ' <?php echo $string['marks']; ?>';
+
+      var paper_marks = document.getElementById('total_marks').value;
+      var cut_marks = 0;
+      cut_marks += EE * document.questions.EE.value * 100;
+      cut_marks += EI * document.questions.EI.value * 100;
+      cut_marks += EN * document.questions.EN.value * 100;
+      cut_marks += ME * document.questions.ME.value * 100;
+      cut_marks += MI * document.questions.MI.value * 100;
+      cut_marks += MN * document.questions.MN.value * 100;
+      cut_marks += HE * document.questions.HE.value * 100;
+      cut_marks += HI * document.questions.HI.value * 100;
+      cut_marks += HN * document.questions.HN.value * 100;
+      var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
+      var cut_score = (cut_marks / paper_marks) * 100;
+      document.questions.cut_score.value = '<?php echo $string['papermarks']; ?>=' + paper_marks + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
+
+      cut_marks = 0;
+      cut_marks += EE * document.questions.EE2.value * 100;
+      cut_marks += EI * document.questions.EI2.value * 100;
+      cut_marks += EN * document.questions.EN2.value * 100;
+      cut_marks += ME * document.questions.ME2.value * 100;
+      cut_marks += MI * document.questions.MI2.value * 100;
+      cut_marks += MN * document.questions.MN2.value * 100;
+      cut_marks += HE * document.questions.HE2.value * 100;
+      cut_marks += HI * document.questions.HI2.value * 100;
+      cut_marks += HN * document.questions.HN2.value * 100;
+      var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
+      var cut_score = (cut_marks / paper_marks) * 100;
+      document.questions.cut_score2.value = '<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
     }
-    document.questions.ee.value = EE + ' <?php echo $string['marks']; ?>';
-    if (origEE != EE) {
-      document.questions.origee.value = origEE;
-      document.questions.origee2.value = origEE;
-    } else {
-      document.questions.origee.value = '';
-      document.questions.origee2.value = '';
+  <?php
     }
-
-    document.questions.ei.value = EI + ' <?php echo $string['marks']; ?>';
-    if (origEI != EI) {
-      document.questions.origei.value = origEI;
-      document.questions.origei2.value = origEI;
-    } else {
-      document.questions.origei.value = '';
-      document.questions.origei2.value = '';
-    }
-
-    document.questions.en.value = EN + ' <?php echo $string['marks']; ?>';
-    if (origEN != EN) {
-      document.questions.origen.value = origEN;
-      document.questions.origen2.value = origEN;
-    } else {
-      document.questions.origen.value = '';
-      document.questions.origen2.value = '';
-    }
-
-    document.questions.me.value = ME + ' <?php echo $string['marks']; ?>';
-    if (origME != ME) {
-      document.questions.origme.value = origME;
-      document.questions.origme2.value = origME;
-    } else {
-      document.questions.origme.value = '';
-      document.questions.origme2.value = '';
-    }
-
-    document.questions.mi.value = MI + ' <?php echo $string['marks']; ?>';
-    if (origMI != MI) {
-      document.questions.origmi.value = origMI;
-      document.questions.origmi2.value = origMI;
-    } else {
-      document.questions.origmi.value = '';
-      document.questions.origmi2.value = '';
-    }
-
-    document.questions.mn.value = MN + ' <?php echo $string['marks']; ?>';
-    if (origMN != MN) {
-      document.questions.origmn.value = origMN;
-      document.questions.origmn2.value = origMN;
-    } else {
-      document.questions.origmn.value = '';
-      document.questions.origmn2.value = '';
-    }
-
-    document.questions.he.value = HE + ' <?php echo $string['marks']; ?>';
-    if (origHE != HE) {
-      document.questions.orighe.value = origHE;
-      document.questions.orighe2.value = origHE;
-    } else {
-      document.questions.orighe.value = '';
-      document.questions.orighe2.value = '';
-    }
-
-    document.questions.hi.value = HI + ' <?php echo $string['marks']; ?>';
-    if (origHI != HI) {
-      document.questions.orighi.value = origHI;
-      document.questions.orighi2.value = origHI;
-    } else {
-      document.questions.orighi.value = '';
-      document.questions.orighi2.value = '';
-    }
-
-    document.questions.hn.value = HN + ' <?php echo $string['marks']; ?>';
-    if (origHN != HN) {
-      document.questions.orighn.value = origHN;
-      document.questions.orighn2.value = origHN;
-    } else {
-      document.questions.orighn.value = '';
-      document.questions.orighn2.value = '';
-    }
-
-    document.questions.easy_total.value = (EE + EI + EN) + ' <?php echo $string['marks']; ?>';
-    document.questions.medium_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
-    document.questions.hard_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
-    document.questions.essential_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
-    document.questions.important_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
-    document.questions.nice_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
-
-    document.questions.easy2_total.value = (EE + EI + EN) + '<?php echo $string['marks']; ?>';
-    document.questions.medium2_total.value = (ME + MI + MN) + ' <?php echo $string['marks']; ?>';
-    document.questions.hard2_total.value = (HE + HI + HN) + ' <?php echo $string['marks']; ?>';
-    document.questions.essential2_total.value = (EE + ME + HE) + ' <?php echo $string['marks']; ?>';
-    document.questions.important2_total.value = (EI + MI + HI) + ' <?php echo $string['marks']; ?>';
-    document.questions.nice2_total.value = (EN + MN + HN) + ' <?php echo $string['marks']; ?>';
-
-    document.questions.ee2.value = EE + ' <?php echo $string['marks']; ?>';
-    document.questions.ei2.value = EI + ' <?php echo $string['marks']; ?>';
-    document.questions.en2.value = EN + ' <?php echo $string['marks']; ?>';
-    document.questions.me2.value = ME + ' <?php echo $string['marks']; ?>';
-    document.questions.mi2.value = MI + ' <?php echo $string['marks']; ?>';
-    document.questions.mn2.value = MN + ' <?php echo $string['marks']; ?>';
-    document.questions.he2.value = HE + ' <?php echo $string['marks']; ?>';
-    document.questions.hi2.value = HI + ' <?php echo $string['marks']; ?>';
-    document.questions.hn2.value = HN + ' <?php echo $string['marks']; ?>';
-
-    var paper_marks = document.getElementById('total_marks').value;
-    var cut_marks = 0;
-    cut_marks += EE * document.questions.EE.value * 100;
-    cut_marks += EI * document.questions.EI.value * 100;
-    cut_marks += EN * document.questions.EN.value * 100;
-    cut_marks += ME * document.questions.ME.value * 100;
-    cut_marks += MI * document.questions.MI.value * 100;
-    cut_marks += MN * document.questions.MN.value * 100;
-    cut_marks += HE * document.questions.HE.value * 100;
-    cut_marks += HI * document.questions.HI.value * 100;
-    cut_marks += HN * document.questions.HN.value * 100;
-    var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
-    var cut_score = (cut_marks / paper_marks) * 100;
-    document.questions.cut_score.value = '<?php echo $string['papermarks']; ?>=' + paper_marks + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
-
-    cut_marks = 0;
-    cut_marks += EE * document.questions.EE2.value * 100;
-    cut_marks += EI * document.questions.EI2.value * 100;
-    cut_marks += EN * document.questions.EN2.value * 100;
-    cut_marks += ME * document.questions.ME2.value * 100;
-    cut_marks += MI * document.questions.MI2.value * 100;
-    cut_marks += MN * document.questions.MN2.value * 100;
-    cut_marks += HE * document.questions.HE2.value * 100;
-    cut_marks += HI * document.questions.HI2.value * 100;
-    cut_marks += HN * document.questions.HN2.value * 100;
-    var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
-    var cut_score = (cut_marks / paper_marks) * 100;
-    document.questions.cut_score2.value = '<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%';
-  }
-<?php
-  }
-?>
-</script>
+  ?>
+  </script>
 </head>
 <?php
   if (isset($_GET['module'])) {

@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'include/std_set_shared_functions.inc';
 $stdID = 0;
 
 function checkVariables($number) {
-  global $A, $B, $C, $D, $E, $F, $G, $H;
+  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
   eval("\$new_number = \"$number\";");
   return $new_number;
 }
@@ -158,12 +158,14 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
         echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
       }
       $search = array('$A','$B','$C','$D','$E','$F','$G','$H','$I','$J');
-      $replace = array($A, $B, $C, $D, $E, $F, $G, $H, $I, $J);
+      $replace = array('<span class="fback">$A</span>', '<span class="fback">$B</span>', '<span class="fback">$C</span>', '<span class="fback">$D</span>', '<span class="fback">$E</span>', '<span class="fback">$F</span>', '<span class="fback">$G</span>', '<span class="fback">$H</span>', '<span class="fback">$I</span>', '<span class="fback">$J</span>');
       echo "<p";
       if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
       echo ">" . str_ireplace($search,$replace,$current_leadin) . "</p>\n";
+      //echo ">" . $current_leadin . "</p>\n";
       
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[3] .  "</p>\n";
+      echo "<div><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />" . $score_array[3] .  "</div>\n";
+      echo "<div class=\"fback\">Answer = " . $options[0]['correct'] . "</div>\n<br />\n";
       echo "<div>";
       echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
       echo "</div>\n";
