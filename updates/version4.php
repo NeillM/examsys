@@ -3256,6 +3256,14 @@ if (!isset($_POST['update'])) {
     flush();
   }
 
+  // 03/09/2012 Permissions fix for staff users
+  $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+  $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
