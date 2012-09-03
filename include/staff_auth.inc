@@ -156,7 +156,7 @@ if (strpos($userroles, 'SysAdmin') !== false) {
         $result->store_result();
         $result->bind_result($q_group, $ownerID);
         $result->fetch();
-        $group_array = explode(';', $q_group);
+        $group_array = explode(';', strtoupper($q_group));
 
         if ($ownerID != $userID and !in_array('SYSTEM', $group_array) and count(array_intersect($group_array, $teams)) == 0) {
           // Not owner or on team so check schools
@@ -215,7 +215,7 @@ if (strpos($userroles, 'SysAdmin') !== false) {
         if ($paper_ownerID != $userID) {
           $moduleIDs = explode(',', $moduleID);
           foreach ($moduleIDs as $g) {
-            if (isset($teams[$g])) {
+            if (isset($teams[strtoupper($g)])) {
               $on_team = true;
               break;
             }
@@ -246,7 +246,7 @@ if (strpos($userroles, 'SysAdmin') !== false) {
         $moduleIDs = explode(';', $q_group);
         //$question_teams = explode(';', $q_group);
         foreach ($moduleIDs as $question_team) {
-          if (isset($teams[$question_team])) $access = true;
+          if (isset($teams[strtoupper($question_team)])) $access = true;
         }
 
         //allow acsess to the TRAIN module for training!
