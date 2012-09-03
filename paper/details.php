@@ -53,16 +53,6 @@ function check_duplicates($q_screens) {
   }
 }
 
-function findDecisionQ($question_array, $sourceID) {
-  $source_question_no = 0;
-  $tmp_q_no = 0;
-  foreach ($question_array as $question) {
-    if ($question['type'] != 'info') $tmp_q_no++;
-    if ($question['q_id'] == $sourceID) $source_question_no = $tmp_q_no;
-  }
-  return $source_question_no;
-}
-
 function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status) {
   global $string;
 
@@ -670,7 +660,7 @@ function random_qMarks($random_questions) {
   if (isset($_GET['module']) and $_GET['module'] != '') {
     $module = $_GET['module'];
     $folder = '';
-    $paper_modules = explode(',',$module);
+    $paper_modules = explode(',', $module);
     if (count($paper_modules) > 0) {     // Paper is on multiple modules
       if (strpos($userroles, 'Admin') !== false) {
         $module = $paper_modules[0];
@@ -690,7 +680,7 @@ function random_qMarks($random_questions) {
     $result->bind_result($folder_name);
     $result->fetch();
     $result->close();
-    
+
     $module = '';
   } else {
     $paper_modules = explode(',', $tmp_module);  // Get the modules off the paper properties
@@ -702,7 +692,7 @@ function random_qMarks($random_questions) {
     $OKmodules = array();
     $module_split = explode(',', $module);
     foreach ($module_split as $individual_module) {
-      if (in_array($individual_module, $teams)) {
+      if (in_array(strtoupper($individual_module), $teams)) {
         $OKmodules[] = $individual_module;
       }
     }
@@ -805,12 +795,6 @@ function random_qMarks($random_questions) {
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {
         $tmp_screen_mean = ($total_marks == 0) ? 0 : ($screen_marks / $total_marks);
-        if ($paper_type == '2' and $question_number > 2 and $tmp_screen_mean * 100 > 25 and $screen_marks > 3) {
-          echo "\n<tr><td colspan=\"6\" style=\"margin-left:5px; font-weight:bold; color:#C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;";
-          $percent = round(($screen_marks / $total_marks) * 100);
-          printf($string['markswarning'], $old_screen, $screen_marks, $percent);
-          echo "</td></tr>\n";
-        }
       }
       $screen_marks = 0;
       if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
@@ -910,12 +894,6 @@ function random_qMarks($random_questions) {
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
       if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="' . $string['warning'] . '" border="0" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
-    } elseif ($temp_array[$x]['q_type'] == 'branching') {
-      if ($temp_array[$x]['leadin'] == '') {
-        echo "Branching question set based on Q" . findDecisionQ($temp_array,$temp_array[$x]['scenario']);
-      } else {
-        echo $temp_array[$x]['leadin'] . " (Q" . findDecisionQ($temp_array,$temp_array[$x]['scenario']) . ")";
-      }
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
       if ($excluded[$temp_array[$x]['q_id']] != NULL) echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
@@ -982,12 +960,6 @@ function random_qMarks($random_questions) {
   }
 
   if ($total_marks != 0) {
-    if ($paper_type == '2' and $question_number > 2 and ($screen_marks / $total_marks) * 100 > 25 and $screen_marks > 3) {
-      echo "\n<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td colspan=\"4\" class=\"warn\" style=\"font-weight:bold\">";
-      $percent = round(($screen_marks / $total_marks) * 100);
-      printf($string['markswarning'], $old_screen, $screen_marks, $percent);
-      echo "</td></tr>\n";
-    }
     if ($row_no > 0 and $paper_type != '3' and $paper_type != '4') {
       echo "<tr><td colspan=\"4\"></td><td id=\"marks_total\" style=\"border-top:1px solid black; padding-right:4px\" align=\"right\">";
       if ($marks_incorrect_error == true) {
