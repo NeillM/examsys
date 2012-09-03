@@ -371,8 +371,8 @@
                 }
                 break;
               case 'rank':
-                for ($sec=1; $sec<=substr_count($question['correct'],','); $sec++) {
-                  if (substr($tmp_exclude,$sec-1,1) == '0') {
+                if ($tmp_exclude{0} == '0') {
+                  for ($sec=1; $sec<=substr_count($question['correct'],','); $sec++) {
                     echo ',Q' . ($i+1) . chr($sec+64);
                     if ($is_random) {
                       add_random_column_standard($i, $sec);
