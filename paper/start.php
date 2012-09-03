@@ -524,7 +524,7 @@ if ($css != '') {
     ajaxSave();
   }
   
-  var startAutoSave = function () {
+  var startAutoSave = function () { 
     autoSaveRef = setTimeout("autoSave()",<?php echo ($cfg_autosave_timeout * 1000); ?>);
   }
 
@@ -536,8 +536,6 @@ if ($css != '') {
     submitType = 'autoSave';
     $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
     ajaxSave();
-    //clear auto save message
-    setTimeout("$('#savemsg').html(\"\")",5000);
     //reset the timer incase this is a long screen
     startAutoSave();
   }
@@ -604,11 +602,14 @@ if ($css != '') {
     if (submitType == 'userSubmit') {
       $('#qForm').submit();
       return true;
+    } else {
+      $('#savemsg').html("<?php echo $string['auto_ok']; ?>");
+      //clear auto save message
+      setTimeout("$('#savemsg').html(\"\")",5000);
     }
   }
 
   var saveFail = function () {
-    startAutoSave();
     $('#saveError').fadeIn('fast');
     $('#savemsg').html("");
     document.body.style.cursor = 'default';

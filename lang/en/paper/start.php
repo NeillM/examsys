@@ -36,7 +36,8 @@ $string['msgselectable3'] = 'You have already selected';
 $string['msgselectable4'] = '.\n\nPlease select a different ranking.';
 //ajax saving and auto saving messages
 $string['saving'] = 'Saving';
-$string['auto_saving'] = 'Auto saved';
+$string['auto_saving'] = 'Auto saving ...';
+$string['auto_ok'] = 'Auto Save Successful';
 $string['savefailed'] = 'Save Failed!';
 $string['tryagain'] = 'Please try again, by moving to the next or previous screens.</div>';
 ?>
