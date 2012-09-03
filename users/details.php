@@ -471,15 +471,15 @@ if (isset($_POST['update']) and $demo == false) {
     }
     echo "</optgroup>\n</select></td></tr>\n";
 
-    if (strpos($userroles,'SysAdmin') !== false ) {
+    if (strpos($userroles, 'SysAdmin') !== false ) {
       echo "<tr><td>&nbsp;" . $string['username'] . "&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"username\" value=\"$username\" /></td><td>&nbsp;" . $string['password'] . "</td><td colspan=\"2\">";
-      if($cfg_use_ldap and array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
+      if ($cfg_use_ldap and array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
         echo $string['externalauth'];
       } else {
         $url_email = urlencode($email);
         echo "<input type=\"button\" onclick=\"resetPassword('$url_email')\" value=\"{$string['reset']}\" />";
 
-        if(strpos($userroles, 'SysAdmin')) {
+        if (strpos($userroles, 'SysAdmin')) {
           echo "&nbsp;<input type=\"button\" onclick=\"forceResetPassword('$username')\" value=\"{$string['forcereset']}\" />";
         }
         
@@ -592,7 +592,7 @@ if (isset($_POST['update']) and $demo == false) {
   
   $stmt->execute();
   $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $duration, $screen, $ipaddress);
-  while($stmt->fetch()) {
+  while ($stmt->fetch()) {
     if ($old_q_paper != $q_paper or $old_started != $started) {
       if ($old_q_paper != '') {
         $paper[$results_no]['crypt_name'] = $old_crypt_name;
