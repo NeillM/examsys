@@ -99,11 +99,14 @@ require '../config/finish.inc';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['examscript'] . ' ' . $cfg_install_type; ?></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
+
+<title><?php echo $string['examscript'] . ' ' . $cfg_install_type; ?></title>
+
+<link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <?php
