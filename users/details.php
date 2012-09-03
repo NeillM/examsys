@@ -446,6 +446,7 @@ if (isset($_POST['update']) and $demo == false) {
     }
     $roles_array[] = 'Staff,Student';
     $roles_array[] = 'External Examiner';
+    $roles_array[] = 'Invigilator';
     $roles_array[] = '#Students';
     $roles_array[] = 'Student';
     $roles_array[] = 'Graduate';
