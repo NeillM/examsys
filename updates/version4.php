@@ -2982,7 +2982,7 @@ if (!isset($_POST['update'])) {
     echo "<li>CREATE TABLE scheduling (id int not null primary key auto_increment, paperID int, period varchar(255), barriers_needed tinyint, cohort_size varchar(20), notes text, sittings tinyint, campus varchar(255))</li>\n";
     ob_flush();
     flush();
-    $adjust = $mysqli->prepare("ALTER TABLE state ADD UNIQUE idx_user_state (userID, state_name, page)");
+    $adjust = $mysqli->prepare("ALTER TABLE scheduling ADD UNIQUE idx_paperID (paperID)");
     $adjust->execute();
     $adjust->close();
     echo "<li>ALTER TABLE scheduling ADD UNIQUE idx_paperID (paperID)</li>\n";
