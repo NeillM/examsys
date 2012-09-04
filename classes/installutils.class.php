@@ -1576,7 +1576,7 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`),
           KEY `idx_idx_log_metadata_student_grade` (`student_grade`),
-          KEY `idx_idx_log_metadata_student_grade` (`paperID`),
+          KEY `idx_idx_log_metadata_student_grade` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
