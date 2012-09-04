@@ -582,6 +582,8 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_resource TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_context TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".scheduling TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".performance_main TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".performance_details TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
@@ -1854,7 +1856,8 @@ QUERY;
           `ipaddress` varchar(15) default NULL,
           `duration` mediumint(9) default NULL,
           `screen` tinyint(4) default NULL,
-          PRIMARY KEY  (`id`)
+          PRIMARY KEY  (`id`),
+          KEY `idx_q_paper` (`q_paper`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2203,7 +2206,27 @@ QUERY;
            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['performace_main']  = <<<QUERY
+          CREATE TABLE `performance_main` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `q_id` int(10) unsigned DEFAULT NULL,
+          `paperID` int(10) unsigned DEFAULT NULL,
+          `percentage` tinyint(4) DEFAULT NULL,
+          `cohort_size` int(10) unsigned DEFAULT NULL,
+          `taken` date DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `idx_q_id` (`q_id`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset};
+QUERY;
 
+    $this->tableList['performance_details'] = <<<QUERY
+          CREATE TABLE `performance_details` (
+          `perform_id` int(11) DEFAULT NULL,
+          `part_no` tinyint(4) DEFAULT NULL,
+          `p` tinyint(4) DEFAULT NULL,
+          `d` tinyint(4) DEFAULT NULL
+          ) ENGINE=InnoDB DEFAULT CHARSET={charset};
+QUERY;
 
   }
 
