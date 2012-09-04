@@ -288,8 +288,11 @@ function deleteMedia($filename) {
   global $cfg_web_root;
   
   if ($filename != '') {
-    if (@!unlink($cfg_web_root . 'media/' . $filename)) {
-      //display_error("Failed to delete " . $filename, '', false, true);
+    $file = $cfg_web_root . 'media/' . $filename;
+    if (file_exists($file)) {
+      if (@!unlink($file)) {
+        //display_error("Failed to delete " . $filename, '', false, true);
+      }
     }
   }
 }
