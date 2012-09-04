@@ -22,16 +22,17 @@
 * @package
 */
 
-  require '../../include/staff_auth.inc';
+require '../../include/staff_auth.inc';
+
+function englishDate($orig_date) {
+  $tmp_date = substr($orig_date,6,2);
+  $tmp_date .= '/' . substr($orig_date,4,2);
+  $tmp_date .= '/' . substr($orig_date,0,4);
+  $tmp_date .= ' ' . substr($orig_date,8,2);
+  $tmp_date .= ':' . substr($orig_date,10,2);
   
-  function englishDate($orig_date) {
-    $tmp_date = substr($orig_date,6,2);
-    $tmp_date .= '/' . substr($orig_date,4,2);
-    $tmp_date .= '/' . substr($orig_date,0,4);
-    $tmp_date .= ' ' . substr($orig_date,8,2);
-    $tmp_date .= ':' . substr($orig_date,10,2);
-    return $tmp_date;
-  }
+  return $tmp_date;
+}
 ?>
 <html>
 <head>
@@ -40,7 +41,7 @@
   
   <title>My Questions</title>
   
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 	<style type="text/css">
     body {background-color:#EEEEEE; font-size:90%}
   </style>

@@ -44,11 +44,12 @@ ob_start();
 <title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
+<link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+
 <script type="text/javascript" src="../js/staff_help.js"></script>
-<script language="JavaScript" type="text/javascript">
+<script language="JavaScript">
   var ie  = document.all;
   var ns6 = document.getElementById&&!document.all;
   var isMenu  = false;

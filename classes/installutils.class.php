@@ -1372,7 +1372,7 @@ QUERY;
     $this->tableList['log0'] = <<<QUERY
         CREATE TABLE `log0` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
           `q_paper` smallint(5) unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
@@ -1394,7 +1394,7 @@ QUERY;
     $this->tableList['log1'] = <<<QUERY
         CREATE TABLE `log1` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
           `q_paper` smallint(5) unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
@@ -1416,7 +1416,7 @@ QUERY;
     $this->tableList['log2'] = <<<QUERY
         CREATE TABLE `log2` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
           `q_paper` smallint(5) unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
@@ -1438,7 +1438,7 @@ QUERY;
     $this->tableList['log3'] = <<<QUERY
         CREATE TABLE `log3` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
           `q_paper` smallint(5) unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
@@ -1460,7 +1460,7 @@ QUERY;
     $this->tableList['log4'] = <<<QUERY
         CREATE TABLE `log4` (
           `id` int(11) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime default NULL,
           `q_paper` smallint(5) unsigned default NULL,
           `q_id` int(11) default NULL,
@@ -1473,7 +1473,7 @@ QUERY;
     $this->tableList['log4_overall'] = <<<QUERY
         CREATE TABLE `log4_overall` (
           `id` int(11) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime default NULL,
           `q_paper` smallint(5) unsigned default NULL,
           `overall_rating` text,
@@ -1490,7 +1490,7 @@ QUERY;
     $this->tableList['log5'] = <<<QUERY
         CREATE TABLE `log5` (
           `id` int(11) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime default NULL,
           `q_paper` smallint(5) unsigned default NULL,
           `q_id` int(11) default NULL,
@@ -1504,8 +1504,8 @@ QUERY;
         CREATE TABLE `log6` (
           `id` int(11) NOT NULL auto_increment,
           `paperID` smallint(6) default NULL,
-          `reviewerID` mediumint(9) default NULL,
-          `peerID` mediumint(9) default NULL,
+          `reviewerID` int(10) unsigned default NULL,
+          `peerID` int(10) unsigned default NULL,
           `started` datetime default NULL,
           `q_id` int(11) default NULL,
           `rating` tinyint(4) default NULL,
@@ -1516,7 +1516,7 @@ QUERY;
     $this->tableList['log_late'] = <<<QUERY
         CREATE TABLE `log_late` (
           `id` int(8) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
           `q_paper` smallint(5) unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
@@ -1537,7 +1537,7 @@ QUERY;
     $this->tableList['log_metadata'] = <<<QUERY
         CREATE TABLE `log_metadata` (
           `id` int(11) NOT NULL auto_increment,
-          `userID` mediumint(9) default NULL,
+          `userID` int(10) default NULL,
           `paperID` smallint(6) default NULL,
           `started` datetime default NULL,
           `ipaddress` char(15) default NULL,
@@ -2082,7 +2082,7 @@ QUERY;
           `username` char(15) default NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
-          `id` mediumint(10) unsigned NOT NULL auto_increment,
+          `id` int(10) unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female') default NULL,
           `last_login` datetime default NULL,
@@ -2097,7 +2097,7 @@ QUERY;
     $this->tableList['users_metadata'] = <<<QUERY
         CREATE TABLE `users_metadata` (
           `id` int(11) NOT NULL auto_increment,
-          `userID` int(11) default NULL,
+          `userID` int(11) unsigned default NULL,
           `moduleID` int(11) default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,

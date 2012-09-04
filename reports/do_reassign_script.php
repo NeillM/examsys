@@ -57,8 +57,14 @@ foreach ($papers as $paper) {
   $result->execute();
   $result->close();
 
-  // Transfer records in logX.
+  // Transfer records in log2.
   $result = $mysqli->prepare("UPDATE log2 SET userID=? WHERE userID=? AND q_paper=? AND started=?");
+  $result->bind_param('iiis', $_GET['userID'], $_GET['temp_userID'], $paper['ID'], $paper['started']);
+  $result->execute();
+  $result->close();
+
+  // Transfer records in log_late.
+  $result = $mysqli->prepare("UPDATE log_late SET userID=? WHERE userID=? AND q_paper=? AND started=?");
   $result->bind_param('iiis', $_GET['userID'], $_GET['temp_userID'], $paper['ID'], $paper['started']);
   $result->execute();
   $result->close();
@@ -102,9 +108,6 @@ $result->close();
   <title>Reassign Script to User</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#ECE9D8}
-  </style>
 </head>
 
 <body onload="window.opener.location.reload(); window.close();">

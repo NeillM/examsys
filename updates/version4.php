@@ -2463,6 +2463,23 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
+  // 05/04/2012 - Enlarge the size of the integer for userID in log_late table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log_late' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type == 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE log_late CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log_late CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
   // 05/04/2012 - Enlarge the size of the integer for ownerID in questions table.
   $data_type = '';
   $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='questions' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='ownerID'");
