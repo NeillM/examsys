@@ -159,7 +159,7 @@ if (!$lti->isInstructor()) {
       exit();
     } else {
       // allow editing of the stored link
-      //TODO NO SUPPORT YET DONE
+      //TODO NO SUPPORT YET IMPLIMENTED
     }
 
   } else {

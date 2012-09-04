@@ -581,6 +581,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".state TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_resource TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_context TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".scheduling TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_db_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
@@ -1028,6 +1029,9 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
+\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
+
+
 // Local database
   \$cfg_db_username = '{cfg_db_username}';
   \$cfg_db_passwd   = '{cfg_db_passwd}';
@@ -1096,6 +1100,10 @@ SCRIPT;
 switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   case 'rogo.local':
     \$cfg_install_type = ' (local)';
+    break;
+  case 'rogotest.local':
+    \$cfg_install_type = ' (local testing)';
+    error_reporting(E_ALL);
     break;
   default:
     \$cfg_install_type = '';
@@ -1216,7 +1224,8 @@ QUERY;
           `deleted` datetime default NULL,
           `schoolid` int(11) default NULL,
           PRIMARY KEY (`id`),
-          KEY `degree` (`name`)
+          KEY `degree` (`name`),
+          KEY `idx_courses_name` (`name`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1387,7 +1396,8 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
-          KEY `started` (`started`)
+          KEY `started` (`started`),
+          KEY `idx_log0_screen` (`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1409,7 +1419,8 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
-          KEY `started` (`started`)
+          KEY `started` (`started`),
+          KEY `idx_log1_screen` (`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1431,7 +1442,8 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
-          KEY `started` (`started`)
+          KEY `started` (`started`),
+          KEY `idx_log2_screen` (`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1453,7 +1465,8 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
-          KEY `started` (`started`)
+          KEY `started` (`started`),
+          KEY `idx_log3_screen` (`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1466,7 +1479,11 @@ QUERY;
           `q_id` int(11) default NULL,
           `rating` text,
           `q_parts` varchar(50) default NULL,
-          PRIMARY KEY  (`id`)
+          PRIMARY KEY  (`id`),
+          KEY `q_paper` (`q_paper`),
+          KEY `username` (`userID`),
+          KEY `started` (`started`),
+          KEY `idx_log4_screen` (`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1483,7 +1500,11 @@ QUERY;
           `examinerID` mediumint(8) unsigned default NULL,
           `osce_type` enum('electronic','paper') default NULL,
           `year` tinyint(4) default NULL,
-          PRIMARY KEY  (`id`)
+          PRIMARY KEY  (`id`),
+          KEY `q_paper` (`q_paper`),
+          KEY `username` (`userID`),
+          KEY `started` (`started`),
+          KEY `idx_log5_screen` (`screen`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1496,7 +1517,10 @@ QUERY;
           `q_id` int(11) default NULL,
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
-          PRIMARY KEY  (`id`)
+          PRIMARY KEY  (`id`),
+          KEY `q_paper` (`q_paper`),
+          KEY `username` (`userID`),
+          KEY `started` (`started`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1509,7 +1533,10 @@ QUERY;
           `started` datetime default NULL,
           `q_id` int(11) default NULL,
           `rating` tinyint(4) default NULL,
-          PRIMARY KEY  (`id`)
+          PRIMARY KEY  (`id`),
+          KEY `q_paper` (`q_paper`),
+          KEY `username` (`userID`),
+          KEY `started` (`started`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1545,7 +1572,9 @@ QUERY;
           `year` tinyint(4) default NULL,
           `attempt` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
-          KEY `userID` (`userID`,`paperID`,`started`)
+          KEY `userID` (`userID`,`paperID`,`started`),
+          KEY `idx_idx_log_metadata_student_grade` (`student_grade`),
+          KEY `idx_idx_log_metadata_student_grade` (`paperID`),
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1613,7 +1642,7 @@ QUERY;
           `note_id` int(11) NOT NULL auto_increment,
           `note` text,
           `note_date` datetime default NULL,
-          `paper_id` smallint(6) default NULL,
+          `paper_id` mediumint(10) default NULL,
           `note_authorID` mediumint(9) default NULL,
           `note_workstation` varchar(15) default NULL,
           PRIMARY KEY  (`note_id`)
@@ -1623,7 +1652,7 @@ QUERY;
     $this->tableList['papers'] = <<<QUERY
         CREATE TABLE `papers` (
           `p_id` int(4) NOT NULL auto_increment,
-          `paper` smallint(5) unsigned NOT NULL default '0',
+          `paper` mediumint(10) unsigned NOT NULL default '0',
           `question` int(4) unsigned NOT NULL default '0',
           `screen` tinyint(2) unsigned NOT NULL default '0',
           `display_pos` smallint(5) unsigned default NULL,
@@ -1931,7 +1960,9 @@ QUERY;
           `method` enum('Modified Angoff','Angoff (Yes/No)','Ebel') default NULL,
           `group_review` text,
           PRIMARY KEY  (`id`),
-          KEY `paperID` (`paperID`)
+          KEY `paperID` (`paperID`),
+          KEY `idx_std-set` (`std_set`),
+          KEY `idx_setterID` (`setterID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2090,7 +2121,8 @@ QUERY;
           `yearofstudy` tinyint(4) default NULL,
           `user_deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
-          KEY `username_index` (`username`)
+          KEY `username_index` (`username`),
+          KEY `idx_roles` (`roles`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2134,7 +2166,7 @@ QUERY;
     $this->tableList['lti_keys'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_keys` (
           `id` mediumint(9) NOT NULL AUTO_INCREMENT,
-          `oauth_consumer_key` char(255)NOT NULL,
+          `oauth_consumer_key` char(255 )NOT NULL,
           `secret` char(255)DEFAULT NULL,
           `name` char(255) DEFAULT NULL,
           `context_id` char(255) DEFAULT NULL,
@@ -2154,6 +2186,23 @@ QUERY;
           KEY `c_internal_id` (`c_internal_id`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
+
+
+    $this->tableList['scheduling'] = <<<QUERY
+          CREATE TABLE `scheduling` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `paperID` int(11) DEFAULT NULL,
+          `period` varchar(255) DEFAULT NULL,
+          `barriers_needed` tinyint(4) DEFAULT NULL,
+          `cohort_size` varchar(20) DEFAULT NULL,
+          `notes` text,
+          `sittings` tinyint(4) DEFAULT NULL,
+          `campus` varchar(255) DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `idx_paperID` (`paperID`)
+           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
 
 
   }

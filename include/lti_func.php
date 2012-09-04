@@ -30,6 +30,7 @@
  * @param object $lti lti object
  * @return false if issue else array of userid and last updated data
  */
+
 function usercheck($db, $lti) {
   global $string, $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_root_path, $cfg_install_type, $cfg_db_database, $cfg_use_ldap, $fp_link, $cfg_encrypt_salt;
   
@@ -109,8 +110,8 @@ function usercheck($db, $lti) {
   } else {
     $authneeded = $lti_i->user_time_check($returned[1]);
     if ($authneeded === true) {
-      display_notice($string['ltiadditionallogin'], $string['ltiadditionallogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
-      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
+//      display_notice($string['ltiadditionallogin'], $string['ltiadditionallogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
+      display_notice($string['ltifirstlogin'],$string['ltiadditionallogindesc'].  $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
       //    $db->close();
       //    exit;
       $_SESSION['lti']['track'] = 'reauth';
