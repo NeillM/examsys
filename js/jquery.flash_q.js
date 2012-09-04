@@ -10,7 +10,7 @@ function sendTextToAS3(lang, q_no, mode, image, correct, user){
   // Add small delay to get around race condition that was evident in Firefox
   setTimeout(function() {
     doSend(q_no, toSend);
-  }, 500)
+  }, 600)
 }
 
 function doSend(q_no, toSend) {
