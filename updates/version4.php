@@ -1379,11 +1379,19 @@ if (!isset($_POST['update'])) {
     echo "<li>ALTER TABLE properties ADD COLUMN crypt_name varchar(32)</li>\n";
     ob_flush();
     flush();
-    
-    $adjust = $mysqli->prepare("ALTER TABLE properties ADD INDEX crypt_name_idx (crypt_name)");
-    $adjust->execute();
-    $adjust->close();
-    
+
+    $result2 = $mysqli->prepare("SHOW INDEX FROM properties WHERE Key_name = 'idx_facultyID'");
+    $result2->execute();
+    $result2->store_result();
+    $result2->fetch();
+    if ($result2->num_rows() == 0) {
+      $adjust = $mysqli->prepare("ALTER TABLE properties ADD INDEX crypt_name_idx (crypt_name)");
+      $adjust->execute();
+      $adjust->close();
+    }
+    $result2->close();
+
+
     $result2 = $mysqli->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties");
     $result2->execute();
     $result2->store_result();
@@ -3272,6 +3280,21 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
   }
+
+  // 04/09/2012 - add new index to schools
+  $result = $mysqli->prepare("SHOW INDEX FROM schools WHERE Key_name = 'idx_facultyID'");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $sql="CREATE INDEX `idx_facultyID` ON `schools` (`facultyID`)";
+    echo "<li>$sql</li>\n";
+    if (!$mysqli->real_query($sql)) {
+      echo "<li>" . $mysqli->error . "</li>\n";
+    }
+  }
+  $result->close();
+
 
   // 03/09/2012 Permissions fix for staff users
   $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";

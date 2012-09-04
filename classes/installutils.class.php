@@ -1867,7 +1867,8 @@ QUERY;
           `school` char(255) default NULL,
           `facultyID` int(11) default NULL,
           `deleted` datetime default NULL,
-          PRIMARY KEY  (`id`)
+          PRIMARY KEY  (`id`),
+          KEY `idx_facultyID` (`facultyID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
