@@ -1536,8 +1536,6 @@ QUERY;
           `q_id` int(11) default NULL,
           `rating` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
-          KEY `q_paper` (`q_paper`),
-          KEY `username` (`userID`),
           KEY `started` (`started`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0  DEFAULT CHARSET={$charset}
 QUERY;
