@@ -1505,8 +1505,7 @@ QUERY;
           PRIMARY KEY  (`id`),
           KEY `q_paper` (`q_paper`),
           KEY `username` (`userID`),
-          KEY `started` (`started`),
-          KEY `idx_log5_screen` (`screen`)
+          KEY `started` (`started`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
