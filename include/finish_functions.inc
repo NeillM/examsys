@@ -2074,7 +2074,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
 
         if ($tmp_display_correct_answer == '1') {
           echo '<br />';
-          if(isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
+          if (isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
           echo '<br />';
         }
         
@@ -2085,7 +2085,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
         
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-          echo '<div class="fback" style="margin-left:17px">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
+          echo '<div class="fback">&nbsp;' . $paper[$question]['correct_fback'] . "</div>\n";
         }
         break;
       case 'labelling':
