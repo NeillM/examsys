@@ -1571,7 +1571,8 @@ QUERY;
           `attempt` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`),
-          KEY `idx_idx_log_metadata_student_grade` (`student_grade`)
+          KEY `idx_log_metadata_student_grade` (`student_grade`),
+          KEY `idx_log_metadata_paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1919,7 +1920,7 @@ QUERY;
     $this->tableList['special_needs'] = <<<QUERY
         CREATE TABLE `special_needs` (
           `special_id` int(11) NOT NULL auto_increment,
-          `userID` mediumint(8) unsigned default NULL,
+          `userID` int(10) unsigned default NULL,
           `background` varchar(20) default NULL,
           `foreground` varchar(20) default NULL,
           `textsize` int(11) default NULL,
@@ -1960,7 +1961,7 @@ QUERY;
           `group_review` text,
           PRIMARY KEY  (`id`),
           KEY `paperID` (`paperID`),
-          KEY `idx_std-set` (`std_set`),
+          KEY `idx_std_set` (`std_set`),
           KEY `idx_setterID` (`setterID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;

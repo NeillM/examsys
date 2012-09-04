@@ -2097,7 +2097,7 @@ if (!isset($_POST['update'])) {
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_roles ON users (roles)</li>\n";
     if (!$mysqli->real_query("CREATE INDEX idx_roles ON users (roles)")) {
-      echo "<li>" . $mysqli->error . "</li>\n";
+      echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   }
 
@@ -2109,11 +2109,11 @@ if (!isset($_POST['update'])) {
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_std_set ON standards_setting (std_set)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_std_set ON standards_setting (std_set)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_setterID ON standards_setting (setterID)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_setterID ON standards_setting (setterID)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   }    
   $result->close();
@@ -2125,11 +2125,11 @@ if (!isset($_POST['update'])) {
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_log_metadata_student_grade ON log_metadata (paperID)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_log_metadata_student_grade ON log_metadata (student_grade)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log_metadata_paperID ON log_metadata (paperID)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_log_metadata_paperID ON log_metadata (paperID)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   } 
   $result->close();
@@ -2141,19 +2141,19 @@ if (!isset($_POST['update'])) {
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_log0_screen ON log0 (screen)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_log0_screen ON log0 (screen)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log1_screen ON log1 (screen)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_log1_screen ON log1 (screen)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log2_screen ON log2 (screen)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_log2_screen ON log2 (screen)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
     echo "<li>CREATE INDEX idx_log3_screen ON log3 (screen)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_log3_screen ON log3 (screen)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   } 
   $result->close();
@@ -2165,7 +2165,7 @@ if (!isset($_POST['update'])) {
   if ($result->num_rows() == 0) {
     echo "<li>CREATE INDEX idx_courses_name ON courses (name)</li>\n";
     if(!$mysqli->real_query("CREATE INDEX idx_courses_name ON courses (name)")) {
-        echo "<li>" . $mysqli->error . "</li>\n";
+        echo "<li class=\"error\">" . $mysqli->error . "</li>\n";
     }
   } 
   $result->close();
@@ -3555,7 +3555,7 @@ if (!isset($_POST['update'])) {
 
   // 16/05/2012 - Enlarge the size of the password field to hold higher level of encryption SHA-512.
   $data_len = 0;
-  $result = $mysqli->prepare("SELECT CHARACTER_OCTET_LENGTH FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='password'");
+  $result = $mysqli->prepare("SELECT CHARACTER_MAXIMUM_LENGTH FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='password'");
   $result->execute();
   $result->store_result();
   $result->bind_result($data_len);
