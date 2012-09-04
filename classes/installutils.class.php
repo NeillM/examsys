@@ -1575,8 +1575,7 @@ QUERY;
           `attempt` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`),
-          KEY `idx_idx_log_metadata_student_grade` (`student_grade`),
-          KEY `idx_idx_log_metadata_student_grade` (`paperID`)
+          KEY `idx_idx_log_metadata_student_grade` (`student_grade`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
