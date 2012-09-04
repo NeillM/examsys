@@ -2226,7 +2226,7 @@ QUERY;
           `part_no` tinyint(4) DEFAULT NULL,
           `p` tinyint(4) DEFAULT NULL,
           `d` tinyint(4) DEFAULT NULL
-          ) ENGINE=InnoDB DEFAULT CHARSET={charset};
+          ) ENGINE=InnoDB DEFAULT CHARSET={$charset};
 QUERY;
 
   }
