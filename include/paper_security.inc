@@ -82,8 +82,12 @@ function check_modules($userID, $moduleID, $calendar_year, $mysqlidb) {
   global $string, $title, $surname, $username;
   
   $attempt = 1;
+  $usern = $username;
+  if (isset($_SERVER['PHP_AUTH_USER'])) {
+    $usern = $_SERVER['PHP_AUTH_USER'];
+  }
 
-  if (stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
+  if (stripos($usern, 'user') !== 0) {
      if ($moduleID != '') {
       $cal_year_sql = '';
       if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
