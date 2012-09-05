@@ -3945,6 +3945,37 @@ if (!isset($_POST['update'])) {
   }
   $result_col->close();
 
+  // 18/07/2012
+  // Add index to improve performance for finding question copying in the Information dialog box.
+  $result = $mysqli->prepare("SHOW INDEX FROM track_changes");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 1) {
+    $adjust = $mysqli->prepare("ALTER TABLE track_changes ADD INDEX(type)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE track_changes ADD INDEX(type)</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
+  // 27/07/2012 - Remove invalid entries from track changes
+  $result = $mysqli->prepare("SELECT typeID FROM track_changes WHERE typeID < 1 LIMIT 1");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 1) {
+    $adjust = $mysqli->prepare("DELETE FROM track_changes WHERE typeID < 1");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>DELETE * FROM track_changes WHERE typeID < 1</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+
   // 31/07/2012 - Add deleted column to users
   $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='user_deleted'");
   $result->execute();
@@ -3960,8 +3991,34 @@ if (!isset($_POST['update'])) {
   }
   $result->close();
 
-  // 15/08/2012 - cczsa1 adding unknown school and faculty
 
+  // 03/08/2012 - Add session change over date.
+  $new_cfg_str = array();
+  $new_cfg_str[] =  "\$cfg_academic_year_start = '07/01';\n";
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $found = false;
+  foreach ($cfg as $line) {
+    if (strpos($line,'cfg_academic_year_start') !== false) {
+      $found = true;
+    }
+  }
+
+  if (!$found) {
+    array_splice($cfg,20,0,$new_cfg_str);
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Added academic_year_start to config file.</li>\n";
+    ob_flush();
+    flush();
+  }
+
+
+  // 15/08/2012 - cczsa1 adding unknown school and faculty
   require_once $cfg_web_root . 'classes/facultyutils.class.php';
   require_once $cfg_web_root . 'classes/schoolutils.class.php';
 
