@@ -266,7 +266,7 @@
   }
   function kb() {
     if (M)
-      p = p * Math.exp(B * Math.LN10);
+      p = p * Math.pow(10, B);
     j = true;
     M = false;
     s = 0;
@@ -391,12 +391,12 @@
   }
   function U() {
     kb();
-    if (u) Jb(Math.exp(p * Math.LN2));
+    if (u) Jb(Math.pow(2, p));
     else        Jb(Math.log(p) / Math.LN2);
   }
   function eb() {
     kb();
-    if (u) Jb(Math.exp(p * Math.LN10));
+    if (u) Jb(Math.pow(10, p));
     else        Jb(Math.log(p) / Math.LN10);
   }
   function X() {
