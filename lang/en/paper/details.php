@@ -24,6 +24,7 @@ $string['nocorrect'] = 'No correct answer specified';
 $string['zeromarks'] = 'Warning zero marks set.';
 $string['toomanycorrect'] = 'Too many correct options';
 $string['answermissing'] = 'Correct answer missing for some options.';
+$string['nolabels'] = 'No labels added to image.';
 $string['mcqsurvey'] = "MCQ with 'other' should only be used on surveys";
 $string['dichotomouswarning'] = '%d out of %d';
 $string['warning'] = 'Warning';

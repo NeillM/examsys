@@ -80,11 +80,36 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
       if ($score_method == 'Mark per Option' and $question_marks < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
+    } elseif ($q_type == 'labelling') {
+      if (!have_valid_labels($temp_array[$row_no]['correct'])) {
+        $temp_array[$row_no]['warnings'] = $string['nolabels'];
+      }
     }
     if ($q_type == 'mcq' and $score_method == 'vertical_other' and $p_type != '3') {
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
     }
   }
+}
+
+/**
+ * Check if a labelling question has any labels added to the canvas
+ * @param $correct Correct answer string for the question
+ * @return bool
+ */
+function have_valid_labels($correct) {
+  $ok = false;
+
+  $tmp_first_split = explode(';', $correct);
+  $tmp_second_split = explode('$', $tmp_first_split[11]);
+
+  for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
+    if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+      $ok = true;
+      break;
+    }
+  }
+
+  return $ok;
 }
 
 function randomDetails($questionID) {
