@@ -31,6 +31,7 @@ require '../include/errors.inc';
 require '../include/mapping.inc';
 require '../include/finish_functions.inc';
 require '../include/paper_security.inc';
+require '../include/media.inc';
 
 check_var('id', 'GET', true, false);
 
@@ -107,6 +108,7 @@ require '../config/finish.inc';
 
   <title><?php echo $string['examscript'] . ' ' . $cfg_install_type; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <?php
