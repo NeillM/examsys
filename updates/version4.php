@@ -4214,8 +4214,6 @@ if (!isset($_POST['update'])) {
   @ob_flush();
   @flush();
 
-
-
   $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND COLUMN_NAME='updated_at' AND TABLE_SCHEMA='$cfg_db_database'");
   $result->execute();
   $result->store_result();
@@ -4235,9 +4233,6 @@ if (!isset($_POST['update'])) {
   @ob_flush();
   @flush();
 
-
-
-
   // 03/09/2012 Permissions fix for staff users
   $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
@@ -4250,12 +4245,9 @@ if (!isset($_POST['update'])) {
   @ob_flush();
   @flush();
 
-
-
-
-
-
-
+  $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_username . "'@'" . $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
 
 
   // End ------------------------------------------------------------------
