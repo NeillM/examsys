@@ -145,6 +145,8 @@ if (!$lti->isInstructor()) {
     $returned2 = $lti->lookup_lti_context();
     $mod = $returned2[0];
     $data = $lti_i->module_code_translate($mod);
+    var_dump($data);
+    exit;
     foreach ($data as $v) {
       if (!UserUtils::staff_on_team($v[1], $mysqli)) {
         UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
