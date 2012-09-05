@@ -4101,6 +4101,143 @@ if (!isset($_POST['update'])) {
   $result->close();
 
 
+
+
+  // cczsa1 2012/09/05 update table structure to match new lti (somehow this has dissapeared from this file somewhere in the past)
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_user' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='oauth_consumer_key'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0 ) {
+    $sql="UPDATE `lti_user` set oauth_consumer_key=CONCAT(oauth_consumer_key,':',user_id)";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_user` DROP COLUMN user_id";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+    $sql="ALTER TABLE `lti_user` CHANGE `oauth_consumer_key` `lti_user_key` varchar(255)";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+    $sql="ALTER TABLE `lti_user` CHANGE `rogo_id` `lti_user_equ` varchar(255) NOT NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+    $sql="ALTER TABLE `lti_user` CHANGE `updated_on` `updated_on` datetime NOT NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  @ob_flush();
+  @flush();
+
+
+  
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_context' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+
+    $sql="UPDATE `lti_context` SET `oaurth_consumer_key`=CONCAT(`oauth_consumer_key`,':',`lti_context_id`)";
+    $adjust = $mysqli->prepare($sql);
+
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_context` DROP `lti_context_id`";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_context` CHANGE `oauth_consumer_key` `lti_context_key` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+  }
+
+  $result->close();
+  @ob_flush();
+  @flush();
+
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_resource' AND COLUMN_NAME='oauth_consumer_key' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+
+    $sql="UPDATE `lti_resource` SET `lti_resource_id`=CONCAT(`oauth_consumer_key`,':',`lti_resource_id`)";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` DROP `oauth_consumer_key`";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` CHANGE `lti_resource_id` `lti_resource_key` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` CHANGE `itype` `internal_type` VARCHAR( 255 ) NOT NULL ";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+
+    $sql="ALTER TABLE `lti_resource` CHANGE `updated` `updated_on` DATETIME";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+
+  @ob_flush();
+  @flush();
+
+
+
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='lti_keys' AND COLUMN_NAME='updated_at' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
+
+
+    $sql="ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+
+  @ob_flush();
+  @flush();
+
+
+
+
   // 03/09/2012 Permissions fix for staff users
   $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
@@ -4108,6 +4245,18 @@ if (!isset($_POST['update'])) {
   $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
+
+
+  @ob_flush();
+  @flush();
+
+
+
+
+
+
+
+
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
