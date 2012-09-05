@@ -962,20 +962,22 @@ if ($student_no > 0) {
             }
             break;
           case 'textbox':
-            if(isset($individual[$tmp_screen][$tmp_question_ID])) {
-              $tmp_data = trim($individual[$tmp_screen][$tmp_question_ID]);
-            } else {
-              $tmp_data = '<unanswered>';
-            }
-            $tmp_data = preg_replace("/(\r\n|\n|\r)/", "", $tmp_data);
-            $tmp_data = str_replace('"',"'",$tmp_data);
+            if (!isset($excluded[$tmp_question_ID])) {
+              if (isset($individual[$tmp_screen][$tmp_question_ID])) {
+                $tmp_data = trim($individual[$tmp_screen][$tmp_question_ID]);
+              } else {
+                $tmp_data = '<unanswered>';
+              }
+              $tmp_data = preg_replace("/(\r\n|\n|\r)/", "", $tmp_data);
+              $tmp_data = str_replace('"',"'",$tmp_data);
 
-            if (substr($tmp_data,0,1) == '-') $tmp_data = trim(substr($tmp_data,1));
-            echo ',"' . $tmp_data . '"';
+              if (substr($tmp_data,0,1) == '-') $tmp_data = trim(substr($tmp_data,1));
+              echo ',"' . $tmp_data . '"';
+            }
             break;
           case 'sct':
-            $correct_text_parts = explode("\t", $question['correct_text']);
             if (!isset($excluded[$tmp_question_ID])) {
+              $correct_text_parts = explode("\t", $question['correct_text']);
               echo ',"';
               if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != 'u') {
                 if ($mode == 'numeric') {
