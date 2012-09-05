@@ -97,6 +97,7 @@ function check_modules($userID, $moduleID, $calendar_year, $mysqlidb) {
       $stmt->bind_result($moduleid, $attempt);
       $stmt->store_result();
       if ($stmt->num_rows == 0) {
+        if ($calendar_year == '') $calendar_year = 'current year';
         $tmp_string = sprintf($string['notregistered'], $title, $surname, $username, $moduleID, $calendar_year);
         access_denied($tmp_string, $output_header = false);
       } else {
