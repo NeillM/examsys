@@ -4109,7 +4109,6 @@ if (!isset($_POST['update'])) {
   $result->store_result();
   $result->bind_result($column_type);
   $result->fetch();
-  var_dump($column_type);
   if ($result->num_rows() > 0 ) {
     $sql="UPDATE `lti_user` set oauth_consumer_key=CONCAT(oauth_consumer_key,':',user_id)";
     $adjust = $mysqli->prepare($sql);
