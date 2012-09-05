@@ -44,7 +44,7 @@
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
-    body {font-size:80%}
+    body {font-size:80%; margin:4px}
     ul {list-style-type:square; color:#FF9900}
     a:link.title {color:#0560A6; font-weight:bold}
     a:visited.title {color:#0560A6; font-weight:bold}

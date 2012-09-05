@@ -42,7 +42,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
-    body {font-size:80%}
+    body {font-size:80%; margin:4px}
     ul {list-style-type:square; color:#FF9900}
     a:link.title {color:#0560A6; font-weight:bold}
     a:visited.title {color:#0560A6; font-weight:bold}
@@ -235,7 +235,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   } else {
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:100%; border:1px solid #6B82B2; border-collapse:collapse\">\n";
     echo "<tr style=\"text-align:center; border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\"><td style=\"border-right: 1px solid #6B82B2\">" . $string['tutorial'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
-    while ($row = $tutorial_results->fetch()) {
+    while ($tutorial_results->fetch()) {
         echo "<tr><td class=\"txt\">" . $tutorial . "</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
     }
     echo "</table>\n";
