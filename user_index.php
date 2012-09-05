@@ -138,7 +138,7 @@ if ($labs != '' and stripos($userroles,'Student') !== false) {
 }
 
 //get modules if the user is a student and the paper is not formative
-
+/*
 if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
   if ($moduleID != '') {
     $cal_year_sql = '';
@@ -153,7 +153,7 @@ if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'
     access_denied($string['error_module'], false);
   }
 }
-
+*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
