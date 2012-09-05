@@ -184,6 +184,7 @@ if (!$lti->isInstructor()) {
           }
 
           $sms_api = $lti_i->sms_api($v);
+          $schoolID = school_utils::get_school_id_by_name($v[4], $mysqli);
 
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);
         }

@@ -69,17 +69,17 @@ Class SchoolUtils {
     return $school_list;
   }
 
-  static function get_school_id_by_name($school_name,$db) {
+  static function get_school_id_by_name($school_name, $db) {
 
     $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school=?");
-    $stmt->bind_param('s',$school_name);
+    $stmt->bind_param('s', $school_name);
     $stmt->execute();
     $stmt->bind_result($id);
     $stmt->store_result();
     $stmt->fetch();
     $row = $stmt->num_rows;
     $stmt->close();
-    if($row == 0) {
+    if ($row == 0) {
       $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school='UNKNOWN School'");
       $stmt->execute();
       $stmt->bind_result($id);
