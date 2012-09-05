@@ -89,7 +89,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $enrolements = 0;
       
     // Get the current academic session
-    $session = date_utils::get_current_academic_year();
+    //$session = date_utils::get_current_academic_year();
+    $session = '2011/12';
     $session_parts = explode('/',$session);
 
     $module = trim($_POST['moduleid']);
