@@ -184,7 +184,7 @@ if (!$lti->isInstructor()) {
           }
 
           $sms_api = $lti_i->sms_api($v);
-          $schoolID = SchoolUtils::get_school_id_by_name($v[4], $mysqli);
+          $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
           
 
 
