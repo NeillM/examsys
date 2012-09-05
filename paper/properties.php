@@ -1131,7 +1131,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }    
     echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"$password\" /></td></tr>\n";
 
-    echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled>";
+    echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
     foreach ($timezone_array as $individual_zone => $display_zone) {
       if ($timezone == $individual_zone) {
         echo "<option value=\"$individual_zone\" selected>$display_zone</option>";

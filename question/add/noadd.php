@@ -39,16 +39,17 @@ function englishDate($orig_date) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  <title>My Questions</title>
+  <title><?php echo $string['noadd']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 	<style type="text/css">
-    body {background-color:#EEEEEE; font-size:90%}
+    body {background-color:#EAEAEA; font-size:90%; margin:10px}
+    .date {color:#C00000; font-weight: bold}
   </style>
   
   <script language="javascript">
     function paperProperties() {
-      notice=window.open("../../paper/properties.php?paperID=<?php echo $_GET['paperID']; ?>&noadd=y","properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice=window.open("../../paper/properties.php?paperID=<?php echo $_GET['paperID']; ?>&caller=details&noadd=y","properties","width=882,height=650,left="+(screen.width/2-325)+",top="+(screen.height/2-441)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }
@@ -57,24 +58,21 @@ function englishDate($orig_date) {
 </head>
 
 <body>
-<div align="center">
 <form>
-<table cellpadding="0" cellspacing="5" border="0" style="width:570px font-size:100%">
-<tr><td width="40"><img src="../../artwork/orange_alert_48.png" width="48" height="48" border="0" alt="Exclamation Icon" /></td>
-<td style="font-size: 160%; font-weight: bold">Warning: Active Paper</td></tr>
-<tr><td></td><td><hr width="100%" style="border: 1px black solid" size="1" /></td></tr>
-<tr><td>&nbsp;</td><td><span style="color: red; font-weight: bold"><?php echo englishDate($_GET['start_date']); ?></span> to <span style="color: red; font-weight: bold"><?php echo englishDate($_GET['end_date']); ?></span>.</td></tr>
+<table cellpadding="0" cellspacing="5" border="0" style="width:100%; text-align:left">
+<tr><td style="width:56px"><img src="../../artwork/clock48.png" width="48" height="48" border="0" alt="Clock" /></td>
+<td style="font-size: 160%; font-weight: bold"><?php echo $string['activepaper']; ?></td></tr>
+<tr><td></td><td><hr width="100%" style="border: 0px; color: #808080; background-color: #808080" noshade="noshade" size="1" /></td></tr>
+<tr><td>&nbsp;</td><td><span class="date"><?php echo englishDate($_GET['start_date']); ?></span> <?php echo $string['to']; ?> <span class="date"><?php echo englishDate($_GET['end_date']); ?></span>.</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td>New questions may not be added to this paper while it is currently active.</td></tr>
+<tr><td>&nbsp;</td><td><?php echo $string['msg']; ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td>This is a safety feature to stop papers being accidentally modified while examinees may be taking them.</td></tr>
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td><strong>Solution:</strong><br />Open <a href="#" onclick="paperProperties(); return false;"><img src="../../artwork/small_link.png" width="12" height="12" alt="Shortcut" border="0" /></a>&nbsp;<a href="#" style="color: blue" onclick="paperProperties(); return false;">Edit Properties</a> from the 'Current Paper Tasks' pane and alter the available dates.</td></tr>
+<tr><td>&nbsp;</td><td><strong><?php echo $string['solution']; ?></strong><br /><?php echo $string['solutionmsg']; ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" align="center"><input type="submit" name="submit" style="width: 120px" value="Cancel" onclick="window.close();" /></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" name="submit" style="width: 120px" value="<?php echo $string['cancel']; ?>" onclick="window.close();" /></td></tr>
 </table>
 </form>
-</div>
+
 </body>
 </html>
