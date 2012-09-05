@@ -32,7 +32,12 @@ class lti_integration_extended extends lti_integration {
     $title = $returned[0]['title'][0];
     $forname = $returned[0]['givenname'][0];
     $surname = $returned[0]['sn'][0];
-    $email = $returned[0]['uonprimaryemailalias'][0];
+    if (isset($returned[0]['uonprimaryemailalias'])) {
+      $email = $returned[0]['uonprimaryemailalias'][0];
+    } else {
+      $email = $returned[0]['uonemailalias'][0];
+    }
+
     $initials = $returned[0]['initials'][0];
     $employeetype = $returned[0]['employeetype'][0];
 
@@ -42,9 +47,9 @@ class lti_integration_extended extends lti_integration {
       $role = 'Staff';
       $year = 1;
       $gender = '';
-      $id = UserUtils::createUser($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $mysqli);
-    }
-    else {
+      $sid = '';
+      $id = UserUtils::create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $mysqli);
+    } else {
       $user_data = $SMS->getUserData($username);
       if (count($user_data) > 0) {
         //valid acount found create user
@@ -62,8 +67,7 @@ class lti_integration_extended extends lti_integration {
           $user_data['StudentID'],
           $mysqli
         );
-      }
-      else {
+      } else {
         //error looking up student
         display_error($string['noaccountfound'], '', false, true);
       }
