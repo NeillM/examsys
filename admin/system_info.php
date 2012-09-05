@@ -76,26 +76,32 @@ require_once '../classes/dateutils.class.php';
   $result->store_result();
   $result->bind_result($Name, $Engine, $Version, $Row_format, $Rows, $Avg_row_length, $Data_length, $Max_data_length, $Index_length, $Data_free, $Auto_increment, $Create_time, $Update_time, $Check_time, $Collation, $Checksum, $Create_options, $Comment);
   while ($result->fetch()) {
-    if (($Name == 'log_late' or $Name == 'temp_users') and $Rows > 0) {
-      echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" />";
-      if ($Name == 'log_late') {
-        echo '&nbsp;<a href="log_late_details.php">More details...</a>';
-        $sub_result = $mysqli->prepare("SELECT COUNT(id) FROM log_late");   // Query to get an accurate figure for log_late.
-        $sub_result->execute();
-        $sub_result->store_result();
-        $sub_result->bind_result($Rows);
-        $sub_result->fetch();
-        $sub_result->close();        
-      } elseif ($Name == 'temp_users') {
-        echo '&nbsp;<a href="clear_guest_users.php">More details...</a>';
-        $sub_result = $mysqli->prepare("SELECT COUNT(id) FROM temp_users");   // Query to get an accurate figure for temp_users.
-        $sub_result->execute();
-        $sub_result->store_result();
-        $sub_result->bind_result($Rows);
-        $sub_result->fetch();
-        $sub_result->close();        
+    if ($Name == 'log_late') {
+      $sub_result = $mysqli->prepare("SELECT COUNT(id) FROM log_late");   // Query to get an accurate figure for log_late.
+      $sub_result->execute();
+      $sub_result->store_result();
+      $sub_result->bind_result($Rows);
+      $sub_result->fetch();
+      $sub_result->close();
+      if ($Rows > 0) {
+        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"log_late_details.php\">More details...</a></td>";
+        echo "<td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
+     } else {
+        echo "<tr><td>" . $Name . "</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
       }
-      echo "</td><td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
+    } elseif ($Name == 'temp_users') {
+      $sub_result = $mysqli->prepare("SELECT COUNT(id) FROM temp_users");   // Query to get an accurate figure for temp_users.
+      $sub_result->execute();
+      $sub_result->store_result();
+      $sub_result->bind_result($Rows);
+      $sub_result->fetch();
+      $sub_result->close();        
+      if ($Rows > 0) {
+        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"clear_guest_users.php\">More details...</a></td>";
+        echo "<td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
+      } else {
+        echo "<tr><td>" . $Name . "</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
+      }
     } else {
       echo "<tr><td>" . $Name . "</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
     }
