@@ -145,8 +145,6 @@ if (!$lti->isInstructor()) {
     $returned2 = $lti->lookup_lti_context();
     $mod = $returned2[0];
     $data = $lti_i->module_code_translate($mod);
-    var_dump($data);
-    exit;
     foreach ($data as $v) {
       if (!UserUtils::staff_on_team($v[1], $mysqli)) {
         UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
@@ -174,10 +172,8 @@ if (!$lti->isInstructor()) {
 
       //no context
 
-
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
 
-var_dump($data);
       foreach ($data as $v) {
 
         if (!module_utils::module_exists($v[1], $mysqli)) {
@@ -190,11 +186,11 @@ var_dump($data);
           $sms_api = $lti_i->sms_api($v);
 
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);
-
-          UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
-
         }
-
+        
+        if (!UserUtils::staff_on_team($v[1], $mysqli)) {
+          UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
+        }
       }
 
       $module_store = $lti_i->module_code_translated_store($data);
