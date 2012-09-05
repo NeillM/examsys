@@ -138,8 +138,9 @@ if ($labs != '' and stripos($userroles,'Student') !== false) {
 }
 
 //get modules if the user is a student and the paper is not formative
+/*
 if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
-  if($moduleID != '') {
+  if ($moduleID != '') {
     $cal_year_sql = '';
     if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
     $module_info = $mysqli->query("SELECT moduleid FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql");
@@ -152,6 +153,7 @@ if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'
     access_denied($string['error_module'], false);
   }
 }
+*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
