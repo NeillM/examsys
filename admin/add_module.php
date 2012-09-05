@@ -130,7 +130,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
             $tmp_userID = UserUtils::create_user($student->Username, '', $student->Title, $student->Forename, $student->Surname, $student->Email, $student->CourseCode, $student->Gender, $student->YearofStudy, 'Student', $student->StudentID, $mysqli);
           }
           // Add student onto the module
-          UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli);
+          UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli, 1);
           
           $enrolements++;
           if ($enrolement_details == '') {
@@ -168,7 +168,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
   <title>Create new Module<?php echo " $cfg_install_type"; ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />

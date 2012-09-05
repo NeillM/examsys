@@ -186,13 +186,13 @@ Class UserUtils {
    * @return bool return true if successful.
    *
    */
-  static function add_student_to_module($tmp_userID, $module, $attempt, $session, $db) {
+  static function add_student_to_module($tmp_userID, $module, $attempt, $session, $db, $auto_update = 0) {
     if (UserUtils::is_user_on_module($tmp_userID, $module, $session, $db)) {
       //dont add a user to a module multiple times
       return true;
     } else {
-      $result = $db->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, ?, 0)");
-      $result->bind_param('issi', $tmp_userID, $module, $session, $attempt);
+      $result = $db->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, ?, ?)");
+      $result->bind_param('issii', $tmp_userID, $module, $session, $attempt, $auto_update);
       $result->execute();
       $result->close();
       if ($db->errno != 0) {
