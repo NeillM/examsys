@@ -326,18 +326,27 @@ if ($_POST['paper_type'] == 'summative') {
   }
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
     $next_flag = 1;
-    echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
+    
+    $year_options = array();
+    $calendar_year = date_utils::get_current_academic_year();
+    $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
+    $year_options[] = $next_session;   // Add next year's session
+    
     $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM student_modules ORDER BY calendar_year DESC");
     $module_details->execute();
     $module_details->bind_result($calendar_year);
-    echo "<select name=\"session\">\n";
     while ($module_details->fetch()) {
-      if ($next_flag == 1) {
-        $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
-        $sel = (date_utils::get_current_academic_year() == $next_session) ? ' selected="selected"' : '';
-        echo "<option value=\"$next_session\"$sel>$next_session</option>\n";
-        $next_flag = 0;
-      }
+      $year_options[] = $calendar_year;
+    }
+    $module_details->close();
+    
+    if (count($year_options) == 1) {
+      $year_options[] = date_utils::get_current_academic_year();  // Add current year
+    }
+    
+    echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
+    echo "<select name=\"session\">\n";
+    foreach ($year_options as $calendar_year) {
       $sel = (date_utils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
       echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
     }
