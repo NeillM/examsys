@@ -9,4 +9,13 @@ $string['no'] = 'No';
 $string['negmarking'] = 'negative marking';
 $string['bonusmark'] = 'for correct options, plus %d bonus %s for fully correct order';
 $string['mousereveal'] = '(Move the mouse over incorrect labels to reveal the correct answer)';
+$string['ee_full'] = 'Easy - Essential1';
+$string['ei_full'] = 'Easy - Important1';
+$string['en_full'] = 'Easy - Nice to know1';
+$string['me_full'] = 'Medium - Essential';
+$string['mi_full'] = 'Medium - Important';
+$string['mn_full'] = 'Medium - Nice to know';
+$string['he_full'] = 'Hard - Essential';
+$string['hi_full'] = 'Hard - Important';
+$string['hn_full'] = 'Hard - Nice to know';
 ?>

@@ -947,6 +947,8 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
 }
 
 function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdID, &$std_excluded, $is_group = false) {
+  global $string;
+
   $html = '';
   $review_string = '';
   $valid = true;
@@ -994,7 +996,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
       break;
     case 'ebel':
       $html .= "<select onchange=\"recountCategories();\" id=\"valstd$stdID\" name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>";
-      $options = array('EE'=>'Easy - Essential','EI'=>'Easy - Important','EN'=>'Easy - Nice to know','ME'=>'Medium - Essential','MI'=>'Medium - Important','MN'=>'Medium - Nice to know','HE'=>'Hard - Essential','HI'=>'Hard - Important','HN'=>'Hard - Nice to know');
+      $options = array('EE'=>$string['ee_full'],'EI'=>$string['ei_full'],'EN'=>$string['en_full'],'ME'=>$string['me_full'],'MI'=>$string['mi_full'],'MN'=>$string['mn_full'],'HE'=>$string['he_full'],'HI'=>$string['hi_full'],'HN'=>$string['hn_full']);
       foreach ($options as $ebel_value=>$title) {
         if ($valid and str_replace('exclude_','',$value) == $ebel_value) {
           $html .= "<option value=\"" . $extra . $ebel_value . "\" selected=\"selected\">$ebel_value: $title</option>\n";

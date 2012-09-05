@@ -22,9 +22,9 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/media.inc';
-require '../include/std_set_functions.inc';
+require_once '../include/staff_auth.inc';
+require_once '../include/media.inc';
+require_once '../include/std_set_functions.inc';
 require_once '../classes/stateutils.class.php';
 
 function ebelDropdown($dropdownID, $selected) {
@@ -377,7 +377,7 @@ if (isset($_POSR['paperID'])) {
     $result->bind_param('iss', $_GET['paperID'], $setterID, $tmp_date_id);
     $result->execute();
     $result->bind_result($std_set, $rating, $questionID);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       $reviews[$questionID] = $rating;
     }
     $result->close();
@@ -388,7 +388,7 @@ if (isset($_POSR['paperID'])) {
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($questionID, $std);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($setterID == '') $reviews[$questionID] = $std;
     echo "<input type=\"hidden\" name=\"old" . $questionID . "\" value=\"$std\" />\n";
   }
