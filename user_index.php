@@ -118,42 +118,16 @@ $display_end_date = $display_end_date->format($tmp_cfg_long_date_time);
 
 $previously_submitted = 0;
 
-// Check for additional password on the paper
-check_paper_password($password, true);
+if (stripos($userroles,'Student') !== false) {
+  // Check for additional password on the paper
+  check_paper_password($password, true);
 
-$low_bandwidth = 0;
-//Check this PC is registered for this exam
-if ($labs != '' and stripos($userroles,'Student') !== false) {
-  $lab_info = $mysqli->prepare("SELECT address, low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
-  $lab_info->bind_param('s',$_SERVER['REMOTE_ADDR']);
-  $lab_info->execute();
-  $lab_info->bind_result($address, $low_bandwidth);
-  $lab_info->store_result();
-  $lab_info->fetch();
-  if ($lab_info->num_rows == 0) {
-    access_denied($string['denied_location'], false);
-  }
-  $lab_info->free_result();
-  $lab_info->close();
-}
+  $low_bandwidth = 0;
+  //Check this PC is registered for this exam
+  $low_bandwidth = check_labs($test_type, $labs, $password, $mysqli);
 
-//get modules if the user is a student and the paper is not formative
-/*
-if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
-  if ($moduleID != '') {
-    $cal_year_sql = '';
-    if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
-    $module_info = $mysqli->query("SELECT moduleid FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql");
-    if ($module_info->num_rows == 0) {
-      $tmp_string = sprintf($string['notregistered'],$title, $surname, $username, $moduleID, $calendar_year);
-      access_denied($tmp_string, false);
-    }
-    $module_info->close();
-  } else {
-    access_denied($string['error_module'], false);
-  }
+  $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
 }
-*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -165,12 +139,12 @@ if (stripos($userroles,'Student') !== false AND stripos($_SERVER['PHP_AUTH_USER'
   
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <style type="text/css">
-  body {font-size:<?php echo $textsize; ?>%}
-  input {font-size:90%}
-  td {text-align:left}
-  .f {font-weight:bold; text-align:right;line-height:180%;padding-right:6px}
-  .w {font-size:90%;color:#C00000;font-weight:bold}
-  p { margin: 2px 0 8px 0 }
+    body {font-size:<?php echo $textsize; ?>%}
+    input {font-size:90%}
+    td {text-align:left}
+    .f {font-weight:bold; text-align:right;line-height:180%;padding-right:6px}
+    .w {font-size:90%;color:#C00000;font-weight:bold}
+    p { margin: 2px 0 8px 0 }
   </style>
   
   <script language="JavaScript">
