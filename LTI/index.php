@@ -260,11 +260,9 @@ END;
 
       list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
     }
-    echo "<br/>";
+    echo '<br />';
 
-    $personalfolders = new personal_folders($mysqli);
-    $personalfolders->loadpersonalfolders($userID);
-    $personalfolders->process();
+
   }
 }
 ?>
