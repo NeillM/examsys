@@ -2,7 +2,7 @@
 $string['name'] = 'Nazwa opisowa'; 
 $string['oauth_consume_key']= 'Klucz odbiorcy Oauth';
 $string['oauth_secret'] = 'Sekret odbiorcy Oauth';
-$string['oauth_context_id'] = 'Przełam identyfikator kontekstowy LTI';
+$string['oauth_context_id'] = 'Przełamowy identyfikator kontekstowy LTI';
 $string['createLTIkeys'] = 'Utwórz nowy klucz LTI';
 $string['editLTIkeys'] = 'Zmień klucz LTI';
 $string['deleteLTIkeys'] = 'Usuń klucz LTI';

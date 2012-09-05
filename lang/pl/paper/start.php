@@ -37,7 +37,7 @@ $string['msgselectable4'] = '.\n\nWybierz inny ranking.';
 //ajax saving and auto saving messages
 $string['saving'] = 'Zapisywanie';
 $string['auto_saving'] = 'Zapisane automatycznie';
-$string['auto_ok'] = 'niko Auto Save Successful';
+$string['auto_ok'] = 'Zapisywane automatyczne zakończone pomyślnie';
 $string['savefailed'] = 'Zapisywanie nie powiodło się!';
 $string['tryagain'] = 'Spróbuj ponownie po przejściu na następnej lub poprzedniej strony.</div>';
 ?>
