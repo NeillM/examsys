@@ -76,6 +76,7 @@ print "debug1:";
       print "debug3:";
       print "<pre>";
       var_dump(db_userlookup($check[0], $mysqli, true));
+      var_dump($password);
       print "</pre>";
       if($password === false) {
         display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
