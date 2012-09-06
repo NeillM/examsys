@@ -138,7 +138,6 @@
       } else {
         $identifier = '';
       }
-      var_dump($session['VLE']);
       if ($session['VLE'] != '') {
         echo "<tr style=\"cursor:pointer\" id=\"$id\" onmouseover=\"highlight($id)\" onmouseout=\"unhighlight($id)\" onclick=\"selSession('$id','$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
       } else {
