@@ -42,16 +42,24 @@ a.greylink:hover {color:#808080}
 .popupitembold {padding-left:4px; font-weight:bold}
 
 .greymenuitem {width:190px; color:#808080}
-.greymenuitem span {width:150px; float:left}
+.greymenuitem span {width:100%; float:left; padding-right: 15%}
 .greymenuitem a:link {color:#808080; text-decoration:none; cursor:pointer}
 .greymenuitem a:visited {color:#808080; text-decoration:none; cursor:pointer}
 .greymenuitem a:hover {color:#808080; text-decoration:none; cursor:pointer}
 
 .menuitem {width:100%}
-.menuitem span {width:150px; float:left}
+.menuitem span {width:100%; float:left; margin-right: 15%}
 .menuitem a:link {color:black; text-decoration:none; cursor:pointer}
 .menuitem a:visited {color:black; text-decoration:none; cursor:pointer}
 .menuitem a:hover {color:blue; text-decoration:underline; cursor:pointer}
+
+.menuitem.sub span {
+  background: transparent url('../artwork/submenu_arrow.png') no-repeat 90% top;
+}
+
+.greymenuitem.sub span {
+  background: transparent url('../artwork/submenu_arrow_grey.png') no-repeat 90% top;
+}
 
 .menu_list {
   margin: 4px 0 0 0;
