@@ -36,5 +36,7 @@ $string['ltifirstlogin'] = 'Autoryzacja Rogō';
 $string['ltifirstlogindesc'] = 'System egzaminowania Rogō wymaga identyfikacji Twojej osoby, aby upewnić się co do posiadanych przez Ciebie przywilejów. Dokonane to będzie tylko przy pierwszej wizycie i w nielicznych przypadkach, w celu zapewnienia bezpieczeństwa w przyszłości.<br /><a href="./">Kliknij, aby kontynuować</a> ';
 $string['ltinotconfigured'] = 'Hiperłącze, które wybrałeś nie jest jeszcze skonfigurowane.';  
 $string['LTIFAILURE'] = 'niepowodzenie LTI';
-$string['expiredtimestamp'] = 'Datownik tego połączenia jest już przeterminowany. Powróć do poprzedniej strony i ponownie wybierz ten link (nie odświeżaj przeglądarki).'; 
+$string['expiredtimestamp'] = 'Datownik tego połączenia jest już przeterminowany. Powróć do poprzedniej strony i ponownie wybierz ten link (nie odświeżaj przeglądarki).';
+$string['UserMissing']='Associated User Missing';  //TODO Nikko
+$string['UserMissingDesc'] = 'Somehow the associated user is missing from the rogo user system this is a serious error and you need to contact support'; //TODO Nikko
 ?>

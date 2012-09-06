@@ -37,4 +37,6 @@ $string['ltifirstlogindesc'] = 'Rogō e-assessment system needs to confirm your 
 $string['ltinotconfigured'] = 'The link you have followed has not yet been configured.';
 $string['LTIFAILURE'] = 'LTI Failure';
 $string['expiredtimestamp'] = 'Timestamp has now expired. Please go back and relaunch the link (do not hit refresh in the browser).';
+$string['UserMissing']='Associated User Missing';
+$string['UserMissingDesc'] = 'Somehow the associated user is missing from the rogo user system this is a serious error and you need to contact support';
 ?>
