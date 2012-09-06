@@ -108,7 +108,7 @@ class lti_integration_extended extends lti_integration {
     }
     $SMS = SmsUtils::GetSmsUtils();
     $SMS->set_module($data[2]);
-    return $SMS->url;
+    return $SMS->url;  
   }
 
 
