@@ -51,11 +51,11 @@ require '../../include/staff_auth.inc';
 <div id="main">
 <?php
   if (strpos($userroles,'SysAdmin') !== false) {
-    $roles_check = 'AND roles IN ("SysAdmin","Admin","Staff")';
+    $roles_check = 'roles IN ("SysAdmin","Admin","Staff")';
   } elseif (strpos($userroles,'Admin') !== false) {
-    $roles_check = 'AND roles IN ("Admin","Staff")';
+    $roles_check = 'roles IN ("Admin","Staff")';
   } else {
-    $roles_check = 'AND roles="Staff"';
+    $roles_check = 'roles="Staff"';
   }
     
   $sub_section = 0;
@@ -66,7 +66,7 @@ require '../../include/staff_auth.inc';
   $help_toc = array();
   $help_toc_titles = array();
 
-  $result = $mysqli->prepare("SELECT id, title FROM staff_help WHERE id != 1 $roles_check AND deleted IS NULL ORDER BY title, id");
+  $result = $mysqli->prepare("SELECT id, title FROM staff_help WHERE $roles_check AND deleted IS NULL ORDER BY title, id");
   $result->execute();
   $result->bind_result($id, $title);
   while ($result->fetch()) {
