@@ -168,12 +168,13 @@ print "debug3<br>";
 print "debug4<br>";
     $returned2 = $lti->lookup_lti_context();
 
-exit();
+
     if ($returned2 === false) {
 print "debug5<br>";
       //no context
 
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
+print "debug6<br>";
 
       foreach ($data as $v) {
 
@@ -183,15 +184,15 @@ print "debug5<br>";
           if ($v[0] == 'Manual') {
             $selfEnroll = 1;
           }
-
+print "debug7<br>";
           $sms_api = $lti_i->sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
-          
+print "debug8<br>";
 
 
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);
         }
-        
+print "debug9<br>";
         if (!UserUtils::staff_on_team($v[1], $mysqli)) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
         }
