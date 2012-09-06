@@ -18,6 +18,7 @@ $string['ldapserverunavailable'] = 'LDAP Server Unavalable';
 $string['noldapaccount'] = 'No LDAP account found!';
 $string['ldapservernosearch'] = 'LDAP Server Unavalable: unable to search';
 $string['nodatabaseconnection'] = 'Could not connect to the database please contact your administrator';
+$string['as'] = 'as';
 $string['localtsauthfailed'] = 'Local Rogō authentication failed.';
 $string['notsaccount'] = 'No Rogō account found!';
 $string['tempaccount'] = 'Temporary Account';

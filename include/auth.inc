@@ -201,7 +201,7 @@ function db_auth($u, $p, $db, $changeuser = true) {
         } elseif (strpos($userroles, 'SysAdmin') !== false) {
           // Look up all the authentication details of the user you are pretending to log in as.
           list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($split_username[1], $db);
-          $cfg_install_type .= " as $title $surname";
+          $cfg_install_type .= " " . $string['as'] . " $title $surname";
         }
       }
 

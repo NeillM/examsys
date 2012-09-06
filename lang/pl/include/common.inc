@@ -18,6 +18,7 @@ $string['ldapserverunavailable'] = 'Serwer LDAP jest niedostępny';
 $string['noldapaccount'] = 'Nie odnaleziono konta LDAP !';
 $string['ldapservernosearch'] = 'Serwer LDAP niedostępny: wyszukiwanie niemożliwe';
 $string['nodatabaseconnection'] = 'Podłączenie do bazy niemożliwe - skontaktuj się z administratorem';
+$string['as'] = 'jako';
 $string['localtsauthfailed'] = 'Nie uzyskano lokalnej autoryzacji Rogō.';
 $string['notsaccount'] = 'Nie odnaleziono konta Rogō!';
 $string['tempaccount'] = 'Konto tymczasowe';
