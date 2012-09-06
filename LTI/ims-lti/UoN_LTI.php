@@ -364,7 +364,8 @@ class UoN_LTI extends BLTI {
   function lookup_lti_resource($lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT internal_id,internal_type,updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=?");
+      echo "SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=$lti_resource_key<br />";
+      $stmt = $this->db->prepare("SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=?");
       $stmt->bind_param('s', $lti_resource_key);
       $stmt->execute();
       $stmt->store_result();
@@ -376,6 +377,7 @@ class UoN_LTI extends BLTI {
       $stmt->fetch();
       $stmt->close();
     }
+    
     return (array($paperret, $otherret, $updated_on));
   }
 
