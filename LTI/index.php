@@ -172,10 +172,10 @@ print "debug4<br>";
     if ($returned2 === false) {
 print "debug5<br>";
       //no context
-exit();
+
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
 print "debug6<br>";
-
+      exit();
       foreach ($data as $v) {
 
         if (!module_utils::module_exists($v[1], $mysqli)) {
