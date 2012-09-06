@@ -364,8 +364,6 @@ class UoN_LTI extends BLTI {
   function lookup_lti_resource($lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      print_r($_SESSION);
-      echo "SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=$lti_resource_key<br />";
       $stmt = $this->db->prepare("SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key=?");
       $stmt->bind_param('s', $lti_resource_key);
       $stmt->execute();
@@ -430,7 +428,7 @@ class UoN_LTI extends BLTI {
    * @return new row id
    */
   function add_lti_context($c_internal_id, $lti_context_key = false) {
-    if ($lti_context_key === false) $lti_context_key = $this->getResourceKey();
+    if ($lti_context_key === false) $lti_context_key = $this->getCourseKey();
     if ($this->parm['dbtype'] == 'mysqli') {
       $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_context (lti_context_key, c_internal_id, updated_on) VALUES (?, ?, NOW()) ");
       $result->bind_param('ss', $lti_context_key, $c_internal_id);
@@ -449,7 +447,7 @@ class UoN_LTI extends BLTI {
    * @return array|bool if false else array with context id and last updated time
    */
   function lookup_lti_context($lti_context_key = false) {
-    if ($lti_context_key === false) $lti_context_key = $this->getResourceKey();
+    if ($lti_context_key === false) $lti_context_key = $this->getCourseKey();
     if ($this->parm['dbtype'] == 'mysqli') {
       $sql = "SELECT c_internal_id,updated_on FROM " . $this->parm['table_prefix'] . "lti_context WHERE lti_context_key=?";
       $stmt = $this->db->prepare($sql);
