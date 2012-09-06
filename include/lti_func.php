@@ -110,7 +110,7 @@ function usercheck($db, $lti) {
   } else {
     $authneeded = $lti_i->user_time_check($returned[1]);
     if ($authneeded === true) {
-      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
+      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
 
       $_SESSION['lti']['track'] = 'reauth';
       //TODO as all the rest of the reauth needs finishing
