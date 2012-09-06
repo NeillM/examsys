@@ -996,12 +996,12 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['marking'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
-       echo "<tr><td align=\"right\" valign=\"top\">Overall&nbsp;Classification&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['overallclassification'] . "&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
     ?>
-      <option value="5"<?php if ($marking == '5') echo ' selected'; ?> />&lt;Automatic&gt;</option>
-      <option value="3"<?php if ($marking == '3') echo ' selected'; ?> />Clear Fail | Borderline | Clear Pass</option>
-      <option value="4"<?php if ($marking == '4') echo ' selected'; ?> />Fail | Borderline fail | Borderline pass | Pass | Good pass</option>
-      <option value="6"<?php if ($marking == '6') echo ' selected'; ?> />Clear FAIL | BORDERLINE | Clear PASS | Honours PASS</option>
+      <option value="5"<?php if ($marking == '5') echo ' selected'; ?> /><?php echo $string['overallclass1']; ?></option>
+      <option value="3"<?php if ($marking == '3') echo ' selected'; ?> /><?php echo $string['overallclass2']; ?></option>
+      <option value="4"<?php if ($marking == '4') echo ' selected'; ?> /><?php echo $string['overallclass3']; ?></option>
+      <option value="6"<?php if ($marking == '6') echo ' selected'; ?> /><?php echo $string['overallclass4']; ?></option>
   <?php
     echo "<tr><td colspan=\"4\">" . wysiwyg_editor('oEdit1', 'osce_marking_guidance', $paper_prologue, 684, 230);
   ?>
