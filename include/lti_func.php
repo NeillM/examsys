@@ -60,7 +60,7 @@ function usercheck($db, $lti) {
   }
   $returned = $lti->lookup_lti_user();
   if ($returned === false) {
-    if (!isset($_SERVER['PHP_AUTH_USER']) AND $_SESSION['lti']['track']=='') {
+    if (!isset($_SERVER['PHP_AUTH_USER']) and $_SESSION['lti']['track']=='') {
       display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
       $_SESSION['lti']['track'] = 'logon';
       $db->close();
