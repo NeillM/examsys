@@ -190,29 +190,29 @@ if (!$lti->isInstructor()) {
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
 
 
-
+print "debug1";
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);
         }
-
+        print "debug2";
         if (!UserUtils::staff_on_team($v[1], $mysqli)) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
         }
       }
-
+      print "debug2";
       $module_store = $lti_i->module_code_translated_store($data);
-
+      print "debug3";
 
       $lti->add_lti_context($module_store);
-
+      print "debug4";
       $returned2 = $lti->lookup_lti_context();
     }
-
+    print "debug5";
     $mod = $returned2[0];
     $data = $lti_i->module_code_translate($mod);
-
+    print "debug6";
     list($c_internal_id, $upd) = $returned2;
     $moduleid = $c_internal_id;
-
+    print "debug7";
     $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
     echo <<<END
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

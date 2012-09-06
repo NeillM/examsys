@@ -103,25 +103,11 @@ class lti_integration_extended extends lti_integration {
 
 
   function sms_api($data) {
-
-
-    print "<pre>";
-    print_r($data);
-
-    if ($data[0] != ' SMS') {
+    if ($data[0] != 'SMS') {
       return '';
     }
     $SMS = SmsUtils::GetSmsUtils();
-
     $SMS->set_module($data[2]);
-
-print_r($SMS->url);
-
-    print "</pre>";
-
-
-
-
     return $SMS->url;
   }
 
