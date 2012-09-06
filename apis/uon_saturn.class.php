@@ -171,7 +171,12 @@ Class UON_SATURN extends SmsUtils {
     elseif($location == 'CN') {
       $location = 'China';
     }
+    elseif($location == 'UK') {
+      $location = 'UK';
+    }
     $arr=$this->getModuleSources();
+
+    print_r($arr);
     if(!isset($arr[$location]))
     {
       $this->url='';
