@@ -256,9 +256,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         echo '<tr><td></td><td></td>';
         if ($na == true) {
-          echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">" . $string['na'] . "</td>";
+          echo "<td style=\"vertical-align:bottom; text-align:center; color:$labelcolor; font-size:80%\">" . $string['na'] . "</td>";
         }
-        echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[0]</td>";
+        echo "<td style=\"vertical-align:bottom; text-align:center; color:$labelcolor; font-size:80%\">$likert_display[0]</td>";
         $temp_end = substr_count($question['display_method'],'|') - 1;
         for ($i=1; $i<=$temp_end; $i++) {
           echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[$i]</td>\n";

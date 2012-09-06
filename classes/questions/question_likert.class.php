@@ -44,10 +44,10 @@ Class QuestionLIKERT extends Question {
     parent::__construct($mysqli, $user_id, $lang_strings, $data);
 
     $this->_scale_types = array(
-    	$this->_lang_strings['oscescales'] => array('0|1' => '0, 1', '0|1|2' => '0, 1, 2', 'Fail|Borderline|Pass' => $this->_lang_strings['failpass']),
-    	'3 ' . $this->_lang_strings['pointscales'] => array('Low||High' => $this->_lang_strings['lowhigh'], 'Never||Always' => $this->_lang_strings['neveralways'], 'Disagree|Neutral|Agree' => $this->_lang_strings['disagre3point']),
-    	'4 ' . $this->_lang_strings['pointscales'] => array('Low|||High' => $this->_lang_strings['lowhigh'], 'Never|||Always' => $this->_lang_strings['neveralways'], 'Strongly<br />Disagree|Disagree|Agree|Strongly<br />Agree' => $this->_lang_strings['disagre4point']),
-    	'5 ' . $this->_lang_strings['pointscales'] => array('Low||||High' => $this->_lang_strings['lowhigh'], 'Never||||Always' => $this->_lang_strings['neveralways'], 'Strongly<br />Disagree|Disagree|Neither Disagree<br />nor Agree|Agree|Strongly<br />Agree' => $this->_lang_strings['disagre5pointneither'], 'Strongly<br />Disagree|Disagree|Uncertain|Agree|Strongly<br />Agree' => $this->_lang_strings['disagre5pointuncertain'], 'Strongly<br />Disagree|Disagree|Neutral|Agree|Strongly<br />Agree' => $this->_lang_strings['disagre5pointneutral'])
+    	$this->_lang_strings['oscescales'] => array('0|1' => '0, 1', '0|1|2' => '0, 1, 2', $this->_lang_strings['failpass3'] => $this->_lang_strings['failpass']),
+    	'3 ' . $this->_lang_strings['pointscales'] => array($this->_lang_strings['lowhigh3'] => $this->_lang_strings['lowhigh'], $this->_lang_strings['neveralways3'] => $this->_lang_strings['neveralways'], $this->_lang_strings['disagre3'] => $this->_lang_strings['disagre3point']),
+    	'4 ' . $this->_lang_strings['pointscales'] => array($this->_lang_strings['lowhigh4'] => $this->_lang_strings['lowhigh'], $this->_lang_strings['neveralways4'] => $this->_lang_strings['neveralways'], $this->_lang_strings['disagre4'] => $this->_lang_strings['disagre4point']),
+    	'5 ' . $this->_lang_strings['pointscales'] => array($this->_lang_strings['lowhigh5'] => $this->_lang_strings['lowhigh'], $this->_lang_strings['neveralways5'] => $this->_lang_strings['neveralways'], $this->_lang_strings['disagre5a'] => $this->_lang_strings['disagre5pointneither'], $this->_lang_strings['disagre5b'] => $this->_lang_strings['disagre5pointuncertain'], $this->_lang_strings['disagre5c'] => $this->_lang_strings['disagre5pointneutral'])
     );
     
     $this->get_all_custom_scales();

@@ -178,6 +178,20 @@ $string['indicated'] = 'wskazana';
 $string['stronglyindicated'] = 'zdecydowanie wskazana';
 $string['oscescales'] = 'Skale stacji OSCE';
 $string['pointscales'] = '-punktowa skala';
+// Likert Scales data - this is how the settings are saved, separate columns with vertical bars (<br /> tages can be used for break lines)
+$string['failpass3'] = 'Nie zdany|Graniczny|Zdany';
+$string['lowhigh3'] = 'Niskie||Wysokich';
+$string['lowhigh4'] = 'Niskie|||Wysokich';
+$string['lowhigh5'] = 'Niskie||||Wysokich';
+$string['neveralways3'] = 'Nigdy||Zawsze';
+$string['neveralways4'] = 'Nigdy|||Zawsze';
+$string['neveralways5'] = 'Nigdy||||Zawsze';
+$string['disagre3'] = 'Nie zgadzam się|Neutralny|Zgadzam się';
+$string['disagre4'] = 'Strongly<br />Disagree|Disagree|Agree|Strongly<br />Agree';  // Niko
+$string['disagre5a'] = 'Strongly<br />Disagree|Disagree|Neither Disagree<br />nor Agree|Agree|Strongly<br />Agree';   // Niko
+$string['disagre5b'] = 'Strongly<br />Disagree|Disagree|Uncertain|Agree|Strongly<br />Agree';  // Niko
+$string['disagre5c'] = 'Strongly<br />Disagree|Disagree|Neutral|Agree|Strongly<br />Agree';  // Niko
+// Likert Scales
 $string['failpass'] = 'Nie zdany, Graniczny, Zdany';//???
 $string['lowhigh'] = 'Niskie do wysokich';
 $string['neveralways'] = 'Nigdy do zawsze';

@@ -374,10 +374,12 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title><?php echo $mode . ' ' . $string['question'] . ' - ' . $q_type_full .  ' ' . $cfg_install_type ?></title>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
 
+<title><?php echo $mode . ' ' . $string['question'] . ' - ' . $q_type_full .  ' ' . $cfg_install_type ?></title>
+
+<link rel="stylesheet" href="../../css/body.css" type="text/css" />
 <link rel="stylesheet" href="../../css/header.css" type="text/css" />
 <link rel="stylesheet" href="../../css/screen.css" type="text/css" />
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
@@ -391,7 +393,6 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <script type="text/javascript" src="../../js/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
 <script type="text/javascript" src="../../js/jquery.tipTip.minified.js"></script>
-<script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
 <?php
 if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.js')):
