@@ -72,6 +72,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
     if ($check > 0) {
       list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
+      print "<pre>" . print_r(db_userlookup($check[0], $mysqli, true),TRUE) . "</pre>";
       if($password === false) {
         display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
         exit();
