@@ -24,13 +24,14 @@
 
   require '../../include/sysadmin_auth.inc';
   require '../../include/errors.inc';
+  require '../../include/help.inc';
   header('Content-Type: text/html; charset=' . $cfg_page_charset);
   
   if (isset($_POST['save_changes'])) {
     // Update help file record
     $tmp_body = $_POST['edit1'];
     $tmp_body_plain = strip_tags($tmp_body);
-    $order   = array("\r\n", "\n", "\r", "\t");
+    $order = array("\r\n", "\n", "\r", "\t");
     $tmp_body_plain = str_replace($order,' ',$tmp_body_plain);
     $tmp_body_plain = str_replace('  ',' ',$tmp_body_plain);
     $tmp_title = $_POST['page_title'];

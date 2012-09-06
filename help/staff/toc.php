@@ -61,7 +61,10 @@ require '../../include/staff_auth.inc';
   $sub_section = 0;
   $help_section = 0;
   $old_title = '';
+  $parent = '';
+  $old_parent = '';
   $help_toc = array();
+  $help_toc_titles = array();
 
   $result = $mysqli->prepare("SELECT id, title FROM staff_help WHERE id != 1 $roles_check AND deleted IS NULL ORDER BY title, id");
   $result->execute();
@@ -69,53 +72,63 @@ require '../../include/staff_auth.inc';
   while ($result->fetch()) {
     $help_toc[$help_section]['id'] = $id;
     $help_toc[$help_section]['title'] = $title;
+    $help_toc_titles[$id] = $title;
     $help_section++;
   }
   $result->close();
   
-  for ($i=0; $i<$help_section; $i++) {
-    $slash_pos = strpos($help_toc[$i]['title'], '/');
+  $expand_id = 0;
+  if (isset($_GET['id'])) {
+    $slash_pos = strpos($help_toc_titles[$_GET['id']], '/');
     if ($slash_pos !== false) {
-      $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
-      $icon = 'single_page.png';
-    } else {
-      if ($old_title != '' and strpos($help_toc[($i)]['title'], $old_title) === false and $sub_section == 1) {
-        echo "</div>\n";
-        $sub_section = 0;
-      }
-      $tmp_title = $help_toc[$i]['title'];
-      if (isset($help_toc[($i+1)]['title']) and strpos($help_toc[($i+1)]['title'], $tmp_title . '/') !== false) {
-        $icon = 'closed_book.png';
-        for ($a=$i; $a<$help_section; $a++) {
-          if (isset($_GET['id']) and $_GET['id'] == $help_toc[$a]['id']) $icon = 'open_book.png';
-          if (isset($help_toc[($a+1)]['title']) and strpos($help_toc[($a+1)]['title'], $tmp_title . '/') === false) break;
-        }
-        $old_title = $tmp_title;
-      } else {
-        $icon = 'single_page.png';
-        $old_title = $tmp_title;
-      }
-    }
-    $id = $help_toc[$i]['id'];
-    if ($icon == 'closed_book.png') {
-      echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $tmp_title . "</nobr></a></div>\n";
-      echo "<div style=\"display:none; margin-left:18px\" id=\"submenu$id\">";
-      $sub_section = 1;
-    } elseif ($icon == 'open_book.png') {
-      echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $tmp_title . "</nobr></a></div>\n";
-      echo "<div style=\"display:block; margin-left:18px\" id=\"submenu$id\">";
-      $sub_section = 1;
-    } else {
-      if ($old_title != '' and strpos($help_toc[($i)]['title'], $old_title) === false and $sub_section == 1) {
-        echo "</div>\n";
-        $sub_section = 0;
-      }
-      echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">" . $tmp_title . "</nobr></a></div>\n";
-    }
+      $target_parent = substr($help_toc_titles[$_GET['id']], 0, $slash_pos);
 
+
+      for ($i=0; $i<$help_section; $i++) {
+        if (strpos($help_toc[$i]['title'], $target_parent) === 0 and $expand_id == 0) {
+          $expand_id = $help_toc[$i]['id'];
+        }
+      }
+    }
   }
 
-  if ($sub_section == 1) echo "</div>\n";
+  for ($i=0; $i<$help_section; $i++) {
+    $id = $help_toc[$i]['id'];
+    $slash_pos = strpos($help_toc[$i]['title'], '/');
+    if ($slash_pos !== false) {
+      $parent = substr($help_toc[$i]['title'], 0, $slash_pos);
+      if ($old_parent != '' and $parent != $old_parent) {
+        echo "</div>\n";
+      }
+      $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
+      
+      if ($parent != $old_parent) {
+        if ($expand_id == $id) {
+          $icon = 'open_book.png';
+          echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $parent . "</a></nobr></div>\n";
+          echo "<div style=\"display:block; margin-left:18px\" id=\"submenu$id\">";
+        } else {
+          $icon = 'closed_book.png';
+          echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $parent . "</a></nobr></div>\n";
+          echo "<div style=\"display:none; margin-left:18px\" id=\"submenu$id\">";
+        }
+      }
+      $old_parent = $parent;
+      $icon = 'single_page.png';      
+    } else {
+      if ($old_parent != '') {
+        echo "</div>\n";
+      }
+      $tmp_title = $help_toc[$i]['title'];
+      $icon = 'single_page.png';
+      $parent = '';
+      $old_parent = $parent;
+    }
+    
+    echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
+  }
+
+  if ($old_parent != '') echo "</div>\n";
   echo "<input type=\"hidden\" name=\"old_highlight\" value=\"0\" />";
   $mysqli->close();
 ?>

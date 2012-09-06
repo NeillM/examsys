@@ -4248,6 +4248,14 @@ if (!isset($_POST['update'])) {
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
+  // 06/09/2012 - Delete the blank 'parent' books from the staff help
+  $result = $mysqli->prepare("DELETE FROM staff_help WHERE body=''");
+  $result->execute();
+  $result->close();
+  // 06/09/2012 - Delete the blank 'parent' books from the student help
+  $result = $mysqli->prepare("DELETE FROM student_help WHERE body=''");
+  $result->execute();
+  $result->close();
   @ob_flush();
   @flush();
 

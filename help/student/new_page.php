@@ -30,26 +30,7 @@
 
   if (isset($_POST['save_changes'])) {
     $tmp_title = $_POST['title'];
-    // Check to see if dummy parent record exists for title.
-    if (strpos($tmp_title,'/') !== false) {
-      $parts = explode('/',$tmp_title);
-      $parent = $parts[0];
       
-      $result = $mysqli->prepare("SELECT id FROM student_help WHERE title=?");
-      $result->bind_param('s', $parent);
-      $result->execute();
-      $result->bind_result($help_pageID);
-      $result->fetch();
-      $result->close();
-    
-      if ($help_pageID == '') {
-        $result = $mysqli->prepare("INSERT INTO student_help VALUES (NULL,?,'','','page',NULL,NULL,NULL)");
-        $result->bind_param('s', $parent);
-        $result->execute();  
-        $result->close();
-      }
-    }
-  
     // Update help file record
     $tmp_body = $_POST['edit1'];
     $tmp_body_plain = strip_tags($tmp_body);

@@ -30,26 +30,7 @@
 
   if (isset($_POST['save_changes'])) {
     $tmp_title = $_POST['title'];
-    // Check to see if dummy parent record exists for title.
-    if (strpos($tmp_title,'/') !== false) {
-      $parts = explode('/',$tmp_title);
-      $parent = $parts[0];
       
-      $result = $mysqli->prepare("SELECT id FROM staff_help WHERE title=?");
-      $result->bind_param('s', $parent);
-      $result->execute();
-      $result->bind_result($help_pageID);
-      $result->fetch();
-      $result->close();
-    
-      if ($help_pageID == '') {
-        $result = $mysqli->prepare("INSERT INTO staff_help VALUES (NULL,?,'','','page',NULL,NULL,?,NULL)");
-        $result->bind_param('ss', $parent, $_POST['page_roles']);
-        $result->execute();  
-        $result->close();
-      }
-    }
-  
     // Update help file record
     $tmp_body = $_POST['edit1'];
     $tmp_body_plain = strip_tags($tmp_body);
@@ -64,7 +45,7 @@
     ?>
     <html>
     <head>
-    <title></title>
+    <title>Rogo</title>
     <script language="JavaScript">
       function reloadHelp() {
         window.top.location='<?php echo $cfg_root_path ?>/help/staff/index.php?id=<?php echo $page_id; ?>';
