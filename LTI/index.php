@@ -268,13 +268,11 @@ END;
     }
     echo '<br />';
 
-if($plk == 0) {
-@ob_clean();
-  display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
+    if ($plk == 0) {
+      @ob_clean();
+      display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
 
-}
-
-
+    }
   }
 }
 ?>
