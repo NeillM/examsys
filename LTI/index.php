@@ -251,6 +251,7 @@ END;
     $block_id = 0;
 
     @ob_flush();
+    @ob_start();
 
     echo '<h1>' . $string['describemodulechoice'] . '</h1>';
 
