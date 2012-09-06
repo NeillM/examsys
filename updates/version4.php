@@ -4241,7 +4241,6 @@ if (!isset($_POST['update'])) {
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
-
   @ob_flush();
   @flush();
 
@@ -4249,6 +4248,15 @@ if (!isset($_POST['update'])) {
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
+  @ob_flush();
+  @flush()
+
+  $sql="GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
+  @ob_flush();
+  @flush();
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
