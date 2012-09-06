@@ -4249,7 +4249,7 @@ if (!isset($_POST['update'])) {
   echo "<li>$sql</li>\n";
 
   @ob_flush();
-  @flush()
+  @flush();
 
   $sql="GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
