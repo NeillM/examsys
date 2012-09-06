@@ -69,19 +69,14 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
     $check = usercheck($mysqli, $lti);
 
-print "debug1:";
     if ($check > 0) {
-      print "debug2:";
-      list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
-      print "debug3:";
-      print "<pre>";
-      var_dump(db_userlookup($check[0], $mysqli, true));
-      var_dump($password);
+      $datareturned=db_userlookup($check[0], $mysqli, true);
       print "</pre>";
-      if($password === false) {
+      if($datareturned === false) {
         display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
         exit();
       }
+      list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = $datareturned;
       db_change_user($mysqli);
     } else {
       $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n<li>" . $string['pressf5'] . "</li>";
