@@ -99,7 +99,7 @@
   $results->close();
   
   // How many papers need scheduling
-  $results = $mysqli->query("SELECT property_id FROM (properties, scheduling) WHERE (start_date IS NULL OR end_date IS NULL) AND properties.property_id=scheduling.paperID");
+  $results = $mysqli->query("SELECT property_id FROM (properties, scheduling) WHERE (start_date IS NULL OR end_date IS NULL) AND properties.property_id=scheduling.paperID AND deleted IS NULL");
   $scheduling_no = $results->num_rows;
   $results->close();
   
