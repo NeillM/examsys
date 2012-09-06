@@ -74,7 +74,7 @@ print "debug1:";
       print "debug2:";
       list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
       print "debug3:";
-      print "<pre>"; var_dump(db_userlookup($check[0], $mysqli, true); print "</pre>";
+      print "<pre>"; var_dump(db_userlookup($check[0], $mysqli, true);  print "</pre>";
       if($password === false) {
         display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
         exit();
