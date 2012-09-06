@@ -175,7 +175,7 @@ print "debug5<br>";
 
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
 print "debug6<br>";
-      exit();
+
       foreach ($data as $v) {
 
         if (!module_utils::module_exists($v[1], $mysqli)) {
@@ -184,7 +184,7 @@ print "debug6<br>";
           if ($v[0] == 'Manual') {
             $selfEnroll = 1;
           }
-print "debug7<br>";
+print "debug7<br>";      exit();
           $sms_api = $lti_i->sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
 print "debug8<br>";
