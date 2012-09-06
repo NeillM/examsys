@@ -110,10 +110,8 @@ function usercheck($db, $lti) {
   } else {
     $authneeded = $lti_i->user_time_check($returned[1]);
     if ($authneeded === true) {
-//      display_notice($string['ltiadditionallogin'], $string['ltiadditionallogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
-      display_notice($string['ltifirstlogin'],$string['ltiadditionallogindesc'].  $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
-      //    $db->close();
-      //    exit;
+      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
+
       $_SESSION['lti']['track'] = 'reauth';
       //TODO as all the rest of the reauth needs finishing
       $db->close();
