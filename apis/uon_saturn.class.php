@@ -101,13 +101,22 @@ Class UON_SATURN extends SmsUtils {
     if (is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->Error)) {
       $moduletitle=(string)$xml->Module->ModuleTitle;
       $school='SchoolMissing';
-      if(isset($xml->School)) {
-        if(isset($xml->School->AdministeredBy)) {
-          $school=(string)$xml->School->AdministeredBy;
+      if(isset($xml->Module->Schools)) {
+
+        foreach($xml->Module->Schools->children() as $v) {
+
+          if(isset($v->AdministeredBy)) {
+            $school = $v->AdministeredBy;
+            break;
+          }
+          if(isset($v->ContributedToBy)) {
+            $school = $v->ContributedToBy;
+          }
+
         }
-        else {
-          $school=(string)$xml->School->ContributedBy;
-        }
+
+
+
       }
       return array($moduleID,$moduletitle,$school);
     }

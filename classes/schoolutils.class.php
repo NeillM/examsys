@@ -79,13 +79,24 @@ Class SchoolUtils {
     $stmt->fetch();
     $row = $stmt->num_rows;
     $stmt->close();
+    //TODO current UoN Fudge for some data that doesnt follow convention should shift to saturn abstraction
     if ($row == 0) {
-      $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school='UNKNOWN School'");
+      $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school like 'School of ?'");
+      $stmt->bind_param('s', $school_name);
       $stmt->execute();
       $stmt->bind_result($id);
       $stmt->store_result();
       $stmt->fetch();
+      $row = $stmt->num_rows;
       $stmt->close();
+      if ($row == 0) {
+        $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school='UNKNOWN School'");
+        $stmt->execute();
+        $stmt->bind_result($id);
+        $stmt->store_result();
+        $stmt->fetch();
+        $stmt->close();
+      }
     }
     return $id;
   }

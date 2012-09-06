@@ -210,8 +210,6 @@ class lti_integration_extended extends lti_integration {
 
     foreach ($data as $k => $v) {
 
-      // TODO this is needing to be completed
-
       if (substr($v[5], 0, 8) == 'MISSING:' and $v[0] == 'SMS') {
         $sms = SmsUtils::GetSmsUtils();
         $sms->set_module($v[2]);
