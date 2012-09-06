@@ -69,6 +69,8 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
     $check = usercheck($mysqli, $lti);
 
+    print "<PRE>debug1:" .print_r($check,TRUE) . "</PRE>";
+
     if ($check > 0) {
       list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($check[0], $mysqli, true);
       db_change_user($mysqli);
@@ -84,6 +86,9 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
       access_denied($message, true);
     }
   }
+
+  print "<PRE>debug2:" .print_r($lti,TRUE) . "</PRE>";
+
 
   if (isset($lti->message) and $lti->message != 'Could not find context in session' and $lti->message != false) {
     // DO WE WANT THIS??
