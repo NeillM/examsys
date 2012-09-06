@@ -96,14 +96,14 @@ Class UON_SATURN extends SmsUtils {
   function get_module_info($moduleID) {
     $xml=$this->get_module($moduleID);
     if (is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->Error)) {
-      $moduletitle=$xml->Module->ModuleTitle;
+      $moduletitle=(string)$xml->Module->ModuleTitle;
       $school='SchoolMissing';
       if(isset($xml->School)) {
         if(isset($xml->School->AdministeredBy)) {
-          $school=$xml->School->AdministeredBy;
+          $school=(string)$xml->School->AdministeredBy;
         }
         else {
-          $school=$xml->School->ContributedBy;
+          $school=(string)$xml->School->ContributedBy;
         }
       }
       return array($moduleID,$moduletitle,$school);
