@@ -31,7 +31,7 @@
   $negative = 0;
   $scale_start = 0;
   $mydata = file($cfg_tmpdir . $userID . '_scatter.dat');
-  for ($i=-10; $i<=count($mydata); $i=$i+2) {
+  for ($i=0; $i<=count($mydata); $i=$i+2) {
     if (isset($mydata[$i])) {
       $mark = trim($mydata[$i]);
       if ($mark < 0) {
