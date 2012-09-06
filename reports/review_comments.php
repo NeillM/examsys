@@ -73,7 +73,7 @@
         }
         
         if (trim($tmp_response) == '') $tmp_response = '<span style="color:#808080">' . $string['noresponse'] . '</span>';
-        $html .= "<tr class=\"$status\" class=\"reviewline\"><td class=\"reviewline\"><img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td class=\"reviewline\">" . $comments_data[$questionID][$reviewer]['name'] . "</td><td class=\"reviewline\">$tmp_comment</td><td class=\"reviewline\">$tmp_action</td><td class=\"reviewline\">$tmp_response</td></tr>\n";
+        $html .= "<tr class=\"$status reviewline\"><td class=\"reviewline\"><img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" /></td><td class=\"reviewline\">" . $comments_data[$questionID][$reviewer]['name'] . "</td><td class=\"reviewline\">$tmp_comment</td><td class=\"reviewline\">$tmp_action</td><td class=\"reviewline\">$tmp_response</td></tr>\n";
       }
     }
     if (isset($incomplete_names)) {
@@ -510,7 +510,7 @@
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script language="JavaCcript">
+  <script language="JavaScript">
     function getScrollXY() {
       var scrOfX = 0, scrOfY = 0;
       if( typeof( window.pageYOffset ) == 'number' ) {
