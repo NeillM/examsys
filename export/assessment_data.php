@@ -95,6 +95,22 @@ function array_swap($array, $ix1, $ix2) {
   return $array;
 }
 
+/**
+ * Convert a string to comma separated HEX numbers to the decimal equivalent
+ * @param $data
+ * @return string
+ */
+function hex_to_dec($data) {
+  $items = explode(',', $data);
+  $response = '';
+
+  foreach ($items as $item) {
+    $response .= hexdec($item) . ',';
+  }
+
+  return rtrim($response, ',');
+}
+
 $mode = (isset($_GET['mode']) and $_GET['mode'] == 'text') ? 'text' : 'numeric';
 $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
 
@@ -452,6 +468,15 @@ if ($student_no > 0) {
 
         if (!$skip_random) {
           switch ($question['type']) {
+            case 'area':
+              if (!isset($excluded[$tmp_question_ID])) {
+                if ($is_random) {
+                  echo ',,';
+                } else {
+                  echo ',"' . hex_to_dec(ltrim($question['correct'], ',')) . '"';
+                }
+              }
+              break;
             case 'blank':
               $correct_parts = explode(',',$question['correct']);
               for ($partID=1; $partID<count($correct_parts); $partID++) {
@@ -698,6 +723,22 @@ if ($student_no > 0) {
 
       if (!$skip_random) {
         switch ($question['type']) {
+          case 'area':
+            if (!isset($excluded[$tmp_question_ID])) {
+              echo ',"';
+              if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != '') {
+                $answer_parts = explode(';', $individual[$tmp_screen][$tmp_question_ID]);
+
+                if (count($answer_parts) > 1) {
+                  echo hex_to_dec($answer_parts[1]);
+                }
+              }
+              echo '"';
+              if ($is_random) {
+                echo ',"' . hex_to_dec(ltrim($question['correct'], ',')) . '"';
+              }
+            }
+            break;
           case 'blank':
             $correct_parts = explode(',',$question['correct']);
             $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
