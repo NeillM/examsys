@@ -81,7 +81,7 @@ Class SchoolUtils {
     $stmt->close();
     //TODO current UoN Fudge for some data that doesnt follow convention should shift to saturn abstraction
     if ($row == 0) {
-      $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school like 'School of ?'");
+      $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school=CONCAT('School of ', ?)");
       $stmt->bind_param('s', $school_name);
       $stmt->execute();
       $stmt->bind_result($id);

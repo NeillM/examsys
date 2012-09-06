@@ -192,7 +192,7 @@ print "debug8<br>";
 
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);
         }
-print "debug9<br>";          exit();
+print "debug9<br>";
         if (!UserUtils::staff_on_team($v[1], $mysqli)) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
         }
