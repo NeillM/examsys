@@ -185,9 +185,6 @@ Class UON_SATURN extends SmsUtils {
     }
     $this->url=$arr[$location];
     $this->campus=$location;
-    print "END";
-    print_r($this->url);
-    print_r($this->campus);
   }
 
   function get_module_name($modulecode) {

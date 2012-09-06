@@ -115,7 +115,7 @@ class lti_integration_extended extends lti_integration {
 
     $SMS->set_module($data[2]);
 
-print_r($SMS);
+print_r($SMS->url);
 
     print "</pre>";
 
