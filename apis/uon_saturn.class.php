@@ -175,8 +175,6 @@ Class UON_SATURN extends SmsUtils {
       $location = 'UK';
     }
     $arr=$this->getModuleSources();
-
-    print_r($arr);
     if(!isset($arr[$location]))
     {
       $this->url='';
