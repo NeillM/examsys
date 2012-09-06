@@ -250,6 +250,8 @@ END;
     $plk = 0;
     $block_id = 0;
 
+    @ob_flush();
+
     echo '<h1>' . $string['describemodulechoice'] . '</h1>';
 
     //if there is a context and therefore a course already selected display that
@@ -266,7 +268,7 @@ END;
     echo '<br />';
 
 if($plk == 0) {
-
+@ob_clean();
   display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
 
 }
