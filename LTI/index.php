@@ -108,7 +108,7 @@ if (isset($_REQUEST['paperlinkID'])) {
 
 
 $returned = $lti->lookup_lti_resource();
-
+print "debug1<br>";
 if (!$lti->isInstructor()) {
   //student
   if ($returned === false) {
@@ -139,9 +139,10 @@ if (!$lti->isInstructor()) {
   }
 } else {
   //staff
+print "debug2<br>";
   if ($returned !== false) {
     // goto link
-
+print "debug3<br>";
     $returned2 = $lti->lookup_lti_context();
     $mod = $returned2[0];
     $data = $lti_i->module_code_translate($mod);
@@ -164,12 +165,12 @@ if (!$lti->isInstructor()) {
 
   } else {
     // no existing stored link so need to create one
-
+print "debug4<br>";
     $returned2 = $lti->lookup_lti_context();
 
-
+exit();
     if ($returned2 === false) {
-
+print "debug5<br>";
       //no context
 
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());

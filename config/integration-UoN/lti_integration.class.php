@@ -81,8 +81,8 @@ class lti_integration_extended extends lti_integration {
     $time1 = strtotime($time);
     $time2 = time();
     $timediff = $time2 - $time1;
-    //if($timediff>(60*60*24*7*15)) {
-    if ($timediff > (60 * 60 * 24)) {
+    if($timediff>(60*60*24*7*15)) {
+    //if ($timediff > (60 * 60 * 1)) {
       return true;
     }
     return false;
