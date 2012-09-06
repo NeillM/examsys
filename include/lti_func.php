@@ -37,7 +37,7 @@ function usercheck($db, $lti) {
   $lti_i = lti_integration::load();
   if (!isset($_SESSION['lti']['track'])) $_SESSION['lti']['track'] = '';
   
-  if ($_SESSION['lti']['track'] == 'reauth2') {
+  if ($_SESSION['lti']['track'] == 'reauth2' and isset($_SERVER['PHP_AUTH_USER'])) {
     $returned2 = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $db, false);
     if ($returned2 > 0) {
       $lti->update_lti_user();
@@ -61,7 +61,7 @@ function usercheck($db, $lti) {
   $returned = $lti->lookup_lti_user();
   if ($returned === false) {
     if (!isset($_SERVER['PHP_AUTH_USER']) and $_SESSION['lti']['track']=='') {
-      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/access_denied.png', $title_color = '#C00000');
+      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
       $_SESSION['lti']['track'] = 'logon';
       $db->close();
       exit;
