@@ -42,7 +42,7 @@ a.greylink:hover {color:#808080}
 .popupitembold {padding-left:4px; font-weight:bold}
 
 .greymenuitem {width:190px; color:#808080}
-.greymenuitem span {width:120px; float:left}
+.greymenuitem span {width:150px; float:left}
 .greymenuitem a:link {color:#808080; text-decoration:none; cursor:pointer}
 .greymenuitem a:visited {color:#808080; text-decoration:none; cursor:pointer}
 .greymenuitem a:hover {color:#808080; text-decoration:none; cursor:pointer}
