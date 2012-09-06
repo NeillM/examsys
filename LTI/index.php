@@ -184,7 +184,7 @@ print "debug6<br>";
           if ($v[0] == 'Manual') {
             $selfEnroll = 1;
           }
-print "debug7<br>";      exit();
+print "debug7<br>";
           $sms_api = $lti_i->sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
 print "debug8<br>";
@@ -192,7 +192,7 @@ print "debug8<br>";
 
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);
         }
-print "debug9<br>";
+print "debug9<br>";          exit();
         if (!UserUtils::staff_on_team($v[1], $mysqli)) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
         }
