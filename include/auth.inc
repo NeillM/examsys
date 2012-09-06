@@ -113,6 +113,10 @@ function db_userlookup($u, $db, $useridlookup = false) {
   $record_no = $stmt->num_rows();
   $stmt->close();
 
+  if($record_no == 0) {
+    return false;
+  }
+
   return array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username);
 }
 
