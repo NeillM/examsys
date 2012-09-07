@@ -106,19 +106,19 @@ SCRIPT;
 </td>
 </tr>
 <tr>
-<td class="field">Title</td><td><input type="text" name="title" size="60" /></td>
+<td class="field"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" /></td>
 </tr>
 <tr>
-<td class="field">Available from</td><td><?php echo date_utils::timedate_select('f', date('YmdH00')); ?></td>
+<td class="field"><?php echo $string['Available from']; ?></td><td><?php echo date_utils::timedate_select('f', date('YmdH00')); ?></td>
 </tr>
 <tr>
-<td class="field">Available to</td><td><?php echo date_utils::timedate_select('t', date('YmdH00')); ?></td>
+<td class="field"><?php echo $string['Available to']; ?></td><td><?php echo date_utils::timedate_select('t', date('YmdH00')); ?></td>
 </tr>
 <tr>
-<td class="field">Staff Message</td><td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:70px; margin: 0" rows="5" cols="20"></textarea></td>
+<td class="field"><?php echo $string['Staff Message']; ?></td><td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:70px; margin: 0" rows="5" cols="20"></textarea></td>
 </tr>
 <tr>
-<td class="field">Student Message</td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:70px; margin: 0" rows="5" cols="20"></textarea></td>
+<td class="field"><?php echo $string['Student Message']; ?></td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:70px; margin: 0" rows="5" cols="20"></textarea></td>
 </tr>
 <tr>
 <td colspan="2">&nbsp;</td>
