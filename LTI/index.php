@@ -173,31 +173,15 @@ if (!$lti->isInstructor()) {
     if ($returned2 === false) {
 
       //no context
-
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
-
-      print "<pre>";
-      var_dump($data);
-      print "</pre>";
-      $result = $mysqli->prepare("SELECT * FROM mysql.users WHERE userid=?");
-      if ($mysqli->error) {
-        try {
-          throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-
       foreach ($data as $v) {
-
         if (!module_utils::module_exists($v[1], $mysqli)) {
 
           $selfEnroll = 0;
           if ($v[0] == 'Manual') {
             $selfEnroll = 1;
           }
-
+          
           $sms_api = $lti_i->sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);

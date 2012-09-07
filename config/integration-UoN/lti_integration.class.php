@@ -218,7 +218,6 @@ class lti_integration_extended extends lti_integration {
           $data[$k][3] = $returned[2];
         } else {
           $data[$k][5] = "SATURN " . $data[$k][5];
-          print "not found!";
         }
 
 
