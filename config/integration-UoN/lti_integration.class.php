@@ -213,6 +213,9 @@ class lti_integration_extended extends lti_integration {
         $sms = SmsUtils::GetSmsUtils();
         $sms->set_module($v[2]);
         $returned = $sms->get_module_info($v[1]);
+        print "<pre>";
+        var_dump($returned);
+        print "</pre>";
         if ($returned !== false) {
           $data[$k][5] = $returned[1];
           $data[$k][3] = $returned[2];
