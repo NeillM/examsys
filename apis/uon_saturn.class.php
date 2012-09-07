@@ -103,7 +103,7 @@ Class UON_SATURN extends SmsUtils {
     print_r($xml);
     print "</pre>";
 
-    if (is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->Error)) {
+    if (is_object($xml) and !(isset($xml->ErrorMessage) or isset($xml->Module->Error) or isset($xml->Module->ModuleError) ) ) {
       $moduletitle=(string)$xml->Module->ModuleTitle;
       $school='SchoolMissing';
       if(isset($xml->Module->Schools)) {
