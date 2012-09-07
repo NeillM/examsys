@@ -4241,6 +4241,15 @@ if (!isset($_POST['update'])) {
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
+  $sql="GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
+  //cczsa1 2012-09-07 add permission to sid table for main user
+  $sql="GRANT SELECT, INSERT ON " . $cfg_db_database . ".sid TO '". $cfg_db_username . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
+
   @ob_flush();
   @flush();
 
@@ -4259,9 +4268,6 @@ if (!isset($_POST['update'])) {
   @ob_flush();
   @flush();
 
-  $sql="GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
-  $mysqli->query($sql);
-  echo "<li>$sql</li>\n";
 
   @ob_flush();
   @flush();
