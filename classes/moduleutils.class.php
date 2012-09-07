@@ -79,7 +79,6 @@ Class module_utils {
 
   static function module_check_self_enrol($module_id, $db) {
     // returns false if not self enrol else returns needed data;
-    print "SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=$module_id";
     $result = $db->prepare("SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
     $result->bind_param('s', $module_id);
     $result->execute();
