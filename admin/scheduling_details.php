@@ -97,9 +97,9 @@ $results->close();
 <table cellspacing="0" cellpadding="4" style="font-size:100%" class="data">
 <?php
   if ($barriers_needed == 1) {
-    $barriers_needed = 'Yes';
+    $barriers_needed = $string['Yes'];
   } else {
-    $barriers_needed = 'No';
+    $barriers_needed = $string['No'];
   }
   $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
   $display_period = $string[$months[$period]];
@@ -119,7 +119,7 @@ $results->close();
   
   $cohort_size = $string['cohortsize'];
   if ($cohort_size == 0) {
-    $cohort_size = '&lt;whole cohort&gt;';
+    $cohort_size = $string['whole cohort'];
   }
 
   echo "<tr><td class=\"f1\">" . $string['papername'] . "</td><td>$paper_title</td></tr>\n";  
