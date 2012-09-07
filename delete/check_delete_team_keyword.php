@@ -57,17 +57,19 @@
 <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td>
-<p><strong><?php echo $string['msg']; ?></strong> <?php
+<?php
 $i = 0;
+$keywordss = '';
 foreach ($keyword_names as $keyword_name) {
   if ($i == 0) {
-    echo $keyword_name;
+    $keywordss = $keyword_name;
   } else {
-    echo ', ' . $keyword_name;
+    $keywordss .= ', ' . $keyword_name;
   }
   $i++;
 }
-?><p>
+?>
+<p><strong><?php printf($string['msg'], $keywordss); ?></strong> <p>
 
 <div style="text-align:right">
 <form action="do_delete_team_keyword.php" method="post">
