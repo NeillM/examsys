@@ -122,9 +122,10 @@ if (!$lti->isInstructor()) {
     list($c_internal_id, $upd) = $lti->lookup_lti_context();
     $session = date_utils::get_current_academic_year();
 
+
     $returned_check = module_utils::module_check_self_enrol($c_internal_id, $mysqli);
 
-    print "DEBUG:<pre>";
+    print "DEBUG: $c_internal_id<pre>";
 
     var_dump($returned_check);
     print "--retuend_check";
