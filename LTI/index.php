@@ -123,26 +123,20 @@ if (!$lti->isInstructor()) {
     $session = date_utils::get_current_academic_year();
 
 
-    $returned_check = module_utils::module_check_self_enrol($c_internal_id, $mysqli);
 
-    print "DEBUG: $c_internal_id<pre>";
+    $data=$lti_i->module_code_translate($c_internal_id);
 
-    var_dump($returned_check);
-    print "--retuend_check";
-    var_dump(UserUtils::is_user_on_module($userID, $c_internal_id, $session, $mysqli));
-    print "--userutil";
-    var_dump($lti_i::allow_module_self_reg($c_internal_id));
-    print "--allowselfreg";
-    print "</pre>";
+foreach($data as $v) {
+  $returned_check = module_utils::module_check_self_enrol($v[1], $mysqli);
 
-
-    if (!UserUtils::is_user_on_module($userID, $c_internal_id, $session, $mysqli) and $returned_check !== false and !$lti_i::allow_module_self_reg($c_internal_id)) {
+    if (!UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli) and $returned_check !== false and !$lti_i::allow_module_self_reg($v[1])) {
       list($fullname, $school, $active, $selfenroll) = $returned_check;
-      if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
+      if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli)) {
         // Insert new module enrollment
-        UserUtils::add_student_to_module($userID, $c_internal_id, 1, $session, $mysqli);
+        UserUtils::add_student_to_module($userID, $v[1], 1, $session, $mysqli);
       }
     }
+  }
     // do something here
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../user_index.php?id=" . $returned[0]);
