@@ -69,37 +69,37 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
   }
 
   if ($error_type != 'Notice') {  // Record errors that are not notices.
-    if (is_object($mysqli)) {    
-      // Query may fail if we try to insert while another statement is open.
-      // Since we don't have a handle on the original statement, close the DB link and create another
-      $mysqli->close();
-      $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
-      
-      $paperID = NULL;
-      if (isset($_GET['paperID'])) {
-        $paperID = $_GET['paperID'];
-      } elseif (isset($_POST['paperID'])) {
-        $paperID = $_POST['paperID'];
-      }
-      
-      $post_data = '';
-      if (isset($_POST)) {
-        foreach ($_POST as $key=>$value) {
-          if ($post_data == '') {
-            $post_data = "$key=$value";
-          } else {
-            $post_data .= ", $key=$value";
-          }
+
+    // Query may fail if we try to insert while another statement is open.
+    // Since we don't have a handle on the original statement, create another DB link
+    $mysqli2 = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+
+    $paperID = NULL;
+    if (isset($_GET['paperID'])) {
+      $paperID = $_GET['paperID'];
+    } elseif (isset($_POST['paperID'])) {
+      $paperID = $_POST['paperID'];
+    }
+
+    $post_data = '';
+    if (isset($_POST)) {
+      foreach ($_POST as $key => $value) {
+        if ($post_data == '') {
+          $post_data = "$key=$value";
+        } else {
+          $post_data .= ", $key=$value";
         }
       }
-      
-      $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)");
-      $log_error->bind_param('issssssssis', $userID, $_SERVER['PHP_AUTH_USER'], $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
-      $log_error->execute();
-      $log_error->close();
     }
+
+    $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)");
+    $log_error->bind_param('issssssssis', $userID, $_SERVER['PHP_AUTH_USER'], $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
+    $log_error->execute();
+    $log_error->close();
+    $mysqli2->close();
+
   }
-  
+
   return false;
 }
 ?>
