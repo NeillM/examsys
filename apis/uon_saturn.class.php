@@ -76,7 +76,11 @@ Class UON_SATURN extends SmsUtils {
     $replaced_module = str_replace('_UNNC', '', $replaced_module);
 
 
-    $returned_data = @file_get_contents($this->url . "&code=$replaced_module&year=" . $session_parts[0]);
+    if($this->url !=='') {
+      $returned_data = @file_get_contents($this->url . "&code=$replaced_module&year=" . $session_parts[0]);
+    } else {
+      $returned_data = false;
+    }
     if ($returned_data !== false) {
 
       $xml = @new SimpleXMLElement($returned_data);
