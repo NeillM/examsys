@@ -211,9 +211,8 @@ if ($paper_type == '2' and $cfg_summative_mgmt) {
   echo '</select></td></tr>';
 
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
-  echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:98%" cols="40" rows="5" name="notes" style="text-size:90%"></textarea></td></tr>';
+  echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:98%; height:77px" cols="40" rows="5" name="notes" style="text-size:90%"></textarea></td></tr>';
   
-  echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td colspan="6" style="text-align:center"><input type="submit" style="width:100px" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
