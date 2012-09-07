@@ -102,8 +102,8 @@ if (!isset($_POST['submit'])) {
   $result->execute();
   $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
-    if (($paper_type == '2' or $paper_type == '4') and date("Y-m-d H:i:s") > $end_date) {
-      //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
+    if (($paper_type == '2' or $paper_type == '4') and $end_date != '' and date("Y-m-d H:i:s") > $end_date) {
+      // echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\"><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } elseif ($start_date < date("Y-m-d H:i:s") and $end_date > date("Y-m-d H:i:s")) {
       echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_warning_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } else {
