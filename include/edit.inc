@@ -121,7 +121,7 @@ function save_external_responses($dblink, $question, $ids, $actions, $responses,
     if($changed) $question->set_comments($comments);
   }
 
-function check_edit_rights($q_id, $checkout_authorID, $checkout_time, $locked, $dblink) {
+function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $checkout_time, $locked, $dblink) {
   global $tmp_ownerID, $userID;
   $disabled = '';
   
@@ -131,7 +131,7 @@ function check_edit_rights($q_id, $checkout_authorID, $checkout_time, $locked, $
     $disabled = 'locked';
     $checkout_author = check_out_paper($dblink, $q_id, $userID);
   } else {                              // Check out editing rights against current user
-    $checkout_author = check_lock_status($checkout_authorID, $checkout_time, $disabled, $dblink, $q_id);
+    $checkout_author = check_lock_status($checkout_authorID, $checkout_authorName, $checkout_time, $disabled, $dblink, $q_id);
   }
   
   return $disabled;
@@ -153,39 +153,30 @@ function check_MSCAA($q_id, $dblink) {
   return $mscaa;
 }
 
-function check_lock_status($checkout_author, $checkout_time, &$disabled, $dblink, $questionID) {
+function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_time, &$disabled, $dblink, $questionID) {
   global $userID, $string;
   
   // Check for lockout.
   $current_time = time();
-  if ($disabled == '' and $userID != $checkout_author) {
+  if ($disabled == '' and $userID != $checkout_authorID) {
     if ($checkout_time != '' and $current_time - $checkout_time < 3600) {
-      if ($editor = $dblink->prepare("SELECT title, initials, surname FROM users WHERE id=?")) {
-        $editor->bind_param('s', $checkout_author);
-        $editor->execute();
-        $editor->bind_result($title, $initials, $surname);
-        $editor->fetch();
-        $editor->close();
-      } else {
-        display_error("Lock Select Error", $editor->error);
-      }
       echo "<script language=\"JavaScript\">\n";
-      echo "  alert('" . $string['questionlocked'] . " $title $initials $surname. " . $string['isinreadonly'] . "')";
+      echo "  alert('" . $string['questionlocked'] . " $checkout_authorName. " . $string['isinreadonly'] . "')";
       echo "</script>\n";
       $disabled = ' disabled';
     } else {
-      $checkout_author = check_out_paper($dblink, $questionID, $userID);
+      $checkout_authorID = check_out_paper($dblink, $questionID, $userID);
     }
-  } elseif ($disabled == '' and $userID == $checkout_author) {
+  } elseif ($disabled == '' and $userID == $checkout_authorID) {
     // Set the lock to the current time/author.
     $editLock = $dblink->prepare("UPDATE questions SET checkout_time=NOW(), checkout_authorID=? WHERE q_id=?");
     $editLock->bind_param('ii', $userID, $questionID);
     $editLock->execute();  
     $editLock->close();
-    $checkout_author = check_out_paper($dblink, $questionID, $userID);
+    $checkout_authorID = check_out_paper($dblink, $questionID, $userID);
   }
   
-  return $checkout_author;
+  return $checkout_authorID;
 }
 
 /**

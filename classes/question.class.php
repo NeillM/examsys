@@ -1082,7 +1082,7 @@ QUERY;
   public function set_checkout_time($value) {
     $this->checkout_time = $value;
   }
-  
+
   /**
    * Get the user to whom the question is checked out
    * @return integer
@@ -1090,7 +1090,26 @@ QUERY;
   public function get_checkout_author_id() {
     return $this->checkout_author_id;
   }
-  
+
+  /**
+   * Get the name of the user to whom the question is checked out
+   * @return integer
+   */
+  public function get_checkout_author_name() {
+    $name = '<unknown>';
+
+    if ($editor = $this->_mysqli->prepare("SELECT title, initials, surname FROM users WHERE id=?")) {
+      $editor->bind_param('s', $this->checkout_author_id);
+      $editor->execute();
+      $editor->bind_result($title, $initials, $surname);
+      $editor->fetch();
+      $editor->close();
+      $name = $title . ' ' . $initials . ' ' . $surname;
+    }
+
+    return $name;
+  }
+
   /**
    * Set the user to whom the question is checked out
    * @param integer $value

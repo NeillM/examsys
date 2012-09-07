@@ -471,14 +471,19 @@ if ($critical_error == '') {
     </div>
 <?php
   $banner_spacer = '';
-  $disabled = check_edit_rights($question->id, $question->get_checkout_author_id(), $question->get_checkout_time('timestamp'), $question->get_locked(), $mysqli);
+  $editor = $question->get_checkout_author_name();
+  $q_disabled = check_edit_rights($question->id, $question->get_checkout_author_id(), $editor, $question->get_checkout_time('timestamp'), $question->get_locked(), $mysqli);
 
-  if ($disabled != '') {
+  if ($q_disabled != '') {
     $banner_spacer = ' class="banner-spaced"';
     
-    if ($disabled == 'locked') {
+    if ($q_disabled == 'locked') {
 ?>
     <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
+<?php
+    } elseif ($q_disabled == ' disabled') {
+?>
+      <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['questionlocked'] . " $editor. " . $string['isinreadonly'] ?></div>
 <?php
     }
   }
@@ -565,7 +570,7 @@ if (count($question->get_teams()) > 0) {
   $q_teams = explode(',', $state['default_team']);
 }
 
-echo render_metadata($mysqli, $question, $question->use_bloom(), $q_teams, $disabled, $string);
+echo render_metadata($mysqli, $question, $question->use_bloom(), $q_teams, $q_disabled, $string);
 ?>
         </div>
       </div>
@@ -616,7 +621,7 @@ echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 
     <div id="button-bar">
 <?php
-echo save_buttons($mode, $disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id, $paper_count, $string);
+echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id, $paper_count, $string);
 ?>
       <input type="hidden" name="q_id" value="<?php echo $question->id ?>" />
       <input name="checkout_author" value="<?php echo $userID ?>" type="hidden" />
