@@ -122,7 +122,7 @@ function db_userlookup($u, $db, $useridlookup = false) {
 
 function db_change_user($db) {
 
-  print "<BR>\r\nUSER CHANGE: " . $userroles . "\r\n<br>";
+
   global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
@@ -130,6 +130,9 @@ function db_change_user($db) {
   global $cfg_db_student_user, $cfg_db_student_passwd;
   global $cfg_db_external_user, $cfg_db_external_passwd;
   global $cfg_db_inv_user, $cfg_db_inv_passwd;
+
+  print "<BR>\r\nUSER CHANGE: " . $userroles . "\r\n<br>";
+
 
   //select the aproprate database user
   if (strpos($userroles, 'SysAdmin') !== false) {
