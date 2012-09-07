@@ -3,7 +3,7 @@ require '../lang/' . $language . '/include/paper_options.inc';
 require_once '../lang/' . $language . '/include/paper_types.inc';
 
 $string['showretired'] = 'Pokaż wycofane';
-$string['teammembers'] = 'Członkowie zespołów';
+$string['teammembers'] = 'Członkowie zespołu';
 $string['calendar'] = 'Kalendarz';
 $string['edit'] = 'Edytuj';
 $string['screen'] = 'Ekran';

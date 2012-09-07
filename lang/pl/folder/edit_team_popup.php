@@ -1,3 +1,3 @@
 <?php
-$string['teammembers'] = 'Członkowie zespołów:';
+$string['teammembers'] = 'Członkowie zespołu:';
 ?>
