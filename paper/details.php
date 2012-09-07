@@ -33,8 +33,28 @@ require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 
 check_var('paperID', 'GET', true, false);
-
 $paperID = $_GET['paperID'];
+
+// Unlock code - emergency use only!
+if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and strpos($userroles,'SysAdmin') !== false) {
+  $tmp_date = new DateTime();
+  $tmp_date->modify('+28 day');
+  $tmp_start_date = $tmp_date->format('Ymd' . '100000');
+  $tmp_end_date = $tmp_date->format('Ymd' . '100000');        
+
+  // Update the paper date so that it does not immediately re-lock
+  $editPaper = $mysqli->prepare("UPDATE properties SET start_date=?, end_date=? WHERE property_id=?");
+  $editPaper->bind_param('ssi', $tmp_start_date, $tmp_end_date, $paperID);
+  $editPaper->execute();
+  $editPaper->close();
+  
+  // Update the questions to take lock off
+  $editPaper = $mysqli->prepare("UPDATE questions INNER JOIN papers ON questions.q_id=papers.question AND paper=? SET questions.locked=NULL");
+  $editPaper->bind_param('i', $paperID);
+  $editPaper->execute();
+  $editPaper->close();
+  $summative_lock = false;
+}
 
 $result = $mysqli->prepare("SELECT DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%H') as start_hour, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
 $result->bind_param('i', $paperID);
@@ -610,27 +630,6 @@ function random_qMarks($random_questions) {
         $editPaper->close();
       }
       
-      // Unlock code - emergency use only!
-      if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and strpos($userroles,'SysAdmin') !== false) {
-        $tmp_date = new DateTime();
-        $tmp_date->modify('+28 day');
-        $tmp_start_date = $tmp_date->format('Ymd' . '100000');
-        $tmp_end_date = $tmp_date->format('Ymd' . '100000');        
-
-        // Update the paper date so that it does not immediately re-lock
-        $editPaper = $mysqli->prepare("UPDATE properties SET start_date=?, end_date=? WHERE property_id=?");
-        $editPaper->bind_param('ssi', $tmp_start_date, $tmp_end_date, $paperID);
-        $editPaper->execute();
-        $editPaper->close();
-        
-        // Update the questions to take lock off
-        $editPaper = $mysqli->prepare("UPDATE questions SET locked=NULL WHERE q_id=?");
-        $editPaper->bind_param('i', $q_id);
-        $editPaper->execute();
-        $editPaper->close();
-        $summative_lock = false;
-      }
-
       //prevent php errors by populating $excluded[$q_id]
       if (!isset($excluded[$q_id])) {
         $excluded[$q_id] = NULL;
