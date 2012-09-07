@@ -126,11 +126,11 @@ if (!$lti->isInstructor()) {
 
     print "DEBUG:<pre>";
 
-    print_r($returned_check);
+    var_dump($returned_check);
     print "--retuend_check";
-    print_r(UserUtils::is_user_on_module($userID, $c_internal_id, $session, $mysqli));
+    var_dump(UserUtils::is_user_on_module($userID, $c_internal_id, $session, $mysqli));
     print "--userutil";
-    print_r($lti_i::allow_module_self_reg($c_internal_id));
+    var_dump($lti_i::allow_module_self_reg($c_internal_id));
     print "--allowselfreg";
     print "</pre>";
 
