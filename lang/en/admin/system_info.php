@@ -37,4 +37,5 @@ $string['queries per second avg'] = 'Queries per second avg';
 $string['na'] = 'N/A';
 $string['driveicon'] = 'Drive icon';
 $string['freespace'] = '%s free of %s';
+$string['More details'] = 'More details...';
 ?>

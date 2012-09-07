@@ -37,4 +37,5 @@ $string['queries per second avg'] = 'Średnia kwerend na sekundę';
 $string['na'] = 'Brak';
 $string['driveicon'] = 'Ikona dysku';
 $string['freespace'] = '%s wolnych z %s';
+$string['More details'] = 'Więcej...';
 ?>

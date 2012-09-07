@@ -84,7 +84,7 @@ require_once '../classes/dateutils.class.php';
       $sub_result->fetch();
       $sub_result->close();
       if ($Rows > 0) {
-        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"log_late_details.php\">More details...</a></td>";
+        echo "<tr><td style=\"color:#C00000\">" . $Name . "&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"log_late_details.php\">" . $string['More details'] . "</a></td>";
         echo "<td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
      } else {
         echo "<tr><td>" . $Name . "</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
