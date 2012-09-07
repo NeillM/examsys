@@ -131,9 +131,6 @@ function db_change_user($db) {
   global $cfg_db_external_user, $cfg_db_external_passwd;
   global $cfg_db_inv_user, $cfg_db_inv_passwd;
 
-  print "<BR>\r\nUSER CHANGE: " . $userroles . "\r\n<br>";
-
-
   //select the aproprate database user
   if (strpos($userroles, 'SysAdmin') !== false) {
     $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
