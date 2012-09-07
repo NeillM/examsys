@@ -58,4 +58,9 @@ class lti_integration {
     return $SMS->url;
   }
 
+
+  function module_code_translated_store($data) {
+    return $data[0][1];
+  }
+
 }

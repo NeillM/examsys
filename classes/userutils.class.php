@@ -59,6 +59,14 @@ Class UserUtils {
       $tmp_userID = $db->insert_id;
       if (isset($sid) and $sid != '') {
         $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
+        if ($db->error) {
+          try {
+            throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+          } catch (Exception $e) {
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo nl2br($e->getTraceAsString());
+          }
+        }
         $result->bind_param('si', $sid, $tmp_userID);
         $result->execute();
         $result->close();

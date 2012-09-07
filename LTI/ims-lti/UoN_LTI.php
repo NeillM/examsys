@@ -431,6 +431,16 @@ class UoN_LTI extends BLTI {
     if ($lti_context_key === false) $lti_context_key = $this->getCourseKey();
     if ($this->parm['dbtype'] == 'mysqli') {
       $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_context (lti_context_key, c_internal_id, updated_on) VALUES (?, ?, NOW()) ");
+      $db=$this->db;
+      if ($db->error) {
+        try {
+          throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+          exit();
+        }
+      }
       $result->bind_param('ss', $lti_context_key, $c_internal_id);
       $result->execute();
       $ret = $this->db->insert_id;
