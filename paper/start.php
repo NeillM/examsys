@@ -686,6 +686,23 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   $previous_duration = 0;
   $screen_pre_submitted = 0;
   if (isset($_POST['sessionid']) or (isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1') or $restart == 1) {    // Get users previous answers for the current screen.
+    if ($paper_type == '_late') { //if we are after the deadline check for awnsers in original_paper_type_log - these will be over written below by new awnsers in log_late below
+      $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
+      $log_data->bind_param('isi', $userID, $sessionid, $property_id);
+      $log_data->execute();
+      $log_data->store_result();
+      $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
+      $user_answers = array();
+      $used_questions[$log_q_id] = $log_q_id;
+      while ($log_data->fetch()) {
+        $user_answers[$log_screen][$log_q_id] = $log_user_answer;
+        $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
+        $user_order[$log_screen][$log_q_id] = $option_order;
+        if ($log_screen == $current_screen) $previous_duration = $log_duration;
+      }
+      $log_data->close();
+    }
+    //get user answers from whichever log is pointed to by log$paper_type
     $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID=? AND started=? and q_paper=? ORDER BY id");
     $log_data->bind_param('isi', $userID, $sessionid, $property_id);
     $log_data->execute();
@@ -703,25 +720,8 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
         }
       }
       $log_data->close();
-    } else {
-      $log_data->close();
-      if ($paper_type == '_late') {
-        $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
-        $log_data->bind_param('isi', $userID, $sessionid, $property_id);
-        $log_data->execute();
-        $log_data->store_result();
-        $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-        $user_answers = array();
-        $used_questions[$log_q_id] = $log_q_id;
-        while ($log_data->fetch()) {
-          $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-          $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-          $user_order[$log_screen][$log_q_id] = $option_order;
-          if ($log_screen == $current_screen) $previous_duration = $log_duration;
-        }
-        $log_data->close();
-      }
-    }
+    } 
+    $log_data->close();
   }
 
   $old_leadin = '';
