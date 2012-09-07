@@ -7,5 +7,5 @@ $string['type'] = 'Typ';
 $string['modified'] = 'Zmodyfikowano';
 $string['warningnoleadin'] = 'Uwaga: brak sformułowania pytania!';
 $string['locked'] = 'Zablokowane';
-$string['warningnoquestion'] = 'Nie znaleziono pytania należącego do zespołu';
+$string['warningnoquestion'] = 'Nie znaleziono pytań należących do zespołu';
 ?>

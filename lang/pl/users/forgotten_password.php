@@ -2,7 +2,7 @@
 $string['forgottenpassword'] = 'Utracone hasło';
 $string['emailaddress'] = 'Adres Email';
 $string['emailaddressinvalid'] = 'Podaj poprawny adres Email';
-$string['emailaddressnotfound'] = 'Brak adresu Email';
+$string['emailaddressnotfound'] = 'Nie znaleziono tego adresu Email';
 $string['passwordreset'] = 'Resetowanie hasła';
 $string['emailhtml'] = <<< EMAIL_HTML
 <p>Cześć %s %s,</p>
