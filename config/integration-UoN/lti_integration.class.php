@@ -219,6 +219,8 @@ class lti_integration_extended extends lti_integration {
         if ($returned !== false) {
           $data[$k][5] = $returned[1];
           $data[$k][3] = $returned[2];
+        } else {
+          $data[$k][5] = "NOT LOCATED IN SATURN: " . $data[$k][5];
         }
 
 
