@@ -64,12 +64,11 @@ function getLabs($labs, $mysqlidb) {
     .s {padding-left:6px}
     .grey {color:#808080}
   </style>
-  
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="javascript">
-    $(function () {
-      $('body').click(desel);
-    });
+  
+    $('body').click(desel);
 
     function sel(divID, evt) {
       tmp_ID = document.myform.divID.value;
