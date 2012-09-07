@@ -719,7 +719,6 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
           $screen_pre_submitted = 1;
         }
       }
-      $log_data->close();
     } 
     $log_data->close();
   }
