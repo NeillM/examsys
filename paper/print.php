@@ -249,34 +249,45 @@ $stmt->free_result();
 $stmt->close();
 
 $current_screen = 1;
-
-echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n";
-if ($paper_type == '3') {
-  echo "<title>" . $string['survey'] . "</title>\n";
-} else {
-  echo "<title>" . $string['assessment'] . "</title>\n";
-}
 ?>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="imagetoolbar" content="no">
-<meta http-equiv="imagetoolbar" content="false">
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
-<meta http-equiv="pragma" content="no-cache" />
-<link rel="stylesheet" type="text/css" href="../css/print.css" />
-
-<style type="text/css">
-<?php
-  if (isset($_GET['break']) and $_GET['break'] == 1) {
-    echo ".qtable {page-break-after:always}\n";
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<html>
+<head>
+  <?php
+  if ($paper_type == '3') {
+    echo "<title>" . $string['survey'] . "</title>\n";
   } else {
-    echo ".qtable {page-break-after:auto}\n";
+    echo "<title>" . $string['assessment'] . "</title>\n";
   }
-?>
-</style>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<script type="text/javascript" src="../js/start.js"></script>
-<script type="text/javascript" src="../js/flash_include.js"></script>
+  ?>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="imagetoolbar" content="no">
+  <meta http-equiv="imagetoolbar" content="false">
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="pragma" content="no-cache" />
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/print.css" />
+
+  <style type="text/css">
+  <?php
+    if (isset($_GET['break']) and $_GET['break'] == 1) {
+      echo ".qtable {page-break-after:always}\n";
+    } else {
+      echo ".qtable {page-break-after:auto}\n";
+    }
+  ?>
+  </style>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/start.js"></script>
+  <script type="text/javascript" src="../js/flash_include.js"></script>
+  <script language="JavaScript">
+    $(document).ready(function() {
+      window.print();
+    });
+  </script>
 </head>
 <body>
 
