@@ -231,9 +231,6 @@ class lti_integration_extended extends lti_integration {
       $data[0][5] = substr($data[0][5], 8);
     }
     // return the data
-    print "<pre>";
-    var_dump($returned);
-    print "</pre>";
     return $data;
   }
 
