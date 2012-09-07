@@ -70,7 +70,7 @@
 <?php
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"; 
   
-  echo "<tr><td colspan=\"3\" style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\">\n<form action=\"\" method=\"post\">\n" . $string['from'] . "\n"; 
+  echo "<tr><td colspan=\"3\" style=\"margin-bottom:5px\">\n<form action=\"\" method=\"post\">\n" . $string['dates'] . "\n"; 
     // Split the end date
     $split_year = substr($start_date,0,4);
     $split_month = substr($start_date,4,2);
@@ -124,8 +124,7 @@
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>\n";
-    echo $string['to'];
+    echo "</select> - ";
     // Split the end date
     $split_year = substr($end_date,0,4);
     $split_month = substr($end_date,4,2);
