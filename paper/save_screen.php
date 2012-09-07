@@ -31,37 +31,36 @@ $displayDebug = false; //ajax call so debug info messes up the output
 
 check_var('id', 'GET', true, false);
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year, password FROM properties WHERE crypt_name=?");
+$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year, password FROM properties WHERE crypt_name=? LIMIT 1");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
-$stmt->store_result();
 $stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year, $password);
-while ($stmt->fetch()) {
-  $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
-  if (strpos($userroles,'Student') !== false) {
+$stmt->fetch();
+$stmt->close();
 
-    // Check for additional password on the paper
-    check_paper_password($password);
+$attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+if (strpos($userroles,'Student') !== false) {
 
-    // Check time security
-    check_datetime($start_date, $end_date);
+  // Check for additional password on the paper
+  check_paper_password($password);
 
-    //Check room security
-    $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
+  // Check time security
+  check_datetime($start_date, $end_date);
 
-    //get modules if the user is a student and the paper is not formative
-    $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
+  //Check room security
+  $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
 
-    // Check for any metadata security restrictions
-    check_metadata($property_id, $userID, $moduleID, $mysqli);
+  //get modules if the user is a student and the paper is not formative
+  $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
 
-    if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
-      $paper_type = '_late';
-    }
+  // Check for any metadata security restrictions
+  check_metadata($property_id, $userID, $moduleID, $mysqli);
+
+  if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
+    $paper_type = '_late';
   }
 }
-$stmt->free_result();
-$stmt->close();
+
 //TODO we need to add some error checking in here. maby wrap this whole function in a transaction ??
 $ret = record_marks($property_id, $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
 echo $_POST['randomPageID'];

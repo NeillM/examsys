@@ -178,7 +178,6 @@ if ($special_needs == 1) {
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-$row_no = 0;
 $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
@@ -188,7 +187,6 @@ if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
   access_denied($string['error_paper'], $output_header = false);
 }
 while ($stmt->fetch()) {
-  $row_no++;
   $no_screens = $screen;
   $add_q = ($q_type == 'info') ? 0 : 1;
   if (!isset($screen_data[$no_screens])) { 
@@ -196,43 +194,43 @@ while ($stmt->fetch()) {
   } else {
     $screen_data[$no_screens] += $add_q;
   }
-  if ($row_no == 1) {
-    $original_paper_type = $paper_type;
-    
-    // If set overwrite the default colours with the current users' special settings
-    if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-    if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-    if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-    if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-    if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-    if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-    if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
-    $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
-  
-    if (stripos($userroles,'Student') !== false) {
-	    // Check for additional password on the paper
-      check_paper_password($password);
-	  
-      // Check time security
-      check_datetime($start_date, $end_date);
-	  
-      //Check room security
-      $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
-      
-      // get modules if the user is a student and the paper is not formative
-      $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
-      
-      // Check for any metadata security restrictions
-      check_metadata($property_id, $userID, $moduleID, $mysqli);
-      
-      if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
-        $paper_type = '_late';
-      }
-    }
-  }
 }
 $stmt->free_result();
 $stmt->close();
+
+$original_paper_type = $paper_type;
+    
+// If set overwrite the default colours with the current users' special settings
+if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
+if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
+if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
+if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
+if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
+if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
+if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
+$attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+
+if (stripos($userroles,'Student') !== false) {
+  // Check for additional password on the paper
+  check_paper_password($password);
+
+  // Check time security
+  check_datetime($start_date, $end_date);
+
+  //Check room security
+  $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
+  
+  // get modules if the user is a student and the paper is not formative
+  $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
+  
+  // Check for any metadata security restrictions
+  check_metadata($property_id, $userID, $moduleID, $mysqli);
+}
+
+//check for submissions after the enddate and set them to save in log_late
+if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
+  $paper_type = '_late';
+}
 
 // Get any Reference Material
 $reference_materials = array();
@@ -651,7 +649,6 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
     record_marks($property_id, $mysqli, $userID, $paper_type, $grade, $year, $attempt, $userroles);
   }
-
   echo $top_table_html;
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
   $question_offset = 0;
