@@ -179,10 +179,10 @@ if (!$lti->isInstructor()) {
       print "<pre>";
       var_dump($data);
       print "</pre>";
-      $result = $db->prepare("SELECT * FROM mysql.users WHERE userid=?");
-      if ($db->error) {
+      $result = $mysqli->prepare("SELECT * FROM mysql.users WHERE userid=?");
+      if ($mysqli->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+          throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
           echo nl2br($e->getTraceAsString());
