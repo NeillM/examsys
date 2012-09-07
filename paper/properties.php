@@ -876,7 +876,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      if ($additional != '') $additional .= ')';
      if ($folder != '') $additional .= ' OR id=' . $folder;
      
-     $folder_details = $mysqli->prepare("SELECT id, name FROM folders WHERE ownerID=? $additional AND deleted IS NULL ORDER BY name");
+     $folder_details = $mysqli->prepare("SELECT id, name FROM folders WHERE (ownerID=?$additional) AND deleted IS NULL ORDER BY name");
      $folder_details->bind_param('s', $userID);
      $folder_details->execute();
      $folder_details->bind_result($folder_id, $folder_name);
