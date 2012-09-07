@@ -114,7 +114,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 }
 
 
-if (isset($_POST['submit']) and $_POST['submit'] == 'Create') {
+if (isset($_POST['submit'])) {
   $folder_results = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
   $folder_results->bind_param('i', $folder);
   $folder_results->execute();
