@@ -11,7 +11,7 @@ $string['new'] = 'Nowy...';
 $string['save'] = 'Zachowaj';
 $string['manageobjectives'] = 'Zarządzaj celami';
 $string['msg1'] = 'Wpisz nowy cel...';
-$string['msg2'] = 'Podaj niebanalną nazwę dla nowej sesji.';
-$string['entertitle'] = 'Podaj niebanalną nazwę dla nowej sesji.';
+$string['msg2'] = 'Podaj opisową nazwę dla nowej sesji.';
+$string['entertitle'] = 'Podaj opisową nazwę dla nowej sesji.';
 
 ?>
