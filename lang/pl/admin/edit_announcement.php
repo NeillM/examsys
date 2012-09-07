@@ -4,4 +4,9 @@ require '../lang/' . $language . '/include/months.inc';
 
 $string['editannouncement'] = 'Edytuj ogłoszenie';
 $string['save'] = 'Zachowaj';
+$string['Title'] = 'Tytuł';
+$string['Available from'] = 'Dostępne od';
+$string['Available to'] = 'Dostępne do';
+$string['Staff Message'] = 'Wiadomość dla kadry';
+$string['Student Message'] = 'Wiadomość dla studentów';
 ?>
