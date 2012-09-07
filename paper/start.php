@@ -524,7 +524,7 @@ if ($css != '') {
   }
   
   var startAutoSave = function () { 
-    autoSaveRef = setTimeout("autoSave()",<?php echo ($cfg_autosave_timeout * 1000); ?>);
+    autoSaveRef = setTimeout("autoSave()",<?php echo (($cfg_autosave_timeout + rand(-5,5)) * 1000); ?>);
   }
 
   var stopAutoSave = function() {
