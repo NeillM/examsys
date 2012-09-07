@@ -57,7 +57,7 @@
 <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td>
-<p><strong>Are you sure you wish to delete:</strong> <?php
+<p><strong><?php echo $string['msg']; ?></strong> <?php
 $i = 0;
 foreach ($keyword_names as $keyword_name) {
   if ($i == 0) {
