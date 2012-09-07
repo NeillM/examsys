@@ -64,6 +64,12 @@ $result->bind_param('i', $_POST['folderID']);
 $result->execute();
 $result->close();
 
+// Remove papers from the deleted folder
+$result = $mysqli->prepare("UPDATE properties SET folder='' WHERE folder=?");
+$result->bind_param('i', $_POST['folderID']);
+$result->execute();
+$result->close();
+
 $mysqli->close();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
