@@ -124,6 +124,17 @@ if (!$lti->isInstructor()) {
 
     $returned_check = module_utils::module_check_self_enrol($c_internal_id, $mysqli);
 
+    print "DEBUG:<pre>";
+
+    print_r($returned_check);
+    print "<<retuend_check";
+    print_r(UserUtils::is_user_on_module($userID, $c_internal_id, $session, $mysqli));
+    print "<<userutil";
+    print_r($lti_i::allow_module_self_reg($c_internal_id));
+    print "<<allowselfreg";
+    print "</pre>";
+    
+
     if (!UserUtils::is_user_on_module($userID, $c_internal_id, $session, $mysqli) and $returned_check !== false and !$lti_i::allow_module_self_reg($c_internal_id)) {
       list($fullname, $school, $active, $selfenroll) = $returned_check;
       if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $_GET['moduleid'], $_POST['session'], $mysqli)) {
