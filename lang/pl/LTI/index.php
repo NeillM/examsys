@@ -2,6 +2,6 @@
 include 'lti_common.php';
 
 
-$string['NoPapers'] = 'No Papers for this module'; //TODO Nikko
-$string['NoPapersDesc'] = 'There are no papers available for this module.  This is probably because you have just created a new link from the VLE with a new module and therefore havent got any papers currently configured.<br /><br />Please close the browser (<strong>very important</strong>) and then go to the Rogo homepage and create a paper.'; //TODO Nikko
+$string['NoPapers'] = 'Brak arkuszy dla tego modułu'; 
+$string['NoPapersDesc'] = 'Brak arkuszy dla tego modułu.  Być może wynika to z faktu, że właśnie utworzyłeś link z VLE wraz z nowym modułem i stąd nie masz jeszcze skonfigurowanych żadnych arkuszy.<br /><br />Zamknij przeglądarkę (<strong>jest to bardzo ważne</strong>) i przejdź do głównej strony Rogo aby utworzyć arkusz.'; 
 ?>

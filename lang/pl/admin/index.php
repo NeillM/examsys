@@ -1,7 +1,7 @@
 <?php
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['calendar'] = 'Kalendarz';
-$string['clearguestaccounts'] = 'Usuń konta gości';
+$string['clearguestaccounts'] = 'Oczyść konta gości';
 $string['clearoldlogs'] = 'Usuń stare logi';
 $string['clearorphanmedia'] = 'Usuń nieużywane pliki medialne';
 $string['cleartraining'] = 'Usuń trening';
