@@ -12,7 +12,7 @@ $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['mappingbysession'] = 'Odwzorowanie wg. sesji';
 $string['bysession'] = 'wg. sesji';
 $string['byquestion'] = 'wg. pytania';
-$string['longitudinal'] = 'dalekosiężne';
+$string['longitudinal'] = 'długoterminowe';
 $string['warning'] = 'Uwaga';
 $string['nomatchsession'] = 'Sesja w tytule arkusza (%s) nie odpowiada sesji arkusza (%s).';
 ?>

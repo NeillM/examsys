@@ -91,7 +91,7 @@ Class question_info {
     
     echo "<table style=\"width:100%\">\n";
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    echo "<tr><td>" . $string['followingpapers'] . "</td><td style=\"text-align:right\"><input type=\"button\" name=\"longitudinal\" value=\"Longitudinal\" onclick=\"openLongitudinal($q_id);\" /></td></tr>\n";
+    echo "<tr><td>" . $string['followingpapers'] . "</td><td style=\"text-align:right\"><input type=\"button\" name=\"longitudinal\" value=\"" . $string['Longitudinal'] . "\" onclick=\"openLongitudinal($q_id);\" /></td></tr>\n";
     echo "</table>\n";
     
     echo "<div style=\"margin:5px; display:block; height:195px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";

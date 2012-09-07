@@ -7,6 +7,7 @@ $string['modified'] = 'Modified';
 $string['locked'] = 'Locked';
 $string['teams'] = 'Teams';
 $string['followingpapers'] = 'Used on the following papers:';
+$string['Longitudinal'] = 'Longitudinal';
 $string['normal'] = 'Normal';
 $string['retired'] = 'Retired';
 $string['incomplete'] = 'Incomplete';
