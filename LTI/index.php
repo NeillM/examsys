@@ -176,6 +176,10 @@ if (!$lti->isInstructor()) {
 
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
 
+      print "<pre>";
+      var_dump($data);
+      print "</pre>";
+
 
       foreach ($data as $v) {
 
