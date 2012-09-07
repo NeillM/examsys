@@ -55,9 +55,9 @@ Class module_utils {
     // Check for unique moduleID
     $unique_moduleid = true;
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
-    if ($this->db->error) {
+    if ($db->error) {
       try {
-        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+        throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
         echo nl2br($e->getTraceAsString());
