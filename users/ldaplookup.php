@@ -36,7 +36,9 @@ require '../include/sort.inc';
   
   <title>LDAP Lookup</title>
 
-  <link rel="stylesheet" href="../css/screen.css" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <style type="text/css">
     body {background-color:#F1F5FB; font-size:90%}
   </style>
