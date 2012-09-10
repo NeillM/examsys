@@ -122,8 +122,12 @@ if (!isset($_POST['submit'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php echo $string['linktopaper']; ?></title>
+  <title><?php echo $string['linktopaper']; ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
 </head>
+
 <body style="font-size:90%;background-color:EEECDC;text-align:center">
 <?php
   $property_id = $_POST['property_id'];
