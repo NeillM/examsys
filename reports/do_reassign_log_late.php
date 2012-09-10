@@ -79,9 +79,9 @@
     $stmt->bind_result($q_id, $mark, $totalpos, $user_answer, $screen, $ipaddress, $duration, $student_grade, $year, $updated, $dismiss, $attempt, $option_order);
     while ($stmt->fetch()) {
       if (array_key_exists($q_id, $logged_qns)) {
-        // Update the record in the real log table with values from log_late
+        // Update the record in the real log table with values from log_late 
         $update = $mysqli->prepare("UPDATE $log_type SET mark=?, user_answer=?, duration=?, updated=? WHERE id=?");
-        $update->bind_param('iissi', $mark, $user_answer, $duration, $updated, $logged_qns[$q_id]);
+        $update->bind_param('isssi', $mark, $user_answer, $duration, $updated, $logged_qns[$q_id]);
         $update->execute();
         $update->close();
       } else {
