@@ -129,7 +129,7 @@ if (!$lti->isInstructor()) {
 foreach($data as $v) {
   $returned_check = module_utils::module_check_self_enrol($v[1], $mysqli);
 
-    if (!UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli) and $returned_check !== false and !$lti_i::allow_module_self_reg($v[1])) {
+    if (!UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v[1])) {
       list($fullname, $school, $active, $selfenroll) = $returned_check;
       if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli)) {
         // Insert new module enrollment
