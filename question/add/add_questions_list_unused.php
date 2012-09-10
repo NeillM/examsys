@@ -38,8 +38,8 @@ require '../../include/errors.inc';
     body {font-size:80%}
     a {text-decoration:none}
   </style>
-  <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
     function Qpreview(qID) {
       parent.previewurl.location = '../view_question.php?q_id=' + qID;
@@ -47,7 +47,6 @@ require '../../include/errors.inc';
 
     function populateTicks() {
       var q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
-      //q_array = Array(786,4283,3339);
       for (i=0; i<q_array.length; i++) {
         var obj = document.getElementById(q_array[i]);
 
@@ -87,11 +86,11 @@ require '../../include/errors.inc';
   } elseif ($order == 'q_type' and $direction == 'asc') {
     echo "<tr><th>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=desc\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=creation_date&direction=asc\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
   } elseif ($order == 'q_type' and $direction == 'desc') {
-    echo "<tr><th>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=creation_date&direction=asc\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
+    echo "<tr><th>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=creation_date&direction=asc\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
   } elseif ($order == 'creation_date' and $direction == 'asc') {
     echo "<tr><th>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=creation_date&direction=desc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   } elseif ($order == 'creation_date' and $direction == 'desc') {
-    echo "<tr><th>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=creation_date&direction=asc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
+    echo "<tr><th>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin&direction=asc\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color: black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=creation_date&direction=asc\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   }  
   echo "<tr><th colspan=\"4\" class=\"bevel\"></th></tr>\n";
   

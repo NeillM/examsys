@@ -40,8 +40,8 @@ $paperID = $_GET['paperID'];
     body {font-size:80%}
   </style>
   
-  <script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="/tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
     function Qpreview(qID) {
       parent.previewurl.location = '../view_question.php?q_id=' + qID;

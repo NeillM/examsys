@@ -33,7 +33,7 @@ require '../../include/staff_auth.inc';
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 	<style type="text/css">
-    body {margin-top:0px; margin-left:0px; margin-right:4px; margin-bottom:2px; background-color:#DFECFF; font-size:90%}
+    body {margin-right:4px; margin-bottom:2px; background-color:#DFECFF; font-size:90%}
   </style>
   
   <script language="JavaScript">
