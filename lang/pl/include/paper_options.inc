@@ -103,7 +103,7 @@ $string['copyname'] = 'Nazwa kopii:';
 $string['paperonly'] = 'Tylko arkusze';
 $string['paperandquestions'] = 'Arkusze i pytania';
 $string['reorderinfo'] = 'Możesz teraz zmienić porządek pytań i przemieścić podzielniki ekranowe przeciągając je w nowe położenia';
-$string['insertscreenbreak'] = 'Wprowadź podzielniki ekranowe';//Insert screen break';
-$string['addscreenbreak'] = 'Wprowadź podzielniki ekranowe';  
-$string['deletescreenbreak'] = 'Usuń podzielniki ekranowe';  
+$string['insertscreenbreak'] = 'Wstaw podzielnik ekranu';//Insert screen break';
+$string['addscreenbreak'] = 'Wstaw podzielnik ekranu';  
+$string['deletescreenbreak'] = 'Usuń podzielnik ekranu';  
 ?>
