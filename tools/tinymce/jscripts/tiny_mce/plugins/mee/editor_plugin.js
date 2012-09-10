@@ -156,9 +156,9 @@ function encodeQuotes(str) {
                 $(doc).find('.mee_iframe').each(function () {
                     var src = $(this).attr('src');
                     var data = src.substr(src.indexOf('?'));
-                    var data = data.substr(1);
-                    var data = data;
-                    var data = $.parseJSON(data);
+                    data = data.substr(1);
+                    data = decodeURIComponent(data.replace(/\+/g, ' '));
+                    data = $.parseJSON(data);
                     data.latex = unencodeQuotes(data.latex);
 
                     $(this).removeClass('mee_iframe');
