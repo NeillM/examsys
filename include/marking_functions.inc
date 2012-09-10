@@ -41,6 +41,52 @@ function time_to_seconds($seconds) {
 }
 
 /**
+ * This is function returns an array of database id q_id mappings for a user on a paper 
+ *
+ * @param int $u_id rogo user id 
+ * @param int $p_id rogo paper id
+ * @param mixed $paper_log_type the current type of the paper 1,2,3,4,5,6 or _late
+ * @param int $sreen_no the screen of interest
+ * @param string $sessionid the id of the session of interest
+ * @param MySQLi $db an open database connection
+ * @return array of database id q_id mappings
+ *
+ */
+function get_log_ids($u_id, $p_id, $paper_log_type, $sreen_no, $sessionid, $db) {
+  $log_ids = array();
+  $log_check = $db->prepare("SELECT id, q_id FROM log$paper_log_type WHERE userID=? AND q_paper=? AND screen=? AND started=?");
+  $log_check->bind_param('siis', $u_id, $p_id, $sreen_no, $sessionid);
+  $log_check->execute();
+  $log_check->bind_result($tmp_id, $tmp_q_id);
+  while ($log_check->fetch()) {
+    $log_ids[$tmp_q_id] = $tmp_id;
+  }
+  $log_check->close();
+  return $log_ids;
+}
+
+/**
+ * This is function returns the log_metadata id associated with a users/paper/session 
+ *
+ * @param int $u_id rogo user id 
+ * @param int $p_id rogo paper id
+ * @param string $sessionid the id of the session of interest
+ * @param MySQLi $db an open database connection
+ * @return mixed int id if a record is found false otherwise
+ *
+ */
+function get_log_metadata_record_id($u_id, $p_id, $sessionid, $db) {
+  $log_check = $db->prepare("SELECT id FROM log_metadata WHERE userID=? AND paperID=? AND started=?");
+  $log_check->bind_param('iis', $u_id, $p_id, $sessionid);
+  $log_check->execute();
+  $log_check->bind_result($tmp_id);
+  if($log_check->fetch()) {
+    return $tmp_id;
+  }
+  return false;
+}
+
+/**
  * This is function record_marks, is used to mark the users answer, and record it in the database for all question types. 
  *
  * @param mixed $paper_id 
@@ -54,6 +100,7 @@ function time_to_seconds($seconds) {
  *
  */
 function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, $student_year, $attempt, $userroles) {
+  global $original_paper_type; //TODO: move this into the function definition
   $screen_no =  $_POST['old_screen'];
   $extra_duration = $_POST['previous_duration'];
 
@@ -84,7 +131,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       } else {
   	    if (isset($_POST['q' . $q_id . '_' . $branch_no . '_branchID'])) {
 	        // the user went down branch $branch_no so saw the questions stored in option option_text
-          // put thes in an array to lookup and add to the paper_array
+          // put these in an array to lookup and add to the paper_array
 	        $selected_q_id = explode(',',$option_text);
 	      }
 	      $branch_no++;
@@ -119,24 +166,17 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   }
   $questions->close();
   
-  $log_ids = array();
-  $log_check = $dblink->prepare("SELECT id, q_id FROM log$paper_type WHERE userID=? AND q_paper=? AND screen=? AND started=?");
-  $log_check->bind_param('siis', $userid, $paper_id, $screen_no, $_POST['sessionid']);
-  $log_check->execute();
-  $log_check->bind_result($tmp_id, $tmp_q_id);
-  while ($log_check->fetch()) {
-    $log_ids[$tmp_q_id] = $tmp_id;
-  }
-  $log_check->close();
-
-  // Set up new insert query ready.
+  $log_ids = get_log_ids($userid, $paper_id, $paper_type, $screen_no, $_POST['sessionid'], $dblink);
+  
   if (count($log_ids) > 0) {
+    // prepare to update old records
     $save_answers = $dblink->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
     $save_answers->bind_param('dsisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
   } else {
-    if ($screen_no == 1) {       // Write log_metadata first on screen 1 only
+    // Set up new insert query ready.
+    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$dblink) === false) {       
+      // Write log_metadata first on screen 1 only
       $tmp_ip_address = NetworkUtils::get_ipaddress();
-      
       $save_metadata = $dblink->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
       $save_metadata->bind_param('iisssii', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
       $save_metadata->execute();

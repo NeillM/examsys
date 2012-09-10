@@ -39,6 +39,8 @@ $stmt->fetch();
 $stmt->close();
 
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+
 if (strpos($userroles,'Student') !== false) {
 
   // Check for additional password on the paper

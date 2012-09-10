@@ -198,7 +198,7 @@ while ($stmt->fetch()) {
 $stmt->free_result();
 $stmt->close();
 
-$original_paper_type = $paper_type;
+$original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions 
     
 // If set overwrite the default colours with the current users' special settings
 if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
@@ -253,6 +253,7 @@ $stmt->close();
 
 // Extract the posted variables.
 $restart = 0;
+$sessionid = '';
 if (isset($_POST['sessionid'])) {
   if ($_POST['button_pressed'] == 'next') {
     $current_screen = $_POST['current_screen'];
@@ -266,7 +267,7 @@ if (isset($_POST['sessionid'])) {
   $sessionid = $_POST['sessionid'];
 } else {
   $current_screen = 1;
-  if (($paper_type == '1' or $paper_type == '2' or $paper_type == '3') and !isset($_GET['mode'])) {  //Mode is used for staff preview.
+  if (($original_paper_type == '1' or $original_paper_type == '2' or $original_paper_type == '3') and !isset($_GET['mode'])) {  //Mode is used for staff preview.
     $stmt = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
     $stmt->bind_param('ii', $property_id, $userID);
     $stmt->execute();
@@ -276,13 +277,31 @@ if (isset($_POST['sessionid'])) {
       $row = $stmt->fetch();
       $stmt->free_result();
       $restart = 1;
-      if ($paper_type == '3') {
+      if ($original_paper_type == '3') {
         $current_screen = 1;
       }
-    } else {
-      $sessionid = date("YmdHis", time());
+    } else if($paper_type == '_late') {
+      //look in the original log for previous session (only happens if we are after the endDate of the paper and are restarting with no records in log_late) 
+      $stmt2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$original_paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
+      $stmt2->bind_param('ii', $property_id, $userID);
+      $stmt2->execute();
+      $stmt2->store_result();
+      $stmt2->bind_result($sessionid, $current_screen);
+      if ($stmt2->num_rows == 1) {
+        $row = $stmt2->fetch();
+        $stmt2->free_result();
+        $restart = 1;
+        if ($original_paper_type == '3') {
+          $current_screen = 1;
+        }
+      }
+      $stmt2->close();
     }
     $stmt->close();
+    if ($sessionid == '') {
+      //no previous session found start a new session
+      $sessionid = date("YmdHis", time());
+    }
   } else {
     $sessionid = date("YmdHis", time());
   }
@@ -685,8 +704,10 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   $user_answers = array();
   $previous_duration = 0;
   $screen_pre_submitted = 0;
-  if (isset($_POST['sessionid']) or (isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1') or $restart == 1) {    // Get users previous answers for the current screen.
-    if ($paper_type == '_late') { //if we are after the deadline check for awnsers in original_paper_type_log - these will be over written below by new awnsers in log_late below
+  if (isset($_POST['sessionid']) or (isset($_POST['fire_alarm']) and $_POST['fire_alarm'] == '1') or $restart == 1) {    
+    // Get users previous answers for the current screen.
+    if ($paper_type == '_late') { 
+      //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
       $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
       $log_data->bind_param('isi', $userID, $sessionid, $property_id);
       $log_data->execute();

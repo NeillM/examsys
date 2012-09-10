@@ -51,6 +51,7 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year, $password);
 while ($stmt->fetch()) {
+  $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions 
   $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
   if (strpos($userroles,'Student') !== false) {
   
