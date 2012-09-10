@@ -152,8 +152,7 @@ function randomDetails($questionID) {
     $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
     while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
-        $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin,'<sub><sup><b><i>'))));
-        if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
+        $old_leadin = clean_leadin($old_leadin);
         $random_questions[$question_no]['theme'] = $old_theme;
         $random_questions[$question_no]['q_id'] = $old_q_id;
         $random_questions[$question_no]['type'] = $old_q_type;
@@ -185,8 +184,7 @@ function randomDetails($questionID) {
     }
 
     // Write out the last question.
-    $old_leadin = trim(str_replace('&nbsp;',' ',(strip_tags($old_leadin,'<sub><sup><b><i>'))));
-    if (strlen($old_leadin) > 160) $old_leadin = substr($old_leadin,0,160) . '...';
+    $old_leadin = clean_leadin($old_leadin);
     $random_questions[$question_no]['theme'] = $old_theme;
     $random_questions[$question_no]['q_id'] = $old_q_id;
     $random_questions[$question_no]['type'] = $old_q_type;
@@ -203,6 +201,25 @@ function randomDetails($questionID) {
   return $random_questions;
 }
 
+/**
+ * Strip tags from the leading string (if it doesn't contain equations) and trim length
+ * @param $leadin
+ * @return string
+ */
+function clean_leadin($leadin) {
+  if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
+    $leadin = strip_tags($leadin);                                     // No equation, strip all tags
+    if (strlen($leadin) > 160) {
+      $leadin = substr($leadin, 0, 160) . '...';
+    }
+  } else {
+    $leadin = trim(str_replace('&nbsp;',' ', $leadin));
+  }
+
+  return $leadin;
+}
+
+
 function random_qMarks($random_questions) {
   $min = 999;
   $max = 0;
@@ -218,6 +235,67 @@ function random_qMarks($random_questions) {
     return 'ERR';
   }
 }
+
+/**
+ * Check the parts of a question to see if they contain equations and therefore need to include LaTeX processing code
+ * @param $leadin
+ * @param $scenario
+ * @param $option_text
+ * @param $score_method
+ * @param $correct_fback
+ * @param $feedback_right
+ * @return int
+ */
+function check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right) {
+  $latex = 0;
+
+  // latex check [tex]
+  if (strpos($leadin,'[tex]') !== false or strpos($scenario,'[tex]') !== false or strpos($option_text,'[tex]') !== false or strpos($score_method,'[tex]') !== false or strpos($correct_fback,'[tex]') !== false or strpos($feedback_right,'[tex]') !== false) {
+    $latex = 1;
+  }
+
+  // latex check [tex]
+  if (strpos($leadin,'[texi]') !== false or strpos($scenario,'[texi]') !== false or strpos($option_text,'[texi]') !== false or strpos($score_method,'[texi]') !== false or strpos($correct_fback,'[texi]') !== false or strpos($feedback_right,'[texi]') !== false) {
+    $latex = 1;
+  }
+
+  // latex check $$
+  if (strpos($leadin,'$$') !== false or strpos($scenario,'$$') !== false or strpos($option_text,'$$') !== false or strpos($score_method,'$$') !== false or strpos($correct_fback,'$$') !== false or strpos($feedback_right,'$$') !== false) {
+    $latex = 1;
+  }
+
+  // latex check class="mee"
+  if (strpos($leadin,'class="mee"') !== false or strpos($scenario,'class="mee"') !== false or strpos($option_text,'class="mee"') !== false or strpos($score_method,'class="mee"') !== false or strpos($correct_fback,'class="mee"') !== false or strpos($feedback_right,'class="mee"') !== false) {
+    $latex = 1;
+  }
+
+  return $latex;
+}
+
+/**
+ * Check the random questions on the paper to see if they require LaTeX
+ * @param $q_ids
+ * @param $mysqli
+ * @return int
+ */
+function check_latex_random($q_ids, $mysqli) {
+  $q_ids = implode(',', $q_ids);
+  $latex = 0;
+
+  $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+  while ($result->fetch()) {
+    $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+    if ($latex == 1) {
+      break;
+    }
+  }
+
+  return $latex;
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
@@ -502,6 +580,7 @@ function random_qMarks($random_questions) {
   $total_marks  = 0;
   $options = 0;
   $neg_marking = false;
+  $rnd_q_ids = array();
   
   // Get the questions (if any).
   $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
@@ -513,24 +592,10 @@ function random_qMarks($random_questions) {
   while ($result->fetch()) {
 
     if ($latex == 0) {
-      // latex check [tex]
-      if (strpos($leadin,'[tex]') !== false or strpos($scenario,'[tex]') !== false or strpos($option_text,'[tex]') !== false or strpos($score_method,'[tex]') !== false or strpos($correct_fback,'[tex]') !== false or strpos($feedback_right,'[tex]') !== false) {
-        $latex = 1;
-      }
-    
-     // latex check [tex]
-      if (strpos($leadin,'[texi]') !== false or strpos($scenario,'[texi]') !== false or strpos($option_text,'[texi]') !== false or strpos($score_method,'[texi]') !== false or strpos($correct_fback,'[texi]') !== false or strpos($feedback_right,'[texi]') !== false) {
-        $latex = 1;
-      }
-    
-      // latex check $$
-      if (strpos($leadin,'$$') !== false or strpos($scenario,'$$') !== false or strpos($option_text,'$$') !== false or strpos($score_method,'$$') !== false or strpos($correct_fback,'$$') !== false or strpos($feedback_right,'$$') !== false) {
-        $latex = 1;
-      }
-    
-      // latex check class="mee"
-      if (strpos($leadin,'class="mee"') !== false or strpos($scenario,'class="mee"') !== false or strpos($option_text,'class="mee"') !== false or strpos($score_method,'class="mee"') !== false or strpos($correct_fback,'class="mee"') !== false or strpos($feedback_right,'class="mee"') !== false) {
-        $latex = 1;
+      if ($q_type == 'random') {
+        $rnd_q_ids[] = $option_text;
+      } else {
+        $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
       }
     }
     // Check for negative marking
@@ -583,16 +648,8 @@ function random_qMarks($random_questions) {
       $temp_array[$row_no]['screen'] = $screen;
       $temp_array[$row_no]['q_type'] = $q_type;
       $temp_array[$row_no]['leadin'] = $leadin;
-      if (strpos($temp_array[$row_no]['leadin'],'class="mee"') === false and strpos($temp_array[$row_no]['leadin'],'class=mee') === false) {
-        $temp_array[$row_no]['leadin'] = strip_tags($temp_array[$row_no]['leadin'],'<sub><sup><b><i>');                                     // No equation, strip all tags
-        if (strlen($temp_array[$row_no]['leadin']) > 160) {
-          $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . '...';
-        }
-      } else {
-        $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',$temp_array[$row_no]['leadin']));
-        //$temp_array[$row_no]['leadin'] = preg_replace('/ style="[\w-,:; \']*"/i', '', $temp_array[$row_no]['leadin']);   // Equation present, strip some formatting
-      }
-      
+      $temp_array[$row_no]['leadin'] = clean_leadin($temp_array[$row_no]['leadin']);
+
       $temp_array[$row_no]['scenario'] = $scenario;
       $temp_array[$row_no]['p_id'] = $p_id;
       $temp_array[$row_no]['q_id'] = $q_id;
@@ -672,6 +729,11 @@ function random_qMarks($random_questions) {
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
     if ($paper_type < 3) checkProblems($paper_type, $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status']);
+
+    // If we had random questions on paper need to check if they need LaTeX
+    if ($latex == 0 and count($rnd_q_ids) > 0) {
+      $latex = check_latex_random($rnd_q_ids, $mysqli);
+    }
 
     if (($total_random_mark != $old_random_mark or $total_marks != $old_total_marks or $latex != $latex_needed) and $paper_type != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark=?, total_mark=?, latex_needed=? WHERE property_id=?");
