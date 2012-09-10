@@ -37,8 +37,8 @@ $string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj się 
 $string['deleted_msg1'] = 'Arkusz <strong>%s</strong> został usunięty.';
 $string['deleted_msg2'] = 'Może być nadal odzyskany z <a href="' . $cfg_root_path . '/delete/recycle_list.php" style="color:blue">kosza</a>.';
 $string['deleted_msg3'] = 'Nie jesteś właścicielem tego arkusza, musisz skontaktować się z <a href="mailto:%s" style="color:blue">%s %s</a> by go odzyskać.';
-$string['addscreenbreak'] = 'Wprowadź podzielniki ekranowe';  
-$string['deletescreenbreak'] = 'Usuń podzielniki ekranowe';
+$string['addscreenbreak'] = 'Wstaw podzielnik ekranu';  
+$string['deletescreenbreak'] = 'Usuń podzielnik ekranu';
 $string['next'] = 'Dalej >>';  
 $string['na'] = 'Brak'; 
 ?>
