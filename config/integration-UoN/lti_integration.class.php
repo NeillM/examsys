@@ -81,7 +81,7 @@ class lti_integration_extended extends lti_integration {
   }
 
 
-  static function user_time_check($time) {
+  static function user_time_check($time, $user='') {
     $time1 = strtotime($time);
     $time2 = time();
     $timediff = $time2 - $time1;
@@ -96,7 +96,16 @@ class lti_integration_extended extends lti_integration {
     return false;
   }
 
-  static function allow_module_self_reg($module_id) {
+  static function allow_module_self_reg($data) {
+    return true;
+  }
+
+  static function allow_staff_module_register($data) {
+    return true;
+  }
+
+
+  static function allow_module_create($data) {
     return true;
   }
 

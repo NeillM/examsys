@@ -129,7 +129,7 @@ if (!$lti->isInstructor()) {
 foreach($data as $v) {
   $returned_check = module_utils::module_check_self_enrol($v[1], $mysqli);
 
-    if (!UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v[1])) {
+    if (!UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v)) {
       list($fullname, $school, $active, $selfenroll) = $returned_check;
       if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli)) {
         // Insert new module enrollment
@@ -137,7 +137,7 @@ foreach($data as $v) {
       }
     }
   }
-    // do something here
+    // do 'something' here
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../user_index.php?id=" . $returned[0]);
     echo "Please click <a href='../user_index.php?id=" . $returned[0] . ".>here</a> to continue";
@@ -154,7 +154,7 @@ foreach($data as $v) {
     $mod = $returned2[0];
     $data = $lti_i->module_code_translate($mod);
     foreach ($data as $v) {
-      if (!UserUtils::staff_on_team($v[1], $mysqli)) {
+      if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
         UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
       }
     }
@@ -181,16 +181,28 @@ foreach($data as $v) {
       //no context
       $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
       foreach ($data as $v) {
-        if (!module_utils::module_exists($v[1], $mysqli)) {
+        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) ) {
+
+          $peer = 1;
+          $external = 1;
+          $stdset = 0;
+          $mapping = 1;
+          $neg_marking = 1;
+
 
           $selfEnroll = 0;
           if ($v[0] == 'Manual') {
             $selfEnroll = 1;
+            $peer = 0;
+            $external = 0;
+            $stdset = 0;
+            $mapping = 0;
+            $neg_marking = 1;
           }
 
           $sms_api = $lti_i->sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
-          $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, 0, 0, 0, 0, 1, 0, $mysqli);
+          $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli);
         }
         if (!UserUtils::staff_on_team($v[1], $mysqli)) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
@@ -251,7 +263,7 @@ END;
 
     echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
-
+var_dump($data);
     foreach ($data as $v) {
       $moduleid = $v[1];
 

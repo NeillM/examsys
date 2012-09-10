@@ -1067,6 +1067,11 @@ require \$root . '/include/path_functions.inc.php';
 // SMS Imports
   \$cfg_sms_api = '';
 
+// LTI these configure the default lti integration if you want more ability than this then you will need to override the lti_integration class (in config/integration called lti-integration.class.php), UoN version is shipped in the -UoN folder
+\$cfg_lti_allow_module_self_reg = false; // allows rogo to auto add student to module if selfreg is set for module if from lti launch
+\$cfg_lti_allow_staff_module_register = false; // allows rogo to register staff onto the module team if set to true and from lti launch and staff in vle
+\$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist
+
 //LDAP
   \$cfg_ldap_server        = '{cfg_ldap_server}';
   \$cfg_ldap_search_dn     = '{cfg_ldap_search_dn}';

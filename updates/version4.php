@@ -4268,6 +4268,47 @@ if (!isset($_POST['update'])) {
   @ob_flush();
   @flush();
 
+  $new_cfg_str = array();
+  $new_cfg_str[] = "\r\n";
+  $new_cfg_str[] = "// LTI these configure the default lti integration if you want more ability than this then you will need to override the lti_integration class (in config/integration called lti-integration.class.php), UoN version is shipped in the -UoN folder\r\n";
+$new_cfg_str[] = "\$cfg_lti_allow_module_self_reg = false; // allows rogo to auto add student to module if selfreg is set for module if from lti launch\r\n";
+$new_cfg_str[] = "\$cfg_lti_allow_staff_module_register = false; // allows rogo to register staff onto the module team if set to true and from lti launch and staff in vle\r\n";
+$new_cfg_str[] = "\$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist\r\n";
+$new_cfg_str[] = "\r\n";
+
+
+  $cfg = file($cfg_web_root . 'config/config.inc.php');
+
+
+
+  //remove refrances to old vars
+  $cfg_new = array();
+  $found = false;
+  foreach ($cfg as $curline=>$line) {
+
+    if (strpos($line,'cfg_lti_allow_module_self_reg') !== false) {
+      $found = true;
+    }
+    if (strpos($line,'cfg_sms_api') !== false) {
+      $target_line = $curline + 1;
+    }
+    $cfg_new[] = $line;
+  }
+
+  if (!$found) {
+    //add the new config chunk
+    array_splice($cfg_new,$target_line,0,$new_cfg_str);
+
+
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old12.php');
+    }
+
+    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+      echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+    }
+    echo "<li>Add lti config variables</li>\n";
+  }
 
   @ob_flush();
   @flush();

@@ -28,7 +28,7 @@ class lti_integration {
 
   }
 
-  static function user_time_check($time) {
+  static function user_time_check($time, $user='') {
     return false;
   }
 
@@ -36,12 +36,23 @@ class lti_integration {
     return false;
   }
 
-  static function allow_module_self_reg($module_id) {
-    return true;
+  static function allow_module_self_reg($data) {
+    global $cfg_lti_allow_module_self_reg;
+    return $cfg_lti_allow_module_self_reg;
+  }
+
+  static function allow_staff_module_register($data) {
+    global $cfg_lti_allow_staff_module_register;
+    return $cfg_lti_allow_staff_module_register;
+  }
+
+  static function allow_module_create($data) {
+    global $cfg_lti_allow_module_create;
+    return $cfg_lti_allow_module_create;
   }
 
   function module_code_translate($c_internal_id, $course_title = '') {
-    return array('Manual', $c_internal_id, 'CampusTODO', 'SchoolTODO', 0, "MISSING:$course_title");
+    return array(array('Manual', $c_internal_id, 'CampusTODO', 'SchoolTODO', 0, "MISSING:$course_title"));
   }
 
   static function determine_std_module($modulecode, $campus, $year, $semstart) {
@@ -49,7 +60,7 @@ class lti_integration {
   }
 
   function sms_api($data) {
-    if ($data[0] != ' SMS') {
+    if ($data[0] != 'SMS') {
       return '';
     }
     $SMS = SmsUtils::GetSmsUtils();
