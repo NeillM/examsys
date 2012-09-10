@@ -31,6 +31,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   <title>lang test</title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/screen.css" />
+  <style type="text/css">
+body {
+	padding-left: 20px;
+}
+table {
+	padding-left: 20px;
+}</style>
 </head>
 
 <body>
@@ -98,9 +108,13 @@ function file_array_read($files, $lang) {
   }
   return $strings;
 }
+
+$last_key = '';
+$last_value = '';
  
 function display_this($data, $data_index) {
 	global $display_text;
+  global $last_key,$last_value;
   
   $data_part1= explode('|', $data[0]);
 	$data_part2= $data[1];
@@ -111,10 +125,27 @@ function display_this($data, $data_index) {
         $display_text .= '<tr><td>';
         if (isset($data_part1[$data_key])) $display_text .= '<em>' . $data_part1[$data_key] . '</em>';
         $display_text .= '</td><td>';
-        if (isset($data_part2)) $display_text .= '<strong>' . $data_part2 . '</strong>';
+        if (isset($data_part2)) {
+          if ($data_part2 != $last_key) {
+            $display_text .= '<strong>' . $data_part2 . '</strong>';
+          }
+          else {
+            $display_text .= '<strong>&nbsp;&nbsp;&nbsp;-<small>//</small>-</strong>';
+          }
+        }
         $display_text .= '</td><td>';
-        if (isset($data_part3[$data_key])) $display_text .= $data_part3[$data_key];
+        $last_key = $data_part2;
+        
+        if (isset($data_part3[$data_key])) {
+          if ($data_part3[$data_key] != $last_value) {
+            $display_text .= $data_part3[$data_key];
+          }
+          else {
+            $display_text .= '';
+          }
+        }
         $display_text .= '</td></tr>';
+        $last_value = $data_part3[$data_key];
 			}
 		} else {
 			$display_text .= '<tr><td><em>' . $data_part1[$data_index] . '</em></td><td><strong>' . $data_part2 . '</strong></td><td>' . $data_part3[$data_index] . '</td></tr>';
@@ -144,14 +175,14 @@ foreach ($lang_array as $lang) {
 	$strings_pl = file_array_read($files, $lang);
 	if (empty($strings_pl[0])) unset($strings_pl[0]);
 
-	echo '<h1>Analysis for: ' . $lang . '</h1>';
+	echo '<h2 class="midblue_header">Analysis for: ' . $lang . '</h2>';
   
   //Missing files
 	$display_text = '';
   foreach ($strings_pl as $strings_key => $strings_data)
 		if ($strings_data[0]==$strings_key) $display_text .= '<em>' . $strings_data[0] . '</em><br />';
-	echo '<h2>Missing files:</h2>';
-	if ($display_text=='') $display_text='none';
+	echo '<h3>Missing files:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 	echo '<table>'.$display_text.'</table>';
 	
   //Strings in missing files
@@ -162,16 +193,16 @@ foreach ($lang_array as $lang) {
 			if (isset($strings_pl[$data_path_elem])) display_this($strings_data, $data_path_key);
     }
 	}
-	echo '<h2>Strings in missing files:</h2>';
-	if ($display_text=='') $display_text='none';
+	echo '<h3>Strings in missing files:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 	echo '<table>'.$display_text.'</table>';
 
 	//Missing strings
 	$display_text = '';
 	foreach ($strings_en as $strings_key => $strings_data)
 		if (!isset($strings_pl[$strings_key]) and (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data, -1);
-  echo '<h2>Missing strings:</h2>';
-	if ($display_text=='') $display_text='none';
+  echo '<h3>Missing strings:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 	echo '<table>'.$display_text.'</table>';
 
   //Missing strings from file
@@ -179,13 +210,13 @@ foreach ($lang_array as $lang) {
 	foreach ($strings_en as $strings_key => $strings_data) {
 		if (isset($strings_pl[$strings_key]) and ($strings_pl[$strings_key][0]!=$strings_data[0])) {
 			$data_path1 = explode("|", $strings_data[0]);
-			$data_path2 = explode("|", $strings_pl[$strings_key][0]);
-			$data_path3 = array_diff($data_path1, $data_path2);
+			$data_path3 = explode("|", $strings_pl[$strings_key][0]);
+			$data_path3 = array_diff($data_path1, $data_path3);
 			display_this(Array(implode(", ", $data_path3), $strings_data[1], $strings_data[2], $strings_data[3]), -1);
 		}
   }   
-	echo '<h2>Missing strings from file:</h2>';
-	if ($display_text=='') $display_text='none';
+	echo '<h3>Missing strings from file:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 	echo '<table>'.$display_text.'</table>';
 
 	//Files with empty keys for the \'string\' array
@@ -197,8 +228,8 @@ foreach ($lang_array as $lang) {
 			$display_text .= '<em>' . $data_path1_elem . '</em><br />';
 		}
 	}
-  echo '<h2>Files with empty keys for the \'string\' array:</h2>';
-	if ($display_text=='') $display_text='none';
+  echo '<h3>Files with empty keys for the \'string\' array:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 	echo '<table>'.$display_text.'</table>';
 
 	//Duplicate strings in files
@@ -206,25 +237,25 @@ foreach ($lang_array as $lang) {
 	foreach ($strings_pl as $strings_key => $strings_data)	{
 		if ($strings_pl[$strings_key][3]>1)	{
       $data_path1 = explode("|", $strings_data[0]);
-      $data_path2 = array_unique($data_path1);
+      $data_path3 = array_unique($data_path1);
       $data_path3 = array_count_values($data_path1);
-      if (count($data_path2)!=count($data_path1)) {
+      if (count($data_path3)!=count($data_path1)) {
         foreach ($data_path3 as $data_path3_key => $data_path3_elem) {
           if ($data_path3_elem>1)  display_this(Array($data_path3_key, $strings_data[1], $strings_data[2], $strings_data[3]), -1);
         }
       }
     }
   }
-  echo '<h2>Duplicate strings in files:</h2>';
-	if ($display_text=='') $display_text='none';
+  echo '<h3>Duplicate strings in files:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 	echo '<table>'.$display_text.'</table>';
 
 	//Identical texts
 	$display_text = '';
 	foreach ($strings_en as $strings_key => $strings_data)
 		if (isset($strings_pl[$strings_key]) and ($strings_pl[$strings_key]==$strings_en[$strings_key]))  display_this($strings_data, -1);		
-  echo '<h2>Identical texts:</h2>';
-	if ($display_text=='') $display_text='none';
+  echo '<h3>Identical texts:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
   echo '<table>'.$display_text.'</table>';
 
 	//Identical strings in files
@@ -232,25 +263,25 @@ foreach ($lang_array as $lang) {
 	foreach ($strings_en as $strings_key => $strings_data)	{
 		if ($strings_en[$strings_key][3]>1) {
       $data_path1 = explode("|", $strings_data[2]);
-      $data_path2 = explode("|", $strings_pl[$strings_key][2]);
-      if (count($data_path2)==count($data_path1)) {
+      $data_path3 = explode("|", $strings_pl[$strings_key][2]);
+      if (count($data_path3)==count($data_path1)) {
         foreach ($data_path1 as $data_path1_key => $data_path1_elem) {
-          if (($data_path1[$data_path1_key]==$data_path2[$data_path1_key]))	{
+          if (($data_path1[$data_path1_key]==$data_path3[$data_path1_key]))	{
           $display_this($strings_pl[$strings_key], $data_path1_key);
           }
         }
       }
     }
   }
-	echo '<h2>Identical strings in files:</h2>';
-	if ($display_text=='') $display_text='none';
+	echo '<h3>Identical strings in files:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 	echo '<table>'.$display_text.'</table>';
 }
  
 //---------------------------------------------------------------------------
 
 echo '<hr>';
-echo '<h1>Analysis for: en</h1>';
+echo '<h2 class="midblue_header">Analysis for: en</h2>';
 
 //Files with empty keys for the \'string\' array
 $display_text = '';
@@ -262,8 +293,8 @@ foreach ($strings_en as $strings_key => $strings_data)	{
     }
   }
 }
-echo '<h2>Files with empty keys for the \'string\' array:</h2>';
-if ($display_text=='') $display_text='none';
+echo '<h3>Files with empty keys for the \'string\' array:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 echo '<table>'.$display_text.'</table>';
 
 //Duplicate strings in files
@@ -271,17 +302,17 @@ $display_text = '';
 foreach ($strings_en as $strings_key => $strings_data)	{
 	if ($strings_en[$strings_key][3]>1) {
     $data_path1 = explode("|", $strings_data[0]);
-    $data_path2 = array_unique($data_path1);
+    $data_path3 = array_unique($data_path1);
     $data_path3 = array_count_values($data_path1);
-    if (count($data_path2)!=count($data_path1)) {
+    if (count($data_path3)!=count($data_path1)) {
       foreach ($data_path3 as $data_path3_key => $data_path3_elem) {
-        if ($data_path3_elem>1)  display_this(Array($data_path3_key, $strings_data[1], $strings_data[2], $strings_data[3]), -1);
+        if ($data_path3_elem>1) display_this(Array($data_path3_key, $strings_data[1], $strings_data[2], $strings_data[3]), -1);
       }
     }
   }
 }
-echo '<h2>Duplicate strings in files:</h2>';
-if ($display_text=='') $display_text='none';
+echo '<h3>Duplicate strings in files:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 echo '<table>'.$display_text.'</table>';
 
 //Duplicate strings
@@ -291,8 +322,8 @@ foreach ($strings_en as $strings_key => $strings_data)	{
 		display_this($strings_data, -1);
 	}
 }
-echo '<h2>Duplicate strings:</h2>';
-if ($display_text=='') $display_text='none';
+echo '<h3>Duplicate strings:</h3>';
+	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
 echo '<table>'.$display_text.'</table>';
 
 echo '<hr>';
