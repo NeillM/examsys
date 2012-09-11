@@ -174,13 +174,19 @@ while ($module_data->fetch()) {
         switch ($sms->ReasonForLeaving) {
           case 'Successfully completed course':
             $new_roles = 'graduate';
+            print "gradute";
+
             break;
           case 'Not Applicable':
             $new_roles = 'Student';
+            print "student";
+
             break;
           case 'W/D (other)':
           case 'W/D (financial reasons)':
             $new_roles = 'left';
+            print "left";
+
             break;
         }
 
