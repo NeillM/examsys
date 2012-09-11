@@ -41,11 +41,46 @@ require '../../include/staff_auth.inc';
   .s {padding-left:6px}
   </style>
 </head>
+<?php
+function show_order_link($paper_type, $title, $type, $order, $direction) {
+  $html = '<a href="add_questions_paper_list.php?paper_type=' . $paper_type . '&order=' . $type . '&direction=';
 
+  $new_dir = 'asc';
+  if ($type == $order) {
+    if ($direction == 'asc') {
+      $new_dir = 'desc';
+    }
+  }
+
+  $html .= $new_dir . '">' . $title . '</a>';
+
+  if ($type == $order) {
+    $html .= '&nbsp;<img src="../../artwork/' . $new_dir . '.gif" width="9" height="7" border="0" />';
+  }
+
+  return $html;
+}
+
+$paper_type = (isset($_GET['paper_type'])) ? $_GET['paper_type'] : 0;
+
+if (isset($_GET['order'])) {
+  $order = $_GET['order'];
+  $direction = $_GET['direction'];
+} else {
+  $order = 'paper_title';
+  $direction = 'asc';
+}
+?>
 <body>
 <table class="header">
 <tr><th colspan="5"style="font-size:160%; font-weight:bold">&nbsp;by Paper</th></tr>
-<tr><th>&nbsp;</th><th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Title</th><th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Module</th><th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Owner</th><th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;Created</th></tr>
+<tr>
+  <th>&nbsp;</th>
+  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, 'Title', 'paper_title', $order, $direction) ?></th>
+  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, 'Module', 'moduleID', $order, $direction) ?></th>
+  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, 'Owner', 'surname', $order, $direction) ?></th>
+  <th><img src="../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo show_order_link($paper_type, 'Created', 'created', $order, $direction) ?></th>
+</tr>
 <tr><th colspan="5" class="bevel"></th></tr>
 <?php
   $my_teams = '';
@@ -56,10 +91,11 @@ require '../../include/staff_auth.inc';
   $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_review_16.gif');
   
   if (isset($_GET['paper_type'])) {
-    $sql = "SELECT property_id, paper_title, paper_type, moduleID, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname FROM (properties, users) WHERE paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=$userID $my_teams) ORDER BY paper_title";
+    $sql = "SELECT property_id, paper_title, paper_type, moduleID, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname FROM (properties, users) WHERE paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=$userID $my_teams)";
   } else {
-    $sql = "SELECT property_id, paper_title, paper_type, moduleID, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname FROM (properties, users) WHERE moduleID LIKE '%" . $_GET['team_name'] . "%' AND deleted IS NULL AND paper_ownerID=users.id ORDER BY paper_title";
+    $sql = "SELECT property_id, paper_title, paper_type, moduleID, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname FROM (properties, users) WHERE moduleID LIKE '%" . $_GET['team_name'] . "%' AND deleted IS NULL AND paper_ownerID=users.id";
   }
+  $sql .= " ORDER BY {$order} " . strtoupper($direction);
   
   $result = $mysqli->prepare($sql);
   $result->execute();
