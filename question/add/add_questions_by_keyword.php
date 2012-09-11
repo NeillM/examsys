@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -30,9 +30,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  
+
   <title><?php echo $string['bykeywords']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
   <style type="text/css">
@@ -78,7 +78,7 @@
     $order = 'leadin';
     $direction = 'asc';
   }
-  
+
   echo "<form name=\"theform\" method=\"post\" action=\"\">\n";
   echo "<input type=\"hidden\" name=\"screen\" value=\"1\" />\n";
   echo "<table class=\"header\">\n";
@@ -96,7 +96,7 @@
     echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','desc'); return false;\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   } elseif ($order == 'last_edited' and $direction == 'desc') {
     echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
-  }  
+  }
 
   echo "<tr><th colspan=\"5\" class=\"bevel\"></th></tr>\n";
 
@@ -104,13 +104,13 @@
     echo "</table>\n</body>\n</html>\n";
     exit;
   }
-  
+
   if (count($teams) == 0) {
     $team_sql = '';
   } else {
     $team_sql = "OR q_group IN ('" . implode("','", $teams) . "')";
   }
-  
+
   $keyword_ids = '';
   for ($i=0; $i<$_POST['keyword_no']; $i++) {
     if (isset($_POST["keyword$i"])) {
@@ -125,7 +125,7 @@
     echo "</table>\n</body>\n</html>\n";
     exit;
   }
-  
+
   $old_id = '';
   $result = $mysqli->prepare("SELECT questions.q_id, leadin_plain, q_type, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND (ownerID=? $team_sql) AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
   $result->bind_param('i', $userID);
@@ -153,13 +153,17 @@
 </form>
 
 <?php
-  echo "<form name=\"keywordsform\" method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">\n";
-  foreach ($_POST as $key=>$value) {
-    if ($key != 'submit' and $key != 'order' and $key != 'direction') {
-      echo "<input type=\"hidden\" name=\"$value\" value=\"$value\" />\n";
-    }
+echo "<form name=\"keywordsform\" method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\">\n";
+$i = 0;
+foreach ($_POST as $key=>$value) {
+  if ($key != 'submit' and $key != 'order' and $key != 'direction' and $key != 'keyword_no') {
+    echo "<input type=\"hidden\" name=\"keyword{$i}\" value=\"$value\" />\n";
+    $i++;
   }
+}
+$key_no = (isset($_POST['keyword_no'])) ? $_POST['keyword_no'] : 0;
 ?>
+<input type="hidden" name="keyword_no" value="<?php echo $key_no ?>" />
 <input type="hidden" name="order" value="" />
 <input type="hidden" name="direction" value="" />
 </form>
