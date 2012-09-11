@@ -26,7 +26,7 @@
 
 // Only run from the command line!
 if (PHP_SAPI != 'cli') {
-  die("Please run this test from CLI!\n");
+  //die("Please run this test from CLI!\n");
 }
 
 error_reporting(E_ALL);
