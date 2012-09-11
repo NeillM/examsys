@@ -108,7 +108,7 @@ function usercheck($db, $lti) {
     }
 
   } else {
-    $authneeded = $lti_i->user_time_check($returned[1]);
+    $authneeded = $lti_i->user_time_check($returned[1], $username);
     if ($authneeded === true) {
       display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
 

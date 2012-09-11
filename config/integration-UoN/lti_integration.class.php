@@ -104,16 +104,9 @@ class lti_integration_extended extends lti_integration {
     return true;
   }
 
-
   static function allow_module_create($data) {
     return true;
   }
-
-  static function lookup_school_code($code) {
-    //unused
-    $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies', 'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology', 'ST' => 'Biosciences', 'AL' => 'CELE', 'EC' => 'Chemical Engineering', 'EN' => 'Mining Engineering', 'PC' => 'Chemistry', 'MC' => 'Public Health Medicine & Epidemiology', 'MG' => 'Obstetrics, Midwifery & Gynaecology', 'LI' => 'Trent Institute for Health Services Research', 'EV' => 'Structures', 'AB' => 'Classics', 'MR' => 'Pathology', 'PS' => 'Computer Science', 'LC' => 'Contemporary Chinese Studies', 'MZ' => 'Medicine', 'TT' => 'PGCE', 'AJ' => 'Critical Theory', 'RN' => 'Cultural Studies', 'LE' => 'Economics', 'EE' => 'Electrical & Electronic Engineering', 'EZ' => 'Engineering', 'IS' => 'Engineering Surveying & Space Geodesy', 'AE' => 'English', 'AR' => 'Modern Languages', 'EP' => 'Manufacturing Engineering & Operational Management', 'AF' => 'French', 'LQ' => 'Sociology', 'LG' => 'Geography', 'AG' => 'German', 'BR' => 'Training & Staff Development Unit', 'AS' => 'Portuguese', 'AH' => 'History', 'IT' => 'Information Technology', 'RH' => 'Institute of Hearing Research', 'NI' => 'Institute of Infections and Immunity', 'LW' => 'Institute of Work, Health & Organizations', 'OI' => 'International Office', 'UL' => 'Language Centre', 'LL' => 'Law', 'PL' => 'Life & Env Sciences', 'EM' => 'Materials Engineering & Materials Design', 'PM' => 'Theoretical Mechanics', 'EA' => 'Mechanical Engineering', 'AM' => 'Music', 'ZN' => 'Ningbo', 'SHS' => 'Nursing', 'PA' => 'Pharmacy', 'AP' => 'Philosophy', 'PP' => 'Physics', 'LD' => 'Politics', 'LP' => 'Psychology', 'AV' => 'Slavonic Studies', 'AT' => 'Theology', 'SV' => 'Vet School');
-  }
-
 
   function sms_api($data) {
     if ($data[0] != 'SMS') {
@@ -123,7 +116,6 @@ class lti_integration_extended extends lti_integration {
     $SMS->set_module($data[2]);
     return $SMS->url;
   }
-
 
   function module_code_translated_store($data) {
     $return = '';
@@ -250,10 +242,7 @@ class lti_integration_extended extends lti_integration {
     return $moduledata;
   }
 
-  static function determine_std_module($modulecode, $campus, $year, $semstart) {
-    // return false if not, else return string with a campus.
-    return false;
-  }
+
 
 
 }
