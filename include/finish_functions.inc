@@ -2283,10 +2283,10 @@ echo '</script>';
         }
         echo_content($paper[$question]['leadin']);
 
-        $movie = $paper[$question]['o_media'][0];
+        $movie = ($tmp_display_correct_answer == '0') ? $paper[$question]['q_media'] : $paper[$question]['o_media'][0];
         if (!isset($paper[$question]['user_answer'])) {
           reset_feedback($hide_if_unanswered);
-          if ($tmp_display_correct_answer == '0') {
+          if ($hide_if_unanswered == '1') {
             $movie = $paper[$question]['q_media'];
           }
         }
@@ -2295,7 +2295,7 @@ echo '</script>';
   <script language="JavaScript">
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="/media/<?php echo $paper[$question]['o_media'][0]; ?>" />');
+    write_string('<param name="movie" value="/media/<?php echo $movie; ?>" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
     write_string('<param name="FlashVars" value="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" />');
