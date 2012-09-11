@@ -61,7 +61,8 @@ while ($module_data->fetch()) {
   $replaced_module = str_replace('_UNMC','',$module);
   $replaced_module = str_replace('_UNNC','',$replaced_module);
   //------------------------------------
-  
+
+  print "Getting: $replaced_module\r\n";
   // Get the currently enrolled students in Rogo for the module.
   $current_users = array();
   $student_data = $mysqli->prepare("SELECT student_modules.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (student_modules, users) LEFT JOIN sid ON users.id=sid.userID WHERE student_modules.userID=users.id AND calendar_year=? AND moduleid=? AND auto_update=1");
