@@ -97,7 +97,7 @@ $cnt=$module_data->num_rows;
   $returned_data = file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
   $xml = new SimpleXMLElement($returned_data);
   
-  if (is_object($xml) and !isset($xml->ErrorMessage)) {
+  if (is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError)) {
     foreach ($xml->Module->Membership->Student as $sms) {
       $sms->Title = trim($sms->Title);
       $sms->Surname = trim($sms->Surname);
@@ -181,22 +181,16 @@ $cnt=$module_data->num_rows;
         switch ($sms->ReasonForLeaving) {
           case 'Successfully completed course':
             $new_roles = 'graduate';
-            print "gradute\r\n";
-
             break;
           case 'Not Applicable':
             $new_roles = 'Student';
-            print "student\r\n";
-
             break;
           case 'W/D (other)':
           case 'W/D (financial reasons)':
             $new_roles = 'left';
-            print "left\r\n";
-
             break;
         }
-        print "after leaving\r\n";
+
 
         $names = explode(' ', $sms->Forename);
         $tmp_initials = '';
