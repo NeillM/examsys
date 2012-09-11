@@ -174,21 +174,22 @@ while ($module_data->fetch()) {
         switch ($sms->ReasonForLeaving) {
           case 'Successfully completed course':
             $new_roles = 'graduate';
-            print "gradute";
+            print "gradute\r\n";
 
             break;
           case 'Not Applicable':
             $new_roles = 'Student';
-            print "student";
+            print "student\r\n";
 
             break;
           case 'W/D (other)':
           case 'W/D (financial reasons)':
             $new_roles = 'left';
-            print "left";
+            print "left\r\n";
 
             break;
         }
+        print "after leaving\r\n";
 
         $names = explode(' ', $sms->Forename);
         $tmp_initials = '';
