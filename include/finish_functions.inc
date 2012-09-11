@@ -1486,7 +1486,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           echo "</tr>\n";
         }
       
-        if ($paper[$question]['score_method'] == 'Bonus Mark' and $tmp_display_students_response == '1') {
+        if ($paper[$question]['score_method'] == 'Bonus Mark') {
           $img_name = 'cross';
           if ($paper[$question]['mark'] == ($paper[$question]['totalpos'] - $paper[$question]['marks_correct']) and $all_correct) {
             $paper[$question]['mark'] += $paper[$question]['marks_correct'];
