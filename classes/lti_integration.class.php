@@ -69,14 +69,14 @@ class lti_integration {
     return $cfg_lti_allow_module_create;
   }
 
-  function module_code_translate($c_internal_id, $course_title = '') {
+  static function module_code_translate($c_internal_id, $course_title = '') {
 
     // this function translates the incoming course code and course title it returns an array (containing possibly multiple records) of an array containing string if Manual or SMS for sms ones, the module code, a campus code (text) , school as a string (gets lookedup against rogo to get id later, a 1 for self reg enable [0 for disable] and the course title
 
     return array(array('Manual', $c_internal_id, 'CampusTODO', 'SchoolTODO', 0, "MISSING:$course_title"));
   }
 
-  function sms_api($data) {
+  static function sms_api($data) {
 
     // this returns the sms url appropriate for the item element (inner array) of the return from module_code_translate function
 
@@ -89,7 +89,7 @@ class lti_integration {
     return $SMS->url;
   }
 
-  function module_code_translated_store($data) {
+  static function module_code_translated_store($data) {
 
     // this takes the data array from the module_code_translate function and converts it into a string that it can store in the db for the lti context info and also read through and decode using the module_code_translate function
 

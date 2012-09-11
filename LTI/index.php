@@ -124,7 +124,7 @@ if (!$lti->isInstructor()) {
 
 
 
-    $data=$lti_i->module_code_translate($c_internal_id);
+    $data=$lti_i::module_code_translate($c_internal_id);
 
 foreach($data as $v) {
   $returned_check = module_utils::module_check_self_enrol($v[1], $mysqli);
@@ -152,7 +152,7 @@ foreach($data as $v) {
 
     $returned2 = $lti->lookup_lti_context();
     $mod = $returned2[0];
-    $data = $lti_i->module_code_translate($mod);
+    $data = $lti_i::module_code_translate($mod);
     foreach ($data as $v) {
       if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
         UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
@@ -179,7 +179,7 @@ foreach($data as $v) {
     if ($returned2 === false) {
 
       //no context
-      $data = $lti_i->module_code_translate($lti->getCourseName(), $lti->get_context_title());
+      $data = $lti_i::module_code_translate($lti->getCourseName(), $lti->get_context_title());
       foreach ($data as $v) {
         if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) ) {
 
@@ -200,7 +200,7 @@ foreach($data as $v) {
             $neg_marking = 1;
           }
 
-          $sms_api = $lti_i->sms_api($v);
+          $sms_api = $lti_i::sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli);
         }
@@ -208,12 +208,12 @@ foreach($data as $v) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
         }
       }
-      $module_store = $lti_i->module_code_translated_store($data);
+      $module_store = $lti_i::module_code_translated_store($data);
       $lti->add_lti_context($module_store);
       $returned2 = $lti->lookup_lti_context();
     }
     $mod = $returned2[0];
-    $data = $lti_i->module_code_translate($mod);
+    $data = $lti_i::module_code_translate($mod);
     list($c_internal_id, $upd) = $returned2;
     $moduleid = $c_internal_id;
     $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
