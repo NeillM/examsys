@@ -95,7 +95,10 @@ $cnt=$module_data->num_rows;
 
   // Look up SMS
   $returned_data = file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
-  $xml = new SimpleXMLElement($returned_data);
+  $xml=false;
+  if($returned_data!==false) {
+    $xml = new SimpleXMLElement($returned_data);
+  }
   
   if (is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError)) {
     foreach ($xml->Module->Membership->Student as $sms) {
@@ -195,7 +198,9 @@ $cnt=$module_data->num_rows;
         $names = explode(' ', $sms->Forename);
         $tmp_initials = '';
         foreach ($names as $tmp_name) {
-          $tmp_initials .= $tmp_name[0];
+          if(isset($tmp_name[0])) {
+            $tmp_initials .= $tmp_name[0];
+          }
         }
         if ($current_users[$lookup_username]['year'] != $sms->YearofStudy or $tmp_initials != $current_users[$lookup_username]['initials'] or $current_users[$lookup_username]['grade'] != $sms->CourseCode or $current_users[$lookup_username]['title'] != $sms->Title or $current_users[$lookup_username]['surname'] != $sms->Surname  or $current_users[$lookup_username]['first_names'] != $sms->Forename or $current_users[$lookup_username]['roles'] != $new_roles) {
           $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, roles=?, grade=?, title=?, surname=?, first_names=?, initials=? WHERE username=?");
