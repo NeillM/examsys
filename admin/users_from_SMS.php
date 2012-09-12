@@ -51,7 +51,7 @@ $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sysadmin_user, $cfg_db
 $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
 $session_parts = explode('/',$session);
 
-$module_data = $mysqli->prepare("SELECT moduleid, sms FROM modules WHERE sms != ''");
+$module_data = $mysqli->prepare("SELECT moduleid, sms FROM modules WHERE sms != '' ORDER BY moduleid");
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($module, $sms);
@@ -68,7 +68,7 @@ while ($module_data->fetch()) {
   //------------------------------------
 $cnt=$module_data->num_rows;
   $cnt1=$module_data->num_rows();
-  print "Getting: $cnt::$cnt1:::$replaced_module\r\n";
+  print "Getting: $cnt::$cnt1:::$replaced_module\r\n<br>";
 
   @ob_flush();
   @flush();
@@ -228,6 +228,9 @@ $cnt=$module_data->num_rows;
         }
       } else {
         echo 'ERROR: unable to establish username for ' . $sms->Forename . ' ' . $sms->Surname . ' (' . $sms->Email . ')<br />';
+        print "<pre>";
+        print_r($sms);
+        print "</pre><br>";
       }
     }
 
@@ -261,7 +264,7 @@ $cnt=$module_data->num_rows;
     $result->bind_param('sisiss', $module, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
     $result->execute();
     $result->close();
-    print "$module, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type";
+    print "$module, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type\r\n<br>";
 
     @ob_flush();
     @flush();
