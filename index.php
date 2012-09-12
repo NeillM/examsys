@@ -295,7 +295,7 @@ require_once './classes/networkutils.class.php';
       if ($ur != 'Student') {
         $ur = str_replace('Demo', '', $ur);
         
-        echo '<span style="color:red">' . $string[strtolower($ur)] . '</span>,';
+        if ($ur!='') echo '<span style="color:red">' . $string[strtolower($ur)] . '</span>,';
       } else {
         echo $string[strtolower($ur)] . ',';
       }
