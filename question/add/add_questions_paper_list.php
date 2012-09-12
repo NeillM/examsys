@@ -50,7 +50,8 @@ require '../../include/staff_auth.inc';
  * @param $order Current sort order
  * @param $direction Current sort direction
  * @return string
- */function show_order_link($paper_type, $title, $type, $order, $direction) {
+ */
+function show_order_link($paper_type, $title, $type, $order, $direction) {
   $html = '<a href="add_questions_paper_list.php?paper_type=' . $paper_type . '&order=' . $type . '&direction=';
 
   $new_dir = 'asc';
