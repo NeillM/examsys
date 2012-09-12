@@ -23,6 +23,7 @@
 */
 
 require '../../include/staff_auth.inc';
+require_once '../../classes/questionutils.class.php';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -115,8 +116,7 @@ require '../../include/staff_auth.inc';
   $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
   if ($stmt->num_rows > 0) {
     while ($stmt->fetch()) {
-      $tmp_leadin = str_replace('&nbsp;',' ',strip_tags($leadin));
-      if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
+      $tmp_leadin = QuestionUtils::clean_leadin($leadin);
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
       
       echo "<tr><td>";

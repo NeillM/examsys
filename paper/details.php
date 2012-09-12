@@ -31,6 +31,7 @@ require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
+require_once '../classes/questionutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 $paperID = $_GET['paperID'];
@@ -152,7 +153,7 @@ function randomDetails($questionID) {
     $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status);
     while ($result->fetch()) {
       if ($old_q_id != $q_id and $old_q_id != '') {
-        $old_leadin = clean_leadin($old_leadin);
+        $old_leadin = QuestionUtils::clean_leadin($old_leadin);
         $random_questions[$question_no]['theme'] = $old_theme;
         $random_questions[$question_no]['q_id'] = $old_q_id;
         $random_questions[$question_no]['type'] = $old_q_type;
@@ -184,7 +185,7 @@ function randomDetails($questionID) {
     }
 
     // Write out the last question.
-    $old_leadin = clean_leadin($old_leadin);
+    $old_leadin = QuestionUtils::clean_leadin($old_leadin);
     $random_questions[$question_no]['theme'] = $old_theme;
     $random_questions[$question_no]['q_id'] = $old_q_id;
     $random_questions[$question_no]['type'] = $old_q_type;
@@ -200,25 +201,6 @@ function randomDetails($questionID) {
 
   return $random_questions;
 }
-
-/**
- * Strip tags from the leading string (if it doesn't contain equations) and trim length
- * @param $leadin
- * @return string
- */
-function clean_leadin($leadin) {
-  if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
-    $leadin = strip_tags($leadin);                                     // No equation, strip all tags
-    if (strlen($leadin) > 160) {
-      $leadin = substr($leadin, 0, 160) . '...';
-    }
-  } else {
-    $leadin = trim(str_replace('&nbsp;',' ', $leadin));
-  }
-
-  return $leadin;
-}
-
 
 function random_qMarks($random_questions) {
   $min = 999;
@@ -648,7 +630,7 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no]['screen'] = $screen;
       $temp_array[$row_no]['q_type'] = $q_type;
       $temp_array[$row_no]['leadin'] = $leadin;
-      $temp_array[$row_no]['leadin'] = clean_leadin($temp_array[$row_no]['leadin']);
+      $temp_array[$row_no]['leadin'] = QuestionUtils::clean_leadin($temp_array[$row_no]['leadin']);
 
       $temp_array[$row_no]['scenario'] = $scenario;
       $temp_array[$row_no]['p_id'] = $p_id;

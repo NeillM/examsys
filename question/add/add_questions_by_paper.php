@@ -22,8 +22,9 @@
 * @package
 */
 
-  require '../../include/staff_auth.inc';
-  require '../../include/question_types.inc';
+require '../../include/staff_auth.inc';
+require '../../include/question_types.inc';
+require_once '../../classes/questionutils.class.php';
 ?>
 <html>
 <head>
@@ -81,10 +82,10 @@
   echo "<tr><th colspan=\"7\" class=\"bevel\"></th></tr>\n";
 
   // Get the questions in order off the paper.
-  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, parts FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, parts FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('i', $_GET['question_paper']);
   $stmt->execute();
-  $stmt->bind_result($q_id, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts);
+  $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts);
   $old_screen = 0;
   $question_no = 0;
   while ($stmt->fetch()) {
@@ -105,7 +106,8 @@
     } else {
       echo '<td style="color:red; text-decoration:line-through" onclick="Qpreview(' . $q_id . ')">';
     }
-    echo "$leadin_plain</td><td class=\"s\">" . fullQuestionType($q_type, $string) . "</td><td class=\"s\">$last_edited</td></tr>\n";
+    $leadin = QuestionUtils::clean_leadin($leadin);
+    echo $leadin . "</td><td class=\"s\">" . fullQuestionType($q_type, $string) . "</td><td class=\"s\">$last_edited</td></tr>\n";
     $old_screen = $screen;
   }
   $stmt->close();

@@ -22,8 +22,9 @@
 * @package
 */
 
-  require '../../include/staff_auth.inc';
-  require '../../include/question_types.inc';
+require '../../include/staff_auth.inc';
+require '../../include/question_types.inc';
+require_once '../../classes/questionutils.class.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -127,11 +128,11 @@
   }
 
   $old_id = '';
-  $result = $mysqli->prepare("SELECT questions.q_id, leadin_plain, q_type, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND (ownerID=? $team_sql) AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
+  $result = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked, parts FROM (questions, keywords_question) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE questions.q_id=keywords_question.q_id AND keywords_question.keywordID IN ($keyword_ids) AND (ownerID=? $team_sql) AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction, questions.q_id");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($q_id, $leadin_plain, $q_type, $display_date, $locked, $parts);
+  $result->bind_result($q_id, $leadin, $leadin_plain, $q_type, $display_date, $locked, $parts);
   while($result->fetch()) {
     if ($q_id != $old_id) {
       echo "<tr><td style=\"width:20px\">";
@@ -142,7 +143,8 @@
       } else {
         echo '<td style="color:red; text-decoration:line-through" onclick="Qpreview(' . $q_id . ')">';
       }
-      echo $leadin_plain . "</td><td><nobr>" . fullQuestionType($q_type, $string) . "</nobr></td><td style=\"padding-left:5px; padding-right:2px\">$display_date</td></tr>\n";
+      $leadin = QuestionUtils::clean_leadin($leadin);
+      echo $leadin . "</td><td><nobr>" . fullQuestionType($q_type, $string) . "</nobr></td><td style=\"padding-left:5px; padding-right:2px\">$display_date</td></tr>\n";
     }
     $old_id = $q_id;
   }

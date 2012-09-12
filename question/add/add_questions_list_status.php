@@ -24,6 +24,7 @@
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
+require_once '../../classes/questionutils.class.php';
 ?>
 <html>
 <head>
@@ -105,8 +106,7 @@ require '../../include/errors.inc';
   $stmt->store_result();
   $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);
   while ($stmt->fetch()) {
-    $tmp_leadin = str_replace('&nbsp;',' ',strip_tags($leadin));
-    if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
+    $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
       
     echo '<tr>';
