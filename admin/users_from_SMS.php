@@ -97,7 +97,7 @@ $cnt=$module_data->num_rows;
   $student_data->close();
 
   // Look up SMS
-  $returned_data = file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
+  $returned_data = @file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
   $xml=false;
   if($returned_data!==false) {
     $xml = new SimpleXMLElement($returned_data);
@@ -230,6 +230,7 @@ $cnt=$module_data->num_rows;
         echo 'ERROR: unable to establish username for ' . $sms->Forename . ' ' . $sms->Surname . ' (' . $sms->Email . ')<br />';
         print "<pre>";
         print_r($sms);
+        print_r($xml);
         print "</pre><br>";
       }
     }
