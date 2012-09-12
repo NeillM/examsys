@@ -586,7 +586,11 @@ if ($student_no > 0) {
                       if ($mode == 'numeric') {
                         echo $tmp_third_split[1];
                       } else {
-                        echo $tmp_third_split[0];
+                        if ($ans = strstr($tmp_third_split[0], '~', true)) {
+                          echo $ans;
+                        } else {
+                          echo $tmp_third_split[0];
+                        }
                       }
                     }
                   }
@@ -929,9 +933,13 @@ if ($student_no > 0) {
             $answers = array();
             $correct = array();
             for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-              if (substr($tmp_exclude,$sec-1,1) == '0') {
-                $tmp_third_split = explode('|', $tmp_second_split[$label_no]);
-                $label_indexes[$tmp_third_split[0]] = $tmp_third_split[1];
+              $tmp_third_split = explode('|', $tmp_second_split[$label_no]);
+              $lix = strstr($tmp_third_split[0], '~', true);
+              if ($lix === false) {
+                $lix = $tmp_third_split[0];
+              }
+              $label_indexes[$lix] = $tmp_third_split[1];
+              if (substr($tmp_exclude, $sec-1, 1) == '0') {
                 if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no-2] > 219) {
                   $location = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
                   $correct[$cix] = $tmp_third_split[0];
@@ -941,8 +949,8 @@ if ($student_no > 0) {
                   } else {
                     $answers[] = '';
                   }
+                  $sec++;
                 }
-                $sec++;
               }
             }
             for ($j = 0; $j < count($answers); $j++) {
