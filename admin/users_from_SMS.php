@@ -26,7 +26,7 @@
 
 // Only run from the command line!
 if (PHP_SAPI != 'cli') {
-  //die("Please run this test from CLI!\n");
+  die("Please run this test from CLI!\n");
 }
 
 error_reporting(E_ALL);
@@ -51,7 +51,7 @@ $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_sysadmin_user, $cfg_db
 $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
 $session_parts = explode('/',$session);
 
-$module_data = $mysqli->prepare("SELECT moduleid, sms FROM modules WHERE sms != '' ORDER BY moduleid LIMIT 20"); //TODO ff
+$module_data = $mysqli->prepare("SELECT moduleid, sms FROM modules WHERE sms != '' ORDER BY moduleid"); //TODO ff
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($module, $sms);
@@ -69,11 +69,11 @@ while ($module_data->fetch()) {
 $cnt=$module_data->num_rows;
   $cnt1=$module_data->num_rows();
 
-
+/*
   print "Getting:  $replaced_module\r\n<br>";
   @ob_flush();
   @flush();
-
+*/
 
   // Get the currently enrolled students in Rogo for the module.
   $current_users = array();
