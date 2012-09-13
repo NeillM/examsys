@@ -426,12 +426,12 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
       echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
       if ($paper[$question]['q_type'] != 'info') {
         if ($paper[$question]['theme'] != '') echo "<tr><td colspan=\"2\" class=\"theme\">" . $paper[$question]['theme'] . "</td></tr>\n";
-        echo "<tr><td class=\"q_no\">" . $display_no . ".</td><td>";
+        echo "<tr><td class=\"q_no\">" . $display_no . '|' . $paper[$question]['q_id'] . ".</td><td>";
       }
     } else {
       if ($paper[$question]['q_type'] != 'info') {
         if ($paper[$question]['theme'] != '') echo "<tr><td colspan=\"2\" class=\"theme\">" . $paper[$question]['theme'] . "</td></tr>\n";
-        echo "<tr><td class=\"q_no\">" . $display_no . ".</td><td>";
+        echo "<tr><td class=\"q_no\">" . $display_no . '|' . $paper[$question]['q_id'] . ".</td><td>";
       }
     }
     if (trim($paper[$question]['notes']) != '') {
