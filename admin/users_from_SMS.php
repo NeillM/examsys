@@ -98,11 +98,11 @@ $cnt=$module_data->num_rows;
   }
   $student_data->close();
 
-
+/*
   print "<br><pre>";
   print_r($current_users);
   print "</pre><br>";
-
+*/
 
   // Look up SMS
   $returned_data = @file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
@@ -132,7 +132,7 @@ $cnt=$module_data->num_rows;
         $lookup_username = $un_parts[0];
       }
 
-      print "SMS:$lookup_username :: \r\n";
+//      print "SMS:$lookup_username :: \r\n";
 
       if ($lookup_username != '') {
         if (isset($current_users[$lookup_username]['delete'])) {
