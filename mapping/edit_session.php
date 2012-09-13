@@ -38,7 +38,7 @@ require '../include/staff_auth.inc';
   if(isset($_GET['identifier'])) $identifier = $_GET['identifier'];
   if(isset($_GET['calendar_year'])) $session = $_GET['calendar_year'];
 
-  if(isset($_POST['Edit']) and $_POST['Edit'] == 'Save') {
+  if(isset($_POST['Edit']) and $_POST['Edit'] == $string['save']) {
     //save session
     $identifier = $_POST['identifier'];
     $occurrence = $_POST['year'] . $_POST['month'] . $_POST['day'] . $_POST['time'];
@@ -109,7 +109,7 @@ require '../include/staff_auth.inc';
     //redirect to list sessions
     header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
 
-  } else if(isset($_POST['cancel']) and $_POST['cancel'] == 'Cancel') {
+  } else if(isset($_POST['cancel']) and $_POST['cancel'] == $string['cancel']) {
     header("Location: ./sessions_list.php?module=" .  $moduleID . "&folder=" . $folder);
   } else {
     //display form
@@ -224,7 +224,7 @@ require '../include/staff_auth.inc';
   } else {
     $folder = '';
   }
-  // RI Added 20010428
+
   if (isset($_GET['calendar_year'])) {
     $session = $_GET['calendar_year'];
   }
