@@ -226,6 +226,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
 
     $display_pos = $row['display_pos'];
     if ($old_q_id != $q_id or $display_pos != $old_display_pos) {
+      $all_items_abstain = true;
       if ($old_type == 'rank') {
         finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $old_marks_incorrect, $saved_response, $totalpos, $mark);
       } elseif ($old_type == 'mrq') {
