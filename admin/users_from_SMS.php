@@ -68,10 +68,12 @@ while ($module_data->fetch()) {
   //------------------------------------
 $cnt=$module_data->num_rows;
   $cnt1=$module_data->num_rows();
-  print "Getting: $cnt::$cnt1:::$replaced_module\r\n<br>";
 
+/*
+  print "Getting:  $replaced_module\r\n<br>";
   @ob_flush();
   @flush();
+*/
 
   // Get the currently enrolled students in Rogo for the module.
   $current_users = array();
@@ -228,10 +230,6 @@ $cnt=$module_data->num_rows;
         }
       } else {
         echo 'ERROR: unable to establish username for ' . $sms->Forename . ' ' . $sms->Surname . ' (' . $sms->Email . ')<br />';
-        print "<pre>";
-        print_r($sms);
-        print_r($xml);
-        print "</pre><br>";
       }
     }
 
