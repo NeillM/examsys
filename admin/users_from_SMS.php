@@ -179,7 +179,8 @@ $cnt=$module_data->num_rows;
             $current_users[$lookup_username]['delete'] = 0;
           }
           // Add student onto the module
-          $success = UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli);
+          $auto_update=1;  //set auto_update to student module association
+          $success = UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli, $auto_update);
 
           if ($success) {
             $enrolements++;
