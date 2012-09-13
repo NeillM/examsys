@@ -267,7 +267,7 @@ foreach ($lang_array as $lang) {
       if (count($data_path3)==count($data_path1)) {
         foreach ($data_path1 as $data_path1_key => $data_path1_elem) {
           if (($data_path1[$data_path1_key]==$data_path3[$data_path1_key]))	{
-          $display_this($strings_pl[$strings_key], $data_path1_key);
+          display_this($strings_pl[$strings_key], $data_path1_key);
           }
         }
       }
