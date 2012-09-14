@@ -35,6 +35,10 @@ table {
   font-size:100%;
 }
 
+table.fixed {
+  table-layout:fixed;
+}
+
 .dkblue_header {
   color:#1F497D
 }

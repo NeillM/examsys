@@ -25,6 +25,7 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../classes/questionutils.class.php';
 set_time_limit(0);
 
 ?>
@@ -49,6 +50,7 @@ set_time_limit(0);
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript">
     function addQID(qID, clearall) {
       if (clearall) {
@@ -66,7 +68,7 @@ set_time_limit(0);
     function clearAll() {
       $('.highlight').removeClass('highlight');
     }
-    
+
     function selQ(questionID, qType, menuID, evt) {
       document.getElementById('menu2a').style.display = 'none';
       document.getElementById('menu2b').style.display = 'none';
@@ -74,7 +76,7 @@ set_time_limit(0);
       document.getElementById('menu' + menuID).style.display = 'block';
 
       lineID = questionID;
-      
+
       if (evt.ctrlKey == false) {
         clearAll();
         $('#id' + lineID).addClass('highlight');
@@ -90,13 +92,13 @@ set_time_limit(0);
       }
       document.PapersMenu.qType.value = qType;
       document.PapersMenu.oldQuestionID.value = lineID;
-      
+
       if (evt != null) {
         evt.cancelBubble = true;
       }
 
     }
-    
+
     function qOff() {
       document.getElementById('menu2a').style.display = 'block';
       document.getElementById('menu2b').style.display = 'none';
@@ -162,7 +164,7 @@ if (isset($_POST['submit'])) {
     exit;
   }
   
-  echo "<table class=\"header\">\n";
+  echo "<table class=\"header fixed\">\n";
 
   $params = '';
   $variables = array();
@@ -304,9 +306,9 @@ if (isset($_POST['submit'])) {
   }
   
   if ($keywordsSQL == '') {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, q_id, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, options) WHERE questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, options) WHERE questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
   } else {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin_plain, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, q_id";
   }
 
   $result = $mysqli->prepare($sql);
@@ -319,10 +321,12 @@ if (isset($_POST['submit'])) {
   }
   $result->execute();
   $result->store_result();
-  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin_plain, $last_edited, $ownerID, $locked, $status);
+  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $leadin, $last_edited, $ownerID, $locked, $status);
 
   $hits = $result->num_rows;
-  
+
+  // Empty first line to fix widths
+  echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 150px\"></th><th style=\"width: 80px\"></th></tr>";
   echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
   if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
     echo "'" . $_POST['searchterm'] . "'";
@@ -338,7 +342,7 @@ if (isset($_POST['submit'])) {
   <th>&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
   <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
   <th><nobr><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?> </nobr></th></tr>
-  <tr><th colspan="4" class="bevel"></td></tr>
+  <tr><th colspan="4" class="bevel"></th></tr>
 <?php
   while ($result->fetch()) {
     echo '<tr class="qline';
@@ -351,8 +355,7 @@ if (isset($_POST['submit'])) {
       echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2b',event); return false;\" ondblclick=\"editQ(); return false;\"><td></td>";
     }
 
-    $tmp_leadin = trim($leadin_plain);
-    if (strlen($tmp_leadin) > 160) $tmp_leadin = substr($tmp_leadin,0,160) . '...';
+    $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
     
     echo "<td class=\"l\">$tmp_leadin <span class=\"o\">($title $initials $surname)</span></td>";   
