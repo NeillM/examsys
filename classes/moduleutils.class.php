@@ -27,7 +27,7 @@
 
 Class module_utils {
 
-  static function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db) {
+  static function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db,$sms_import = 0) {
 
     if (module_utils::module_exists($moduleid, $db) !== false) {
       return false;
@@ -46,6 +46,11 @@ Class module_utils {
     $result->close();
     if ($db->errno != 0) {
       return false;
+    }
+
+    if($sms_import==1 and $sms_api != '') {
+      $SMS= SmsUtils::GetSmsUtils();
+      $SMS->update_module_enrolement($moduleid,$sms_api);
     }
 
     return true;

@@ -4257,6 +4257,9 @@ if (!isset($_POST['update'])) {
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
+  @ob_flush();
+  @flush();
+
   // 06/09/2012 - Delete the blank 'parent' books from the staff help
   $result = $mysqli->prepare("DELETE FROM staff_help WHERE body=''");
   $result->execute();
@@ -4309,6 +4312,13 @@ $new_cfg_str[] = "\r\n";
     }
     echo "<li>Add lti config variables</li>\n";
   }
+
+  @ob_flush();
+  @flush();
+
+  $sql = "GRANT INSERT ON " . $cfg_db_database . ".sms_imports TO '". $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>$sql</li>\n";
 
   @ob_flush();
   @flush();
