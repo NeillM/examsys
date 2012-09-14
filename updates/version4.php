@@ -3810,10 +3810,10 @@ if (!isset($_POST['update'])) {
     echo "<li>CREATE TABLE performance_main (id int not null primary key auto_increment, q_id int unsigned, paperID int unsigned, percentage tinyint, cohort_size int unsigned, taken date)</li>\n";
     ob_flush();
     flush();
-    $adjust = $mysqli->prepare("ALTER TABLE performance_main ADD UNIQUE idx_q_id (q_id)");
+    $adjust = $mysqli->prepare("ALTER TABLE performance_main ADD INDEX idx_q_id (q_id)");
     $adjust->execute();
     $adjust->close();
-    echo "<li>ALTER TABLE performance_main ADD UNIQUE idx_q_id (q_id)</li>\n";
+    echo "<li>ALTER TABLE performance_main ADD INDEX idx_q_id (q_id)</li>\n";
     
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_main TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
     $mysqli->query($sql);
@@ -3825,6 +3825,11 @@ if (!isset($_POST['update'])) {
     echo "<li>CREATE TABLE performance_details (perform_id int, part_no tinyint, p tinyint, d tinyint)</li>\n";
     ob_flush();
     flush();
+
+    $adjust = $mysqli->prepare("ALTER TABLE performance_details ADD INDEX idx_perform_id (perform_id)");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE performance_details ADD INDEX idx_perform_id (perform_id)</li>\n";
     
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".performance_details TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
     $mysqli->query($sql);

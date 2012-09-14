@@ -2055,8 +2055,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
 
     $record = $mysqli->prepare($sql);
-    echo $sql;
-    
+
     array_unshift($variables, $params);
     foreach ($variables as $key => $value) {
       $tmp[$key] = &$variables[$key];
@@ -2064,7 +2063,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     call_user_func_array(array($record,'bind_param'), $tmp);
     
     $record->execute();
-    echo $mysqli->error;
     $record->close();
     
     // Write records into performance_details
