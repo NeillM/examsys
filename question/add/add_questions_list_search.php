@@ -126,6 +126,7 @@ require_once '../../classes/questionutils.class.php';
     $order = 'leadin_plain';
     $direction = 'asc';
   }
+
   echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;";
   if ($order == 'leadin_plain' and $direction == 'asc') {
     echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=leadin_plain&direction=desc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=q_type&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" /><nobr>&nbsp;<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?order=last_edited&direction=asc&owner=$owner&searchterm=$searchterm&searchtype=$searchtype\">" . $string['modified'] . "</a>&nbsp;</nobr></th></tr>\n";
@@ -150,6 +151,8 @@ require_once '../../classes/questionutils.class.php';
     $old_id = 0;
     $searchterm = '%' . $_GET['searchterm'] . '%';
     
+    if ($order == 'q_type') $order = 'CAST(q_type AS CHAR)';
+
     if ($_GET['owner'] == '') {
       if (count($teams) > 0) { 
         $team_sql = "OR questions.q_group REGEXP '" . implode('|', $teams) . "'";
