@@ -192,9 +192,12 @@ Class UON_SATURN extends SmsUtils {
     $dat = $this->getModuleEnrolements($modulecode);
   }
 
-  function update_module_enrolement($module, $sms) {
-    // run module enrolement for select code
+  function update_module_enrolement($module, $sms, $mysqli ='NOTSET') {
 
+    // run module enrolement for select code
+    if ($mysqli = 'NOTSET') {
+      global $mysqli;
+    }
 
     $enrolements = 0;
     $deletions = 0;

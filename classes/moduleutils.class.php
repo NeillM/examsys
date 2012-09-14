@@ -48,9 +48,9 @@ Class module_utils {
       return false;
     }
 
-    if($sms_import==1 and $sms_api != '') {
-      $SMS= SmsUtils::GetSmsUtils();
-      $SMS->update_module_enrolement($moduleid,$sms_api);
+    if ($sms_import == 1 and $sms_api != '') {
+      $SMS = SmsUtils::GetSmsUtils();
+      $SMS->update_module_enrolement($moduleid, $sms_api, $db);
     }
 
     return true;
