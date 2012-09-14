@@ -206,8 +206,7 @@ Class UON_SATURN extends SmsUtils {
     $replaced_module = str_replace('_UNMC', '', $module);
     $replaced_module = str_replace('_UNNC', '', $replaced_module);
     //------------------------------------
-    $cnt = $module_data->num_rows;
-    $cnt1 = $module_data->num_rows();
+
 
     /*
       print "Getting:  $replaced_module\r\n<br>";
