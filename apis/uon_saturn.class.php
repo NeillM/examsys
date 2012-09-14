@@ -190,7 +190,7 @@ Class UON_SATURN extends SmsUtils {
   function update_module_enrolement($module, $sms, $mysqli = 'NOTSET', $session = 'NOTSET') {
 
     // run module enrolement for select code
-    if ($mysqli = 'NOTSET') {
+    if ($mysqli == 'NOTSET') {
       global $mysqli;
     }
 
