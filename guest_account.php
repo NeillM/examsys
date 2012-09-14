@@ -33,12 +33,14 @@ require_once './classes/networkutils.class.php';
 $mysqli = new mysqli($cfg_db_host, $cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
 
 // Check that the ip_address of the current user is within the exam lab.
+$paper_match = false;
 $ip_match = false;
 $results = $mysqli->prepare("SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type='2' AND labs != ''");
 $results->execute();
 $results->store_result();
 $results->bind_result($labs);
 while ($results->fetch()) {
+  $paper_match = true;
   $sub_results = $mysqli->prepare("SELECT address FROM ip_addresses WHERE lab IN ($labs)");
   $sub_results->execute();
   $sub_results->store_result();
@@ -50,7 +52,9 @@ while ($results->fetch()) {
 }
 $results->close();
 
-if ($ip_match == false) {
+if ($paper_match == false) {
+  access_denied($string['cannotfindexams'], false, true);
+} elseif ($ip_match == false) {
   access_denied($string['denied_msg'], false, true);
 }
 ?>

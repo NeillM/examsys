@@ -13,4 +13,5 @@ $string['firstname'] = 'First Name';
 $string['surname'] = 'Surname';
 $string['studentid'] = 'Student ID';
 $string['denied_msg'] = 'This page can only be accessed from a university computer within the examination room.';
+$string['cannotfindexams'] = 'Rogō cannot find any Exams';
 ?>
