@@ -202,7 +202,7 @@ foreach($data as $v) {
 
           $sms_api = $lti_i::sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
-          $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli);
+          $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1);
         }
         if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
