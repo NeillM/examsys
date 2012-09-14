@@ -86,12 +86,10 @@ Class UON_SATURN extends SmsUtils {
       $xml = @new SimpleXMLElement($returned_data);
       if (is_object($xml) and !isset($xml->ErrorMessage)) {
         return $xml;
-      }
-      else {
+      } else {
         return false;
       }
-    }
-    else {
+    } else {
       return false;
 
     }
@@ -120,8 +118,7 @@ Class UON_SATURN extends SmsUtils {
 
       }
       return array($moduleID, $moduletitle, $school);
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -171,11 +168,9 @@ Class UON_SATURN extends SmsUtils {
   function set_module($location) {
     if ($location == 'MY') {
       $location = 'Malaysia';
-    }
-    elseif ($location == 'CN') {
+    } elseif ($location == 'CN') {
       $location = 'China';
-    }
-    elseif ($location == 'UK') {
+    } elseif ($location == 'UK') {
       $location = 'UK';
     }
     $arr = $this->getModuleSources();
@@ -192,15 +187,17 @@ Class UON_SATURN extends SmsUtils {
     $dat = $this->getModuleEnrolements($modulecode);
   }
 
-  function update_module_enrolement($module, $sms, $mysqli = 'NOTSET', $session = 'NOTSET' ) {
+  function update_module_enrolement($module, $sms, $mysqli = 'NOTSET', $session = 'NOTSET') {
 
     // run module enrolement for select code
     if ($mysqli = 'NOTSET') {
       global $mysqli;
     }
 
-    $session = ($session == 'NOTSET') ?  date_utils::get_current_academic_year(): $session;
-    $session_parts = explode('/',$session);
+    if ($session == 'NOTSET') {
+      $session = date_utils::get_current_academic_year();
+    }
+    $session_parts = explode('/', $session);
 
     $enrolements = 0;
     $deletions = 0;
