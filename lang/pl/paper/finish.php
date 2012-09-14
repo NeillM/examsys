@@ -48,6 +48,6 @@ $string['iscorrect'] = 'jest poprawny';
 $string['isexcluded'] = 'jest wykluczony';
 $string['withinshape'] = 'W obszarze';  
 $string['outsideshape'] = 'Poza obszarem';
-$string['useranswererror'] = 'User Answer Error'; // Niko
-$string['errorkeywordunique'] = 'ERROR: unable to find unique question for supplied keywords'; // Niko
+$string['useranswererror'] = 'Błąd odpowiedzi użytkownika'; 
+$string['errorkeywordunique'] = 'Błąd: nie można odnaleźć unikalnego pytania dla dostarczonych słów kluczowych'; 
 ?>
