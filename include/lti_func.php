@@ -78,7 +78,7 @@ function usercheck($db, $lti) {
           $stmt->execute();
         }
       }
-      if ($returned2 == -1) {
+      if ($returned2 == -1 ) {
         // create user
         $lti_i->user_add($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
         $returned2 = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $db, false);

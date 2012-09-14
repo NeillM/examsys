@@ -274,8 +274,7 @@ Class UserUtils {
       $teams[$team_name] = $team_name;
     }
     $result->close();
-
-
+$module=strtoupper($module);
     if (isset($teams[$module])) {
       return true;
 

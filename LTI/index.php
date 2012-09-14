@@ -45,7 +45,7 @@ global $cfg_long_date_time;
 function
 listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   global $cfg_long_date_time, $icons;
-  
+
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
   $results2->execute();
@@ -123,20 +123,19 @@ if (!$lti->isInstructor()) {
     $session = date_utils::get_current_academic_year();
 
 
+    $data = $lti_i::module_code_translate($c_internal_id);
 
-    $data=$lti_i::module_code_translate($c_internal_id);
+    foreach ($data as $v) {
+      $returned_check = module_utils::module_check_self_enrol($v[1], $mysqli);
 
-foreach($data as $v) {
-  $returned_check = module_utils::module_check_self_enrol($v[1], $mysqli);
-
-    if (!UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v)) {
-      list($fullname, $school, $active, $selfenroll) = $returned_check;
-      if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli)) {
-        // Insert new module enrollment
-        UserUtils::add_student_to_module($userID, $v[1], 1, $session, $mysqli);
+      if (!UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v)) {
+        list($fullname, $school, $active, $selfenroll) = $returned_check;
+        if ($active == 1 and $selfenroll == 1 and !UserUtils::is_user_on_module($userID, $v[1], $session, $mysqli)) {
+          // Insert new module enrollment
+          UserUtils::add_student_to_module($userID, $v[1], 1, $session, $mysqli);
+        }
       }
     }
-  }
     // do 'something' here
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../user_index.php?id=" . $returned[0]);
@@ -156,6 +155,8 @@ foreach($data as $v) {
     foreach ($data as $v) {
       if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
         UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
+      } elseif (!UserUtils::staff_on_team($v[1], $mysqli) and !$lti_i::allow_staff_module_register($v)) {
+        $error[] = '<img src="' . $cfg_root_path . '../artwork/exclamation_64.png' . '"><h1>' . $string['NotAddedToModuleTitle'] . '</h1>' . $string['NotAddedToModule'] . $v[1] . '<br>';
       }
     }
 
@@ -181,7 +182,7 @@ foreach($data as $v) {
       //no context
       $data = $lti_i::module_code_translate($lti->getCourseName(), $lti->get_context_title());
       foreach ($data as $v) {
-        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) ) {
+        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v)) {
 
           $peer = 1;
           $external = 1;
@@ -203,9 +204,16 @@ foreach($data as $v) {
           $sms_api = $lti_i::sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1);
+        } elseif (!module_utils::module_exists($v[1], $mysqli) and  !$lti_i::allow_module_create($v)) {
+          display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png');
+          exit();
         }
         if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
           UserUtils::add_staff_to_team($userID, $v[1], $mysqli);
+        } elseif (!UserUtils::staff_on_team($v[1], $mysqli) and !$lti_i::allow_staff_module_register($v)) {
+          display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png');
+          exit();
+
         }
       }
       $module_store = $lti_i::module_code_translated_store($data);
@@ -252,6 +260,13 @@ END;
 
     $plk = 0;
     $block_id = 0;
+
+
+    if (isset($error)) {
+      foreach ($error as $e) {
+        echo $e;
+      }
+    }
 
     @ob_flush();
     @ob_start();

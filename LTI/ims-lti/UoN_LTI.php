@@ -461,6 +461,16 @@ class UoN_LTI extends BLTI {
     if ($this->parm['dbtype'] == 'mysqli') {
       $sql = "SELECT c_internal_id,updated_on FROM " . $this->parm['table_prefix'] . "lti_context WHERE lti_context_key=?";
       $stmt = $this->db->prepare($sql);
+      $db=$this->db;
+      if ($db->error) {
+        try {
+          throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+          exit();
+        }
+      }
       $stmt->bind_param('s', $lti_context_key);
       $stmt->execute();
       $stmt->store_result();
