@@ -126,6 +126,23 @@ function display_response($show_response, $type) {
   return $response;
 }
 
+/**
+ * Replace a variable with the calculated value in leadin and feedback
+ * @param $varname Name of variable to replace
+ * @param $value
+ * @param $leadin
+ * @param $feedback
+ * @return mixed Returns back the value which can be used to set the actual variable
+ */
+function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
+  if ($value == 'ERROR') {
+    $value = strtoupper($string['error']);
+  }
+  $leadin = str_replace($varname, $value, $leadin);
+  $feedback = str_replace($varname, $value, $feedback);
+  return $value;
+}
+
 function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqlidb) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $cfg_root_path, $strong_on, $strong_off;
   
@@ -349,7 +366,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         $question_data->close();
       } else {
         $paper[$i]['q_type'] = 'random_failed';
-        $paper[$i]['leadin'] = "<span style=\"color: #f00;\">ERROR: unable to find unique question for supplied keywords</span>";
+        $paper[$i]['leadin'] = "<span style=\"color: #f00;\">{$string['errorkeywordunique']}</span>";
       }
       if(isset($excluded[$old_q_id])) {
         $tmp_excluded = $excluded[$old_q_id];
@@ -386,7 +403,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     }
     $answer_data->close();
   } else {
-    display_error("User Answer Error", $mysqlidb->error);
+    display_error($string['useranswererror'], $mysqlidb->error);
   }
   
   ?>
@@ -554,54 +571,34 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         foreach($variable_array as $individual_variable) {
           switch ($var_no) {
             case 1:
-              $A = $individual_variable;
-              $tmp_leadin = str_replace('$A',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$A',$individual_variable,$tmp_fback);
+              $A = populate_variable('$A', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 2:
-              $B = $individual_variable;
-              $tmp_leadin = str_replace('$B',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$B',$individual_variable,$tmp_fback);
+              $B = populate_variable('$B', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 3:
-              $C = $individual_variable;
-              $tmp_leadin = str_replace('$C',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$C',$individual_variable,$tmp_fback);
+              $C = populate_variable('$C', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 4:
-              $D = $individual_variable;
-              $tmp_leadin = str_replace('$D',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$D',$individual_variable,$tmp_fback);
+              $D = populate_variable('$D', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 5:
-              $E = $individual_variable;
-              $tmp_leadin = str_replace('$E',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$E',$individual_variable,$tmp_fback);
+              $E = populate_variable('$E', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 6:
-              $F = $individual_variable;
-              $tmp_leadin = str_replace('$F',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$F',$individual_variable,$tmp_fback);
+              $F = populate_variable('$F', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 7:
-              $G = $individual_variable;
-              $tmp_leadin = str_replace('$G',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$G',$individual_variable,$tmp_fback);
+              $G = populate_variable('$G', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 8:
-              $H = $individual_variable;
-              $tmp_leadin = str_replace('$H',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$H',$individual_variable,$tmp_fback);
+              $H = populate_variable('$H', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 9:
-              $I = $individual_variable;
-              $tmp_leadin = str_replace('$I',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$I',$individual_variable,$tmp_fback);
+              $I = populate_variable('$I', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
             case 10:
-              $J = $individual_variable;
-              $tmp_leadin = str_replace('$J',$individual_variable,$tmp_leadin);
-              $tmp_fback = str_replace('$J',$individual_variable,$tmp_fback);
+              $J = populate_variable('$J', $individual_variable, $tmp_leadin, $tmp_fback, $string);
               break;
           }
           $var_no++;

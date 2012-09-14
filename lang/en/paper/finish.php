@@ -48,4 +48,6 @@ $string['iscorrect'] = 'Is correct';
 $string['isexcluded'] = 'Is excluded';
 $string['withinshape'] = 'Within shape';
 $string['outsideshape'] = 'Outside shape';
+$string['useranswererror'] = 'User Answer Error';
+$string['errorkeywordunique'] = 'ERROR: unable to find unique question for supplied keywords';
 ?>
