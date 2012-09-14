@@ -1416,7 +1416,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
 
             echo "<td ";
-            if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
+            if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1' and $score_method != 'Mark per Question') echo ' class="excluded"';
             if ($score_method == 'Mark per Option') echo "id=\"q_" . ($ex_no) . "_1\"";
             echo ">" . $tmp_ext_scenarios[$i-1] . "</td>";
           }
