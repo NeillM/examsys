@@ -192,14 +192,14 @@ Class UON_SATURN extends SmsUtils {
     $dat = $this->getModuleEnrolements($modulecode);
   }
 
-  function update_module_enrolement($module, $sms, $mysqli = 'NOTSET', $session = date_utils::get_current_academic_year() ) {
+  function update_module_enrolement($module, $sms, $mysqli = 'NOTSET', $session = 'NOTSET' ) {
 
     // run module enrolement for select code
     if ($mysqli = 'NOTSET') {
       global $mysqli;
     }
 
- //   $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
+    $session = ($session == 'NOTSET') ?  date_utils::get_current_academic_year(): $session;
     $session_parts = explode('/',$session);
 
     $enrolements = 0;
