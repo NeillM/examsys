@@ -1,6 +1,7 @@
 body {font-size:85%; line-height:150%}
 p, div, td {color:#484848}
 ul {list-style:square outside; color:#f27000}
+img.img_border {border-width:1px;border-style:solid;}
 table {font-size:100%}
 td {font-size:100%; font-family:Arial,sans-serif}
 h1 {font-size:150%; color:black}

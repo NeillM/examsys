@@ -57,12 +57,12 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
       exit;
     }
     if ($_POST['border']) {
-      $border = 1;
+      $border = 'class="img_border" ';
     } else {
-      $border = 0;
+      $border = '';
     }
     
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" border="' . $border . '" />'; 
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" "' . $border . '" />'; 
     
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
