@@ -136,7 +136,7 @@ function display_response($show_response, $type) {
  */
 function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
   if ($value == 'ERROR') {
-    $value = strtoupper($string['error']);
+    $value = '&lt;' . $string['unanswered'] . '&gt;';
   }
   $leadin = str_replace($varname, $value, $leadin);
   $feedback = str_replace($varname, $value, $feedback);
