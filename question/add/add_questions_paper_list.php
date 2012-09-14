@@ -97,6 +97,10 @@ if (isset($_GET['order'])) {
     $my_teams .= " OR moduleID LIKE '%$individual_team%'";
   }
 
+  if($order == 'created') {
+    $order = 'CAST(created AS DATE)';
+  }
+
   $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_review_16.gif');
   
   if (isset($_GET['paper_type'])) {
