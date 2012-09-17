@@ -169,6 +169,9 @@ if ($critical_error == '') {
 
       // Save metadata
       $part_names = array('bloom','status','teams');
+      if (!isset($_POST['teams'])) {
+        $_POST['teams'] = array();
+      }
       foreach($part_names as $section_name) {
         if(isset($_POST["$section_name"])) {
           $method = "set_$section_name";
@@ -202,12 +205,13 @@ if ($critical_error == '') {
       // Strip MS Office HTML.
       $question->set_scenario(clearMSOtags($question->get_scenario()));
       $question->set_leadin(clearMSOtags($question->get_leadin()));
-   
 
-      if (isset($_POST['teams'])) {
-        $question->set_teams($_POST['teams']);
+
+      if (!isset($_POST['teams'])) {
+        $_POST['teams'] = array();
       }
-      
+      $question->set_teams($_POST['teams']);
+
       $unified_part_names = $question->get_unified_fields();
             
       for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
