@@ -1312,7 +1312,7 @@ QUERY;
         CREATE TABLE `help_log` (
           `id` int(11) NOT NULL auto_increment,
           `type` enum('student','staff') default NULL,
-          `userID` int(10) unsigned default NULL,
+          `userID` int unsigned default NULL,
           `accessed` datetime default NULL,
           `pageID` int(11) default NULL,
           PRIMARY KEY  (`id`)
@@ -1323,7 +1323,7 @@ QUERY;
         CREATE TABLE `help_searches` (
           `id` int(11) NOT NULL auto_increment,
           `type` enum('student','staff') default NULL,
-          `userID` int(10) unsigned default NULL,
+          `userID` int unsigned default NULL,
           `searched` datetime default NULL,
           `searchstring` text,
           `hits` int(11) default NULL,
@@ -1335,7 +1335,7 @@ QUERY;
         CREATE TABLE `help_tutorial_log` (
           `id` int(11) NOT NULL auto_increment,
           `type` enum('student','staff') default NULL,
-          `userID` int(10) unsigned default NULL,
+          `userID` int unsigned default NULL,
           `accessed` datetime default NULL,
           `tutorial` varchar(255) default NULL,
           PRIMARY KEY  (`id`)
@@ -1365,7 +1365,7 @@ QUERY;
     $this->tableList['keywords_user'] = <<<QUERY
         CREATE TABLE `keywords_user` (
           `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `userID` int unsigned default NULL,
           `keyword` char(255) default NULL,
           `keyword_type` enum('personal','team') default NULL,
           PRIMARY KEY  (`id`),
@@ -1421,7 +1421,7 @@ QUERY;
           `totalpos` tinyint(4) default NULL,
           `user_answer` text,
           `screen` tinyint(3) unsigned default NULL,
-          `duration` mediumint(9) default NULL,
+          `duration` mediumint default NULL,
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
@@ -1444,7 +1444,7 @@ QUERY;
           `totalpos` tinyint(4) default NULL,
           `user_answer` text,
           `screen` tinyint(3) unsigned default NULL,
-          `duration` mediumint(9) default NULL,
+          `duration` mediumint default NULL,
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
@@ -1467,7 +1467,7 @@ QUERY;
           `totalpos` tinyint(4) default NULL,
           `user_answer` text,
           `screen` tinyint(3) unsigned default NULL,
-          `duration` mediumint(9) default NULL,
+          `duration` mediumint default NULL,
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
@@ -1505,7 +1505,7 @@ QUERY;
           `numeric_score` int(11) default NULL,
           `feedback` text,
           `student_grade` char(25) default NULL,
-          `examinerID` mediumint(8) unsigned default NULL,
+          `examinerID` mediumint unsigned default NULL,
           `osce_type` enum('electronic','paper') default NULL,
           `year` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
@@ -1556,7 +1556,7 @@ QUERY;
           `totalpos` tinyint(4) default NULL,
           `user_answer` text,
           `screen` tinyint(3) unsigned default NULL,
-          `duration` mediumint(9) default NULL,
+          `duration` mediumint default NULL,
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
@@ -1672,7 +1672,7 @@ QUERY;
     $this->tableList['password_tokens'] = <<<QUERY
         CREATE TABLE `password_tokens` (
           `id` int NOT NULL auto_increment,
-          `user_id` int NOT NULL,
+          `user_id` int unsigned NOT NULL,
           `token` char(16) NOT NULL,
           `time` datetime NOT NULL,
           PRIMARY KEY  (`id`)
@@ -1681,7 +1681,7 @@ QUERY;
 
     $this->tableList['properties'] = <<<QUERY
         CREATE TABLE `properties` (
-          `property_id` mediumint(10) unsigned NOT NULL auto_increment,
+          `property_id` mediumint unsigned NOT NULL auto_increment,
           `paper_title` varchar(255) default NULL,
           `start_date` datetime default NULL,
           `end_date` datetime default NULL,
@@ -1708,7 +1708,7 @@ QUERY;
           `deleted` datetime default NULL,
           `created` datetime default NULL,
           `random_mark` float default NULL,
-          `total_mark` mediumint(9) default NULL,
+          `total_mark` mediumint default NULL,
           `display_correct_answer` enum('0','1') default NULL,
           `display_question_mark` enum('0','1') default NULL,
           `display_students_response` enum('0','1') default NULL,
@@ -1739,7 +1739,7 @@ QUERY;
           `q_paper` int default NULL,
           `q_id` int default NULL,
           `parts` varchar(255) default NULL,
-          `userID` int(10) unsigned default NULL,
+          `userID` int unsigned default NULL,
           `date` datetime default NULL,
           `reason` text,
           PRIMARY KEY  (`id`)
@@ -1948,7 +1948,7 @@ QUERY;
           `body_plain` text,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
-          `checkout_authorID` mediumint(8) unsigned default NULL,
+          `checkout_authorID` mediumint unsigned default NULL,
           `roles` enum('SysAdmin','Admin','Staff') default NULL,
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
@@ -1991,7 +1991,7 @@ QUERY;
           `body_plain` text,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
-          `checkout_authorID` mediumint(8) unsigned default NULL,
+          `checkout_authorID` mediumint unsigned default NULL,
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
@@ -2026,7 +2026,7 @@ QUERY;
         CREATE TABLE `sys_errors` (
           `id` int NOT NULL auto_increment,
           `occurred` datetime default NULL,
-          `userID` int default NULL,
+          `userID` int unsigned default NULL,
           `auth_user` varchar(45) default NULL,
           `errtype` enum('Notice','Warning','Fatal Error','Unknown') default NULL,
           `errstr` text,
@@ -2070,7 +2070,7 @@ QUERY;
     $this->tableList['textbox_marking'] = <<<QUERY
         CREATE TABLE `textbox_marking` (
           `id` int NOT NULL auto_increment,
-          `paperID` mediumint default NULL,
+          `paperID` mediumint unsigned default NULL,
           `q_id` int default NULL,
           `answer_id` int default NULL,
           `markerID` int unsigned default NULL,
@@ -2079,7 +2079,7 @@ QUERY;
           `date` datetime default NULL,
           `phase` tinyint(4) default NULL,
           `logtype` tinyint(4) default NULL,
-          `student_userID` mediumint(8) unsigned default NULL,
+          `student_userID` mediumint unsigned default NULL,
           PRIMARY KEY  (`id`),
           KEY `paperID` (`paperID`),
           KEY `q_id` (`q_id`)
@@ -2089,7 +2089,7 @@ QUERY;
     $this->tableList['textbox_remark'] = <<<QUERY
         CREATE TABLE `textbox_remark` (
           `id` int NOT NULL auto_increment,
-          `paperID` mediumint default NULL,
+          `paperID` mediumint unsigned default NULL,
           `userID` int unsigned default NULL,
           PRIMARY KEY  (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2198,7 +2198,7 @@ QUERY;
     $this->tableList['scheduling'] = <<<QUERY
           CREATE TABLE `scheduling` (
           `id` int NOT NULL AUTO_INCREMENT,
-          `paperID` mediumint DEFAULT NULL,
+          `paperID` mediumint unsigned DEFAULT NULL,
           `period` varchar(255) DEFAULT NULL,
           `barriers_needed` tinyint(4) DEFAULT NULL,
           `cohort_size` varchar(20) DEFAULT NULL,
