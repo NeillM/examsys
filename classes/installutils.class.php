@@ -2149,8 +2149,8 @@ QUERY;
     $this->tableList['lti_user'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_user` (
           `lti_user_key` varchar(255) NOT NULL,
-          `lti_user_equ` int NOT NULL,
-          `updated_on` datetime,
+          `lti_user_equ` varchar(255) NOT NULL,
+          `updated_on` datetime NOT NULL,
           PRIMARY KEY (`lti_user_key`),
           KEY `lti_user_equ` (`lti_user_equ`)
          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2161,8 +2161,8 @@ QUERY;
         CREATE TABLE IF NOT EXISTS `lti_resource` (
         `lti_resource_key` varchar(255) NOT NULL,
         `internal_id` varchar(255) DEFAULT NULL,
-        `itype` varchar(255) DEFAULT NULL,
-        `updated` datetime,
+        `internal_type` varchar(255) NOT NULL,
+        `updated_on` datetime,
         PRIMARY KEY (`lti_resource_key`),
         KEY `destination2` (`itype`),
         KEY `destination` (`internal_id`)
@@ -2178,7 +2178,7 @@ QUERY;
           `name` char(255) DEFAULT NULL,
           `context_id` char(255) DEFAULT NULL,
           `deleted` datetime,
-          `updated_at` datetime,
+          `updated_on` datetime,
           PRIMARY KEY (`id`),
           KEY `oauth_consumer_key` (`oauth_consumer_key`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
