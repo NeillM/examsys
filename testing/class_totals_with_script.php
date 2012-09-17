@@ -41,15 +41,19 @@ if (isset($_GET['period'])) {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 MONTH)';
   } elseif ($_GET['period'] == 'year') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 YEAR)';
+  } elseif ($_GET['period'] == '2year') {
+    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 2 YEAR)';
+  } elseif ($_GET['period'] == '3year') {
+    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 3 YEAR)';
   }
 } else {
   $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';
 }
 
 if (isset($_GET['server'])) {
-  $server = $_GET['server'];
+  $server = $protocol . $_GET['server'];
 } else {
-  $server = $protocol . $_SERVER['HTTP_HOST'];
+  $server = $protocol . $_SERVER['SERVER_ADDR'];
 }
 
   
@@ -179,6 +183,7 @@ foreach ($papers as $paper) {
     flush();  
   }
   $result->close();
+  if($current_no > 12) break;
 }
 
 ob_end_flush();
