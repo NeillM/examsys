@@ -4287,8 +4287,69 @@ if (!isset($_POST['update'])) {
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
 
+  //2012-09-17 cczsa1 update to make database consistant with new install
+  $findsql="SELECT column_type from information_schema.COLUMNS where TABLE_NAME='student_modules'  and TABLE_SCHEMA='". $cfg_db_database . "' and column_type=\"enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15')\"";
+  $result = $mysqli->prepare($findsql);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() > 0) {
 
-  //remove refrances to old vars
+    $sql="ALTER TABLE `student_modules` CHANGE `calendar_year` `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+
+  @ob_flush();
+  @flush();
+
+
+  $findsql="SELECT column_type from information_schema.COLUMNS where TABLE_NAME='users_metadata'  and TABLE_SCHEMA='". $cfg_db_database . "'  and column_name='userID' and column_type like 'int%unsigned'";
+  $result = $mysqli->prepare($findsql);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+
+    $sql="ALTER TABLE `users_metadata` CHANGE `userID` `userID` int unsigned default NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+
+  @ob_flush();
+  @flush();
+
+
+  $findsql="SELECT column_type from information_schema.COLUMNS where TABLE_NAME='textbox_remark'  and TABLE_SCHEMA='". $cfg_db_database . "'  and column_name='paperID' and column_type like 'mediumint%unsigned'";
+  $result = $mysqli->prepare($findsql);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+
+    $sql="ALTER TABLE `textbox_remark` CHANGE `paperID` `paperID` mediumint unsigned DEFAULT NULL";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+
+  @ob_flush();
+  @flush();
+
+
+
+  //remove references to old vars
   $cfg_new = array();
   $found = false;
   foreach ($cfg as $curline=>$line) {
