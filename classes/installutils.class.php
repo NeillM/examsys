@@ -1436,7 +1436,7 @@ QUERY;
     $this->tableList['log2'] = <<<QUERY
         CREATE TABLE `log2` (
           `id` int NOT NULL auto_increment,
-          `userID` int( unsigned default NULL,
+          `userID` int unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
           `q_paper` mediumint unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
