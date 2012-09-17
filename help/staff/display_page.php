@@ -111,10 +111,8 @@
       if (parent.frames['navigation'].document.getElementById('old_highlight').value != 0) {
         old_section = parent.frames['navigation'].document.getElementById('old_highlight').value;
         parent.frames['navigation'].document.getElementById(old_section).style.fontWeight="normal";
-        parent.frames['navigation'].document.getElementById(old_section).style.textDecoration="none";
       }
       parent.frames['navigation'].document.getElementById('title<?php echo $_GET['id']; ?>').style.fontWeight="bold";
-      parent.frames['navigation'].document.getElementById('title<?php echo $_GET['id']; ?>').style.textDecoration="underline";
       parent.frames['navigation'].document.getElementById('old_highlight').value = 'title<?php echo $_GET['id']; ?>';
     }
 

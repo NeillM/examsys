@@ -1,4 +1,4 @@
-function updateMenu(sectionID,imageID) {
+function updateMenu(sectionID, imageID) {
   current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
   document.getElementById(sectionID).style.display = current;
 

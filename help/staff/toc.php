@@ -44,6 +44,7 @@ require '../../include/staff_auth.inc';
     #main {height:100%; width:100%; overflow:scroll; border-left:2px solid #7699C7; border-right:2px solid #7699C7; border-bottom:2px solid #7699C7; padding:2px}
   </style>
 
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../js/help_toc.js"></script>
 </head>
 <body onload="resizeTOC()" onresize="resizeTOC()">
@@ -125,11 +126,11 @@ require '../../include/staff_auth.inc';
       $old_parent = $parent;
     }
     
-    echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
+    echo "<div id=\"title$id\"><nobr><a onclick=\"highlight('title$id')\" href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
   }
 
   if ($old_parent != '') echo "</div>\n";
-  echo "<input type=\"hidden\" name=\"old_highlight\" value=\"0\" />";
+  echo "<input type=\"text\" id=\"old_highlight\" value=\"0\" />";
   $mysqli->close();
 ?>
 </div>

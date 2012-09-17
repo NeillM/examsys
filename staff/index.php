@@ -24,22 +24,22 @@
 * @package
 */
 
-  require '../include/staff_student_auth.inc';
-  require '../include/sidebar_menu.inc';
-  require '../classes/recyclebin.class.php';
-  require '../config/index.inc';
+require '../include/staff_student_auth.inc';
+require '../include/sidebar_menu.inc';
+require '../classes/recyclebin.class.php';
+require '../config/index.inc';
 
-  // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
-  if (strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === false and strpos($userroles,'Admin') === false and strpos($userroles,'SysAdmin') === false) {
-    header("location: ../students/");
-    exit;
-  } elseif ($userroles == 'External Examiner') {
-    header("location: ../reviews/");
-    exit;
-  } elseif ($userroles == 'Invigilator') {
-    header("location: ../invigilator/");
-    exit;
-  }
+// Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
+if (strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === false and strpos($userroles,'Admin') === false and strpos($userroles,'SysAdmin') === false) {
+  header("location: ../students/");
+  exit;
+} elseif ($userroles == 'External Examiner') {
+  header("location: ../reviews/");
+  exit;
+} elseif ($userroles == 'Invigilator') {
+  header("location: ../invigilator/");
+  exit;
+}
 
 // If we're still here we should be staff
 require '../include/staff_auth.inc';
@@ -119,7 +119,7 @@ require '../include/staff_auth.inc';
     }
   }
 
-  //Update the last log in date in users.
+  // Update the last log in date in users.
   $stmt = $mysqli->prepare("UPDATE users SET last_login=NOW() WHERE id=?");
   $stmt->bind_param('i', $userID);
   $stmt->execute();

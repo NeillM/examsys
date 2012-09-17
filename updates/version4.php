@@ -4279,11 +4279,10 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   $new_cfg_str[] = "\r\n";
   $new_cfg_str[] = "// LTI these configure the default lti integration if you want more ability than this then you will need to override the lti_integration class (in config/integration called lti-integration.class.php), UoN version is shipped in the -UoN folder\r\n";
-$new_cfg_str[] = "\$cfg_lti_allow_module_self_reg = false; // allows rogo to auto add student to module if selfreg is set for module if from lti launch\r\n";
-$new_cfg_str[] = "\$cfg_lti_allow_staff_module_register = false; // allows rogo to register staff onto the module team if set to true and from lti launch and staff in vle\r\n";
-$new_cfg_str[] = "\$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist\r\n";
-$new_cfg_str[] = "\r\n";
-
+  $new_cfg_str[] = "\$cfg_lti_allow_module_self_reg = false; // allows rogo to auto add student to module if selfreg is set for module if from lti launch\r\n";
+  $new_cfg_str[] = "\$cfg_lti_allow_staff_module_register = false; // allows rogo to register staff onto the module team if set to true and from lti launch and staff in vle\r\n";
+  $new_cfg_str[] = "\$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist\r\n";
+  $new_cfg_str[] = "\r\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
@@ -4327,6 +4326,68 @@ $new_cfg_str[] = "\r\n";
 
   @ob_flush();
   @flush();
+
+  // 14/09/2012 - Change the way borders are done on images in the Staff help system.
+  $result = $mysqli->prepare("SELECT id, body FROM staff_help WHERE body LIKE '%border=%'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($id, $body);
+  while ($result->fetch()) {
+    $patterns = '/(<img .*)(border="1")(.*>)/i';
+    $replace = '${1}class="image_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $patterns = '/(<img .*)(border=1)(.*>)/i';
+    $replace = '${1}class="image_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $patterns = '/(<img .*)(border="0")(.*>)/i';
+    $replace = '${1}class="image_no_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $patterns = '/(<img .*)(border=0)(.*>)/i';
+    $replace = '${1}class="image_no_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $body_plain = strip_tags($body);
+    
+    $update = $mysqli->prepare("UPDATE staff_help SET body=?, body_plain=? WHERE id=?");
+    $update->bind_param('ssi', $body, $body_plain, $id);
+    $update->execute();
+    $update->close();
+  }
+  $result->close();
+
+  // 14/09/2012 - Change the way borders are done on images in the Student help system.
+  $result = $mysqli->prepare("SELECT id, body FROM student_help WHERE body LIKE '%border=%'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($id, $body);
+  while ($result->fetch()) {
+    $patterns = '/(<img .*)(border="1")(.*>)/i';
+    $replace = '${1}class="image_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $patterns = '/(<img .*)(border=1)(.*>)/i';
+    $replace = '${1}class="image_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $patterns = '/(<img .*)(border="0")(.*>)/i';
+    $replace = '${1}class="image_no_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $patterns = '/(<img .*)(border=0)(.*>)/i';
+    $replace = '${1}class="image_no_brd"${3}';
+    $body = preg_replace($patterns, $replace, $body);
+
+    $body_plain = strip_tags($body);
+    
+    $update = $mysqli->prepare("UPDATE student_help SET body=?, body_plain=? WHERE id=?");
+    $update->bind_param('ssi', $body, $body_plain, $id);
+    $update->execute();
+    $update->close();
+  }
+  $result->close();
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

@@ -29,15 +29,18 @@ $path = $cfg_web_root . 'help/staff/images/';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Add Captivate Tutorial</title>
-<style type="text/css"> 
-body {background-color:#F1F5FB; color:black; font-family:Arial,sans-serif; font-size:90%; margin:0px}
-input, textarea {font-family:Arial,sans-serif}
-.field {text-align:right}
-.note {font-size:90%; color:#808080}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title>Add Captivate Tutorial</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../../../../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../../../../../css/dialog.css" />
+  <style type="text/css"> 
+    body {font-size:90%}
+    .field {text-align:right}
+    .note {font-size:90%; color:#808080}
+  </style>
 <?php
 if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
@@ -76,11 +79,11 @@ var ExampleDialog = {
 tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
         </script>
         </head>
-        <body onload="ExampleDialog.insert();">
+        <body onload="ExampleDialog.insert();" class="dialog_body">
     <?php    
 } else {
   //defaut state
-  echo "<body>";   
+  echo "<body class=\"dialog_body\">";   
   showForm('');
   exit;  
 } 
@@ -100,7 +103,7 @@ function showForm($error) {
 <tr><td></td><td class="note">Browse for the flash file you wish to add (SWF).</td></tr>
 <tr><td class="field">Title</td><td><input name="title" type="text" value="" size="40" style="width:95%" /></td></tr>
 <tr><td class="field">File</td><td>
-  <div id="waitmsg" style="display:none; filter:progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=4); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border: black 1px solid; color: black; font-size: 20pt; font-family: Arial,sans-serif; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><br /><div align="center"><img src="../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
+  <div id="waitmsg" style="display:none; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border:1px solid #868686; color: black; font-size: 20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><div align="center"><img src="../../../../../../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
     <input type="file" name="FileName" size="50" /><br />
 </td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>

@@ -104,12 +104,10 @@ if ($_GET['id'] != '1' and strpos($userroles,'SysAdmin') === false and strpos($u
       if (parent.frames['navigation'].document.getElementById('old_highlight').value != 0) {
         old_section = parent.frames['navigation'].document.getElementById('old_highlight').value;
         parent.frames['navigation'].document.getElementById(old_section).style.fontWeight="normal";
-        parent.frames['navigation'].document.getElementById(old_section).style.textDecoration="none";
       }
       <?php
       if ($_GET['id'] != 1) {
         echo "parent.frames['navigation'].document.getElementById('title" . $_GET['id'] . "').style.fontWeight=\"bold\";\n";
-        echo "parent.frames['navigation'].document.getElementById('title" . $_GET['id'] . "').style.textDecoration=\"underline\";\n";
       }
       ?>
       parent.frames['navigation'].document.getElementById('old_highlight').value = 'title<?php echo $_GET['id']; ?>';

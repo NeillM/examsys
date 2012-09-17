@@ -29,17 +29,20 @@ $path = $cfg_web_root . 'help/staff/images/';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<title>Add New Image</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<style type="text/css"> 
-body {background-color:#F1F5FB; color:black; font-family:Arial,sans-serif; font-size:90%; margin:0px}
-input, textarea {font-family:Arial,sans-serif}
-.field {text-align:right}
-.note {font-size:90%; color:#808080}
-</style>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
+  <title>Add New Image</title>
+
+  <link rel="stylesheet" type="text/css" href="../../../../../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../../../../../css/dialog.css" />
+  <style type="text/css"> 
+    body {font-size:90%}
+    .field {text-align:right}
+    .note {font-size:90%; color:#808080}
+  </style>
 <?php
-if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
+  if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
     
     $filename = $_FILES['FileName']['tmp_name'];
@@ -57,12 +60,12 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
       exit;
     }
     if ($_POST['border']) {
-      $border = 'class="img_border" ';
+      $class = 'class="image_brd"';
     } else {
-      $border = '';
+      $class = 'class="image_no_brd"';
     }
     
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" "' . $border . '" />'; 
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" ' . $class . ' />'; 
     
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
@@ -83,12 +86,13 @@ var ExampleDialog = {
 
 tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
         </script>
-        </head>
-        <body onload="ExampleDialog.insert();">
+      </head>
+
+      <body onload="ExampleDialog.insert();" class="dialog_body">
     <?php    
 } else {
   //defaut state
-  echo "<body>";   
+  echo "<body class=\"dialog_body\">";   
   showForm('');
   exit;  
 } 
@@ -103,10 +107,10 @@ function showForm($error) {
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" style="font-size:100%">
-<tr><td style="background-color:white; width:56px"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" border="0" alt="Image" /></td><td style="color:#5582D2; width:90%; background-color:white; text-align:left; font-size:150%; font-weight:bold">Add New Image</td></tr>
+<tr><td class="dialog_header" style="width:56px"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" border="0" alt="Image" /></td><td class="dialog_header">Add New Image</td></tr>
 <tr><td></td><td class="note">Browse for the image file you wish to add (GIF, PNG or JPEG).</td></tr>
 <tr><td class="field">File</td><td>
-  <div id="waitmsg" style="display:none; filter:progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=4); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border: black 1px solid; color: black; font-size: 20pt; font-family: Arial,sans-serif; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><br /><div align="center"><img src="../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
+  <div id="waitmsg" style="display:none; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border:1px solid #868686; color: black; font-size: 20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><div align="center"><img src="../../../../../../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
     <input type="file" name="FileName" accept="image/gif,image/jpeg,image/pjpeg,image/png" size="50" /><br />
 </td></tr>
 <tr><td class="field">alt</td><td><input type="text" name="alt" value="" size="40" /></td></tr>

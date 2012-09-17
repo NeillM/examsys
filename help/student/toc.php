@@ -121,7 +121,7 @@
   }
 
   if ($old_parent != '') echo "</div>\n";
-  echo "<input type=\"hidden\" name=\"old_highlight\" value=\"0\" />";
+  echo "<input type=\"hidden\" id=\"old_highlight\" value=\"0\" />";
   $mysqli->close();
 ?>
 </div>
