@@ -177,8 +177,9 @@ foreach ($papers as $paper) {
       $result->fetch();
 
       echo "Problem with " . $mark['userID'] . " $tmp_surname, $tmp_first_names ($tmp_username) - $script_mark / " . $mark['mark'] . "<br />";
+    } else {
+      echo "&nbsp;&nbsp;&nbsp;\n";
     }
-
     ob_flush();
     flush();  
   }
