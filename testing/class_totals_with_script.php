@@ -153,6 +153,7 @@ $result->close();
 $paper_no = count($papers);
 $current_no = 0;
 
+$result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id=? LIMIT 1");
 foreach ($papers as $paper) {
   $url = $server . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc&studentsonly=1";
   
@@ -164,9 +165,8 @@ foreach ($papers as $paper) {
   ob_flush();
   flush();  
 
-  $result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id=? LIMIT 1");
   foreach ($marks_set as $mark) {
-    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&previous=" . str_replace(' ', '%20', $mark['started']) . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']);
+    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&previous=" . str_replace(' ', '%20', $mark['started']) . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
     $output = getData($url);
     $script_mark = parseScript($output);
     
@@ -182,8 +182,8 @@ foreach ($papers as $paper) {
     ob_flush();
     flush();  
   }
-  $result->close();
 }
+$result->close();
 
 ob_end_flush();
 ?>

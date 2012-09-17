@@ -2316,9 +2316,8 @@ echo '</script>';
     }
     
     // Display any objectives mapped
-    if ($paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert') {
+    if ($paper[$question]['q_type'] != 'info' and $paper[$question]['q_type'] != 'likert' and !isset($_GET['disable_mappings'])) {
       $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $mysqlidb);
-      
       if (count($objByModule) > 0) {
         echo "<br />\n<div class=\"objH\">" . $string['learningobjectives'] . "</div>\n<ul>\n";
         $module_list = explode(',',$moduleID);
