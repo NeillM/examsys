@@ -53,7 +53,7 @@ function head($text) {
 
 head('Pragma: public');
 if ($ext == "xml") {
-  head('Content-Type: text/xml; charset='. cfg_page_charset);
+  head('Content-Type: text/xml; charset=UTF-8');
 } elseif ($ext == "zip") {
   head('Content-Type: application/zip');
 } else if ($ext == "png") {
