@@ -2164,7 +2164,7 @@ QUERY;
         `internal_type` varchar(255) NOT NULL,
         `updated_on` datetime,
         PRIMARY KEY (`lti_resource_key`),
-        KEY `destination2` (`itype`),
+        KEY `destination2` (`internal_type`),
         KEY `destination` (`internal_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
