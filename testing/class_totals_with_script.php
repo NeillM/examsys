@@ -183,7 +183,6 @@ foreach ($papers as $paper) {
     flush();  
   }
   $result->close();
-  if($current_no > 12) break;
 }
 
 ob_end_flush();
