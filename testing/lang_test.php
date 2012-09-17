@@ -130,21 +130,26 @@ function display_this($data, $data_index) {
             $display_text .= '<strong>' . $data_part2 . '</strong>';
           }
           else {
-            $display_text .= '<strong>&nbsp;&nbsp;&nbsp;-<small>//</small>-</strong>';
+            $display_text .= '<span style="color:lightgrey"><strong>&nbsp;&nbsp;&nbsp;-<small>//</small>-</strong></span>';
           }
         }
         $display_text .= '</td><td>';
-        $last_key = $data_part2;
         
         if (isset($data_part3[$data_key])) {
           if ($data_part3[$data_key] != $last_value) {
-            $display_text .= $data_part3[$data_key];
+             if ($data_part2 != $last_key) {
+              $display_text .= $data_part3[$data_key];
+              }
+              else {
+              $display_text .= '<span style="color:IndianRed">' . $data_part3[$data_key] . '</span>';
+              }
           }
           else {
-            $display_text .= '';
+            $display_text .= '<span style="color:lightgrey"><strong>&nbsp;&nbsp;&nbsp;-<small>//</small>-</strong></span>';
           }
         }
         $display_text .= '</td></tr>';
+        $last_key = $data_part2;
         $last_value = $data_part3[$data_key];
 			}
 		} else {

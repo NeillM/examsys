@@ -1,7 +1,7 @@
 <?php
 require_once '../lang/' . $language . '/include/paper_types.inc';
 
-$string['createnewpaper'] = 'Create New Paper';
+$string['createnewpaper'] = 'Create new Paper';
 $string['papertype'] = 'Paper Types';
 $string['name'] = 'Name';
 $string['next'] = 'Next >';
