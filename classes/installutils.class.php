@@ -1930,7 +1930,7 @@ QUERY;
           `userID` int unsigned default NULL,
           `background` varchar(20) default NULL,
           `foreground` varchar(20) default NULL,
-          `textsize` int) default NULL,
+          `textsize` int default NULL,
           `extra_time` tinyint(4) default NULL,
           `marks_color` varchar(20) default NULL,
           `themecolor` varchar(20) default NULL,
