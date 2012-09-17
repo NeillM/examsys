@@ -1377,7 +1377,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         }
 
         if (isset($paper[$question]['user_answer'])) {
-          $rank_answers = explode(',',$paper[$question]['user_answer']);
+          $rank_answers = explode(',', $paper[$question]['user_answer']);
         } else {
           $rank_answers = array_fill(0, 20, 'u');
         }
@@ -1498,14 +1498,20 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
             $html .= display_std($paper[$question]['std'][$no_options]);
           }
           $html .= '</td>';
-          $html .= '<td>' . display_response($tmp_display_students_response, $img_name) . '</td>';
+          $html .= '<td>';
+          if ($answered) {
+            $html .= display_response($tmp_display_students_response, $img_name);
+          } else {
+            $html .= '&nbsp;';
+          }
+          $html .= '</td>';
           $html .= '<td colspan="3">' . $string['overallcorrectorder'] . '</td>';
           $html .= '</tr>';
           
           echo $html;
         }
         
-        if ($answered  == false) {
+        if ($answered == false) {
           echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
         }
         echo "</table>\n";
