@@ -530,7 +530,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       for ($a=0; $a<$count_user_awnser; $a++) {
         if ($tmp_exclude{$a} == '0') {
           if ($question['display_method'] == 'dropdown') {
-            if (strip_tags(str_replace('&nbsp;',' ',$question['correct'][$a][0])) == strip_tags(html_entity_decode(str_replace('&nbsp;',' ',trim($user_answers[$a+1]))))) {
+            if (str_replace('&nbsp;',' ',$question['correct'][$a][0]) == html_entity_decode(str_replace('&nbsp;',' ',$user_answers[$a+1]))) {
               $tmp_mark += $question['marks_correct'];
               $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
             } elseif ($user_answers[$a+1] != 'u' and $user_answers[$a+1] != '') {
@@ -1044,7 +1044,6 @@ $warnings = array('deleted_qns' => array());
       $tmp_array['paper_type'] = $paper_type;
     }
     getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
-    
     if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
     if (isset($tmp_array['questions'])) {
       $tmp_array['questions']++;
