@@ -1204,16 +1204,16 @@ class databaseTables {
   function __construct($charset) {
     $this->tableList['admin_access'] = <<<QUERY
       CREATE TABLE `admin_access` (
-        `adminID` int(11) NOT NULL auto_increment,
-        `userID` int(10) unsigned default NULL,
-        `schools_id` int(11) default NULL,
+        `adminID` int NOT NULL auto_increment,
+        `userID` int unsigned default NULL,
+        `schools_id` int default NULL,
         PRIMARY KEY (`adminID`)
       ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['announcements'] = <<<QUERY
       CREATE TABLE `announcements` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `id` int NOT NULL AUTO_INCREMENT,
         `title` varchar(255) DEFAULT NULL,
         `staff_msg` text,
         `student_msg` text,
@@ -1227,11 +1227,11 @@ QUERY;
 
    $this->tableList['courses'] = <<<QUERY
         CREATE TABLE `courses` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int NOT NULL auto_increment,
           `name` varchar(255) default NULL,
           `description` varchar(255) default NULL,
           `deleted` datetime default NULL,
-          `schoolid` int(11) default NULL,
+          `schoolid` int default NULL,
           PRIMARY KEY (`id`),
           KEY `degree` (`name`),
           KEY `idx_courses_name` (`name`)
@@ -1240,8 +1240,8 @@ QUERY;
 
     $this->tableList['ebel'] = <<<QUERY
           CREATE TABLE `ebel` (
-            `id` int(11) NOT NULL auto_increment,
-            `setterID` int(10) unsigned default NULL,
+            `id` int NOT NULL auto_increment,
+            `setterID` int unsigned default NULL,
             `date_set` datetime default NULL,
             `category` char(3) default NULL,
             `percentage` float default NULL,
@@ -1252,7 +1252,7 @@ QUERY;
 
     $this->tableList['ebel_grid_templates'] = <<<QUERY
           CREATE TABLE `ebel_grid_templates` (
-            `id` int(11) NOT NULL auto_increment,
+            `id` int NOT NULL auto_increment,
             `EE` tinyint(4) default NULL,
             `EI` tinyint(4) default NULL,
             `EN` tinyint(4) default NULL,
@@ -1278,7 +1278,7 @@ QUERY;
 
     $this->tableList['faculty'] = <<<QUERY
           CREATE TABLE `faculty` (
-            `id` int(11) NOT NULL auto_increment,
+            `id` int NOT NULL auto_increment,
             `name` varchar(80) default NULL,
             `deleted` datetime default NULL,
             PRIMARY KEY  (`id`)
@@ -1287,8 +1287,8 @@ QUERY;
 
     $this->tableList['feedback_release'] = <<<QUERY
         CREATE TABLE `feedback_release` (
-          `idfeedback_release` int(11) NOT NULL auto_increment,
-          `paper_id` mediumint(8) unsigned default NULL,
+          `idfeedback_release` int NOT NULL auto_increment,
+          `paper_id` mediumint unsigned default NULL,
           `date` datetime NOT NULL,
           `type` enum('objectives','questions') default NULL,
           PRIMARY KEY  (`idfeedback_release`)
@@ -1389,16 +1389,16 @@ QUERY;
 
     $this->tableList['log0'] = <<<QUERY
         CREATE TABLE `log0` (
-          `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned NOT NULL default '0',
+          `q_paper` mediumint unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
           `user_answer` text,
           `screen` tinyint(3) unsigned default NULL,
-          `duration` mediumint(9) default NULL,
+          `duration` mediumint default NULL,
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
           `option_order` varchar(255) default NULL,
@@ -1412,10 +1412,10 @@ QUERY;
 
     $this->tableList['log1'] = <<<QUERY
         CREATE TABLE `log1` (
-          `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned NOT NULL default '0',
+          `q_paper` mediumint unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
@@ -1435,10 +1435,10 @@ QUERY;
 
     $this->tableList['log2'] = <<<QUERY
         CREATE TABLE `log2` (
-          `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int( unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned NOT NULL default '0',
+          `q_paper` mediumint unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
@@ -1458,10 +1458,10 @@ QUERY;
 
     $this->tableList['log3'] = <<<QUERY
         CREATE TABLE `log3` (
-          `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned NOT NULL default '0',
+          `q_paper` mediumint unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
@@ -1481,10 +1481,10 @@ QUERY;
 
     $this->tableList['log4'] = <<<QUERY
         CREATE TABLE `log4` (
-          `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `started` datetime default NULL,
-          `q_paper` mediumint(8) unsigned default NULL,
+          `q_paper` mediumint unsigned default NULL,
           `q_id` int(11) default NULL,
           `rating` text,
           `q_parts` varchar(50) default NULL,
@@ -1497,10 +1497,10 @@ QUERY;
 
     $this->tableList['log4_overall'] = <<<QUERY
         CREATE TABLE `log4_overall` (
-          `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `started` datetime default NULL,
-          `q_paper` mediumint(8) unsigned default NULL,
+          `q_paper` mediumint unsigned default NULL,
           `overall_rating` text,
           `numeric_score` int(11) default NULL,
           `feedback` text,
@@ -1517,10 +1517,10 @@ QUERY;
 
     $this->tableList['log5'] = <<<QUERY
         CREATE TABLE `log5` (
-          `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `started` datetime default NULL,
-          `q_paper` mediumint(8) unsigned default NULL,
+          `q_paper` mediumint unsigned default NULL,
           `q_id` int(11) default NULL,
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
@@ -1533,10 +1533,10 @@ QUERY;
 
     $this->tableList['log6'] = <<<QUERY
         CREATE TABLE `log6` (
-          `id` int(11) NOT NULL auto_increment,
-          `paperID` mediumint(8) unsigned default NULL,
-          `reviewerID` int(10) unsigned default NULL,
-          `peerID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `paperID` mediumint unsigned default NULL,
+          `reviewerID` int unsigned default NULL,
+          `peerID` int unsigned default NULL,
           `started` datetime default NULL,
           `q_id` int(11) default NULL,
           `rating` tinyint(4) default NULL,
@@ -1547,10 +1547,10 @@ QUERY;
 
     $this->tableList['log_late'] = <<<QUERY
         CREATE TABLE `log_late` (
-          `id` int(8) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `started` datetime NOT NULL default '0000-00-00 00:00:00',
-          `q_paper` mediumint(8) unsigned NOT NULL default '0',
+          `q_paper` mediumint unsigned NOT NULL default '0',
           `q_id` int(4) NOT NULL default '0',
           `mark` float default NULL,
           `totalpos` tinyint(4) default NULL,
@@ -1568,9 +1568,9 @@ QUERY;
 
     $this->tableList['log_metadata'] = <<<QUERY
         CREATE TABLE `log_metadata` (
-          `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
-          `paperID` mediumint(8) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
+          `paperID` mediumint unsigned default NULL,
           `started` datetime default NULL,
           `ipaddress` char(15) default NULL,
           `student_grade` char(25) default NULL,
@@ -1585,7 +1585,7 @@ QUERY;
 
     $this->tableList['modules'] = <<<QUERY
         CREATE TABLE `modules` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int NOT NULL auto_increment,
           `moduleid` char(25) default NULL,
           `fullname` text,
           `active` tinyint(4) default NULL,
@@ -1593,7 +1593,7 @@ QUERY;
           `checklist` varchar(255) default NULL,
           `sms` varchar(255) default NULL,
           `selfenroll` tinyint(4) default NULL,
-          `schoolid` int(11) default NULL,
+          `schoolid` int default NULL,
           `neg_marking` tinyint(1) default NULL,
           `ebel_grid_template` int(11) default NULL,
           PRIMARY KEY  (`id`),
@@ -1635,7 +1635,7 @@ QUERY;
     $this->tableList['paper_metadata_security'] = <<<QUERY
         CREATE TABLE `paper_metadata_security` (
           `id` int(11) NOT NULL auto_increment,
-          `paperID` mediumint(10) unsigned default NULL,
+          `paperID` mediumint unsigned default NULL,
           `name` varchar(255) default NULL,
           `value` varchar(255) default NULL,
           PRIMARY KEY  (`id`)
@@ -1644,11 +1644,11 @@ QUERY;
 
     $this->tableList['paper_notes'] = <<<QUERY
         CREATE TABLE `paper_notes` (
-          `note_id` int(11) NOT NULL auto_increment,
+          `note_id` int NOT NULL auto_increment,
           `note` text,
           `note_date` datetime default NULL,
-          `paper_id` mediumint(10) unsigned default NULL,
-          `note_authorID` int(10) unsigned default NULL,
+          `paper_id` mediumint unsigned default NULL,
+          `note_authorID` int unsigned default NULL,
           `note_workstation` varchar(15) default NULL,
           PRIMARY KEY  (`note_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
@@ -1657,7 +1657,7 @@ QUERY;
     $this->tableList['papers'] = <<<QUERY
         CREATE TABLE `papers` (
           `p_id` int(4) NOT NULL auto_increment,
-          `paper` mediumint(10) unsigned NOT NULL default '0',
+          `paper` mediumint unsigned NOT NULL default '0',
           `question` int(4) unsigned NOT NULL default '0',
           `screen` tinyint(2) unsigned NOT NULL default '0',
           `display_pos` smallint(5) unsigned default NULL,
@@ -1671,8 +1671,8 @@ QUERY;
 
     $this->tableList['password_tokens'] = <<<QUERY
         CREATE TABLE `password_tokens` (
-          `id` int(11) NOT NULL auto_increment,
-          `user_id` int(11) NOT NULL,
+          `id` int NOT NULL auto_increment,
+          `user_id` int NOT NULL,
           `token` char(16) NOT NULL,
           `time` datetime NOT NULL,
           PRIMARY KEY  (`id`)
@@ -1698,7 +1698,7 @@ QUERY;
           `bidirectional` enum('0','1') NOT NULL default '0',
           `pass_mark` tinyint(4) default NULL,
           `distinction_mark` tinyint(4) default NULL,
-          `paper_ownerID` int(10) unsigned default NULL,
+          `paper_ownerID` int unsigned default NULL,
           `folder` varchar(255) default NULL,
           `labs` text,
           `rubric` text,
@@ -1735,9 +1735,9 @@ QUERY;
 
     $this->tableList['question_exclude'] = <<<QUERY
         CREATE TABLE `question_exclude` (
-          `id` int(11) NOT NULL auto_increment,
-          `q_paper` int(11) default NULL,
-          `q_id` int(11) default NULL,
+          `id` int NOT NULL auto_increment,
+          `q_paper` int default NULL,
+          `q_id` int default NULL,
           `parts` varchar(255) default NULL,
           `userID` int(10) unsigned default NULL,
           `date` datetime default NULL,
@@ -1757,7 +1757,7 @@ QUERY;
           `incorrect_fback` text,
           `display_method` text,
           `notes` text,
-          `ownerID` int(10) unsigned default NULL,
+          `ownerID` int unsigned default NULL,
           `q_media` text,
           `q_media_width` varchar(100) default NULL,
           `q_media_height` varchar(100) default NULL,
@@ -1781,8 +1781,8 @@ QUERY;
 
 $this->tableList['questions_metadata'] = <<<QUERY
         CREATE TABLE `questions_metadata` (
-          `id` int(11) NOT NULL auto_increment,
-          `questionID` int(11) default NULL,
+          `id` int NOT NULL auto_increment,
+          `questionID` int default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
           PRIMARY KEY  (`id`)
@@ -1791,8 +1791,8 @@ QUERY;
 
     $this->tableList['recent_papers'] = <<<QUERY
         CREATE TABLE `recent_papers` (
-          `userID` int(10) unsigned NOT NULL default '0',
-          `paperID` mediumint(9) unsigned NOT NULL default '0',
+          `userID` int unsigned NOT NULL default '0',
+          `paperID` mediumint unsigned NOT NULL default '0',
           `accessed` datetime default NULL,
           PRIMARY KEY  (`userID`,`paperID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
@@ -1800,7 +1800,7 @@ QUERY;
 
     $this->tableList['reference_material'] = <<<QUERY
         CREATE TABLE `reference_material` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `id` int NOT NULL AUTO_INCREMENT,
           `title` varchar(255) DEFAULT NULL,
           `content` text,
           `width` smallint(5) unsigned DEFAULT NULL,
@@ -1812,9 +1812,9 @@ QUERY;
 
     $this->tableList['reference_modules'] = <<<QUERY
         CREATE TABLE `reference_modules` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `refID` mediumint(8) unsigned DEFAULT NULL,
-          `moduleID` mediumint(8) unsigned DEFAULT NULL,
+          `id` int NOT NULL AUTO_INCREMENT,
+          `refID` mediumint unsigned DEFAULT NULL,
+          `moduleID` mediumint unsigned DEFAULT NULL,
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
@@ -1822,19 +1822,19 @@ QUERY;
     $this->tableList['reference_papers'] = <<<QUERY
         CREATE TABLE `reference_papers` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
-          `paperID` mediumint(9) unsigned DEFAULT NULL,
-          `refID` mediumint(9) DEFAULT NULL,
+          `paperID` mediumint unsigned DEFAULT NULL,
+          `refID` mediumint DEFAULT NULL,
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['relationships'] = <<<QUERY
         CREATE TABLE `relationships` (
-          `rel_id` int(11) NOT NULL auto_increment,
+          `rel_id` int NOT NULL auto_increment,
           `module_id` char(15) NOT NULL,
-          `paper_id` mediumint(8) unsigned NOT NULL,
+          `paper_id` mediumint unsigned NOT NULL,
           `question_id` int(11) NOT NULL,
-          `obj_id` int(11) NOT NULL,
+          `obj_id` int NOT NULL,
           `calendar_year` enum('2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL,
           `vle_api` varchar(255) DEFAULT NULL,
           PRIMARY KEY  (`rel_id`),
@@ -1846,18 +1846,18 @@ QUERY;
 
     $this->tableList['review_comments'] = <<<QUERY
         CREATE TABLE `review_comments` (
-          `id` int(11) NOT NULL auto_increment,
-          `q_paper` mediumint(8) unsigned default NULL,
-          `q_id` int(11) default NULL,
+          `id` int NOT NULL auto_increment,
+          `q_paper` mediumint unsigned default NULL,
+          `q_id` int default NULL,
           `category` tinyint(4) default NULL,
           `comment` text,
-          `reviewer` int(10) unsigned default NULL,
+          `reviewer` int unsigned default NULL,
           `reviewed` datetime default NULL,
           `action` enum('Not actioned','Read - disagree','Read - actioned') default NULL,
           `response` text,
           `review_type` enum('External','Internal') default NULL,
           `ipaddress` varchar(15) default NULL,
-          `duration` mediumint(9) default NULL,
+          `duration` mediumint default NULL,
           `screen` tinyint(4) default NULL,
           PRIMARY KEY  (`id`),
           KEY `idx_q_paper` (`q_paper`)
@@ -1866,9 +1866,9 @@ QUERY;
 
     $this->tableList['schools'] = <<<QUERY
         CREATE TABLE `schools` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int NOT NULL auto_increment,
           `school` char(255) default NULL,
-          `facultyID` int(11) default NULL,
+          `facultyID` int default NULL,
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
           KEY `idx_facultyID` (`facultyID`)
@@ -1877,11 +1877,11 @@ QUERY;
 
     $this->tableList['sct_reviews'] = <<<QUERY
         CREATE TABLE `sct_reviews` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int NOT NULL auto_increment,
           `reviewer_name` text,
           `reviewer_email` text,
-          `paperID` mediumint(9) unsigned default NULL,
-          `q_id` int(4) default NULL,
+          `paperID` mediumint unsigned default NULL,
+          `q_id` int default NULL,
           `answer` tinyint(4) default NULL,
           `reason` text,
           PRIMARY KEY  (`id`)
@@ -1890,7 +1890,7 @@ QUERY;
 
     $this->tableList['sessions'] = <<<QUERY
         CREATE TABLE `sessions` (
-          `sess_id` int(11) NOT NULL auto_increment,
+          `sess_id` int NOT NULL auto_increment,
           `identifier` bigint(20) unsigned NOT NULL,
           `moduleID` char(25) NOT NULL,
           `title` text NOT NULL,
@@ -1905,19 +1905,19 @@ QUERY;
     $this->tableList['sid'] = <<<QUERY
         CREATE TABLE `sid` (
           `student_id` char(15) default NULL,
-          `userID` int(10) unsigned NOT NULL default '0',
+          `userID` int unsigned NOT NULL default '0',
           PRIMARY KEY  (`userID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['sms_imports'] = <<<QUERY
         CREATE TABLE `sms_imports` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int NOT NULL auto_increment,
           `updated` date default NULL,
           `moduleid` char(25) default NULL,
-          `enrolements` int(11) default NULL,
+          `enrolements` int default NULL,
           `enrolement_details` text,
-          `deletions` int(11) default NULL,
+          `deletions` int default NULL,
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
           PRIMARY KEY  (`id`)
@@ -1926,11 +1926,11 @@ QUERY;
 
     $this->tableList['special_needs'] = <<<QUERY
         CREATE TABLE `special_needs` (
-          `special_id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `special_id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `background` varchar(20) default NULL,
           `foreground` varchar(20) default NULL,
-          `textsize` int(11) default NULL,
+          `textsize` int) default NULL,
           `extra_time` tinyint(4) default NULL,
           `marks_color` varchar(20) default NULL,
           `themecolor` varchar(20) default NULL,
@@ -1958,12 +1958,12 @@ QUERY;
 
     $this->tableList['standards_setting'] = <<<QUERY
         CREATE TABLE `standards_setting` (
-          `id` int(11) NOT NULL auto_increment,
-          `setterID` mediumint(8) unsigned default NULL,
-          `questionID` int(11) default NULL,
+          `id` int NOT NULL auto_increment,
+          `setterID` mediumint unsigned default NULL,
+          `questionID` int default NULL,
           `std_set` datetime default NULL,
           `rating` text,
-          `paperID` mediumint(9) unsigned NOT NULL default '0',
+          `paperID` mediumint unsigned NOT NULL default '0',
           `method` enum('Modified Angoff','Angoff (Yes/No)','Ebel') default NULL,
           `group_review` text,
           PRIMARY KEY  (`id`),
@@ -1975,7 +1975,7 @@ QUERY;
 
     $this->tableList['state'] = <<<QUERY
         CREATE TABLE `state` (
-          `userID` int(10) unsigned DEFAULT NULL,
+          `userID` int unsigned DEFAULT NULL,
           `state_name` varchar(255) DEFAULT NULL,
           `content` varchar(255) DEFAULT NULL,
           `page` varchar(255) DEFAULT NULL,
@@ -1985,7 +1985,7 @@ QUERY;
 
     $this->tableList['student_help'] = <<<QUERY
         CREATE TABLE `student_help` (
-          `id` smallint(6) NOT NULL auto_increment,
+          `id` smallint NOT NULL auto_increment,
           `title` text,
           `body` text,
           `body_plain` text,
@@ -2000,8 +2000,8 @@ QUERY;
 
     $this->tableList['student_modules'] = <<<QUERY
         CREATE TABLE `student_modules` (
-          `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `moduleid` char(25) NOT NULL,
           `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
           `attempt` tinyint(4) default NULL,
@@ -2012,21 +2012,21 @@ QUERY;
 
     $this->tableList['student_notes'] = <<<QUERY
         CREATE TABLE `student_notes` (
-          `note_id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
+          `note_id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
           `note` text,
           `note_date` datetime default NULL,
-          `paper_id` mediumint(8) unsigned NOT NULL default '0',
-          `note_authorID` int(10) unsigned default NULL,
+          `paper_id` mediumint unsigned NOT NULL default '0',
+          `note_authorID` int unsigned default NULL,
           PRIMARY KEY  (`note_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['sys_errors'] = <<<QUERY
         CREATE TABLE `sys_errors` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int NOT NULL auto_increment,
           `occurred` datetime default NULL,
-          `userID` int(11) default NULL,
+          `userID` int default NULL,
           `auth_user` varchar(45) default NULL,
           `errtype` enum('Notice','Warning','Fatal Error','Unknown') default NULL,
           `errstr` text,
@@ -2036,7 +2036,7 @@ QUERY;
           `php_self` text,
           `query_string` text,
           `request_method` enum('GET','HEAD','POST','PUT','DELETE') default NULL,
-          `paperID` mediumint(8) unsigned default NULL,
+          `paperID` mediumint unsigned default NULL,
           `post_data` text,
           PRIMARY KEY  (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2046,7 +2046,7 @@ QUERY;
         CREATE TABLE `teams` (
           `groupID` int(4) NOT NULL auto_increment,
           `name` char(255) default NULL,
-          `memberID` int(10) unsigned default NULL,
+          `memberID` int unsigned default NULL,
           `added` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
           `type` enum('System','Custom') default NULL,
           PRIMARY KEY  (`groupID`),
@@ -2056,7 +2056,7 @@ QUERY;
 
     $this->tableList['temp_users'] = <<<QUERY
         CREATE TABLE `temp_users` (
-          `id` int(11) NOT NULL auto_increment,
+          `id` int NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `surname` char(50) default NULL,
           `title` enum('Dr','Miss','Mr','Mrs','Ms','Professor') default NULL,
@@ -2069,11 +2069,11 @@ QUERY;
 
     $this->tableList['textbox_marking'] = <<<QUERY
         CREATE TABLE `textbox_marking` (
-          `id` int(11) NOT NULL auto_increment,
-          `paperID` int(11) default NULL,
-          `q_id` int(11) default NULL,
-          `answer_id` int(11) default NULL,
-          `markerID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `paperID` mediumint default NULL,
+          `q_id` int default NULL,
+          `answer_id` int default NULL,
+          `markerID` int unsigned default NULL,
           `mark` float default NULL,
           `comments` text,
           `date` datetime default NULL,
@@ -2088,9 +2088,9 @@ QUERY;
 
     $this->tableList['textbox_remark'] = <<<QUERY
         CREATE TABLE `textbox_remark` (
-          `id` int(11) NOT NULL auto_increment,
-          `paperID` int(11) default NULL,
-          `userID` int(10) unsigned default NULL,
+          `id` int NOT NULL auto_increment,
+          `paperID` mediumint default NULL,
+          `userID` int unsigned default NULL,
           PRIMARY KEY  (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2100,7 +2100,7 @@ QUERY;
           `id` int(4) NOT NULL auto_increment,
           `type` varchar(40) default NULL,
           `typeID` int(4) default NULL,
-          `editor` int(10) unsigned default NULL,
+          `editor` int unsigned default NULL,
           `old` text,
           `new` text,
           `changed` datetime default NULL,
@@ -2120,7 +2120,7 @@ QUERY;
           `username` char(15) default NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
-          `id` int(10) unsigned NOT NULL auto_increment,
+          `id` int unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female') default NULL,
           `last_login` datetime default NULL,
@@ -2135,9 +2135,9 @@ QUERY;
 
     $this->tableList['users_metadata'] = <<<QUERY
         CREATE TABLE `users_metadata` (
-          `id` int(11) NOT NULL auto_increment,
-          `userID` int(10) unsigned default NULL,
-          `moduleID` int(11) default NULL,
+          `id` int NOT NULL auto_increment,
+          `userID` int unsigned default NULL,
+          `moduleID` int default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
           `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
@@ -2149,7 +2149,7 @@ QUERY;
     $this->tableList['lti_user'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_user` (
           `lti_user_key` varchar(255) NOT NULL,
-          `lti_user_equ` int(11) NOT NULL,
+          `lti_user_equ` int NOT NULL,
           `updated_on` datetime,
           PRIMARY KEY (`lti_user_key`),
           KEY `lti_user_equ` (`lti_user_equ`)
@@ -2172,7 +2172,7 @@ QUERY;
 
     $this->tableList['lti_keys'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_keys` (
-          `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+          `id` mediumint NOT NULL AUTO_INCREMENT,
           `oauth_consumer_key` char(255 )NOT NULL,
           `secret` char(255)DEFAULT NULL,
           `name` char(255) DEFAULT NULL,
@@ -2197,8 +2197,8 @@ QUERY;
 
     $this->tableList['scheduling'] = <<<QUERY
           CREATE TABLE `scheduling` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `paperID` int(11) DEFAULT NULL,
+          `id` int NOT NULL AUTO_INCREMENT,
+          `paperID` mediumint DEFAULT NULL,
           `period` varchar(255) DEFAULT NULL,
           `barriers_needed` tinyint(4) DEFAULT NULL,
           `cohort_size` varchar(20) DEFAULT NULL,
@@ -2212,11 +2212,11 @@ QUERY;
 
     $this->tableList['performace_main']  = <<<QUERY
           CREATE TABLE `performance_main` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `q_id` int(10) unsigned DEFAULT NULL,
-          `paperID` int(10) unsigned DEFAULT NULL,
+          `id` int NOT NULL AUTO_INCREMENT,
+          `q_id` int unsigned DEFAULT NULL,
+          `paperID` mediumint unsigned DEFAULT NULL,
           `percentage` tinyint(4) DEFAULT NULL,
-          `cohort_size` int(10) unsigned DEFAULT NULL,
+          `cohort_size` int unsigned DEFAULT NULL,
           `taken` date DEFAULT NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `idx_q_id` (`q_id`)
@@ -2225,7 +2225,7 @@ QUERY;
 
     $this->tableList['performance_details'] = <<<QUERY
           CREATE TABLE `performance_details` (
-          `perform_id` int(11) DEFAULT NULL,
+          `perform_id` int DEFAULT NULL,
           `part_no` tinyint(4) DEFAULT NULL,
           `p` tinyint(4) DEFAULT NULL,
           `d` tinyint(4) DEFAULT NULL
