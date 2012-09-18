@@ -159,13 +159,27 @@ function display_this($data, $data_index) {
 }
 
 //----------------------------------------------------------------------------------------------
-//list of lang folders
-$lang_array=Array('pl');
-$path=getcwd();
-$path=preg_replace('/testing/', '', $path) . 'lang/en/';
 
 //exclusion list
-$excluded = explode("|",  ".|..|.ds_store|.svn");
+$excluded = explode("|",  ".|..|.ds_store|.svn|en");
+
+//path for lang list
+$path=preg_replace('/testing/', '', getcwd()) . 'lang/';
+
+//list of lang folders
+$lang_array=Array();
+
+$folder_handle = opendir($path);
+while(false !== ($filename = readdir($folder_handle))) {
+  if (!in_array(strtolower($filename), $excluded)) {
+    if (is_dir($path . $filename . "/")) {
+      array_push($lang_array, $filename);
+    }
+  }
+}
+
+//path for folders inside /en/
+$path=preg_replace('/testing/', '', getcwd()) . 'lang/en/';
 
 //searching for files
 $files = Array();
