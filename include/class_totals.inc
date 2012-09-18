@@ -715,29 +715,29 @@ function formatsec($seconds) {
 
 set_time_limit(0);
 
-$paperID = $_GET['paperID'];
-$startdate = $_GET['startdate'];
-$enddate = $_GET['enddate'];
+$paperID    = $_GET['paperID'];
+$startdate  = $_GET['startdate'];
+$enddate    = $_GET['enddate'];
 
-$row_count = 0;
-$old_q_id = -1;
-$old_screen;
-$old_userID = '';
-$old_title = '';
-$old_surname = '';
-$old_started = '';
+$row_count      = 0;
+$old_q_id       = -1;
+$old_screen     = 0;
+$old_userID     = '';
+$old_title      = '';
+$old_surname    = '';
+$old_started    = '';
 $old_display_started = '';
-$old_duration = 0;
-$old_ipaddress = '';
-$temp_mark = 0;
-$temp_time = '';
-$total_mark = 0;
+$old_duration   = 0;
+$old_ipaddress  = '';
+$temp_mark      = 0;
+$temp_time      = '';
+$total_mark     = 0;
 $total_adjusted_mark = 0;
-$total_time = 0;
-$completed_no = 0;
-$max_mark = 0;
-$min_mark = 9999;
-$user_duration = 0;
+$total_time     = 0;
+$completed_no   = 0;
+$max_mark       = 0;
+$min_mark       = 9999;
+$user_duration  = 0;
 
 $old_theme = '';
 $old_scenario = '';
@@ -964,18 +964,18 @@ $log_query->execute();
 $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt);
 //$log_query->store_result();
 
-$user_no = 0;
+$user_no    = 0;
 $display_no = 0;
-$tmp_mark = 0;
+$tmp_mark   = 0;
 $tmp_user_mark_array = array();
-$user_duration = 0;
+$user_duration    = 0;
 $marking_complete = 1;
-$old_screen = 0;
+$old_screen   = 0;
 $total_adjusted_mark = 0;
-$tmp_array = array();
+$tmp_array    = array();
 $user_results = array();
-$median = array();
-$sortby = 'name';
+$median       = array();
+$sortby   = 'name';
 $ordering = 'asc';
 if (isset($_GET['percent'])) {
   $percent = $_GET['percent'];
@@ -994,184 +994,182 @@ if (isset($_GET['absent'])) {
 }
     
 $warnings = array('deleted_qns' => array());
-//if ($log_query->num_rows > 0) {
-  while ($log_query->fetch() !== null) {
-    if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and $user_modules[$tmp_userID]['moduleid'] != $_GET['repmodule']) {
-	    continue; //this user is not on the module set in repmodule so dont put them in the array
-	  }
-    if ($old_screen != $screen or $old_userID != $tmp_userID or $old_started != $started) {
-      $user_duration += $old_duration;
-    }
-    if (($old_userID != $tmp_userID) or ($old_started != $started)) {
-      if ($old_userID != '') {
-        writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
-        $tmp_array['questions'] = 0;
-        $tmp_mark = 0;
-        $tmp_user_mark_array = array();
-        $user_duration = 0;
-        $marking_complete = 1;
-      }
-      $tmp_array = array();
-      $tmp_array['started'] = $started;
-      $tmp_array['username'] = $username;
-      $tmp_array['tmp_userID'] = $tmp_userID;
-      if (isset($user_modules[$tmp_userID]['moduleid'])) {
-        $tmp_array['module'] = $user_modules[$tmp_userID]['moduleid'];
-      } else {
-        $tmp_array['module'] = '';
-      }
-      $tmp_array['attempt'] = $attempt;
-      $tmp_array['grade'] = $grade;
-      $tmp_array['roles'] = $tmp_roles;
-      $tmp_array['year'] = $year;
-      $tmp_array['display_started'] = $display_started;
-      $tmp_array['title'] = $title;
-      $tmp_array['name'] = str_replace("'","",$surname) . ',' . $first_names;
-      $tmp_array['surname'] = $surname;
-      $tmp_array['initials'] = $initials;
-      $tmp_array['first_names'] = $first_names;
-      $tmp_array['student_id'] = $student_id;
-      $tmp_array['gender'] = $gender;
-      $tmp_array['ipaddress'] = $ipaddress;
-      if (isset($ipaddresses[$ipaddress])) {
-        $tmp_array['room'] = $ipaddresses[$ipaddress];
-      } else {
-        $tmp_array['room'] = '<span style="color:#808080">&lt;unknown&gt;</span>';
-      }
-      $tmp_array['xmean'] = 0;
-      $tmp_array['xmean_adjusted'] = 0;
-      $tmp_array['duration'] = $user_duration;
-      $tmp_array['paper_type'] = $paper_type;
-    }
-    getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
-    if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
-    if (isset($tmp_array['questions'])) {
-      $tmp_array['questions']++;
-    } else {
-      $tmp_array['questions'] = 1;
-    }
-    $old_userID = $tmp_userID;
-    $old_started = $started;
-    $old_duration = $duration;
-    $old_screen = $screen;
-    $old_status = $status;
+while ($log_query->fetch() !== null) {
+  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '' and $user_modules[$tmp_userID]['moduleid'] != $_GET['repmodule']) {
+    continue; //this user is not on the module set in repmodule so dont put them in the array
   }
-  
-  if(!empty($tmp_array)) {
-    if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or $user_modules[$tmp_userID]['moduleid'] == $_GET['repmodule']) {
-      $user_duration += $old_duration;
-      $log_query->free_result();
-      $log_query->close();
+  if ($old_screen != $screen or $old_userID != $tmp_userID or $old_started != $started) {
+    $user_duration += $old_duration;
+  }
+  if (($old_userID != $tmp_userID) or ($old_started != $started)) {
+    if ($old_userID != '') {
       writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
-    
-      if ($percent < 100) {
-        // Sort by mark order.
-        $sortby = 'mark';
-        $ordering = $direction;
-        $user_results = array_csort($user_results, $sortby, $ordering);
-        $cohort_size = round(($user_no/100)*$percent);
-        // Set visible/invisible flag where necessary.
-        for ($i=0; $i<$user_no; $i++) {
-          if ($i >= $cohort_size) {
-            $user_results[$i]['visible'] = 0;
-            $out_of_range++;
-          } else {
-            $total_mark += $user_results[$i]['mark'];
-            $total_adjusted_mark += ($user_results[$i]['mark'] - $total_random_mark);
-          }
-        }
-      } else {
-        if ($absent == 0) $cohort_size = $user_no;
-        for ($i=0; $i<$user_no; $i++) {
-          if (isset($user_results[$i]['mark'])) {
-            $total_mark += $user_results[$i]['mark'];
-            $total_adjusted_mark += ($user_results[$i]['mark'] - $total_random_mark);
-          }
-        }
-      }
-    
-      if ($absent == 1) {
-        // Add in students in cohort who haven't taken the exam.
-        $count_student_cohort = count($student_cohort);
-        for ($i=0; $i<$count_student_cohort; $i++) {
-          if ($student_cohort[$i]['taken'] == 0) {
-            $user_results[$user_no]['name'] = $student_cohort[$i]['name'];
-            $user_results[$user_no]['mark'] = 0;
-            $user_results[$user_no]['adj_percent'] = 0;
-            $user_results[$user_no]['percent'] = 0;
-            $user_results[$user_no]['started'] = '';
-            $user_results[$user_no]['username'] = $student_cohort[$i]['username'];
-            $user_results[$user_no]['tmp_userID'] = $student_cohort[$i]['tmp_userID'];
-            $user_results[$user_no]['student_grade'] = $student_cohort[$i]['grade'];
-            $user_results[$user_no]['module'] = $student_cohort[$i]['module'];
-            $user_results[$user_no]['year'] = '';
-            $user_results[$user_no]['display_started'] = '';
-            $user_results[$user_no]['title'] = $student_cohort[$i]['title'];
-            $user_results[$user_no]['surname'] = $student_cohort[$i]['surname'];
-            $user_results[$user_no]['initials'] = $student_cohort[$i]['initials'];
-            $user_results[$user_no]['first_names'] = $student_cohort[$i]['first_names'];
-            $user_results[$user_no]['student_id'] = $student_cohort[$i]['student_id'];
-            $user_results[$user_no]['gender'] = $student_cohort[$i]['gender'];
-            $user_results[$user_no]['ipaddress'] = '';
-            $user_results[$user_no]['duration'] = 0;
-            $user_results[$user_no]['questions'] = '';
-            $user_results[$user_no]['paper_type'] = '';
-            $user_results[$user_no]['room'] = '';
-            $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
-            $user_results[$user_no]['roles'] = 'Student';
-            $user_no++;
-          }
-        }
-      }
-      
-      /*
-      // Remove additional users from array who do not match passed metadata settings.
-      $meta_parts = explode('=',$_GET['meta1']);
-      for ($i=0; $i<$user_no; $i++) {
-        $type = $meta_parts[0];
-        
-        if (isset($user_results[$i]) and $user_results[$i]['metadata'][$type] != $meta_parts[1]) {
-          $total_mark -= $user_results[$i]['mark'];
-          $total_adjusted_mark -= ($user_results[$i]['mark']-$total_random_mark);
-          unset($user_results[$i]);
-        }
-      }
-      */
-      
-      // Sort the arrays
-      sort($median);
-      if (isset($_GET['sortby'])) {
-        $sortby = $_GET['sortby'];
-      } else {
-        $sortby = 'name';
-      }
-      if (isset($_GET['ordering'])) {
-        $ordering = $_GET['ordering'];
-      } else {
-        $ordering = 'asc';
-      }
-      if (isset($_GET['percent'])) {
-        $percent = $_GET['percent'];
-      } else {
-        $percent = 100;
-      }
-      if (isset($_GET['direction'])) {
-        $direction = $_GET['direction'];
-      } else {
-        $direction = 'asc';
-      }
-      if (isset($_GET['absent'])) {
-        $absent = $_GET['absent'];
-      } else {
-        $absent = 0;
-      }
-      
-      $tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
-      if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
-      $user_results = array_csort($user_results, $tmp_sort, $ordering);
+      $tmp_array['questions'] = 0;
+      $tmp_mark = 0;
+      $tmp_user_mark_array = array();
+      $user_duration = 0;
+      $marking_complete = 1;
     }
+    $tmp_array = array();
+    $tmp_array['started'] = $started;
+    $tmp_array['username'] = $username;
+    $tmp_array['tmp_userID'] = $tmp_userID;
+    if (isset($user_modules[$tmp_userID]['moduleid'])) {
+      $tmp_array['module'] = $user_modules[$tmp_userID]['moduleid'];
+    } else {
+      $tmp_array['module'] = '';
+    }
+    $tmp_array['attempt'] = $attempt;
+    $tmp_array['grade'] = $grade;
+    $tmp_array['roles'] = $tmp_roles;
+    $tmp_array['year'] = $year;
+    $tmp_array['display_started'] = $display_started;
+    $tmp_array['title'] = $title;
+    $tmp_array['name'] = str_replace("'","",$surname) . ',' . $first_names;
+    $tmp_array['surname'] = $surname;
+    $tmp_array['initials'] = $initials;
+    $tmp_array['first_names'] = $first_names;
+    $tmp_array['student_id'] = $student_id;
+    $tmp_array['gender'] = $gender;
+    $tmp_array['ipaddress'] = $ipaddress;
+    if (isset($ipaddresses[$ipaddress])) {
+      $tmp_array['room'] = $ipaddresses[$ipaddress];
+    } else {
+      $tmp_array['room'] = '<span style="color:#808080">&lt;unknown&gt;</span>';
+    }
+    $tmp_array['xmean'] = 0;
+    $tmp_array['xmean_adjusted'] = 0;
+    $tmp_array['duration'] = $user_duration;
+    $tmp_array['paper_type'] = $paper_type;
   }
-//} // ENDIF 
+  getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
+  if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
+  if (isset($tmp_array['questions'])) {
+    $tmp_array['questions']++;
+  } else {
+    $tmp_array['questions'] = 1;
+  }
+  $old_userID   = $tmp_userID;
+  $old_started  = $started;
+  $old_duration = $duration;
+  $old_screen   = $screen;
+  $old_status   = $status;
+}
+
+if (!empty($tmp_array)) {
+  if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or $user_modules[$tmp_userID]['moduleid'] == $_GET['repmodule']) {
+    $user_duration += $old_duration;
+    $log_query->free_result();
+    $log_query->close();
+    writeUserResults($tmp_array, $user_results, $user_no, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete, $metadata_array, $student_metadata_array);
+  
+    if ($percent < 100) {
+      // Sort by mark order.
+      $sortby = 'mark';
+      $ordering = $direction;
+      $user_results = array_csort($user_results, $sortby, $ordering);
+      $cohort_size = round(($user_no/100)*$percent);
+      // Set visible/invisible flag where necessary.
+      for ($i=0; $i<$user_no; $i++) {
+        if ($i >= $cohort_size) {
+          $user_results[$i]['visible'] = 0;
+          $out_of_range++;
+        } else {
+          $total_mark += $user_results[$i]['mark'];
+          $total_adjusted_mark += ($user_results[$i]['mark'] - $total_random_mark);
+        }
+      }
+    } else {
+      if ($absent == 0) $cohort_size = $user_no;
+      for ($i=0; $i<$user_no; $i++) {
+        if (isset($user_results[$i]['mark'])) {
+          $total_mark += $user_results[$i]['mark'];
+          $total_adjusted_mark += ($user_results[$i]['mark'] - $total_random_mark);
+        }
+      }
+    }
+  
+    if ($absent == 1) {
+      // Add in students in cohort who haven't taken the exam.
+      $count_student_cohort = count($student_cohort);
+      for ($i=0; $i<$count_student_cohort; $i++) {
+        if ($student_cohort[$i]['taken'] == 0) {
+          $user_results[$user_no]['name'] = $student_cohort[$i]['name'];
+          $user_results[$user_no]['mark'] = 0;
+          $user_results[$user_no]['adj_percent'] = 0;
+          $user_results[$user_no]['percent'] = 0;
+          $user_results[$user_no]['started'] = '';
+          $user_results[$user_no]['username'] = $student_cohort[$i]['username'];
+          $user_results[$user_no]['tmp_userID'] = $student_cohort[$i]['tmp_userID'];
+          $user_results[$user_no]['student_grade'] = $student_cohort[$i]['grade'];
+          $user_results[$user_no]['module'] = $student_cohort[$i]['module'];
+          $user_results[$user_no]['year'] = '';
+          $user_results[$user_no]['display_started'] = '';
+          $user_results[$user_no]['title'] = $student_cohort[$i]['title'];
+          $user_results[$user_no]['surname'] = $student_cohort[$i]['surname'];
+          $user_results[$user_no]['initials'] = $student_cohort[$i]['initials'];
+          $user_results[$user_no]['first_names'] = $student_cohort[$i]['first_names'];
+          $user_results[$user_no]['student_id'] = $student_cohort[$i]['student_id'];
+          $user_results[$user_no]['gender'] = $student_cohort[$i]['gender'];
+          $user_results[$user_no]['ipaddress'] = '';
+          $user_results[$user_no]['duration'] = 0;
+          $user_results[$user_no]['questions'] = '';
+          $user_results[$user_no]['paper_type'] = '';
+          $user_results[$user_no]['room'] = '';
+          $user_results[$user_no]['visible'] = 1;    // Default to visible unless switched off below.
+          $user_results[$user_no]['roles'] = 'Student';
+          $user_no++;
+        }
+      }
+    }
+    
+    /*
+    // Remove additional users from array who do not match passed metadata settings.
+    $meta_parts = explode('=',$_GET['meta1']);
+    for ($i=0; $i<$user_no; $i++) {
+      $type = $meta_parts[0];
+      
+      if (isset($user_results[$i]) and $user_results[$i]['metadata'][$type] != $meta_parts[1]) {
+        $total_mark -= $user_results[$i]['mark'];
+        $total_adjusted_mark -= ($user_results[$i]['mark']-$total_random_mark);
+        unset($user_results[$i]);
+      }
+    }
+    */
+    
+    // Sort the arrays
+    sort($median);
+    if (isset($_GET['sortby'])) {
+      $sortby = $_GET['sortby'];
+    } else {
+      $sortby = 'name';
+    }
+    if (isset($_GET['ordering'])) {
+      $ordering = $_GET['ordering'];
+    } else {
+      $ordering = 'asc';
+    }
+    if (isset($_GET['percent'])) {
+      $percent = $_GET['percent'];
+    } else {
+      $percent = 100;
+    }
+    if (isset($_GET['direction'])) {
+      $direction = $_GET['direction'];
+    } else {
+      $direction = 'asc';
+    }
+    if (isset($_GET['absent'])) {
+      $absent = $_GET['absent'];
+    } else {
+      $absent = 0;
+    }
+    
+    $tmp_sort = ($sortby != 'result' and $sortby != 'percent') ? $sortby : 'adj_percent';
+    if ($tmp_sort == 'adj_percent') $tmp_sort = 'mark';
+    $user_results = array_csort($user_results, $tmp_sort, $ordering);
+  }
+}
 
 if (substr($marking,0,1) == '2') {
   get_ss_pass($ss_pass, $ss_hon);
@@ -1192,18 +1190,19 @@ function isEven($intNumber) {
 }
 
 // Generate summary statistics.
-$failures = 0;
-$passes = 0;
-$honours = 0;
-$mark_total = 0;
-$percent_total = 0;
-$max_mark = 0;
-$min_mark = 9999;
-$max_percent = 0;    // adjusted percent.
-$min_percent = 100;  // adjusted percent.
-$median_mark_array = array();
+$failures       = 0;
+$passes         = 0;
+$honours        = 0;
+$mark_total     = 0;
+$percent_total  = 0;
+$max_mark       = 0;
+$min_mark       = 9999;
+$max_percent    = 0;    // adjusted percent.
+$min_percent    = 100;  // adjusted percent.
+$median_mark_array    = array();
 $median_percent_array = array();
-$marks_data = array();
+$marks_data           = array();
+
 for ($i=0; $i<$user_no; $i++) {
   if (isset($user_results[$i]['adj_percent']) and $user_results[$i]['questions'] >= $question_no and $user_results[$i]['visible'] == 1) {
     $completed_no++;
@@ -1240,7 +1239,7 @@ if ($completed_no > 1) {
   $stddev_mark = sqrt($xmean_total/($completed_no-1));
   $stddev_percent = sqrt($xmean_percent_total / ($completed_no - 1));
 } else {
-  $stddev_mark = 0;
+  $stddev_mark    = 0;
   $stddev_percent = 0;
 }
 
@@ -1257,15 +1256,15 @@ if ($completed_no > 0) {
     $median_percent = $median_percent_array[($completed_no/2)-1];
   }
 } else {
-  $mean_mark = 0;
-  $mean_percent = 0;
-  $median_mark = 0;
+  $mean_mark      = 0;
+  $mean_percent   = 0;
+  $median_mark    = 0;
   $median_percent = 0;
 }
 
-$top_10 = mypercentile($marks_data, 0.1);
-$top_15 = mypercentile($marks_data, 0.15);
-$top_20 = mypercentile($marks_data, 0.2);
-$top_25 = mypercentile($marks_data, 0.25);
-$bottom_10 = mypercentile($marks_data, 0.90);
+$top_10     = mypercentile($marks_data, 0.1);
+$top_15     = mypercentile($marks_data, 0.15);
+$top_20     = mypercentile($marks_data, 0.2);
+$top_25     = mypercentile($marks_data, 0.25);
+$bottom_10  = mypercentile($marks_data, 0.90);
 ?>
