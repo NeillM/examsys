@@ -505,7 +505,7 @@ class IE_Local_Save extends IE_Main {
 
     $this->q_row['scenario'] = $question->scenario;
     $this->q_row['correct_fback'] = $question->feedback;
-    $this->q_row['score_method'] = 'Marks per Option';
+    $this->q_row['score_method'] = 'Mark per Option';
 
     $lt = $line_thicknesses[(string) $question->line_thickness];
     if ($lt == "") $lt = 1;
@@ -545,11 +545,12 @@ class IE_Local_Save extends IE_Main {
 
   function SaveLikert($question) {
     $this->q_row['scenario'] = $question->scenario ;
-    $this->q_row['score_method'] = implode("|", $question->scale);
+    $this->q_row['score_method'] = 'Mark per Option';
+    $this->q_row['display_method'] = implode("|", $question->scale);
     if ($question->hasna) {
-      $this->q_row['score_method'] .= "|true";
+      $this->q_row['display_method'] .= "|true";
     } else {
-      $this->q_row['score_method'] .= "|false";
+      $this->q_row['display_method'] .= "|false";
     }
   }
 

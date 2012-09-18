@@ -288,6 +288,10 @@ function MakeValidHTML($in,$trim=0) {
   $doc->loadHTML($in);
 
   $in = $doc->saveHTML();
+  
+  // Required specifically for Likert Scales but mostly harmless
+  $in = str_replace('<br>', '<br />', $in);
+  
   /*echo "Int:<br>";
    echo "<pre>";
    echo htmlentities($in);

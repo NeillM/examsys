@@ -569,7 +569,7 @@ class IE_Local_Load extends IE_Main {
     $store->scenario = $q_row['scenario'];
 
     // options for likert in score method, along with has n/a
-    $sm = $q_row['score_method'];
+    $sm = $q_row['display_method'];
 
     // extract the last part of the score method and if true has n/a
     $store->hasna = strtolower(substr($sm, strrpos($sm, "|") + 1)) == "true" ? 1 : 0;

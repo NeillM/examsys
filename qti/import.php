@@ -89,7 +89,7 @@ move_uploaded_file($_FILES["file"]["tmp_name"], $file);
 
 // set up qti load classes
 $import = new IE_QTI_Load();
-$load_params->sourcefile = $filLoe;
+$load_params->sourcefile = $file;
 $load_params->original_filename = $_FILES["file"]["name"];
 
 // setup touchstone save classes
