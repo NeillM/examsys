@@ -54,7 +54,6 @@
   .heading {background-color:#EBEADB; border-left:solid white 1px; border-right:solid #D8D2BD 1px; border-top:solid white 1px; border-bottom: solid #D8D2BD 1px; color:black; font-family:Arial,sans-serif}
   textarea, input[type=text], select {font-family:Arail,sans-serif; font-size:90%; border: 1px solid #7F9DB9}
   </style>
-
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_email.js"></script>
   <script type="text/javascript">
@@ -77,14 +76,14 @@
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
 <tr>
-<td>&nbsp;&nbsp;CC</td><td><input type="text" size="70" name="ccaddress" value="<?php echo $ccaddress; ?>" /></td>
+<td>&nbsp;&nbsp;<?php echo $string['cc'];?></td><td><input type="text" size="70" name="ccaddress" value="<?php echo $ccaddress; ?>" /></td>
 <td style="text-align:right" rowspan="3" valign="top"><img src="../artwork/stamp.png" width="63" height="67" alt="stamp" /></td>
 </tr>
 <tr>
-<td>&nbsp;&nbsp;BCC</td><td><input type="text" size="70" name="bccaddress" value="<?php echo $bccaddress; ?>" /></td>
+<td>&nbsp;&nbsp;<?php echo $string['bcc'];?></td><td><input type="text" size="70" name="bccaddress" value="<?php echo $bccaddress; ?>" /></td>
 </tr>
 <tr>
-<td>&nbsp;&nbsp;Subject</td><td><input type="text" size="70" name="subject" value="<?php echo $subject; ?>" /></td>
+<td>&nbsp;&nbsp;<?php echo $string['subject'];?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject; ?>" /></td>
 </tr>
 <tr>
 <td colspan="3"><p><?php echo wysiwyg_editor('oEdit1','template',$message,748,350); ?></p></td>
@@ -92,7 +91,7 @@
 <tr><td colspan="3">&nbsp;</td></tr>
 <tr>
 <td colspan="3" style="text-align: center">
-<input type="submit" style="width:120px" name="submit" value="Email Class" />&nbsp;<input type="button" name="cancel" style="width: 120px" value="Cancel" onclick="window.close();" />
+<input type="submit" style="width:120px" name="submit" value="<?php echo $string['email_class'];?>" />&nbsp;<input type="button" name="cancel" style="width: 120px" value="<?php echo $string['cancel'];?>" onclick="window.close();" />
 <?php
   $result = $mysqli->prepare("SELECT email FROM users WHERE id=?");
   $result->bind_param('i',$userID);

@@ -35,6 +35,7 @@ $string['experimantalquestions'] = 'Experimental Questions';
 $string['warnings'] = 'Warnings';
 $string['nolongerappear'] = 'Answers found for questions that no longer appear on the paper (IDs:';
 $string['emailssent'] = 'Emails sent.';
+$string['emailclassmarks'] = 'Email Class Marks';
 $string['title'] = 'Title';
 $string['surname'] = 'Surname';
 $string['firstnames'] = 'First Names';

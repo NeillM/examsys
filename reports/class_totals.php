@@ -923,7 +923,7 @@ if ($language != 'en') {
       if ($paper_type < 2) {
         echo "<tr><td>&nbsp;</td><td colspan=\"8\">\n";
         echo "<form name=\"theform\" method=\"post\">\n";
-        echo "<input type=\"button\" value=\"Email Class Marks\" onclick=\"popupEmailTemplate();\" />\n";
+        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" />\n";
         echo '<input type="hidden" name="emailclass" value="" />';
         echo '<input type="hidden" name="from" value="" />';
         echo '<input type="hidden" name="emailtemplate" value="" />';
