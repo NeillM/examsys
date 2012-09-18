@@ -47,13 +47,16 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Email Template<?php echo " $cfg_install_type"; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {font-family:Arial,sans-serif; font-size:90%; background-color:#DFECFF; color:black; margin-top:2px; margin-left:0px; margin-right: 0px}
-  .heading {background-color:#EBEADB; border-left:solid white 1px; border-right:solid #D8D2BD 1px; border-top:solid white 1px; border-bottom: solid #D8D2BD 1px; color:black; font-family:Arial,sans-serif}
-  textarea, input[type=text], select {font-family:Arail,sans-serif; font-size:90%; border: 1px solid #7F9DB9}
+    body {font-size:90%; background-color:#F0F0F0; margin-top:2px}
+    .heading {background-color:#EBEADB; border-left:solid white 1px; border-right:solid #D8D2BD 1px; border-top:solid white 1px; border-bottom: solid #D8D2BD 1px}
   </style>
+  
+  <?php echo $cfg_js_root ?>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_email.js"></script>
   <script type="text/javascript">
@@ -86,7 +89,7 @@
 <td>&nbsp;&nbsp;<?php echo $string['subject'];?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject; ?>" /></td>
 </tr>
 <tr>
-<td colspan="3"><p><?php echo wysiwyg_editor('oEdit1','template',$message,748,350); ?></p></td>
+<td colspan="3"><p><?php echo wysiwyg_editor('oEdit1', 'template', $message, 782, 350); ?></p></td>
 </tr>
 <tr><td colspan="3">&nbsp;</td></tr>
 <tr>
