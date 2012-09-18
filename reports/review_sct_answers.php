@@ -22,91 +22,91 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/media.inc';
-  require '../include/errors.inc';
+require '../include/staff_auth.inc';
+require '../include/media.inc';
+require '../include/errors.inc';
 
-  function saveResponseData($optID, $experts, $max_experts) {
-    global $mysqli;
-    
-    $marks = ($max_experts > 0) ? $experts / $max_experts : 0;
-    $stmt = $mysqli->prepare("UPDATE options SET correct=?, marks_correct=? WHERE id_num=?");
-    $stmt->bind_param('sdi', $experts, $marks, $optID);
-    $stmt->execute();
-    $stmt->close();
+function saveResponseData($optID, $experts, $max_experts) {
+  global $mysqli;
+  
+  $marks = ($max_experts > 0) ? $experts / $max_experts : 0;
+  $stmt = $mysqli->prepare("UPDATE options SET correct=?, marks_correct=? WHERE id_num=?");
+  $stmt->bind_param('sdi', $experts, $marks, $optID);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function display_question($question, &$question_no, $reviews, &$string) {
+  $question_no++;
+
+  if ($question['scenario'] != '') {
+    echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">{$string['clinicalvignette']}</td></tr>\n";
+    echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
+    if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+    echo $question['scenario'] . "<br />\n<br />";
+    $li_set = 1;
+  }
+  if ($question['q_media'] != '') {
+    if ($li_set == 0) {
+      echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
+    }
+    echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
+    $li_set = 1;
   }
   
-  function display_question($question, &$question_no, $reviews, &$string) {
-    $question_no++;
-
-    if ($question['scenario'] != '') {
-      echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">{$string['clinicalvignette']}</td></tr>\n";
-      echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
-      if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
-      echo $question['scenario'] . "<br />\n<br />";
-      $li_set = 1;
-    }
-    if ($question['q_media'] != '') {
-      if ($li_set == 0) {
-        echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
-      }
-      echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
-      $li_set = 1;
-    }
+  $sct_parts = explode('~',$question['leadin']);
+  echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
+  $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
+  echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">{$string['newinformation']}</td></tr>\n";
+  echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
+  echo "</table>\n";
     
-    $sct_parts = explode('~',$question['leadin']);
-    echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-    $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
-    echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">{$string['newinformation']}</td></tr>\n";
-    echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
-    echo "</table>\n";
-      
-    echo '<p><strong>';
-    echo $string['thenthis'] . ' ';
-    echo mb_strtolower($sct_titles[$question['display_method']], 'UTF-8');
-    echo ' ' . $string['becomes'] . ':';
-    echo '</strong></p>';
-    echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-    
-    $no_experts = 0;
-    $max_experts = 0;
-    for ($i=1; $i<=count($question['options']); $i++) {
-      if (isset($reviews[$question['q_id']][$i])) {
-        $no_experts += $reviews[$question['q_id']][$i];
-        if($reviews[$question['q_id']][$i] > $max_experts) $max_experts = $reviews[$question['q_id']][$i];
-      }
+  echo '<p><strong>';
+  echo $string['thenthis'] . ' ';
+  echo mb_strtolower($sct_titles[$question['display_method']], 'UTF-8');
+  echo ' ' . $string['becomes'] . ':';
+  echo '</strong></p>';
+  echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
+  
+  $no_experts = 0;
+  $max_experts = 0;
+  for ($i=1; $i<=count($question['options']); $i++) {
+    if (isset($reviews[$question['q_id']][$i])) {
+      $no_experts += $reviews[$question['q_id']][$i];
+      if($reviews[$question['q_id']][$i] > $max_experts) $max_experts = $reviews[$question['q_id']][$i];
     }
-    
-    $part_id = 0;
-    foreach ($question['options'] as $optionID => $option_text) {
-      $part_id++;
-      echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td style=\"color:#808080\">";
-      if (isset($reviews[$question['q_id']][$part_id])) {
-        $review_no = $reviews[$question['q_id']][$part_id];
-      } else {
-        $review_no = 0;
-      }
-      echo $review_no . ' ' . $string['outof'] . ' ' . $no_experts;
-      echo "</td><td>$option_text</td></tr>\n";
-      if (isset($_POST['submit'])) {
-        saveResponseData($optionID, $review_no, $max_experts);
-      }
-    }
-    echo "</table>\n</blockquote>\n";
-    
-    echo "<span style=\"color:#808080\">{$string['briefreasonwhy']}</span><br /><ul>";
-    if (isset($reviews[$question['q_id']]) and count($reviews[$question['q_id']]['reason']) > 0) {
-      foreach($reviews[$question['q_id']]['reason'] as $comment) {
-        if (trim($comment) != '') {
-          echo "<li>$comment</li>\n";
-        }
-      }
-    } else {
-        echo "<li>{$string['nocomments']}</li>\n";
-    }
-    echo "</ul></td></tr>\n";
-    echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
   }
+  
+  $part_id = 0;
+  foreach ($question['options'] as $optionID => $option_text) {
+    $part_id++;
+    echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$part_id\" /></td><td style=\"color:#808080\">";
+    if (isset($reviews[$question['q_id']][$part_id])) {
+      $review_no = $reviews[$question['q_id']][$part_id];
+    } else {
+      $review_no = 0;
+    }
+    echo $review_no . ' ' . $string['outof'] . ' ' . $no_experts;
+    echo "</td><td>$option_text</td></tr>\n";
+    if (isset($_POST['submit'])) {
+      saveResponseData($optionID, $review_no, $max_experts);
+    }
+  }
+  echo "</table>\n</blockquote>\n";
+  
+  echo "<span style=\"color:#808080\">{$string['briefreasonwhy']}</span><br /><ul>";
+  if (isset($reviews[$question['q_id']]) and count($reviews[$question['q_id']]['reason']) > 0) {
+    foreach($reviews[$question['q_id']]['reason'] as $comment) {
+      if (trim($comment) != '') {
+        echo "<li>$comment</li>\n";
+      }
+    }
+  } else {
+      echo "<li>{$string['nocomments']}</li>\n";
+  }
+  echo "</ul></td></tr>\n";
+  echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -119,6 +119,7 @@
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
+    body {font-size:90%}
     li {margin-left:15px;margin-right:15px;font-size:100%}
     table {font-size:100%}
     pre {font-family:Arial,sans-serif; font-size:100%}

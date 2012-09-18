@@ -24,15 +24,9 @@
 * @package
 */
 
-  require_once 'staff_student_auth.inc';
-  
-  if (strpos($userroles,'Admin') === false AND strpos($userroles,'Invigilator') === false) {
-    Header("WWW-authenticate: basic realm=\"Rogo\"");
-    Header("HTTP/1.0 401 Unauthorised");
-    echo "<html>\n<head>\n<title>Access Denied</title>\n<style>\nbody {font-size:90%; font-family:Arial,sans-serif; background-color:#FCFCFC; color:#575757}\nh1 {font-weight:normal; color:#BF0000; font-size:140%}\n</style>\n</head>\n<body>\n";
-    echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/access_denied.png\" width=\"48\" height=\"48\" /></div>\n";
-    echo "<h1 style=\"margin-left:60px\">Access Denied</h1>\n";
-    echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"margin-left:60px; color:#C0C0C0; background-color:#C0C0C0\" />\n<p style=\"margin-left:60px\">You are attempting to access a <strong>Invigilator Only</strong> page.</p>\n</body>\n</html>";
-    exit;
-  } 
+require_once 'staff_student_auth.inc';
+
+if (strpos($userroles,'Admin') === false AND strpos($userroles,'Invigilator') === false) {
+  access_denied('You are attempting to access a <strong>Invigilator Only</strong> page.', false, true);
+} 
 ?>

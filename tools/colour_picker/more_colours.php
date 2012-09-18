@@ -24,6 +24,8 @@
 * @package
 */
 
+require '../../include/staff_auth.inc';
+
 function rgb_hex($input) {
   $input = str_replace('rgb(','',$input);
   $input = str_replace(')','',$input);
@@ -44,105 +46,109 @@ function rgb_hex($input) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title>Colours</title>
-<style type="text/css">
-body {font-family:Arial,sans-serif; background-color:#F0F1F2; color:black; font-size:100%; margin:2px}
-input {font-family:Arial,sans-serif}
-</style>
-<script language="JavaScript">
-  var currentColor;
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title>Colours</title>
+  
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <style type="text/css">
+    body {background-color:#F0F1F2; margin:6px}
+  </style>
+  <script language="JavaScript">
+    var currentColor;
 
-  // function to generate the hex code
-  function d2h(d) {
-    var h = hD.substr(d&15,1);
-    while(d>15) {
-      d>>=4;h=hD.substr(d&15,1)+h;
+    // function to generate the hex code
+    function d2h(d) {
+      var h = hD.substr(d&15,1);
+      while(d>15) {
+        d>>=4;h=hD.substr(d&15,1)+h;
+      }
+      return h;
     }
-    return h;
-  }
 
-  function toHexCode(dec) {
-    // array to store the hex code for each value passed 
-    // to the getHex function
-    var hexCode= new Array();
+    function toHexCode(dec) {
+      // array to store the hex code for each value passed 
+      // to the getHex function
+      var hexCode= new Array();
 
-    // variable to define the dynamic array index
-    // for hexCode array
-    var i=0;
+      // variable to define the dynamic array index
+      // for hexCode array
+      var i=0;
 
-    // while loop to run until dec variable
-    // is greater than 15
-    while (dec > 15) {
+      // while loop to run until dec variable
+      // is greater than 15
+      while (dec > 15) {
+        hexCode[i] = getHex(dec);
+
+        // evaluate dec each time to
+        // pass the while loop condition
+        dec = Math.floor(dec / 16);
+        i+=1;
+      }
+      // store the last value 
+      // skiped due to loop condition
+      // for dec < 15
       hexCode[i] = getHex(dec);
 
-      // evaluate dec each time to
-      // pass the while loop condition
-      dec = Math.floor(dec / 16);
-      i+=1;
-    }
-    // store the last value 
-    // skiped due to loop condition
-    // for dec < 15
-    hexCode[i] = getHex(dec);
+      // variable to store the hex Codes
+      var decToHex = "";
 
-    // variable to store the hex Codes
-    var decToHex = "";
+      // reverse loop on hexCode to
+      // generate the right order of hex codes
+      for (i=hexCode.length-1; i>=0; i--) {
+        decToHex += hexCode[i]; 
+      }
+    
+      if (decToHex.length < 2) {
+        decToHex = '0' + decToHex;
+      }
 
-    // reverse loop on hexCode to
-    // generate the right order of hex codes
-    for (i=hexCode.length-1; i>=0; i--) {
-      decToHex += hexCode[i]; 
+      return decToHex;
+    } 
+   
+    function updateHex() {
+      hexval = toHexCode(document.getElementById('r').value) + toHexCode(document.getElementById('g').value) + toHexCode(document.getElementById('b').value) + '';
+      document.getElementById('hex').value = hexval;
+      document.getElementById('swatch').style.backgroundColor = '#' + hexval;
+      currentColor = '#' + hexval;
     }
-	
-    if (decToHex.length < 2) {
-      decToHex = '0' + decToHex;
+   
+    function updateSwatch(hexval) {
+      document.getElementById('r').value = parseInt(hexval.substring(0,2),16)
+      document.getElementById('g').value = parseInt(hexval.substring(2,4),16)
+      document.getElementById('b').value = parseInt(hexval.substring(4,6),16)
+      document.getElementById('hex').value = hexval;
+      document.getElementById('swatch').style.backgroundColor = '#' + hexval;
+      currentColor = '#' + hexval;
     }
-
-    return decToHex;
-  } 
- 
-  function updateHex() {
-    hexval = toHexCode(document.getElementById('r').value) + toHexCode(document.getElementById('g').value) + toHexCode(document.getElementById('b').value) + '';
-    document.getElementById('hex').value = hexval;
-    document.getElementById('swatch').style.backgroundColor = '#' + hexval;
-    currentColor = '#' + hexval;
-  }
- 
-  function updateSwatch(hexval) {
-    document.getElementById('r').value = parseInt(hexval.substring(0,2),16)
-    document.getElementById('g').value = parseInt(hexval.substring(2,4),16)
-    document.getElementById('b').value = parseInt(hexval.substring(4,6),16)
-    document.getElementById('hex').value = hexval;
-    document.getElementById('swatch').style.backgroundColor = '#' + hexval;
-    currentColor = '#' + hexval;
-  }
- 
-  function manualSwatch() {
-    hexval = document.getElementById('hex').value;
-    document.getElementById('r').value = parseInt(hexval.substring(0,2),16);
-    if (hexval.length > 2) {
-      document.getElementById('g').value = parseInt(hexval.substring(2,4),16);
+   
+    function manualSwatch() {
+      hexval = document.getElementById('hex').value;
+      document.getElementById('r').value = parseInt(hexval.substring(0,2),16);
+      if (hexval.length > 2) {
+        document.getElementById('g').value = parseInt(hexval.substring(2,4),16);
+      }
+      if (hexval.length > 4) {
+        document.getElementById('b').value = parseInt(hexval.substring(4,6),16);
+      }
+      if (hexval.length == 6) {
+        document.getElementById('swatch').style.backgroundColor = '#' + document.getElementById('hex').value;
+        currentColor = '#' + document.getElementById('hex').value;
+      }
     }
-    if (hexval.length > 4) {
-      document.getElementById('b').value = parseInt(hexval.substring(4,6),16);
+   
+    function returnColour() {
+      window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor = currentColor;
+      window.opener.document.getElementById('<?php echo $_GET['swatch']; ?>').value = currentColor;
+      window.close();
     }
-    if (hexval.length == 6) {
-      document.getElementById('swatch').style.backgroundColor = '#' + document.getElementById('hex').value;
-      currentColor = '#' + document.getElementById('hex').value;
+    
+    function initialSet() {
+      document.getElementById('current').style.backgroundColor = window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor;
+      document.getElementById('swatch').style.backgroundColor = window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor;
     }
-  }
- 
-  function returnColour() {
-    window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor = currentColor;
-    window.opener.document.getElementById('<?php echo $_GET['swatch']; ?>').value = currentColor;
-    window.close();
-  }
-  
-  function initialSet() {
-    document.getElementById('current').style.backgroundColor = window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor;
-    document.getElementById('swatch').style.backgroundColor = window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor;
-  }
-</script>
+  </script>
 </head>
 
 <body onload="initialSet(); window.opener.document.getElementById('picker').style.display = 'none';">

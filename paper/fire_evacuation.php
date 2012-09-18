@@ -83,11 +83,15 @@ if (!isset($_GET['dont_record']) or $_GET['dont_record'] != true) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-  <head>
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-    <title></title>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+
+  <title>Rogo</title>
+
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
 </head>
-<body style="font-family:Arial,sans-serif; color:black">
+<body>
   <form method="post" name="questions" action="start.php?id=<?php echo $_GET['id'] ?>&dont_record=true">
 
   <p style="text-align:center; font-size:200%; color:#008000"><?php echo $string['top_msg']; ?></p>
