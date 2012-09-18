@@ -284,12 +284,13 @@ Class InstallUtils {
 
     //Write out the config file
     self::writeConfigFile();
+    if (!is_array(self::$warnings)) {
+      echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
+      echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
+      echo "<p style=\"margin-left:10px\"><input type=\"button\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../staff/index.php'\" /></p>\n";
+    }
 
-    echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
-    echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
-    echo "<p style=\"margin-left:10px\"><input type=\"button\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../staff/index.php'\" /></p>\n";
 
-    self::displayWarnings();
   }
 
 

@@ -64,5 +64,6 @@ if (isset($_POST['install'])) {
 } else {
   InstallUtils::displayForm();
 }
+
 InstallUtils::displayfooter();
 ?>
