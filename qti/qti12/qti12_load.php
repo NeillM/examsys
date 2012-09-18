@@ -270,7 +270,7 @@ $numb=0;
 
     $oiii=print_r($question,TRUE);
     $t=9;
-    file_put_contents($cfg_tmpdir . 'out3.txt',$oiii);
+//    file_put_contents($cfg_tmpdir . 'out3.txt',$oiii);
     $t=8;
 
     if (!empty($q_imp->material->media)) {
