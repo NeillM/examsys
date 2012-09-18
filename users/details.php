@@ -48,10 +48,10 @@ if (isset($_GET['tab'])) {
   $tab = 'log';
 }
   
-function drawTabs($current_tab, $col_span, $right_text, $user_roles) {
+function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color) {
   global $string;
 
-  $html = "<tr><td colspan=\"" . ($col_span - 1) . "\" style=\"background-color:#F1F5FB\">";
+  $html = "<tr><td colspan=\"" . ($col_span - 1) . "\" style=\"background-color:$bg_color\">";
   $html .= '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr>';
   
   $tab_array = array('Log');
@@ -78,7 +78,7 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles) {
       $html .= "<td style=\"padding-top:0px; cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:100%; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
     }
   }
-  $html .= "</tr></table></td><td align=\"right\" style=\"background-color:#F1F5FB\">$right_text</td></tr>\n";
+  $html .= "</tr></table></td><td align=\"right\" style=\"background-color:$bg_color\">$right_text</td></tr>\n";
   return $html;
 }
 
@@ -291,11 +291,7 @@ if (isset($_POST['update']) and $demo == false) {
 <?php
   require '../tools/colour_picker/colour_picker.inc';
   require '../include/user_search_options.inc';
-?>
-<div id="content" class="content">
-<table cellpadding="0" cellspacing="0" border="0" style="background-color:#F1F5FB; width:100%">
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $_GET['userID']; ?>" method="post">
-<?php
+  
   $needs_result = $mysqli->prepare("SELECT special_id FROM special_needs WHERE userID=?");
   $needs_result->bind_param('i', $_GET['userID']);
   $needs_result->execute();
@@ -303,10 +299,10 @@ if (isset($_POST['update']) and $demo == false) {
   if ($needs_result->num_rows > 0) $special_needs = true;
   $needs_result->close();
 
-  $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id FROM users LEFT JOIN sid ON users.id=sid.userID WHERE users.id=?");
+  $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id, user_deleted FROM users LEFT JOIN sid ON users.id=sid.userID WHERE users.id=?");
   $user_result->bind_param('i', $_GET['userID']);
   $user_result->execute();
-  $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id);
+  $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
   $user_result->fetch();
   $user_result->close();
   
@@ -330,6 +326,17 @@ if (isset($_POST['update']) and $demo == false) {
   $user_query->bind_result($description);
   $user_query->fetch();
   $user_query->close();
+  
+  if ($user_deleted == '') {
+    $bg_color = '#F1F5FB';
+  } else {
+    $bg_color = '#FFC0C0';
+  }
+?>
+<div id="content" class="content">
+<table cellpadding="0" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%">
+<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $_GET['userID']; ?>" method="post">
+<?php
   
   if (strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
     if (strpos($tmp_roles,'Student') !== false or stripos($tmp_roles,'graduate') !== false or strpos($tmp_roles,'left') !== false or strpos($tmp_roles,'suspended') !== false) {
@@ -359,7 +366,7 @@ if (isset($_POST['update']) and $demo == false) {
     }
     echo "</select>&nbsp;<input type=\"text\" name=\"first_names\" size=\"20\" value=\"$tmp_first_names\" />&nbsp;<input type=\"text\" size=\"15\" name=\"surname\" value=\"$tmp_surname\" /></td><td style=\"text-align:right\"><input type=\"submit\" name=\"update\" value=\"" . $string['update'] . "\" /></td></td></tr>\n";
     echo "<tr><td>&nbsp;" . $string['email'] . "</td><td><input type=\"text\" size=\"35\" name=\"email\" value=\"$email\" /></td>\n";
-    if (stripos($tmp_roles,'Student') !== false) {
+    if (stripos($tmp_roles,'Student') !== false or stripos($tmp_roles,'Graduate') !== false) {
       if ($student_id == '') $student_id = $string['unknown'];
       echo "<td>&nbsp;" . $string['studentid'] . "</td><td colspan=\"2\"><input type=\"text\" size=\"15\" name=\"sid\" value=\"$student_id\" /></td></tr>\n";
     } else {
@@ -535,7 +542,7 @@ if (isset($_POST['update']) and $demo == false) {
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Log_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo drawTabs('Log', 6, '', $tmp_roles);
+  echo drawTabs('Log', 6, '', $tmp_roles, $bg_color);
   
   $sortby = 'q_paper';
   if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
@@ -709,7 +716,7 @@ if (isset($_POST['update']) and $demo == false) {
   $results->fetch();
   $results->close();
   
-  echo drawTabs('Modules', 4, '', $tmp_roles);
+  echo drawTabs('Modules', 4, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\" style=\"width:20px\">&nbsp;</td><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['name'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td></tr>\n";
   $old_year = '';
   $html = '';
@@ -755,7 +762,7 @@ if (isset($_POST['update']) and $demo == false) {
   }
   echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=admin\" method=\"post\">";
   
-  echo drawTabs('Admin', 1, '', $tmp_roles);
+  echo drawTabs('Admin', 1, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
   
@@ -804,7 +811,7 @@ if (isset($_POST['update']) and $demo == false) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes_tab\" style=\"width:100%; display:none\">\n";
   }
   $link_html = '<img src="../artwork/shortcut.png" onclick="newStudentNote()" width="10" height="10" border="0" />&nbsp;<a href="" onclick="newStudentNote(); return false;" class="access">' . $string['createnote'] . '</a>&nbsp;';
-  echo drawTabs('Notes', 4, $link_html, $tmp_roles);
+  echo drawTabs('Notes', 4, $link_html, $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;" . $string['date'] . "</td><td class=\"coltitle\">" . $string['paper'] . "</td><td class=\"coltitle\">" . $string['note'] . "</td><td class=\"coltitle\">" . $string['author'] . "</td></tr>\n";
   
   $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \"$cfg_short_date\"), paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=?");
@@ -826,7 +833,7 @@ if (isset($_POST['update']) and $demo == false) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility_tab\" style=\"width:100%; text-align:left; display:none\">\n";
   }
   echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=accessibility\" method=\"post\">";
-  echo drawTabs('Accessibility', 1, '', $tmp_roles);
+  echo drawTabs('Accessibility', 1, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"text-align:left\">";
   
@@ -992,7 +999,7 @@ if (isset($_POST['update']) and $demo == false) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata_tab\" style=\"width:100%; display:none\">\n";
   }
   echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
-  echo drawTabs('Metadata', 5, '', $tmp_roles);
+  echo drawTabs('Metadata', 5, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td><td class=\"coltitle\">" . $string['value'] . "</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
   $stmt = $mysqli->prepare("SELECT users_metadata.id, modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND userID=?");
   $stmt->bind_param('i', $_GET['userID']);
@@ -1031,7 +1038,7 @@ if (isset($_POST['update']) and $demo == false) {
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo drawTabs('Teams', 4, '', $tmp_roles);
+  echo drawTabs('Teams', 4, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td></tr>\n";
   if (strpos($userroles,'Admin') !== false) {
     echo "<tr><td colspan=\"4\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;" . $string['editteams'] . "</a></td></tr>\n";
