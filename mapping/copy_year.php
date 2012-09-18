@@ -23,12 +23,12 @@
 */
 
 require_once '../include/staff_auth.inc';
-require_once'../include/errors.inc';
+require_once '../include/errors.inc';
 require_once '../include/mapping.inc';
 
 $errors = array();
 
-if(empty($_POST['source_y']) || empty($_POST['dest_y']) || empty($_POST['moduleID'])) {
+if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['moduleID'])) {
 	$errors[] = "Undefined source or destination year";
 } elseif ($_POST['source_y'] == $_POST['dest_y']) {
 	$errors[] = "Source and destination years cannot be the same";
@@ -42,6 +42,7 @@ if(empty($_POST['source_y']) || empty($_POST['dest_y']) || empty($_POST['moduleI
 		$errors[] = "An error occured when copying the objectives. Please try again.";
 	}
 }
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -51,8 +52,8 @@ if(empty($_POST['source_y']) || empty($_POST['dest_y']) || empty($_POST['moduleI
   
   <title>Rogō: Copy Objectives<?php echo ' ' . $cfg_install_type; ?></title>
   
-  <link rel="stylesheet" type="text/css" href="../body.css" />
-  <link rel="stylesheet" type="text/css" href="../submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <?php
 if (count($errors) == 0) {

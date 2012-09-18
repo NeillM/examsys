@@ -4287,7 +4287,7 @@ if (!isset($_POST['update'])) {
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
 
-  //2012-09-17 cczsa1 update to make database consistant with new install
+  // 17/09/2012 cczsa1 update to make database consistant with new install
   $findsql="SELECT column_type from information_schema.COLUMNS where TABLE_NAME='student_modules'  and TABLE_SCHEMA='". $cfg_db_database . "' and column_type=\"enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15')\"";
   $result = $mysqli->prepare($findsql);
   $result->execute();

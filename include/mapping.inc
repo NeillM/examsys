@@ -529,28 +529,28 @@ function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, 
   return $objsByMapping;
 }
 
-function copyObjectives($objectives, $module, $dest_session, $rogodb) {
+function copyObjectives($objectives, $module, $dest_session, $db) {
 	// Get highest identifier - can't rely on time as we may loop in < 1 second
-	$result = $rogodb->prepare("SELECT MAX(identifier) AS largest FROM sessions WHERE moduleID = ?");
+	$result = $db->prepare("SELECT MAX(identifier) AS largest FROM sessions WHERE moduleID = ?");
 	$result->bind_param('s', $module);
 	$result->execute();
 	$result->bind_result($largest);
 	$i = 0;
-	while ($row = $result->fetch()) {
+	while ($result->fetch()) {
 		$identifier = $largest + 1;
 	}
-	if($identifier < 10) {
+	if ($identifier < 10) {
 		$identifier = intval(time());
 	}
 	$result->close();
     
 	// Loop through the sessions for the source year
-	foreach($objectives[$module] as $session) {
+	foreach ($objectives[$module] as $session) {
 		$occurrence_parts = explode('/', $session['occurrance']);
 		$occurrence_new = date('Y-m-d H:i:s', mktime(9, 0, 0, $occurrence_parts[1], $occurrence_parts[0], $occurrence_parts[2] + 1));
 		
 		// Save it
-    $stmt = $rogodb->prepare("INSERT INTO sessions(identifier, moduleID, title, source_url, calendar_year, occurrence) VALUES (?,?,?,?,?,?)");
+    $stmt = $db->prepare("INSERT INTO sessions(identifier, moduleID, title, source_url, calendar_year, occurrence) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param('ssssss', $identifier, $module, $session['title'], $session['source_url'], $dest_session, $occurrence_new);
 		$stmt->execute();
 		$err = $stmt->error;
@@ -561,10 +561,10 @@ function copyObjectives($objectives, $module, $dest_session, $rogodb) {
     }
     
     // Get starting point for objective ID
-    $result = $rogodb->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
+    $result = $db->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
     $result->execute();
     $result->bind_result($largest);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       $obj_id = $largest + 1;
     }
     if ($obj_id < 10) {
@@ -573,19 +573,21 @@ function copyObjectives($objectives, $module, $dest_session, $rogodb) {
     $result->close();
     
 		// Loop through the objectives for the original session
-		foreach ($session['objectives'] as $objective) {
-			// Save them against the new session identifier
-			$stmt = $rogodb->prepare("INSERT INTO objectives(obj_id, objective, moduleID, identifier, calendar_year, sequence) VALUES (?,?,?,?,?,?)");
-			$stmt->bind_param('issssi', $obj_id, $objective['content'], $module, $identifier, $dest_session, $objective['sequence']);
-			$stmt->execute();
-			$err = $stmt->error;
-			$stmt->close();
+    if (isset($session['objectives'])) {
+      foreach ($session['objectives'] as $objective) {
+        // Save them against the new session identifier
+        $stmt = $db->prepare("INSERT INTO objectives(obj_id, objective, moduleID, identifier, calendar_year, sequence) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('issssi', $obj_id, $objective['content'], $module, $identifier, $dest_session, $objective['sequence']);
+        $stmt->execute();
+        $err = $stmt->error;
+        $stmt->close();
 
-			if (!empty($err)) {
-	    	throw new Exception($err);
-	    }
-			
-			$obj_id++;
+        if (!empty($err)) {
+          throw new Exception($err);
+        }
+        
+        $obj_id++;
+      }
     }
     
 		$identifier++;
