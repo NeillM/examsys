@@ -92,6 +92,10 @@ class IE_Local_Save extends IE_Main {
     // Get the actual ID of the module
     $this->db->SetTable('modules');
     $this->db->AddField('id');
+    // Temp fix - if more than one team just get the first. Avoids error but doesn't fix the problem completely
+    if (strpos($q_group, ',') !== false) {
+      $q_group = strstr($q_group, ',', true);
+    }
     $this->db->AddWhere('moduleid', $q_group, 's');
     $module_row = $this->db->GetSingleRow();
 
