@@ -108,7 +108,11 @@ if (isset($_GET['submit'])) {
   $user_no = 0;
   if ($roles_sql != '') {
     if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
-      $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users LEFT JOIN teams ON users.id=teams.memberID AND teams.name LIKE '" . $_GET['team'] . "' WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+      if ($_GET['team'] != '') {
+        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users, teams WHERE users.id=teams.memberID AND teams.name = '" . $_GET['team'] . "' AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+      } else {
+        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+      }
     } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
       $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
     } else {
@@ -204,12 +208,12 @@ if (isset($_GET['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-  a {color:black}
-  .coltitle {cursor:hand; background-color:#F1F5FB; color:black}
-  #usertable td {padding-left:6px}
-  .fn {color:#A5A5A5}
-  .uline:hover {background-color:#eee}
-  .uline.highlight {background-color:#B3C8E8}
+    a {color:black}
+    .coltitle {cursor:hand; background-color:#F1F5FB; color:black}
+    #usertable td {padding-left:6px}
+    .fn {color:#A5A5A5}
+    .uline:hover {background-color:#eee}
+    .uline.highlight {background-color:#B3C8E8}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>

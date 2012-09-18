@@ -221,6 +221,13 @@ if (isset($_POST['update']) and $demo == false) {
     .sch_check {text-align:right; width:40px; padding-right:6px}
     a.paper {color:black}
     a.paper:hover {color:white; background-color:#000080}
+    .photo_blur {
+      -webkit-filter: blur(15px);
+      -moz-filter: blur(15px);
+      -ms-filter: blur(15px);
+      -o-filter: blur(15px);
+      filter: blur(15px);
+    }
   </style>
 
   <script language="javascript">
@@ -346,7 +353,7 @@ if (isset($_POST['update']) and $demo == false) {
         if ($demo == true) {
           echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         } else {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" class=\"photo_blur\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         }
       } else {
         echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
