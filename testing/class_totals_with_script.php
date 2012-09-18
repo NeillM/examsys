@@ -165,6 +165,7 @@ foreach ($papers as $paper) {
   ob_flush();
   flush();  
 
+  $i = 0;
   foreach ($marks_set as $mark) {
     $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&previous=" . str_replace(' ', '%20', $mark['started']) . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
     $output = getData($url);
@@ -177,9 +178,13 @@ foreach ($papers as $paper) {
       $result->fetch();
 
       echo "Problem with " . $mark['userID'] . " $tmp_surname, $tmp_first_names ($tmp_username) - $script_mark / " . $mark['mark'] . "<br />";
-    } else {
-      echo "&nbsp;&nbsp;&nbsp;\n";
     }
+
+    if ($i % 10 == 0) {
+      echo '.';
+    }
+    $i++;
+    
     ob_flush();
     flush();  
   }
