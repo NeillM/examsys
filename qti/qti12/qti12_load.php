@@ -41,44 +41,48 @@ class IE_qti12_Load extends IE_Main {
   }
 
   function BuildMatchArrays() {
+    global $string;
+
     // some values for abstaining and not applicable
-    $this->abstainvalues = explode("|", strtolower("N/A|Abstain|Not Applicable"));
+    $this->abstainvalues = explode("|", strtolower($string['na_abstain']));
 
     // values for likert scales
 
     // from touchstone
-    ExplodeToArray($this->likert_values, "Fail|Borderline|Pass");
-    ExplodeToArray($this->likert_values, "Disagree|Neutral|Agree");
+    ExplodeToArray($this->likert_values, $string['failpass3']);
+    ExplodeToArray($this->likert_values, $string['disagre3']);
 
-    ExplodeToArray($this->likert_values, "Strongly<br />Disagree|Disagree|Agree|Strongly<br />Agree");
+    ExplodeToArray($this->likert_values, $string['disagre4']);
 
-    ExplodeToArray($this->likert_values, "Strongly<br />Disagree|Disagree|Neutral|Agree|Strongly<br />Agree");
-    ExplodeToArray($this->likert_values, "Strongly<br />Disagree|Disagree|Uncertain|Agree|Strongly<br />Agree");
-    ExplodeToArray($this->likert_values, "Strongly<br />Disagree|Disagree|Neither<br />Disagree<br />nor Agree|Agree|Strongly<br />Agree");
-    ExplodeToArray($this->likert_values, "Strongly<br />Disagree|Disagree|Neutral|Agree|Strongly<br />Agree");
+    ExplodeToArray($this->likert_values, $string['disagre4']);
+    ExplodeToArray($this->likert_values, $string['disagre5a']);
+    ExplodeToArray($this->likert_values, $string['disagre5b']);
+    ExplodeToArray($this->likert_values, $string['disagre5c']);
 
     // from qmp
-    ExplodeToArray($this->likert_values, "Agree|Neither Agree nor Disagree|Disagree");
-    ExplodeToArray($this->likert_values, "I like this|Neutral|I don't like this");
-    ExplodeToArray($this->likert_values, "Like me|Neutral|Not like me");
-    ExplodeToArray($this->likert_values, "Satisfied|Neutral|Dissatisfied");
+    ExplodeToArray($this->likert_values, $string['qmpagree3']);
+    ExplodeToArray($this->likert_values, $string['qmplike3']);
+    ExplodeToArray($this->likert_values, $string['qmplikeme3']);
+    ExplodeToArray($this->likert_values, $string['qmpsatisfied3']);
 
-    ExplodeToArray($this->likert_values, "Strongly Agree|Agree|Disagree|Stongly Disagree");
-    ExplodeToArray($this->likert_values, "I like this a lot|I like this|I don't like this|I don't like this a lot");
-    ExplodeToArray($this->likert_values, "Very Like me|Like me|Not like me|Very Not like me");
-    ExplodeToArray($this->likert_values, "Very Satisfied|Satisfied|Dissatisfied|Very Dissatisfied");
+    ExplodeToArray($this->likert_values, $string['qmpagree4']);
+    ExplodeToArray($this->likert_values, $string['qmplike4']);
+    ExplodeToArray($this->likert_values, $string['qmplikeme4']);
+    ExplodeToArray($this->likert_values, $string['qmpsatisfied4']);
 
-    ExplodeToArray($this->likert_values, "Strongly Agree|Agree|Neither Agree nor Disagree|Disagree|Stongly Disagree");
-    ExplodeToArray($this->likert_values, "I like this a lot|I like this|Neutral|I don't like this|I don't like this a lot");
-    ExplodeToArray($this->likert_values, "Very Like me|Like me|Neutral|Not like me|Very Not like me");
-    ExplodeToArray($this->likert_values, "Very Satisfied|Satisfied|Neutral|Dissatisfied|Very Dissatisfied");
+    ExplodeToArray($this->likert_values, $string['qmpagree5']);
+    ExplodeToArray($this->likert_values, $string['qmplike5']);
+    ExplodeToArray($this->likert_values, $string['qmplikeme5']);
+    ExplodeToArray($this->likert_values, $string['qmpsatisfied5']);
 
     // values for dichotomous
-    ExplodeToArray($this->dich_values, "True|False");
-    ExplodeToArray($this->dich_values, "Yes|No");
+    ExplodeToArray($this->dich_values, $string['qmptf']);
+    ExplodeToArray($this->dich_values, $string['qmpyn']);
   }
 
   function Load($params) {
+    global $string;
+
     $file = $params->sourcefile;
     $this->params = $params;
 
@@ -88,7 +92,7 @@ class IE_qti12_Load extends IE_Main {
     $xml = @simplexml_load_string($xmlStr);
 
     if (!$xml) {
-      $this->AddError("$file is an invalid XML file");
+      $this->AddError(sprintf($string['invalidxml'], $file));
       return;
     }
 $rt="";
@@ -149,9 +153,11 @@ $numb=0;
   }
 
   function LoadSection($xml) {
+    global $string;
+
     $screen = new ST_Paper_Screen();
 
-    echo "Loading section<br>";
+    echo "{$string['loadingsection']}<br>";
     foreach ($this->result->papers as & $p) {
       $paper = $p;
       break;
@@ -169,8 +175,7 @@ $numb=0;
   }
 
   function LoadItem($item) {
-    global $q_warnings;
-    global $q_errors;
+    global $q_warnings, $q_errors, $string;
 
     $q_warnings = array();
     $q_errors = array();
@@ -224,7 +229,7 @@ $numb=0;
     elseif ($type == "error") $question = $this->LoadError($q_imp);
     else {
       $question = $this->LoadUnknown($q_imp);
-      $this->AddError("Question type $type not yet supported", $q_imp->load_id);
+      $this->AddError(sprintf($string['qunsupported'], $type), $q_imp->load_id);
     }
     // DEBUGDEBUG add if WCTJUMB SENTANCE DETECT AND OVERWRITE $question->$question
 
@@ -322,6 +327,8 @@ $numb=0;
   }
 
   function DetermineQType(&$question) {
+    global $string;
+
     // no input stuff so this is an info question
     if (empty($question->counts['response'])) return "info";
 
@@ -337,7 +344,7 @@ $numb=0;
     }
 
     if (isset($question->counts['grp']) && $question->counts['grp'] > 0) {
-      $this->AddError("Response groups are not currently supported.", $question->load_id);
+      $this->AddError($string['noresponsegroups'], $question->load_id);
       return "error";
     }
 
@@ -351,17 +358,17 @@ $numb=0;
 
 
     if (isset($question->counts['extension']) && $question->counts['extension'] > 0) {
-      $this->AddError("Render extensions are not currently supported.", $question->load_id);
+      $this->AddError($string['norenderextensions'], $question->load_id);
       return "error";
     }
 
-    if ($question->qmd_itemtype == "Multiple Response - 1 mark per True Option with Other") return "mrq";
+    if ($question->qmd_itemtype == 'Multiple Response - 1 mark per True Option with Other') return "mrq";
 
     // do we have differing labels for each part of the question?? if so only thing we can possibly import as is 'blank'
     if (!$question->labelsets) {
       // if we dont have single cardinality, then we cant import a blank with dropdowns
       if ($question->cardinality != 'Single') {
-        $this->AddError("All sets of labels are different and we have multiple cardinality, question is not supported in touchstone.", $question->load_id);
+        $this->AddError($string['nomultiplecard'], $question->load_id);
         return 'error';
       }
 
@@ -431,7 +438,7 @@ $numb=0;
       // should be checking to see if each of the sets of answers are the same
       if (!$question->labelsets) {
         // label sets are not the same	
-        $this->AddError("Label sets for all question stems arent the same, prehaps this should be imprted as a blank with dropdowns??", $question->load_id);
+        $this->AddError($string['labelsetserror'], $question->load_id);
         return "blank";
       }
 
@@ -464,7 +471,7 @@ $numb=0;
 
     // multiple numeric, not supported
     if ($question->counts['num'] > 1) {
-      $this->AddError("Questions with multiple numeric imputs cannot be imported", $question->load_id);
+      $this->AddError($string['nomultiinputs'], $question->load_id);
       return "error";
     }
 
@@ -604,8 +611,9 @@ $numb=0;
   // SPECIFIC QUESTION TYPE LOADS //
   //////////////////////////////////
 
-  // DONE
   function LoadBlank(&$source) {
+    global $string;
+
     // easy to do, no feedback in touchstone so goes the way of the dinosar
     $dest = new ST_Question_Blank();
 
@@ -628,7 +636,7 @@ $numb=0;
     } else if ($source->counts['fib'] > 0) {
       $this->BlankString($dest, $source);
     } else {
-      $this->AddError("Blank type question with not dropdowns or text entrys", $source->load_id);
+      $this->AddError($string['blanktypeerror'], $source->load_id);
     }
     
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
@@ -647,7 +655,9 @@ $numb=0;
   }
 
   function BlankString(&$dest, &$source) {
-    echo "Loading blank string<br>";
+    global $string;
+
+    echo "{$string['loadingblank']}<br>";
     $qtext = array();
     $optionid = 1;
     foreach ($source->presentation->children() as $child) {
@@ -659,6 +669,8 @@ $numb=0;
   }
 
   function ProcessBlankChild(&$dest, &$source, &$qtext, &$optionid, &$child, $inflow) {
+    global $string;
+
     $name = $child->getName();
     echo "Name : $name<br>";
     if ($name == "flow") {
@@ -698,7 +710,7 @@ $numb=0;
           if (!$inflow) $qtext_i[] = "<br />";
         } else if ($name == "render_fib") {
           if (count($chunk->children()) == 0) {
-            echo "Adding sub item - render_fib with no childred<br>";
+            echo $string['addingsub'] . '<br>';
             // no children in the fib, just add as a blank
             $blankid = "%".sprintf("BLANK_%d", $optionid)."%";
 
@@ -780,7 +792,9 @@ $numb=0;
     }
   }
   function BlankDropdowns(&$dest, &$source) {
-    echo "Loading blank dropdown<br>";
+    global $string;
+
+    echo "{$string['loadingblankdrop']}<br>";
     $qtext = array();
     $optionid = 1;
     foreach ($source->presentation->children() as $child) {
@@ -902,9 +916,10 @@ $numb=0;
     return $dest;
   }
 
-  // DONE
   function LoadDichotomous(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    global $string;
+
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Dichotomous();
 
     $dest->load_id = $source->load_id;
@@ -992,9 +1007,9 @@ $numb=0;
     $conds = $this->GetRespConditions($source, 1);
     foreach ($conds as $condition) {
       if (count($condition->conditions) == 0) {
-        $this->AddWarning("Positive outcome with no condition, unable to work out correct answer", $source->load_id);
+        $this->AddWarning($string['posnocond'], $source->load_id);
       } else {
-        if (count($condition->conditions) > 1) $this->AddWarning("Multiple positive values on outcome, correct answer may be wrong", $source->load_id);
+        if (count($condition->conditions) > 1) $this->AddWarning($string['multiplepos'], $source->load_id);
 
         $correctvalue = $condition->conditions[0]->value;
         $id = $condition->conditions[0]->respident;
@@ -1232,8 +1247,9 @@ $numb=0;
     return $dest;
   }
 
-  // NEW	
   function LoadLabelling(&$source) {
+    global $string;
+
     // easy to do, no feedback in touchstone so goes the way of the dinosar
     $dest = new ST_Question_Labelling();
 
@@ -1336,15 +1352,16 @@ $numb=0;
     $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
 
     if ($label_match == 0) {
-      $this->AddError("Unable to find label matching information", $source->load_id);
+      $this->AddError($string['nomatchinglabel'], $source->load_id);
       $dest->type = "error";
     }
 
     return $dest;
   }
 
-  // DONE
   function LoadLikert(&$source) {
+    global $string;
+
     // easy to do, no feedback in touchstone so goes the way of the dinosar
     $dest = new ST_Question_Likert();
 
@@ -1358,7 +1375,7 @@ $numb=0;
     $responses_html = $this->GetResponseLabelList($source, false);
     $responses_clean = $this->GetResponseLabelList($source);
 
-    if (count($source->itemfeedback) > 0) $this->AddWarning("Touchstone doesnt store any feedback for likert questions so it has been lost", $source->load_id);
+    if (count($source->itemfeedback) > 0) $this->AddWarning($string['nolikertfeedback'], $source->load_id);
 
     // do we have a N/A value?
     foreach ($responses_clean as $key => $isna) {
@@ -1440,8 +1457,9 @@ $numb=0;
     return $dest;
   }
 
-  // DONE
   function LoadMCQ(&$source) {
+    global $string;
+
     $dest = new ST_Question_Mcq();
 
     $dest->load_id = $source->load_id;
@@ -1483,9 +1501,9 @@ $numb=0;
     list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
     
     if ($positive == 0) {
-      $this->AddWarning("Unable to find a correct answer", $source->load_id);
+      $this->AddWarning($string['nocorrect'], $source->load_id);
     } else if ($positive > 1) {
-      $this->AddWarning("Found multiple conditions that are scoring the question, ignoring all but the 1st", $source->load_id);
+      $this->AddWarning($string['multipleconds'], $source->load_id);
     }
 
     // get back the single positive response for the question
@@ -1559,6 +1577,8 @@ $numb=0;
 
 
   function LoadTrueFalse(&$source) {
+    global $string;
+
     $dest = new ST_Question_Mcq();
 
     $dest->load_id = $source->load_id;
@@ -1580,9 +1600,9 @@ $numb=0;
     $conds = $this->GetRespConditions($source, 1);
     foreach ($conds as $condition) {
       if (count($condition->conditions) == 0) {
-        $this->AddWarning("Positive outcome with no condition, unable to work out correct answer", $source->load_id);
+        $this->AddWarning($string['posnocond'], $source->load_id);
       } else {
-        if (count($condition->conditions) > 1) $this->AddWarning("Multiple positive values on outcome, correct answer may be wrong", $source->load_id);
+        if (count($condition->conditions) > 1) $this->AddWarning($string['multiplepos'], $source->load_id);
 
         $correctvalue = $condition->conditions[0]->value;
         $id = $condition->conditions[0]->respident;
@@ -1614,9 +1634,9 @@ $dest->answer=strtolower($answer);
     list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
 
     if ($positive == 0) {
-      $this->AddWarning("Unable to find a correct answer", $source->load_id);
+      $this->AddWarning($string['nocorrect'], $source->load_id);
     } else if ($positive > 1) {
-      $this->AddWarning("Found multiple conditions that are scoring the question, ignoring all but the 1st", $source->load_id);
+      $this->AddWarning($string['multipleconds'], $source->load_id);
     }
 
     // get back the single positive response for the question
@@ -1692,20 +1712,9 @@ $dest->answer=strtolower($answer);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  // DONE
   function LoadMRQ(&$source) {
+    global $string;
+
     // count up response conditions    
     list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
@@ -1728,7 +1737,7 @@ $dest->answer=strtolower($answer);
     $choiceno = 1;
     foreach ($source->responses as $response) {
       if (!$response->ismulti) {
-        $this->AddWarning("Trying to load MRQ without ismulti set! No idea whats going on here", $source->load_id);
+        $this->AddWarning($string['mrqnoismulti'], $source->load_id);
       }
 
       foreach ($response->labels as $label) {
@@ -1792,20 +1801,21 @@ $dest->answer=strtolower($answer);
     return $dest;
   }
 
-  // DONE
   function MRQ_GetCorrect_allnegative(&$dest, &$source) {
-    echo "Some negatives - 1 mark per true option with negative<br>";
+    global $string;
+
+    echo "{$string['someneg']}<br>";
     $dest->score_method = 'AllNegative';
 
     $conds = $this->GetRespConditions($source, 1);
 
     foreach ($conds as & $cond) {
       if (count($cond->conditions) > 1) {
-        $this->AddWarning("Multiple positive outcomes, with multiple options on an outcome, correct answer may be wrong", $source->load_id);
+        $this->AddWarning($string['multiposmultiopt'], $source->load_id);
       }
 
       if (count($cond->conditions) == 0) {
-        $this->AddWarning("Positive outcome with no condition, ignoring", $source->load_id);
+        $this->AddWarning($string['posnocond'], $source->load_id);
         continue;
       }
 
@@ -1827,7 +1837,9 @@ $dest->answer=strtolower($answer);
 
   // DONE
   function MRQ_GetCorrect_selectedpositive(&$dest, &$source) {
-    echo "No negatives and multiple positives, 1 mark per true option<br>";
+    global $string;
+
+    echo  "{$string['noneg']}<br>";
     $dest->score_method = 'SelectedPositive';
 
     $conds = $this->GetRespConditions($source, 1);
@@ -1836,11 +1848,11 @@ $dest->answer=strtolower($answer);
 
     foreach ($conds as & $cond) {
       if (count($cond->conditions) > 1) {
-        $this->AddWarning("Multiple positive outcomes, with multiple options on an outcome, correct answer may be wrong", $source->load_id);
+        $this->AddWarning($string['multiposmultiopt'], $source->load_id);
       }
 
       if (count($cond->conditions) == 0) {
-        $this->AddWarning("Positive outcome with no condition, ignoring", $source->load_id);
+        $this->AddWarning($string['posnocond'], $source->load_id);
         continue;
       }
 
@@ -1958,6 +1970,8 @@ $dest->answer=strtolower($answer);
 
   // DONE	
   function LoadTextbox(&$source) {
+    global $string;
+
     // easy to do, no feedback in touchstone so goes the way of the dinosar
     $dest = new ST_Question_Textbox();
 
@@ -1977,7 +1991,7 @@ $dest->answer=strtolower($answer);
     // get any positive marks that are terms to match
     $conditions = $this->GetRespConditions($source, 1);
 
-    if (count($conditions) > 0) $this->AddWarning("Importing text entry question with marking criteria. This will not be automatically marked in touchstone", $source->load_id);
+    if (count($conditions) > 0) $this->AddWarning($string['importingtext'], $source->load_id);
 
     $dest->marks = 0;
     foreach ($conditions as $condition) {

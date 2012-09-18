@@ -26,7 +26,9 @@ class IE_qti_Load extends IE_Main {
   var $params;
 
   function Load($params) {
-    echo "<h4>Params</h4>";
+    global $string;
+
+    echo "<h4>{$string['params']}</h4>";
     print_p($params);
 
     global $import_directory;
@@ -59,7 +61,7 @@ class IE_qti_Load extends IE_Main {
         }
         $zip->close();
       } else {
-        $this->AddError("Invalid Zip file Uploaded");
+        $this->AddError($string['invalidzip']);
         return;
       }
     }
@@ -79,7 +81,7 @@ class IE_qti_Load extends IE_Main {
     //print_p($files);
 
     if (count($files['qti12']) == 0) {
-      $this->AddError("No QTI XML files in the zip file");
+      $this->AddError($string['noqtiinzip']);
       return;
     }
 
@@ -100,7 +102,7 @@ class IE_qti_Load extends IE_Main {
 
       foreach ($qti12->errors as $qid => $errors) foreach ($errors as $error) $this->errors[$qid][] = $error;
 
-      echo "<h4>File Output : $filename</h4>";
+      echo "<h4>{$string['fileoutput']}: $filename</h4>";
       echo $this->debug;
 
       foreach ($output->questions as $id => $question) $result->questions[$id] = $question;
@@ -114,11 +116,13 @@ class IE_qti_Load extends IE_Main {
   }
 
   function DetectFileType($filename) {
+    global $string;
+
     $xmlStr = file_get_contents($filename);
     $xml = simplexml_load_string($xmlStr);
 
     if (!$xml) {
-      $this->AddError(basename($filename)." is an invalid XML file");
+      $this->AddError(sprintf($string['invalidzip2'], basename($filename)));
       return '';
     }
 

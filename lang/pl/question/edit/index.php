@@ -4,6 +4,7 @@ require '../../lang/' . $language . '/include/blooms.inc';
 require '../../lang/' . $language . '/include/question_types.inc';
 require '../../lang/' . $language . '/question/sct_shared.php';
 require '../../lang/' . $language . '/question/info.php';
+require '../../lang/' . $language . '/question/edit/likert_scales.php';
 
 $string['edit'] = 'Edytuj';
 $string['add'] = 'Dodaj';
@@ -178,29 +179,6 @@ $string['indicated'] = 'wskazana';
 $string['stronglyindicated'] = 'zdecydowanie wskazana';
 $string['oscescales'] = 'Skale stacji OSCE';
 $string['pointscales'] = '-punktowa skala';
-// Likert Scales data - this is how the settings are saved, separate columns with vertical bars (<br /> tages can be used for break lines)
-$string['failpass3'] = 'Nie zdany|Na granicy|Zdany';
-$string['lowhigh3'] = 'Niskie||Wysokie';
-$string['lowhigh4'] = 'Niskie|||Wysokie';
-$string['lowhigh5'] = 'Niskie||||Wysokie';
-$string['neveralways3'] = 'Nigdy||Zawsze';
-$string['neveralways4'] = 'Nigdy|||Zawsze';
-$string['neveralways5'] = 'Nigdy||||Zawsze';
-$string['disagre3'] = 'Nie zgadzam się|Obojętny|Zgadzam się';
-$string['disagre4'] = 'Zdecydowanie<br />się<br />nie zgadzam|Nie<br />zgadzam<br />się|Zgadzam<br />się|Zdecydowanie<br />się zgadzam'; 
-$string['disagre5a'] = 'Zdecydowanie<br />się<br />nie zgadzam|Nie<br />zgadzam<br />się|Nie<br />mam<br />zdania|Zgadzam<br />się|Zdecydowanie<br />się zgadzam';
-$string['disagre5b'] = 'Zdecydowanie<br />się<br />nie zgadzam|Nie<br />zgadzam<br />się|Nie<br />jestem<br />pewien|Zgadzam<br />się|Zdecydowanie<br />się zgadzam';
-$string['disagre5c'] = 'Zdecydowanie<br />się<br />nie zgadzam|Nie<br />zgadzam<br />się|Obojętny|Zgadzam<br />się|Zdecydowanie<br />się zgadzam';
-// Likert Scales
-$string['failpass'] = 'Nie zdany, Na granicy, Zdany';//???
-$string['lowhigh'] = 'Niskie - Wysokie';
-$string['neveralways'] = 'Nigdy - Zawsze';
-$string['disagre3point'] = 'Nie zgadzam się, Obojętny, Zgadzam się';
-$string['disagre4point'] = 'Zdecydowanie się nie zgadzam, Nie zgadzam się, Zgadzam się, Zdecydowanie się zgadzam';
-$string['disagre5pointneither'] = 'Zdecydowanie się nie zgadzam, Nie zgadzam się, Nie mam zdania, Zgadzam się, Zdecydowanie się zgadzam';
-$string['disagre5pointuncertain'] = 'Zdecydowanie się nie zgadzam, Nie zgadzam się, Nie jestem pewien, Zgadzam się, Zdecydowanie się zgadzam';
-$string['disagre5pointneutral'] = 'Zdecydowanie się nie zgadzam, Nie zgadzam się, Obojętny, Zgadzam się, Zdecydowanie się zgadzam';
-$string['custom'] = 'Własna';
 $string['scale'] = 'Skala';
 $string['nacolumn'] = 'Kolumna nie dotyczy';
 $string['includena'] = "uwzględnij opcję 'nie dotyczy'";

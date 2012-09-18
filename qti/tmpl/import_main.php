@@ -89,7 +89,7 @@ echo "</table>";
 
 <table border="0" cellpadding="0" cellspacing="0" class="dialog_border" style="width:500px; text-align:left"> 
 	<tr> 
-		<td class="dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><span style="font-size:160%; font-weight:bold; color:#5582D2">QTI Import</td> 
+		<td class="dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><span style="font-size:160%; font-weight:bold; color:#5582D2"><?php echo $string['qtiimport'] ?></td>
 	</tr> 
 	<tr> 
 		<td align="left" class="dialog_body" colspan="2"> 

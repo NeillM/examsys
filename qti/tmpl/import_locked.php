@@ -102,14 +102,14 @@ echo "</table>";
 
 <table border="0" cellpadding="0" cellspacing="0" style="width:600px; border:1px solid #5582D2; text-align:left"> 
 	<tr> 
-		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2">QTI Import</span></td> 
+		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['qtiimport'] ?></span></td>
 	</tr> 
 	<tr> 
 		<td align="left" style="background-color:#fff2a4" colspan="2"> 
 			
 			<div style="padding-top:16px;padding-left:16px;padding-right:16px;">
           <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
-			     <tr><td colspan="2" style="height:32px; text-align:right"><img src="../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" />&nbsp;&nbsp;</td><td colspan="7" style="height:32px; vertical-align:middle;"><strong>Paper Locked</strong>&nbsp;&nbsp;&nbsp;This paper is now locked and cannot be modified. <a href="#" class="blacklink" onclick="launchHelp(189); return false;">Click for more details.</a></td></tr>
+			     <tr><td colspan="2" style="height:32px; text-align:right"><img src="../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" />&nbsp;&nbsp;</td><td colspan="7" style="height:32px; vertical-align:middle;"><strong><?php echo $string['paperlocked'] ?></strong>&nbsp;&nbsp;&nbsp;<?php echo $string['paperlockedmsg'] ?><a href="#" class="blacklink" onclick="launchHelp(189); return false;">Click for more details.</a></td></tr>
 			    </table>
           <br/>
       </div>

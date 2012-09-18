@@ -59,9 +59,11 @@ class IE_Local_Load extends IE_Main {
   }
 
   function Load($params) {
-    echo "<h4>Params</h4>";
+    global $string;
+
+    echo "<h4>{$string['params']}</h4>";
     print_p($params);
-    echo "<h4>Other Debug</h4>";
+    echo "<h4>{$string['othherdebug']}</h4>";
 
     $this->params = $params;
     // store params in class

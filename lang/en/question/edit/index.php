@@ -4,6 +4,7 @@ require '../../lang/' . $language . '/include/blooms.inc';
 require '../../lang/' . $language . '/include/question_types.inc';
 require '../../lang/' . $language . '/question/sct_shared.php';
 require '../../lang/' . $language . '/question/info.php';
+require '../../lang/' . $language . '/question/edit/likert_scales.php';
 
 $string['edit'] = 'Edit';
 $string['add'] = 'Add';
@@ -178,29 +179,6 @@ $string['indicated'] = 'indicated';
 $string['stronglyindicated'] = 'strongly indicated';
 $string['oscescales'] = 'OSCE Stations Scales';
 $string['pointscales'] = 'Point Scales';
-// Likert Scales data - this is how the settings are saved, separate columns with vertical bars (<br /> tages can be used for break lines)
-$string['failpass3'] = 'Fail|Borderline|Pass';
-$string['lowhigh3'] = 'Low||High';
-$string['lowhigh4'] = 'Low|||High';
-$string['lowhigh5'] = 'Low||||High';
-$string['neveralways3'] = 'Never||Always';
-$string['neveralways4'] = 'Never|||Always';
-$string['neveralways5'] = 'Never||||Always';
-$string['disagre3'] = 'Disagree|Neutral|Agree';
-$string['disagre4'] = 'Strongly<br />Disagree|Disagree|Agree|Strongly<br />Agree';
-$string['disagre5a'] = 'Strongly<br />Disagree|Disagree|Neither Disagree<br />nor Agree|Agree|Strongly<br />Agree';
-$string['disagre5b'] = 'Strongly<br />Disagree|Disagree|Uncertain|Agree|Strongly<br />Agree';
-$string['disagre5c'] = 'Strongly<br />Disagree|Disagree|Neutral|Agree|Strongly<br />Agree';
-// Likert Scales
-$string['failpass'] = 'Fail, Borderline, Pass';
-$string['lowhigh'] = 'Low to High';
-$string['neveralways'] = 'Never to Always';
-$string['disagre3point'] = 'Disagree, Neutral, Agree';
-$string['disagre4point'] = 'Strongly Disagree, Disagree, Agree, Strongly Agree';
-$string['disagre5pointneither'] = 'Strongly Disagree, Disagree, Neither Disagree nor Agree, Agree, Strongly Agree';
-$string['disagre5pointuncertain'] = 'Strongly Disagree, Disagree, Uncertain, Agree, Strongly Agree';
-$string['disagre5pointneutral'] = 'Strongly Disagree, Disagree, Neutral, Agree, Strongly Agree';
-$string['custom'] = 'Custom';
 $string['scale'] = 'Scale';
 $string['nacolumn'] = 'N/A Column';
 $string['includena'] = "include 'not applicable' option";

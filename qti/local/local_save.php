@@ -46,16 +46,16 @@ class IE_Local_Save extends IE_Main {
 
   // main save function
   function Save($params, &$data) {
-    echo "<h4>Params</h4>";
-    print_p($params);
-    echo "<h4>Other Debug</h4>";
+    global $userID, $string;
 
-    global $userID;
+    echo "<h4>{$string['params']}</h4>";
+    print_p($params);
+    echo "<h4>{$string['othherdebug']}</h4>";
 
     $this->db = new Database();
 
     if (count($data->questions) == 0) {
-      $this->AddError("No questions to load into Rogo");
+      $this->AddError($string['noquestions']);
       return;
     }
 
@@ -77,7 +77,7 @@ class IE_Local_Save extends IE_Main {
     $nextid = 1;
 
     if ($paperid) {
-      echo "Adding to paper $paperid<br>";
+      echo "{$string['addingtopaper']} $paperid<br>";
 
       $this->db->SetTable('papers');
       $this->db->AddField("max(screen) as screen");
@@ -201,19 +201,19 @@ class IE_Local_Save extends IE_Main {
       }
       $this->db->InsertRow("questions_metadata", "id", $meta_row);
 
-      echo "<h4>Question Tables</h4>";
-      echo "<div>questions row</div>";
+      echo "<h4>{$string['questiontables']}</h4>";
+      echo "<div>{$string['questionsrow']}</div>";
       print_p($this->q_row, false);
-      echo "<div>options rows</div>";
+      echo "<div>{$string['optionsrows']}</div>";
       print_p($this->o_rows, false, 100);
-      echo "<div>new keywords</div>";
+      echo "<div>{$string['newkeywords']}</div>";
       print_p($new_keywords, false);
 
       $track = array();
-      $track['type'] = "QTI Import";
+      $track['type'] = $string['qtiimport'];
       $track['typeID'] = $this->q_row['q_id'];
       $track['editor'] = $userID;
-      $track['new'] = "Imported from QTI 1.2 file ".$params->original_filename;
+      $track['new'] = "{$string['imported1_2']} ".$params->original_filename;
       $track['part'] = "all";
       $track['changed'] = date("Y-m-d H:i:s");
 
@@ -239,7 +239,7 @@ class IE_Local_Save extends IE_Main {
         foreach ($paper->screens as & $screen) {
           foreach ($screen->question_ids as $q_id) {
             $p_row = $this->db->GetBlankTableRow('papers');
-            echo "adding question $q_id as display_pos = $nextid on screen $nextscreen<br>";
+            echo sprintf($string['addingquestiondetails'], $q_id, $nextid, $nextscreen) . '<br>';
 
             $p_row['paper'] = $paperid;
             $q = FindQuestion($data->questions, $q_id);

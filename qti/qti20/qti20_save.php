@@ -32,9 +32,11 @@ class IE_qti20_Save extends IE_Main {
 
   // main save function
   function Save($params, &$data) {
-    echo "<h4>Params</h4>";
+    global $string;
+
+    echo "<h4>{$string['params']}</h4>";
     print_p($params);
-    echo "<h4>General Debug</h4>";
+    echo "<h4>{$string['generaldebuginfo']}</h4>";
 
     global $userID;
     $data->ownerID = $userID;
