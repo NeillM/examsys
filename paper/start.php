@@ -228,7 +228,7 @@ if (stripos($userroles,'Student') !== false) {
 }
 
 //check for submissions after the enddate and set them to save in log_late
-if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
+if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) { //Mode is used for staff preview.
   $paper_type = '_late';
 }
 
@@ -719,7 +719,10 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
         $user_answers[$log_screen][$log_q_id] = $log_user_answer;
         $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
         $user_order[$log_screen][$log_q_id] = $option_order;
-        if ($log_screen == $current_screen) $previous_duration = $log_duration;
+        if ($log_screen == $current_screen) {
+          $previous_duration = $log_duration;
+          $screen_pre_submitted = 1;
+        }
       }
       $log_data->close();
     }
