@@ -55,7 +55,7 @@
 <form name="myform">
 <br />
 
-<table style="margin-left:9px; font-size:90%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
+<table style="margin-left:9px; font-size:90%; display:block" cellpadding="4" cellspacing="0" border="0" id="menu1a">
 <tr><td class="ico"><img onclick="newKeyword()" src="../artwork/key.png" width="16" height="16" alt="key" border="0" /></a></td><td class="menuitem"><a href="#" onclick="newKeyword()"><?php echo $string['createnewkeyword']; ?></a></td></tr>
 <tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editkeyword']; ?></td></tr>
 <tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deletekeyword']; ?></td></tr>
@@ -69,7 +69,7 @@
 <tr><td><a href="import_keywords.php?module=<?php echo $module; ?>"><img src="../artwork/import_16.gif" width="16" height="16" alt="Import" border="0" /></a></td><td class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>"><?php echo $string['importkeywords']; ?></a></td></tr>
 </table>
 
-<table style="margin-left:9px; font-size:90%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
+<table style="margin-left:9px; font-size:90%; display:none" cellpadding="4" cellspacing="0" border="0" id="menu1b">
 <tr><td class="ico"><img onclick="newKeyword()" src="../artwork/key.png" width="16" height="16" alt="key" border="0" /></a></td><td class="menuitem"><a href="#" onclick="newKeyword()"><?php echo $string['createnewkeyword']; ?></a></td></tr>
 <tr><td class="ico"><img onclick="editKeyword()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editKeyword(); return false;"><?php echo $string['editkeyword']; ?></a></td></tr>
 <tr><td class="ico"><img onclick="deleteKeyword()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteKeyword(); return false;"><?php echo $string['deletekeyword']; ?></a></td></tr>

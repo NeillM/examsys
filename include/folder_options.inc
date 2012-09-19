@@ -23,6 +23,7 @@
 */
 
 include_once '../classes/dateutils.class.php';
+include_once '../classes/moduleutils.class.php';
 
 // Get folder information
 $modules_array = array();
@@ -66,6 +67,8 @@ if (count($teams) > 0) {
 <?php
   } else {
   
+    $module_details = module_utils::get_full_details($_GET['module'], $mysqli);
+  
     if ($module != '') {   
     ?>
       <div class="submenuheading"><?php echo $string['module']; ?></div>
@@ -75,7 +78,7 @@ if (count($teams) > 0) {
     if (strpos($userroles,'SysAdmin') !== false) {
       echo "<tr><td class=\"ico\"><a href=\"../admin/edit_module.php?moduleid=$module\"><img src=\"$cfg_root_path/artwork/admin_icon_16.gif\" width=\"16\" height=\"16\" alt=\"cog\" /></a></td><td class=\"menuitem\"><a href=\"../admin/edit_module.php?moduleid=$module\">" . $string['editpropertiessysadmin'] . "</a></td></tr>";
     }
-    if (strpos($checklist,'mapping') !== false ) {     // Curriculum mapping switched on for the module
+    if (strpos($module_details['checklist'],'mapping') !== false ) {     // Curriculum mapping switched on for the module
       if (in_array($module, $teams) == true or strpos($userroles,'SysAdmin') !== false or strpos($userroles,'Admin') !== false ) {
         echo "<tr><td class=\"ico\"><a href=\"../mapping/sessions_list.php?module=" . $module . "\"><img src=\"$cfg_root_path/artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /></a></td><td class=\"menuitem\"><a href=\"../mapping/sessions_list.php?module=" . $_GET['module'] . "\">" . $string['manageobjectives'] . "</a></td></tr>\n";
       } else {

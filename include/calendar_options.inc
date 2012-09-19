@@ -26,7 +26,7 @@
 <div id="left-sidebar" class="sidebar">
 <div class="submenuheading"><?php echo $string['calendaryears']; ?></div>
 
-<table cellpadding="3" cellspacing="0" border="0" style="margin-left:9px; font-size:90%">
+<table cellpadding="4" cellspacing="0" border="0" style="margin-left:9px; font-size:90%">
 <?php
   $start_year = date("Y");
   $start_year -= 4;

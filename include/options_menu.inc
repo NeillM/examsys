@@ -35,7 +35,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 
 ?><div id="left-sidebar" class="sidebar">
 <br />
-<table id="general" cellpadding="4" cellspacing="0" border="0" width="185" style="margin-left:2px; font-size:90%">
+<table id="general" class="sidebar_tbl" style="margin-left:2px">
 <tr><td class="ico"><a href="#" onclick="launchHelp(1); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/small_help_icon.gif" width="16" height="16" alt="Help" /></a></td><td class="menuitem"><a href="#" onclick="launchHelp(1); return false;"><?php echo $string['helpsupport']; ?></a></td></tr>
 <?php
   if (strpos($userroles,'SysAdmin') !== false) {
@@ -51,7 +51,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 <br />
 
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
-<table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:8px">
+<table class="sidebar_tbl">
 <?php
   if (count($teams) > 0 or strpos($userroles,'Admin') !== false) {    // Allow SysAdmin and Admin users not on any team to still create papers.
     echo "<tr><td style=\"text-align:left\"><a href=\"#\" onclick=\"newPaper(); return false;\"><img style=\"text-align:center\" src=\"{$cfg_root_path}/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"newPaper(); return false;\">" . $string['createnewpaper'] . "</a></td></tr>\n";
@@ -65,7 +65,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 <br />
 
 <div class="submenuheading" id="banktasks"><?php echo $string['questionbanktasks']; ?></div>
-<table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:8px">
+<table class="sidebar_tbl">
 <tr><td class="ico"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Papers" /></a></td><td class="menuitem sub"><span id="type"><a href="#" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event); return false;"><?php echo $string['questionsbytype']; ?></span></a></td></tr>
 <?php
   if (count($teams) == 0) {

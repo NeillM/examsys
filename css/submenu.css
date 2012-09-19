@@ -23,6 +23,17 @@ a.greylink:hover {color:#808080}
 .menuheading a:hover {color:#428EFF; cursor:pointer}
 
 .sidebar {background-color:#6375D6}
+.sidebar_tbl {
+  border-spacing:0;
+  font-size:90%;
+  margin-left:9px;
+  width:185px;
+  border:none;
+}
+.sidebar_tbl td {
+  padding:4px;
+  border:none;
+}
 .popup {
   display:none;
   top:0px;
