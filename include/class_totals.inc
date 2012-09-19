@@ -41,7 +41,6 @@ require_once '../include/sort.inc';
 function getRandomDetails($questionID, &$random_q_ids) {
   global $cfg_short_date, $paper_buffer, $mysqli;
 
-//  unset($paper_buffer[$questionID]);
   $random_q_ids[] = $questionID;
 
   $question_no = 0;
