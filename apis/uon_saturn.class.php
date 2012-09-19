@@ -187,7 +187,7 @@ Class UON_SATURN extends SmsUtils {
     $dat = $this->getModuleEnrolements($modulecode);
   }
 
-  function update_module_enrolement($module, $sms, $mysqli = 'NOTSET', $session = 'NOTSET') {
+  function update_module_enrolement($module, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
 
     // run module enrolement for select code
     if ($mysqli == 'NOTSET') {
@@ -247,7 +247,7 @@ Class UON_SATURN extends SmsUtils {
     */
 
     // Look up SMS
-    $returned_data = @file_get_contents($sms . "&code=$replaced_module&year=" . $session_parts[0]);
+    $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
     $xml = false;
     if ($returned_data !== false) {
       $xml = new SimpleXMLElement($returned_data);
@@ -402,9 +402,9 @@ Class UON_SATURN extends SmsUtils {
     }
 
     if ($enrolements > 0 or $deletions > 0) {
-      if ($sms == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
+      if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
         $import_type = 'SATURN Malaysia';
-      } elseif ($sms == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
+      } elseif ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
         $import_type = 'SATURN China';
       } else {
         $import_type = 'SATURN UK';
@@ -416,7 +416,7 @@ Class UON_SATURN extends SmsUtils {
       $result->close();
 
 
-      print "$module, $sms, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type\r\n<br>";
+      print "$module, $sms_api, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type\r\n<br>";
       @ob_flush();
       @flush();
 

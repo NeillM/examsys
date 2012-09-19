@@ -120,6 +120,11 @@ class lti_integration_extended extends lti_integration {
   static function module_code_translated_store($data) {
     $return = '';
     foreach ($data as $k => $v) {
+      $module=$v[1];
+      $replaced_module = str_replace('_UNMC', '', $module);
+      $replaced_module = str_replace('_UNNC', '', $replaced_module);
+      $v[1]=$replaced_module;
+
       $extra = '';
       if ($v[0] == 'Manual') {
         $extra = 'ZZ-';
