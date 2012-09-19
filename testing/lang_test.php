@@ -137,12 +137,12 @@ function display_this($data, $data_index) {
         
         if (isset($data_part3[$data_key])) {
           if ($data_part3[$data_key] != $last_value) {
-             if ($data_part2 != $last_key) {
+            if ($data_part2 != $last_key) {
               $display_text .= $data_part3[$data_key];
-              }
-              else {
+            }
+            else {
               $display_text .= '<span style="color:IndianRed">' . $data_part3[$data_key] . '</span>';
-              }
+            }
           }
           else {
             $display_text .= '<span style="color:lightgrey"><strong>&nbsp;&nbsp;&nbsp;-<small>//</small>-</strong></span>';
@@ -197,6 +197,8 @@ foreach ($lang_array as $lang) {
 	echo '<h2 class="midblue_header">Analysis for: ' . $lang . '</h2>';
   
   //Missing files
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
   foreach ($strings_pl as $strings_key => $strings_data)
 		if ($strings_data[0]==$strings_key) $display_text .= '<em>' . $strings_data[0] . '</em><br />';
@@ -205,6 +207,8 @@ foreach ($lang_array as $lang) {
 	echo '<table>'.$display_text.'</table>';
 	
   //Strings in missing files
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
   foreach ($strings_en as $strings_key => $strings_data) {
 		$data_path = explode("|", $strings_data[0]);
@@ -217,6 +221,8 @@ foreach ($lang_array as $lang) {
 	echo '<table>'.$display_text.'</table>';
 
 	//Missing strings
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
 	foreach ($strings_en as $strings_key => $strings_data)
 		if (!isset($strings_pl[$strings_key]) and (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data, -1);
@@ -225,6 +231,8 @@ foreach ($lang_array as $lang) {
 	echo '<table>'.$display_text.'</table>';
 
   //Missing strings from file
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
 	foreach ($strings_en as $strings_key => $strings_data) {
 		if (isset($strings_pl[$strings_key]) and ($strings_pl[$strings_key][0]!=$strings_data[0])) {
@@ -239,6 +247,8 @@ foreach ($lang_array as $lang) {
 	echo '<table>'.$display_text.'</table>';
 
 	//Files with empty keys for the \'string\' array
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
 	foreach ($strings_pl as $strings_key => $strings_data) {
 		if ($strings_data[1]=='') {
@@ -252,6 +262,8 @@ foreach ($lang_array as $lang) {
 	echo '<table>'.$display_text.'</table>';
 
 	//Duplicate strings in files
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
 	foreach ($strings_pl as $strings_key => $strings_data)	{
 		if ($strings_pl[$strings_key][3]>1)	{
@@ -270,6 +282,8 @@ foreach ($lang_array as $lang) {
 	echo '<table>'.$display_text.'</table>';
 
 	//Identical texts
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
 	foreach ($strings_en as $strings_key => $strings_data)
 		if (isset($strings_pl[$strings_key]) and ($strings_pl[$strings_key]==$strings_en[$strings_key]))  display_this($strings_data, -1);		
@@ -278,6 +292,8 @@ foreach ($lang_array as $lang) {
   echo '<table>'.$display_text.'</table>';
 
 	//Identical strings in files
+  $last_key = '';
+  $last_value = '';
 	$display_text = '';
 	foreach ($strings_en as $strings_key => $strings_data)	{
 		if ($strings_en[$strings_key][3]>1) {
@@ -303,6 +319,8 @@ echo '<hr>';
 echo '<h2 class="midblue_header">Analysis for: en</h2>';
 
 //Files with empty keys for the \'string\' array
+$last_key = '';
+$last_value = '';
 $display_text = '';
 foreach ($strings_en as $strings_key => $strings_data)	{
 	if ($strings_data[1]=='')	{
@@ -317,6 +335,8 @@ echo '<h3>Files with empty keys for the \'string\' array:</h3>';
 echo '<table>'.$display_text.'</table>';
 
 //Duplicate strings in files
+$last_key = '';
+$last_value = '';
 $display_text = '';
 foreach ($strings_en as $strings_key => $strings_data)	{
 	if ($strings_en[$strings_key][3]>1) {
@@ -335,6 +355,8 @@ echo '<h3>Duplicate strings in files:</h3>';
 echo '<table>'.$display_text.'</table>';
 
 //Duplicate strings
+$last_key = '';
+$last_value = '';
 $display_text = '';
 foreach ($strings_en as $strings_key => $strings_data)	{
 	if ($strings_en[$strings_key][3]>1) {
