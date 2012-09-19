@@ -24,35 +24,23 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/sidebar_menu.inc';
-  require '../include/errors.inc';
-  require '../classes/dateutils.class.php';
-  
-  check_var('module', 'GET', true, false);
-  set_time_limit(0);
-  ob_start();
+require '../include/staff_auth.inc';
+require '../include/sidebar_menu.inc';
+require '../include/errors.inc';
+require '../classes/dateutils.class.php';
+require '../classes/moduleutils.class.php';
+
+check_var('module', 'GET', true, false);
+set_time_limit(0);
+ob_start();
 
   
 // Folder security checks
 $folder = '';
-if (isset($_GET['module'])) {
-  $module = $_GET['module'];
-  
-  $module_data = $mysqli->prepare("SELECT fullname, checklist, selfenroll FROM modules WHERE moduleid=?");
-  $module_data->bind_param('s', $module);
-  $module_data->execute();
-  $module_data->store_result();
-  $module_data->bind_result($module_fullname, $checklist, $selfenrol);
-  $module_data->fetch();
-  $module_count = $module_data->num_rows();
-  $module_data->close();
-  
-  if ($module_count == 0) {
-    display_error($string['modulenotfound'], sprintf($string['modulenotfoundmsg'], $module), false, true);
-  }
-} else {
-  $module = '';
+$module = $_GET['module'];
+
+if (module_utils::module_exists($module, $mysqli) === false) {  
+  display_error($string['modulenotfound'], sprintf($string['modulenotfoundmsg'], $module), false, true);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -145,20 +133,13 @@ if (isset($_GET['module'])) {
         $col_no = 0;
         $unknown_users = array();
         $headings = array();
-        $stmt = $mysqli->prepare("INSERT INTO users_metadata VALUES (NULL, ?, ?, ?, ?, ?)");
+        $stmt = $mysqli->prepare("REPLACE INTO users_metadata (userID, moduleID, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param('iisss', $student_id, $moduleID, $type, $value, $_POST['session']);
         foreach ($lines as $separate_line) {
           $cols = explode(',', $separate_line);
           if ($line_no == 0) {  // Read the header row
             $heading = $cols;
             $col_no = count($cols);
-            $delete_stmt = $mysqli->prepare("DELETE FROM users_metadata WHERE moduleID=? AND type=? AND calendar_year=?");
-            $delete_stmt->bind_param('iss', $moduleID, $type, $_POST['session']);
-            for ($i=1; $i<$col_no; $i++) {
-              $type = trim($heading[$i]);
-              $delete_stmt->execute();
-            }
-            $delete_stmt->close();
           } else {
             $username = trim($cols[0]);
             
@@ -197,15 +178,15 @@ if (isset($_GET['module'])) {
     exit;
   } else {
 ?>
-
+<br />
 <table border="0" cellpadding="4" cellspacing="0" class="dialog_border" style="width:700px">
 <tr>
-<td class="dialog_header" style="width:56px"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td class="dialog_header"><?php echo $string['importmetadata']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/user_metadata_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header"><?php echo $string['importmetadata']; ?></span></td>
 </tr>
 <tr>
 <td class="dialog_body" colspan="2">
 
-<p style="text-align:justify"><?php echo $string['msg']; ?></p>
+<p style="text-align:justify; padding:4px"><?php echo $string['msg']; ?></p>
 <br />
 <div style="text-align:center">
 <img src="../artwork/user_metadata_sheet.png" width="350" height="165" style="border:1px solid black" alt="" />
@@ -226,7 +207,7 @@ if (isset($_GET['module'])) {
 <tr><td><?php echo $string['file']; ?></td><td><input type="file" size="50" name="csvfile" /></td></tr>
 </table>
 <br />
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p style="padding-bottom:10px"><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>

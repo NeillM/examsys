@@ -392,7 +392,7 @@ if (!isset($_POST['update'])) {
   $result->close();
 
   // 06/07/2011 - New table users_metadata.
-  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users_metadata' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='id'");
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='users_metadata' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
   $result->execute();
   $result->store_result();
   $result->bind_result($column_type);
@@ -3352,12 +3352,10 @@ if (!isset($_POST['update'])) {
     $sql = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'";
     $mysqli->query($sql);
     echo "<li>GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".state TO '". $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
-
   }
 
-    @ob_flush();
-    @flush();
-
+  @ob_flush();
+  @flush();
 
   // 24/04/2012 - Add default timezone config file.
   $new_cfg_str = array();
@@ -4225,8 +4223,6 @@ if (!isset($_POST['update'])) {
   $result->bind_result($column_type);
   $result->fetch();
   if ($result->num_rows() > 0) {
-
-
     $sql="ALTER TABLE `lti_keys` CHANGE `updated_at` `updated_on` DATETIME";
     $adjust = $mysqli->prepare($sql);
     $adjust->execute();
@@ -4347,8 +4343,6 @@ if (!isset($_POST['update'])) {
   @ob_flush();
   @flush();
 
-
-
   //remove references to old vars
   $cfg_new = array();
   $found = false;
@@ -4449,6 +4443,35 @@ if (!isset($_POST['update'])) {
     $update->close();
   }
   $result->close();
+  
+  // 19/09/2012 - remove ID field from users_metadata
+  $result = $mysqli->prepare("SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='users_metadata' AND COLUMN_NAME='id' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 1) {
+    if (!$mysqli->real_query("ALTER TABLE users_metadata DROP COLUMN id")) {
+      echo "<li>" . $mysqli->error . "</li>\n";
+    } else {
+      echo "<li>ALTER TABLE users_metadata DROP COLUMN id</li>\n";
+    }
+  } 
+  $result->close();
+  
+  // 19/09/2012 - add new index to users_metadata
+  $result = $mysqli->prepare("SHOW INDEX FROM users_metadata WHERE Key_name = 'idx_users_metadata'");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    if (!$mysqli->real_query("ALTER TABLE users_metadata ADD UNIQUE idx_users_metadata (userID, moduleID, type, calendar_year)")) {
+      echo "<li>" . $mysqli->error . "</li>\n";
+    } else {
+      echo "<li>ALTER TABLE users_metadata ADD UNIQUE idx_users_metadata (userID, moduleID, type, calendar_year)</li>\n";
+    }
+  } 
+  $result->close();
+  
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

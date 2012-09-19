@@ -94,25 +94,12 @@ if ($folder != '') {
     }
   }
 }
+
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $module = $_GET['module'];
-  
-  $module_data = $mysqli->prepare("SELECT fullname, checklist, selfenroll FROM modules WHERE moduleid=?");
-  $module_data->bind_param('s', $module);
-  $module_data->execute();
-  $module_data->store_result();
-  $module_data->bind_result($module_fullname, $checklist, $selfenrol);
-  $module_data->fetch();
-  $module_count = $module_data->num_rows();
-  $module_data->close();
-  
-  if ($module_count == 0) {
-    display_error($string['modulenotfound'], sprintf($string['modulenotfoundmsg'], $module), false, true);
-  }
 } else {
   $module = '';
 }
-
 
 if (isset($_POST['submit'])) {
   $folder_results = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
@@ -238,7 +225,7 @@ echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
 if ($folder != '') {
   echo $folders_array[$parts];
 } elseif ($_GET['module'] != '') {
-  echo $_GET['module'] . ': <span style="font-weight:normal">' . $module_fullname . '</span>';
+  echo $_GET['module'] . ': <span style="font-weight:normal">' . $module_details['fullname'] . '</span>';
 }
 echo '</div></th>';
 echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\" onclick=\"refreshPage();\"";
@@ -285,7 +272,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 }
 
 // Is it a self-enrol module.
-if ($selfenrol == 1) {
+if ($module_details['selfenroll'] == 1) {
   $selfenrol_url = $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/self_enrol.php?moduleid=' . $_GET['module'];
   echo "<div style=\"padding-left:10px\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /> <span style=\"color:#C00000\">Self-enrol URL:</span> <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n<br />";
 }

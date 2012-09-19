@@ -198,8 +198,8 @@ if (isset($_POST['update']) and $demo == false) {
   }
 } elseif (isset($_POST['save_metadata'])) {
   for ($i=0; $i<$_POST['metadata_no']; $i++) {
-    $result = $mysqli->prepare("UPDATE users_metadata SET value=? WHERE id=?");
-    $result->bind_param('si', $_POST["meta_value$i"], $_POST["meta_id$i"]);
+    $result = $mysqli->prepare("REPLACE INTO users_metadata (userID, moduleID, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
+    $result->bind_param('iisss', $_GET['userID'], $_POST["meta_moduleID$i"], $_POST["meta_type$i"], $_POST["meta_value$i"], $_POST["meta_calendar_year$i"]);
     $result->execute();
     $result->close();
   }
@@ -1008,13 +1008,13 @@ if (isset($_POST['update']) and $demo == false) {
   echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
   echo drawTabs('Metadata', 5, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td><td class=\"coltitle\">" . $string['value'] . "</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
-  $stmt = $mysqli->prepare("SELECT users_metadata.id, modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND userID=?");
+  $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND userID=?");
   $stmt->bind_param('i', $_GET['userID']);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($meta_id, $mod_id, $moduleID, $fullname, $calendar_year, $type, $value);
+  $stmt->bind_result($mod_id, $moduleID, $fullname, $calendar_year, $type, $value);
   while ($stmt->fetch()) {
-    echo "<tr><td>&nbsp;$moduleID: $fullname</td><td>$calendar_year</td><td>$type</td><td><input type=\"hidden\" name=\"meta_id$metadata_no\" value=\"$meta_id\" /><select name=\"meta_value$metadata_no\">";
+    echo "<tr><td>&nbsp;$moduleID: $fullname<input type=\"hidden\" name=\"meta_moduleID$metadata_no\" value=\"$mod_id\" /></td><td>$calendar_year<input type=\"hidden\" name=\"meta_calendar_year$metadata_no\" value=\"$calendar_year\" /></td><td>$type<input type=\"hidden\" name=\"meta_type$metadata_no\" value=\"$type\" /></td><td><select name=\"meta_value$metadata_no\">";
     $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE calendar_year=? AND moduleID=? AND type=?");
     $result->bind_param('sis', $calendar_year, $mod_id, $type);
     $result->execute();

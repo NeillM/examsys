@@ -2136,14 +2136,13 @@ QUERY;
 
     $this->tableList['users_metadata'] = <<<QUERY
         CREATE TABLE `users_metadata` (
-          `id` int NOT NULL auto_increment,
           `userID` int unsigned default NULL,
           `moduleID` int default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
           `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
-          PRIMARY KEY  (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+          UNIQUE KEY `idx_users_metadata` (`userID`,`moduleID`,`type`,`calendar_year`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
 

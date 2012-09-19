@@ -62,7 +62,7 @@ Class module_utils {
     $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
     if ($db->error) {
       try {
-        throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+        throw new Exception("MySQL error $db->error <br> Query:<br> ", $db->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
         echo nl2br($e->getTraceAsString());
@@ -97,6 +97,23 @@ Class module_utils {
     $result->close();
 
     return array($fullname, $school, $active, $selfenroll);
+  }
+
+  static function get_full_details($module_id, $db) {
+    // returns false if not self enrol else returns needed data;
+    $result = $db->prepare("SELECT fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
+    $result->bind_param('s', $module_id);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($fullname, $school, $active, $selfenroll, $checklist);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $result->close();
+      return false;
+    }
+    $result->close();
+
+    return array('fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
   }
 
 }

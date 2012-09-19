@@ -210,7 +210,7 @@ if (isset($_GET['calendar_year'])) {
 <table cellpadding="0" cellspacing="0" border="0" id="menu1" style="display:block; margin-left:10px; font-size:90%">
 <tr><td>
 
-<table style="font-size:100%; line-height:160%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu2a">
+<table style="display:block" cellpadding="4" cellspacing="0" border="0" id="menu2a">
 <tr><td><img src="../artwork/user_file_icon_grey_16.gif" width="16" height="16" alt="User Details" /></td><td class="greymenuitem"><?php echo $string['viewuserfile']; ?></td></tr>
 <?php
   if (strpos($userroles, 'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
@@ -222,7 +222,7 @@ if (isset($_GET['calendar_year'])) {
 ?>
 </table>
 
-<table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu2b">
+<table style="display:none" cellpadding="4" cellspacing="0" border="0" id="menu2b">
 <tr><td class="ico"><a href="#" onclick="viewProfileSingle(); return false;"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
 <?php
   if (strpos($userroles, 'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
@@ -231,7 +231,7 @@ if (isset($_GET['calendar_year'])) {
 ?>
 </table>
 
-<table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu2c">
+<table style="display:none" cellpadding="4" cellspacing="0" border="0" id="menu2c">
 <tr><td class="ico"><a onclick="viewProfileSingle(); return false;" href="#"><img src="../artwork/user_file_icon_16.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="viewProfileSingle(); return false;" href="#"><?php echo $string['viewuserfile']; ?></a></td></tr>
 <?php
   if (strpos($userroles, 'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
@@ -256,7 +256,7 @@ if (strpos($userroles, 'Admin') !== false) {
 <tr><td>
 
 
-<table style="font-size:100%; line-height: 160%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu3a">
+<table style="display:block" cellpadding="4" cellspacing="0" border="0" id="menu3a">
 <?php
   if (strpos($userroles, 'Admin') !== false) {
     echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
@@ -265,7 +265,7 @@ if (strpos($userroles, 'Admin') !== false) {
 ?>
 </table>
 
-<table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu3b">
+<table style="display:none" cellpadding="4" cellspacing="0" border="0" id="menu3b">
 <?php
   if (strpos($userroles, 'Admin') !== false) {
     echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
@@ -274,7 +274,7 @@ if (strpos($userroles, 'Admin') !== false) {
 ?>
 </table>
 
-<table style="font-size:100%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu3c">
+<table style="display:none" cellpadding="4" cellspacing="0" border="0" id="menu3c">
 <?php
   if (strpos($userroles, 'Admin') !== false) {
     echo '<tr><td class="ico"><a href="import_users.php"><img src="../artwork/import_16.gif" width="16" height="16" alt="' . $string['importusers'] . '" /></a></td><td class="menuitem"><a href="import_users.php">' . $string['importusers'] . '</a></td></tr>';
