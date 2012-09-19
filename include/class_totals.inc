@@ -650,21 +650,19 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
       $correct = 0;
       $count_user_split2 = count($user_split2)-3;
       for ($a=0; $a<$count_user_split2; $a+=4) {
-        if ($tmp_exclude{$i} == '0') {
-          $x = $user_split2[$a];
-          $y = $user_split2[$a+1];
+        $x = $user_split2[$a];
+        $y = $user_split2[$a+1];
 
-          if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
-            $tmp_mark += $question['marks_correct'];
-            $correct += $question['marks_correct'];
-            $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
-          } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
-            $tmp_mark += $question['marks_incorrect'];
-            $correct += $question['marks_incorrect'];
-            $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
-          } else {
-            $tmp_user_mark_array[$q_id][] = 0;
-          }
+        if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
+          $tmp_mark += $question['marks_correct'];
+          $correct += $question['marks_correct'];
+          $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
+        } elseif (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] != $user_split2[$a+2]) {
+          $tmp_mark += $question['marks_incorrect'];
+          $correct += $question['marks_incorrect'];
+          $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
+        } else {
+          $tmp_user_mark_array[$q_id][] = 0;
         }
         $i++;
       }
@@ -1043,6 +1041,7 @@ while ($log_query->fetch() !== null) {
     $tmp_array['paper_type'] = $paper_type;
   }
   getUserMark($q_id, $user_answer, $mark, $excluded, $status, $tmp_mark, $tmp_user_mark_array, $random_q_ids, $tmp_userID);
+
   if ($q_type == 'textbox' and !is_numeric($mark)) $marking_complete = 0;
   if (isset($tmp_array['questions'])) {
     $tmp_array['questions']++;
@@ -1055,6 +1054,7 @@ while ($log_query->fetch() !== null) {
   $old_screen   = $screen;
   $old_status   = $status;
 }
+
 
 if (!empty($tmp_array)) {
   if (!isset($_GET['repmodule']) or $_GET['repmodule'] == '' or $user_modules[$tmp_userID]['moduleid'] == $_GET['repmodule']) {
