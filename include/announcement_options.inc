@@ -42,15 +42,15 @@
 <br />
 
 <table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="add_announcement.php"><img src="../artwork/megaphone_16.png" width="16" height="16" alt="<?php echo $string['createannouncement']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_announcement.php"><?php echo $string['createannouncement']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editannouncement']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['editannouncement']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['deleteannouncement']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['deleteannouncement']; ?></td></tr>
+<tr><td class="ico"><a href="add_announcement.php"><img src="../artwork/megaphone_16.png" width="16" height="16" alt="<?php echo $string['createannouncement']; ?>" /></a></td><td class="menuitem"><a href="add_announcement.php"><?php echo $string['createannouncement']; ?></a></td></tr>
+<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editannouncement']; ?>" /></td><td class="greymenuitem"><?php echo $string['editannouncement']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['deleteannouncement']; ?>" /></td><td class="greymenuitem"><?php echo $string['deleteannouncement']; ?></td></tr>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="add_announcement.php"><img src="../artwork/megaphone_16.png" width="16" height="16" alt="<?php echo $string['createannouncement']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_announcement.php"><?php echo $string['createannouncement']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editAnnouncement()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editannouncement']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="editAnnouncement(); return false;"><?php echo $string['editannouncement']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteAnnouncement()" src="../artwork/red_cross.png" width="16" height="16" alt="<?php echo $string['deleteannouncement']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="deleteAnnouncement(); return false;"><?php echo $string['deleteannouncement']; ?></a></td></tr>
+<tr><td class="ico"><a href="add_announcement.php"><img src="../artwork/megaphone_16.png" width="16" height="16" alt="<?php echo $string['createannouncement']; ?>" /></a></td><td class="menuitem"><a href="add_announcement.php"><?php echo $string['createannouncement']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="editAnnouncement()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editannouncement']; ?>" /></td><td class="menuitem"><a href="" onclick="editAnnouncement(); return false;"><?php echo $string['editannouncement']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="deleteAnnouncement()" src="../artwork/red_cross.png" width="16" height="16" alt="<?php echo $string['deleteannouncement']; ?>" /></td><td class="menuitem"><a href="" onclick="deleteAnnouncement(); return false;"><?php echo $string['deleteannouncement']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>

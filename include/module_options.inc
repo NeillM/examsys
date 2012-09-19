@@ -47,19 +47,19 @@ $session = date_utils::get_current_academic_year();
 <br />
 
 <table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="add_module.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="<?php echo $string['createmodule']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_module.php"><?php echo $string['createmodule']; ?></a></td></tr>
-<tr><td class="ico"><a href="bulk_import_modules.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="bulk_import_modules.php"><?php echo $string['bulkmoduleimport']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editmodule']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['editmodule']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/link_grey.png" width="16" height="16" alt="<?php echo $string['modulefolder']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['modulefolder']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/link_grey.png" width="16" height="16" alt="<?php echo $string['studentcohort']; ?>" border="0" /></td><td class="greymenuitem"><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</td></tr>
+<tr><td class="ico"><a href="add_module.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="<?php echo $string['createmodule']; ?>" /></a></td><td class="menuitem"><a href="add_module.php"><?php echo $string['createmodule']; ?></a></td></tr>
+<tr><td class="ico"><a href="bulk_import_modules.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="bulk_import_modules.php"><?php echo $string['bulkmoduleimport']; ?></a></td></tr>
+<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editmodule']; ?>" /></td><td class="greymenuitem"><?php echo $string['editmodule']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/link_grey.png" width="16" height="16" alt="<?php echo $string['modulefolder']; ?>" /></td><td class="greymenuitem"><?php echo $string['modulefolder']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/link_grey.png" width="16" height="16" alt="<?php echo $string['studentcohort']; ?>" /></td><td class="greymenuitem"><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</td></tr>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="add_module.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="<?php echo $string['createmodule']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_module.php"><?php echo $string['createmodule']; ?></a></td></tr>
-<tr><td class="ico"><a href="bulk_import_modules.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="bulk_import_modules.php"><?php echo $string['bulkmoduleimport']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editModule()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editmodule']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="editModule(); return false;"><?php echo $string['editmodule']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="jumpToModule()" src="../artwork/link.png" width="16" height="16" alt="<?php echo $string['modulefolder']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="jumpToModule(); return false;"><?php echo $string['modulefolder']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="studentCohort()" src="../artwork/link.png" width="16" height="16" alt="<?php echo $string['studentcohort']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="studentCohort(); return false;"><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</a></td></tr>
+<tr><td class="ico"><a href="add_module.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="<?php echo $string['createmodule']; ?>" /></a></td><td class="menuitem"><a href="add_module.php"><?php echo $string['createmodule']; ?></a></td></tr>
+<tr><td class="ico"><a href="bulk_import_modules.php"><img src="../artwork/module_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="bulk_import_modules.php"><?php echo $string['bulkmoduleimport']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="editModule()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editmodule']; ?>" /></td><td class="menuitem"><a href="" onclick="editModule(); return false;"><?php echo $string['editmodule']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="jumpToModule()" src="../artwork/link.png" width="16" height="16" alt="<?php echo $string['modulefolder']; ?>" /></td><td class="menuitem"><a href="" onclick="jumpToModule(); return false;"><?php echo $string['modulefolder']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="studentCohort()" src="../artwork/link.png" width="16" height="16" alt="<?php echo $string['studentcohort']; ?>" /></td><td class="menuitem"><a href="" onclick="studentCohort(); return false;"><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</a></td></tr>
 </table>
 </td></tr>
 </table>

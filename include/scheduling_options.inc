@@ -34,7 +34,7 @@
 <br />
 
 <table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><img src="../artwork/information_icon_grey.gif" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['viewdetails']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/information_icon_grey.gif" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['viewdetails']; ?></td></tr>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu1b">

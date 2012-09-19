@@ -221,13 +221,6 @@ if (isset($_POST['update']) and $demo == false) {
     .sch_check {text-align:right; width:40px; padding-right:6px}
     a.paper {color:black}
     a.paper:hover {color:white; background-color:#000080}
-    .photo_blur {
-      -webkit-filter: blur(15px);
-      -moz-filter: blur(15px);
-      -ms-filter: blur(15px);
-      -o-filter: blur(15px);
-      filter: blur(15px);
-    }
   </style>
 
   <script language="javascript">
@@ -351,16 +344,16 @@ if (isset($_POST['update']) and $demo == false) {
       $row_no = 7;
       if (file_exists($student_photo)) {
         if ($demo == true) {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         } else {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" class=\"photo_blur\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" &nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         }
       } else {
-        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
       }
     } else {
       $row_no = 9;
-      echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+      echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
     }
     $title_array = explode(',', $string['title_types']);
     echo '<select name="title">';
@@ -746,7 +739,7 @@ if (isset($_POST['update']) and $demo == false) {
     if ($attempt == 1) {
       $html .= '<td></td>';
     } else {
-      $html .= '<td><img src="../artwork/resit.png" width="16" height="16" alt="Resit" border="0" /></td>';
+      $html .= '<td><img src="../artwork/resit.png" width="16" height="16" alt="Resit" /></td>';
     }
     $html .= "<td>&nbsp;<a styele=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">$moduleid</a></td><td><a style=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">$fullname</a></td><td>$calendar_year</td></tr>\n";
     $old_year = $calendar_year;

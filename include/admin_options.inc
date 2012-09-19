@@ -27,7 +27,7 @@
 <div class="submenuheading"><?php echo $string['administrativetools']; ?></div>
 
 <table class="sidebar_tbl">
-<tr><td class="ico"><a href="../staff/index.php"><img src="../artwork/house.png" width="16" height="16" alt="<?php echo $string['home']; ?>" border="0" /></a></td><td class="menuitem"><a href="../staff/index.php"><?php echo $string['home']; ?></a></td></tr>
+<tr><td class="ico"><a href="../staff/index.php"><img src="../artwork/house.png" width="16" height="16" alt="<?php echo $string['home']; ?>" /></a></td><td class="menuitem"><a href="../staff/index.php"><?php echo $string['home']; ?></a></td></tr>
 </table>
 
 </div>

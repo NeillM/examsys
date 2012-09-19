@@ -45,15 +45,15 @@
 <br />
 
 <table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="create_lab.php" target="body"><img src="../artwork/new_lab_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="create_lab.php"><?php echo $string['createnewlab']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['vieweditdetails']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deletelab']; ?></td></tr>
+<tr><td class="ico"><a href="create_lab.php" target="body"><img src="../artwork/new_lab_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="create_lab.php"><?php echo $string['createnewlab']; ?></a></td></tr>
+<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['vieweditdetails']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deletelab']; ?></td></tr>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="create_lab.php" target="body"><img src="../artwork/new_lab_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="create_lab.php"><?php echo $string['createnewlab']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="viewDetails()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="viewDetails(); return false;"><?php echo $string['vieweditdetails']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteLab()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteLab(); return false;"><?php echo $string['deletelab']; ?></a></td></tr>
+<tr><td class="ico"><a href="create_lab.php" target="body"><img src="../artwork/new_lab_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="create_lab.php"><?php echo $string['createnewlab']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="viewDetails()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="viewDetails(); return false;"><?php echo $string['vieweditdetails']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="deleteLab()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteLab(); return false;"><?php echo $string['deletelab']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>

@@ -42,17 +42,17 @@
 <br />
 
 <table class="sidebar_tbl" id="menu1a">
-<tr><td class="ico"><a href="add_course.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="add_course.php"><?php echo $string['createcourse']; ?></a></td></tr>
-<tr><td class="ico"><a href="bulk_import_courses.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="bulk_import_courses.php"><?php echo $string['bulkcourseimport']; ?></a></td></tr>
-<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['editcourse']; ?></td></tr>
-<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deletecourse']; ?></td></tr>
+<tr><td class="ico"><a href="add_course.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="add_course.php"><?php echo $string['createcourse']; ?></a></td></tr>
+<tr><td class="ico"><a href="bulk_import_courses.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="bulk_import_courses.php"><?php echo $string['bulkcourseimport']; ?></a></td></tr>
+<tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['editcourse']; ?></td></tr>
+<tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /></td><td class="greymenuitem"><?php echo $string['deletecourse']; ?></td></tr>
 </table>
 
 <table class="sidebar_tbl" style="display:none" id="menu1b">
-<tr><td class="ico"><a href="add_course.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="add_course.php"><?php echo $string['createcourse']; ?></a></td></tr>
-<tr><td class="ico"><a href="bulk_import_courses.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" border="0" /></a></td><td class="menuitem"><a href="bulk_import_courses.php"><?php echo $string['bulkcourseimport']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="editCourse()" src="../artwork/edit.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="editCourse(); return false;"><?php echo $string['editcourse']; ?></a></td></tr>
-<tr><td class="ico"><img onclick="deleteCourse()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteCourse(); return false;"><?php echo $string['deletecourse']; ?></a></td></tr>
+<tr><td class="ico"><a href="add_course.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="add_course.php"><?php echo $string['createcourse']; ?></a></td></tr>
+<tr><td class="ico"><a href="bulk_import_courses.php"><img src="../artwork/degree_icon_16.png" width="16" height="16" alt="" /></a></td><td class="menuitem"><a href="bulk_import_courses.php"><?php echo $string['bulkcourseimport']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="editCourse()" src="../artwork/edit.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="editCourse(); return false;"><?php echo $string['editcourse']; ?></a></td></tr>
+<tr><td class="ico"><img onclick="deleteCourse()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteCourse(); return false;"><?php echo $string['deletecourse']; ?></a></td></tr>
 </table>
 </td></tr>
 </table>
