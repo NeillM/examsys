@@ -42,8 +42,7 @@ require_once '../classes/facultyutils.class.php';
 
 global $cfg_long_date_time;
 
-function
-listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
+function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   global $cfg_long_date_time, $icons;
 
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";

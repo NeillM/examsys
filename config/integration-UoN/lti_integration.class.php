@@ -211,6 +211,12 @@ class lti_integration_extended extends lti_integration {
 
       }
 
+      if ($v[2] == 'MY') {
+        $data[$k][1] = $data[$k][1] . '_UNMC';
+      } elseif ($v[2] == 'CN') {
+        $data[$k][1] = $data[$k][1] . '_UNNC';
+      }
+
       //     $returned = lookup_module_description($v);
       //      $data[$k] = $returned;
     }
