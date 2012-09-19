@@ -569,7 +569,7 @@ function getUserMark($q_id, $tmp_user_answer, $tmp_user_mark, $exclude, $status,
           $tmp_exclude = '0000000000000000000000000000000000000000';
         }
         if ($tmp_exclude{$a} == '0') {
-          if ($question['correct'][$a] == $tmp_user_answer{$a}) {
+          if ($question['correct'][$a] == substr($tmp_user_answer,$a,1)) {
             $tmp_mark += $question['marks_correct'];
             $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
           } else {
