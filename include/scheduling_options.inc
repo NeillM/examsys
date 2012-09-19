@@ -33,11 +33,11 @@
 <form name="myform">
 <br />
 
-<table style="margin-left:9px; font-size:90%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
+<table class="sidebar_tbl" id="menu1a">
 <tr><td class="ico"><img src="../artwork/information_icon_grey.gif" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['viewdetails']; ?></td></tr>
 </table>
 
-<table style="margin-left:9px; font-size:90%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
+<table class="sidebar_tbl" style="display:none" id="menu1b">
 <tr><td class="ico"><img onclick="viewDetails()" src="../artwork/information_icon.gif" width="16" height="16" alt="" /></td><td class="menuitem"><a href="#" onclick="viewDetails(); return false;"><?php echo $string['viewdetails']; ?></a></td></tr>
 </table>
 

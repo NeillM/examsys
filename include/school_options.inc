@@ -42,7 +42,7 @@
 <br />
 
 
-<table style="margin-left:9px; font-size:90%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu1a">
+<table class="sidebar_tbl" id="menu1a">
 <?php
 if ($faculties > 0) {
 ?>
@@ -59,7 +59,7 @@ if ($faculties > 0) {
 <tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="" border="0" /></td><td class="greymenuitem"><?php echo $string['deleteschool']; ?></td></tr>
 </table>
 
-<table style="margin-left:9px; font-size:90%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu1b">
+<table class="sidebar_tbl" style="display:none" id="menu1b">
 <tr><td class="ico"><a href="add_school.php" target="body"><img src="../artwork/school_icon_16.png" width="16" height="16" alt="<?php echo $string['createschool']; ?>" border="0" /></a></td><td class="menuitem"><a href="add_school.php"><?php echo $string['createschool']; ?></a></td></tr>
 <tr><td class="ico"><img onclick="editSchool()" src="../artwork/edit.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" border="0" /></td><td class="menuitem"><a href="" onclick="editSchool(); return false;"><?php echo $string['editschool']; ?></a></td></tr>
 <tr><td class="ico"><img onclick="deleteSchool()" src="../artwork/red_cross.png" width="16" height="16" alt="" border="0" /></td><td class="menuitem"><a href="" onclick="deleteSchool(); return false;"><?php echo $string['deleteschool']; ?></a></td></tr>

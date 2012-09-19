@@ -48,7 +48,7 @@ if (count($teams) > 0) {
   if ($folder != '') {       // Currently in a folder
 ?>
 <div class="submenuheading"><?php echo $string['foldertasks']; ?></div>
-<table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:9px">
+<table class="sidebar_tbl">
 <?php
 
   if ($folder_ownerID == $userID or (in_array($team_name,$teams)) == true or strpos($userroles,'SysAdmin') !== false) {
@@ -72,7 +72,7 @@ if (count($teams) > 0) {
     if ($module != '') {   
     ?>
       <div class="submenuheading"><?php echo $string['module']; ?></div>
-      <table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:9px">
+      <table class="sidebar_tbl">
     <?php
 
     if (strpos($userroles,'SysAdmin') !== false) {
@@ -99,7 +99,7 @@ if (count($teams) > 0) {
 ?>
 
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
-<table cellpadding="4" cellspacing="0" border="0" style="font-size:90%; margin-left:8px">
+<table class="sidebar_tbl">
 <?php
   if (count($teams) > 0) {
     echo "<tr><td class=\"ico\"><a href=\"#\" onclick=\"newPaper(); return false;\"><img src=\"$cfg_root_path/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"newPaper(); return false;\">" . $string['createnewpaper'] . "</a></td></tr>\n";

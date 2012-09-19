@@ -38,8 +38,8 @@
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .stats {border-collapse:collapse}
-    .stats th {background-color:#EBF2F7; border: 1px solid #CFDBEB}
-    .stats td {border: 1px solid #CFDBEB}
+    .stats th {background-color:#EAEAEA; border: 1px solid #C0C0C0; font-weight:normal}
+    .stats td {border: 1px solid #C0C0C0}
     .n {text-align:right}
   </style>
   <script type="text/javascript" src="../js/staff_help.js"></script>

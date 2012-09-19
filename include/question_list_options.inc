@@ -148,7 +148,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 
 <div class="submenuheading" id="banktasks"><?php echo $string['questionbank']; ?></div>
 
-<table cellpadding="4" cellspacing="0" border="0" style="margin-left:8px; font-size:90%">
+<table class="sidebar_tbl">
 <tr><td class="ico"><a href="#" onclick="showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Papers" /></a></td><td class="menuitem sub"><span id="type"><a href="#" onclick="showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><?php echo $string['questionsbytype']; ?></a></span></td></tr>
 <?php
   if (count($teams) == 0) {
@@ -170,7 +170,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 
 <div class="submenuheading" id="banktasks"><?php echo $string['currentquestiontasks']; ?></div>
 
-<table style="margin-left:8px; font-size:90%; display:block" cellpadding="4" cellspacing="0" border="0" id="menu2a">
+<table class="sidebar_tbl" id="menu2a">
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/edit_icon_16_grey.png" width="16" height="16" alt="Edit" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/information_icon_grey.gif" width="16" height="16" alt="Information" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/copy_icon_grey.gif" width="16" height="16" alt="Copy" /></td><td class="greymenuitem"><?php echo $string['copyontopaperx']; ?></td></tr>
@@ -178,7 +178,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/red_cross_grey.png" width="16" height="16" alt="Delete" /></td><td class="greymenuitem"><?php echo $string['deletequestion']; ?></td></tr>
 </table>
 
-<table style="margin-left:8px; font-size:90%; display:none" cellpadding="4" cellspacing="0" border="0" id="menu2b">
+<table class="sidebar_tbl" style="display:none" id="menu2b">
 <tr><td class="ico"><a id="edit" onclick="editQ(); return false;" href="#"><img src="<?php echo $cfg_root_path ?>/artwork/new_question_menu_icon.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/information_icon.gif" width="16" height="16" alt="Information" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td class="ico"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/copy_icon.gif" width="16" height="16" alt="Copy" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
@@ -186,7 +186,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 <tr><td class="ico"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></td><td class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><?php echo $string['deletequestion']; ?></a></td></tr>
 </table>
 
-<table style="margin-left:8px; font-size:90%; display:none" cellpadding="4" cellspacing="0" border="0" id="menu2c">
+<table class="sidebar_tbl" style="display:none" id="menu2c">
 <tr><td class="ico"><a id="edit" onclick="editQ(); return false;" href="#"><img src="<?php echo $cfg_root_path ?>/artwork/new_question_menu_icon.gif" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/information_icon.gif" width="16" height="16" alt="Information" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td class="ico"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/copy_icon.gif" width="16" height="16" alt="Copy" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>

@@ -322,7 +322,7 @@ $stmt->close();
 ?>
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
  <?php
-  echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" id=\"menu1\" style=\"margin-left:9px; font-size:90%; display:block\">\n";
+  echo "<table class=\"sidebar_tbl\" id=\"menu1\">\n";
   if ($paper_type == '5') {      // Offline
     echo "<tr><td style=\"width:20px\"><img src=\"{$cfg_root_path}/artwork/small_play_grey.png\" width=\"16\" height=\"16\" alt=\"" . $string['testpreview'] . "\" /></td><td class=\"greymenuitem\" style=\"width:166px\">" . $string['testpreview'] . "</td></tr>\n";
   } else {
@@ -412,7 +412,7 @@ $stmt->close();
 
 <div class="submenuheading" id="currentquestion"><?php echo $string['currentquestiontasks']; ?></div>
 
-<table style="margin-left:9px; display:block; font-size:90%" cellpadding="4" cellspacing="0" border="0" id="menu2a">
+<table class="sidebar_tbl" id="menu2a">
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/information_icon_grey.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/copy_icon_grey.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="greymenuitem"><?php echo $string['copyontopaperx']; ?></td></tr>
@@ -420,7 +420,7 @@ $stmt->close();
 <tr><td class="ico"><img src="<?php echo $cfg_root_path ?>/artwork/red_cross_grey.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></td><td class="greymenuitem"><?php echo $string['removefrompaper']; ?></td></tr>
 </table>
 
-<table style="margin-left:9px; font-size:90%" cellpadding="4" cellspacing="0" border="0" id="menu2b">
+<table class="sidebar_tbl" id="menu2b">
 <tr><td class="ico"><a id="edit" onclick="editQuestion(); return false;" href="#"><img style="cursor:hand" onclick="editQuestion(); return false;" src="<?php echo $cfg_root_path ?>/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></a></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img style="cursor:hand" onclick="questionInfo(); return false;" src="<?php echo $cfg_root_path ?>/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td class="ico"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img style="cursor:hand" onclick="copyToPaper(); return false;" src="<?php echo $cfg_root_path ?>/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
@@ -428,7 +428,7 @@ $stmt->close();
 <tr><td class="ico"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img style="cursor:hand" onclick="deleteQuestion(); return false;" src="<?php echo $cfg_root_path ?>/artwork/red_cross.png" width="16" height="16" alt="<?php echo $string['removefrompaper']; ?>" /></a></td><td class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><?php echo $string['removefrompaper']; ?></a></td></tr>
 </table>
 
-<table style="margin-left:9px; font-size:90%" cellpadding="4" cellspacing="0" border="0" id="menu2c">
+<table class="sidebar_tbl" id="menu2c">
 <tr><td class="ico"><img style="cursor:hand" onclick="editQuestion(); return false;" src="<?php echo $cfg_root_path ?>/artwork/edit.png" width="16" height="16" alt="<?php echo $string['editquestion']; ?>" /></td><td class="menuitem"><a id="edit" onclick="editQuestion(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><img style="cursor:hand" onclick="questionInfo(); return false;" src="<?php echo $cfg_root_path ?>/artwork/information_icon.gif" width="16" height="16" alt="<?php echo $string['information']; ?>" /></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td class="ico"><img style="cursor:hand" onclick="copyToPaper(); return false;" src="<?php echo $cfg_root_path ?>/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copyontopaperx']; ?>" /></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
@@ -468,7 +468,7 @@ if ($summative_lock == 1) {
 
 <div class="submenuheading" id="banktasks"><?php echo $string['questionbanktasks']; ?></div>
 
-<table cellpadding="4" cellspacing="0" border="0" style="margin-left:9px; font-size:90%">
+<table class="sidebar_tbl">
 <tr><td class="ico"><a href="#" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbytype']; ?>" /></a></td><td class="menuitem sub"><span id="type"><a href="#" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><?php echo $string['questionsbytype']; ?></a></span></td></tr>
 <?php
   if (count($teams) == 0) {
@@ -493,7 +493,7 @@ if ($paper_type == '2') {
 
 <div class="submenuheading"><?php echo $string['summativechecklist']; ?></div>
 
-<table cellpadding="2" cellspacing="0" border="0" width="185" style="margin-left:9px; padding-bottom:2px; font-size:90%">
+<table class="sidebar_tbl">
 
 <?php
   // Session

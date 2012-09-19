@@ -415,7 +415,7 @@ require_once '../classes/stateutils.class.php';
 <br />
 <div class="submenuheading" id="banktasks"><?php echo $string['currentquestiontasks']; ?></div>
 
-<table style="margin-left:12px; font-size:90%; line-height:160%; display:block" cellpadding="3" cellspacing="0" border="0" id="menu2a">
+<table class="sidebar_tbl" style="margin-left:12px" id="menu2a">
 <tr><td class="ico"><img src="../artwork/edit_grey.png" width="16" height="16" alt="Edit" /></td><td class="greymenuitem"><?php echo $string['editquestion']; ?></td></tr>
 <tr><td class="ico"><img src="../artwork/information_icon_grey.gif" width="16" height="16" alt="Information" /></td><td class="greymenuitem"><?php echo $string['information']; ?></td></tr>
 <tr><td class="ico"><img src="../artwork/copy_icon_grey.gif" width="16" height="16" alt="Copy" /></td><td class="greymenuitem"><?php echo $string['copyontopaperx']; ?></td></tr>
@@ -423,7 +423,7 @@ require_once '../classes/stateutils.class.php';
 <tr><td class="ico"><img src="../artwork/red_cross_grey.png" width="16" height="16" alt="Delete" /></td><td class="greymenuitem"><?php echo $string['deletequestion']; ?></td></tr>
 </table>
 
-<table style="margin-left:12px; font-size:90%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu2b">
+<table class="sidebar_tbl" style="margin-left:12px; display:none" id="menu2b">
 <tr><td class="ico"><a id="edit" onclick="editQ(); return false;" href="#"><img src="../artwork/edit.png" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img src="../artwork/information_icon.gif" width="16" height="16" alt="Information" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td class="ico"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="../artwork/copy_icon.gif" width="16" height="16" alt="Copy" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>
@@ -431,7 +431,7 @@ require_once '../classes/stateutils.class.php';
 <tr><td class="ico"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img src="../artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></td><td class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><?php echo $string['deletequestion']; ?></a></td></tr>
 </table>
 
-<table style="margin-left:12px; font-size:90%; line-height:160%; display:none" cellpadding="3" cellspacing="0" border="0" id="menu2c">
+<table class="sidebar_tbl" style="margin-left:12px; display:none" id="menu2c">
 <tr><td class="ico"><a id="edit" onclick="editQ(); return false;" href="#"><img src="../artwork/edit.png" width="16" height="16" alt="Edit" /></a></td><td class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><?php echo $string['editquestion']; ?></a></td></tr>
 <tr><td class="ico"><a id="information" href="#" onclick="questionInfo(); return false;"><img src="../artwork/information_icon.gif" width="16" height="16" alt="Information" /></a></td><td class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><?php echo $string['information']; ?></a></td></tr>
 <tr><td class="ico"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img src="../artwork/copy_icon.gif" width="16" height="16" alt="Copy" /></a></td><td class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><?php echo $string['copyontopaperx']; ?></a></td></tr>

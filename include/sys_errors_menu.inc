@@ -36,7 +36,7 @@
 
 <br />
 
-<table cellpadding="3" cellspacing="0" border="0" style="margin-left:10px; font-size:90%">
+<table class="sidebar_tbl">
 <tr><td class="ico"><a onclick="displayDetails(); return false;"><img src="../artwork/information_icon.gif" width="16" height="16" alt="home" border="0" /></a></td><td class="menuitem"><a onclick="displayDetails(); return false;"><?php echo $string['displaydetails']; ?></a></td></tr>
 </table>
 
