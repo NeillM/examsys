@@ -30,14 +30,16 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['summativeexamstats'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .stats {border-collapse:collapse}
-    .stats th {color:white; background-image:url(../artwork/search_bar_background.png); background-repeat:repeat-x; border: 1px solid #6893CD}
-    .stats td {border: 1px solid #6893CD}
+    .stats th {background-color:#EBF2F7; border: 1px solid #CFDBEB}
+    .stats td {border: 1px solid #CFDBEB}
     .n {text-align:right}
   </style>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -95,7 +97,7 @@ $result->bind_result($property_id, $paper_title, $month, $start_date, $end_date,
 while ($result->fetch()) {
   $paper_count = 0;
   
-  $paper_data = $mysqli->prepare("SELECT userid FROM log_metadata, users WHERE log_metadata.userID=users.ID AND roles IN ('Student','graduate') AND paperID = ? AND started >= ? AND started <= ?");
+  $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID=users.ID AND roles IN ('Student','graduate') AND paperID = ? AND started >= ? AND started <= ?");
   $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
   $paper_data->execute();
   $paper_data->store_result();
@@ -110,7 +112,7 @@ while ($result->fetch()) {
 
     if ($old_month != '') {
       if ($month_paper_no > 0) {
-        echo "<tr><td>".$string[strtolower($old_month)]."</td><td class=\"n\">$month_paper_no</td><td class=\"n\">" . round($month_student_no/$month_paper_no,1) . "</td><td class=\"n\">$month_min</td><td class=\"n\">$month_max</td><td class=\"n\">" . number_format($month_student_no) . "</td></tr>\n";
+        echo "<tr><td>" . $string[strtolower($old_month)] . "</td><td class=\"n\">$month_paper_no</td><td class=\"n\">" . round($month_student_no/$month_paper_no,1) . "</td><td class=\"n\">$month_min</td><td class=\"n\">$month_max</td><td class=\"n\">" . number_format($month_student_no) . "</td></tr>\n";
       }
     }
     $month_paper_no = 0;
