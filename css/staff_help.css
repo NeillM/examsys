@@ -2,7 +2,10 @@ body {
   font-size:85%;
   line-height:150%;
 }
-p, div, td {
+a {
+  color:blue;
+}
+p, div, td, strong, ol {
   color:#484848;
 }
 ul {

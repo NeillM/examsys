@@ -127,6 +127,8 @@
   $result->bind_result($page_title, $body, $id, $page_checkout_time, $page_checkout_authorID, $type, $roles);
   $result->fetch();
   $result->close();
+  
+  
 
   if ($type == 'pointer') {
     $edit_id = $body;
@@ -154,7 +156,7 @@
   
   echo "</select>\n</td></tr></table>\n<br />\n";
   
-  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" . htmlspecialchars($body) . "</textarea>\n";
+  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">$body</textarea>\n";
   
   // Check for lockout.
   $current_time = date('YmdHis');

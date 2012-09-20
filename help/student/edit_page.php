@@ -141,7 +141,7 @@
   }
 
   echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></p>\n";
-  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" . htmlspecialchars($body) . "</textarea>\n";
+  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">$body</textarea>\n";
 
   // Check for lockout.
   $current_time = date('YmdHis');
