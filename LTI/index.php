@@ -292,7 +292,7 @@ END;
       @ob_clean();
       display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
 
-      echo 'Module: ' . $modinfo;
+      echo '<p>Module(s): ' . $modinfo .'</p>';
 
     }
 
