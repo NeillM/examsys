@@ -273,11 +273,11 @@ END;
     echo '<h1>' . $string['describemodulechoice'] . '</h1>';
 
     //if there is a context and therefore a course already selected display that
-$modinfo='';
-    foreach($data as $v) {
-      $modinfo = .', ' . $v[1];
+    $modinfo = '';
+    foreach ($data as $v) {
+      $modinfo = £modinfo . ', ' . $v[1];
     }
-    $modinfo=substr($modinfo, 2);
+    $modinfo = substr($modinfo, 2);
 
     echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . ' ' . $modinfo . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
@@ -295,7 +295,6 @@ $modinfo='';
       echo 'Module: ' . $modinfo;
 
     }
-
 
 
   }

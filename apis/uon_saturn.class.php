@@ -416,7 +416,7 @@ Class UON_SATURN extends SmsUtils {
       $result->close();
 
 
-      print "$module, $sms_api, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type\r\n<br>";
+//      print "$module, $sms_api, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type\r\n<br>";
       @ob_flush();
       @flush();
 
