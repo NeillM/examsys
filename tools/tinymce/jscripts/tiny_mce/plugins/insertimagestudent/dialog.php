@@ -59,7 +59,7 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
       echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
       exit;
     }
-    if ($_POST['border']) {
+    if (isset($_POST['border']) and $_POST['border'] == 1) {
       $class = 'class="image_brd"';
     } else {
       $class = 'class="image_no_brd"';
