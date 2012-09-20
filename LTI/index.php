@@ -275,7 +275,7 @@ END;
     //if there is a context and therefore a course already selected display that
     $modinfo = '';
     foreach ($data as $v) {
-      $modinfo = £modinfo . ', ' . $v[1];
+      $modinfo = $modinfo . ', ' . $v[1];
     }
     $modinfo = substr($modinfo, 2);
 
