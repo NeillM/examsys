@@ -47,6 +47,11 @@ ob_start();
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+<style type="text/css">
+  .warn-icon {
+    font-size: 90%;
+  }
+</style>
 
 <script type="text/javascript" src="../js/staff_help.js"></script>
 <script language="JavaScript">
@@ -377,8 +382,10 @@ if ($language != 'en') {
 
   $log_late = array();
   // Check log_late for any records
-  $result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names FROM log_late, users WHERE log_late.userID=users.id AND q_paper=? AND started>? ORDER BY surname, initials");
-  $result->bind_param('is', $paperID, $startdate);
+  $late_ts = strtotime($enddate) + 7200;
+  $late_end = date('Y-m-d H:i:s', $late_ts);
+  $result = $mysqli->prepare("SELECT DISTINCT userID, title, surname, first_names FROM log_late, users WHERE log_late.userID=users.id AND q_paper=? AND started>? AND started<? ORDER BY surname, initials");
+  $result->bind_param('iss', $paperID, $startdate, $late_end);
   $result->execute();
   $result->bind_result($tmp_userID, $title, $surname, $first_names);
   while ($result->fetch()) {
@@ -443,8 +450,8 @@ if ($language != 'en') {
   echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
   
   // output table header
-  echo "<tr style=\"font-size:110%\">\n";
   if (isset($user_results[0])){
+    echo "<tr style=\"font-size:110%\">\n";
     foreach ($table_order as $display => $key) {
       if ($key == '') {
         echo "<th>";
@@ -459,6 +466,7 @@ if ($language != 'en') {
         echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repcourse=" . $_GET['repcourse'] . "&module=" . $_GET['module'] . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&direction=$direction&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;</th>";
       }
     }
+    echo "</tr>\n";
   }
   
   echo '<tr><th colspan="' . ($cols) . '" class="bevel"></th></tr>';
@@ -471,12 +479,32 @@ if ($language != 'en') {
     }
   }
   if ($temp_user_no > 0) {
-    echo "<tr><td class=\"redwarn\" style=\"width:28px; text-align:right\"><img src=\"../artwork/temp_account_warning.png\" style=\"padding-top:1px\" width=\"28\" height=\"28\" alt=\"Warning\" /></td><td colspan=\"$cols\" class=\"redwarn\">&nbsp;" . $string['temporaryaccountswarning'] . " <a href=\"#\" style=\"color:black\" onclick=\"launchHelp(185); return false;\">" . $string['moredetails'] . "</a></td></tr>\n";
+?>
+    <tr>
+      <td class="redwarn" colspan="<?php echo $cols ?>">
+        <table class="warn-icon">
+          <tr>
+            <td><img src="../artwork/temp_account_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td><?php echo $string['temporaryaccountswarning'] ?></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+<?php
   }
   
   if (count($log_late) > 0) {
-    echo "<tr><td class=\"redwarn\" style=\"width:28px; text-align:right\"><img src=\"../artwork/late_warning_icon.png\" width=\"28\" height=\"28\" /></td><td colspan=\"$cols\" class=\"redwarn\" style=\"padding-left:6px\">" . $string['latesubmissionsmsg'] . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>): ";
-    $html = '';
+?>
+    <tr>
+      <td class="redwarn" colspan="<?php echo $cols ?>">
+        <table class="warn-icon">
+          <tr>
+            <td><img src="../artwork/late_warning_icon.png" width="28" height="28" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
+            <td>
+
+
+<?php
+    $html = $string['latesubmissionsmsg'] . " (<a style=\"color:black\" href=\"#\" onclick=\"launchHelp(221); return false;\">" . $string['moredetails'] . "</a>): ";
     foreach ($log_late as $student_userID => $student_name) {
       if ($html == '') {
         $html = $student_name;
@@ -484,7 +512,7 @@ if ($language != 'en') {
         $html .= ', ' . $student_name;
       }
     }
-    echo "$html.</div></td></tr>\n";
+    echo "$html.</td></tr></table></td></tr>\n";
   }
   
   $xmean_total = 0;
