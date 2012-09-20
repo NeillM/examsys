@@ -48,7 +48,7 @@
             echo "<frame src=\"display_page.php?id=" . $_GET['id'] . $tmp_highlight . "\" name=\"content\" id=\"content\" scrolling=\"yes\" />\n";
           }
         } else {
-          echo "<frame src=\"display_page.php?id=0$tmp_highlight\" name=\"content\" id=\"content\" scrolling=\"yes\" />\n";
+          echo "<frame src=\"display_page.php?id=1$tmp_highlight\" name=\"content\" id=\"content\" scrolling=\"yes\" />\n";
         }
       ?>
     <noframes>

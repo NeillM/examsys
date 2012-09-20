@@ -137,7 +137,7 @@
   
   echo "<body onload=\"updateToolbar(" . $_GET['id'] . "," . $_GET['id'] . "); updateTOC();\">\n";
   
-  if ($_GET['id'] == 0) {
+  if ($_GET['id'] == 1) {
     // ID 1 is for the homepage.
     echo "<div>\n";
   } else {
@@ -170,7 +170,7 @@
     } while ($found !== false);
   }
   echo $tmp_body;
-  if ($_GET['id'] > 0) {
+  if ($_GET['id'] > 1) {
     echo "<br clear=\"all\" />\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px; margin-bottom:5px\" />\n</div>\n";
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\"><tr>";
     echo "<td style=\"padding-left:20px\"><a style=\"color:#003366\" href=\"#top\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" border=\"0\" alt=\"" . $string['top'] . "\" /></a>&nbsp;<a style=\"color:#003366\" href=\"#top\">" . $string['top'] . "</a></td><td style=\"padding-right:20px; text-align:right\">&copy; 2012, The University of Nottingham</td></tr>";
