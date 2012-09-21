@@ -1226,7 +1226,18 @@ QUERY;
       ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-   $this->tableList['courses'] = <<<QUERY
+    $this->tableList['class_totals_test_local'] = <<<QUERY
+        CREATE TABLE `class_totals_test_local` (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `user_id` int unsigned DEFAULT NULL,
+          `paper_id` mediumint unsigned DEFAULT NULL,
+          `status` enum('in_progress','success','failure') DEFAULT NULL,
+          `errors` text,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['courses'] = <<<QUERY
         CREATE TABLE `courses` (
           `id` int NOT NULL auto_increment,
           `name` varchar(255) default NULL,

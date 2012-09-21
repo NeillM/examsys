@@ -15,184 +15,115 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* This script is designed to compare marks between the Class Totals report and students' actual exam scripts (finish.php).
-* It works by:
-*   1. Get summative exam papers in the require date range.
-*   2. For each paper call class_totals.php and parse for student IDs and marks.
-*   3. For each student call finish.php and compare the mark.
-*   4. Echo errors for any which do not match.
-* 
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2012 The University of Nottingham
-* @package
-*/
+ *
+ * This script is designed to compare marks between the Class Totals report and students' actual exam scripts (finish.php).
+ * It works by:
+ *   1. Get summative exam papers in the require date range.
+ *   2. For each paper call class_totals.php and parse for student IDs and marks.
+ *   3. For each student call finish.php and compare the mark.
+ *   4. Echo errors for any which do not match.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
-set_time_limit(0);
-ob_start();
-
-$end_dateSQL = 'NOW()';
-if (isset($_GET['period'])) {
-  if ($_GET['period'] == 'week') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 WEEK)';
-  } elseif ($_GET['period'] == 'month') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 MONTH)';
-  } elseif ($_GET['period'] == 'year') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 YEAR)';
-  } elseif ($_GET['period'] == '2year') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 2 YEAR)';
-  } elseif ($_GET['period'] == '3year') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 3 YEAR)';
-  }
-} else {
-  $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';
-}
-
-if (isset($_GET['server'])) {
-  $server = $protocol . $_GET['server'];
-} else {
-  $server = $protocol . $_SERVER['SERVER_ADDR'];
-}
-
-  
-function getData($url) {
-  $ch = curl_init($url);
-
-  curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-  curl_setopt($ch, CURLOPT_USERPWD, $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_SSLVERSION, 3);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept-Language: en-us,en;q=0.5'));
-
-  $output = curl_exec($ch);
-  curl_close($ch);
-  
-  return $output;
-}
-
-function tidyLine($line) {
-  $line = str_replace('<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="Marking not complete" />&nbsp;', '', $line);
-  $parts = explode('>', $line);
-  $parts2 = explode('<', $parts[1]);
-  
-  return str_replace('&nbsp;', '', $parts2[0]);
-}
-
-function parseRawMarks($data) {
-  $marks = array();
-  $line = 0;
-  $data_line = explode('<tr', $data);
-  
-  foreach ($data_line as $row) {
-    if (strpos($row,'Display exam script') !== false) {
-      $cols = explode('<td', $row);
-      
-      $tmp_parts = explode("popMenu('", $cols[2]);
-      $started = substr($tmp_parts[1], 0, 19);
-      
-      $tmp_parts2 = explode(',', $tmp_parts[1]);
-      $tmp_userID = $tmp_parts2[1];
-     
-      $marks[$line]['mark'] = tidyLine($cols[5]);
-      $marks[$line]['percent'] = tidyLine($cols[6]);
-      $marks[$line]['started'] = $started;
-      $marks[$line]['userID'] = $tmp_userID;
-
-      $line++;
-    }
-  }
-  return $marks;
-}
-
-function parseScript($data) {
-  $data_line = explode('<tr', $data);
-  
-  foreach ($data_line as $row) {
-    if (strpos($row,'Your mark') !== false) {
-      $cols = explode('>', $row);
-      
-      $parts = explode(' out of', $cols[4]);
-      $mark = round($parts[0],1);  // Round it to 1 decimal because this is what Class Totals does.
-    }
-  }
-  return $mark;
-}
 
 $papers = array();
-$result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > $start_dateSQL AND end_date < $end_dateSQL AND deleted IS NULL ORDER BY start_date");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y') FROM properties WHERE paper_type = '2' AND start_date < NOW() AND deleted IS NULL ORDER BY property_id");
 $result->execute();
-$result->bind_result($crypt_name, $paperID, $title, $display_start_date, $start_date, $end_date);
+$result->bind_result($paperID, $title, $display_start_date);
 while ($result->fetch()) {
-  $papers[] = array('crypt_name'=>$crypt_name, 'paperID'=>$paperID, 'title'=>$title, 'display_start_date'=>$display_start_date, 'start_date'=>$start_date, 'end_date'=>$end_date);
+  $papers[] = array('paperID'=>$paperID, 'title'=>$title, 'display_start_date'=>$display_start_date);
 }
 $result->close();
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>"/>
+
   <title>Testing: Class Totals</title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+
+  <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <style type="text/css">
-    body {font-size:90%}
-    table {font-size:100%}
-    .n {text-align:right}
+    body {
+      font-size: 90%;
+      font-family: Arial, sans-serif;
+    }
+
+    dt {
+      font-weight: bold;
+    }
+    dd {
+      padding-bottom: 16px;
+    }
+    input[type=text] {
+      width: 400px;
+    }
   </style>
+
+  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(function () {
+      $('#results').hide();
+      $('#start').click(function () {
+        var period = $('#period').val();
+        var paper = $('#paper').val();
+        $.post('class_totals_with_script_ajax.php',
+                {
+                  period:period,
+                  paper:paper
+                });
+        $('#results').show();
+        $('#form').hide();
+      });
+      $('#status').click(function() {
+        var period = $('#period').val();
+        var paper = $('#paper').val();
+        window.location.href='class_totals_with_script_status.php?period=' + period + '&paper=' + paper;
+      });
+    })
+  </script>
 </head>
 <body>
+<h1>Class Totals Internal Analysis</h1>
+
+<div id="form">
+  <dl class="form">
+    <dt><label for="period">Select time period:</label></dt>
+    <dd>
+      <select id="period" name="period">
+        <option value="">-- All papers --</option>
+        <option value="week">Last week</option>
+        <option value="month">Last month</option>
+        <option value="year">Last year</option>
+        <option value="2year">Last 2 years</option>
+        <option value="3year">Last 3 years</option>
+      </select>
+    </dd>
+    <dt><label for="paper">OR Select a paper</label></dt>
+    <dd>
+      <select id="paper">
+        <option value="">-- All papers --</option>
 <?php
-$paper_no = count($papers);
-$current_no = 0;
-
-$result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id=? LIMIT 1");
-foreach ($papers as $paper) {
-  $url = $server . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=A14CHH&folder=&percent=100&absent=0&direction=asc&studentsonly=1";
-  
-  $output = getData($url);
-  $marks_set = parseRawMarks($output);
-  
-  $current_no++;
-  echo "<br /><strong>$current_no/$paper_no Checking paperID " . $paper['paperID'] . "...</strong><br />\n";
-  ob_flush();
-  flush();  
-
-  $i = 0;
-  foreach ($marks_set as $mark) {
-    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&previous=" . str_replace(' ', '%20', $mark['started']) . "&userid=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
-    $output = getData($url);
-    $script_mark = parseScript($output);
-    
-    if ($script_mark != $mark['mark']) {
-      $result->bind_param('i', $mark['userID']);
-      $result->execute();
-      $result->bind_result($tmp_surname, $tmp_first_names, $tmp_username);
-      $result->fetch();
-
-      echo "Problem with " . $mark['userID'] . " $tmp_surname, $tmp_first_names ($tmp_username) - $script_mark / " . $mark['mark'] . "<br />";
-    }
-
-    if ($i % 10 == 0) {
-      echo '.';
-    }
-    $i++;
-
-    ob_flush();
-    flush();  
-  }
-}
-$result->close();
-
-ob_end_flush();
+foreach ($papers as $paper):
 ?>
-Finished<br />
+        <option value="<?php echo $paper['paperID'] ?>"><?php echo '[' . $paper['paperID'] . '] ' . $paper['title'] ?> (<?php echo $paper['display_start_date'] ?>)</option>
+<?php
+endforeach;
+?>
+      </select>
+    </dd>
+  </dl>
+  <button id="start">Start Analysis</button>
+</div>
+<div id="results">
+  <p>Analysis started.</p>
+  <button id="status">View the current status</button>
+</div>
 </body>
 </html>

@@ -4471,7 +4471,33 @@ if (!isset($_POST['update'])) {
     }
   } 
   $result->close();
-  
+
+  // 21/09/2012 - Create new 'class_totals_test_local' table to hold progress in class totals comparison test.
+  $result = $mysqli->prepare("SELECT COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='class_totals_test_local' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='id'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $query = <<< QUERY
+        CREATE TABLE `class_totals_test_local` (
+          `id` int NOT NULL AUTO_INCREMENT,
+          `user_id` int unsigned DEFAULT NULL,
+          `paper_id` mediumint unsigned DEFAULT NULL,
+          `status` enum('in_progress','success','failure') DEFAULT NULL,
+          `errors` text,
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$cfg_db_charset}
+QUERY;
+
+    $adjust = $mysqli->prepare($query);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>{$query}</li>\n";
+    ob_flush();
+    flush();
+  }
+
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
