@@ -3456,8 +3456,24 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>TRUNCATE staff_help</li>\n";
   
-    $query = file_get_contents('../install/staff_help.sql');
-    $mysqli->query($query);
+    $filec=file('../install/staff_help.sql');
+    foreach($filec as $query) {
+      $query=trim(rtrim($query));
+      if(substr($query,0,11) == 'INSERT INTO')   { // ONLY DO INSERT STATEMENTS
+        $mysqli->query($query);
+        if ($mysqli->error) {
+          try {
+            throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+          } catch (Exception $e) {
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo nl2br($e->getTraceAsString());
+            exit();
+          }
+        }
+      }
+     }
+
+
     echo "<li>LOADED staff_help</li>\n";
   }
   if (isset($_POST['update_student_help'])) {
@@ -3466,8 +3482,22 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>TRUNCATE student_help</li>\n";
     
-    $query = file_get_contents('../install/student_help.sql');
-    $mysqli->query($query);
+    $filec=file('../install/student_help.sql');
+    foreach($filec as $query) {
+      $query=trim(rtrim($query));
+      if(substr($query,0,11) == 'INSERT INTO')   { // ONLY DO INSERT STATEMENTS
+        $mysqli->query($query);
+        if ($mysqli->error) {
+          try {
+            throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+          } catch (Exception $e) {
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo nl2br($e->getTraceAsString());
+            exit();
+          }
+        }
+      }
+    }
     echo "<li>LOADED student_help</li>\n";
   }
 
