@@ -309,23 +309,67 @@ Class InstallUtils {
     if (file_exists($staff_help)) {
       $query = file_get_contents($staff_help);
       self::$db->query("TRUNCATE staff_help");
-      self::$db->query($query);
+
+
+      self::$db->multi_query($query);
+      if (self::$db->error) {
+        try {
+          throw new Exception("0MySQL error " . self::$db->error . " <br> Query:<br> ", self::$db->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
+
       if (self::$db->errno != 0) {
-        self::logWarning(array('501' => $string['logwarning1'] . self::$db->error ));
+        self::logWarning(array('501' => $string['logwarning1'] . self::$db->error));
+        $ext = '';
+      }
+      while (self::$db->more_results()) {
+        self::$db->next_result();
+        if (self::$db->error) {
+          try {
+            throw new Exception("0MySQL error " . self::$db->error . " <br> Query:<br> ", self::$db->errno);
+          } catch (Exception $e) {
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo nl2br($e->getTraceAsString());
+          }
+        }
       }
     } else {
-      self::logWarning(array('502'=>  $string['logwarning2']));
+      self::logWarning(array('502' => $string['logwarning2']));
     }
 
     if (file_exists($student_help)) {
       $query = file_get_contents($student_help);
       self::$db->query("TRUNCATE student_help");
-      self::$db->query($query);
+
+      self::$db->multi_query($query);
+      if (self::$db->error) {
+        try {
+          throw new Exception("0MySQL error " . self::$db->error . " <br> Query:<br> ", self::$db->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
       if (self::$db->errno != 0) {
-        self::logWarning(array('503' =>  $string['logwarning3'] . self::$db->error ));
+        self::logWarning(array('503' => $string['logwarning3'] . self::$db->error));
+        $ext = '';
+        while (self::$db->more_results()) {
+          self::$db->next_result();
+          if (self::$db->error) {
+            try {
+              throw new Exception("0MySQL error " . self::$db->error . " <br> Query:<br> ", self::$db->errno);
+            } catch (Exception $e) {
+              echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+              echo nl2br($e->getTraceAsString());
+            }
+          }
+        }
       }
     } else {
-      self::logWarning(array('504'=> $string['logwarning4']));
+      self::logWarning(array('504' => $string['logwarning4']));
     }
 
   }
@@ -770,6 +814,7 @@ Class InstallUtils {
     if (file_exists($rogo_path . '/config/config.inc.php')) {
       $errors['90'] =  "<p>" . sprintf($string['errors1'],$rogo_path."/config/config.inc.php") . "</p>";
       $errors['90'] .= "<p>" . sprintf($string['errors2'],"<a href=\"/staff\">") . "</a></p>";
+      self::displayError($errors);
     }
   }
 

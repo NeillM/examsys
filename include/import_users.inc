@@ -29,12 +29,15 @@ require_once '../classes/userutils.class.php';
 $header = array();
 $needed_cols1 = array('student_id','first names','surname','title','course code','year of course','local email');
 $needed_cols2 = array('id','forenames','family name','title','course','year of study','email');
+$optional_cols = array('modules','session');
 
 function add_users_from_file($fileName) {
-  global $header, $needed_cols1, $needed_cols2, $mysqli, $string, $cfg_encrypt_salt;
+  global $header, $needed_cols1, $needed_cols2, $optional_cols, $mysqli, $string, $cfg_encrypt_salt;
   
   $courses = array();
   $users[] = array();
+  
+  $users['html'] = "<table style=\"width:100%\">\n";
   
   $lines = file($fileName);
   foreach ($lines as $separate_line) {
@@ -49,6 +52,7 @@ function add_users_from_file($fileName) {
 
     if (count($header) == 0) {
       //build the header array
+      $tmp_orig_header = explode($split_on, $separate_line);
       $separate_line = strtolower($separate_line);
       $error = array();
       $tmp_header = explode($split_on, $separate_line);
@@ -59,9 +63,26 @@ function add_users_from_file($fileName) {
       $header = array_flip($header);
       for ($i=0; $i<count($needed_cols1); $i++) {
         if (!isset($header[$needed_cols1[$i]]) and !isset($header[$needed_cols2[$i]])) {
-          $error['error'][] = "<li>" . sprintf($string['missingcolumn'],$needed_cols1[$i]) . "</li>";
+          $error['error'][] = "<li>" . sprintf($string['missingcolumn'], $needed_cols1[$i]) . "</li>";
         }
       }
+      
+      $i = 0;
+      $col_errors = array();
+      $users['html'] .= '<tr>';
+      $users['html'] .= "<th></th>";
+      foreach ($tmp_orig_header as $field) {
+        $tmp_field = strtolower(str_replace('"', '', $field));
+        if (in_array($tmp_field, $needed_cols1) or in_array($tmp_field, $needed_cols2) or in_array($tmp_field, $optional_cols)) {
+          $users['html'] .= "<th>$field</th>";
+        } else {
+          $users['html'] .= "<th style=\"background-color:#FFC0C0\">$field</th>";
+          $col_errors[$i] = true;
+        }
+        $i++;
+      }
+      $users['html'] .= '</tr>';
+      
       if (count($error) > 0) {
         return $error;
       } else {
@@ -73,7 +94,7 @@ function add_users_from_file($fileName) {
     if (isset($header['type'])) {
       $role = str_replace('"','',trim($fields[$header['type']]));
     } else {
-      $roles = 'Student';
+      $role = 'Student';
     }
     if (isset($header['student_id'])) {
       $sid = str_replace('"','',trim($fields[$header['student_id']]));
@@ -139,11 +160,11 @@ function add_users_from_file($fileName) {
 
     // Override some fields if user type is Staff.
     if (strtolower($role) == 'staff') {
-      $roles = 'Staff';
+      $role = 'Staff';
       $course = 'University Lecturer';
       $year = 1;
     } elseif (strtolower($role) == 'external examiner') {
-      $roles = 'External Examiner';
+      $role = 'External Examiner';
       $course = 'Staff External Examiner';
       $year = 1;
     }
@@ -151,6 +172,23 @@ function add_users_from_file($fileName) {
     $invalid_user = false;
     $tmp_userID = UserUtils::username_exists($username, $mysqli);
     
+    $users['html'] .= '<tr>';
+    if ($tmp_userID === false) {
+      $users['html'] .= '<td><img src="../artwork/green_plus_16.png" wodth="16" height="16" alt="Add" /></td>';
+    } else {
+      $users['html'] .= '<td><img src="../artwork/arrow_circle_double.png" wodth="16" height="16" alt="Update" /></td>';
+    }
+    $i = 0;
+    foreach ($fields as $field) {
+      if (isset($col_errors[$i])) {
+        $users['html'] .= "<td style=\"background-color:#FFC0C0\">$field</td>";
+      } else {
+        $users['html'] .= "<td>$field</td>";
+      }
+      $i++;
+    }
+    $users['html'] .= '</tr>';
+
     if ($tmp_userID === false) {
       //add new users
 
@@ -183,14 +221,14 @@ function add_users_from_file($fileName) {
       if ($password != '') {
         //we are updating the password from the CSV
         $encpw_password = encpw($cfg_encrypt_salt, $username, $password);
-        $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, title=?, first_names=?, surname=?, grade=? , password=? WHERE username=?");
-        $result->bind_param('sssssss', $year, $title, $forname, $surname, $course, $encpw_password, $username);
+        $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, title=?, first_names=?, surname=?, grade=?, password=?, roles=? WHERE username=?");
+        $result->bind_param('ssssssss', $year, $title, $forname, $surname, $course, $encpw_password, $role, $username);
         $result->execute();
         $result->close();
       } else {
         //no new password was provided in the CSV
-        $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, title=?, first_names=?, surname=?, grade=? WHERE username=?");
-        $result->bind_param('ssssss', $year, $title, $forname, $surname, $course, $username);
+        $result = $mysqli->prepare("UPDATE users SET yearofstudy=?, title=?, first_names=?, surname=?, grade=?, roles=? WHERE username=?");
+        $result->bind_param('sssssss', $year, $title, $forname, $surname, $course, $role, $username);
         $result->execute();
         $result->close();
       }
@@ -212,6 +250,7 @@ function add_users_from_file($fileName) {
       UserUtils::add_staff_to_team($tmp_userID, $team, $mysqli);
     }
   }
+  $users['html'] .= "</table>\n";
 
   return $users;
 }
