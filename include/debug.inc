@@ -170,34 +170,48 @@ function outputLoadTimes() {
   if (!$mysqli->closed) {
     $mysqli->cacheSqlProfile();
   }
-  echo  '<br style="clear:both" /><div style="clear:both; font-size:90%; margin:20px; padding:15px; background-color:#ffffff; width:90%">';
+  echo  '<div style="cursor:pointer; position:absolute; left:55%; top:0; z-index: 9999; font-size:90%; padding:0px; background-color:#ffffff; width:43%">';
   $start = explode(' ',$debug_pagestart);
   $end = explode(' ', microtime());
   $usec = floatval($end[0]) - floatval($start[0]);
   $sec = $end[1] - $start[1];
   $res=(float)$sec+(float)$usec;
-  echo '<p>Time: ' . round($res,3) . ' secs, Memory: ' . round(((memory_get_peak_usage()/1024)/1024),1) . 'Mb, Queries: ' . count($queryInfo) . " <a href=\"#\" onclick=\"document.getElementById('allQueries').style.display='block'; return false;\">More ...</a></p>";
-  
-  
+  echo '<div onclick="var el=document.getElementById(\'debugOverview\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;">Debug:: Time: ' . round($res,3) . ' secs, Memory: ' . round(((memory_get_peak_usage()/1024)/1024),1) . 'Mb, Queries: ' . count($queryInfo) . "</div>";
+  echo "<div id=\"debugOverview\" style=\"display:none\">";
+  echo '<p onclick="var el=document.getElementById(\'dbgData\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;"><strong>$_ POST GET SERVER SESSION</strong></p>';
+  echo '<div id="dbgData" style="display:none">';
+    echo "<pre>\$_GET";
+      var_dump($_GET);
+    echo "</pre>";
+    echo "<pre>\$_POST";
+      var_dump($_POST);
+    echo "</pre>";
+    echo "<pre>\$_SESSION";
+      var_dump($_SESSION);
+    echo "</pre>";
+    echo "<pre>\$_SERVER";
+      var_dump($_SERVER);
+    echo "</pre>";
+  echo '</div>';
   $errors = false;
   foreach($queryInfo as $id => $query) {
     if (isset($query['sql']['error'])) $errors = true;
   }
   
-  
+  echo '<p onclick="var el=document.getElementById(\'allQueries\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;"><strong>Queries:</strong></p>';
   if ($errors) {
     echo '<div id="allQueries" style="display:block">';
   } else {
     echo '<div id="allQueries" style="display:none">';
   }
-  echo '<hr noshade="noshade" style="height:1px; border:0px" /><ol>';
+  echo '<ol>';
   foreach ($queryInfo as $id => $query) {
     if (isset($query['sql']['error'])) {
       echo "<li><div style=\"background-color:#C00000; color:white\">";
     } else {
       echo "<li>";
     }
-    echo "<p>" . $query['sql']['Query'] . ' [' . $query['sql']['Duration'] . "] <a href=\"#\" onclick=\"document.getElementById('debug_$id').style.display='block'; return false;\">More ...</a></p>";
+    echo "<p>" . $query['sql']['Query'] . ' [' . $query['sql']['Duration'] . "] <a href=\"#\" onclick=\"var el=document.getElementById('debug_$id'); el.style.display=el.style.display=(el.style.display != 'none' ? 'none' : ''); return false;\">More ...</a></p>";
     
     echo "<div id=\"debug_$id\" style=\"display:none\"><pre>"; 
       var_dump($query['stack']);
@@ -208,15 +222,15 @@ function outputLoadTimes() {
     if (isset($query['sql']['error'])) echo '</div>';
     echo "</li>";
   }
-  echo '</ol>';
-  echo "<p><strong>Included files:</strong></p>";
-  echo '<hr noshade="noshade" style="height:1px; border:0px" /><ol>';
+  echo '</ol></div>';
+  echo '<p onclick="var el=document.getElementById(\'dbgFiles\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;"><strong>Included files:</strong></p>';
+  echo '<ol id="dbgFiles" style="display:none">';
   $included_files = get_included_files();
   foreach ($included_files as $filename) {
     echo "<li>$filename</li>\n";
   }
 
-  echo '</ol></div>';
+  echo '</ol></div></div>';
 }
 //END Debug
 
