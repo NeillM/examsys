@@ -3454,7 +3454,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("TRUNCATE staff_help");
     if ($mysqli->error) {
       try {
-        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
         echo nl2br($e->getTraceAsString());
@@ -3465,10 +3465,10 @@ if (!isset($_POST['update'])) {
     $adjust->close();
     echo "<li>TRUNCATE staff_help</li>\n";
     $file=file_get_contents('../install/staff_help.sql');
-  $mysqli->multi_query($file);
+    $mysqli->multi_query($file);
     if ($mysqli->error) {
       try {
-        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
         echo nl2br($e->getTraceAsString());        exit();
@@ -3485,7 +3485,7 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("TRUNCATE student_help");
     if ($mysqli->error) {
       try {
-        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
         echo nl2br($e->getTraceAsString());
@@ -3500,7 +3500,7 @@ if (!isset($_POST['update'])) {
     $mysqli->multi_query($file);
     if ($mysqli->error) {
       try {
-        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
         echo nl2br($e->getTraceAsString());
@@ -4541,6 +4541,125 @@ QUERY;
     flush();
   }
 
+  // 25/09/2012 - Enlarge the size of the integer for userID in log_metadata table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='log_metadata' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int') {
+    $adjust = $mysqli->prepare("ALTER TABLE log_metadata CHANGE COLUMN userID userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE log_metadata CHANGE COLUMN userID userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 25/09/2012 - Enlarge the size of the integer for note_authorID in paper_notes table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='paper_notes' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='note_authorID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int') {
+    $adjust = $mysqli->prepare("ALTER TABLE paper_notes CHANGE COLUMN note_authorID note_authorID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE paper_notes CHANGE COLUMN note_authorID note_authorID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 25/09/2012 - Enlarge the size of the integer for note_authorID in student_help table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='student_help' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='checkout_authorID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int') {
+    $adjust = $mysqli->prepare("ALTER TABLE student_help CHANGE COLUMN checkout_authorID checkout_authorID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE student_help CHANGE COLUMN checkout_authorID checkout_authorID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 25/09/2012 - Enlarge the size of the integer for setterID in standards_setting table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='standards_setting' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='setterID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int') {
+    $adjust = $mysqli->prepare("ALTER TABLE standards_setting CHANGE COLUMN setterID setterID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE standards_setting CHANGE COLUMN setterID setterID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 25/09/2012 - Enlarge the size of the integer for note_authorID in staff_help table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='staff_help' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='checkout_authorID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int') {
+    $adjust = $mysqli->prepare("ALTER TABLE staff_help CHANGE COLUMN checkout_authorID checkout_authorID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE staff_help CHANGE COLUMN checkout_authorID checkout_authorID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 25/09/2012 - Enlarge the size of the integer for student_userID in textbox_marking table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='textbox_marking' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='student_userID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'int') {
+    $adjust = $mysqli->prepare("ALTER TABLE textbox_marking CHANGE COLUMN student_userID student_userID int unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE textbox_marking CHANGE COLUMN student_userID student_userID int unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
+  // 25/09/2012 - Reduce size of the integer for paperID in textbox_marking table.
+  $data_type = '';
+  $result = $mysqli->prepare("SELECT DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME='textbox_marking' AND TABLE_SCHEMA='$cfg_db_database' AND COLUMN_NAME='paperID'");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($data_type);
+  $result->fetch();
+  if ($data_type != 'mediumint') {
+    $adjust = $mysqli->prepare("ALTER TABLE textbox_marking CHANGE COLUMN paperID paperID mediumint unsigned");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE textbox_marking CHANGE COLUMN paperID paperID mediumint unsigned</li>\n";
+    ob_flush();
+    flush();
+  }
+  $result->close();
+  
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

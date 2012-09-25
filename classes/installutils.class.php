@@ -2005,7 +2005,7 @@ QUERY;
           `body_plain` text,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
-          `checkout_authorID` mediumint unsigned default NULL,
+          `checkout_authorID` int unsigned default NULL,
           `roles` enum('SysAdmin','Admin','Staff') default NULL,
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
@@ -2016,7 +2016,7 @@ QUERY;
     $this->tableList['standards_setting'] = <<<QUERY
         CREATE TABLE `standards_setting` (
           `id` int NOT NULL auto_increment,
-          `setterID` mediumint unsigned default NULL,
+          `setterID` int unsigned default NULL,
           `questionID` int default NULL,
           `std_set` datetime default NULL,
           `rating` text,
@@ -2048,7 +2048,7 @@ QUERY;
           `body_plain` text,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
-          `checkout_authorID` mediumint unsigned default NULL,
+          `checkout_authorID` int unsigned default NULL,
           `deleted` datetime default NULL,
           PRIMARY KEY  (`id`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
@@ -2136,7 +2136,7 @@ QUERY;
           `date` datetime default NULL,
           `phase` tinyint(4) default NULL,
           `logtype` tinyint(4) default NULL,
-          `student_userID` mediumint unsigned default NULL,
+          `student_userID` int unsigned default NULL,
           PRIMARY KEY  (`id`),
           KEY `paperID` (`paperID`),
           KEY `q_id` (`q_id`)
