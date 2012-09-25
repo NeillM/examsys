@@ -50,27 +50,22 @@
   $result->fetch();
   $result->close();
 ?>
-  <html>
+<html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['osceform']; ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:90%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    table {border-collapse:collapse}
-    td {text-align:center}
-    .question {text-align:left; border:1px solid #7F9DB9}
-    .rating {border:1px solid #7F9DB9}
-    .theme {text-align:left; font-size:125%; color:<?php echo $themecolor; ?>; padding-top:10px}
-    .overall {border:1px solid #7F9DB9; width:20%; height:35px; text-align:center}
-    ul {margin-top:0px; margin-bottom:0px}
-    .part {text-decoration:none}
-    .part_ok {color:#3A8000; text-decoration:underline}
-  </style>
-  </head>
   
-  <body>
+  <title><?php echo $string['osceform']; ?></title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/osce.css" />
+  <style type="text/css">
+    body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    .theme {color:<?php echo $themecolor; ?>}
+  </style>
+</head>
+  
+<body>
   <table cellpadding="2" cellspacing="0" border="0"><tr>
 <?php
   if (file_exists('../users/photos/' . $original_username . '.jpg')) {
@@ -90,7 +85,7 @@
   $result->bind_param('ii', $_GET['paperID'], $_GET['userID']);
   $result->execute();
   $result->bind_result($q_id, $rating,$q_parts);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $stored_results[$q_id] = $rating;
     $stored_q_parts[$q_id] = $q_parts;
   }
@@ -107,11 +102,12 @@
   $question_no = 1;
   $sub_totals = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
   $cell_colors = array('#FF8080','#FFC169','#50E850');
+  $rating_class = array('rating1','rating2','rating3');
   $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($question_no == 1) {
       // Header row
       $cols = substr_count($display_method, '|');
@@ -123,9 +119,9 @@
       echo "</tr>\n";
     }
     if (trim($theme) != '') {
-      echo "<tr><td colspan=\"4\" class=\"theme\">$theme</td></tr>\n";
+      echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
     }
-    echo "<tr id=\"row_" . $question_no . "\"><td class=\"question\">";
+    echo "<tr id=\"row_" . $question_no . "\"><td class=\"q\">";
     if (trim($notes) != '') {
       echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
@@ -134,7 +130,7 @@
     $sub_totals[$stored_results[$q_id]]++; 
     for ($i=0; $i<$cols; $i++) {
       if (array_key_exists($q_id,$stored_results) and $stored_results[$q_id] == $i) {
-        echo "<td style=\"background-color:" . $cell_colors[$i] . "\" class=\"rating\"><br />&nbsp;</td>";
+        echo "<td class=\"" . $rating_class[$i] . " r\"><br />&nbsp;</td>";
       } else {
         echo "<td class=\"rating\"><br />&nbsp;</td>";
       }
@@ -152,7 +148,7 @@
   switch ($marking) {
     case '3':
       $labels = array('Clear Fail','Borderline','Clear Pass');
-      $colors = array('#FF8080','#FFC169','#50E850');
+      $colors = array('#D99594','#FABF8F','#C2D69B');
       break;
     case '4':
       $labels = array('Fail','Borderline Fail','Borderline pass','Pass','Good Pass');
@@ -160,7 +156,7 @@
       break;
     case '5':
       $labels = array('Unsatisfactory','Competent');
-      $colors = array('#FF8080','#50E850');
+      $colors = array('#D99594','#C2D69B');
       break;
     case '6':
       $labels = array('Clear FAIL','BORDERLINE','Clear PASS','Honours PASS');
@@ -179,7 +175,7 @@
 
   <br />
   <div><strong><?php echo $string['feedback']; ?></strong></div>
-  <textarea name="feedback" id="feedback" style="border:1px solid #7F9DB9; width:100%" cols="60" rows="4"><?php echo $feedback; ?></textarea>
+  <textarea name="feedback" id="feedback" style="border:1px solid #C0C0C0; width:100%" cols="60" rows="4"><?php echo $feedback; ?></textarea>
 <?php
   $mysqli->close();
 ?>

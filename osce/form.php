@@ -115,7 +115,7 @@
     $result->fetch();
     $result->close();
 ?>
-  <html>
+<html>
   <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
@@ -124,15 +124,9 @@
   <title>OSCE Form</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
     body {font-size:60%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    table {border-collapse:collapse}
-    td {text-align:center}
-    .q {border:1px solid #C0C0C0; text-align:left; width:80%}
-    .r {border:1px solid #C0C0C0}
-    .t {text-align:left; font-size:125%; color:<?php echo $themecolor; ?>; padding-top:10px}
-    .overall {border:1px solid #7F9DB9; width:20%; height:35px; text-align:center}
-    ul {margin-top:0px; margin-bottom:0px}
   </style>
   <script language="JavaScript">
     function ans(q_id, rating) {
@@ -261,7 +255,7 @@
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     if ($question_no == 1) {
       // Header row
       $cols = substr_count($display_method,'|');

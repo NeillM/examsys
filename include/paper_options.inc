@@ -102,7 +102,7 @@ $stmt->close();
     <?php
     if ($paper_type == '4') {      // OSCE
     ?>
-      window.open("<?php echo $cfg_root_path ?>/osce/form.php?id=<?php echo $crypt_name; ?>&username=test","paper","width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("<?php echo $cfg_root_path ?>/osce/form.php?paperID=<?php echo $_GET['paperID']; ?>&username=test","paper","width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     <?php
     } elseif ($paper_type == '6') {
     ?>
