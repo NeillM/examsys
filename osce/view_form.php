@@ -25,6 +25,7 @@
   require '../include/staff_auth.inc';
   require '../include/demo_replace.inc';
   require './osce.inc';
+  
   if (strpos($userroles,'Demo') !== false) $demo = true;
 
   // Get the module ID and calendar year of the OSCE station.

@@ -118,8 +118,6 @@
 <html>
   <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <meta name="apple-mobile-web-app-capable" content="yes" />
   
   <title>OSCE Form</title>
   
