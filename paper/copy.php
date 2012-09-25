@@ -147,7 +147,7 @@
               if ($line == 0) {
                 $new_media_name = '';
                 if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
-                	$new_media_name = unique_filename($individual_media, FALSE);
+                	$new_media_name = unique_filename($individual_media);
                   if (file_exists("../media/$individual_media")) {
                     if (!copy("../media/$individual_media","../media/$new_media_name")) {
                       $error[] = sprintf($string['copyerror'], $individual_media);
@@ -178,7 +178,7 @@
           $new_o_media = '';
           foreach ($media_array as $individual_media) {
             if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
-							$new_media_name = unique_filename($individual_media, FALSE);
+							$new_media_name = unique_filename($individual_media);
               if (file_exists("../media/$individual_media")) {
                 if (!copy("../media/$individual_media","../media/$new_media_name")) {
                   $error[] = sprintf($string['copyerror'], $individual_media);
