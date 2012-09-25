@@ -35,7 +35,7 @@ $mysqli = new mysqli($cfg_db_host, $cfg_db_student_user, $cfg_db_student_passwd,
 // Check that the ip_address of the current user is within the exam lab.
 $paper_match = false;
 $ip_match = false;
-$results = $mysqli->prepare("SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type='2' AND labs != ''");
+$results = $mysqli->prepare("SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1','2') AND labs != ''");
 $results->execute();
 $results->store_result();
 $results->bind_result($labs);
