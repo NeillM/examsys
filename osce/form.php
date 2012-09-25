@@ -124,7 +124,7 @@
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
-    body {font-size:60%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    body {font-size:90%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
   </style>
   <script language="JavaScript">
     function ans(q_id, rating) {
