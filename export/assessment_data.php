@@ -32,6 +32,8 @@ check_var('paperID', 'GET', true, false);
 check_var('startdate', 'GET', true, false);
 check_var('enddate', 'GET', true, false);
 
+$displayDebug = false; //disable debud output in this script as it effects the output
+
 if (strpos($userroles,'Demo') !== false) {
   $demo = true;
 } else {
@@ -194,7 +196,7 @@ $question_no++;
 
 header('Pragma: public');
 header('Content-type: application/octet-stream');
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
+header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . "_ER.csv");
 
 $user_no = 0;
 $result = $mysqli->prepare("SELECT COUNT(question) AS question_no FROM (papers, questions) WHERE papers.question=questions.q_id AND q_type!='info' AND paper=?");

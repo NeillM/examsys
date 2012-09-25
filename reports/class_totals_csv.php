@@ -31,7 +31,7 @@
 
   header('Pragma: public');
   header("Content-type: application/vnd.ms-excel");
-  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".csv");
+  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . "_CT.csv");
 
   if ($cohort_size > 0) {
     if ($marking == '0') {

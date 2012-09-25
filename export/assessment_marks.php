@@ -27,7 +27,9 @@ require '../include/class_totals.inc';
 
 header('Pragma: public');
 header('Content-type: application/octet-stream');
-header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . "_marks.csv");
+header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . "_EM.csv");
+
+$displayDebug = false; //disable debud output in this script as it effects the output
 
 function get_correct_labels($question, $tmp_exclude) {
   $correct_labels = array();
