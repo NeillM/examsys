@@ -32,10 +32,8 @@ Class FormUtils {
 	 * @param string $label Lebel to use in returned string. Should be 'selected' or 'checked'
 	 * @return string String to select/check the element
 	 */
-	public function check_selected($field, $value, $label='selected')
-	{
-		if($field == $value)
-		{
+	public function check_selected($field, $value, $label='selected')	{
+		if ($field == $value) {
 			return $label.'="'.$label.'"';
 		}
 		
@@ -50,17 +48,14 @@ Class FormUtils {
 	 * @param array $array
 	 * @return array Associative array with keys from $fields and values from $array
 	 */
-	public function pre_populate($fields, $array)
-	{
+	public function pre_populate($fields, $array)	{
 		$new_array = array();
 		
-		if(!is_array($array))
-		{
+		if (!is_array($array))	{
 			$array = array();
 		}
 		
-		foreach(explode(',', $fields) as $field)
-		{
+		foreach(explode(',', $fields) as $field) {
 			$new_array[$field] = (!empty($array[$field])) ? $array[$field] : '';
 		}
 	
@@ -74,14 +69,11 @@ Class FormUtils {
 	 * @param array $fields List of fields to check existence of in $_POST
 	 * @return array List of errors
 	 */
-	public function check_required($fields)
-	{
+	public function check_required($fields) {
 		$errors = array();
 		
-		foreach($fields as $name => $pretty_name)
-		{
-			if(!isset($_POST[$name]) || $_POST[$name] == '')
-			{
+		foreach($fields as $name => $pretty_name)	{
+			if (!isset($_POST[$name]) || $_POST[$name] == '') {
 				$errors[] = "Field $pretty_name is required";
 			}
 		}
@@ -94,12 +86,10 @@ Class FormUtils {
 	 * @param string $text Text to check
 	 * @return boolean
 	 */
-	public function has_URL($text)
-	{
+	public function has_URL($text) {
 		$rval = false;
 
-		if (strpos(strtolower($text), "http", 0) !== false or strpos(strtolower($text), "www") !== false)
-		{
+		if (strpos(strtolower($text), "http", 0) !== false or strpos(strtolower($text), "www") !== false) {
 			$rval = true;
 		}
 		
@@ -111,42 +101,29 @@ Class FormUtils {
 	 * @param string $text Text to check
 	 * @return boolean
 	 */
-		public function has_multiple_URLs($text)
-	{
+		public function has_multiple_URLs($text) {
 		$rval = false;
 
 		$i = strpos(strtolower($text), "http",0);
-		if ($i === false)
-		{
+		if ($i === false)	{
 			$rval = false;
-		}
-		else
-		{
+		}	else {
 			$j = strpos(strtolower($text), "http", $i+1);
-			if ($j === false)
-			{
+			if ($j === false)	{
 				$rval = false;
-			}
-			else
-			{
+			}	else {
 				$rval = true;
 			}
 		}
 		if (!$rval) {
 			$i = strpos(strtolower($text), "www",0);
-			if ($i === false)
-			{
+			if ($i === false)	{
 				$rval = false;
-			}
-			else
-			{
+			}	else {
 				$j = strpos(strtolower($text), "www", $i+1);
-				if ($j === false)
-				{
+				if ($j === false)	{
 					$rval = false;
-				}
-				else
-				{
+				}	else {
 					$rval = true;
 				}
 			}
@@ -160,12 +137,10 @@ Class FormUtils {
 	 * @param string $text Text to check
 	 * @return boolean
 	 */
-		public function is_URL($text)
-	{
+		public function is_URL($text)	{
 		$rval = false;
 		
-		if (preg_match("/^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?$/i", $text))
-		{
+		if (preg_match("/^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?$/i", $text)) {
 			$rval = true;
 		}
 		
@@ -177,12 +152,10 @@ Class FormUtils {
 	 * @param string $text Text to check
 	 * @return boolean
 	 */
-	public function is_email($text)
-	{
+	public function is_email($text)	{
 		$rval = false;
 		
-		if (preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", $text))
-		{
+		if (preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/i", $text)) {
 			$rval = true;
 		}
 		
@@ -196,22 +169,20 @@ Class FormUtils {
 	 * @param unknown_type $name File name
 	 * @return string Unique filename
 	 */
-	public function get_unique_name($base, $name)
-	{
+	public function get_unique_name($base, $name)	{
 		$unique_name = '';
 		
 		$file_parts = pathinfo($name);
 		
-    	$modifier = '';
-    	$modifier_count = 1;
-    	
-    	do
-    	{
-    		$unique_name = $file_parts['filename'].$modifier.'.'.$file_parts['extension'];
-    		$modifier = '-'.$modifier_count++;
-    	}
-    	while(file_exists($base.$unique_name));
-    	
-    	return $unique_name;
+    $modifier = '';
+    $modifier_count = 1;
+    
+    do {
+      $unique_name = $file_parts['filename'].$modifier.'.'.$file_parts['extension'];
+      $modifier = '-'.$modifier_count++;
+    }
+    while (file_exists($base.$unique_name));
+    
+    return $unique_name;
 	}
 }

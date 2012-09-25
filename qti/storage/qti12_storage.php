@@ -100,10 +100,6 @@ class ST_QTI12_Question // <item
 
     $this->title = (string) $xml->attributes()->title;
     $this->load_id = (string) $xml->attributes()->ident;
-
-    //echo $this->load_id;
-    //exit;
-
     $this->material = new ST_QTI12_Material();
 
     // load item meta data
@@ -119,28 +115,24 @@ class ST_QTI12_Question // <item
         }
       }
 
-    if ($xml->itemmetadata->qmd_itemtype) $this->qmd_itemtype = (string) $xml->itemmetadata->qmd_itemtype;
+      if ($xml->itemmetadata->qmd_itemtype) $this->qmd_itemtype = (string) $xml->itemmetadata->qmd_itemtype;
 
       if ($xml->itemmetadata->qmd_status) $this->qmd_status = (string) $xml->itemmetadata->qmd_status;
 
       if ($xml->itemmetadata->qmd_toolvendor) $this->qmd_toolvendor = (string) $xml->itemmetadata->qmd_toolvendor;
 
       $t=0;
-
-
     }
 
-
     $this->LoadComments($xml);
-    if($this->wct_questiontype=="WCT_JumbledSentence") {
-$ttt=$xml->presentation->flow->response_lid->render_extension->ims_render_object;
+    if ($this->wct_questiontype=="WCT_JumbledSentence") {
+      $ttt = $xml->presentation->flow->response_lid->render_extension->ims_render_object;
 
       $itemid=1;
 
-      foreach( $xml->presentation->flow->response_lid->render_extension->ims_render_object->children() as $child1)
-      {
+      foreach( $xml->presentation->flow->response_lid->render_extension->ims_render_object->children() as $child1) {
         $name=$child1->getName();
-        if($name=="material") {
+        if ($name == "material") {
           $mat=new ST_QTI12_Material();
           $mat->notrim=1;
           $mat->add($child1);
@@ -148,7 +140,7 @@ $ttt=$xml->presentation->flow->response_lid->render_extension->ims_render_object
           $trtrtr=1;
           unset($mat);
         }
-        if($name=="response_label") {
+        if ($name == "response_label") {
           $mat=new ST_QTI12_Material();
           $mat->notrim=1;
           $mat->add($child1->material);
@@ -164,7 +156,7 @@ $ttt=$xml->presentation->flow->response_lid->render_extension->ims_render_object
         }
       }
 
-      if($xml->resprocessing->respcondition->conditionvar->and) {
+      if ($xml->resprocessing->respcondition->conditionvar->and) {
 
         foreach($xml->resprocessing->respcondition->conditionvar->and->children() as $child2) {
 
@@ -174,17 +166,17 @@ $ttt=$xml->presentation->flow->response_lid->render_extension->ims_render_object
          $optionslk4[$nm]=$ident2;
         }
       }
-      if(isset($optionslk3)) {
-    foreach($optionslk1 as $par3 => $child3) {
-      $string=sprintf("%%BLANK_%d%%",$par3);
-$lk2=$optionslk3[$par3];
-      $options[$string][]=$optionslk2[$lk2];
-      foreach($optionslk2 as $par4 => $child4) {
-        if($par4!=$lk2) {
-          $options[$string][]=$optionslk2[$par4];
+      if (isset($optionslk3)) {
+        foreach ($optionslk1 as $par3 => $child3) {
+          $string = sprintf("%%BLANK_%d%%",$par3);
+          $lk2 = $optionslk3[$par3];
+          $options[$string][]=$optionslk2[$lk2];
+          foreach($optionslk2 as $par4 => $child4) {
+            if($par4!=$lk2) {
+              $options[$string][]=$optionslk2[$par4];
+            }
+          }
         }
-      }
-    }
       }
       $this->optionslk1=$optionslk1;
       $this->optionslk2=$optionslk2;
@@ -197,12 +189,9 @@ $lk2=$optionslk3[$par3];
       $debpoint=1;
 
       $this->LoadPresentation($xml->presentation->flow);
-    }
-    else {
+    } else {
       $this->LoadPresentation($xml->presentation);
     }
-    //}
-    // process respcond
 
     if ($xml->resprocessing->respcondition) {
       foreach ($xml->resprocessing as $respch) {
@@ -224,18 +213,15 @@ $lk2=$optionslk3[$par3];
 
     foreach ($this->respconditions as & $respcondition) {
       foreach ($respcondition->conditions as $condition) {
-        //echo $condition->__toString() . "<br>";
         $value = $condition->value;
         $respid = $condition->respident;
 
         if (!array_key_exists($respid, $this->responses)) {
-          //echo "ERROR : Response ident from respcondition doesnt exist - $respid<br>";
           continue;
         }
         $response = $this->responses[$respid];
 
         if (!array_key_exists($value, $response->labels)) {
-          //echo "ERROR : Value in respcondition doesnt match any of the labels, attempting to do a lookup<br>";	
           foreach ($response->labels as $label) {
             if (strtolower($label->material->GetText()) == strtolower($value)) {
               $condition->value = $label->id;
@@ -292,38 +278,24 @@ $lk2=$optionslk3[$par3];
       if ($name == 'material') $this->material->add($child, $elementno);
 
       // load all response_lid elements, followed by all other types
-
-
-
-      //foreach ($xml->response_lid as $response)
-      //{
       if ($name == 'response_lid') {
         $resp = new ST_QTI12_Response('lid', $child);
         $resp->order = $elementno;
         $this->responses[$resp->id] = $resp;
       }
-      //}	
 
-      //foreach ($xml->response_str as $response)
-      //{
       if ($name == 'response_str') {
         $resp = new ST_QTI12_Response('str', $child);
         $resp->order = $elementno;
         $this->responses[$resp->id] = $resp;
       }
-      //}
 
-      //foreach ($xml->response_xy as $response)
-      //{
       if ($name == 'response_xy') {
         $resp = new ST_QTI12_Response('xy', $child);
         $resp->order = $elementno;
         $this->responses[$resp->id] = $resp;
       }
-      //}
 
-      //foreach ($xml->response_num as $response)
-      //{
       if ($name == 'response_num') {
         $resp = new ST_QTI12_Response('num', $child);
         $resp->order = $elementno;
@@ -335,7 +307,6 @@ $lk2=$optionslk3[$par3];
         $resp->order = $elementno;
         $this->responses[$resp->id] = $resp;
       }
-      //}
 
       $elementno++;
     }
@@ -385,8 +356,6 @@ $lk2=$optionslk3[$par3];
 
         // check that the count is the same
         if (count($itemlabels) != count($baselabels)) {
-          //echo "Count wrong<br>";
-          //print_p($itemlabels);
           $allsame = 0;
           break;
         }
@@ -412,7 +381,6 @@ $lk2=$optionslk3[$par3];
         if (!$allsame) break;
       }
 
-      //echo "Settings Labels as all same = $allsame<br>";
       $this->labelsets = $allsame;
     }
   }
@@ -598,11 +566,6 @@ class ST_QTI12_RespCondition // <respcondition>
           $this->sortedoutR[$nm]=$ind;
         }
       }
-
-
-
-
-
     }
 
     $this->continue = strtolower($xml->attributes()->continue) == 'yes' ? 1 : 0;
@@ -632,9 +595,6 @@ class ST_QTI12_RespCondition // <respcondition>
   }
 
   function LoadConditionVar($xml) {
-    //echo "<h4>Loading ConditionalVar</h4>";
-    //print_p($xml->conditionvar);
-
     if ($xml->other) {
       $this->type = 'other';
       return;
@@ -643,7 +603,6 @@ class ST_QTI12_RespCondition // <respcondition>
     // add all conditions
 
     foreach ($xml->children() as $child) {
-      //echo "Loading conditionvar : " . $child->getName() . "<br>";
       if ($child->getName() == "not") continue;
       $this->conditions[] = new ST_QTI12_CondVar($child);
     }
@@ -807,9 +766,9 @@ class ST_QTI12_Material // <material>
     $basename = basename($image);
     $imagefile = FindFile($import_directory, $basename);
     echo "Converted \"$image\" to base name \"$imagefile\"<br>";
-    if($imagefile=="" and $wct==1) {
-      list($discard,$split)= explode('=',$image);
-$pathinfo=pathinfo((string)$load_params->sourcefile);
+    if ($imagefile=="" and $wct==1) {
+      list($discard, $split) = explode('=',$image);
+      $pathinfo=pathinfo((string)$load_params->sourcefile);
 
       $imagefile = FindFileSub2($pathinfo['dirname'], '','*'. $split . '*.' . pathinfo($imgnam,PATHINFO_EXTENSION));
       $imagefile= $pathinfo['dirname'].'/' .$imagefile;
@@ -851,8 +810,9 @@ $pathinfo=pathinfo((string)$load_params->sourcefile);
     global $import_directory;
     global $q_warnings;
     global $q_errors;
+    
     if (stripos(" ".$text, "<img") > 0) {
-      $output = "";
+      $output = '';
       while ($text) {
         if (stripos(" ".$text, "<img") > 0) {
           $pre = substr($text, 0, stripos($text, "<img"));
@@ -871,19 +831,11 @@ $pathinfo=pathinfo((string)$load_params->sourcefile);
             $filename = FindFile($import_directory, $basename);
 
             if ($filename) {
-              //echo "Found \"$basename\" as \"$filename\" in zip<br>";
-
-              //$identifier_size = GetImageSize($imagefile);
-              //$this->media_width = $identifier_size[0];
-              //$this->media_height = $identifier_size[1];
-
               $basename = basename($filename);
               $uniqueFilename = unique_filename($basename);
 
               copy($import_directory."/".$filename, $cfg_web_root.'media/'.$uniqueFilename);
-              //echo "Copied $import_directory/$filename to /var/www/media/$uniqueFilename<br />";
-              //$this->media = $basename;	
-
+              
               $data['IMG'][0]['src'] = "/media/".$basename;
               // recreate img tag
               $imgtag = "<img ";
@@ -897,32 +849,17 @@ $pathinfo=pathinfo((string)$load_params->sourcefile);
           }
 
           $output .= $imgtag;
-          /*echo "PASS<BR>";
-           echo "<pre>";
-           echo "START BIT:\n";
-           echo htmlentities($pre);
-           echo "\nIMG TAG:\n";
-           echo htmlentities($imgtag);
-           echo "\nREST:\n";
-           echo htmlentities($rest);
-           echo "</pre>";
-           echo "END PASS:\n";*/
-
+          
           $text = $rest;
-          //return $text;
-          } else {
+        } else {
           $output .= $text;
           $text = "";
         }
       }
 
       $text = $output;
-      //echo "IMAGE IN CDATA - <br>";	
-      }
-    /*echo "Parsed<br>";
-     echo "<pre>";
-     echo htmlentities($text);
-     echo "</pre>";*/
+    }
+
     return $text;
   }
 
@@ -931,17 +868,16 @@ $pathinfo=pathinfo((string)$load_params->sourcefile);
   }
 
   function GetHTML() {
-    //print_p($this);
     $output = "";
     $usediv = 0;
+
     if (count($this->chunks) > 1) $usediv = 1;
 
     foreach ($this->chunks as $chunk) {
 
-      if($this->notrim==0) {
+      if ($this->notrim==0) {
         $text = trim(implode("", $chunk->data));
-      }
-      else {
+      } else {
         $text = implode("", $chunk->data);
       }
 
@@ -953,6 +889,7 @@ $pathinfo=pathinfo((string)$load_params->sourcefile);
         if ($usediv) $output .= "</div>";
       }
     }
+    
     return $output;
   }
 
@@ -1011,7 +948,7 @@ function FindFileSub2($basedir, $dir, $filename) {
       }
     }
   }
-  return "";
+  return '';
 }
 
 function FindFileSub($basedir, $dir, $filename) {
@@ -1025,7 +962,7 @@ function FindFileSub($basedir, $dir, $filename) {
       } else {
         $res = FindFileSub($basedir, $entry, $filename);
       }
-      if ($res != "") return $res;
+      if ($res != '') return $res;
     } else if (strtolower($entry) == strtolower($filename)) {
       if ($dir) {
         return $dir."/".$entry;
@@ -1041,7 +978,7 @@ function FindFileSub($basedir, $dir, $filename) {
 function parseHtml($s_str) {
   $i_indicatorL = 0;
   $i_indicatorR = 0;
-  $s_tagOption = "";
+  $s_tagOption = '';
   $i_arrayCounter = 0;
   $a_html = array();
   // Search for a tag in string

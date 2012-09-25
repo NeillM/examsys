@@ -209,7 +209,7 @@ Class Question extends RogoObject {
         $this->set_media(uploadFile($field));
       } else {
         // Delete existing media if asked
-        if (isset($deletion_data['delete_media0']) AND $deletion_data['delete_media0'] == 'on') {
+        if (isset($deletion_data['delete_media0']) and $deletion_data['delete_media0'] == 'on') {
           deleteMedia($old_media['filename']);
           $this->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
         }

@@ -183,7 +183,7 @@ if ($critical_error == '') {
     }
   } elseif ((isset($_POST['submit']) and $_POST['submit'] == $string['save']) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
    // Save data
-    if ($question->id == -1 or check_fullSave($question->id,$mysqli)) {
+    if ($question->id == -1 or check_fullSave($question->id, $mysqli)) {
       
       $part_names = $question->get_editable_fields();
       $compound_fields = $question->get_compound_fields();

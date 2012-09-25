@@ -96,32 +96,26 @@ DELETE;
 
 /**
  * This is function returns a unique filename so that files are not overwritten on the server.
- * Only a-z, 0-9 and a few other characters are kept in the filename.
+ * The filename is initially seeded with the current UNIX time in seconds plus the original
+ * file extension.
  *
  * @param mixed $filename 
  *
  */
-function unique_filename($filename, $strip = TRUE) {
+function unique_filename($filename) {
   global $cfg_web_root;
-  if ($filename == '') return '';
-  $i = 1;
-  if($strip == TRUE) {
-    $filename = strtolower($filename);
-    $filename = preg_replace("/[^a-z0-9_\-\(\)\.]/","",$filename);
-  }
+  
+  $ext = substr($filename, strrpos($filename, '.'));
+  $fileno = date('U');
+  
+  $tmp_filename = $fileno . $ext;
 
-  while (file_exists($cfg_web_root . "media/$filename")) {
-    if (!isset($ext)) {
-      $tmp = explode('.',$filename);
-      $n = count($tmp);
-      $ext = $tmp[$n - 1];
-      $tmp[$n - 1] = '';
-      $name = implode('',$tmp);
-    }
-    $filename = $name . "$i." . $ext;
-    $i++;
+  while (file_exists($cfg_web_root . "media/$tmp_filename")) {
+    $fileno++;
+    $tmp_filename = $fileno . $ext;
   }
-  return $filename;
+  
+  return $tmp_filename;
 }
 
 /**
