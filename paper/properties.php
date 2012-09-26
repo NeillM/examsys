@@ -408,8 +408,7 @@ if (isset($_POST['Submit'])) {
       $editProperties->bind_param('ii', $paperID, $existing_ref);
       $editProperties->execute();
       $editProperties->close();
-    }
-    
+    }    
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -957,6 +956,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        echo '<input type="hidden" name="fgcolor" value="' . $fgcolor . '" />';
        echo '<input type="hidden" name="themecolor" value="' . $themecolor . '" />';
        echo '<input type="hidden" name="labelcolor" value="' . $labelcolor . '" />';
+       echo '<input type="hidden" name="fullscreen" value="' . $fullscreen . '" />';
      } else {
        echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA;color:#00156E; border-bottom:1px solid #CFDBEB\">&nbsp;" . $string['displayoptions'] ."</td></tr>\n";
        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";

@@ -22,34 +22,34 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/demo_replace.inc';
-  require './osce.inc';
-  
-  if (strpos($userroles,'Demo') !== false) $demo = true;
+require '../include/staff_auth.inc';
+require '../include/demo_replace.inc';
+require './osce.inc';
 
-  // Get the module ID and calendar year of the OSCE station.
-  $result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id=? AND users.id=sid.userID");
-  $result->bind_param('i', $_GET['userID']);
-  $result->execute();
-  $result->bind_result($username, $title, $surname, $first_names, $grade, $year, $student_id);
-  $result->fetch();
-  $result->close();
-  
-  $original_username = $username;
-  if (isset($demo) and $demo == true) {
-    $surname = demo_replace($surname,$demo);
-    $first_names = demo_replace($first_names,$demo);
-    $student_id = demo_replace_number($student_id,$demo);
-  }
+if (strpos($userroles,'Demo') !== false) $demo = true;
 
-  // Get properties of the paper.
-  $result = $mysqli->prepare("SELECT paper_title, bgcolor, fgcolor, labelcolor, themecolor, marking FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper_title, $bgcolor, $fgcolor, $labelcolor, $themecolor, $marking);
-  $result->fetch();
-  $result->close();
+// Get the module ID and calendar year of the OSCE station.
+$result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id=? AND users.id=sid.userID");
+$result->bind_param('i', $_GET['userID']);
+$result->execute();
+$result->bind_result($username, $title, $surname, $first_names, $grade, $year, $student_id);
+$result->fetch();
+$result->close();
+
+$original_username = $username;
+if (isset($demo) and $demo == true) {
+  $surname = demo_replace($surname,$demo);
+  $first_names = demo_replace($first_names,$demo);
+  $student_id = demo_replace_number($student_id,$demo);
+}
+
+// Get properties of the paper.
+$result = $mysqli->prepare("SELECT paper_title, bgcolor, fgcolor, labelcolor, themecolor, marking FROM properties WHERE property_id=?");
+$result->bind_param('i', $_GET['paperID']);
+$result->execute();
+$result->bind_result($paper_title, $bgcolor, $fgcolor, $labelcolor, $themecolor, $marking);
+$result->fetch();
+$result->close();
 ?>
 <html>
   <head>
@@ -62,7 +62,7 @@
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
     body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    .theme {color:<?php echo $themecolor; ?>}
+    .t {color:<?php echo $themecolor; ?>}
   </style>
 </head>
   

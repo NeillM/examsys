@@ -117,6 +117,7 @@
 ?>
 <html>
   <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
   <title>OSCE Form</title>
@@ -125,24 +126,25 @@
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
     body {font-size:90%; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    .t {color:<?php echo $themecolor; ?>}
   </style>
   <script language="JavaScript">
     function ans(q_id, rating) {
       document.getElementById('q' + q_id + '_val').value = rating;
       if (rating == 1) {
-        document.getElementById('c' + q_id + '_1').style.backgroundColor = '#FF8080';
+        document.getElementById('c' + q_id + '_1').style.backgroundColor = '#D99594';
         document.getElementById('c' + q_id + '_2').style.backgroundColor = '';
         if (document.getElementById('c' + q_id + '_3')) {
           document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
         }
       } else if (rating == 2) {
-        document.getElementById('c' + q_id + '_2').style.backgroundColor = '#FFC169';
+        document.getElementById('c' + q_id + '_2').style.backgroundColor = '#FABF8F';
         document.getElementById('c' + q_id + '_1').style.backgroundColor = '';
         if (document.getElementById('c' + q_id + '_3')) {
           document.getElementById('c' + q_id + '_3').style.backgroundColor = '';
         }
       } else if (rating == 3) {
-        document.getElementById('c' + q_id + '_3').style.backgroundColor = '#50E850';
+        document.getElementById('c' + q_id + '_3').style.backgroundColor = '#C2D69B';
         document.getElementById('c' + q_id + '_1').style.backgroundColor = '';
         document.getElementById('c' + q_id + '_2').style.backgroundColor = '';
       }
@@ -190,7 +192,7 @@
       <?php
       if ($marking == '3') {
         $labels = array('Clear Fail','Borderline','Clear Pass');
-        $colors = array('#FF8080','#FFC169','#50E850');
+        $colors = array('#D99594','#FABF8F','#C2D69B');
       } else {
         $labels = array('Fail','Borderline Fail','Borderline pass','Pass','Good Pass');
         $colors = array('#FF2B2B','#FF8080','#FFC169','#50E850','#1DB11D');
@@ -247,8 +249,8 @@
 
   // Get the questions.
   $question_no = 1;
-  $cell_headings = array('#C00000','#C87602','#008000');
-  $cell_colors = array('#FF8080','#FFC169','#50E850');
+  $cell_headings = array('#953734','#E36C09','#76923C');
+  $cell_colors = array('#D99594','#FABF8F','#C2D69B');
   $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
@@ -312,8 +314,10 @@
   $result->close();
 ?>
   <br />
+  <blockquote>
   <div><strong><?php echo $string['feedback']; ?></strong></div>
-  <textarea name="fback" id="fback" style="border:1px solid #7F9DB9; width:100%" cols="60" rows="4"><?php if (isset($feedback)) echo $feedback; ?></textarea>
+  <textarea name="fback" id="fback" style="border:1px solid #C0C0C0; width:100%" cols="60" rows="4"><?php if (isset($feedback)) echo $feedback; ?></textarea>
+  </blockquote>
   <br />
   <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:40px; font-weight:bold" disabled /><input type="hidden" name="marking" value="<?php echo $marking; ?>" /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($_GET['userID'])) echo $_GET['userID']; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /><input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" /></div>
   </form>
