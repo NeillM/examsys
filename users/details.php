@@ -738,46 +738,21 @@ if (isset($_POST['update']) and $demo == false) {
   }
   $results->close();
   
-  $html = '';
   if ($current_year == false) {
-    $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year() . "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a></nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year() . "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a></nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
   
   for ($i=0; $i<$row_no; $i++) {
     if ($calendar_year != $old_year) {
-      $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $user_modules[$i]['calendar_year'];
-      if ($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == date_utils::get_current_academic_year() ) $html .= "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
-      $html .= "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+      echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $user_modules[$i]['calendar_year'];
+      if ($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == date_utils::get_current_academic_year() ) {
+        echo "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+      }
+      echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
-    $html .= "<tr><td></td><td><a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['moduleid']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
+    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['moduleid']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
   }
   
-  /*
-    if ($row_no == 0 and $calendar_year != $most_recent_year and $tmp_roles == 'Student') {
-      $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>$most_recent_year&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('$most_recent_year','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" border=\"0\" /></a></nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-    }
-    if ($calendar_year != $old_year) {
-      $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $calendar_year;
-      if ($calendar_year == $most_recent_year or $calendar_year == date_utils::get_current_academic_year() ) $html .= "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('$calendar_year','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" border=\"0\" /></a>";
-      $html .= "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-    }
-    $html .= '<tr>';
-    if ($attempt == 1) {
-      $html .= '<td></td>';
-    } else {
-      $html .= '<td><img src="../artwork/resit.png" width="16" height="16" alt="Resit" /></td>';
-    }
-    $html .= "<td>&nbsp;<a styele=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">$moduleid</a></td><td><a style=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">$fullname</a></td><td>$calendar_year</td></tr>\n";
-    $old_year = $calendar_year;
-    $row_no++;
-  }
-  if ($results->num_rows == 0) {
-    $html .= "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year() . "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('$most_recent_year','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" border=\"0\" /></a></nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  }
-  
-  $results->close();
-  */
-  echo $html;
 ?>
 </table>
 
