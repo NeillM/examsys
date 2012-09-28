@@ -23,12 +23,15 @@
 */
 
 require '../include/staff_auth.inc';
+require '../include/errors.inc';
+
+check_var('id', 'GET', true, false);
 
 // Get the module ID and calendar year of the OSCE station.
-$result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year FROM properties WHERE property_id=?");
-$result->bind_param('i', $_GET['paperID']);
+$result = $mysqli->prepare("SELECT property_id, paper_title, moduleID, calendar_year FROM properties WHERE crypt_name=?");
+$result->bind_param('s', $_GET['id']);
 $result->execute();
-$result->bind_result($paper_title, $moduleID, $calendar_year);
+$result->bind_result($paperID, $paper_title, $moduleID, $calendar_year);
 $result->fetch();
 $result->close();
 ?>
@@ -41,9 +44,9 @@ $result->close();
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-size:70%}
-    table {font-size:100%; border-collapse:collapse; width:100%}
-    tr {border:1px solid #7F9DB9}
+    body {font-size:90%}
+    table {font-size:100%; width:100%}
+    tr {border:1px solid #C0C0C0}
     a {color:black}
     .n {color:#808080}
     .bl {font-weight:bold}
@@ -52,7 +55,7 @@ $result->close();
   
   <script language="JavaScript">
     function load(userID) {
-      window.location.href = "form.php?paperID=<?php echo $_GET['paperID']; ?>&userID=" + userID;
+      window.location.href = "form.php?id=<?php echo $_GET['id']; ?>&userID=" + userID;
     }
   </script>
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
@@ -72,7 +75,7 @@ $result->close();
     // Get the students who are enrolled on the module/session.
     $student_no = 0;
     $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (student_modules, users, sid) LEFT JOIN log4_overall ON users.id=log4_overall.userID AND q_paper=? WHERE student_modules.userID=users.id AND users.id=sid.userID AND moduleid=? AND calendar_year=? ORDER BY surname, initials");
-    $result->bind_param('iss', $_GET['paperID'], $moduleID, $calendar_year);
+    $result->bind_param('iss', $paperID, $moduleID, $calendar_year);
     $result->execute();
     $result->bind_result($tmp_userID, $surname, $first_names, $title, $student_id, $started);
     while ($result->fetch()) {

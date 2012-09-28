@@ -104,6 +104,7 @@ $result->close();
   $sub_totals = array(0=>0,1=>0,2=>0,3=>0,4=>0,5=>0);
   $cell_colors = array('#FF8080','#FFC169','#50E850');
   $rating_class = array('rating1','rating2','rating3');
+  
   $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
@@ -112,12 +113,6 @@ $result->close();
     if ($question_no == 1) {
       // Header row
       $cols = substr_count($display_method, '|');
-      $headings = explode('|', $display_method);
-      echo '<tr><td></td>';
-      for ($i=0; $i<$cols; $i++) {
-        echo "<td style=\"width:80px; color:$labelcolor; font-weight:bold\">" . $headings[$i] . "</td>";
-      }
-      echo "</tr>\n";
     }
     if (trim($theme) != '') {
       echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
@@ -131,9 +126,9 @@ $result->close();
     $sub_totals[$stored_results[$q_id]]++; 
     for ($i=0; $i<$cols; $i++) {
       if (array_key_exists($q_id,$stored_results) and $stored_results[$q_id] == $i) {
-        echo "<td class=\"" . $rating_class[$i] . " r\"><br />&nbsp;</td>";
+        echo "<td class=\"" . $rating_class[$i] . " r\">$i</td>";
       } else {
-        echo "<td class=\"rating\"><br />&nbsp;</td>";
+        echo "<td class=\"r\">$i</td>";
       }
     }
     echo "</tr>\n";
@@ -153,7 +148,7 @@ $result->close();
       break;
     case '4':
       $labels = array('Fail','Borderline Fail','Borderline pass','Pass','Good Pass');
-      $colors = array('#FF2B2B','#FF8080','#FFC169','#50E850','#1DB11D');
+      $colors = array('#D99694','#E5B9B7','#FFC169','#D7E3BC','#C2D69B');
       break;
     case '5':
       $labels = array('Unsatisfactory','Competent');
@@ -161,7 +156,7 @@ $result->close();
       break;
     case '6':
       $labels = array('Clear FAIL','BORDERLINE','Clear PASS','Honours PASS');
-      $colors = array('#FF2B2B','#FF8080','#50E850','#1DB11D');
+      $colors = array('#D99694','#E5B9B7','#D7E3BC','#C2D69B');
       break;
   }
   for ($i=0; $i<count($labels); $i++) {
@@ -175,8 +170,10 @@ $result->close();
   </tr></table>  
 
   <br />
+  <blockquote>
   <div><strong><?php echo $string['feedback']; ?></strong></div>
-  <textarea name="feedback" id="feedback" style="border:1px solid #C0C0C0; width:100%" cols="60" rows="4"><?php echo $feedback; ?></textarea>
+  <textarea name="feedback" id="feedback" style="border:1px solid #C0C0C0; width:100%" cols="60" rows="4"><?php echo stripslashes($feedback); ?></textarea>
+  </blockquote>
 <?php
   $mysqli->close();
 ?>

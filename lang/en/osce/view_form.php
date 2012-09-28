@@ -1,5 +1,5 @@
 <?php
-$string['osceform'] = 'OSCE: Form';
+$string['osceform'] = 'OSCE Form';
 $string['overallclassification'] = 'Overall Classification:';
 $string['feedback'] = 'Feedback';
 $string['clear fail'] = 'Clear Fail';
