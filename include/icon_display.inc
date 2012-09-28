@@ -73,7 +73,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
   echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px" align="center">';
 
   $icon_type = $paper_type;
-  if (date("YmdHis", time()) >= $start_date) {
+  if (date("YmdHis", time()) >= $start_date and $start_date != '') {
     $locked = '_locked';
   } else {
     $locked = '';
@@ -131,7 +131,11 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     if (isset($_GET['module']) and $_GET['module'] == '') echo ', ' . str_replace(',',', ',$moduleID);
   }
   echo '<br />';
-  echo '  ' . $display_start_date;
+  if ($display_start_date == '') {
+    echo ' &lt;unscheduled&gt;';
+  } else {
+    echo '  ' . $display_start_date;
+  }
   if ($icon_type == 2) {
     if ($exam_duration != '') echo ', ' . $exam_duration . $string['mins'];
   } else {
