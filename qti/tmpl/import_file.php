@@ -32,12 +32,12 @@
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
   
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-	<link rel="stylesheet" type="text/css" href="../css/highlight.css" /> 
-	<link rel="stylesheet" type="text/css" href="../css/wizard.css" /> 
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/highlight.css" /> 
+	<link rel="stylesheet" type="text/css" href="../../css/wizard.css" /> 
+  <link rel="stylesheet" type="text/css" href="../../css/submenu.css" />
 	<style type="text/css">
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
 		a {color:black}
@@ -109,12 +109,18 @@ echo "</table>";
               <input type="hidden" name="module" id="module" value="<?php echo $module ?>" />
 						</td>
 					</tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
 					<tr>
 						<td style="text-align:center">
 							<input type="submit" name="submit" value="<?php echo $string['import2'] . ' ' . $string['file'] ?>" style="width:100px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" style="width:100px" onclick="javascript:history.back()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input type="button" name="help" value="<?php echo $string['help'] ?>" style="width:100px" onclick="javascript:launchHelp(224)" />
 						</td>
 					</tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
 				</table>
 				</form>
 			</div>

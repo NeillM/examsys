@@ -46,7 +46,7 @@ class IE_qti_Load extends IE_Main {
     if ($ext == "xml") {
       $xml_files[basename($filename)] = $filename;
     } else if ($ext == "zip") {
-      echo "Extracting zip<br>";
+      echo "Extracting zip<br />";
       $zip = new ZipArchive;
       $res = $zip->open($filename);
       if ($res === TRUE) {
@@ -66,8 +66,6 @@ class IE_qti_Load extends IE_Main {
       }
     }
 
-    //print_p($xml_files);
-
     $files['qti12'] = array(); // qti 1.2 files, each unrelated to the rest
     $files['manifest'] = array(); // manifest files
     $files['item'] = array(); // qti 2 questions
@@ -77,8 +75,6 @@ class IE_qti_Load extends IE_Main {
       $type = $this->DetectFileType($fullpath);
       $files[$type][$filename] = $fullpath;
     }
-
-    //print_p($files);
 
     if (count($files['qti12']) == 0) {
       $this->AddError($string['noqtiinzip']);
@@ -110,8 +106,6 @@ class IE_qti_Load extends IE_Main {
       if (!empty($output->papers)) foreach ($output->papers as $id => $paper) $result->papers[$id] = $paper;
     }
 
-    //print_p($result);
-
     return $result;
   }
 
@@ -135,7 +129,6 @@ class IE_qti_Load extends IE_Main {
 
     if ($basenode == "assessmenttest") return "paper";
 
-    echo $basenode."<br>";
-    //print_p($xml);
-    }
+    echo $basenode . '<br />';
+  }
 }

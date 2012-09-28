@@ -183,30 +183,10 @@ $numb=0;
     $q_imp = $this->LoadQuestion($item);
     $type = $this->DetermineQType($q_imp);
 
-    $oiii=print_r($q_imp,TRUE);
-    $t=8;
-
-    //echo "<b>Q:</b> " . $item->attributes()->title . " - $type<br>";
+    $oiii = print_r($q_imp,TRUE);
+    $t = 8;
     $question = '';
-
     $marks = '';
-
-    // parse for (xx marks) or (1 mark) and strip it out of the material
-    /*foreach ($q_imp->material->chunks as & $chunk) {
-      foreach ($chunk->data as & $data) {
-        $regexp = "/\((\d{1,3}) mark[s]*\)/i";
-        if (preg_match($regexp, $data, $out)) {
-          echo "Match marks:<br>";
-          echo "<pre>".htmlentities($data)."</pre>";
-          print_p($out);
-          $marks = $out[1];
-          $data = preg_replace($regexp, "", $data);
-        }
-      }
-    }*/
-
-
-
 
     if ($type == "blank") $question = $this->LoadBlank($q_imp);
     elseif ($type == "calculation") $question = $this->LoadCalculation($q_imp);
@@ -273,10 +253,9 @@ $numb=0;
       }
     }
 
-    $oiii=print_r($question,TRUE);
-    $t=9;
-//    file_put_contents($cfg_tmpdir . 'out3.txt',$oiii);
-    $t=8;
+    $oiii = print_r($question,TRUE);
+    $t = 9;
+    $t = 8;
 
     if (!empty($q_imp->material->media)) {
       $question->media = $q_imp->material->media;
@@ -293,10 +272,6 @@ $numb=0;
       $question->keywords[] = $keyword;
     }
 
-    //if ($question->marks != $marks && $marks > 0) {
-    //  $this->AddWarning("This question may have been imported with a different number of marks. Import specified $marks, imported with ".$question->marks, $q_imp->load_id);
-    //}
-
     foreach ($q_warnings as $warn) $this->AddWarning($warn, $q_imp->load_id);
 
     foreach ($q_errors as $error) $this->AddError($error, $q_imp->load_id);
@@ -312,15 +287,13 @@ $numb=0;
     unset($q_imp->raw_xml);
     unset($q_imp->presentation);
 
-    //print_p($q_imp,false);
-
     return $question->load_id;
   }
 
   function LoadQuestion(&$item) {
     $q = new ST_QTI12_Question($item);
     $q->CountStuff();
-    if(!isset($q->q_option_order)) {
+    if (!isset($q->q_option_order)) {
       $q->q_option_order='display order';
     }
     return $q;
@@ -349,7 +322,6 @@ $numb=0;
     }
 
     if (isset($question->counts['extension']) && $question->counts['extension'] > 0 && $question->wct_questiontype == "WCT_JumbledSentence") {
-//      $this->AddError("Render extensions are not currently supported.", $question->load_id);
       print "WebCT Jumbled Sentence Detected<br>";
 
       return "blank";
@@ -476,12 +448,10 @@ $numb=0;
     }
 
     if ($question->counts['str'] > 0) {
-      //$this->AddError("Multiple Text inputs! This is probably a fill in the blanks but not sure yet",$question->load_id);
       return "blank";
     }
     // multiple string, but only 1 material, could this be a blank question??
     if ($question->counts['str'] > 1) {
-      //$this->AddError("Questions with multiple numeric imputs cannot be imported",$question->load_id);
       return "blank";
     }
 
@@ -520,11 +490,6 @@ $numb=0;
 
     $num_ok = true;
     foreach ($match_num as $isok) if ($isok == 0) $num_ok = false;
-
-    //if ($num_ok) {
-      //echo "Found ranking based on 1, 2, 3 etc<br>";
-      //return true;
-    //}
 
     return false;
   }
@@ -585,7 +550,6 @@ $numb=0;
       } else if (strlen($bit) > 3) {
         // force title to be regenerated if we found a chunk that isnt in it
         $title = trim($newtitle);
-        //echo "Breaking as chunk !$bit!<br>";
         break;
       }
     }
@@ -718,12 +682,7 @@ $numb=0;
 
             // get all conditions that are related to this response
             $conds = $this->GetRespConditions($source, 1, $response->id);
-        /*
-            echo "<pre>";
-            print_r($response);
-            print_r($conds);
-            echo "</pre>";
-*/
+
             foreach ($conds as $cond) {
               foreach ($cond->conditions as $opt) {
                 $blank = new STQ_Blank_Option();
@@ -1021,7 +980,6 @@ $numb=0;
           if ($option->value_true == $correctvalue) $option->iscorrect = 1;
         }
       }
-
     }
 
     // sort out feedback
@@ -1570,12 +1528,6 @@ $numb=0;
     return $dest;
   }
 
-
-
-
-
-
-
   function LoadTrueFalse(&$source) {
     global $string;
 
@@ -1609,7 +1561,7 @@ $numb=0;
         $answer= $condition->conditions[0]->value;
       }
     }
-$dest->answer=strtolower($answer);
+    $dest->answer=strtolower($answer);
 
     $choiceno = 1;
     foreach ($response->labels as $label) {
@@ -1688,7 +1640,6 @@ $dest->answer=strtolower($answer);
     $dest->options2=$dest->options;
 
 
-
     unset($dest->options);
     unset($choices);
     foreach($dest->options2 as $opts) {
@@ -1706,11 +1657,6 @@ $dest->answer=strtolower($answer);
 
     return $dest;
   }
-
-
-
-
-
 
   function LoadMRQ(&$source) {
     global $string;
@@ -1783,12 +1729,6 @@ $dest->answer=strtolower($answer);
       // get list of feedbacks common to both outcomes and add to general feedback array
       // remove common ones from the list
       RemoveCommonInArray($correctfb, $incorrectfb, $generalfb);
-
-      //echo "Getting correct feedbacks for " . $option->base_id . "<br>";
-      //print_p($correctfb);
-      //echo "Getting incorrect feedbacks for " . $option->base_id . "<br>";
-      //print_p($incorrectfb);
-      // store whats left in positive and negative feedbacks
 
       $option->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
       $option->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
@@ -2061,7 +2001,7 @@ $numbb=1;
         }
         $labl=$label->material->GetLabel();
         $labl2=$label->id;
-$lablk[$rid][$labl2]=$labl;
+        $lablk[$rid][$labl2]=$labl;
         if(!isset($lablkd[$labl])) {
           $lablkd[$labl]=$numbb;
         }
@@ -2073,10 +2013,8 @@ $lablk[$rid][$labl2]=$labl;
         }
 
       }
-  //  if($question->wct_questiontype != "WCT_Matching") {
-        //break;
+  
       $loop=1;
-   //  }
     }
 
     return $resplist;

@@ -28,19 +28,20 @@ $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->bind_result($paper_title, $paper_moduleID, $tmp_folder, $paper_ownerID, $tmp_module, $start_date, $end_date, $created, $max_screen, $fullscreen, $max_display_pos, $paper_type, $externals, $internal_reviewers, $labs, $session, $exam_duration, $crypt_name, $display_question_mark);
 while ($stmt->fetch()) {
+
   if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
     $active_date = 1;
   } else {
     $active_date = 0;
   }
-  if (date("YmdHis", time()) >= $start_date and $paper_type == '2') {
+  if (date("YmdHis", time()) >= $start_date and $start_date != '' and $paper_type == '2') {
     $summative_lock = 1;
   } else {
     $summative_lock = 0;
   }
 }
 $stmt->close();
-$moduleID=$paper_moduleID;
+$moduleID = $paper_moduleID;
 
 // get some paper details
 $paper = GetVar("paperID");
@@ -53,7 +54,7 @@ $db->AddField('paper_type');
 $db->AddWhere('property_id', $paper, 'i');
 $paper_row = $db->GetSingleRow();
 
-if ($paper_row['paper_type'] == '2' and time() > $paper_row['start_date']) {
+if ($paper_row['paper_type'] == '2' and time() > $paper_row['start_date'] and $paper_row['start_date'] != '') {
   $summative_lock = 1;
   include "tmpl/import_locked.php";
   exit;

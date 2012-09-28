@@ -25,14 +25,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html onscroll="scrollXY();" onclick="hideMenus();">
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
 	<title>Rogō Export to QTI</title>
-	<script type="text/javascript" src="js/mootools-1.2.4.js"></script> 
-	<link rel="stylesheet" type="text/css" href="css/highlight.css" /> 
-	<link rel="stylesheet" type="text/css" href="css/wizard.css" /> 
+  
+	<link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 	<style type="text/css">
-		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
 		a {color:black}
 		a:hover {color:blue}
@@ -40,14 +41,12 @@
 		.recent {color:blue; font-size:90%}
 		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
 
-	.exp_table 
-	{
+	.exp_table {
 		border-left: 1px solid #dddddd;
 		border-top: 1px solid #dddddd;
 	}
 
-	.exp_table tr td,.exp_table tr th
-	{
+	.exp_table tr td,.exp_table tr th	{
 		border-bottom: 1px solid #dddddd;
 		border-right: 1px solid #dddddd;
 		padding: 1px;
@@ -61,18 +60,19 @@
 	.screen_head {
 		font-size:120%;
 	}
-
 	</style>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript">
-  // Popup window code
-  function newPopup(url) {
-    notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
+  
+	<script type="text/javascript" src="js/mootools-1.2.4.js"></script> 
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script language="JavaScript">
+    // Popup window code
+    function newPopup(url) {
+      notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
     }
-  }
-</script>
+  </script>
 </head>
 
 <?php
@@ -80,8 +80,8 @@ require '../include/paper_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
 <?php
-echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-echo "<tr><td style=\"background-color:#F1F5FB\" colspan=\"5\"><div class=\"breadcrumb\">";
+echo "<table class=\"header\">\n";
+echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
 if ($module != '') {
   echo '<a href="../staff/index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
 } elseif ($folder != '') {
@@ -90,8 +90,8 @@ if ($module != '') {
   echo '<a href="../staff/index.php">Home</a>';
 }
 echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-echo "</td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-echo "<tr><td colspan=\"6\" style=\"height:3px\"><img src=\"../artwork/header_horizontal_line.gif\" width=\"100%\" height=\"3\" alt=\"Line\" /></td></tr>";
+echo "</th><th style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
+echo "<tr><th class=\"bevel\" colspan=\"6\"></th></tr>";
 echo "</table>";
 ?>
 <br/>
@@ -102,7 +102,7 @@ echo "</table>";
 
 <table border="0" cellpadding="0" cellspacing="0" style="width:600px; border:1px solid #5582D2; text-align:left"> 
 	<tr> 
-		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-family:Arial,sans-serif; font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['qtiimport'] ?></span></td>
+		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['qtiimport'] ?></span></td>
 	</tr> 
 	<tr> 
 		<td align="left" style="background-color:#fff2a4" colspan="2"> 
