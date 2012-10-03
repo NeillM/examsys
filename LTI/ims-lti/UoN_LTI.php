@@ -174,6 +174,7 @@ class UoN_LTI extends BLTI {
         continue;
       }
     }
+    $newinfo['oauth_consumer_secret']=$secret;
 
     $this->info = $newinfo;
     if ($usesession == true and strlen(session_id()) > 0) {
@@ -189,6 +190,50 @@ class UoN_LTI extends BLTI {
       $this->complete = true;
     }
   }
+
+
+  function get_lti_keys($deleted=false) {
+    $dataret = array();
+    if ($this->parm['dbtype'] == 'mysqli') {
+      $db = $this->db;
+      if ($db->error) {
+        try {
+          throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+        } catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
+      $extra='';
+      if(!$deleted) {
+        $extra=' WHERE deleted IS NULL ';
+      }
+      $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
+      if ($db->error) {
+        try {
+          throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+        }
+        catch (Exception $e) {
+          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+          echo nl2br($e->getTraceAsString());
+        }
+      }
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($lti_keys_id, $lti_keys_key, $lti_keys_secret, $lti_keys_name, $lti_keys_context_id, $lti_keys_deleted, $lti_keys_updated_on);
+
+
+      $rows = $stmt->num_rows;
+      while ($stmt->fetch()) {
+        $dataret[$lti_keys_id]=array('lti_keys_id'=>$lti_keys_id, 'lti_keys_key'=>$lti_keys_key, 'lti_keys_secret'=>$lti_keys_secret, 'lti_keys_name'=>$lti_keys_name, 'lti_keys_context_id'=>$lti_keys_context_id, 'lti_keys_deleted'=>$lti_keys_deleted, 'lti_keys_updated_on'=>$lti_keys_updated_on);
+      }
+
+      return $dataret;
+    }
+
+
+  }
+
 
 
   /**
@@ -486,4 +531,21 @@ class UoN_LTI extends BLTI {
   }
 
 
+  function get_consumer_secret() {
+    if (isset($this->info['oauth_consumer_secret'])) {
+      return $this->info['oauth_consumer_secret'];
+    }
+    return false;
+  }
+
+  function send_grade($grade) {
+
+    $oauth_consumer_key = $this->getConsumerKey();
+    $oauth_consumer_secret = $this->get_consumer_secret();
+    $endpoint = $this->getOutcomeService();
+    $sourcedid = $this->getOutcomeSourceDID();
+
+    $response = replaceResultRequest($grade, $sourcedid, $endpoint, $oauth_consumer_key, $oauth_consumer_secret);
+    return $response;
+  }
 }

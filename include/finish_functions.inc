@@ -2378,6 +2378,13 @@ echo '</script>';
       } else {
         if ( ($total_marks-$total_random_mark) > 0 and (($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100 > 0) {
           echo number_format((($user_mark-$total_random_mark)/($total_marks-$total_random_mark))*100, 1, '.', ',');
+          $gradetoret = ($user_mark - $total_random_mark) / ($total_marks - $total_random_mark);
+          if ($gradetoret < 0) $gradetoret = 0;
+          global $lti;
+          if ($lti->valid) {
+            //return grade back to VLE
+            $lti->send_grade($gradetoret);
+          }
         } else {
           echo '0';
         }
@@ -2390,7 +2397,14 @@ echo '</script>';
       if (isset($_GET['percent'])) {
         echo $_GET['percent'];
       } else {
-        echo number_format(($user_mark/$total_marks)*100, 1, '.', ',');
+        echo number_format(($user_mark / $total_marks) * 100, 1, '.', ',');
+        $gradetoret = $user_mark / $total_marks;
+        if ($gradetoret < 0) $gradetoret = 0;
+        global $lti;
+        if ($lti->valid) {
+          //return grade back to VLE
+          $lti->send_grade($gradetoret);
+        }
       }
       echo "%</td></tr>\n";
     }
