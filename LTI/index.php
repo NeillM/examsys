@@ -293,6 +293,8 @@ END;
 
     if ($plk == 0) {
       @ob_clean();
+      unset($_SESSION['_lti_context']);
+      unset($_SESSION['lti']);
       display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
 
       echo '<p>Module(s): ' . $modinfo .'</p>';
