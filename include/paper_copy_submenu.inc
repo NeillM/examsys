@@ -38,8 +38,8 @@ require_once '../classes/dateutils.class.php';
   }
   
   function nextTable() {
-    document.getElementById('table1').style.display = 'none';
-    document.getElementById('table2').style.display = 'table';
+    document.getElementById('table1div').style.display = 'None';
+    document.getElementById('table2div').style.display = 'Block';
   }
   
   function checkCopyForm() {
@@ -73,6 +73,7 @@ if ($cfg_summative_mgmt) {
   echo '<form method="post" action="../paper/copy.php">';
 }
 ?>
+<div id="table1div" style="width:100%">
 <table cellpadding="1" cellspacing="0" border="0" style="font-size:100%; width:100%" id="table1">
 <tr>
 <td colspan="5" style="background-color:#F2B100; height:5px; padding:0px"> </td>
@@ -149,8 +150,10 @@ if ($paper_type == '2' and $cfg_summative_mgmt) {
 </tr>
 <tr><td colspan="5">&nbsp;</td></tr>
 </table>
+</div>
 
-<table cellpadding="1" cellspacing="1" border="0" style="font-size:90%; width:100%; display:none" id="table2">
+<div id="table2div" style="display:none; width:100%">
+<table cellpadding="1" cellspacing="1" border="0" style="font-size:90%; width:100%" id="table2">
 <tr>
 <td colspan="6" style="background-color:#F2B100; height:5px; padding:0px"> </td>
 </tr>
@@ -219,6 +222,7 @@ if ($paper_type == '2' and $cfg_summative_mgmt) {
 
 ?>
 </table>
+</div>
 
 </form>
 </div>
