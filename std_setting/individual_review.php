@@ -91,6 +91,7 @@ if (isset($_POSR['paperID'])) {
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style>
   table {table-layout:auto}
+  #maincontent {height:auto}
   </style>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
