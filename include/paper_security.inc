@@ -121,9 +121,7 @@ function check_metadata($property_id, $userID, $moduleID, $mysqlidb) {
   $stmt->bind_result($security_type, $security_value);
   $stmt->store_result();
   while ($stmt->fetch()) {
-    $check_security = $mysqlidb->prepare("SELECT users_metadata.id FROM users_metadata, modules WHERE users_metadata.moduleid=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $moduleID) . "') AND userID=? AND type=? AND value=?");
-    echo $mysqlidb->error;
-    exit;
+    $check_security = $mysqlidb->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.moduleid=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $moduleID) . "') AND userID=? AND type=? AND value=?");
     $check_security->bind_param('iss', $userID, $security_type, $security_value);
     $check_security->execute();
     $check_security->store_result();
