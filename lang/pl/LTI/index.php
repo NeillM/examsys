@@ -9,5 +9,8 @@ $string['NoPapersDesc'] = 'Brak arkuszy dla tego modułu.  Być może wynika to 
 $string['NoModCreateTitle'] = 'Tworzenie modułów nie jest umożliwione '; 
 $string['NoModCreate'] = 'Tworzenie modułów z LTI nie jest umożliwione w konfuguracji, nie jest więc możliwe utworzenie modułu z kodem kursu: '; 
 $string['NotAddedToModuleTitle'] = 'Nie dodano do zespołu modułu'; 
-$string['NotAddedToModule'] = 'Dodawanie do zespołu modułu nie jest umożliwione dla LTI, dotyczy to modułu: '; 
+$string['NotAddedToModule'] = 'Dodawanie do zespołu modułu nie jest umożliwione dla LTI, dotyczy to modułu: ';
+
+$string['SELECT']='Select'; //TODO Niko
+
 ?>

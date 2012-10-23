@@ -42,7 +42,9 @@ require_once '../classes/facultyutils.class.php';
 
 global $cfg_long_date_time;
 
-function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
+$choicetype='radio';
+
+function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type='') {
   global $cfg_long_date_time, $icons;
 
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
@@ -64,12 +66,31 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
     } else {
       echo '<div>';
     }
+    $type='radio';
     while ($results2->fetch()) {
+      if ($type == 'radio') {
+        $extra = "<input type=\"radio\" name=\"paperlinkID\" id=\"paperlinkID-$plk\" value=\"$plk\"><label for=\"paperlinkID-$plk\">";
+        $extra1 = "</label>";
+      } elseif ($type == '') {
+        $extra = "<a href=\"?paperlinkID=" . $plk . "\">";
+        $extra1 = "</a>";
+      }
+      echo "<div style=\"padding-left:52px\">$extra<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" />&nbsp;";
+      if (strpos($paper_title, '[deleted') !== false) {
+        echo ' style="color:#808080"';
+      }
+      echo  $paper_title . "$extra1</div>\n";
+
+
+      /*
       echo "<div style=\"padding-left:52px\"><a href=\"?paperlinkID=" . $plk . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
       if (strpos($paper_title, '[deleted') !== false) {
         echo ' style="color:#808080"';
       }
       echo "href=\"?paperlinkID=" . $plk . "\">" . $paper_title . "</a></div>\n";
+       */
+
+
       $_SESSION['postlookup'][$plk] = array($crypt_name, $moduleid);
       $plk++;
     }
@@ -108,7 +129,7 @@ if (isset($_REQUEST['paperlinkID'])) {
     $lti->add_lti_resource($retlookup, 'paper');
   }
 }
-
+unset($_SESSION['postlookup']);
 
 $returned = $lti->lookup_lti_resource();
 
@@ -183,6 +204,8 @@ if (!$lti->isInstructor()) {
 
       //no context
       $data = $lti_i::module_code_translate($lti->getCourseName(), $lti->get_context_title());
+
+      var_dump($data);
       foreach ($data as $v) {
         if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v)) {
 
@@ -277,19 +300,40 @@ END;
 
     //if there is a context and therefore a course already selected display that
     $modinfo = '';
+    $exit=0;
+
     foreach ($data as $v) {
       $modinfo = $modinfo . ', ' . $v[1];
+      if($v[1]=='') {
+        $exit=1;
+      }
     }
     $modinfo = substr($modinfo, 2);
 
     echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['papersoncurrentmodule'] . ' ' . $modinfo . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-
+    if($choicetype == 'radio') {
+    echo '<form method="POST">';
+    }
     foreach ($data as $v) {
       $moduleid = $v[1];
 
-      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
+      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true, $choicetype);
+    }
+    if($choicetype == 'radio') {
+      $strng=$string['SELECT'];
+    print <<<END
+			<div>
+<input type="submit" name="submit" value="$strng"></form>
+			</div></form>
+			<div>Module: $modinfo </div>
+END;
+
     }
     echo '<br />';
+    if($exit==1) {
+      $plk=0;
+      $modinfo="Undefined Module. Please contact Support.";
+    }
 
     if ($plk == 0) {
       @ob_clean();

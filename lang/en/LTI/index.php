@@ -9,4 +9,6 @@ $string['NoModCreate'] = 'Module Creation from LTI is not enabled in the config 
 $string['NotAddedToModuleTitle'] = 'Not Added to Module Team';
 $string['NotAddedToModule'] = 'Adding to Module Team is not enabled in the config for LTI, this happened for module: ';
 
+$string['SELECT']='Select';
+
 ?>

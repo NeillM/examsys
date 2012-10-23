@@ -136,6 +136,10 @@ class lti_integration_extended extends lti_integration {
   }
 
   static function module_code_translate($c_internal_id, $course_title = ' ') {
+var_dump(array($c_internal_id,$course_title));
+    if(stripos($c_internal_id,' ') !== FALSE ) {
+      self::invalid_module_code($c_internal_id,array(),'initial blank check');
+    }
 
     // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
     // shortname for real module try XXXXXX-YY-ZZZWWWW  WHERE XXXXXX is saturn code YY is country rest we dont care about.
@@ -216,6 +220,11 @@ class lti_integration_extended extends lti_integration {
 
       }
 
+
+      if($data[$k][1]=='' ) {
+        self::invalid_module_code($c_internal_id,$data,'during loop');
+      }
+
       if ($v[2] == 'MY') {
         $data[$k][1] = $data[$k][1] . '_UNMC';
       } elseif ($v[2] == 'CN') {
@@ -224,6 +233,10 @@ class lti_integration_extended extends lti_integration {
 
       //     $returned = lookup_module_description($v);
       //      $data[$k] = $returned;
+
+
+
+
     }
     if (count($data) == 1 and substr($data[0][5], 0, 8) == 'MISSING:' and strlen($data[0][5]) > 9) {
       $data[0][5] = substr($data[0][5], 8);
@@ -239,7 +252,23 @@ class lti_integration_extended extends lti_integration {
     // fifth is if its self registration module
     // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
 
+
+    if(count($data)===0) {
+      self::invalid_module_code($c_internal_id,$data,'no returned data');
+    }
+
     return $data;
   }
 
+  function invalid_module_code($c_internal_id,$data,$location='') {
+    display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
+
+    echo '<p>Incoming Module Code: ' . $c_internal_id .'</p>';
+    echo '<p><pre>';
+    var_dump($data);
+    echo '</pre></p>';
+    echo "<p>At: $location</p>";
+
+    exit();
+  }
 }
