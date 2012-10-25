@@ -1231,7 +1231,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
           $i++;
         }
-        $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
+        if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
+          $d = 0;
+        } else {
+          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
+        }
         $std_val = (isset($tmp_std_array[$i])) ? $tmp_std_array[$i] : '';
         $tmp_correct_no = (isset($top_log[$q_id]['all_correct'])) ? $top_log[$q_id]['all_correct'] : 0;
         $tmp_bottom_no = (isset($bottom_log[$q_id]['all_correct'])) ? $bottom_log[$q_id]['all_correct'] : 0;
@@ -1266,10 +1270,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo ">$individual_option</td></tr>\n";
         }
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-        if ($top_log[$q_id]['totalpos'] > 0 and $bottom_log[$q_id]['totalpos'] > 0) {
-          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
-        } else {
+        if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
           $d = 0;
+        } else {
+          $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
         }
         $tmp_pstat = ($freq_log[$q_id]['totalpos'] > 0) ? pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'], $q_id, 1) : 'p=' . 0;
         echo "<tr><td>" . $tmp_pstat . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
@@ -1340,7 +1344,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     if (isset($freq_log[$q_id]['unmarked']) and $freq_log[$q_id]['unmarked'] > 0) {
       echo "<tr><td>p=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" /></td><td>d=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" /></td><td colspan=\"2\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;" . $freq_log[$q_id]['unmarked'] . " unmarked scripts</td></tr>\n";
     } else {
-      if ($freq_log[$q_id]['totalpos'] == 0) {
+      if (empty($freq_log[$q_id]['totalpos'])) {
         $p = 0;
       } else {
         $p = $freq_log[$q_id]['mark'] / $freq_log[$q_id]['totalpos'];
