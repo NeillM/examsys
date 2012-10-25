@@ -103,7 +103,7 @@ function checkVariables($number) {
 }
 
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset) {
-  global $external_review_deadline, $reviews_array, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $string, $language, $cfg_root_path;
+  global $external_review_deadline, $reviews_array, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $string, $language, $cfg_root_path, $cfg_js_root ;
 
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
@@ -750,7 +750,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
         } else {
           include_once('../include/wysiwyg_editor.inc');
-          echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . ($textbox_size[0] * 7) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
+          echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . ($textbox_size[0] * 7) . "px; height:" . ($textbox_size[1] * 28) . "px\">" . $question['correct_fback'] . "</textarea>\n";
         }
         
         echo "</blockquote>\n";
