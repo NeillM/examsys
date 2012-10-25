@@ -807,9 +807,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             $ans = $user_answers[$current_screen][$q_id];
           }
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-            echo "<textarea class=\"mceEditor\" style=\"background-color:red\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . ($textbox_size[0] * 7) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
+            echo "<textarea class=\"mceEditor\" style=\"background-color:red\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($textbox_size[0] * 8)) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
           } else {
-            echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . ($textbox_size[0] * 7) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
+            echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($textbox_size[0] * 8)) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
           }
         }
         $marks += $display_option['marks_correct'];
