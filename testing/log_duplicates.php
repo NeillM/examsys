@@ -43,7 +43,7 @@ SELECT q_id, userID, q_paper, count(q_id)
 FROM log{$log} INNER JOIN users ON log{$log}.userID = users.id 
 WHERE users.roles='Student' 
 GROUP BY userID, q_paper, q_id HAVING count(q_id) > 1
-ORDER BY count(q_id), q_paper, userID DESC
+ORDER BY count(q_id) DESC, q_paper ASC
 QUERY;
   $stmt = $mysqli->prepare($query);
   $stmt->execute();
