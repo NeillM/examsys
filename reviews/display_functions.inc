@@ -749,7 +749,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $textbox_size[0] . "\" rows=\"" . $textbox_size[1] . "\">" . $question['correct_fback'] . "</textarea>";
           }
         } else {
-          include_once('wysiwyg_editor.inc');
+          include_once('../include/wysiwyg_editor.inc');
           echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . ($textbox_size[0] * 7) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
         }
         
