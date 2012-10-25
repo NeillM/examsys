@@ -39,17 +39,17 @@ if (!empty($_GET['logs'])) {
 $errors = array();
 foreach ($logs as $log) {
   $query = <<< QUERY
-SELECT q_id, userID, count(q_id) 
+SELECT q_id, userID, q_paper, count(q_id) 
 FROM log{$log} INNER JOIN users ON log{$log}.userID = users.id 
 WHERE users.roles='Student' 
-GROUP BY userID, q_id HAVING count(q_id) > 1
+GROUP BY userID, q_paper, q_id HAVING count(q_id) > 1
 ORDER BY count(q_id) DESC
 QUERY;
   $stmt = $mysqli->prepare($query);
   $stmt->execute();
-  $stmt->bind_result($q_id, $tmp_userid, $count);
+  $stmt->bind_result($q_id, $tmp_userid, $paper_id, $count);
   while ($stmt->fetch()) {
-    $errors[$log][] =  "$count records found for user $tmp_userid on question $q_id";
+    $errors[$log][] =  "$count records found for user $tmp_userid on paper $paper_id, question $q_id";
   }
   $stmt->close();
 }
