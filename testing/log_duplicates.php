@@ -58,7 +58,7 @@ QUERY;
 <html>
 <head>
   <title>Log duplicate check</title>
-  <link rel="../css/body.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     #content {
       padding: 24px;
