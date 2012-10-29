@@ -22,45 +22,47 @@
 * @package
 */
 
-  require_once '../include/staff_auth.inc';
-  require_once '../lang/' . $language . '/include/question_types.inc';
-  require_once '../classes/stateutils.class.php';
-  
-  $typeSQL = '';
-  $type = '';
-  if (isset($_GET['type'])) {
-    $type = $_GET['type'];
-    if ($_GET['type'] != '%') {
-      $typeSQL = " AND q_type = '" . $_GET['type'] . "'";
-    }
-  }
-  if (isset($_GET['userid'])) {
-    $userid = $_GET['userid'];
-  } else {
-    $userid = '';
-  }
-  if (isset($_GET['keyword'])) {
-    $keyword = $_GET['keyword'];
-  } else {
-    $keyword = '';
-  }
-  if (isset($_GET['team'])) {
-    $team = $_GET['team'];
-  } else {
-    $team = '';
-  }
+require_once '../include/staff_auth.inc';
+require_once '../lang/' . $language . '/include/question_types.inc';
+require_once '../classes/stateutils.class.php';
 
-  if (isset($_GET['checked'])) {
-    if ($_GET['checked'] == 'true') {
-      $state_checked = true;
-    } else {
-      $state_checked = false;
-    }
-  } elseif (isset($state['myquestions']) and $state['myquestions'] == 'true') {
+$state = $stateutil->getState($userID, $mysqli);
+
+$typeSQL = '';
+$type = '';
+if (isset($_GET['type'])) {
+  $type = $_GET['type'];
+  if ($_GET['type'] != '%') {
+    $typeSQL = " AND q_type = '" . $_GET['type'] . "'";
+  }
+}
+if (isset($_GET['userid'])) {
+  $userid = $_GET['userid'];
+} else {
+  $userid = '';
+}
+if (isset($_GET['keyword'])) {
+  $keyword = $_GET['keyword'];
+} else {
+  $keyword = '';
+}
+if (isset($_GET['team'])) {
+  $team = $_GET['team'];
+} else {
+  $team = '';
+}
+
+if (isset($_GET['checked'])) {
+  if ($_GET['checked'] == 'true') {
     $state_checked = true;
   } else {
     $state_checked = false;
   }
+} elseif (isset($state['myquestions']) and $state['myquestions'] == 'true') {
+  $state_checked = true;
+} else {
+  $state_checked = false;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

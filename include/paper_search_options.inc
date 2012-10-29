@@ -26,6 +26,7 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 
+$state = $stateutil->getState($userID, $mysqli, $cfg_root_path . '/paper/search.php');
 ?>
 <script language="JavaScript">
   function updateDropdownState(mySel, NameOfState) {

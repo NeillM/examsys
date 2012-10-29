@@ -26,7 +26,7 @@
   require '../include/errors.inc';
   require_once '../classes/stateutils.class.php';
   
-  $state = $stateutil->getState($userID, $mysqli, '/reports/textbox_header.php');
+  $state = $stateutil->getState($userID, $mysqli, $cfg_root_path . '/reports/textbox_header.php');
   
   $paperID = $_GET['paperID'];
   $q_id = $_GET['q_id'];

@@ -24,7 +24,7 @@
 
 Class StateUtils {
 
-  static function getState($userID, $db, $page = '') {
+  function getState($userID, $db, $page = '') {
     $state_array = array();
     if ($page == '') {
       $page = $_SERVER['PHP_SELF'];
@@ -43,7 +43,7 @@ Class StateUtils {
     return $state_array;
   }
 
-  static function setState($userID, $state_name, $content, $page, $db) {
+  function setState($userID, $state_name, $content, $page, $db) {
     $result = $db->prepare("REPLACE INTO state (userID, state_name, content, page) VALUES (?, ?, ?, ?)");
     $result->bind_param('isss', $userID, $state_name, $content, $page);
     $result->execute();
@@ -52,6 +52,6 @@ Class StateUtils {
 }
 
 $stateutil = new StateUtils();
-$state = $stateutil->getState($userID, $mysqli);
+//$state = $stateutil->getState($userID, $mysqli);
 
 ?>

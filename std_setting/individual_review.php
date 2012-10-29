@@ -27,6 +27,8 @@ require_once '../include/media.inc';
 require_once '../include/std_set_functions.inc';
 require_once '../classes/stateutils.class.php';
 
+$state = $stateutil->getState($userID, $mysqli);
+
 function ebelDropdown($dropdownID, $selected) {
   $html = "<select name=\"$dropdownID\" onchange=\"recountCategories();\">\n";
   $html .= "<option value=\"0\"></option>\n";

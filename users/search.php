@@ -135,6 +135,8 @@ if (isset($_GET['submit'])) {
       }
     }
     
+    echo $query_string .'<br />';
+    
     $user_data = $mysqli->prepare($query_string);
     $user_data->execute();
     $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);

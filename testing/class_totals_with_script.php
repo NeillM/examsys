@@ -48,11 +48,11 @@ $result->close();
 
   <title>Testing: Class Totals</title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <style type="text/css">
     body {
       font-size: 90%;
-      font-family: Arial, sans-serif;
     }
 
     dt {

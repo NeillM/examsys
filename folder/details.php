@@ -42,7 +42,6 @@ function getLastFolder($path) {
   }
 }
 
-$stateutil = new StateUtils();
 $state = $stateutil->getState($userID, $mysqli);
 
 $folder_name = '';

@@ -33,6 +33,8 @@ require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
 require_once '../../include/mapping.inc';
 
+$state = $stateutil->getState($userID, $mysqli);
+
 $question = null;
 $logger = new Logger($mysqli);
 $paper_id = (!isset($_GET['paperID'])) ? -1 : $_GET['paperID'];
