@@ -156,7 +156,7 @@
   
   echo "</select>\n</td></tr></table>\n<br />\n";
   
-  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">$body</textarea>\n";
+  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" .  htmlspecialchars($body, ENT_NOQUOTES) . "</textarea>\n";
   
   // Check for lockout.
   $current_time = date('YmdHis');
