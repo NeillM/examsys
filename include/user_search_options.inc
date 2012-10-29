@@ -28,7 +28,7 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 
-$state = $stateutil->getState($userID, $mysqli, '/users/search.php');
+$state = $stateutil->getState($userID, $mysqli, $cfg_root_path . '/users/search.php');
 
 if (isset($_GET['moduleID'])) {
   $moduleID = $_GET['moduleID'];
@@ -118,9 +118,6 @@ if (isset($_GET['calendar_year'])) {
   </table>
 
 <?php
-  var_dump($cfg_web_root, $cfg_root_path);
-
-
   if (isset($state['advanced'])) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:" . $state['advanced'] . "\">\n";
   } else {
