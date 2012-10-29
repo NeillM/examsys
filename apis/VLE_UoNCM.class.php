@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Curriculum Map API, all Curriculum Map related functions go in here
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -30,6 +30,9 @@ require_once $cfg_web_root . 'webServices/RestRequest.class';
 class VLE_UoNCM implements iVLEAPI {
   private $_root_url = 'http://curriculum.nottingham.ac.uk/%s/index.php/';
   private $_sess_year;
+  private $_module_id;
+
+  private $_moodle_base_url = 'http://moodle.nottingham.ac.uk/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
 
   /**
    * Return objectives from the University of Nottingham Curriculum Mapping system
@@ -40,6 +43,7 @@ class VLE_UoNCM implements iVLEAPI {
   public function getObjectives($moduleID, $session) {
     $this->_sess_year = strstr($session, '/', true);
     $this->_root_url = sprintf($this->_root_url, $this->_sess_year);
+    $this->_module_id = $moduleID;
     $req = new RestRequest($this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attribute&attrib=code&output=module_session_obs");
     $req->execute();
 
@@ -111,7 +115,7 @@ class VLE_UoNCM implements iVLEAPI {
         'occurrance' => date('d/m/y H:i', strtotime($session['start'])),
         'calendar_year' => $calendar_year,
         'VLE' => 'UoNCM',
-        'source_url' => $this->_root_url . 'view/' . $session['@attributes']['id'],
+        'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $session['@attributes']['id']) . '&ses=' . $session['code'],
         'mapped' => 0,
         'objectives' => array()
       );
@@ -153,7 +157,7 @@ class VLE_UoNCM implements iVLEAPI {
         'occurrance' => 'Non-timetabled',
         'calendar_year' => $calendar_year,
         'VLE' => 'UoNCM',
-        'source_url' => $this->_root_url . 'view/' . $learning_act['@attributes']['id'],
+        'source_url' => sprintf($this->_moodle_base_urls[$this->_sess_year], $this->_module_id, $this->_sess_year, $session['@attributes']['id']),
         'mapped' => 0,
         'objectives' => array()
       );
