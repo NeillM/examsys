@@ -57,6 +57,7 @@
     
     $mysqli->close();
     header("location: display_page.php?id=" . $_POST['original_id']);
+    exit;
   } elseif (isset($_POST['cancel'])) {
     // Release authoring lock.
     if ($_POST['checkout_authorID'] == $userID) {
@@ -67,6 +68,7 @@
     }
     $mysqli->close();
     header("location: display_page.php?id=" . $_POST['original_id']);
+    exit;
   } else {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -127,8 +129,6 @@
   $result->bind_result($page_title, $body, $id, $page_checkout_time, $page_checkout_authorID, $type, $roles);
   $result->fetch();
   $result->close();
-  
-  
 
   if ($type == 'pointer') {
     $edit_id = $body;
