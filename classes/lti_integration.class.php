@@ -11,6 +11,7 @@ require_once $cfg_web_root . 'classes/userutils.class.php';
 
 class lti_integration {
 
+  public $description = 'Default';
   static function load() {
 
     // Load the appropriate  lti integration class (if new one found load that else use this)
