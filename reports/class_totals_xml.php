@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Class total report in Excel 2003 XML format.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -26,7 +26,7 @@
 
   require '../include/staff_auth.inc';
   require '../include/class_totals.inc';
-  
+
   $displayDebug = false; //disable debug output in this script as it effects the output
 
   header('Pragma: public');
@@ -42,7 +42,7 @@
   }
 
   $total_time = 0;
-  
+
   //output table heading
   $table_order = array('Title'=>'title', 'Surname'=>'Surname' ,'First Names'=>'First_Names','Student ID'=>'student_id','Course'=>'student_grade','Mark'=>'mark',$marking_label=>$marking_key,'Clasification'=>'mark','Start Time'=>'started','Duration'=>'duration','IP Address'=>'ipaddress');
   $table_order['Room'] = 'room';
@@ -58,8 +58,8 @@
       }
     }
   }
-  
-  
+
+
   // Write results to XML ---------------------------------------------------------------------------
   echo '<?xml version="1.0"?>';
   echo '<?mso-application progid="Excel.Sheet"?>';
@@ -156,7 +156,7 @@
   }
   if (isset($user_results[0]['metadata'])) {
     for ($i=0; $i<$meta_col_count; $i++) {
-      echo '   <Column ss:AutoFitWidth="0" ss:Width="90"/>';    
+      echo '   <Column ss:AutoFitWidth="0" ss:Width="90"/>';
     }
   }
   echo '   <Row ss:AutoFitHeight="0" ss:Height="26.25">';
@@ -174,11 +174,11 @@
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
   echo '    <Cell ss:StyleID="s28"/>';
-  
+
   foreach ($metadata_cols as $key) {
-    echo '    <Cell ss:StyleID="s28"/>';    
+    echo '    <Cell ss:StyleID="s28"/>';
   }
-  
+
   echo '   </Row>';
   echo '   <Row>';
   echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['title'] . '</Data></Cell>';
@@ -213,8 +213,8 @@
     if ($user_results[$i]['visible'] == 1) {
       echo '<Row>';
       echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
-      echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname']) . '</Data></Cell>';
-      echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names']) . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname'],  ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</Data></Cell>';
+      echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names'],  ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</Data></Cell>';
       echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
       echo '<Cell><Data ss:Type="String">' . $user_results[$i]['username'] . '</Data></Cell>';
       echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_grade'] . '</Data></Cell>';
@@ -257,7 +257,7 @@
         // Display any associated metadata
         foreach ($metadata_cols as $key => $col) {
           echo '<Cell><Data ss:Type="String">' . $user_results[$i][$col] . '</Data></Cell>';
-        }      
+        }
         echo '</Row>';
         if ($user_results[$i]['mark'] > $max_mark) {
           $max_mark = $user_results[$i]['mark'];
@@ -308,11 +308,11 @@
   $exp_row_count = 20;
   $exp_row_count += ($marking > 1) ? '2' : $marking;
   $exp_row_count += (count($warnings['deleted_qns']) > 0) ? 1 : 0;
-  
+
   if (isset($user_results[0]['metadata'])) {
     $exp_row_count += $meta_col_count;
   }
-  
+
   echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="' . $exp_row_count . '" x:FullColumns="1" x:FullRows="1">';
   echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
 
@@ -384,7 +384,7 @@
     echo '<Cell><Data ss:Type="Number">' . number_format($stddev_mark, 2, '.', ',') . '</Data></Cell>';
     echo '</Row>';
   }
-    
+
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['maxmark'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $max_mark . '</Data></Cell>';
@@ -442,7 +442,7 @@
 	  echo ')</Data></Cell>';
 	  echo '</Row>';
   }
-  echo '  </Table>';  
+  echo '  </Table>';
   echo '  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">';
   echo '   <ProtectObjects>False</ProtectObjects>';
   echo '   <ProtectScenarios>False</ProtectScenarios>';

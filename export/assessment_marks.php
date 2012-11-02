@@ -15,13 +15,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
-  
+
 require '../include/staff_auth.inc';
 require '../include/class_totals.inc';
 
@@ -55,6 +55,8 @@ function get_correct_labels($question, $tmp_exclude) {
 }
 $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
 
+$csv = '';
+
 $row_written = 0;
 foreach ($user_results as $individual) {
   $tmp_user_ID = $individual['username'];
@@ -62,9 +64,9 @@ foreach ($user_results as $individual) {
   if ($row_written == 0) {
     // Only output personal data if assessment, do not show if survey.
     if ($paper_type < 3) {
-      echo '"' . $string['gender'] . '","' . $string['title'] . '","' . $string['surname'] . '","' . $string['firstnames'] . '","' . $string['studentid'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
+      $csv .= '"' . $string['gender'] . '","' . $string['title'] . '","' . $string['surname'] . '","' . $string['firstnames'] . '","' . $string['studentid'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
     } else {
-      echo '"' . $string['gender'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
+      $csv .= '"' . $string['gender'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
     }
     $q_no = 1;
     foreach ($paper_buffer as $q_id => $question) {
@@ -97,7 +99,7 @@ foreach ($user_results as $individual) {
           for ($a=0; $a<count($paper_answers); $a++) {
             $sub_parts += substr_count($paper_answers[$a], '$');
 
-            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') echo ',Q' . $q_no . $numerals[$a];
+            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') $csv .= ',Q' . $q_no . $numerals[$a];
           }
         } elseif ($question['q_type'] == 'matrix' and $question['score_method'] == 'Mark per Option') {
           $sub_parts = 0;
@@ -105,36 +107,36 @@ foreach ($user_results as $individual) {
           for ($a=0; $a<count($paper_answers); $a++) {
             $sub_parts += substr_count($paper_answers[$a], '$');
 
-            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') echo ',Q' . $q_no . chr($a+65);
+            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank') and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a<count($question['correct']); $a++) {
-            if (substr($tmp_exclude, $a, 1) == '0') echo ',Q' . $q_no . chr($a+65);
+            if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
           for ($a=0; $a <(count($question['correct_labels']) + substr_count($tmp_exclude, '1')); $a++) {
-            if (substr($tmp_exclude, $a, 1) == '0') echo ',Q' . $q_no . chr($a+65);
+            if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
           $paper_answers = explode('|', $question['correct'][0]);
           for ($a=0; $a<count($paper_answers); $a++) {
-            if (substr($tmp_exclude, $a, 1) == '0') echo ',Q' . $q_no . chr($a+65);
+            if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',Q' . $q_no . chr($a+65);
           }
         } else {
-          if (!array_key_exists($q_id, $excluded)) echo ',Q' . $q_no;
+          if (!array_key_exists($q_id, $excluded)) $csv .= ',Q' . $q_no;
         }
         $q_no++;
       }
     }
-    echo "\n";
+    $csv .= "\n";
   }
-  
+
   // Write out the raw data.
   if ($individual['visible'] == 1) {
     if ($paper_type < 3) {
-      echo '"' . $individual['gender'] . '","' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' .$individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
+      $csv .= '"' . $individual['gender'] . '","' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' .$individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
     } else {
-      echo '"' . $individual['gender'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
+      $csv .= '"' . $individual['gender'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
     }
     foreach ($paper_buffer as $q_id => $question) {
       if (array_key_exists($q_id, $excluded)) {
@@ -168,11 +170,11 @@ foreach ($user_results as $individual) {
           $a = 0;
           if (is_array($individual['mark_array'][$q_id])) {
             foreach ($individual['mark_array'][$q_id] as $tmp_mark) {
-              echo ',' . $tmp_mark;
+              $csv .= ',' . $tmp_mark;
               $a++;
             }
           } else {
-            echo ',' . $individual['mark_array'][$q_id];
+            $csv .= ',' . $individual['mark_array'][$q_id];
           }
         } else {
           if (($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') and $question['score_method'] == 'Mark per Option') {
@@ -181,30 +183,33 @@ foreach ($user_results as $individual) {
             for ($a=0; $a<count($paper_answers); $a++) {
               $sub_parts += substr_count($paper_answers[$a],'$');
 
-              if ($paper_answers[$a] != '' and substr($tmp_exclude,$a+$sub_parts,1) == '0') echo ',0';
+              if ($paper_answers[$a] != '' and substr($tmp_exclude,$a+$sub_parts,1) == '0') $csv .= ',0';
             }
           } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank') and $question['score_method'] == 'Mark per Option') {
             for ($a=0; $a<count($question['correct']); $a++) {
-              if (substr($tmp_exclude,$a,1) == '0') echo ',0';
+              if (substr($tmp_exclude,$a,1) == '0') $csv .= ',0';
             }
           } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
             for ($a=0; $a < count($question['correct_labels']); $a++) {
-              if (substr($tmp_exclude, $a, 1) == '0') echo ',0';
+              if (substr($tmp_exclude, $a, 1) == '0') $csv .= ',0';
             }
           } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
             $paper_answers = explode("|",$question['correct'][0]);
             for ($a=0; $a<count($paper_answers); $a++) {
-              if (substr($tmp_exclude,$a,1) == '0') echo ',0';
+              if (substr($tmp_exclude,$a,1) == '0') $csv .= ',0';
             }
           } else {
-            if (!array_key_exists($q_id,$excluded)) echo ',0';
+            if (!array_key_exists($q_id,$excluded)) $csv .= ',0';
           }
         }
       }
     }
-    echo "\n";
+    $csv .= "\n";
   }
   $row_written++;
 }
+
+echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
+
 $mysqli->close();
 ?>

@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -72,8 +72,8 @@ function get_random_question_details($question, $rand_id, $mysqli) {
 }
 
 function add_random_column_standard($i, $sec, $subsec=''){
-  echo ':user';
-  echo ',Q' . ($i+1) . chr($sec+64) . $subsec . ':correct';
+  $csv .= ':user';
+  $csv .= ',Q' . ($i+1) . chr($sec+64) . $subsec . ':correct';
 }
 
 function fix_correct($q_type, $correct, $old_correct) {
@@ -220,6 +220,8 @@ $exclude = '';
 //  $result->close();
 //}
 
+$csv = '';
+
 // Get order of the class.
 $student_list = '';
 if ($paper_type == '0') {
@@ -293,7 +295,7 @@ if ($student_no > 0) {
     $tmp_user_ID = $individual['userID'];
     // Write out the headings.
     if ($row_written == 0) {
-      echo $string['gender'] . ',' . $string['title'] . ',' . $string['surname'] . ',' . $string['firstnames'] . ',' . $string['studentid'] . ',' . $string['course'] . ',' . $string['year'] . ',' . $string['started'];
+      $csv .= $string['gender'] . ',' . $string['title'] . ',' . $string['surname'] . ',' . $string['firstnames'] . ',' . $string['studentid'] . ',' . $string['course'] . ',' . $string['year'] . ',' . $string['started'];
       for ($i = 0; $i < $question_no; $i++) {
         $tmp_question_ID = $paper_buffer[$i]['ID'];
         $tmp_screen = $paper_buffer[$i]['screen'];
@@ -321,7 +323,7 @@ if ($student_no > 0) {
             case 'blank':
               for ($sec=1; $sec<=substr_count($question['correct'], ','); $sec++) {
                 if (substr($tmp_exclude, $sec - 1, 1) == '0') {
-                  echo ',Q' . ($i+1) . chr($sec + 64);
+                  $csv .= ',Q' . ($i+1) . chr($sec + 64);
                   if ($is_random) {
                     add_random_column_standard($i, $sec);
                   }
@@ -334,7 +336,7 @@ if ($student_no > 0) {
               for ($sec=1; $sec < count($correct_parts); $sec++) {
                 if ($correct_parts[$sec] != '' and substr($tmp_exclude, $partID, 1) == '0') {
                   if (strpos($correct_parts[$sec], '$') === false) {
-                    echo ',Q' . ($i+1) . $numerals[$sec-1];
+                    $csv .= ',Q' . ($i+1) . $numerals[$sec-1];
                     if ($is_random) {
                       add_random_column_standard($i, $sec);
                     }
@@ -342,7 +344,7 @@ if ($student_no > 0) {
                     $num_ix = 0;
                     $correct_subparts = explode('$', $correct_parts[$sec]);
                     foreach ($correct_subparts as $subpart) {
-                      echo ',Q' . ($i+1) . $numerals[$sec-1] . chr($num_ix + 65);
+                      $csv .= ',Q' . ($i+1) . $numerals[$sec-1] . chr($num_ix + 65);
                       if ($is_random) {
                         add_random_column_standard($i, $sec, $numerals[$num_ix]);
                       }
@@ -357,7 +359,7 @@ if ($student_no > 0) {
               $correct_parts = explode('|', $question['correct']);
               for ($sec=0; $sec<count($correct_parts); $sec++) {
                 if (substr($tmp_exclude,$sec,1) == '0') {
-                  echo ',Q' . ($i+1) . chr($sec + 65);
+                  $csv .= ',Q' . ($i+1) . chr($sec + 65);
                 }
               }
               break;
@@ -368,7 +370,7 @@ if ($student_no > 0) {
               for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
                 if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
                   if (substr($tmp_exclude,$sec-1,1) == '0') {
-                    echo ',Q' . ($i+1) . chr($sec+64);
+                    $csv .= ',Q' . ($i+1) . chr($sec+64);
                     if ($is_random) {
                       add_random_column_standard($i, $sec);
                     }
@@ -381,7 +383,7 @@ if ($student_no > 0) {
               $correct_parts = explode(',', $question['correct']);
               for ($sec = 1; $sec < count($correct_parts); $sec++) {
                 if (substr($tmp_exclude, $sec - 1, 1) == '0' and $correct_parts[$sec] != '') {
-                  echo ',Q' . ($i+1) . chr($sec+64);
+                  $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
                     add_random_column_standard($i, $sec);
                   }
@@ -391,7 +393,7 @@ if ($student_no > 0) {
             case 'rank':
               if ($tmp_exclude{0} == '0') {
                 for ($sec=1; $sec<=substr_count($question['correct'],','); $sec++) {
-                  echo ',Q' . ($i+1) . chr($sec+64);
+                  $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
                     add_random_column_standard($i, $sec);
                   }
@@ -402,7 +404,7 @@ if ($student_no > 0) {
             case 'dichotomous':
               for ($sec=1; $sec<=substr_count($question['correct'],','); $sec++) {
                 if (substr($tmp_exclude,$sec-1,1) == '0') {
-                  echo ',Q' . ($i+1) . chr($sec+64);
+                  $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
                     add_random_column_standard($i, $sec);
                   }
@@ -412,39 +414,39 @@ if ($student_no > 0) {
             case 'mrq':
               for ($sec=1; $sec<=substr_count($question['correct'],','); $sec++) {
                 if (!isset($excluded[$tmp_question_ID])) {
-                  echo ',Q' . ($i+1) . chr($sec+64);
+                  $csv .= ',Q' . ($i+1) . chr($sec+64);
                   if ($is_random) {
                     add_random_column_standard($i, $sec);
                   }
                 }
               }
-              if ($question['score_method'] == 'other') echo ',Q' . ($i+1) . '.other';
+              if ($question['score_method'] == 'other') $csv .= ',Q' . ($i+1) . '.other';
               break;
             case 'calculation':
               if (!isset($excluded[$tmp_question_ID])) {
                 if ($is_random) {
-                  echo ',Q' . ($i+1) . ':formula';
+                  $csv .= ',Q' . ($i+1) . ':formula';
                 }
-                echo ',Q' . ($i+1) . ':user';
-                echo ',Q' . ($i+1) . ':correct';
-                echo ',Q' . ($i+1) . ':variables';
+                $csv .= ',Q' . ($i+1) . ':user';
+                $csv .= ',Q' . ($i+1) . ':correct';
+                $csv .= ',Q' . ($i+1) . ':variables';
               }
               break;
             default:
               if (!isset($excluded[$tmp_question_ID])) {
-                echo ',Q' . ($i+1);
+                $csv .= ',Q' . ($i+1);
                 if ($is_random) {
-                  echo ':user';
-                  echo ',Q' . ($i+1) . ':correct';
+                  $csv .= ':user';
+                  $csv .= ',Q' . ($i+1) . ':correct';
                 }
               }
               break;
           }
         }
       }
-      echo "\n";
+      $csv .= "\n";
       // Write out correct answers line.
-      echo $string['correctanswers'] . ',,,,,,,';
+      $csv .= $string['correctanswers'] . ',,,,,,,';
       for ($i=0; $i<$question_no; $i++) {
         $tmp_question_ID = $paper_buffer[$i]['ID'];
         $tmp_screen = $paper_buffer[$i]['screen'];
@@ -473,9 +475,9 @@ if ($student_no > 0) {
             case 'area':
               if (!isset($excluded[$tmp_question_ID])) {
                 if ($is_random) {
-                  echo ',,';
+                  $csv .= ',,';
                 } else {
-                  echo ',"' . hex_to_dec(ltrim($question['correct'], ',')) . '"';
+                  $csv .= ',"' . hex_to_dec(ltrim($question['correct'], ',')) . '"';
                 }
               }
               break;
@@ -484,15 +486,15 @@ if ($student_no > 0) {
               for ($partID=1; $partID<count($correct_parts); $partID++) {
                 if (substr($tmp_exclude,$partID-1,1) == '0') {
                   if ($is_random) {
-                    echo ',,';
+                    $csv .= ',,';
                   } else {
-                    echo ',' . $correct_parts[$partID];
+                    $csv .= ',' . $correct_parts[$partID];
                   }
                 }
               }
               break;
             case 'flash':
-              echo ',';
+              $csv .= ',';
               break;
             case 'extmatch':
               $correct_parts = explode(',',$question['correct']);
@@ -501,22 +503,22 @@ if ($student_no > 0) {
               for ($outer=1; $outer < count($correct_parts); $outer++) {
                 if ($correct_parts[$outer] != '' and substr($tmp_exclude,$partID-1,1) == '0') {
                   if ($is_random) {
-                    echo str_repeat(',', 2 * (substr_count($correct_parts[$outer], '$') + 1));
+                    $csv .= str_repeat(',', 2 * (substr_count($correct_parts[$outer], '$') + 1));
                   } else {
                     if ($mode == 'numeric') {
-                      echo ',"' . str_replace('$', '","', $correct_parts[$outer]) . '"';
+                      $csv .= ',"' . str_replace('$', '","', $correct_parts[$outer]) . '"';
                     } else {
                       if (strpos($correct_parts[$outer], '$') === false) {
-                        echo ',"' . $correct_text_parts[$correct_parts[$outer]] . '"';
+                        $csv .= ',"' . $correct_text_parts[$correct_parts[$outer]] . '"';
                       } else {
                         $correct_subparts = explode('$', $correct_parts[$outer]);
-                        echo ',"';
+                        $csv .= ',"';
                         for ($k = 0; $k < count($correct_subparts); $k++) {
                           $subpart = $correct_subparts[$k];
-                          if ($k > 0) echo '","';
-                          echo $correct_text_parts[$subpart];
+                          if ($k > 0) $csv .= '","';
+                          $csv .= $correct_text_parts[$subpart];
                         }
-                        echo '"';
+                        $csv .= '"';
                       }
                     }
                   }
@@ -529,14 +531,14 @@ if ($student_no > 0) {
               $correct_text_parts = explode("\t", $question['correct_text']);
               for ($partID=1; $partID < count($correct_parts); $partID++) {
                 if (substr($tmp_exclude,$partID-1,1) == '0' and $correct_parts[$partID] != '') {
-                  echo ',';
+                  $csv .= ',';
                   if ($is_random) {
-                    echo ',';
+                    $csv .= ',';
                   } else {
                     if ($mode == 'numeric') {
-                    echo $correct_parts[$partID];
+                    $csv .= $correct_parts[$partID];
                     } else {
-                      echo $correct_text_parts[$correct_parts[$partID]];
+                      $csv .= $correct_text_parts[$correct_parts[$partID]];
                     }
                   }
                 }
@@ -547,20 +549,20 @@ if ($student_no > 0) {
               if ($question['type'] == 'rank') $question['correct'] = str_replace('0','N/A',$question['correct']);
               if (!isset($excluded[$tmp_question_ID])) {
                 if ($is_random) {
-                  echo str_repeat(',', substr_count($question['correct'], ',') * 2);
+                  $csv .= str_repeat(',', substr_count($question['correct'], ',') * 2);
                 } else {
                   if ($mode == 'numeric') {
-                    echo $question['correct'];
+                    $csv .= $question['correct'];
                   } else {
                     $correct_parts = explode(',', $question['correct']);
                     $correct_text_parts = explode("\t", $question['correct_text']);
                     for ($j = 1; $j < count($correct_parts); $j++) {
                       if ($question['type'] == 'mrq' and $correct_parts[$j] == 'y') {
-                        echo ',"' . $correct_text_parts[$j] . '"';
+                        $csv .= ',"' . $correct_text_parts[$j] . '"';
                       } elseif ($question['type'] == 'rank') {
-                        echo ',' . StringUtils::ordinal_suffix($correct_parts[$j], $language);
+                        $csv .= ',' . StringUtils::ordinal_suffix($correct_parts[$j], $language);
                       } else {
-                        echo ',';
+                        $csv .= ',';
                       }
                     }
                   }
@@ -570,7 +572,7 @@ if ($student_no > 0) {
             case 'hotspot':
               $correct_parts = explode('|', $question['correct']);
               for ($partID=0; $partID<count($correct_parts); $partID++) {
-                if (substr($tmp_exclude,$partID-1,1) == '0') echo ',';
+                if (substr($tmp_exclude,$partID-1,1) == '0') $csv .= ',';
               }
               break;
             case 'labelling':
@@ -581,17 +583,17 @@ if ($student_no > 0) {
                 if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
                   if (substr($tmp_exclude,$sec-1,1) == '0') {
                     $tmp_third_split = explode('|', $tmp_second_split[$label_no]);
-                    echo ',';
+                    $csv .= ',';
                     if ($is_random) {
-                      echo ',';
+                      $csv .= ',';
                     } else {
                       if ($mode == 'numeric') {
-                        echo $tmp_third_split[1];
+                        $csv .= $tmp_third_split[1];
                       } else {
                         if ($ans = strstr($tmp_third_split[0], '~', true)) {
-                          echo $ans;
+                          $csv .= $ans;
                         } else {
-                          echo $tmp_third_split[0];
+                          $csv .= $tmp_third_split[0];
                         }
                       }
                     }
@@ -605,27 +607,27 @@ if ($student_no > 0) {
               $correct_parts = explode(',',$question['correct']);
               for ($partID=1; $partID<count($correct_parts); $partID++) {
                 if (substr($tmp_exclude,$partID-1,1) == '0') {
-                  echo ',';
+                  $csv .= ',';
                   if ($is_random) {
-                    echo ',';
+                    $csv .= ',';
                   } else {
-                    echo $correct_parts[$partID];
+                    $csv .= $correct_parts[$partID];
                   }
                 }
               }
               break;
             case 'textbox':
-              if (!isset($excluded[$tmp_question_ID])) echo ',';
+              if (!isset($excluded[$tmp_question_ID])) $csv .= ',';
               break;
             case 'calculation':
               if (!isset($excluded[$tmp_question_ID])) {
-                echo ',,';
+                $csv .= ',,';
                 if ($is_random) {
-                  echo ',';
+                  $csv .= ',';
                 } else {
-                  echo '"' . substr($question['correct'],1) . '"';
+                  $csv .= '"' . substr($question['correct'],1) . '"';
                 }
-                echo ',';
+                $csv .= ',';
               }
               break;
             case 'sct':
@@ -650,28 +652,28 @@ if ($student_no > 0) {
                     }
                   }
                 }
-                echo ',';
+                $csv .= ',';
                 if ($is_random) {
-                  echo ',';
+                  $csv .= ',';
                 } else {
-                  echo '"' . $correct . '"';
+                  $csv .= '"' . $correct . '"';
                 }
               }
               break;
             default:
               if (!isset($excluded[$tmp_question_ID])) {
                 if ($is_random) {
-                  echo ',,';
+                  $csv .= ',,';
                 } else {
                   if ($mode == 'numeric') {
-                    echo $question['correct'];
+                    $csv .= $question['correct'];
                   } else {
                     $corr_index = ltrim($question['correct'], ',');
                     $correct_text_parts = explode("\t", $question['correct_text']);
                     if (isset($correct_text_parts[$corr_index])) {
-                      echo ',"' . $correct_text_parts[$corr_index] . '"';
+                      $csv .= ',"' . $correct_text_parts[$corr_index] . '"';
                     } else {
-                      echo ',,';
+                      $csv .= ',,';
                     }
                   }
                 }
@@ -680,10 +682,10 @@ if ($student_no > 0) {
           }
         }
       }
-      echo "\n";
+      $csv .= "\n";
     }
     // Write out the raw data.
-    echo $individual['gender'] . ',"' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' . $individual['course'] . '",' . $individual['year'] . ',' . $individual['started'];
+    $csv .= $individual['gender'] . ',"' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' . $individual['course'] . '",' . $individual['year'] . ',' . $individual['started'];
     for ($i=0; $i<$question_no; $i++) {
       $tmp_question_ID = $paper_buffer[$i]['ID'];
       $tmp_screen = $paper_buffer[$i]['screen'];
@@ -731,17 +733,17 @@ if ($student_no > 0) {
         switch ($question['type']) {
           case 'area':
             if (!isset($excluded[$tmp_question_ID])) {
-              echo ',"';
+              $csv .= ',"';
               if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != '') {
                 $answer_parts = explode(';', $individual[$tmp_screen][$tmp_question_ID]);
 
                 if (count($answer_parts) > 1) {
-                  echo hex_to_dec($answer_parts[1]);
+                  $csv .= hex_to_dec($answer_parts[1]);
                 }
               }
-              echo '"';
+              $csv .= '"';
               if ($is_random) {
-                echo ',"' . hex_to_dec(ltrim($question['correct'], ',')) . '"';
+                $csv .= ',"' . hex_to_dec(ltrim($question['correct'], ',')) . '"';
               }
             }
             break;
@@ -751,12 +753,12 @@ if ($student_no > 0) {
             $correct_parts = explode(',',$question['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
               if (substr($tmp_exclude,$partID-1,1) == '0') {
-                echo ',';
+                $csv .= ',';
                 if ($tmp_answers[$partID] != 'u') {
-                  echo str_replace("\n", ' ', str_replace("\r", ' ', $tmp_answers[$partID]));
+                  $csv .= str_replace("\n", ' ', str_replace("\r", ' ', $tmp_answers[$partID]));
                 }
                 if ($is_random) {
-                  echo ',' . $correct_parts[$partID];
+                  $csv .= ',' . $correct_parts[$partID];
                 }
               }
             }
@@ -769,7 +771,7 @@ if ($student_no > 0) {
             }
             if (!isset($excluded[$tmp_question_ID])) {
               if ($is_random) {
-                echo ',"' . substr($question['correct'],1) . '"';
+                $csv .= ',"' . substr($question['correct'],1) . '"';
               }
               $vars = explode(',', $answer_parts[2]);
               $variables = '';
@@ -780,7 +782,7 @@ if ($student_no > 0) {
                   if ($var != '') $variables .= ',' . $var;
                 }
               }
-              echo ',"' . $answer_parts[0] . '",' . $answer_parts[1] . ',"' . $variables . '"';
+              $csv .= ',"' . $answer_parts[0] . '",' . $answer_parts[1] . ',"' . $variables . '"';
             }
             break;
           case 'true_false':
@@ -788,13 +790,13 @@ if ($student_no > 0) {
             $correct_parts = explode(',',$question['correct']);
             for ($partID=0; $partID < count($correct_parts) - 1; $partID++) {
               if (substr($tmp_exclude, $partID, 1) == '0') {
-                echo ',';
+                $csv .= ',';
                 $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? substr($individual[$tmp_screen][$tmp_question_ID],$partID,1) : 'u';
                 if($part_ans != 'u') {
-                  echo $part_ans;
+                  $csv .= $part_ans;
                 }
                 if ($is_random) {
-                  echo ',' . $correct_parts[$partID + 1];
+                  $csv .= ',' . $correct_parts[$partID + 1];
                 }
               }
             }
@@ -810,9 +812,9 @@ if ($student_no > 0) {
                 $correct_text_parts = explode("\t", $question['correct_text']);
                 if (isset($answer_parts[$outer-1])) {
                   $answer_subparts = explode('$', $answer_parts[$outer-1]);
-                  echo ',"';
+                  $csv .= ',"';
                   for ($k = 0; $k < count($correct_subparts); $k++) {
-                    if ($k > 0) echo '","';
+                    if ($k > 0) $csv .= '","';
 
                     $diff = count($correct_subparts) - count($answer_subparts);
                     if ($diff > 0) {
@@ -829,30 +831,30 @@ if ($student_no > 0) {
                     if ($answer_subparts[$k] != -1) {
                       $subpart = $answer_subparts[$k];
                       if ($mode == 'numeric') {
-                        echo $answer_subparts[$k];
+                        $csv .= $answer_subparts[$k];
                       } else {
                         if (isset($correct_text_parts[$subpart])) {
-                          echo $correct_text_parts[$subpart];
+                          $csv .= $correct_text_parts[$subpart];
                         }
                       }
                     }
                     if ($is_random) {
                       if ($mode == 'numeric') {
-                        echo '","' . $correct_subparts[$k];
+                        $csv .= '","' . $correct_subparts[$k];
                       } else {
-                        echo '","' . $correct_text_parts[$correct_subparts[$k]];
+                        $csv .= '","' . $correct_text_parts[$correct_subparts[$k]];
                       }
                     }
                   }
-                  echo '"';
+                  $csv .= '"';
                 } else {
                   for ($k = 0; $k < count($correct_subparts); $k++) {
-                    echo ',';
+                    $csv .= ',';
                     if ($is_random) {
                       if ($mode == 'numeric') {
-                        echo ',' . $correct_subparts[$k];
+                        $csv .= ',' . $correct_subparts[$k];
                       } else {
-                        echo ',"' . $correct_text_parts[$correct_subparts[$k]] . '"';
+                        $csv .= ',"' . $correct_text_parts[$correct_subparts[$k]] . '"';
                       }
                     }
                   }
@@ -869,20 +871,20 @@ if ($student_no > 0) {
             for ($partID=0; $partID < count($correct_parts) - 1; $partID++) {
               // $correct_parts[0] is always empty
               if (substr($tmp_exclude,$partID,1) == '0' and $correct_parts[$partID + 1] != '') {
-                echo ',';
+                $csv .= ',';
                 if (isset($answer_parts[$partID]) and  $answer_parts[$partID] != '' and  $answer_parts[$partID] != 'u') {
                   if ($mode == 'numeric') {
-                    echo $answer_parts[$partID];
+                    $csv .= $answer_parts[$partID];
                   } else {
-                    echo $correct_text_parts[$answer_parts[$partID]];
+                    $csv .= $correct_text_parts[$answer_parts[$partID]];
                   }
                 }
                 if ($is_random) {
-                  echo ',';
+                  $csv .= ',';
                   if ($mode == 'numeric') {
-                    echo $correct_parts[$partID + 1];
+                    $csv .= $correct_parts[$partID + 1];
                   } else {
-                    echo $correct_text_parts[$correct_parts[$partID + 1]];
+                    $csv .= $correct_text_parts[$correct_parts[$partID + 1]];
                   }
                 }
               }
@@ -895,13 +897,13 @@ if ($student_no > 0) {
               $answer_parts = ($individual[$tmp_screen][$tmp_question_ID] != '') ? explode(',',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
 
               for ($partID=0; $partID < count($correct_parts) - 1; $partID++) {
-                echo ',';
+                $csv .= ',';
                 if ($answer_parts[$partID] != 'u') {
-                  echo ($mode == 'numeric') ? $answer_parts[$partID] : StringUtils::ordinal_suffix($answer_parts[$partID], $language);
+                  $csv .= ($mode == 'numeric') ? $answer_parts[$partID] : StringUtils::ordinal_suffix($answer_parts[$partID], $language);
                 }
                 if ($is_random) {
-                  echo ',';
-                  echo ($mode == 'numeric') ? $correct_parts[$partID + 1] : StringUtils::ordinal_suffix($correct_parts[$partID + 1], $language);
+                  $csv .= ',';
+                  $csv .= ($mode == 'numeric') ? $correct_parts[$partID + 1] : StringUtils::ordinal_suffix($correct_parts[$partID + 1], $language);
                 }
               }
             }
@@ -912,9 +914,9 @@ if ($student_no > 0) {
 
             for ($partID = 0; $partID < count($correct_parts); $partID++) {
               if (substr($tmp_exclude, $partID, 1) == '0') {
-                echo ',';
+                $csv .= ',';
                 if (isset($answer_parts[$partID]) and $answer_parts[$partID] != 'u') {
-                  echo str_replace(',', 'x', substr($answer_parts[$partID], 2));
+                  $csv .= str_replace(',', 'x', substr($answer_parts[$partID], 2));
                 }
               }
             }
@@ -957,19 +959,19 @@ if ($student_no > 0) {
             }
             for ($j = 0; $j < count($answers); $j++) {
               $answer = $answers[$j];
-              echo ',';
+              $csv .= ',';
               if ($answer != '') {
                 if ($mode == 'numeric') {
                   if (isset($label_indexes[$answer])) {
-                    echo $label_indexes[$answer];
+                    $csv .= $label_indexes[$answer];
                   }
                   if ($is_random) {
-                    echo ',' . $label_indexes[$correct[$j]];
+                    $csv .= ',' . $label_indexes[$correct[$j]];
                   }
                 } else {
-                  echo $answer;
+                  $csv .= $answer;
                   if ($is_random) {
-                    echo ',' . $correct[$j];
+                    $csv .= ',' . $correct[$j];
                   }
                 }
               }
@@ -982,22 +984,22 @@ if ($student_no > 0) {
               for ($char_pos = 0; $char_pos < substr_count($question['correct'], ','); $char_pos++) {
                 $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? substr($individual[$tmp_screen][$tmp_question_ID], $char_pos, 1) : '';
                 if ($mode == 'numeric') {
-                  echo ',"' . $part_ans . '"';
+                  $csv .= ',"' . $part_ans . '"';
                 } else {
                   if ($part_ans == 'y') {
-                    echo ',"' . $correct_text_parts[$char_pos + 1] . '"';
+                    $csv .= ',"' . $correct_text_parts[$char_pos + 1] . '"';
                   } else {
-                    echo ',';
+                    $csv .= ',';
                   }
                 }
                 if ($is_random) {
                   if ($mode == 'numeric') {
-                    echo ',' . substr($correct_clean, $char_pos, 1);
+                    $csv .= ',' . substr($correct_clean, $char_pos, 1);
                   } else {
                     if (substr($correct_clean, $char_pos, 1) == 'y') {
-                      echo ',"' . $correct_text_parts[$char_pos + 1] . '"';
+                      $csv .= ',"' . $correct_text_parts[$char_pos + 1] . '"';
                     } else {
-                      echo ',';
+                      $csv .= ',';
                     }
                   }
                 }
@@ -1005,9 +1007,9 @@ if ($student_no > 0) {
               $char_pos = substr_count($question['correct'],',') + 1;
               if ($question['score_method'] == 'other') {
                 $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? substr($individual[$tmp_screen][$tmp_question_ID], $char_pos + 1) : '';
-                echo ',"' . $part_ans . '"';
+                $csv .= ',"' . $part_ans . '"';
                 if ($is_random) {
-                  echo ',';
+                  $csv .= ',';
                 }
               }
             }
@@ -1023,21 +1025,21 @@ if ($student_no > 0) {
               $tmp_data = str_replace('"',"'",$tmp_data);
 
               if (substr($tmp_data,0,1) == '-') $tmp_data = trim(substr($tmp_data,1));
-              echo ',"' . $tmp_data . '"';
+              $csv .= ',"' . $tmp_data . '"';
             }
             break;
           case 'sct':
             if (!isset($excluded[$tmp_question_ID])) {
               $correct_text_parts = explode("\t", $question['correct_text']);
-              echo ',"';
+              $csv .= ',"';
               if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != 'u') {
                 if ($mode == 'numeric') {
-                  echo $individual[$tmp_screen][$tmp_question_ID];
+                  $csv .= $individual[$tmp_screen][$tmp_question_ID];
                 } else {
-                  echo $correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]];
+                  $csv .= $correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]];
                 }
               }
-              echo '"';
+              $csv .= '"';
               if ($is_random) {
                 $correct = '';
                 $parts = explode(',', $question['correct']);
@@ -1054,29 +1056,29 @@ if ($student_no > 0) {
                     }
                   }
                 }
-                echo ',"' . $correct . '"';
+                $csv .= ',"' . $correct . '"';
               }
             }
             break;
           default:
             if (!isset($excluded[$tmp_question_ID])) {
               $correct_text_parts = explode("\t", $question['correct_text']);
-              echo ',"';
+              $csv .= ',"';
               if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != 'u') {
                 if ($mode == 'numeric') {
-                  echo $individual[$tmp_screen][$tmp_question_ID];
+                  $csv .= $individual[$tmp_screen][$tmp_question_ID];
                 } else {
                   if (isset($correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]])) {
-                    echo $correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]];
+                    $csv .= $correct_text_parts[$individual[$tmp_screen][$tmp_question_ID]];
                   }
                 }
               }
-              echo '"';
+              $csv .= '"';
               if ($is_random) {
                 if ($mode =='numeric') {
-                echo ',"' . ltrim($question['correct'], ',') . '"';
+                $csv .= ',"' . ltrim($question['correct'], ',') . '"';
                 } else {
-                  echo ',"' . $correct_text_parts[ltrim($question['correct'], ',')] . '"';
+                  $csv .= ',"' . $correct_text_parts[ltrim($question['correct'], ',')] . '"';
                 }
               }
             }
@@ -1084,12 +1086,14 @@ if ($student_no > 0) {
         }
       }
     }
-    echo "\n";
+    $csv .= "\n";
     $row_written++;
   }
 } else {
-  echo $string['nodata'];
+  $csv .= $string['nodata'];
 }
+
+echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
 
 $mysqli->close();
 ?>
