@@ -37,7 +37,7 @@ if (UserUtils::username_exists($_SERVER['PHP_AUTH_USER'], $mysqli) === false ) {
   //the user has no Rogo Account but has an LDAP acount so lets make one !
   $SMS = SMSutils::GetSmsUtils();
   $user_data = $SMS->getUserData($_SERVER['PHP_AUTH_USER']);
-  if (count($user_data) > 0) {
+  if ($user_data !== false) {
     //valid acount found create user
     UserUtils::create_user(
                           $_SERVER['PHP_AUTH_USER'], 
