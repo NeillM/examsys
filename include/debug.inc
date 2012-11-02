@@ -207,12 +207,12 @@ function outputLoadTimes() {
   echo '<ol>';
   foreach ($queryInfo as $id => $query) {
     if (isset($query['sql']['error'])) {
-      echo "<li><div style=\"background-color:#C00000; color:white\">";
+      echo "<li><div style=\"background-color:#FA8072; color:white\">";
     } else {
       echo "<li>";
     }
     echo "<p>" . $query['sql']['Query'] . ' [' . $query['sql']['Duration'] . "] <a href=\"#\" onclick=\"var el=document.getElementById('debug_$id'); el.style.display=el.style.display=(el.style.display != 'none' ? 'none' : ''); return false;\">More ...</a></p>";
-    
+    if (isset($query['sql']['error'])) echo "<strong>" . $query['sql']['error'] . "</strong>";
     echo "<div id=\"debug_$id\" style=\"display:none\"><pre>"; 
       var_dump($query['stack']);
       if (isset($query['sql']['INFO'])) {

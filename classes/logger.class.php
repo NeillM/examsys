@@ -49,8 +49,12 @@ Class Logger {
    */
   public function track_change($message, $object_id, $user_id, $orig_val, $new_val, $part) {
     $success = true;
-    
+
     if ($object_id > 0) {
+
+      if(is_array($orig_val)) $orig_val = implode(',',$orig_val);
+      if(is_array($new_val)) $new_val = implode(',',$new_val);
+
       $query = <<< QUERY
 INSERT INTO track_changes(type, typeID, editor, old, new, changed, part)
 VALUES (?,?,?,?,?,NOW(),?)

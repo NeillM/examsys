@@ -30,16 +30,8 @@ if (strpos($userroles,'SysAdmin') === false) {
   access_denied($string['accessdeniedsysadmin'], true);
 } 
 
-// Get teams.
-$teams = array();
-$result = $mysqli->prepare("SELECT name FROM teams WHERE memberID=? ORDER BY name");
-$result->bind_param('i', $userID);
-$result->execute();
-$result->bind_result($team_name);
-while ($result->fetch()) {
-  $teams[] = $team_name;
-}
-$result->close();
+// Get staff_modules.
+$staff_modules = get_staff_modules($userID, $mysqli);
 
 $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
 ?>

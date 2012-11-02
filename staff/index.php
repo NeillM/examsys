@@ -24,10 +24,12 @@
 * @package
 */
 
-require '../include/staff_student_auth.inc';
-require '../include/sidebar_menu.inc';
-require '../classes/recyclebin.class.php';
-require '../config/index.inc';
+require_once '../include/staff_student_auth.inc';
+require_once '../include/sidebar_menu.inc';
+require_once '../classes/recyclebin.class.php';
+require_once '../config/index.inc';
+require_once '../classes/paperutils.class.php';
+
 
 // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
 if (strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === false and strpos($userroles,'Admin') === false and strpos($userroles,'SysAdmin') === false) {
@@ -42,7 +44,7 @@ if (strpos($userroles,'Student') !== false and strpos($userroles,'Staff') === fa
 }
 
 // If we're still here we should be staff
-require '../include/staff_auth.inc';
+require_once '../include/staff_auth.inc';
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
@@ -175,13 +177,15 @@ require '../include/staff_auth.inc';
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 
   // -- Display top 10 recent papers ----------------------------------
-  $result = $mysqli->prepare("SELECT paperID, paper_title, moduleID, accessed, paper_type FROM (recent_papers, properties) WHERE userID=? AND recent_papers.paperID=properties.property_id ORDER BY accessed DESC LIMIT 10");
+  $result = $mysqli->prepare("SELECT paperID, paper_title, accessed, paper_type FROM (recent_papers, properties) WHERE userID=? AND recent_papers.paperID=properties.property_id ORDER BY accessed DESC LIMIT 10");
   $result->bind_param('i', $userID);
   $result->execute();
-  $result->bind_result($paperID, $paper_title, $moduleID, $accessed, $paper_type);
+  $result->bind_result($paperID, $paper_title, $accessed, $paper_type);
   $result->store_result();
   echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myrecentpapers'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   while ($result->fetch()) {
+    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);  
+    $moduleID = implode(',',$moduleIDs);
     echo "<div style=\"padding-left:22px\"><a href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
     echo "href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\">" . $paper_title . "</a></div>\n";
@@ -223,13 +227,13 @@ require '../include/staff_auth.inc';
 <?php
   // -- Display personal folders --------------------------------------
   $module_sql = '';
-  foreach ($teams as $individual_team){
-    if (trim($individual_team) != '') $module_sql .= " OR team_name LIKE '%$individual_team%'";
+  if (count($staff_modules) > 0) {
+    $module_sql == " OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "'') ";
   }
 
-  $result = $mysqli->prepare("SELECT id, name, team_name, color FROM folders WHERE (ownerID=$userID $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
+  $result = $mysqli->prepare("SELECT id, name, color FROM folders,folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=$userID $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
   $result->execute();
-  $result->bind_result($id, $name, $team_name, $color);
+  $result->bind_result($id, $name, $color);
   $result->store_result();
 
   echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myfolders'] . " (" . ($result->num_rows() + 1) . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
@@ -247,7 +251,7 @@ require '../include/staff_auth.inc';
     }
   }
 
-  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userID, $teams, $mysqli) . "\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
+  echo "<div class=\"f\"><a href=\"../delete/recycle_list.php\" class=\"blacklink\"><img style=\"vertical-align:middle; padding-right:8px\" src=\"../artwork/" . RecycleBin::get_recyclebin_icon($userID, $staff_modules, $mysqli) . "\" width=\"48\" height=\"48\" alt=\"Recycle Bin\" border=\"0\" align=\"middle\" />" . $string['recyclebin'] . "</a></div>\n";
 ?>
 <br clear="left" />
 <?php
@@ -275,10 +279,11 @@ require '../include/staff_auth.inc';
     echo '<br clear="left" /><br />';
 
     // -- Display papers not assigned to a module -------------------
-    $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'$cfg_short_date') AS start_date, DATE_FORMAT(start_date,'$cfg_short_date %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID, properties.password FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper WHERE paper_ownerID=$userID AND moduleID='' AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
+    $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'$cfg_short_date') AS start_date, DATE_FORMAT(start_date,'$cfg_short_date %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_ownerID=$userID AND idMod is NULL AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
     $result->execute();
-    $result->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID, $password);
+    $result->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
     $result->store_result();
+    $moduleID = '';
     if ($result->num_rows > 0) {
       echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $result->num_rows . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
       while ($result->fetch()) {

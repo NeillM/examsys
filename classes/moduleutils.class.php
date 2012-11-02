@@ -33,6 +33,11 @@ Class module_utils {
       return false;
     }
 
+    //dont let modules with no id to be created ;-)
+    if($moduleid == '') {
+      return false;
+    }
+
     $checklist = '';
     if ($peer == true) $checklist .= ',peer';
     if ($external == true) $checklist .= ',external';
@@ -114,6 +119,36 @@ Class module_utils {
     $result->close();
 
     return array('fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
+  }
+  
+  static function get_idMod($module_id, $db) {
+    $result = $db->prepare("SELECT id FROM modules WHERE moduleid=?");
+    $result->bind_param('s', $module_id);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $result->close();
+      return false;
+    }
+    $result->close();
+    return $id;
+  }
+
+  static function get_moduleID($idMod, $db) {
+    $result = $db->prepare("SELECT moduleID FROM modules WHERE id=?");
+    $result->bind_param('s', $idMod);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($module_id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $result->close();
+      return false;
+    }
+    $result->close();
+    return $module_id;
   }
 
 }

@@ -27,7 +27,9 @@ require_once '../../classes/question.class.php';
 require_once '../../classes/logger.class.php';
 require_once '../../classes/viewhelper.class.php';
 require_once '../../classes/stateutils.class.php';
+require_once '../../classes/moduleutils.class.php';
 require_once '../../classes/questioninfo.class.php';
+require_once '../../classes/paperutils.class.php';
 require_once '../../include/edit.inc';
 require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
@@ -64,7 +66,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
       $question = Question::question_factory($mysqli, $userID, $string, $_GET['type']);
       $question->set_type($_GET['type']);
       $question->set_owner_id($userID);
-      if ($module != '') $question->set_teams(array($module));
+      $question->set_teams(Paper_utils::get_modules($paper_id, $mysqli));
     } catch (ClassNotFoundException $ex) {
       $critical_error = $ex->getMessage();
     }
@@ -208,11 +210,14 @@ if ($critical_error == '') {
       $question->set_scenario(clearMSOtags($question->get_scenario()));
       $question->set_leadin(clearMSOtags($question->get_leadin()));
 
-
-      if (!isset($_POST['teams'])) {
-        $_POST['teams'] = array();
+      $question_teams = array();
+      if (isset($_POST['teams'])) {
+        //$question_teams = array_combine($_POST['teams'], $_POST['teams']);
+        foreach($_POST['teams'] as $idMod) {
+          $question_teams[$idMod] = module_utils::get_moduleID($idMod, $mysqli);
+        }
       }
-      $question->set_teams($_POST['teams']);
+      $question->set_teams($question_teams);
 
       $unified_part_names = $question->get_unified_fields();
             

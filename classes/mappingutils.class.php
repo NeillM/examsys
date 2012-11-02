@@ -25,13 +25,12 @@
  */
 
 class MappingUtils {
-  public static function get_vle_api($module_id, $session, &$vle_api_cache, $rogodb) {
+  public static function get_vle_api($idMod, $session, &$vle_api_cache, $rogodb) {
 
-    if (!isset($vle_api_cache[$module_id])) {
+    if (!isset($vle_api_cache[$idMod])) {
       // Are there any existing relationships for the module in this session?
-      $stmt = $rogodb->prepare("SELECT vle_api FROM relationships WHERE module_id LIKE ? AND calendar_year=? LIMIT 1");
-      $mod_like = '%' . $module_id . '%';
-      $stmt->bind_param('ss', $mod_like, $session);
+      $stmt = $rogodb->prepare("SELECT vle_api FROM relationships WHERE idMod = ? AND calendar_year=? LIMIT 1");
+      $stmt->bind_param('ss', $idMod, $session);
       $stmt->execute();
       $stmt->store_result();
       if ($stmt->num_rows > 0) {
@@ -40,17 +39,17 @@ class MappingUtils {
         $stmt->close();
       } else {
         // No existing relationships. Use VLE API as defined in the module
-        $stmt = $rogodb->prepare("SELECT vle_api FROM modules WHERE moduleid=? LIMIT 1");
-        $stmt->bind_param('s', $module_id);
+        $stmt = $rogodb->prepare("SELECT vle_api FROM modules WHERE id=? LIMIT 1");
+        $stmt->bind_param('s', $idMod);
         $stmt->execute();
         $stmt->bind_result($vle_api);
         $stmt->fetch();
         $stmt->close();
       }
 
-      $vle_api_cache[$module_id] = $vle_api;
+      $vle_api_cache[$idMod] = $vle_api;
     } else {
-      $vle_api = $vle_api_cache[$module_id];
+      $vle_api = $vle_api_cache[$idMod];
     }
 
     return $vle_api;

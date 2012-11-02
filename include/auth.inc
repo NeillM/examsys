@@ -289,11 +289,11 @@ function gen_password($len = 8) {
   return $pass;
 }
 
-function getUserTeams($userID, $db) {
+//TODO REMOVE ME
+/*function getUserTeams($userID, $db) {
   $teams = array();
 
   $result = $db->prepare("SELECT name FROM teams WHERE memberID=? AND name IS NOT NULL ORDER BY name");
-  echo $db->error;
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($team_name);
@@ -304,6 +304,26 @@ function getUserTeams($userID, $db) {
   $result->close();
 
   return $teams;
+}*/
+
+/***
+*
+*
+*
+*/
+function get_staff_modules($userID, $db) {
+  $teams = array();
+
+  $result = $db->prepare("SELECT idMod,moduleID FROM modules_staff,modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->bind_result($idMod,$moduleID);
+  while ($result->fetch()) {
+    $staff_modules[$idMod] = $moduleID;
+  }
+  $result->close();
+
+  return $staff_modules;
 }
 
 ?>

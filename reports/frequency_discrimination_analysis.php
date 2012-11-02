@@ -30,6 +30,7 @@ require '../include/staff_auth.inc';
 require '../include/media.inc';
 require '../include/errors.inc';
 require '../include/sort.inc';
+require_once '../classes/paperutils.class.php';
   
 set_time_limit(0);
 check_var('paperID', 'GET', true, false);
@@ -1689,13 +1690,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $result->close();
 
   // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_title, paper_type, labelcolor, themecolor, marking, pass_mark, moduleID FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT paper_title, paper_type, labelcolor, themecolor, marking, pass_mark FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($paper_title, $paper_type, $labelcolor, $themecolor, $marking, $pass_mark, $moduleID);
+  $result->bind_result($paper_title, $paper_type, $labelcolor, $themecolor, $marking, $pass_mark);
   $result->fetch();
   $result->close();
   
+  $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+
   // Get the standards setting
   if (substr($marking,0,1) == '2') {
     $tmp_parts = explode(',', $marking);
@@ -1713,9 +1716,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   }
   
   // Get all the users on the module(s) the paper is on.
-  if ($moduleID != '') {
+  $users_on_modules = '';
+  if (is_array($moduleIDs)) {
     $users_on_modules = '';
-    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM student_modules WHERE moduleid IN ('" . str_replace(",","','",$moduleID) . "')");
+    $moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
+    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student,modules WHERE modules.id = modules_student.idMod AND idMod IN ($moduleIDs_in)");
     $mod_query->execute();
     $mod_query->bind_result($tmp_userID, $tmp_moduleid);
     $mod_query->store_result();

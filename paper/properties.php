@@ -28,7 +28,14 @@ require_once '../include/staff_auth.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
-require_once '../lang/' . $language. '/include/timezones.inc';
+require_once '../lang/' . $language . '/include/timezones.inc';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/moduleutils.class.php';
+require_once '../classes/questionutils.class.php';
+
+if (!isset($staff_modules)){
+   $staff_modules = get_staff_modules($userID, $mysqli);
+}
 
 function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userroles, $db) {
   if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'Admin') === false) {
@@ -72,11 +79,12 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userroles, $db) {
   return $html;
 }
 
-function getSchools($teams, $db) {
+function getSchools($staff_modules, $db) {
   $schools = array();
-  $teams_list = implode("','", $teams);
+
+  $staff_modules_list = implode("','", $staff_modules);
   
-  $result = $db->prepare("SELECT DISTINCT schools.id FROM schools, modules WHERE modules.schoolid=schools.id AND modules.moduleid IN ('$teams_list')");
+  $result = $db->prepare("SELECT DISTINCT schools.id FROM schools, modules WHERE modules.schoolid=schools.id AND modules.moduleid IN ('$staff_modules_list')");
   $result->execute();
   $result->bind_result($schoolID);
   while ($result->fetch()) {
@@ -218,15 +226,15 @@ if (isset($_POST['Submit'])) {
     $internal_review_deadline = $_POST['int_tyear'] . $_POST['int_tmonth'] . $_POST['int_tday'];
     if ($internal_review_deadline == '') $internal_review_deadline = NULL;
 
-    $module_string = '';
-    $first_module = '';
+    $paper_modules = array();
     for ($i=0; $i<$_POST['module_no']; $i++) {
       if (isset($_POST['module' . $i])) {
-        if ($module_string == '') {
-          $module_string = $_POST['module' . $i];
-          $first_module = $_POST['module' . $i];
+        if (count($paper_modules) == 0) {
+          $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
+          $first_module_idMod = $_POST['module' . $i];
+          $first_module_id = module_utils::get_moduleID($_POST['module' . $i], $mysqli);
         } else {
-          $module_string .= ',' . $_POST['module' . $i];
+          $paper_modules[$_POST['module' . $i]] = $_POST['module' . $i];
         }
       }
     }
@@ -307,15 +315,20 @@ if (isset($_POST['Submit'])) {
     $paperID = $_POST['paperID'];
     
     if ($cfg_summative_mgmt and $paper_type == '2' and strpos($userroles,'Admin') === false) {
-      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
-      $editProperties->bind_param('sssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties->bind_param('ssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
       $editProperties->close();
+
+      Paper_utils::update_modules($paper_modules,$paperID,$mysqli);
     } else {
-      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, moduleID=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
-      $editProperties->bind_param('sssssssssssssssiisssisisssssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $module_string, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $_POST['calendar_year'], $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
+
+      $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_type=?, start_date=?, end_date=?, timezone=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, labs=?, rubric=?, calculator=?, externals=?, exam_duration=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, calendar_year=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
+      $editProperties->bind_param('ssssssssssssssiisssisisssssssssssi', $paper_title, $paper_type, $tmp_start_date, $tmp_end_date, $timezone, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $lab_string, $tmp_rubric, $tmp_calculator, $external_string, $exam_duration, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $_POST['calendar_year'], $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
       $editProperties->close();
+
+      Paper_utils::update_modules($paper_modules,$paperID,$mysqli);
     }
     
     // Release objectives-based feedback
@@ -349,10 +362,7 @@ if (isset($_POST['Submit'])) {
     $result->store_result();
     $result->bind_result($q_id);
     while ($result->fetch()) {
-      $editPaper = $mysqli->prepare("UPDATE questions SET q_group=? WHERE q_id=?");
-      $editPaper->bind_param('si', $first_module, $q_id);
-      $editPaper->execute();
-      $editPaper->close();
+      QuestionUtils::update_modules_from_papers($q_id,$mysqli);
     }
     $result->close();
     
@@ -429,20 +439,20 @@ if (isset($_POST['Submit'])) {
         <?php
           } elseif ($_POST['noadd'] == 'y') {
         ?>
-            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
+            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
             window.opener.close();
             window.close();
         <?php
           } else {
         ?>
-            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
+            window.opener.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>&folder=<?php if (isset($_POST['folderID'])) echo $_POST['folderID']; ?>&school=";
             window.close();
         <?php
           }
         ?>
       }
       function updateParent() {
-        window.opener.parent.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module; ?>";
+        window.opener.parent.location = "details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $first_module_id; ?>";
         window.close();
       }
     </script></head>
@@ -484,13 +494,12 @@ if (isset($_POST['Submit'])) {
   $result->close();
   
   // Get the main properties of the paper
-  $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, hide_if_unanswered, paper_title, paper_type, start_date, end_date, timezone, paper_prologue, paper_postscript, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, moduleID, calendar_year, internal_reviewers, external_review_deadline, internal_review_deadline, sound_demo, password, crypt_name FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, hide_if_unanswered, paper_title, paper_type, start_date, end_date, timezone, paper_prologue, paper_postscript, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, calendar_year, internal_reviewers, external_review_deadline, internal_review_deadline, sound_demo, password, crypt_name FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $timezone, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $moduleID, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $password, $crypt_name);
+  $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $timezone, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $password, $crypt_name);
   $result->fetch();
   $result->close();
-  
   $local_time = new DateTimeZone($cfg_timezone);
   $target_timezone = new DateTimeZone($timezone);
   
@@ -856,26 +865,13 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<option value=\"\"></option>";
      $additional = '';
      
-     $team_query = $mysqli->prepare("SELECT DISTINCT name FROM teams WHERE memberID=? ORDER BY name");
-     $team_query->bind_param('s', $userID);
-     $team_query->execute();
-     $team_query->store_result();
-     $team_query->bind_result($team_name);
-     while ($team_query->fetch()) {
-       if ($team_name != '') {
-         if ($additional == '') {
-           $additional = ' OR team_name IN ("' . $team_name . '"';
-         } else {
-           $additional .= ',"' . $team_name . '"';
-         }
-       }
+     if(is_array($staff_modules)) {
+      $additional = ' OR idMod IN ("' . implode("','",array_keys($staff_modules)) . '")';
      }
-     $team_query->close();
-     
-     if ($additional != '') $additional .= ')';
+
      if ($folder != '') $additional .= ' OR id=' . $folder;
-     
-     $folder_details = $mysqli->prepare("SELECT id, name FROM folders WHERE (ownerID=?$additional) AND deleted IS NULL ORDER BY name");
+
+     $folder_details = $mysqli->prepare("SELECT id, name FROM folders,folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=?$additional) AND deleted IS NULL ORDER BY name");
      $folder_details->bind_param('s', $userID);
      $folder_details->execute();
      $folder_details->bind_result($folder_id, $folder_name);
@@ -1319,8 +1315,8 @@ if ($paper_type != '4' and $paper_type != '5') {
     
     echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
     
-    $modules_array = explode(',',$moduleID);
-    $total_modules = array_merge($teams, $modules_array);
+    $modules_array = Paper_utils::get_modules($_GET['paperID'], $mysqli);
+    $total_modules = array_merge($staff_modules, $modules_array);
     
     $module_sql = implode("','", $total_modules);
     if ($module_sql != '') $module_sql = "'$module_sql'";
@@ -1328,7 +1324,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     if ($module_sql == '') {
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"0\" /></div>\n";
     } else {
-      $module_array = search_utils::get_teams($teams, $userroles, $userID, $mysqli);
+      $module_array = search_utils::get_staff_modules($staff_modules, $userroles, $userID, $mysqli);
       $module_no = 0;
       $old_school = '';
       foreach ($module_array as $module) {
@@ -1340,13 +1336,13 @@ if ($paper_type != '4' and $paper_type != '5') {
           if ($separate_module == $module['id']) $match = true;
         }
         if ($match == true) {
-          if (in_array($module['id'],$teams) or strpos($userroles,'SysAdmin') !== false) {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+          if (in_array($module['id'],$staff_modules) or strpos($userroles,'SysAdmin') !== false) {
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           }
         } else {
-          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['id'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
         }
         $module_no++;  
         $old_school = $module['school'];        
@@ -1517,14 +1513,15 @@ if ($paper_type != '4' and $paper_type != '5') {
 </td></tr>
   <?php  
   echo "<tr><td><div style=\"width:345px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
-  $team_list = implode("','", $teams);
   
-  $schools = getSchools($teams, $mysqli);
+  $schools = getSchools($staff_modules, $mysqli);
   $school_sql = (count($schools) > 0) ? 'AND schoolid IN (' . implode(',', $schools) . ')' : '';
   $current_internals = explode(',',$internal_reviewers);
      
-  $internal_details = $mysqli->prepare("SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, teams, modules WHERE users.id=teams.memberID and modules.moduleid=teams.name $school_sql ORDER BY surname, initials");
+  $internal_details = $mysqli->prepare("SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE users.id=modules_staff.memberID and modules.id=modules_staff.idMod $school_sql ORDER BY surname, initials");
+  echo $mysqli->error;
   $internal_details->execute();
+  echo $mysqli->error;
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
   $internal_no = 0;
   while ($internal_details->fetch()) {

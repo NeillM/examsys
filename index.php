@@ -28,6 +28,7 @@
 
 require_once './include/staff_student_auth.inc';
 require_once './classes/networkutils.class.php';
+require_once './classes/paperutils.class.php';
 
 // Redirect External Exminers and Invigilators to their own areas.
   if ($userroles == 'External Examiner') {
@@ -104,10 +105,10 @@ require_once './classes/networkutils.class.php';
   $paper_no = 0;
   $paper_display = array();
   
-  $paper_query = $mysqli->prepare("SELECT paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, moduleID, calendar_year, password FROM (papers, properties) WHERE papers.paper=properties.property_id AND (labs != '' OR password != '') AND (paper_type='1' OR paper_type='2') AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() GROUP BY paper");
+  $paper_query = $mysqli->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password FROM (papers, properties) WHERE papers.paper=properties.property_id AND (labs != '' OR password != '') AND (paper_type='1' OR paper_type='2') AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() GROUP BY paper");
   $paper_query->execute();
   $paper_query->store_result();
-  $paper_query->bind_result($paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $moduleID, $calendar_year, $password);
+  $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password);
   while ($paper_query->fetch()) {
     if ($labs != '') {
       $machineOK = false;
@@ -119,14 +120,16 @@ require_once './classes/networkutils.class.php';
       $machineOK = true;
     }
     if (strpos($_SERVER['PHP_AUTH_USER'], 'user') !== 0) {
-      if ($moduleID != '') {
+      $moduleIDs = Paper_utils::get_modules($property_id, $mysqli);
+      if (count($moduleIDs) > 0) {
         $moduleOK = false;
         if ($calendar_year != '') {
           $cal_sql = "AND calendar_year = '" . $calendar_year . "'";
         } else {
           $cal_sql = '';
         }
-        $moduleInfo = $mysqli->prepare("SELECT userID FROM student_modules WHERE userID=? $cal_sql AND moduleID IN ('" . str_replace(",","','",$moduleID) . "')");
+        $module_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
+        $moduleInfo = $mysqli->prepare("SELECT userID FROM modules_student WHERE userID=? $cal_sql AND idMod IN ($module_in)");
         $moduleInfo->bind_param('i', $userID);
         $moduleInfo->execute();
         $moduleInfo->store_result();
@@ -270,7 +273,7 @@ require_once './classes/networkutils.class.php';
     
     $last_cal_year = '';
     $i = 0;
-    $info = $mysqli->prepare("SELECT moduleID, calendar_year FROM student_modules WHERE userID=? ORDER BY calendar_year DESC, moduleID");
+    $info = $mysqli->prepare("SELECT moduleID, calendar_year FROM modules_student,modules WHERE modules.id = modules_student.idMod AND userID=? ORDER BY calendar_year DESC, moduleID");
     $info->bind_param('i', $userID);
     $info->execute();
     $info->bind_result($user_moduleID, $user_calendar_year);
@@ -304,22 +307,18 @@ require_once './classes/networkutils.class.php';
 
     // Show staff a list of summative papers in the next 6 weeks with a link to test & preview
     if (strpos($userroles, 'Staff') !== false) {
-      if (!isset($teams)){
-        $teams = getUserTeams($userID, $mysqli);
+      if (!isset($staff_modules)){
+        $staff_modules = get_staff_modules($userID, $mysqli);
       }
       $papers = array();
-
-      foreach ($teams as $team) {
-        $like1 = "%,$team,%";
-        $like2 = "$team,%";
-        $like3 = "%,$team";
-        $paper_q = $mysqli->prepare("SELECT DISTINCT property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, exam_duration, crypt_name, fullscreen, labs FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE paper_type='2' AND start_date > NOW() AND start_date < DATE_ADD(NOW(), INTERVAL 42 DAY) AND (moduleID=? OR moduleID LIKE ? OR moduleID LIKE ? OR moduleID LIKE ?) AND deleted IS NULL AND retired IS NULL GROUP BY paper_title HAVING MAX(screen) > 0 ORDER BY paper_type, paper_title");
-        $paper_q->bind_param('ssss', $team, $like1, $like2, $like3);
+      foreach ($staff_modules as $idMod => $moduleID) {
+        $paper_q = $mysqli->prepare("SELECT DISTINCT properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, exam_duration, crypt_name, fullscreen, labs FROM properties LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_type='2' AND start_date > NOW() AND start_date < DATE_ADD(NOW(), INTERVAL 42 DAY) AND idMod = ?  AND deleted IS NULL AND retired IS NULL GROUP BY paper_title HAVING MAX(screen) > 0 ORDER BY paper_type, paper_title");
+        $paper_q->bind_param('i', $idMod);
         $paper_q->execute();
         $paper_q->store_result();
         $paper_q->bind_result($property_id, $screens, $paper_title, $start_date, $exam_duration, $crypt_name, $fullscreen, $labs);
         while($paper_q->fetch()) {
-          $papers[$team][] = array('id' => $property_id, 'screens' => $screens, 'title' => $paper_title, 'start_date' => $start_date, 'duration' => $exam_duration, 'crypt_name' => $crypt_name, 'fullscreen' => $fullscreen, 'labs' => $labs);
+          $papers[$moduleID][] = array('id' => $property_id, 'screens' => $screens, 'title' => $paper_title, 'start_date' => $start_date, 'duration' => $exam_duration, 'crypt_name' => $crypt_name, 'fullscreen' => $fullscreen, 'labs' => $labs);
         }
         $paper_q-> close();
       }
@@ -330,11 +329,11 @@ require_once './classes/networkutils.class.php';
           <h2 class="dkblue_header"><?php echo $string['summativetesting'] ?></h2>
           <p><?php echo $string['summativetestmsg'] ?></p>
 <?php
-        $team = '';
-        foreach ($papers as $mod_id => $paper_list) {
-          if ($mod_id != $team) {
-            $team = $mod_id;
-            echo "<table style=\"clear:both; font-size:100%\"><tr><td class=\"subsect\">$mod_id</td><td style=\"width:98%\"><hr class=\"head-line\" /></td></tr></table>\n";
+        $staff_module = '';
+        foreach ($papers as $moduleID => $paper_list) {
+          if ($moduleID != $staff_module) {
+            $staff_module = $moduleID;
+            echo "<table style=\"clear:both; font-size:100%\"><tr><td class=\"subsect\">$moduleID</td><td style=\"width:98%\"><hr class=\"head-line\" /></td></tr></table>\n";
           }
           foreach ($paper_list as $paper) {
             $screen_plural = ($paper['screens'] > 1) ? 'screens' : 'screen';

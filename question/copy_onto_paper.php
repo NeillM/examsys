@@ -97,7 +97,7 @@ if (!isset($_POST['submit'])) {
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:4px" id="paperlist">
   <table cellpadding="0" cellspacing="1" border="0" width="95%">
 <?php
-  $result = $mysqli->prepare("SELECT DISTINCT property_id, paper_title, start_date, end_date, paper_type FROM properties WHERE (paper_ownerID=? OR moduleID IN ('" . implode("','",$teams) . "')) AND deleted IS NULL  ORDER BY paper_title");
+  $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, start_date, end_date, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')) AND deleted IS NULL  ORDER BY paper_title");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);

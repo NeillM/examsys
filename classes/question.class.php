@@ -28,6 +28,8 @@ require_once 'exceptions.inc.php';
 require_once 'rogo_object.class.php';
 require_once 'option.class.php';
 require_once 'logger.class.php';
+require_once 'questionutils.class.php';
+
 
 Class Question extends RogoObject {
 
@@ -50,7 +52,7 @@ Class Question extends RogoObject {
   protected $media = '';
   protected $media_width = 0;
   protected $media_height = 0;
-  protected $teams = '';
+  protected $teams = array();
   protected $checkout_time = null;
   protected $checkout_author_id = '';
   protected $created = null;
@@ -74,11 +76,8 @@ Class Question extends RogoObject {
   protected $_allow_correction = true;
   protected $_use_bloom = true;
   
-  // Imploded DB version of teams
-  protected $group = '';
-  
   protected $_user_id;
-  protected $_fields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'media', 'media_width', 'media_height', 'group', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status');
+  protected $_fields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'media', 'media_width', 'media_height', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status');
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
   protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
 //  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
@@ -106,7 +105,7 @@ Class Question extends RogoObject {
   protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial');
   
   // Map our 'nice' property names to the database fields and 'parts' in track changes
-  protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'group' => 'q_group', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
+  protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
   protected $_change_field_map;
   protected $_pretty_names;
   public static $types = array('blank', 'calculation', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area');
@@ -136,7 +135,7 @@ Class Question extends RogoObject {
     $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']);
     $this->_option_orders = array('display order' => $this->_lang_strings['displayorder'], 'alphabetic' => $this->_lang_strings['alphabetic'], 'random' => $this->_lang_strings['random']);
     $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-    $this->_change_field_map = array('scenario_plain' => 'scenario', 'leadin_plain' => 'leadin', 'q_group' => 'teams', 'correct' => $this->_lang_strings['correctanswer']);
+    $this->_change_field_map = array('scenario_plain' => 'scenario', 'leadin_plain' => 'leadin', 'correct' => $this->_lang_strings['correctanswer']);
     // TODO: check if some question types need 'Display Method' instead of 'Presentation'
     $this->_pretty_names = array('type' => $this->_lang_strings['type'], 'leadin' => $this->_lang_strings['leadin'], 'score_method' => $this->_lang_strings['markingmethod'], 'display_method' => $this->_lang_strings['presentation'], 'option_order' => $this->_lang_strings['optionorder'], 'owner_id' => $this->_lang_strings['owner'], 'status' => $this->_lang_strings['status']);
     
@@ -294,6 +293,7 @@ Class Question extends RogoObject {
    * @throws ValidationException
    */
   public function save($clear_checkout = true) {
+    
     $success = false;
     if ($this->_logger == null ) $this->_logger =  new Logger($this->_mysqli);
     
@@ -315,22 +315,22 @@ Class Question extends RogoObject {
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
-        $params = array_merge(array('ssssssssssssssisssssisssss'), $this->_data);
+        $params = array_merge(array('ssssssssssssssisssssissss'), $this->_data);
         $query = <<< QUERY
 INSERT INTO questions(q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method, 
-display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, q_group, checkout_time, checkout_authorID, 
+display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID, 
 creation_date, last_edited, locked, deleted, status)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
       } else {
         // Otherwise we're updating an existing one
-        $params = array_merge(array('ssssssssssssssisssssisssssi'), $this->_data, array(&$this->id));
+        $params = array_merge(array('ssssssssssssssisssssissssi'), $this->_data, array(&$this->id));
         $this->last_edited = date('Y-m-d H:i:s');
         $query = <<< QUERY
 UPDATE questions
 SET q_type = ?, theme = ?, scenario = ?, scenario_plain = ?, leadin = ?, leadin_plain = ?, notes = ?, correct_fback = ?, incorrect_fback = ?, 
 score_method = ?, display_method = ?, q_option_order = ?, std = ?, bloom = ?, ownerID = ?, q_media = ?, q_media_width = ?, q_media_height = ?, 
-q_group = ?, checkout_time = ?, checkout_authorID = ?, creation_date = ?, last_edited = ?, locked = ?, deleted = ?, status = ?
+checkout_time = ?, checkout_authorID = ?, creation_date = ?, last_edited = ?, locked = ?, deleted = ?, status = ?
 WHERE q_id = ?
 QUERY;
       }
@@ -359,7 +359,12 @@ QUERY;
         }
       }
       $result->close();
-            
+      
+      if ($success) {
+        //updates the teams/question modules
+        QuestionUtils::update_modules($this->teams, $this->id, $this->_mysqli);
+      }
+
       if ($success) {
         $success = $this->save_options();
       }
@@ -572,13 +577,10 @@ QUERY;
   public function allow_negative_marks($module = '') {
     if ($this->_allow_negative_marks == null) {
       $this->_allow_negative_marks = true;
-      
       // Check all the modules that the question is on
-      $modules = ($this->group != '') ? str_replace(';', "','", $this->group) : $module;
-      if ($modules != '') {
-      
-        $modules = str_replace(';', "','", $this->group);
-        $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE moduleid IN ('" . $modules . "') AND neg_marking=0");
+      $moduleIds = implode(',',array_keys($this->teams)); 
+      if ($moduleIds != '') {
+        $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE id IN (" . $moduleIds . ") AND neg_marking=0");
         $result->execute();
         $result->store_result();
         if ($result->num_rows > 0) $this->_allow_negative_marks = false;
@@ -1030,7 +1032,7 @@ QUERY;
    * @return array
    */
   protected function get_group() {
-    return $this->group;
+    return implode(';',$this->get_teams());
   }
   
   /**
@@ -1038,27 +1040,21 @@ QUERY;
    * @return array
    */
   public function get_teams() {
-    if (!is_array($this->teams)) {
-      $this->teams = ($this->group != '') ? explode(';', $this->group) : array();
-    }
-    
     return $this->teams;
   }
   
   /**
-   * Set the group to which the question belongs
+   * Set the modules/teams to which the question belongs
    * @param array $value
    */
   public function set_teams($value) {
-    $this->get_teams();
-    
+
     // Sort the arrays so that we can compare directly. Should have few members so overhead will be small
-    sort($this->teams);
-    sort($value);
+    asort($this->teams);
+    asort($value);
     
     if (count($this->teams) != count($value) or $this->teams != $value) {
-      $this->set_modified_field('group', $this->group);
-      $this->group = implode(';', $value);
+      $this->set_modified_field('teams', $this->teams);
       $this->teams = $value;
     }
   }
@@ -1401,7 +1397,7 @@ QUERY;
     
     $q_query = <<< QUERY
 SELECT q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method, display_method, 
- q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, q_group, checkout_time, checkout_authorID, creation_date, 
+ q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID, creation_date, 
  last_edited, locked, deleted, status
 FROM questions
 WHERE q_id = ?
@@ -1418,6 +1414,23 @@ QUERY;
     $result->close();
     
     if ($found > 0) {
+
+      //get the question modules
+$t_query = <<< QUERY
+  SELECT idMod, moduleId 
+  FROM questions_modules, modules
+  WHERE q_id = ?  AND questions_modules.idMod = modules.id
+QUERY;
+      $result = $this->_mysqli->prepare($t_query);
+      $result->bind_param('i', $this->id);
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($idMod, $moduleId);
+      while ($success = $result->fetch()) {
+        $this->teams[$idMod] = $moduleId;
+      }
+      $result->close();
+
       // Build array of references to option data for use in call_user_func_array
       $opt_fields = Option::get_field_array();
       $opt_data = array();
@@ -1441,7 +1454,7 @@ QUERY;
       call_user_func_array(array($result, 'bind_result'), $opt_data);
       // TODO: handle 'correctness' more nicely
       $i = 1;
-      while ($success == true and $success = $result->fetch()) {
+      while ($success = $result->fetch()) {
         $this->options[$opt_data['id']] = Option::option_factory($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, $opt_data);
         $i++;
       }

@@ -26,23 +26,25 @@
 
 require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
+require_once $cfg_web_root . 'classes/paperutils.class.php';
+
 
 $paperID = $_GET['paperID'];
 
 $modules_array = array();
 
-$my_folders_array = get_folders($teams, $userID, $mysqli);
-$full_modules_array = get_modules($teams, $my_folders_array, $modules_array, $mysqli);
-$teams_array = get_teams($teams, $mysqli);
-$keywords_array = get_keywords($teams, $userID, $mysqli);
+$my_folders_array = get_folders($staff_modules, $userID, $mysqli);
+$full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_array, $mysqli);
+$staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
+$keywords_array = get_keywords($staff_modules, $userID, $mysqli);
 
 if (!isset($paper_title) or $paper_title == '') {
   $max_screen = 0;
 
-  $stmt = $mysqli->prepare("SELECT paper_title, moduleID, folder, paper_ownerID, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, externals, internal_reviewers, labs, calendar_year, exam_duration, crypt_name, display_question_mark FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? GROUP BY paper_title");
+  $stmt = $mysqli->prepare("SELECT paper_title, folder, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, externals, internal_reviewers, labs, calendar_year, exam_duration, crypt_name, display_question_mark FROM properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? GROUP BY paper_title");
   $stmt->bind_param('i', $paperID);
   $stmt->execute();
-  $stmt->bind_result($paper_title, $paper_moduleID, $tmp_folder, $paper_ownerID, $moduleID, $start_date, $end_date, $created, $max_screen, $fullscreen, $max_display_pos, $paper_type, $externals, $internal_reviewers, $labs, $session, $exam_duration, $crypt_name, $display_question_mark);
+  $stmt->bind_result($paper_title, $tmp_folder, $paper_ownerID, $start_date, $end_date, $created, $max_screen, $fullscreen, $max_display_pos, $paper_type, $externals, $internal_reviewers, $labs, $session, $exam_duration, $crypt_name, $display_question_mark);
   while ($stmt->fetch()) {
     if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
       $active_date = 1;
@@ -56,7 +58,6 @@ if (!isset($paper_title) or $paper_title == '') {
     }
   }
   $stmt->close();
-  $tmp_module = $moduleID;
 }
 
 
@@ -70,8 +71,9 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
 } else {
   $folder = '';
 }
-
-$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE moduleid IN ('" . str_replace(",","','",$moduleID) . "')");
+$moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+$moduleid_in = "'" . implode("','",$moduleIDs) . "'";
+$stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE moduleid IN ($moduleid_in)");
 $stmt->execute();
 $stmt->bind_result($tmp_checklist);
 $check[] = array();
@@ -303,12 +305,12 @@ $stmt->close();
 <input type="hidden" name="scrOfY" id="scrOfY" value="0" />
 <input type="hidden" name="current_pos" id="current_pos" value="" />
 <?php
-$team_member = false;
+$module_member = false;
 if ($paper_ownerID == $userID or strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
-  $team_member = true;
+  $module_member = true;
 } else {
-  foreach ($teams as $individual_team) {
-    if (stripos($moduleID, $individual_team) !== false) $team_member = true;
+  if(in_array($moduleID, $staff_modules)) {
+    $module_member = true;
   }
 }
 
@@ -333,7 +335,7 @@ $stmt->close();
     }
   }
 
-  if ($team_member == true) {
+  if ($module_member == true) {
     if ($summative_lock == 1) {
       if (strpos($userroles,'SysAdmin') !== false) {
         echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
@@ -387,7 +389,7 @@ $stmt->close();
 ?>
 <tr><td><a onclick="showCopyMenu(false, event); return false;" href="#"><img src="<?php echo $cfg_root_path ?>/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copypaper']; ?>" /></a></td><td class="menuitem sub"><span id="copy"><a onclick="showCopyMenu(false, event); return false;" href="#"><?php echo $string['copypaper']; ?></a></span></td></tr>
 <?php
-  if ($team_member == true and $summative_lock != 1) {
+  if ($module_member == true and $summative_lock != 1) {
     echo '<tr><td><a href="#" onclick="deletePaper(); return false;"><img src="' . $cfg_root_path . '/artwork/delete_paper_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deletePaper(); return false;">' . $string['deletepaper'] . '</a></td></tr>';
   } else {
     echo '<tr><td><img src="' . $cfg_root_path . '/artwork/delete_paper_grey_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" /></td><td class="greymenuitem">' . $string['deletepaper'] . '</td></tr>';
@@ -471,7 +473,7 @@ if ($summative_lock == 1) {
 <table class="sidebar_tbl">
 <tr><td class="ico"><a href="#" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/question_list_icon.gif" width="16" height="16" alt="<?php echo $string['questionsbytype']; ?>" /></a></td><td class="menuitem sub"><span id="type"><a href="#" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><?php echo $string['questionsbytype']; ?></a></span></td></tr>
 <?php
-  if (count($teams) == 0) {
+  if (count($staff_modules) == 0) {
     echo "<tr><td class=\"ico\"><img src=\"" . $cfg_root_path . "/artwork/question_list_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['questionsbyteam'] . "\" /></td><td class=\"greymenuitem sub\"><span id=\"team\">" . $string['questionsbyteam'] . "</span></td></tr>\n";
   } else {
     echo "<tr><td class=\"ico\"><a href=\"#\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','banktasks','team',myOptions1,myURLs1,event); return false;\"><img src=\"" . $cfg_root_path . "/artwork/question_list_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['questionsbyteam'] . "\" /></a></td><td class=\"menuitem sub\"><span id=\"team\"><a href=\"#\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','banktasks','team',myOptions1,myURLs1,event); return false;\">" . $string['questionsbyteam'] . "</a></span></td></tr>\n";
@@ -664,14 +666,14 @@ if ($paper_type == '2') {
 </div>
 <?php
   makeMenu(array($string['info']=>$cfg_root_path . '/question/list.php?type=info',$string['keyword_based']=>$cfg_root_path . '/question/list.php?type=keyword',$string['random']=>$cfg_root_path . '/question/list.php?type=random','-'=>'-',$string['area']=>$cfg_root_path . '/question/list.php?type=area',$string['calculation']=>$cfg_root_path . '/question/list.php?type=calculation',$string['dichotomous']=>$cfg_root_path . '/question/list.php?type=dichotomous',$string['extmatch']=>$cfg_root_path . '/question/list.php?type=extmatch',$string['blank']=>$cfg_root_path . '/question/list.php?type=blank',$string['flash']=>$cfg_root_path . '/question/list.php?type=flash',$string['hotspot']=>$cfg_root_path . '/question/list.php?type=hotspot',$string['labelling']=>$cfg_root_path . '/question/list.php?type=labelling',$string['likert']=>$cfg_root_path . '/question/list.php?type=likert',$string['matrix']=>$cfg_root_path . '/question/list.php?type=matrix',$string['mcq']=>$cfg_root_path . '/question/list.php?type=mcq',$string['mrq']=>$cfg_root_path . '/question/list.php?type=mrq',$string['rank']=>$cfg_root_path . '/question/list.php?type=rank',$string['sct']=>$cfg_root_path . '/question/list.php?type=sct',$string['textbox']=>$cfg_root_path . '/question/list.php?type=textbox', $string['true_false']=>$cfg_root_path . '/question/list.php?type=true_false'));
-  makeMenu($teams_array);
+  makeMenu($staff_modules_array);
   makeMenu($keywords_array);
   makeMenu(array($string['questions']=>$cfg_root_path . '/question/search.php',$string['papers']=>$cfg_root_path . '/paper/search.php',$string['people']=>$cfg_root_path . '/users/search.php', '-'=>'-', $string['studentcohort']=>$cfg_root_path . '/users/search.php?paperID=' . $_GET['paperID']));
   
   if ($summative_lock == 1) {
     $params = "&scrOfY=' + document.getElementById('scrOfY').value + '";
   } else {
-    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=$tmp_module&calling=paper";
+    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=" . $_GET['module']. "&calling=paper";
   }
 
   if ($paper_type == '6') {

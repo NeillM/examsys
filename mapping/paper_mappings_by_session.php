@@ -26,6 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 require '../include/mapping.inc';
 require '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 
@@ -80,10 +81,10 @@ $paperID = $_GET['paperID'];
     $result->close();
   }
     
-  $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT paper_title, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper_title, $moduleID, $session, $start_date, $end_date, $paper_type);
+  $result->bind_result($paper_title, $session, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
     echo "<table class=\"header\">\n";
     echo '<tr><th>';
@@ -117,10 +118,10 @@ $paperID = $_GET['paperID'];
   $temp_array = array();
   $questionID_list = '';
 
-  $result = $mysqli->prepare("SELECT random_mark, total_mark, q_group, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $result = $mysqli->prepare("SELECT random_mark, total_mark, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $result->bind_param('ii', $paperID, $paperID);
   $result->execute();
-  $result->bind_result($random_mark, $total_mark, $q_group, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
+  $result->bind_result($random_mark, $total_mark, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
   while ($result->fetch()) {
     $row_no++;
     $temp_array[$q_id]['screen'] = $screen;
@@ -138,7 +139,6 @@ $paperID = $_GET['paperID'];
 
     if($q_type == 'info') $info_count++;
 
-    $temp_array[$q_id]['q_group'] = $q_group;
     $total_random_mark = $random_mark;
     $total_marks = $total_mark;
     $temp_total_marks = $total_mark;
@@ -187,8 +187,8 @@ $paperID = $_GET['paperID'];
     <td colspan="5" style="padding:0px">
     <?php
     $ul_start = false;
-    
-    $objsBySession = getObjectives($moduleID, $session, $paperID, $questionID_list, $mysqli);
+    $moduleIDs = Paper_utils::get_modules($paperID,$mysqli);
+    $objsBySession = getObjectives($moduleIDs, $session, $paperID, $questionID_list, $mysqli);
     unset($objsBySession['none_of_the_above']);
     foreach($objsBySession as $module => $sessions ) {
       if (count($objsBySession) > 1) {

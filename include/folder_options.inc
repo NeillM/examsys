@@ -24,24 +24,15 @@
 
 include_once '../classes/dateutils.class.php';
 include_once '../classes/moduleutils.class.php';
+require_once '../include/sidebar_functions.inc';
 
-// Get folder information
 $modules_array = array();
-if (count($teams) > 0) {
-  $modules_array = array();
-  $team_sql = implode("','", $teams);
-  if ($team_sql != '') $team_sql = "'$team_sql'";
-  
-  $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN ($team_sql) ORDER BY moduleID");
-  $result->execute();
-  $result->bind_result($moduleid, $fullname);
-  while ($result->fetch()) {
-    $title = $moduleid . ' - ' . str_replace("'", "\'", $fullname);
-    $url = '/folder/details.php?module=' . $moduleid;
-    $modules_array[$title] = $url;
-  }
-  $result->close();
-}
+//$staff_modules is populated in staff_auth.inc
+$my_folders_array = get_folders($staff_modules, $userID, $mysqli);
+$full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_array, $mysqli);
+$staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
+$keywords_array = get_keywords($staff_modules, $userID, $mysqli);
+
 ?>
 <div id="left-sidebar" class="sidebar">
 <?php
@@ -51,9 +42,9 @@ if (count($teams) > 0) {
 <table class="sidebar_tbl">
 <?php
 
-  if ($folder_ownerID == $userID or (in_array($team_name,$teams)) == true or strpos($userroles,'SysAdmin') !== false) {
+  if ($folder_ownerID == $userID or (in_array($staff_module,$staff_modules)) == true or strpos($userroles,'SysAdmin') !== false) {
     echo '<tr><td class="ico"><a href="#" onclick="folderProperties(); return false;"><img src="' . $cfg_root_path . '/artwork/properties_icon.gif" width="16" height="16" alt="Properties" /></a></td><td class="menuitem"><a href="#" onclick="folderProperties(); return false;">' . $string['folderproperties'] . '</a></td></tr>';
-    echo '<tr><td class="ico"><a href="' . $cfg_root_path . '/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="' . $cfg_root_path . '/artwork/folder_16.png" width="16" height="16" alt="New Folder" /></a></td><td class="menuitem"><a href="' . $cfg_root_path . '/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y&newteam=' . $team_name . '">' . $string['makesubfolder'] . '</a></td></tr>';
+    echo '<tr><td class="ico"><a href="' . $cfg_root_path . '/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img src="' . $cfg_root_path . '/artwork/folder_16.png" width="16" height="16" alt="New Folder" /></a></td><td class="menuitem"><a href="' . $cfg_root_path . '/folder/details.php?module=' . $module . '&folder=' . $_GET['folder'] . '&newfolder=y&newteam=' . $staff_module . '">' . $string['makesubfolder'] . '</a></td></tr>';
     echo '<tr><td class="ico"><a href="#" onclick="deleteFolder(); return false;"><img src="' . $cfg_root_path . '/artwork/red_cross.png" width="16" height="16" alt="Delete Folder" /></a></td><td class="menuitem"><a href="#" onclick="deleteFolder(); return false;">' . $string['deletefolder'] . '</a></td></tr>';
   } else {
     echo '<tr><td class="ico"><img src="' . $cfg_root_path . '/artwork/properties_icon_grey.gif" width="16" height="16" alt="Properties" /></td><td class="greymenuitem">' . $string['folderproperties'] . '</td></tr>';
@@ -79,7 +70,7 @@ if (count($teams) > 0) {
       echo "<tr><td class=\"ico\"><a href=\"../admin/edit_module.php?moduleid=$module\"><img src=\"$cfg_root_path/artwork/admin_icon_16.gif\" width=\"16\" height=\"16\" alt=\"cog\" /></a></td><td class=\"menuitem\"><a href=\"../admin/edit_module.php?moduleid=$module\">" . $string['editpropertiessysadmin'] . "</a></td></tr>";
     }
     if (strpos($module_details['checklist'],'mapping') !== false ) {     // Curriculum mapping switched on for the module
-      if (in_array($module, $teams) == true or strpos($userroles,'SysAdmin') !== false or strpos($userroles,'Admin') !== false ) {
+      if (in_array($module, $staff_modules) == true or strpos($userroles,'SysAdmin') !== false or strpos($userroles,'Admin') !== false ) {
         echo "<tr><td class=\"ico\"><a href=\"../mapping/sessions_list.php?module=" . $module . "\"><img src=\"$cfg_root_path/artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /></a></td><td class=\"menuitem\"><a href=\"../mapping/sessions_list.php?module=" . $_GET['module'] . "\">" . $string['manageobjectives'] . "</a></td></tr>\n";
       } else {
         echo "<tr><td class=\"ico\"><img src=\"$cfg_root_path/artwork/module_icon_grey_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /></td><td class=\"menuitem\" style=\"color:#808080\">" . $string['manageobjectives'] . "</td></tr>\n";
@@ -101,7 +92,7 @@ if (count($teams) > 0) {
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
 <table class="sidebar_tbl">
 <?php
-  if (count($teams) > 0) {
+  if (count($staff_modules) > 0) {
     echo "<tr><td class=\"ico\"><a href=\"#\" onclick=\"newPaper(); return false;\"><img src=\"$cfg_root_path/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"newPaper(); return false;\">" . $string['createnewpaper'] . "</a></td></tr>\n";
   } else {
     echo "<tr><td class=\"ico\" style=\"color:#808080\"><img src=\"$cfg_root_path/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></td><td class=\"menuitem\">" . $string['createnewpaper'] . "</td></tr>\n";
@@ -133,74 +124,9 @@ if ($folder != '') {
 
 </div>
 <?php
-  // My Folders.
-  $team_string = '';
-  if (count($teams) > 0) {
-    $team_string = " OR team_name IN ('" . implode("','",$teams) . "')";
-  }
-  $my_folders_array = array();
-  $result = $mysqli->prepare("SELECT id, name FROM folders WHERE (ownerID=? $team_string) AND deleted IS NULL ORDER BY name");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->bind_result($folder_id, $folder_name);
-  while ($result->fetch()) {
-    $path_parts = substr_count($folder_name, ';');
-    $folder_array = explode(';', $folder_name);
-    $display_name = str_repeat('&nbsp;',$path_parts * 4) . $folder_array[$path_parts];
-    $display_name = str_replace("'", "\'", $display_name);
-    $url = '/folder/details.php?folder=' . $folder_id;
-    $my_folders_array[$display_name] = $url;
-  }
-  $result->close();
-
-  // Teams
-  $teams_array = array();
-  foreach($teams as $individual_team) {
-    $teams_array[$individual_team] = $cfg_root_path . '/question/list.php?type=%&team=' . $individual_team;
-  }
-
-  // Keywords
-  $keywords_array = array();
-  $keyword_no = 0;
-  $old_moduleID = '';
-  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$teams) . "') ORDER BY moduleid, keyword");
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($moduleID, $tmp_keyword, $keywordID);
-  while ($stmt->fetch()) {
-    if ($old_moduleID != $moduleID) $keywords_array[$keyword_no] = "#$moduleID";
-    $keywords_array[htmlspecialchars($tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
-    $old_moduleID = $moduleID;
-    $keyword_no++;
-  }
-  if ($stmt->num_rows > 0) $keywords_array[$keyword_no] = '#Personal Keywords';
-  $stmt->close();
-
-  $result = $mysqli->prepare("SELECT DISTINCT id, keyword FROM keywords_user WHERE userID=? ORDER BY keyword");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->bind_result($keywordID, $tmp_keyword);
-  while ($result->fetch()) {
-    $keywords_array[htmlspecialchars($tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
-  }
-  $result->close();
-  
-  if (count($my_folders_array) > 0) {
-    $divider = array('-'=>'-');
-    $full_modules_array = array();
-    $full_modules_array += $my_folders_array;
-    if (count($modules_array) > 0) {
-      $full_modules_array += $divider + $modules_array;
-    } else {
-      $full_modules_array = $modules_array;
-    }
-  } else {
-    $full_modules_array = $modules_array;
-  }
-  
   makeMenu($full_modules_array);
   makeMenu(array($string['info']=>$cfg_root_path . '/question/list.php?type=info',$string['keyword_based']=>$cfg_root_path . '/question/list.php?type=keyword',$string['random']=>$cfg_root_path . '/question/list.php?type=random','-'=>'-',$string['calculation']=>$cfg_root_path . '/question/list.php?type=calculation',$string['dichotomous']=>$cfg_root_path . '/question/list.php?type=dichotomous',$string['extmatch']=>$cfg_root_path . '/question/list.php?type=extmatch',$string['blank']=>$cfg_root_path . '/question/list.php?type=blank',$string['flash']=>$cfg_root_path . '/question/list.php?type=flash',$string['hotspot']=>$cfg_root_path . '/question/list.php?type=hotspot',$string['labelling']=>$cfg_root_path . '/question/list.php?type=labelling',$string['likert']=>$cfg_root_path . '/question/list.php?type=likert',$string['matrix']=>$cfg_root_path . '/question/list.php?type=matrix',$string['mcq']=>$cfg_root_path . '/question/list.php?type=mcq',$string['mrq']=>$cfg_root_path . '/question/list.php?type=mrq',$string['rank']=>$cfg_root_path . '/question/list.php?type=rank',$string['sct']=>$cfg_root_path . '/question/list.php?type=sct',$string['textbox']=>$cfg_root_path . '/question/list.php?type=textbox', $string['true_false']=>$cfg_root_path . '/question/list.php?type=true_false'));
-  makeMenu($teams_array);
+  makeMenu($staff_modules_array);
   makeMenu($keywords_array);
   if (isset($_GET['module'])) {
     makeMenu(array($string['questions']=>$cfg_root_path . '/question/search.php', $string['papers']=>$cfg_root_path . '/paper/search.php', $string['people']=>$cfg_root_path . '/users/search.php', '-'=>'-', 'Students on ' . $_GET['module'] . ' (' . date_utils::get_current_academic_year() . ')'=>$cfg_root_path . '/users/search.php?submit=Search&team=' . $_GET['module'] . '&calendar_year=' . date_utils::get_current_academic_year() . '&students=on&search_username=&student_id='));

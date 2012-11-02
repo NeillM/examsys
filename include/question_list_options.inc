@@ -29,10 +29,10 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
 
 $modules_array = array();
 
-$my_folders_array = get_folders($teams, $userID, $mysqli);
-$full_modules_array = get_modules($teams, $my_folders_array, $modules_array, $mysqli);
-$teams_array = get_teams($teams, $mysqli);
-$keywords_array = get_keywords($teams, $userID, $mysqli);
+$my_folders_array = get_folders($staff_modules, $userID, $mysqli);
+$full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_array, $mysqli);
+$staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
+$keywords_array = get_keywords($staff_modules, $userID, $mysqli);
 ?>
 <?php echo $cfg_js_root ?>
 <script src="<?php echo $cfg_root_path ?>/js/sidebar.js" type="text/javascript"></script>
@@ -151,8 +151,8 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 <table class="sidebar_tbl">
 <tr><td class="ico"><a href="#" onclick="showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><img src="<?php echo $cfg_root_path ?>/artwork/question_list_icon.gif" width="16" height="16" alt="List Papers" /></a></td><td class="menuitem sub"><span id="type"><a href="#" onclick="showMenu('popup0','banktasks','type',myOptions0,myURLs0,event); return false;"><?php echo $string['questionsbytype']; ?></a></span></td></tr>
 <?php
-  if (count($teams) == 0) {
-    echo "<tr><td class=\"ico\"><img src=\"" . $cfg_root_path . "/artwork/question_list_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"List Teams\" /></td><td class=\"greymenuitem sub\"><span id=\"team\">" . $string['questionsbyteam'] . "</span></td></tr>\n";
+  if (count($staff_modules) == 0) {
+    echo "<tr><td class=\"ico\"><img src=\"" . $cfg_root_path . "/artwork/question_list_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['questionsbyteam'] . "\" /></td><td class=\"greymenuitem sub\"><span id=\"team\">" . $string['questionsbyteam'] . "</span></td></tr>\n";
   } else {
     echo "<tr><td class=\"ico\"><a href=\"#\" onclick=\"showMenu('popup1','banktasks','team',myOptions1,myURLs1,event); return false;\"><img src=\"" . $cfg_root_path . "/artwork/question_list_icon.gif\" width=\"16\" height=\"16\" alt=\"List Teams\" /></a></td><td class=\"menuitem sub\"><span id=\"team\"><a href=\"#\" onclick=\"showMenu('popup1','banktasks','team',myOptions1,myURLs1,event); return false;\">" . $string['questionsbyteam'] . "</a></span></td></tr>\n";
   }
@@ -205,7 +205,7 @@ $keywords_array = get_keywords($teams, $userID, $mysqli);
 <?php
   //makeMenu($full_modules_array);
   makeMenu(array($string['info']=>$cfg_root_path . '/question/list.php?type=info',$string['keyword_based']=>$cfg_root_path . '/question/list.php?type=keyword',$string['random']=>$cfg_root_path . '/question/list.php?type=random','-'=>'-',$string['area']=>$cfg_root_path . '/question/list.php?type=area',$string['calculation']=>$cfg_root_path . '/question/list.php?type=calculation',$string['dichotomous']=>$cfg_root_path . '/question/list.php?type=dichotomous',$string['extmatch']=>$cfg_root_path . '/question/list.php?type=extmatch',$string['blank']=>$cfg_root_path . '/question/list.php?type=blank',$string['flash']=>$cfg_root_path . '/question/list.php?type=flash',$string['hotspot']=>$cfg_root_path . '/question/list.php?type=hotspot',$string['labelling']=>$cfg_root_path . '/question/list.php?type=labelling',$string['likert']=>$cfg_root_path . '/question/list.php?type=likert',$string['matrix']=>$cfg_root_path . '/question/list.php?type=matrix',$string['mcq']=>$cfg_root_path . '/question/list.php?type=mcq',$string['mrq']=>$cfg_root_path . '/question/list.php?type=mrq',$string['rank']=>$cfg_root_path . '/question/list.php?type=rank',$string['sct']=>$cfg_root_path . '/question/list.php?type=sct',$string['textbox']=>$cfg_root_path . '/question/list.php?type=textbox', $string['true_false']=>$cfg_root_path . '/question/list.php?type=true_false'));
-  makeMenu($teams_array);
+  makeMenu($staff_modules_array);
   makeMenu($keywords_array);
   makeMenu(array($string['questions']=>$cfg_root_path . '/question/search.php',$string['papers']=>$cfg_root_path . '/paper/search.php',$string['people']=>$cfg_root_path . '/users/search.php'));
   makeMenu(array($string['info']=>"$cfg_root_path/question/edit/index.php?type=info",$string['keyword_based']=>"$cfg_root_path/question/edit/index.php?type=keyword_based",$string['random']=>"$cfg_root_path/question/edit/index.php?type=random","-"=>"-",$string['calculation']=>"$cfg_root_path/question/edit/index.php?type=calculation",$string['dichotomous']=>"$cfg_root_path/question/edit/index.php?type=dichotomous",$string['extmatch']=>"$cfg_root_path/question/edit/index.php?type=extmatch",$string['blank']=>"$cfg_root_path/question/edit/index.php?type=blank",$string['flash']=>"$cfg_root_path/question/edit/index.php?type=flash",$string['hotspot']=>"$cfg_root_path/question/edit/index.php?type=hotspot",$string['labelling']=>"$cfg_root_path/question/edit/index.php?type=labelling",$string['likert']=>"$cfg_root_path/question/edit/index.php?type=likert",$string['matrix']=>"$cfg_root_path/question/edit/index.php?type=matrix",$string['mcq']=>"$cfg_root_path/question/edit/index.php?type=mcq",$string['mrq']=>"$cfg_root_path/question/edit/index.php?type=mrq",$string['rank']=>"$cfg_root_path/question/edit/index.php?type=rank",$string['sct']=>"$cfg_root_path/question/edit/index.php?type=sct",$string['textbox']=>"$cfg_root_path/question/edit/index.php?type=textbox",$string['true_false']=>"$cfg_root_path/question/edit/index.php?type=true_false"));

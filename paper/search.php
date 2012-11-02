@@ -102,21 +102,13 @@
     $lab = '';
   }
   $moduleid = '';
-  if (isset($_POST['team']) and $_POST['team'] != '') {
-    $moduleid = 'AND moduleid LIKE ?';
-    $variables[] = '%' . $_POST['team'] . '%';
-    $params .= 's';
+  if (isset($_POST['module']) and $_POST['module'] != '') {
+    $moduleid = 'AND idMod = ?';
+    $variables[] = $_POST['module'];
+    $params .= 'i';
   } else {
     if (strpos($userroles,'SysAdmin') === false) {
-      $moduleid = 'AND (';
-      foreach ($teams as $individual_team) {
-        if ($moduleid == 'AND (') {
-          $moduleid .= 'moduleid LIKE "%' . $individual_team . '%"';
-        } else {
-          $moduleid .= ' OR moduleid LIKE "%' . $individual_team . '%"';
-        }
-      }
-      $moduleid .= ')';
+      $moduleid = "AND idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
     }
   }
   if (isset($_POST['day']) and $_POST['day'] != '') {
@@ -168,7 +160,7 @@
   }
 
   if (isset($_POST['submit'])) {
-    $results = $mysqli->prepare("SELECT DISTINCT property_id, title, initials, surname, moduleID, paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, retired FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
+    $results = $mysqli->prepare("SELECT DISTINCT properties.property_id, title, initials, surname, moduleID, paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, retired FROM (properties, users, properties_modules, modules) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.paper_ownerID=users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
     if (count($variables) > 0) {
 	    array_unshift($variables, $params);
 	    $vars = array();

@@ -25,16 +25,18 @@
 require_once $cfg_web_root . 'apis/VLEFactory.class.php';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/mappingutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 
-if (in_array($_GET['module'], $teams) === false and strpos($userroles,'SysAdmin') === false) {
+if (in_array($_GET['module'], $staff_modules) === false and strpos($userroles,'SysAdmin') === false) {
   exit;
 }
 
+$idMod = module_utils::get_idMod($_GET['module'], $mysqli);
+
 $session = date_utils::get_current_academic_year();
 $vle_api_cache = array();
-$vle_api = MappingUtils::get_vle_api($_GET['module'], $session, $vle_api_cache, $mysqli);
-
+$vle_api = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);
 if ($vle_api != '') {
   $vle = VLEFactory::GetVLEAPI($vle_api);
   $objsBySession = $vle->getObjectives($_GET['module'], $session);
@@ -42,7 +44,7 @@ if ($vle_api != '') {
   $vle_name_a = $vle->getFriendlyName(true);
 } else {
   require_once '../include/mapping.inc';
-  $objsBySession = getObjectives($_GET['module'], $session, '', '', $mysqli, 'all');
+  $objsBySession = getObjectives($idMod, $session, '', '', $mysqli, 'all');
 }
 ?>
 <script language="JavaScript">

@@ -23,10 +23,15 @@
 */
 
   require '../include/staff_auth.inc';
+  require_once '../classes/paperutils.class.php';
+  require_once '../classes/moduleutils.class.php';
 
   function modulo($n,$b) {
     return $n-$b*floor($n/$b);
   }
+
+  $property_id = $_POST['property_id'];
+  $session = $_POST['session'];
 
   if (!$cfg_summative_mgmt or $_POST['paper_type'] != 'summative') {
     if ((modulo($_POST['fyear'],4) == 0 and modulo($_POST['fyear'],100) != 0) or modulo($_POST['fyear'],400) == 0) {
@@ -69,20 +74,20 @@
     $timezone = $_POST['timezone'];
   }
   
-  $module_string = '';
+  //process the posted modules
+  $modules = array();
+  $first = true;
   for ($i=0; $i<$_POST['module_no']; $i++) {
     if (isset($_POST['module' . $i])) {
-      if ($module_string == '') {
-        $module_string = $_POST['module' . $i];
-        $first_module = $_POST['module' . $i];
-      } else {
-        $module_string .= ',' . $_POST['module' . $i];
-      }
+      if ($first == true) {
+        $first_module = module_utils::get_moduleID($_POST['module' . $i], $mysqli);
+        $first = false;
+      } 
+      $modules[$_POST['module' . $i]] = $_POST['module' . $i];
     }
   }
-  
-  $property_id = $_POST['property_id'];
-  $session = $_POST['session'];
+  //add the modules to the paper
+  Paper_utils::add_modules($modules, $property_id, $mysqli);
   
   $stmt = $mysqli->prepare("SELECT UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id=?");
   $stmt->bind_param('i', $property_id);
@@ -94,8 +99,8 @@
   $hash = $property_id . $created . $paper_ownerID;   // Generate the encrypted name of the paper.
 
   if ($cfg_summative_mgmt and $_POST['paper_type'] == 'summative') {
-    $result = $mysqli->prepare("UPDATE properties SET moduleID=?, deleted=NULL, crypt_name=?, calendar_year=?, exam_duration=? WHERE property_id=? LIMIT 1");
-    $result->bind_param('sssii', $module_string, $hash, $session, $_POST['duration'], $property_id);
+    $result = $mysqli->prepare("UPDATE properties SET deleted=NULL, crypt_name=?, calendar_year=?, exam_duration=? WHERE property_id=? LIMIT 1");
+    $result->bind_param('ssii', $hash, $session, $_POST['duration'], $property_id);
     $result->execute();  
     $result->close();
 
@@ -116,8 +121,8 @@
     $result->execute();  
     $result->close();
   } else {
-    $result = $mysqli->prepare("UPDATE properties SET moduleID=?, start_date=?, end_date=?, timezone=?, deleted=NULL, crypt_name=?, calendar_year=? WHERE property_id=? LIMIT 1");
-    $result->bind_param('ssssssi', $module_string, $tmp_start_date, $tmp_end_date, $timezone, $hash, $session, $property_id);
+    $result = $mysqli->prepare("UPDATE properties SET start_date=?, end_date=?, timezone=?, deleted=NULL, crypt_name=?, calendar_year=? WHERE property_id=? LIMIT 1");
+    $result->bind_param('sssssi', $tmp_start_date, $tmp_end_date, $timezone, $hash, $session, $property_id);
     $result->execute();  
     $result->close();
   }

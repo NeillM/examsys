@@ -52,9 +52,9 @@ if (strpos($userroles, 'External Examiner') !== false) {
 
 // Get teams if the user is not an External Examiner.
 if(strpos($userroles, 'External Examiner') !== false) {  
-  $teams = array();
+  $staff_modules = array();
 } else {
-  $teams = getUserTeams($userID, $mysqli);
+  $staff_modules = get_staff_modules($userID, $mysqli);
 }
 
 $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
@@ -69,7 +69,7 @@ if (strpos($userroles, 'SysAdmin') !== false) {
 } elseif (strpos($userroles, 'Admin') !== false) {
   //For 'Admin' users look up permissions from 'admin_access' table.
 
-  $on_team = false;
+  $on_staff_module = false;
   $failed_paper = false;
 
   //Can the user access the paper?
@@ -82,63 +82,66 @@ if (strpos($userroles, 'SysAdmin') !== false) {
     if (substr($tmp_paperID, 0, 5) != 'find:') {
 
       // Get the moduleID of the paper
-      $result = $mysqli->prepare("SELECT moduleID, paper_ownerID FROM properties WHERE property_id=?");
-      $result->bind_param('i', $tmp_paperID);
-      $result->execute();
-      $result->bind_result($moduleID, $paper_ownerID);
-      $result->fetch();
-      $result->close();
+      $moduleIDs = Paper_utils::get_modules($property_id, $mysqli);
+      $module_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
+      //$result = $mysqli->prepare("SELECT moduleID, paper_ownerID FROM properties WHERE property_id=?");
+      //$result->bind_param('i', $tmp_paperID);
+      //$result->execute();
+      //$result->bind_result($moduleID, $paper_ownerID);
+      //$result->fetch();
+      //$result->close();
 
       // Check which Schools the moduleID(s) are in.
-      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=$userID AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid IN ('" . str_replace(",", "','", $moduleID) . "')");
+      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=$userID AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)");
       $result->execute();
       $result->store_result();
       $result->bind_result($paper_school);
       if ($result->num_rows() > 0) {
-        $on_team = true;
+        $on_staff_module = true;
       } else {
-        $on_team = false;
+        $on_staff_module = false;
       }
       $result->close();
 
       // Override access for the system training module.
-      if ($on_team == false and strpos($moduleID, 'SYSTEM') === false) {
+      if ($on_staff_module == false and strpos($moduleID, 'SYSTEM') === false) {
+        //TODO Why is this here!!
         $failed_paper = true;
       }
     }
   }
 
 
-  if ($on_team == false and isset($_GET['module']) and $_GET['module'] != '') {
+  if ($on_staff_module == false and isset($_GET['module']) and $_GET['module'] != '') {
     // Is 'Admin' on the module as normal
-    $result = $mysqli->prepare("SELECT groupID FROM teams WHERE memberID=? AND name=?");
+    $result = $mysqli->prepare("SELECT groupID FROM modules_staff WHERE memberID=? AND name=?");
     $result->bind_param('is', $userID, $_GET['module']);
     $result->execute();
     $result->store_result();
     $result->bind_result($groupID);
     if ($result->num_rows() > 0) {
-      $on_team = true;
+      $on_staff_module = true;
     } else {
-      $on_team = false;
+      $on_staff_module = false;
     }
     $result->close();
 
-    if ($on_team == false) { // Check which Schools the moduleID(s) are in and match school to 'Admin' person.
+    if ($on_staff_module == false) { // Check which Schools the moduleID(s) are in and match school to 'Admin' person.
       $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid=?");
       $result->bind_param('is', $userID, $_GET['module']);
       $result->execute();
       $result->store_result();
       $result->bind_result($paper_school);
       if ($result->num_rows() > 0) {
-        $on_team = true;
+        $on_staff_module = true;
       } else {
-        $on_team = false;
+        $on_staff_module = false;
       }
       $result->close();
     }
 
     // Override access for the system training module.
-    if ($on_team == false and strpos($_GET['module'], 'SYSTEM') === false) {
+    if ($on_staff_module == false and strpos($_GET['module'], 'SYSTEM') === false) {
       $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
       access_denied($message, false);
     }
@@ -158,8 +161,8 @@ if (strpos($userroles, 'SysAdmin') !== false) {
         $result->fetch();
         $group_array = explode(';', strtoupper($q_group));
 
-        if ($ownerID != $userID and !in_array('SYSTEM', $group_array) and count(array_intersect($group_array, $teams)) == 0) {
-          // Not owner or on team so check schools
+        if ($ownerID != $userID and !in_array('SYSTEM', $group_array) and count(array_intersect($group_array, $staff_modules)) == 0) {
+          // Not owner or on staff_module so check schools
           $is_admin = false;
           if (count($group_array) > 0) {
             $module_list = "'" . str_replace(';', ',', $q_group) . "'";
@@ -184,17 +187,17 @@ if (strpos($userroles, 'SysAdmin') !== false) {
   }
 
 } else {
-  //normal users can access things they own or are on the team of only !!
-  $on_team = false;
+  //normal users can access things they own or are on the staff_module of only !!
+  $on_staff_module = false;
 
   //can the user acsess the module
   if (isset($_GET['module']) and $_GET['module'] != '' and !isset($_GET['paperID'])) {
-    $team_match = false;
+    $staff_module_match = false;
     $paper_modules = explode(',', $_GET['module']);
     foreach ($paper_modules as $paper_module) {
       if (in_array(strtoupper($paper_module), $teams)) $team_match = true;
     }
-    if ($team_match == false) {
+    if ($staff_module_match == false) {
       access_denied(str_replace('%s', $_GET['module'], $string['denied_team']), false);
     }
   }
@@ -215,12 +218,12 @@ if (strpos($userroles, 'SysAdmin') !== false) {
         if ($paper_ownerID != $userID) {
           $moduleIDs = explode(',', $moduleID);
           foreach ($moduleIDs as $g) {
-            if (isset($teams[strtoupper($g)])) {
-              $on_team = true;
+            if (isset($staff_modules[strtoupper($g)])) {
+              $on_staff_module = true;
               break;
             }
           } //allow acsess to the SYSTEM module for training!
-          if ($on_team == false and strpos($moduleID, 'SYSTEM') === false) {
+          if ($on_staff_module == false and strpos($moduleID, 'SYSTEM') === false) {
             access_denied($string['denied_paper'], false);
           }
         }
@@ -245,8 +248,8 @@ if (strpos($userroles, 'SysAdmin') !== false) {
         $access = false;
         $moduleIDs = explode(';', $q_group);
         //$question_teams = explode(';', $q_group);
-        foreach ($moduleIDs as $question_team) {
-          if (isset($teams[strtoupper($question_team)])) $access = true;
+        foreach ($moduleIDs as $question_modles) {
+          if (isset($staff_modules[$question_modles])) $access = true;
         }
 
         //allow acsess to the TRAIN module for training!

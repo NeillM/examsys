@@ -35,7 +35,6 @@ if (isset($_GET['type'])) {
   if ($_GET['type'] != '%') {
     $typeSQL = " AND q_type = '" . $_GET['type'] . "'";
   }
-}
 if (isset($_GET['userid'])) {
   $userid = $_GET['userid'];
 } else {
@@ -46,10 +45,10 @@ if (isset($_GET['keyword'])) {
 } else {
   $keyword = '';
 }
-if (isset($_GET['team'])) {
-  $team = $_GET['team'];
+if (isset($_GET['module'])) {
+  $module = $_GET['module'];
 } else {
-  $team = '';
+  $module = '';
 }
 
 if (isset($_GET['checked'])) {
@@ -105,31 +104,31 @@ if (isset($_GET['checked'])) {
   $question_no = 0;
   $display_no = 0;
   $bank_type = '';
-  $team_sql = '';
+  $module_sql = '';
   
   if ($keyword != '%' and $keyword != '' and $type == '%') {
     $parts = explode(';',$keyword);
     $bank_type = ": '" . $parts[1] . "'";
   }
-  if ($team != '') {
-    $bank_type = ': ' . $team;
+  if ($module != '') {
+    $bank_type = ': ' . $module;
   }
   if ($_GET['type'] != '%') {
     $bank_type = ': ' . $_GET['type'];
   }
 
-  if ($team != '') {
-    if (in_array($team, $teams)) {
-      $team_sql = 'q_group LIKE "%' . $team . '%"';
+  if ($module != '') {
+    if (in_array($module, $staff_modules)) {
+      $module_sql = 'q_group LIKE "%' . $module . '%"';
     } else {
       echo "<tr><td colspan=\"4\">" . $string['notinteam'] . "</td></tr>\n</body>\n</html>\n";
       exit;
     }
   } else {
-    if (count($teams) > 0) {
-      $team_sql = implode("','", $teams);
-      if ($team_sql != '') $team_sql = "q_group IN ('$team_sql')";
-      $team_sql .= " OR users.id=$userID";
+    if (count($staff_modules) > 0) {
+      $staff_modules_sql = implode("','", $staff_modules);
+      if ($staff_modules_sql != '') $staff_modules_sql = "q_group IN ('$staff_modules')";
+      $staff_modules_sql .= " OR users.id=$userID";
     }
   }
   
@@ -139,11 +138,11 @@ if (isset($_GET['checked'])) {
     $keyword = '';
   }
 
-  if ($team_sql != '') {
-    $team_sql = '(' . $team_sql .') AND';
+  if ($module_sql != '') {
+    $module_sql = '(' . $module_sql .') AND';
   } else {
     // Reset to just look for current owners paper if not on any teams.
-    $team_sql .= "users.id=$userID AND";
+    $module_sql .= "users.id=$userID AND";
   }
 
   $hits = 0;
@@ -154,9 +153,9 @@ if (isset($_GET['checked'])) {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }
   if ($state_checked == 'true') {
-    $query_string .= " WHERE $team_sql users.id=questions.ownerID AND ownerID=$userID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE $module_sql users.id=questions.ownerID AND ownerID=$userID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
   } else {
-    $query_string .= " WHERE $team_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE $module_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
   }
   $search_results = $mysqli->prepare($query_string);
   $search_results->execute();

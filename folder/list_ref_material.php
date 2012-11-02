@@ -100,7 +100,7 @@ check_var('module', 'GET', true, false);
   $reference_materials = array();
   $old_id = '';
 
-  $result = $mysqli->prepare("SELECT reference_material.id, reference_material.title, modules.moduleid FROM (reference_material, reference_modules, modules) WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.moduleid=modules.id AND modules.moduleid=? ORDER BY reference_material.id");
+  $result = $mysqli->prepare("SELECT reference_material.id, reference_material.title, modules.moduleid FROM (reference_material, reference_modules, modules) WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod=modules.id AND modules.moduleid=? ORDER BY reference_material.id");
   $result->bind_param('s', $_GET['module']);
   $result->execute();
   $result->bind_result($id, $title, $moduleid);

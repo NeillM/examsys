@@ -88,12 +88,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
     flush();
   
     // Get the moduleid
-    $stmt = $mysqli->prepare("SELECT id FROM modules WHERE moduleid=?");
-    $stmt->bind_param('s', $_GET['module']);
-    $stmt->execute();
-    $stmt->bind_result($moduleID);
-    $stmt->fetch();
-    $stmt->close();
+    $idMod = module_utils::get_idMod($_GET['module'], $mysqli);
   
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userID . "_import_metadata.csv"))  {
@@ -115,7 +110,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
       } else {
         // Load the IDs for all students in the module
         $student_id_array = array();
-        $stmt = $mysqli->prepare("SELECT users.id, username, student_id FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID AND moduleid=? AND calendar_year=? ORDER BY username");
+        $stmt = $mysqli->prepare("SELECT users.id, username, student_id FROM (users, modules_student, modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID AND modules_student.idMod = modules.id AND moduleid=? AND calendar_year=? ORDER BY username");
         $stmt->bind_param('ss', $_GET['module'], $_POST['session']);
         $stmt->execute();
         $stmt->bind_result($id, $username, $student_id);
@@ -133,8 +128,8 @@ if (module_utils::module_exists($module, $mysqli) === false) {
         $col_no = 0;
         $unknown_users = array();
         $headings = array();
-        $stmt = $mysqli->prepare("REPLACE INTO users_metadata (userID, moduleID, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param('iisss', $student_id, $moduleID, $type, $value, $_POST['session']);
+        $stmt = $mysqli->prepare("REPLACE INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param('iisss', $student_id, $idMod, $type, $value, $_POST['session']);
         foreach ($lines as $separate_line) {
           $cols = explode(',', $separate_line);
           if ($line_no == 0) {  // Read the header row

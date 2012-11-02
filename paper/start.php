@@ -29,6 +29,7 @@ require '../include/staff_student_auth.inc';
 require '../include/display_functions.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
 require '../include/paper_security.inc';
 
 check_var('id', 'GET', true, false);
@@ -178,11 +179,11 @@ if ($special_needs == 1) {
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $latex_needed, $password, $q_type);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $calendar_year, $latex_needed, $password, $q_type);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
   access_denied($string['error_paper'], $output_header = false);
 }
@@ -209,6 +210,8 @@ if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecol
 if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
 if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+
+$moduleID = Paper_utils::get_modules($property_id,$mysqli);
 
 if (stripos($userroles,'Student') !== false) {
   // Check for additional password on the paper

@@ -27,10 +27,9 @@
 
 Class QuestionUtils {
 
-  
   /**
    * Get the leading for a give question ID
-   * @paraminteger $q_id
+   * @param integer $q_id
    * @param resource $db
    * @return string The leadin
    */
@@ -63,6 +62,111 @@ Class QuestionUtils {
     }
 
     return $leadin;
+  }
+
+  /**
+   * returns an array of modules/teams that the question is on 
+   * @param intager $q_id the id of the questions
+   * @param resource $db
+   * @return array of modules keyed on idMod
+   */
+  static function get_modules($q_id, $db) {
+    $modules = array();
+    $stmt = $db->prepare("SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id=? and questions_modules.idMod = modules.id");
+    $stmt->bind_param('i', $q_id);
+    $stmt->execute();
+    $stmt->bind_result($idMod, $moduleID);
+    while($res = $stmt->fetch()) {
+      $modules[$idMod] = $moduleID;
+    }
+    $stmt->close();
+    return $modules;
+  }
+
+  /**
+  * Update the modules for a question bast on the modules that the papers it is part of are on 
+  * @param $modules an array of modules keyed on idMod
+  * @param $q_id the id of the questions
+  * @return void 
+  */
+  static function update_modules_from_papers($q_id, $db) {
+
+    $sql = <<<SQL
+      SELECT DISTINCT idMod 
+      FROM papers, properties, properties_modules 
+      WHERE properties.property_id = properties_modules.property_id 
+      AND properties.property_id=paper 
+      AND question = ? 
+      AND deleted is NULL 
+SQL;
+    $update = $db->prepare($sql);
+    $update->bind_param('i', $q_id);
+    $update->execute();
+    $update->bind_result($tmp_idMod);
+    $on_idMod = array();
+    while($update->fetch()) {
+      $on_idMod[$tmp_idMod] = $tmp_idMod;
+    }
+    $update->close();
+
+    //questions may be on modules the current users is not in - should we exclude these from the delete
+    $update = $db->prepare("DELETE FROM questions_modules WHERE q_id = ?");
+    $update->bind_param('i', $q_id);
+    $update->execute();
+    $update->close();
+    
+    QuestionUtils::add_modules($on_idMod, $q_id, $db);
+
+  }
+
+  /**
+  * updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
+  * @param $modules an array of modules keyed on idMod
+  * @param $q_id the id of the question
+  * @return void 
+  */
+  static function update_modules($modules, $q_id, $db) {
+    global $userID, $userroles, $staff_modules; //these will come form the users object later
+
+    if(count($staff_modules) > 0 and strpos($userroles,'SysAdmin') !== false) {
+       $user_modules = get_staff_modules($userID, $db);
+    }
+
+    if(strpos($userroles,'SysAdmin') !== false) {
+      //sysadmin 
+      $user_can_delete = ''; //no restrictions
+    } else {
+      $user_can_delete = "AND idMod IN (" . implode(',',array_keys($staff_modules)) . ")"; //users can only remove modules if they are on the team
+    }
+
+    $editProperties = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $user_can_delete");
+    $editProperties->bind_param('i', $q_id);
+    $editProperties->execute();
+    $editProperties->close();
+    
+    QuestionUtils::add_modules($modules, $q_id, $db);
+  }
+
+  /**
+  * add modules to a question ignoring any duplicates  
+  * @param $modules an array of modules keyed on idMod
+  * @param $paperID the id of the paper or property_id
+  * @return void 
+  */
+  static function add_modules($modules, $q_id, $db) {
+    $update = $db->prepare("INSERT INTO questions_modules VALUES(?,?) ON DUPLICATE KEY UPDATE idMod=idMod");
+    foreach ($modules as $idMod => $ModuleID) {
+      $update->bind_param('ii', $q_id, $idMod);
+      $update->execute();
+    }
+    $update->close();
+  }
+
+  static function lock_question($q_id, $db) {
+    $lock = $mysqli->prepare("UPDATE questions SET locked=NOW() WHERE q_id=? AND locked IS NULL");
+    $lock->bind_param('i', $q_id);
+    $lock->execute();
+    $lock->close();
   }
 }
 ?>

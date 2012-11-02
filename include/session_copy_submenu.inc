@@ -25,14 +25,14 @@
 /**
  * Get a list of years for which the module has mapped objectives
  * @param debug_mysqli $db
- * @param string $module The module ID
+ * @param int $idMod The DB ID of the module
  * @return array List of years
  */
-function get_existing_years($db, $module) {
+function get_existing_years($db, $idMod) {
 	$years = array();
 	
-	$result = $db->prepare("SELECT DISTINCT calendar_year FROM objectives WHERE moduleID = ? ORDER BY calendar_year DESC");
-	$result->bind_param('s', $module);
+	$result = $db->prepare("SELECT DISTINCT calendar_year FROM objectives WHERE idMod = ? ORDER BY calendar_year DESC");
+	$result->bind_param('s', $idMod);
   $result->execute();
   $result->bind_result($year);
   while($result->fetch()) {
@@ -81,7 +81,7 @@ function get_existing_years($db, $module) {
 	$session_parts = explode('/', $session);
 	
 	// Get a list of existing (source) years
-	$source_years = get_existing_years($mysqli, $_GET['module']);
+	$source_years = get_existing_years($mysqli, $idMod);
 
 	// Should never be a case where we don't have a source year but check anyway
 	if (count($source_years) > 0) {

@@ -105,11 +105,17 @@ if (isset($_GET['submit'])) {
   }
   $result->close();
   
+  if ($calendar_year == '%') {
+    $calendar_year_sql = '';
+  } else {
+    $calendar_year_sql = " AND calendar_year = '$calendar_year'";
+  }
+
   $user_no = 0;
   if ($roles_sql != '') {
-    if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
-      if ($_GET['team'] != '') {
-        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users, teams WHERE users.id=teams.memberID AND teams.name = '" . $_GET['team'] . "' AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
+    if ((isset($_GET['module']) and $_GET['module'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
+      if ($_GET['module'] != '') {
+        $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users, modules_student, modules WHERE modules_student.idMod = modules.id AND users.id=modules_student.userID AND modules_student.idMod = '" . $_GET['module'] . "' AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql$calendar_year_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
       } else {
         $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM users WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
       }
@@ -125,11 +131,6 @@ if (isset($_GET['submit'])) {
           $module_sql = '';
         } else {
           $module_sql = " AND moduleid LIKE '$moduleID'";
-        }
-        if ($calendar_year == '%') {
-          $calendar_year_sql = '';
-        } else {
-          $calendar_year_sql = " AND calendar_year LIKE '$calendar_year'";
         }
         $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, student_modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=student_modules.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
       }

@@ -26,6 +26,7 @@ require '../include/staff_auth.inc';
 require '../config/campuses.inc';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/dateutils.class.php';
+require_once '../classes/paperutils.class.php';
 require '../lang/' . $language. '/include/timezones.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -42,16 +43,9 @@ require '../lang/' . $language. '/include/timezones.inc';
   $result->execute();  
 
   // Check that the new paper name is not already used by any other paper (i.e. unique).
-  $result = $mysqli->prepare("SELECT property_id FROM properties WHERE paper_title=? LIMIT 1");
-  $result->bind_param('s', $_POST['paper_name']);
-  $result->execute();  
-  $result->store_result();
-  $result->bind_result($tmp_id);
-  $rows_found = $result->num_rows;
-  $result->free_result();
-  $result->close();
+  $unique = Paper_utils::is_paper_title_unique($_POST['paper_name'], $mysqli);
   
-  if ($rows_found > 0) {
+  if (!$unique) {
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -199,11 +193,11 @@ require '../lang/' . $language. '/include/timezones.inc';
   
   if ($cfg_summative_mgmt and $_POST['paper_type'] == 'summative') {
     // Summative paper so set null dates
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,NULL,NULL,'Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',NULL,'$session','',NULL,NULL,'0',0,'',NULL,NULL)");
+    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,NULL,NULL,'Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',?,'',NULL,NULL,'0',0,'',NULL,NULL)");
   } else {
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20100101090000','20250101090000','Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',NULL,'$session','',NULL,NULL,'0',0,'',NULL,NULL)");
+    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,'20100101090000','20250101090000','Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',?,'',NULL,NULL,'0',0,'',NULL,NULL)");
   }
-  $result->bind_param('sssss', $paper_name, $paper_types[$_POST['paper_type']], $userID, $folder, $default_rubric);
+  $result->bind_param('ssssss', $paper_name, $paper_types[$_POST['paper_type']], $userID, $folder, $default_rubric, $session);
   $result->execute();  
   $property_id = $mysqli->insert_id;
   $result->close();
@@ -332,7 +326,7 @@ if ($_POST['paper_type'] == 'summative') {
     $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
     $year_options[] = $next_session;   // Add next year's session
     
-    $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM student_modules ORDER BY calendar_year DESC");
+    $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
     $module_details->execute();
     $module_details->bind_result($calendar_year);
     while ($module_details->fetch()) {
@@ -514,28 +508,24 @@ if ($_POST['paper_type'] == 'summative') {
   echo "</table>\n";
   
   echo "<div style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['modules'] . "</div><div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
-  $team_sql = implode("','", $teams);
-  if ($team_sql != '') $team_sql = "'$team_sql'";
+  $staff_modules_sql = "'" . implode("','", array_keys($staff_modules)) . "'";
   
   $module_no = 0;
   if (strpos($userroles,'SysAdmin') !== false) {
-    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE moduleid != '' ORDER BY moduleID");
+    $result = $mysqli->prepare("SELECT DISTINCT modules.id, moduleid, fullname FROM modules, schools ORDER BY moduleID");
   } elseif (strpos($userroles,'Admin') !== false) {
     $schoolIDs = implode(',', SchoolUtils::get_admin_schools($userID, $mysqli));
-    if ($schoolIDs == '') {
-      $schoolIDs = '-1';
-    }
-    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE (schoolid IN ($schoolIDs) OR moduleid IN ($team_sql)) AND moduleid != '' ORDER BY moduleID");
+    $result = $mysqli->prepare("SELECT DISTINCT modules.id, moduleid, fullname FROM modules WHERE (schoolid IN ($schoolIDs) OR modules.id IN ($staff_modules_sql)) AND ORDER BY moduleID");
   } else {
-    $result = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN ($team_sql) AND moduleid != '' ORDER BY moduleID");
+    $result = $mysqli->prepare("SELECT DISTINCT modules.id, moduleid, fullname FROM modules WHERE modules.id IN ($staff_modules_sql)  ORDER BY moduleID");
   }
   $result->execute();
-  $result->bind_result($module_id, $module_name);
+  $result->bind_result($idMod, $module_id, $module_name);
   while ($result->fetch()) {
     if (isset($_POST['module']) and $_POST['module'] == $module_id) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" checked />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
+      echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $idMod . "\" checked />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module_id . "\" />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
+      echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $idMod . "\" />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
     }
     $module_no++;
   }

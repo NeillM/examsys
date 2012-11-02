@@ -73,31 +73,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   // Update other tables if the Module ID has changed.
   if ($_POST['old_moduleid'] != trim($_POST['moduleid'])) {
-    // Teams
-    $tmp_moduleid = trim($_POST['moduleid']);
-    $tmp_old_moduleid = $_POST['old_moduleid'];
-    
-    $result = $mysqli->prepare("UPDATE teams SET name=? WHERE name=?");
-    $result->bind_param('ss', $tmp_moduleid, $tmp_old_moduleid);
-    $result->execute();
-    $result->close();
-    
-    // Properties
-    $tmp_old_moduleid = '%' . $_POST['old_moduleid'] . '%';
-    $stmt = $mysqli->prepare("SELECT property_id, moduleID FROM properties WHERE moduleID LIKE ?");
-    $stmt->bind_param('s', $tmp_old_moduleid);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($paper_property_id, $paper_moduleID);
-    while ($stmt->fetch()) {
-      $paper_moduleID = str_replace($_POST['old_moduleid'], trim($_POST['moduleid']), $paper_moduleID);
-      $result = $mysqli->prepare("UPDATE properties SET moduleID=? WHERE property_id=?");
-      $result->bind_param('si', $paper_moduleID, $paper_property_id);
-      $result->execute();
-      $result->close();
-    }
-    $stmt->close();
-
+    //TODO this can be removed soon 
     // Questions
     $tmp_old_moduleid = '%' . $_POST['old_moduleid'] . '%';
     $stmt = $mysqli->prepare("SELECT q_id, q_group FROM questions WHERE q_group LIKE ?");

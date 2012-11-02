@@ -37,6 +37,7 @@ if (strpos($userroles,'Demo') !== false) {
 require_once '../include/calculate_marks.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
+require_once '../classes/paperutils.class.php';
 
 function getRandomDetails($questionID, &$random_q_ids) {
   global $cfg_short_date, $paper_buffer, $mysqli;
@@ -318,7 +319,6 @@ function crankMark($tmp_percent, $ss_pass, $ss_hon, $pass_mark, $distinction_mar
 
 function writeUserResults($tmp, &$master_array, &$user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp, $met_array, $student_met_array) {
   global $student_cohort, $cohort_size, $total_random_mark, $total_marks, $marking, $ss_pass, $ss_hon, $pass_mark, $demo, $display_no, $meta_col_count;
-
   $master_array[$user_number]['name'] = $tmp['name'];
   $master_array[$user_number]['mark'] = round($tmp_user_mark,1);
   $master_array[$user_number]['mark_array'] = $tmp_user_mark_array;
@@ -756,11 +756,11 @@ while ($result->fetch()) {
 $result->close();
 
 // Load the correct answers into 'paper_buffer' array.
-$result = $mysqli->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, paper_title, marking, pass_mark, distinction_mark, paper_ownerID, q_type, paper_type, correct, score_method, option_text, moduleID, calendar_year, status, display_pos, crypt_name FROM (papers, questions, options, properties) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND questions.q_id=options.o_id AND q_type!='info' ORDER BY screen, display_pos, id_num");
+$result = $mysqli->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, paper_title, marking, pass_mark, distinction_mark, paper_ownerID, q_type, paper_type, correct, score_method, option_text, calendar_year, status, display_pos, crypt_name FROM (papers, questions, options, properties) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND questions.q_id=options.o_id AND q_type!='info' ORDER BY screen, display_pos, id_num");
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
 $result->store_result();
-$result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $paper_title, $marking, $pass_mark, $distinction_mark, $tmp_ownerID, $q_type, $paper_type, $correct, $score_method, $option_text, $moduleID, $calendar_year, $status, $display_pos, $crypt_name);
+$result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $paper_title, $marking, $pass_mark, $distinction_mark, $tmp_ownerID, $q_type, $paper_type, $correct, $score_method, $option_text, $calendar_year, $status, $display_pos, $crypt_name);
 $old_q_id = '';
 $question_no = 0;
 $total_marks = 0;
@@ -912,24 +912,25 @@ if ($paper_type == '2') {
 }
 
 // Get all the users on the module(s) the paper is on.
-if ($moduleID != '') {
-  $user_modules = array();
-  $mod_query = $mysqli->prepare("SELECT DISTINCT userID, moduleid, MAX(attempt) FROM student_modules WHERE moduleid IN ('" . str_replace(",","','",$moduleID) . "') GROUP BY userID");
-  $mod_query->execute();
-  $mod_query->bind_result($tmp_userID, $tmp_moduleid, $attempt);
-  $mod_query->store_result();
-  while ($mod_query->fetch()) {
-    $user_modules[$tmp_userID]['moduleid'] = $tmp_moduleid;
-    //$user_modules[$tmp_userID]['attempt'] = $attempt;
-  }
-  $mod_query->close();
+
+$user_modules = array();
+$moduleID = Paper_utils::get_modules($_GET['paperID'],$mysqli);
+$moduleID_in =  "'" . implode("','",array_keys($moduleID)) . "'";
+$mod_query = $mysqli->prepare("SELECT userID, moduleID, MAX(attempt) FROM modules_student,modules WHERE modules_student.idMod = modules.id AND idMod IN ($moduleID_in) and calendar_year = ? GROUP BY userID,moduleID");
+$mod_query->bind_param('s',$calendar_year);
+$mod_query->execute();
+$mod_query->bind_result($tmp_userID, $tmp_moduleid, $attempt);
+$mod_query->store_result();
+while ($mod_query->fetch()) {
+  $user_modules[$tmp_userID]['moduleid'] = $tmp_moduleid;
 }
+$mod_query->close();
 
 // Query for metadata
 $metadata_array = array();
 $student_metadata_array = array();
-$stmt = $mysqli->prepare('SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND modules.moduleid=?');
-$stmt->bind_param('s', $moduleID);
+$moduleID_in =  "'" . implode("','",array_keys($moduleID)) . "'";
+$stmt = $mysqli->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod=modules.id AND modules.id IN ($moduleID_in)");
 $stmt->execute();
 $stmt->bind_result($student_userID, $type, $value);
 while ($stmt->fetch()) {
@@ -960,7 +961,6 @@ if ($paper_type == '0') {
 }
 $log_query->execute();
 $log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt);
-//$log_query->store_result();
 
 $user_no    = 0;
 $display_no = 0;

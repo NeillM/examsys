@@ -27,7 +27,7 @@
   require_once '../../classes/logger.class.php';
   
   function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled, &$string) {
-    global $teams, $userID, $userroles, $faculty;
+    global $staff_modules, $userID, $userroles, $faculty;
 
     $current_status = ($question->get_status() == '') ? $string['normal'] : $question->get_status();
     
@@ -99,17 +99,18 @@ META;
 META;
     
     
-    // Teams
+    // Teams - staff_modules
     if (!is_array($module) or count($module) == 0) {
       $module = $question->get_teams();
     }
     $current_teams = $module;
-    $teams_array = search_utils::get_teams($teams, $userroles, $userID, $mysqlidb);
+
+    $teams_array = search_utils::get_staff_modules($staff_modules, $userroles, $userID, $mysqlidb);
     
     // Team keyword lists by module
     if (count($module) == 0) {
       // No teams passed in, use all teams the current user is on.
-      $module = $teams;
+      $module = $staff_modules;
     }
     
     $html .= <<< META
@@ -209,7 +210,8 @@ META;
     foreach ($teams_array as $individual_team) {
       $team_name = $individual_team['id'];
       $fullname = $individual_team['fullname'];
-      
+      $team_idMod = $individual_team['idMod'];
+
       if ($individual_team['school'] != $prev_heading) {
         if ($prev_heading != '') {
           $html .= <<< META
@@ -234,7 +236,7 @@ HEADING;
             
       $enc_name = htmlentities($fullname);
       $html .= <<< META
-                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_name}" type="checkbox"{$checked} /> {$team_name}: {$enc_name}</label></li>
+                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} /> {$team_name}: {$enc_name}</label></li>
 
 META;
 

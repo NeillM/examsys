@@ -26,19 +26,18 @@
 
 /**
  * Get a list of personal folders for the current user.
- * @param array $teams list of teams current user is on
+ * @param array $staff_modules list of staff modules current user is on
  * @param integer $userID ID of the current user
  * @param object $db database connection
  * @return array list of personal folder URLs
  */
-function get_folders($teams, $userID, $db) {
-  $team_string = '';
-  if (count($teams) > 0) {
-    $team_string = " OR team_name IN('" . implode("','",$teams) . "')";
+function get_folders($staff_modules, $userID, $db) {
+  $staff_modules_string = '';
+  if (count($staff_modules) > 0) {
+    $staff_modules_string = " OR idMod IN('" . implode("','",$staff_modules) . "')";
   }
   $my_folders_array = array();
-  
-  $result = $db->prepare("SELECT id, name FROM folders WHERE (ownerID=? $team_string) AND deleted IS NULL ORDER BY name");
+  $result = $db->prepare("SELECT id, name FROM folders,folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=? $staff_modules_string) AND deleted IS NULL ORDER BY name");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($folder_id, $folder_name);
@@ -96,31 +95,30 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db) {
 }
 
 /**
- * Get a list of teams the current user is on
+ * Get a list of staff modules the current user is on
  * @param array $teams list of teams current user is on
  * @param object $db database connection
- * @return array list of team URLs.
+ * @return array list of module URLs.
  */
-function get_teams($teams, $db) {
+function get_staff_module_links($staff_modules, $db) {
   global $cfg_root_path;
   
-  $teams_array = array();
+  $modules_array = array();
 
-  if (count($teams) > 0) {
-    $team_sql = implode("','", $teams);
-    if ($team_sql != '') $team_sql = "'$team_sql'";
+  if (count($staff_modules) > 0) {
+    $staff_modules_sql = "'" . implode("','", $staff_modules) . "'";
     
-    $result = $db->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    $result = $db->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($staff_modules_sql) ORDER BY moduleID");
     $result->execute();
     $result->bind_result($tmp_moduleid, $tmp_fullname);
     while ($result->fetch()) {
       $title = $tmp_moduleid . ' - ' . str_replace("'", "\'", $tmp_fullname);
-      $teams_array[$title] = $cfg_root_path . '/question/list.php?type=%&team=' . $tmp_moduleid;
+      $modules_array[$title] = $cfg_root_path . '/question/list.php?type=%&module=' . $tmp_moduleid;
     }
     $result->close();
   }
 
-  return $teams_array;
+  return $modules_array;
 }
 
 /**

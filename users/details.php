@@ -708,7 +708,7 @@ if (isset($_POST['update']) and $demo == false) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Modules_tab\" style=\"width:100%; display:none\">\n";
   }
   
-  $results = $mysqli->prepare("SELECT MAX(calendar_year) AS calendar_year FROM student_modules");
+  $results = $mysqli->prepare("SELECT MAX(calendar_year) AS calendar_year FROM modules_student");
   $results->execute();
   $results->bind_result($most_recent_year);
   $results->fetch();
@@ -721,7 +721,7 @@ if (isset($_POST['update']) and $demo == false) {
   $user_modules = array();
   $current_year = false;  
   
-  $results = $mysqli->prepare("SELECT DISTINCT student_modules.moduleid, fullname, student_modules.calendar_year, attempt FROM (student_modules, modules) WHERE student_modules.moduleid=modules.moduleid AND userID=? ORDER BY student_modules.calendar_year DESC, student_modules.moduleid");
+  $results = $mysqli->prepare("SELECT DISTINCT modules.moduleid, fullname, modules_student.calendar_year, attempt FROM (modules_student, modules) WHERE modules_student.idMod=modules.id AND userID=? ORDER BY modules_student.calendar_year DESC, modules.moduleid");
   $results->bind_param('i', $tmp_id);
   $results->execute();
   $results->store_result();
@@ -750,7 +750,7 @@ if (isset($_POST['update']) and $demo == false) {
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
-    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['moduleid']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module=$moduleid\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
+    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['moduleid']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['moduleid']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
     $old_year = $user_modules[$i]['calendar_year'];
   }
   
@@ -817,7 +817,7 @@ if (isset($_POST['update']) and $demo == false) {
   echo drawTabs('Notes', 4, $link_html, $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;" . $string['date'] . "</td><td class=\"coltitle\">" . $string['paper'] . "</td><td class=\"coltitle\">" . $string['note'] . "</td><td class=\"coltitle\">" . $string['author'] . "</td></tr>\n";
   
-  $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \"$cfg_short_date\"), paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=?");
+  $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \"$cfg_short_date\"), paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, properties_modules, modules, users) WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=?");
   $results->bind_param('i', $tmp_id);
   $results->execute();
   $results->store_result();
@@ -1004,7 +1004,7 @@ if (isset($_POST['update']) and $demo == false) {
   echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
   echo drawTabs('Metadata', 5, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td><td class=\"coltitle\">" . $string['value'] . "</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
-  $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND userID=?");
+  $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.idMod=modules.id AND userID=?");
   $stmt->bind_param('i', $_GET['userID']);
   $stmt->execute();
   $stmt->store_result();
@@ -1048,13 +1048,13 @@ if (isset($_POST['update']) and $demo == false) {
   }
   
   if (strpos($userroles,'Admin') !== false or $userID == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
-    $result = $mysqli->prepare("SELECT name, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM teams, modules WHERE teams.name=modules.moduleid AND memberID=? ORDER BY name");
+    $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod=modules.id AND memberID=? ORDER BY moduleID");
     $result->bind_param('i', $tmp_id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($name, $fullname, $added, $type);
+    $result->bind_result($moduleID, $fullname, $added, $type);
     while ($result->fetch()) {
-      echo "<tr><td>&nbsp;$name</td><td>$fullname</td><td>$added</td><td>" . $string[strtolower($type)] . "</td></tr>\n";
+      echo "<tr><td>&nbsp;$moduleID</td><td>$fullname</td><td>$added</td><td>" . $string[strtolower($type)] . "</td></tr>\n";
     }
     $result->close();
   } else {

@@ -22,13 +22,16 @@
 * @package
 */
 
-function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repcourse, $repmodule, $repyear, $paperID, $paper_type, $direction, &$student_no = 0, &$user_total = 0, $percent = 100) {
+require_once '../classes/paperutils.class.php';
+
+function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $repmodule, $repyear, $paperID, $paper_type, $direction, &$student_no = 0, &$user_total = 0, $percent = 100) {
   global $qid_list;
   
   // Get all the users on the module(s) the paper is on.
-  if ($moduleID != '') {
+  if (is_array($moduleIDs)) {
     $users_on_modules = '';
-    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM student_modules WHERE moduleid IN ('" . str_replace(",","','",$moduleID) . "')");
+    $moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
+    $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student,modules WHERE modules.id = modules_student.idMod and idMod IN ($moduleIDs_in)");
     $mod_query->execute();
     $mod_query->bind_result($tmp_userID, $tmp_moduleid);
     $mod_query->store_result();
@@ -123,12 +126,14 @@ function getCohortData($mysqli, $moduleID, $startdate, $enddate, $repcourse, $re
 
 function getPaperProperties($db,$paperID) {
   global $paper_title, $paper_type, $moduleID, $session, $pass_mark, $random_mark, $total_mark, $marking, $exam_duration, $start_date, $end_date;
-  $result = $db->prepare("SELECT paper_title, paper_type, moduleID, calendar_year, pass_mark, random_mark, total_mark, marking, exam_duration, start_date, end_date FROM properties WHERE property_id=?");
+  $result = $db->prepare("SELECT paper_title, paper_type, calendar_year, pass_mark, random_mark, total_mark, marking, exam_duration, start_date, end_date FROM properties WHERE property_id=?");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper_title, $paper_type, $moduleID, $session, $pass_mark, $random_mark, $total_mark, $marking, $exam_duration, $start_date, $end_date);
+  $result->bind_result($paper_title, $paper_type, $session, $pass_mark, $random_mark, $total_mark, $marking, $exam_duration, $start_date, $end_date);
   $result->fetch();
   $result->close();
+
+  $moduleID = Paper_utils::get_modules($paperID, $db);
 }
 
 function formatsec($seconds) {

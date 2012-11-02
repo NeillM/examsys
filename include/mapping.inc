@@ -36,17 +36,20 @@ require_once $cfg_web_root . 'webServices/RestRequest.class';
 require_once $cfg_web_root . 'apis/VLEFactory.class.php';
 require_once $cfg_web_root . 'classes/dateutils.class.php';
 require_once $cfg_web_root . 'classes/mappingutils.class.php';
+require_once $cfg_web_root . 'classes/moduleutils.class.php';
 
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   global $vle_api_cache;
 
   //get module and session form paper id
-  $result = $db->prepare("SELECT moduleID, calendar_year, paper_type FROM properties WHERE property_id=?");
+  $result = $db->prepare("SELECT moduleID, idMod, calendar_year, paper_type FROM properties, properties_modules, modules WHERE properties_modules.property_id = properties.property_id and modules.id = idMod AND properties.property_id=?");
   $result->bind_param('i', $paper_id);
   $result->execute();
   $result->store_result();
-  $result->bind_result($modules, $session, $paper_type);
-  $result->fetch();
+  $result->bind_result($moduleId, $idMod, $session, $paper_type);
+  while($result->fetch()) {
+    $modules_array[$idMod] = $moduleId;
+  }
   if ($result->num_rows == 0) {
     return 0;
   }
@@ -58,7 +61,7 @@ function render_objectives_mapping_form($db, $paper_id, &$string) {
     $q_id = '';
   }
   
-  $objsByModuleSession = getObjectives($modules, $session, $paper_id, $q_id, $db);
+  $objsByModuleSession = getObjectives($modules_array, $session, $paper_id, $q_id, $db);
 
   if (isset($objsByModuleSession['none_of_the_above'])) {
     $none_of_the_above = $objsByModuleSession['none_of_the_above'];
@@ -127,20 +130,23 @@ HTML;
         </ul>
 
 HTML;
-
+    $tmp = array_flip($modules_array);
+    $idmod = $tmp[$moduleid_forform];
     $html .= <<< HTML
     		<input name="{$moduleid_forform}_session" type="hidden" value="{$session}"/>
     		<input name="{$moduleid_forform}_old_mappings" type="hidden" value="{$old_mappings}" />
-        <input name="{$moduleid_forform}_vle_api" type="hidden" value="$vle_api_cache[$moduleid]"/>
+        <input name="{$moduleid_forform}_vle_api" type="hidden" value="$vle_api_cache[$idmod]"/>
 
 HTML;
   }
   
   $checked = (isset($none_of_the_above['mapped'])) ? ' checked="checked"' : '';
-  $nota_message = sprintf($string['noneabovemsg'], $modules);
+  $modules_string = implode(',',$modules_array);
+  $modules_keys_string = implode(',',array_keys($modules_array));
+  $nota_message = sprintf($string['noneabovemsg'], $modules_string);
   $html .= <<< HTML
         <p class="warning"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>{$string['noneabove']}</strong></label><br />{$nota_message}</p>
-        <input id="objective_modules" name="objective_modules" type="hidden" value="{$modules}" />
+        <input id="objective_modules" name="objective_modules" type="hidden" value="{$modules_string}" />
         
 HTML;
     
@@ -267,29 +273,32 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
 
     foreach ($modules as $moduleid) {
       $moduleid_forform = str_replace(' ', '_', $moduleid);
+
+      $idMod = module_utils::get_idMod($moduleid_forform, $db);
+
       if (isset($_POST[$moduleid_forform . '_session'])) {
         $session = $_POST[$moduleid_forform . '_session'];
         $old_mappings = $_POST[$moduleid_forform . '_old_mappings'];
         $vle_api = $_POST[$moduleid_forform . '_vle_api'];
         if (isset($_POST[$moduleid_forform . '_objectives'])) {
           foreach ($_POST[$moduleid_forform . '_objectives'] as $objective_id) {
-            $sql[] = "INSERT INTO relationships VALUES (NULL, '$moduleid', $paper_id, $question_id, $objective_id, '$session', '$vle_api')";
+            $sql[] = "INSERT INTO relationships VALUES (NULL, $idMod, $paper_id, $question_id, $objective_id, '$session', '$vle_api')";
             $new_mappings .= $objective_id . ',';
           }
         }
     
         //check for none of the above
         if (isset($_POST['none_of_the_above']) and $_POST['none_of_the_above'] == -1 and count($sql) == 0) {
-          $sql[] = "INSERT INTO relationships VALUES (NULL, '$moduleid', $paper_id, $question_id, -1, '$session','$vle_api')";
+          $sql[] = "INSERT INTO relationships VALUES (NULL, $idMod, $paper_id, $question_id, -1, '$session','$vle_api')";
           $new_mappings .= '-1,';
         } else {
           $old_mappings .= '-1,';
         }
-    
+
         if ($new_mappings != $old_mappings) {
           // prepend the delete
           if ($old_mappings != '') {
-            $delete = "DELETE FROM relationships WHERE module_id = '$moduleid' AND paper_id = $paper_id AND question_id = $question_id AND calendar_year = '$session' AND vle_api= '$vle_api'";
+            $delete = "DELETE FROM relationships WHERE idMod = $idMod AND paper_id = $paper_id AND question_id = $question_id AND calendar_year = '$session' AND vle_api= '$vle_api'";
             array_unshift($sql, $delete);
           }
           foreach($sql as $query) {
@@ -377,10 +386,10 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
   $original_thisModuleid = $thisModuleid;
   $objsBySession = array();
 
-  $module_list = explode(',',$thisModuleid);
-  foreach ($module_list as $thisModuleid) {
+  $module_list = $thisModuleid;
+  foreach ($module_list as $thisidMod => $thisModuleid) {
     // Get which API to use to get the learning objectives
-    $vle_api = MappingUtils::get_vle_api($thisModuleid, $session, $vle_api_cache, $rogodb);
+    $vle_api = MappingUtils::get_vle_api($thisidMod, $session, $vle_api_cache, $rogodb);
 
     if ($vle_api != '') {
       // Get objectives from the VLE via REST request
@@ -397,21 +406,21 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
     } else {
       // Use Rogō's internally stored objectves
       if ($scope == 'all') {
-      	$sql = "SELECT sess_id, identifier, moduleID, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE moduleID=? ORDER BY calendar_year, sess_id";
+      	$sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod=? ORDER BY calendar_year, sess_id";
       	$stmt = $rogodb->prepare($sql);
-        $stmt->bind_param('s', $thisModuleid);
+        $stmt->bind_param('s', $thisidMod);
       } elseif ($session == '' and $scope == 'latest') {
-        $sql = "SELECT sess_id, identifier, moduleID, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE moduleID=? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod=? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
         $stmt = $rogodb->prepare($sql);
-        $stmt->bind_param('s', $thisModuleid);
+        $stmt->bind_param('s', $thisidMod);
       } else {
-        $sql = "SELECT sess_id, identifier, moduleID, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE moduleID=? AND calendar_year=? ORDER BY sess_id";
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod=? AND calendar_year=? ORDER BY sess_id";
         $stmt = $rogodb->prepare($sql);
-        $stmt->bind_param('ss', $thisModuleid, $session);
+        $stmt->bind_param('ss', $thisidMod, $session);
       }
       $stmt->execute();
       $stmt->store_result();
-      $stmt->bind_result($sess_id, $identifier, $moduleID, $title, $source_url, $calendar_year, $occurrence);
+      $stmt->bind_result($sess_id, $identifier, $idMod, $title, $source_url, $calendar_year, $occurrence);
       while ($stmt->fetch()) {
         $objsBySession[$thisModuleid][$identifier]['class_code'] = '';
         $objsBySession[$thisModuleid][$identifier]['title'] = $title;
@@ -422,6 +431,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
         $objsBySession[$thisModuleid][$identifier]['calendar_year'] = $calendar_year;
         $objsBySession[$thisModuleid][$identifier]['VLE'] = '';
       }
+
       $stmt->close();
       if (isset($objsBySession[$thisModuleid]) and count($objsBySession[$thisModuleid]) > 0) {
         //GET objs from Touchstone
@@ -449,9 +459,9 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
   //START:: get the currently mapped objectives in Rogo.
   $mapped = array();
   if ($questionID != '') {
-    $thisModuleid = str_replace(',','|',$original_thisModuleid);
-    if ($result = $rogodb->prepare("SELECT obj_id, question_id FROM relationships WHERE module_id REGEXP ? AND paper_id=? AND calendar_year=? AND question_id IN ($questionID) AND vle_api=?")) {
-      $result->bind_param('siss', $thisModuleid, $paperID, $session, $vle_api);
+    $original_thisModuleid_in = "'" . implode("','",array_keys($original_thisModuleid)) . "'";
+    if ($result = $rogodb->prepare("SELECT obj_id, question_id FROM relationships WHERE idMod IN($original_thisModuleid_in) AND paper_id=? AND calendar_year=? AND question_id IN ($questionID) AND vle_api=?")) {
+      $result->bind_param('iss', $paperID, $session, $vle_api);
       $result->execute();
       $result->bind_result($obj_id, $question_id);
       while ($row = $result->fetch()) {

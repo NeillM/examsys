@@ -4660,7 +4660,157 @@ QUERY;
   }
   $result->close();
   
+  //27/09/2012 - remove concatenated moduleID form properties and crate the properties_module linking table
+  $result = $mysqli->prepare("SELECT TABLE_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME='properties_modules' AND TABLE_SCHEMA='$cfg_db_database'");
+  $result->execute();
+  $result->store_result();
+  $result->fetch();
+  if ($result->num_rows() == 0 ) { 
+    $adjust = $mysqli->prepare("CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE properties_modules (property_id mediumint(8) unsigned, idMod int, constraint pk_properties_module primary key (property_id, idMod))</li>\n";
+    ob_flush();
+    flush();
+    $res = $mysqli->prepare("SELECT id, moduleid FROM modules");
+    $res->execute(); 
+    $res->bind_result($id,$moduleid);
+    $modules = array();
+    while($res->fetch()) {
+      $modules[$moduleid] = $id;
+    }
+    $res->close();
+    unset($res);
+    $res = $mysqli->prepare("SELECT property_id, moduleID FROM properties");
+    $res->execute(); 
+    $res->store_result();
+    $res->bind_result($property_id, $moduleID);
+    $insert_res = $mysqli->prepare("INSERT INTO properties_modules VALUES (?,?)");
+    echo "<br/>Populating properties_modules ";
+    $i = 0;
+    while($res->fetch()) {
+      $paper_modules = explode(',',$moduleID);
+      foreach($paper_modules as $m) {
+        $insert_res->bind_param('ii', $property_id, $modules[$m]);
+        $insert_res->execute();
+      }
+      echo ".";
+      if($i % 80 == 0) echo "\n";
+      ob_flush();
+      flush();
+    }
+    $insert_res->close();
+    $res->close();
 
+    $adjust = $mysqli->prepare("ALTER TABLE properties DROP moduleid");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE properties DROP moduleid</li>\n";
+
+    //deal with questions q_group
+    $adjust = $mysqli->prepare("CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int, constraint pk_questions_module primary key (q_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE questions_modules (q_id int(4) unsigned, idMod int, constraint pk_questions_module primary key (q_id, idMod))</li>\n";
+    ob_flush();
+    flush();
+    
+    $res = $mysqli->prepare("SELECT q_id, q_group FROM questions");
+    $res->execute(); 
+    $res->store_result();
+    $res->bind_result($q_id, $moduleID);
+    $insert_res = $mysqli->prepare("INSERT INTO questions_modules VALUES (?,?)");
+    echo "<br/>Populating questions_modules ";
+    $i = 0;
+    while($res->fetch()) {
+      $questions_modules = explode(',',$moduleID);
+      foreach($questions_modules as $m) {
+        $insert_res->bind_param('ii', $q_id, $modules[$m]);
+        $insert_res->execute();
+      }
+      echo ".";
+      if($i % 80 == 0) echo "\n";
+      ob_flush();
+      flush();
+    }
+    $insert_res->close();
+    $res->close();
+
+    $adjust = $mysqli->prepare("ALTER TABLE questions DROP q_group");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE questions DROP q_group</li>\n";
+
+    //'folders' => 'team_name' is not 1 to 1 so need a folders_modules_staff joining table 
+    $adjust = $mysqli->prepare("CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int, constraint pk_properties_module primary key (folders_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>CREATE TABLE folders_modules_staff (folders_id int unsigned, idMod int, constraint pk_properties_module primary key (folders_id, idMod)) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1</li>\n";
+    ob_flush();
+    flush();
+    unset($res);
+    $res = $mysqli->prepare("SELECT id, team_name FROM folders");
+    $res->execute(); 
+    $res->store_result();
+    $res->bind_result($folder_id, $team_name);
+    $insert_res = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES (?,?)");
+    echo "<br/>Populating properties_modules ";
+    $i = 0;
+    while($res->fetch()) {
+      $folder_modules = explode(',',$moduleID);
+      foreach($folder_modules as $m) {
+        $insert_res->bind_param('ii', $folder_id, $modules[$m]);
+        $insert_res->execute();
+      }
+      echo ".";
+      if($i % 80 == 0) echo "\n";
+      ob_flush();
+      flush();
+    }
+    $insert_res->close();
+    $res->close();
+
+    $adjust = $mysqli->prepare("ALTER TABLE folders DROP team_name");
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>ALTER TABLE properties DROP moduleid</li>\n";
+
+    //translate moduleID to idMod in all tables
+    $mysqli->query("ALTER TABLE sessions DROP PRIMARY KEY");
+    $tables = array(  
+                    'objectives ' => 'moduleID', 
+                    'relationships' => 'module_id', 
+                    'sessions' => 'moduleID', 
+                    'sms_imports' => 'moduleid', 
+                    'student_modules' => 'moduleid', 
+                    'teams' => 'name'
+                    );
+    foreach($tables as $table => $col) {
+      echo "<li>UPDATEING $col in $table</li>";
+      ob_flush();
+      flush();
+      foreach($modules as $code => $id) { 
+        $mysqli->query("UPDATE $table set $col = $id WHERE $col = '$code'");
+      }
+    }
+    //rename and rename and retype the columns 
+    $tables['reference_modules'] = 'moduleID'; //this just needs renaming
+    $tables['users_metadata'] = 'moduleID'; //this just needs renaming
+    foreach($tables as $table => $col) {
+      echo "<li>ALTER TABLE $table CHANGE $col idMod INTEGER DEFAULT NULL </li>";
+      $mysqli->query("ALTER TABLE $table CHANGE $col idMod INTEGER DEFAULT NULL");
+    }
+    //rename teams and student_modues
+    echo '<li>RENAME TABLE teams TO modules_staff, student_modues TO modules_student</li>';
+    $mysqli->query('RENAME TABLE teams TO modules_staff, student_modules TO modules_student');
+    ob_flush();
+    flush();
+
+    $mysqli->query("ALTER TABLE sessions ADD PRIMARY KEY(identifier,idMod,calendar_year)");
+
+    //TODO Indexes and GRANTS
+  }
+  $result->close();
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 

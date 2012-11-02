@@ -28,19 +28,19 @@ Class RecycleBin {
 	/**
 	 * Determine what icon to show for the recycle bin
    * @param integer $userID ID of the current user
-   * @param array $teams array of teams the current user is on
+   * @param array $staff_modules array of modules the staff user is on
    * @param resource $db database connection
 	 * @return string the relevant icon empty/fill
 	 */
-	static function get_recyclebin_icon($userID, $teams, $db)	{
+	static function get_recyclebin_icon($userID, $staff_modules, $db)	{
     $recycle_bin_no = 0;
     
-    if (count($teams) == 0) {
-      $team_sql = '';
+    if (count($staff_modules) == 0) {
+      $staff_module_sql = '';
     } else {
-      $team_sql = " OR moduleID REGEXP ('" . implode('|', $teams) . "')";
+      $staff_module_in = "'" . implode("','",array_keys($staff_modules)) . "'";
     }
-    $stmt = $db->prepare("SELECT property_id FROM properties WHERE (paper_ownerID=?$team_sql) AND deleted IS NOT NULL LIMIT 1");
+    $stmt = $db->prepare("SELECT properties.property_id FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ($staff_module_in)) AND deleted IS NOT NULL LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($no_deleted);
@@ -48,12 +48,13 @@ Class RecycleBin {
     $stmt->close();
     $recycle_bin_no += $no_deleted;
     
-    if (count($teams) == 0) {
-      $team_sql = '';
+    if (count($staff_modules) == 0) {
+      $staff_module_sql = '';
     } else {
-      $team_sql = " OR q_group REGEXP ('" . implode('|', $teams) . "')";
+      $staff_module_sql = " OR idmod IN (" . implode(',', array_keys($staff_modules)) . ")";
     }
-    $stmt = $db->prepare("SELECT q_id FROM questions WHERE (ownerID=?$team_sql) AND deleted IS NOT NULL LIMIT 1");
+
+    $stmt = $db->prepare("SELECT questions.q_id FROM questions,questions_modules WHERE questions.q_id = questions_modules.q_id AND (ownerID=? $staff_module_sql) AND deleted IS NOT NULL LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($no_deleted);
@@ -61,12 +62,12 @@ Class RecycleBin {
     $stmt->close();
     $recycle_bin_no += $no_deleted;
     
-    if (count($teams) == 0) {
-      $team_sql = '';
+    if (count($staff_modules) == 0) {
+      $staff_module_sql = '';
     } else {
-      $team_sql = " OR team_name REGEXP ('" . implode('|', $teams) . "')";
+      $staff_module_sql = "AND idMod IN ('" . implode("','", array_keys($staff_modules)) . "')";
     }
-    $stmt = $db->prepare("SELECT id FROM folders WHERE (ownerID=?$team_sql) AND deleted IS NOT NULL LIMIT 1");
+    $stmt = $db->prepare("SELECT id FROM folders,folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=? $staff_module_sql) AND deleted IS NOT NULL LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($no_deleted);

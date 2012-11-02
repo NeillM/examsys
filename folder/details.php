@@ -30,6 +30,7 @@ require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../classes/stateutils.class.php';
+require_once '../classes/paperutils.class.php';
 
 function getLastFolder($path) {
   $parts = explode(';' , $path);
@@ -61,15 +62,15 @@ if (isset($_GET['folder'])) {
 }
 if ($folder != '') {
   $tmp_folder = $_GET['folder'];
-  $result = $mysqli->prepare("SELECT ownerID, name, team_name FROM folders WHERE id=?");
+  $result = $mysqli->prepare("SELECT ownerID, name, moduleid FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND folders_modules_staff.idMod = modules.id AND folders.id=?");
   $result->bind_param('i', $tmp_folder);
   $result->execute();
   $result->store_result();
-  $result->bind_result($folder_ownerID, $orig_folder_name, $team_name);
+  $result->bind_result($folder_ownerID, $orig_folder_name, $staff_module);
   $result->fetch();
   $result->close();
   
-  if (isset($folder_teams) and $folder_teams != '' and $module == '') $module = $folder_teams;
+  if (isset($staff_module) and $staff_module != '' and $staff_module == '') $module = $staff_module;
 
   $parent_list = array();
   if (substr_count($orig_folder_name,';') > 0) {
@@ -237,7 +238,7 @@ $display_papers = true;
 // Get members of current folder.
 if (isset($_GET['module']) and $_GET['module'] != '') {
 
-  $member_details = $mysqli->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (teams, users) WHERE teams.memberID=users.id AND name=? ORDER BY surname, initials");
+  $member_details = $mysqli->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users, modules) WHERE modules_staff.idMod = modules.id AND modules_staff.memberID=users.id AND moduleID=? ORDER BY surname, initials");
   $member_details->bind_param('s', $module);
   $member_details->execute();
   $member_details->store_result();
@@ -279,19 +280,19 @@ if (isset($module_details['selfenroll']) and $module_details['selfenroll'] == 1)
 // Get any sub-folders first.
 if ($folder != '') {
   $tmp_string = '';
-  if (count($teams) > 0) {
-    $tmp_string = " OR team_name IN ('" . implode("','",$teams) . "')";
+  if (count($staff_modules) > 0) {
+    $tmp_string = " OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
   }
   
   $tmp_folder_name = $orig_folder_name . ';%';
-  $folder_details = $mysqli->prepare("SELECT id, name, team_name, color FROM folders WHERE (ownerID=? $tmp_string) AND name LIKE ? AND deleted IS NULL ORDER BY name, id");
+  $folder_details = $mysqli->prepare("SELECT folders.id, name, moduleid, color FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND folders_modules_staff.idMod = modules.id AND (ownerID=? $tmp_string) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
   $folder_details->bind_param('is', $userID, $tmp_folder_name);
   $folder_details->execute();
-  $folder_details->bind_result($id, $name, $team_name, $color);
+  $folder_details->bind_result($id, $name, $staff_modules, $color);
   while ($folder_details->fetch()) {
     $display_name = str_replace("$orig_folder_name;","",$name);
     if (substr_count($display_name,';') == 0) {
-      if ($team_name == '') {
+      if ($staff_modules == '') {
         echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
       } else {
         echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/shared_" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
@@ -308,11 +309,11 @@ if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['s
 
 // Get current owner papers.
 if ($folder != '') {
-  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID, properties.password FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
+  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
 } elseif ($_GET['module'] != '') {
   $paper_types = array();
   
-  $results = $mysqli->prepare("SELECT DISTINCT paper_type, COUNT(paper_type) AS no_papers FROM properties WHERE (moduleID = '" . $_GET['module'] . "' OR moduleID LIKE '%," . $_GET['module'] . ",%' OR moduleID LIKE '" . $_GET['module'] . ",%' OR moduleID LIKE '%," . $_GET['module'] . "') AND deleted IS NULL GROUP BY paper_type");
+  $results = $mysqli->prepare("SELECT DISTINCT paper_type, COUNT(paper_type) AS no_papers FROM properties, modules, properties_modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND moduleID = '" . $_GET['module'] . "' AND deleted IS NULL GROUP BY paper_type");
   $results->execute();
   $results->bind_result($paper_type, $no_papers);
   while ($results->fetch()) {
@@ -320,19 +321,18 @@ if ($folder != '') {
   }
   $results->close();
   
-  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, moduleID, properties.password FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND (moduleID = '" . $_GET['module'] . "' OR moduleID LIKE '%," . $_GET['module'] . ",%' OR moduleID LIKE '" . $_GET['module'] . ",%' OR moduleID LIKE '%," . $_GET['module'] . "') AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
+  $query_string = "SELECT DISTINCT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND properties.paper_ownerID=users.id AND moduleID = '" . $_GET['module'] . "' AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
 }
-
 $results = $mysqli->prepare($query_string);
 $results->execute();
-$results->bind_result($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID, $password);
+$results->bind_result($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
 $results->store_result();
-
 $old_p_type = '';
 $sent_clear_all = false;
 if ($display_papers) {
   if ($results->num_rows > 0) {
     while ($results->fetch()) {
+      $moduleIds = Paper_utils::get_modules($property_id, $mysqli); 
       if ($old_p_type != $paper_type and (isset($_GET['module']) and $_GET['module'] != '') ) {
         if ($sent_clear_all) {
           echo "<br clear=\"all\" />";
@@ -346,7 +346,7 @@ if ($display_papers) {
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
         echo "<br />\n";
       }
-      display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID, $password);
+      display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleIds, $password);
       $old_p_type = $paper_type;
       $file_no++;
     }

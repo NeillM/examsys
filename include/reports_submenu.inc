@@ -21,6 +21,7 @@
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
+require_once $cfg_web_root . 'classes/paperutils.class.php';
 ?>
 <script language="JavaScript">
 <?php
@@ -303,13 +304,13 @@
   echo "</select></td></tr>\n";
   
   //get the paper modules (also rubric for use if peer review paper)
-  $result = $mysqli->prepare("SELECT moduleID, rubric FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT rubric FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($moduleID, $rubric);
+  $result->bind_result($rubric);
   $result->fetch();
   $result->close();
-  $moduleIDs = explode(',', $moduleID);
+  $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
   
   //module drop down
   if ($paper_type != '3') {
@@ -353,7 +354,7 @@
   // Get any metadata fields
   $metadata = array();
   if (count($moduleIDs) > 0) {
-    $result = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE users_metadata.moduleID=modules.id AND modules.moduleid IN ('" . implode("','",$moduleIDs) . "') ORDER BY type, value");
+    $result = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE users_metadata.idMod=modules.id AND modules.moduleid IN ('" . implode("','",$moduleIDs) . "') ORDER BY type, value");
     $result->execute();
     $result->bind_result($meta_type, $meta_value);
     while ($result->fetch()) {

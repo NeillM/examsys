@@ -41,7 +41,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 // Get the dropdown list values
-$stmt = $mysqli->prepare("SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.moduleID=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $_GET['modules']) . "') GROUP BY reference_material.id");
+$stmt = $mysqli->prepare("SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $_GET['modules']) . "') GROUP BY reference_material.id");
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($title, $refID);

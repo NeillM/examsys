@@ -24,6 +24,8 @@
 
   require '../include/staff_auth.inc';
   require '../include/mapping.inc';
+  require_once '../classes/paperutils.class.php';
+
   $paperID = $_GET['paperID'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -77,10 +79,10 @@
     $result->close();
   }
     
-  $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
+  $result = $mysqli->prepare("SELECT paper_title, calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper_title, $moduleID, $session, $start_date, $end_date, $paper_type);
+  $result->bind_result($paper_title, $session, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
     echo "<table class=\"header\">\n";
     echo '<tr><th>';
@@ -147,10 +149,10 @@
   $row_no = 0;
   $temp_array = array();
 
-  $result = $mysqli->prepare("SELECT random_mark, total_mark, paper_ownerID, q_group, ownerID, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $result = $mysqli->prepare("SELECT random_mark, total_mark, paper_ownerID, ownerID, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $result->bind_param('ii', $paperID, $paperID);
   $result->execute();
-  $result->bind_result($total_random_mark, $total_marks, $paper_ownerID, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
+  $result->bind_result($total_random_mark, $total_marks, $paper_ownerID, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
   while ($result->fetch()) {
     $row_no++;
     $temp_array[$row_no]['screen'] = $screen;
@@ -165,7 +167,6 @@
     $temp_array[$row_no]['q_media_height'] = $q_media_height;
     $temp_array[$row_no]['ownerID'] = $ownerID;
     $temp_array[$row_no]['display_pos'] = $display_pos;
-    $temp_array[$row_no]['q_group'] = $q_group;
     $temp_total_marks = $total_marks;
   }
   $result->close();
@@ -227,7 +228,8 @@
     }
     $old_screen = $temp_array[$x]['screen'];
     
-    $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $temp_array[$x]['q_id'], $mysqli);
+    $moduleIDs = Paper_utils::get_modules($paperID,$mysqli);
+    $objByModule = getObjectivesByMapping($moduleIDs, $session, $paperID, $temp_array[$x]['q_id'], $mysqli);
     if(array_key_exists($temp_array[$x]['q_id'],$excluded)) {
       $class = 'mapping_exclueded';
     } else {

@@ -351,8 +351,8 @@ $state = $stateutil->getState($userID, $mysqli, $cfg_root_path . '/question/sear
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_team_dropdown($teams, $userroles, $userID, $mysqli); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($teams, $userroles, $userID, $mysqli, 'questions'); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($staff_modules, $userroles, $userID, $mysqli); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($staff_modules, $userroles, $userID, $mysqli, 'questions'); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['status']; search_utils::display_status_dropdown(); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['blooms']; search_utils::display_blooms_dropdown(); ?></div>
   
@@ -360,7 +360,7 @@ $state = $stateutil->getState($userID, $mysqli, $cfg_root_path . '/question/sear
   <option value=""></option>
 <?php
   $old_moduleID = '';
-  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$teams) . "') ORDER BY moduleid, keyword");
+  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$staff_modules) . "') ORDER BY moduleid, keyword");
   $stmt->execute();
   $stmt->bind_result($moduleID, $keyword, $keywordID);
   while ($stmt->fetch()) {

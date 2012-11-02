@@ -144,7 +144,7 @@ if (isset($_POST['submit'])) {
     $error = $string['notickedfields'];
   }
   
-  if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['team'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
+  if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
     $error = $string['narrowyoursearch'];
   }
   
@@ -216,22 +216,22 @@ if (isset($_POST['submit'])) {
     $search_string = 'AND (' . substr($search_string, 4) . ')';
   }
   
-  if ($_POST['team'] != '') {
-    $team_string = ' AND q_group LIKE ?';
-    $variables[] = '%' . $_POST['team'] . '%';
+  if ($_POST['module'] != '') {
+    $module_string = ' AND q_group LIKE ?';
+    $variables[] = '%' . $_POST['module'] . '%';
     $params .= 's';
   } else {
-    $team_string = '';
+    $module_string = '';
   }
   
-  if ($_POST['owner'] != '' or count($teams) == 0) {
+  if ($_POST['owner'] != '' or count($staff_modules) == 0) {
     $user_string = ' AND questions.ownerID=?';
     $variables[] = $_POST['owner'];
     $params .= 'i';
   } else {
     // If no specific owner set lock down by team (apart from SysAdmin).
-    if (count($teams) > 0 and $_POST['team'] == '') {
-      $user_string = " AND (q_group REGEXP '" . implode('|', $teams) . "' OR questions.ownerID=$userID)";
+    if (count($staff_modules) > 0 and $_POST['module'] == '') {
+      $user_string = " AND (q_group REGEXP '" . implode('|', $staff_modules) . "' OR questions.ownerID=$userID)";
       /*
       $user_string = ' AND (';
       foreach ($teams as $individual_team) {
@@ -306,9 +306,9 @@ if (isset($_POST['submit'])) {
   }
   
   if ($keywordsSQL == '') {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, options) WHERE questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, options) WHERE questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
   } else {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $team_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options) WHERE questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, q_id";
   }
 
   $result = $mysqli->prepare($sql);
@@ -333,7 +333,7 @@ if (isset($_POST['submit'])) {
   } elseif (isset($_POST['searchtype']) and $_POST['searchtype'] != '%') {
     echo $string[$_POST['searchtype']];
   } else {
-    echo $_POST['team'];
+    echo $_POST['module'];
   }
   echo "</div></th></tr>";
 ?>

@@ -32,6 +32,7 @@ require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../classes/questionutils.class.php';
+require_once '../classes/paperutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 $paperID = $_GET['paperID'];
@@ -57,10 +58,10 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and strpos($userroles,'Sys
   $summative_lock = false;
 }
 
-$result = $mysqli->prepare("SELECT DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%H') as start_hour, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
+$result = $mysqli->prepare("SELECT DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%H') as start_hour, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
 $result->bind_param('i', $paperID);
 $result->execute();
-$result->bind_result($created, $paper_title, $moduleID, $pass_mark, $title, $initials, $surname, $tmp_module, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $tmp_start_hour, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed);
+$result->bind_result($created, $paper_title, $pass_mark, $title, $initials, $surname, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $tmp_start_hour, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed);
 $result->fetch();
 $result->close();
 
@@ -457,10 +458,10 @@ function check_latex_random($q_ids, $mysqli) {
 <?php
   $max_screen = 0;
 
-  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos), paper_ownerID, paper_title, moduleID, pass_mark, users.title, users.initials, users.surname, moduleID, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed, retired, crypt_name, labs, calendar_year, exam_duration, display_question_mark, fullscreen, externals, internal_reviewers FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? AND paper_ownerID=users.id GROUP BY paper_title LIMIT 1");
+  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos), paper_ownerID, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed, retired, crypt_name, labs, calendar_year, exam_duration, display_question_mark, fullscreen, externals, internal_reviewers FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? AND paper_ownerID=users.id GROUP BY paper_title LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($max_screen, $max_display_pos, $paper_ownerID, $paper_title, $moduleID, $pass_mark, $title, $initials, $surname, $tmp_module, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed, $retired, $crypt_name, $labs, $session, $exam_duration, $display_question_mark, $fullscreen, $externals, $internal_reviewers);
+  $result->bind_result($max_screen, $max_display_pos, $paper_ownerID, $paper_title, $pass_mark, $title, $initials, $surname, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed, $retired, $crypt_name, $labs, $session, $exam_duration, $display_question_mark, $fullscreen, $externals, $internal_reviewers);
   $result->fetch();
   $result->close();
 
@@ -578,11 +579,11 @@ function check_latex_random($q_ids, $mysqli) {
   $rnd_q_ids = array();
   
   // Get the questions (if any).
-  $result = $mysqli->prepare("SELECT theme, q_group, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
+  $result = $mysqli->prepare("SELECT theme, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($theme, $q_group, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
+  $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked);
   $temp_array = array();
   while ($result->fetch()) {
 
@@ -655,7 +656,7 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no]['ownerID'] = $ownerID;
       $temp_array[$row_no]['display_pos'] = $display_pos;
       $temp_array[$row_no]['correct'] = $correct;
-      $temp_array[$row_no]['q_group'] = $q_group;
+      $temp_array[$row_no]['questions_modules'] = QuestionUtils::get_modules($q_id, $mysqli);
       $temp_array[$row_no]['status'] = $status;
       $temp_array[$row_no]['warnings'] = '';
       $temp_array[$row_no]['random'] = array();
@@ -667,19 +668,13 @@ function check_latex_random($q_ids, $mysqli) {
       }
 
       if ($summative_lock and $locked == '') {
-        $editPaper = $mysqli->prepare("UPDATE questions SET locked=NOW() WHERE q_id=? AND locked IS NULL");
-        $editPaper->bind_param('i', $q_id);
-        $editPaper->execute();
-        $editPaper->close();
+        QuestionUtils::lock_question($q_id, $mysqli);
       }
-      // Set the question team to that of the paper if null.
-      if ($q_group == '') {
-        $module_list = explode(',',$moduleID);
 
-        $editPaper = $mysqli->prepare("UPDATE questions SET q_group=? WHERE q_id=?");
-        $editPaper->bind_param('si', $module_list[0], $q_id);
-        $editPaper->execute();
-        $editPaper->close();
+      // Set the question modules to that of the paper if the question is not on a module.
+      if (count($temp_array[$row_no]['questions_modules']) == 0) {
+        $paper_modules = Paper_utils::get_modules($_GET['paperID'],$mysqli);
+        QuestionUtils::add_modules($paper_modules, $q_id, $mysqli);
       }
       
       //prevent php errors by populating $excluded[$q_id]
@@ -737,7 +732,6 @@ function check_latex_random($q_ids, $mysqli) {
       $result->close();
     }
   }
-
   if (isset($_GET['module']) and $_GET['module'] != '') {
     $module = $_GET['module'];
     $folder = '';
@@ -747,7 +741,7 @@ function check_latex_random($q_ids, $mysqli) {
         $module = $paper_modules[0];
       } else {
         for ($i=count($paper_modules)-1; $i>0; $i--) {
-          if (in_array($paper_modules[$i], $teams)) {
+          if (in_array($paper_modules[$i], $staff_modules)) {
             $module = $paper_modules[$i];
           }
         }
@@ -764,8 +758,9 @@ function check_latex_random($q_ids, $mysqli) {
 
     $module = '';
   } else {
-    $paper_modules = explode(',', $tmp_module);  // Get the modules off the paper properties
-    $module = $paper_modules[0];
+    $paper_modules = Paper_utils::get_modules($_GET['paperID'],$mysqli);  // Get the modules from paper properties
+    $module = array_slice($paper_modules,0,1);
+    $module = $module[0];
     $folder = '';
   }
 
@@ -773,7 +768,7 @@ function check_latex_random($q_ids, $mysqli) {
     $OKmodules = array();
     $module_split = explode(',', $module);
     foreach ($module_split as $individual_module) {
-      if (in_array(strtoupper($individual_module), $teams)) {
+      if (in_array(strtoupper($individual_module), $staff_modules)) {
         $OKmodules[] = $individual_module;
       }
     }
@@ -891,8 +886,8 @@ function check_latex_random($q_ids, $mysqli) {
     if ($temp_array[$x]['ownerID'] == $userID or $paper_ownerID == $userID or strpos($userroles,'SysAdmin') !== false) {
       $teamOK = true;
     } else {
-      foreach ($teams as $individual_team) {
-        if ($individual_team == $temp_array[$x]['q_group']) $teamOK = true;
+      foreach ($staff_modules as $individual_team) {
+        if (in_array($individual_team,$temp_array[$x]['q_group'])) $teamOK = true;
       }
     }
 

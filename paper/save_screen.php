@@ -27,19 +27,23 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
+require_once '../classes/paperutils.class.php';
+
 $displayDebug = false; //ajax call so debug info messes up the output
 
 check_var('id', 'GET', true, false);
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year, password FROM properties WHERE crypt_name=? LIMIT 1");
+$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, password FROM properties WHERE crypt_name=? LIMIT 1");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
-$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year, $password);
+$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $calendar_year, $password);
 $stmt->fetch();
 $stmt->close();
 
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+
+$moduleID = Paper_utils::get_modules($property_id,$mysqli);
 
 if (strpos($userroles,'Student') !== false) {
 

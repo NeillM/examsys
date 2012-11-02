@@ -162,7 +162,7 @@ if ($paper_type == '2' and $cfg_summative_mgmt) {
 <?php
   $next_flag = 1;
   echo '<tr><td style="text-align:right">' . $string['academicsession'] . '</td><td>';
-  $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM student_modules ORDER BY calendar_year DESC");
+  $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
   $module_details->execute();
   $module_details->bind_result($calendar_year);
   echo "<select name=\"session\">\n";
