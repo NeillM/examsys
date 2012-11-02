@@ -4676,7 +4676,7 @@ QUERY;
     $res->execute(); 
     $res->bind_result($id,$moduleid);
     $modules = array();
-    while($res->fetch()) {
+    while ($res->fetch()) {
       $modules[$moduleid] = $id;
     }
     $res->close();
@@ -4685,12 +4685,12 @@ QUERY;
     $res->execute(); 
     $res->store_result();
     $res->bind_result($property_id, $moduleID);
-    $insert_res = $mysqli->prepare("INSERT INTO properties_modules VALUES (?,?)");
-    echo "<br/>Populating properties_modules ";
+    $insert_res = $mysqli->prepare("INSERT INTO properties_modules VALUES (?, ?)");
+    echo "<br />Populating properties_modules ";
     $i = 0;
-    while($res->fetch()) {
+    while ($res->fetch()) {
       $paper_modules = explode(',',$moduleID);
-      foreach($paper_modules as $m) {
+      foreach ($paper_modules as $m) {
         $insert_res->bind_param('ii', $property_id, $modules[$m]);
         $insert_res->execute();
       }
@@ -4722,14 +4722,14 @@ QUERY;
     $insert_res = $mysqli->prepare("INSERT INTO questions_modules VALUES (?,?)");
     echo "<br/>Populating questions_modules ";
     $i = 0;
-    while($res->fetch()) {
+    while ($res->fetch()) {
       $questions_modules = explode(',',$moduleID);
       foreach($questions_modules as $m) {
         $insert_res->bind_param('ii', $q_id, $modules[$m]);
         $insert_res->execute();
       }
       echo ".";
-      if($i % 80 == 0) echo "\n";
+      if ($i % 80 == 0) echo "\n";
       ob_flush();
       flush();
     }
@@ -4753,12 +4753,12 @@ QUERY;
     $res->execute(); 
     $res->store_result();
     $res->bind_result($folder_id, $team_name);
-    $insert_res = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES (?,?)");
-    echo "<br/>Populating properties_modules ";
+    $insert_res = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES (?, ?)");
+    echo "<br />Populating properties_modules ";
     $i = 0;
-    while($res->fetch()) {
+    while ($res->fetch()) {
       $folder_modules = explode(',',$moduleID);
-      foreach($folder_modules as $m) {
+      foreach ($folder_modules as $m) {
         $insert_res->bind_param('ii', $folder_id, $modules[$m]);
         $insert_res->execute();
       }
@@ -4785,18 +4785,18 @@ QUERY;
                     'student_modules' => 'moduleid', 
                     'teams' => 'name'
                     );
-    foreach($tables as $table => $col) {
+    foreach ($tables as $table => $col) {
       echo "<li>UPDATEING $col in $table</li>";
       ob_flush();
       flush();
-      foreach($modules as $code => $id) { 
+      foreach ($modules as $code => $id) { 
         $mysqli->query("UPDATE $table set $col = $id WHERE $col = '$code'");
       }
     }
     //rename and rename and retype the columns 
     $tables['reference_modules'] = 'moduleID'; //this just needs renaming
     $tables['users_metadata'] = 'moduleID'; //this just needs renaming
-    foreach($tables as $table => $col) {
+    foreach ($tables as $table => $col) {
       echo "<li>ALTER TABLE $table CHANGE $col idMod INTEGER DEFAULT NULL </li>";
       $mysqli->query("ALTER TABLE $table CHANGE $col idMod INTEGER DEFAULT NULL");
     }
@@ -4806,11 +4806,28 @@ QUERY;
     ob_flush();
     flush();
 
-    $mysqli->query("ALTER TABLE sessions ADD PRIMARY KEY(identifier,idMod,calendar_year)");
+    $mysqli->query("ALTER TABLE sessions ADD PRIMARY KEY(identifier, idMod, calendar_year)");
 
     //TODO Indexes and GRANTS
   }
   $result->close();
+  
+  // 02/11/2012 - Add new field to special_needs table.
+  $findsql = "SELECT column_type from information_schema.COLUMNS where TABLE_NAME='special_needs'  and TABLE_SCHEMA='". $cfg_db_database . "'  and column_name='unanswered'";
+  $result = $mysqli->prepare($findsql);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($column_type);
+  $result->fetch();
+  if ($result->num_rows() == 0) {
+    $sql = "ALTER TABLE `special_needs` ADD COLUMN `unanswered` varchar(20)";
+    $adjust = $mysqli->prepare($sql);
+    $adjust->execute();
+    $adjust->close();
+    echo "<li>$sql</li>";
+  }
+  $result->close();
+  
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
