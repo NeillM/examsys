@@ -28,12 +28,12 @@ require_once '../classes/userutils.class.php';
 
 if (isset($_POST['submit'])) {
   // Clear the team of all members.
-  UserUtils::clear_team_by_userID($_POST['userID'], $mysqli);
+  UserUtils::clear_staff_modules_by_userID($_POST['userID'], $mysqli);
   
   // Insert a record for each team member.
   for ($i=0; $i<$_POST['module_no']; $i++) {
     if (isset($_POST["mod$i"]) and $_POST["mod$i"] != '') {
-      UserUtils::add_staff_to_team($_POST['userID'], $_POST["mod$i"], $mysqli);
+      UserUtils::add_staff_to_module($_POST['userID'], $_POST["mod$i"], $mysqli);
     }
   }
 ?>
@@ -101,12 +101,12 @@ if (isset($_POST['submit'])) {
 
 <?php
   $user_teams = array();
-  $result = $mysqli->prepare("SELECT name FROM teams WHERE type='System' AND memberID=?");
+  $result = $mysqli->prepare("SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND type='System' AND memberID=?");
   $result->bind_param('i', $_GET['userID']);
   $result->execute();
-  $result->bind_result($name);
+  $result->bind_result($moduleID, $idMod);
   while ($result->fetch()) {
-    $user_teams[] = $name;
+    $user_modules[$idMod] = $moduleID;
   }
   $result->close();
 
@@ -114,23 +114,18 @@ if (isset($_POST['submit'])) {
   $mod_no = 0;
   echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:12px 4px 8px 4px; font-size:90%\" id=\"list\">";
   
-  $result = $mysqli->prepare("SELECT school, moduleid, fullname FROM modules, schools WHERE modules.schoolid=schools.id AND active=1 ORDER BY school, moduleid");
+  $result = $mysqli->prepare("SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid=schools.id AND active=1 ORDER BY school, moduleid");
   $result->execute();
-  $result->bind_result($school, $moduleid, $fullname);
+  $result->bind_result($school, $moduleid, $fullname, $idMod);
   while ($result->fetch()) {
     if ($old_school != $school) {
       echo "<table border=\"0\" style=\"margin-top:10px; width:100%; background-color:white; color:#1E3287\"><tr><td><nobr>$school</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     }
-  
-    $match = false;
-    foreach ($user_teams as $individual_team) {
-      if ($individual_team == $moduleid) $match = true;
-    }
    
-    if ($match == true) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" value=\"$moduleid\" checked />";
+    if (isset($user_modules[$idMod])) {
+      echo "<div style=\"background-color:#B3C8E8\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" value=\"$idMod\" checked />";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" value=\"$moduleid\" />";
+      echo "<div style=\"background-color:white\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" value=\"$idMod\" />";
     }
     echo "&nbsp;$moduleid: $fullname</span></div>\n";
     $old_school = $school;

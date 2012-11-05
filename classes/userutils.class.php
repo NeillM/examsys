@@ -124,13 +124,13 @@ Class UserUtils {
    * Add a member of staff onto a team.
    *
    * @param integer $tmp_userID UserID of the member of staff
-   * @param string $module the name of the team (module)
+   * @param string $idmod the name of the team (module)
    * @param object $db mysqli database connection
    *
    */
-  static function add_staff_to_team($tmp_userID, $module, $db) {
-    $stmt = $db->prepare("INSERT INTO teams VALUES (NULL, ?, ?, NULL, 'System')");
-    $stmt->bind_param('si', $module, $tmp_userID);
+  static function add_staff_to_module($tmp_userID, $idMod, $db) {
+    $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NULL, 'System')");
+    $stmt->bind_param('si', $idMod, $tmp_userID);
     $stmt->execute();
     $stmt->close();
   }
@@ -142,9 +142,9 @@ Class UserUtils {
    * @param object $db mysqli database connection
    *
    */
-  static function clear_team_by_team_name($team_name, $db) {
-    $result = $db->prepare("DELETE FROM teams WHERE name=?");
-    $result->bind_param('s', $team_name);
+  static function clear_staff_modules_by_moduleID($moduleID, $db) {
+    $result = $db->prepare("DELETE FROM modules_staff WHERE idMod = (SELECT idMod FROM modules WHERE moduleid=? limit 1");
+    $result->bind_param('s', $moduleID);
     $result->execute();
     $result->close();
   }
@@ -156,8 +156,8 @@ Class UserUtils {
    * @param object $db mysqli database connection
    *
    */
-  static function clear_team_by_userID($tmp_userID, $db) {
-    $result = $db->prepare("DELETE FROM teams WHERE memberID=?");
+  static function clear_staff_modules_by_userID($tmp_userID, $db) {
+    $result = $db->prepare("DELETE FROM modules_staff WHERE memberID=?");
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->close();
@@ -171,7 +171,7 @@ Class UserUtils {
    * @return array list of UserIDs for member of the team
    *
    */
-  static function get_team_list_by_name($team_name, $db) {
+  static function get_staff_modules_list_by_name($team_name, $db) {
     $team_members = array();
     $result = $db->prepare("SELECT memberID FROM teams WHERE name=?");
     $result->bind_param('s', $team_name);
