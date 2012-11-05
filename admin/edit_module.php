@@ -71,26 +71,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $result->execute();
   $result->close();
 
-  // Update other tables if the Module ID has changed.
-  if ($_POST['old_moduleid'] != trim($_POST['moduleid'])) {
-    //TODO this can be removed soon 
-    // Questions
-    $tmp_old_moduleid = '%' . $_POST['old_moduleid'] . '%';
-    $stmt = $mysqli->prepare("SELECT q_id, q_group FROM questions WHERE q_group LIKE ?");
-    $stmt->bind_param('s', $tmp_old_moduleid);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($q_id, $question_moduleID);
-    while ($stmt->fetch()) {
-      $question_moduleID = str_replace($_POST['old_moduleid'], trim($_POST['moduleid']), $question_moduleID);
-      $result = $mysqli->prepare("UPDATE questions SET q_group=? WHERE q_id=?");
-      $result->bind_param('si', $question_moduleID, $q_id);
-      $result->execute();
-      $result->close();
-    }
-    $stmt->close();
-  }
-
   $mysqli->close();
   header("location: list_modules.php");
 } else {
