@@ -9,5 +9,6 @@ $string['msg1'] = "Rogō can bulk upload student module enrolements. The first r
 $string['msg2'] = "The extra (optional) field 'Attempt' can be used to store attempt number for resit purposes. If left blank 1 is assumed for 1st attempt.";
 $string['addingmodules'] = 'Adding Modules From';
 $string['missingusers'] = 'Missing users';
+$string['missingmodules'] = 'Missing modules';
 $string['enrolementsperformed'] = 'Enrolements performed';
 ?>

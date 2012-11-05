@@ -77,16 +77,17 @@ require_once '../classes/userutils.class.php';
         <?php
         // Get a list of modules held by Rogo.
         $module_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT moduleid FROM modules");
+        $result = $mysqli->prepare("SELECT DISTINCT id, moduleid FROM modules");
         $result->execute();
-        $result->bind_result($moduleid);
+        $result->bind_result($idMod, $moduleid);
         while ($result->fetch()) {
-          $module_list[] = $moduleid;
+          $module_list[$moduleid] = $idMod;
         }
         $result->close();
 
         $modulesAdded = 0;
         $missing_users = array();
+        $unknow_ModuleID = array();
         $lines = file($cfg_tmpdir . $userID . "_cohort_update.csv");
 
         // Build an array of unique student names.
@@ -112,13 +113,13 @@ require_once '../classes/userutils.class.php';
           if ($student_databaseID !== false) {
             $students[$student['sid']]['dbID'] = $student_databaseID;
 
-            $result = $mysqli->prepare("SELECT moduleid, attempt FROM student_modules WHERE userID=? AND calendar_year=?");
+            $result = $mysqli->prepare("SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND  userID=? AND calendar_year=?");
             $result->bind_param('is', $student_databaseID, $student['session']);
             $result->execute();
             $result->store_result();
             $result->bind_result($moduleid, $attempt);
             while ($result->fetch()) {
-              if (in_array($moduleid, $module_list)) {
+              if (isset($module_list[$moduleid])) {
                 $students[$student['sid']]['modules'][$moduleid][] = $attempt;
               }
             }
@@ -128,7 +129,6 @@ require_once '../classes/userutils.class.php';
 
         foreach ($lines as $separate_line) {
           $fields = explode(',', $separate_line);
-
           if (!stristr($fields[0], "ID") and !stristr($fields[0], "Student ID")) {
             $sid = trim($fields[0]);
             $module = trim($fields[1]);
@@ -139,7 +139,7 @@ require_once '../classes/userutils.class.php';
               $attempt = 1;
             }
             
-            if (in_array($module, $module_list)) {
+            if (isset($module_list[$module])) {
               $require_insert = true;
               if (isset($students[$sid]['modules'][$module])) {
                 foreach ($students[$sid]['modules'][$module] as $individual_attempt) {
@@ -148,15 +148,16 @@ require_once '../classes/userutils.class.php';
                   }
                 }
               }
-              
               if ($require_insert) {
                 if (isset($students[$sid]['dbID'])) {
-                  UserUtils::add_student_to_module($students[$sid]['dbID'], $module, $attempt, $session, $mysqli);
+                  UserUtils::add_student_to_module($students[$sid]['dbID'], $module_list[$module], $attempt, $session, $mysqli);
                   $modulesAdded++;
                 } else {
                   $missing_users[$sid]['module'][] = $module;
                 }
               }
+            } else {
+              $unknow_ModuleID[] = $module;
             }
           }
         }
@@ -172,7 +173,10 @@ require_once '../classes/userutils.class.php';
         echo "<p style=\"margin-left:10px\">$moduleid</p>";
       }
     }
-
+    echo "<p>" . count($unknow_ModuleID) . " " . $string['missingmodules'] . "</p>";
+    foreach($unknow_ModuleID as $moduleID) {
+       echo "<p style=\"margin-left:10px\">$moduleID</p>";
+    }
     $mysqli->close();
     ?>
     </div>

@@ -189,18 +189,18 @@ Class UserUtils {
    * Enrole a student on a module.
    *
    * @param int $userID ID of the student to be enroled.
-   * @param string $module Module ID for the enrolement.
+   * @param int $idMod Module ID for the enrolement.
    * @param object $db $mysqli database connection.
    * @return bool return true if successful.
    *
    */
-  static function add_student_to_module($tmp_userID, $module, $attempt, $session, $db, $auto_update = 0) {
-    if (UserUtils::is_user_on_module($tmp_userID, $module, $session, $db)) {
+  static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
+    if (UserUtils::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
       //dont add a user to a module multiple times
       return true;
     } else {
-      $result = $db->prepare("INSERT INTO student_modules VALUES(NULL, ?, ?, ?, ?, ?)");
-      $result->bind_param('issii', $tmp_userID, $module, $session, $attempt, $auto_update);
+      $result = $db->prepare("INSERT INTO modules_student VALUES(NULL, ?, ?, ?, ?, ?)");
+      $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
       $result->execute();
       $result->close();
       if ($db->errno != 0) {
@@ -214,21 +214,20 @@ Class UserUtils {
    * Test to see if a student is on a module.
    *
    * @param int $tmp_userID ID of the student.
-   * @param string $module Module ID for the enrolement.
+   * @param int $idMod Module ID for the enrolement.
    * @param string $session The academic year.
    * @param object $db $mysqli database connection.
    * @return bool return true if successful.
    *
    */
-  static function is_user_on_module($tmp_userID, $module, $session, $db) {
-    $result = $db->prepare("SELECT userID FROM student_modules WHERE userID=? AND moduleid=? AND calendar_year=?");
-    $result->bind_param('iss', $tmp_userID, $module, $session);
+  static function is_user_on_module($tmp_userID, $idMod, $session, $db) {
+    $result = $db->prepare("SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result->bind_param('iss', $tmp_userID, $idMod, $session);
     $result->execute();
     $result->store_result();
     $result->bind_result($tmp_userID);
     $exists = ($result->num_rows > 0);
     $result->close();
-
     return $exists;
   }
 
