@@ -23,6 +23,9 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require '../classes/moduleutils.class.php';
+require '../classes/paperutils.class.php';
+require '../classes/questionutils.class.php';
 
 function stripTrainModule($module_string) {
   $new_modules = array();
@@ -33,19 +36,25 @@ function stripTrainModule($module_string) {
   return implode(',',$new_modules);
 }
 
+// get the id of the TRAIN module
+$trainIdMod = module_utils::get_idMod('TRAIN', $mysqli);
+
 // Clear the TRAIN team
-$update = $mysqli->prepare("DELETE FROM teams WHERE name='TRAIN'");
+$update = $mysqli->prepare("DELETE FROM modules_staff WHERE idMod=?");
+$update->bind_param('i', $trainIdMod);
 $update->execute();
 $update->close();
 
 // Get all the papers on the TRAIN team
-$result = $mysqli->prepare("SELECT property_id, moduleID FROM properties WHERE moduleID like '%TRAIN%'");
+$result = $mysqli->prepare("SELECT properties.property_id FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod = ?");
+$result->bind_param('i', $trainIdMod);
 $result->execute();
 $result->store_result();
-$result->bind_result($paperID, $moduleID);
+$result->bind_result($paperID);
 while ($result->fetch()) {
-  if ($moduleID == 'TRAIN') {
-    // Paper only on the TRAIN module
+    
+    Paper_utils::remove_modules(array($trainIdMod => 'TRAIN'), $paperID, $mysqli);
+
     $q_result = $mysqli->prepare("SELECT question FROM papers WHERE paper=?");
     $q_result->bind_param('i', $paperID);
     $q_result->execute();
@@ -59,46 +68,24 @@ while ($result->fetch()) {
       $check->store_result();
       $check->bind_result($questionID);
       $check->fetch();
-      if ($check->num_rows > 0) {
-        $update = $mysqli->prepare("UPDATE questions SET deleted=NOW(), q_group='', ownerID=-1 WHERE q_id=$questionID");
-        $update->execute();
-        $update->close();
+      if ($check->num_rows == 1) {
+        //delete the question its only on 1 training paper
+        QuestionUtils::delete_question($questionID, $mysqli);
+      } else {
+        //remove from the TRAIN module dont delete ;-) its used elsewhere
+        QuestionUtils::remove_modules(array($trainIdMod => 'TRAIN'), $questionID, $mysqli);
       }
       $check->close();
     }
     $q_result->close();
-    $update = $mysqli->prepare("UPDATE properties SET deleted=NOW(), moduleID='', paper_ownerID=-1 WHERE property_id=$paperID");
-    $update->execute();
-    $update->close();
-  } else {
-    // Paper on other modules as well
-    $update = $mysqli->prepare("UPDATE properties SET moduleID='" . stripTrainModule($moduleID) . "' WHERE property_id=$paperID");
-    $update->execute();
-    $update->close();
-    
-    $q_result = $mysqli->prepare("SELECT question FROM papers WHERE paper=?");
-    $q_result->bind_param('i', $paperID);
-    $q_result->execute();
-    $q_result->store_result();
-    $q_result->bind_result($questionID);
-    
-    while ($q_result->fetch()) {
-      $check = $mysqli->prepare("SELECT q_group FROM questions WHERE q_id=? LIMIT 1");
-      $check->bind_param('i', $questionID);
-      $check->execute();
-      $check->store_result();
-      $check->bind_result($q_group);
-      $check->fetch();
-      
-      $update = $mysqli->prepare("UPDATE questions SET q_group='" . stripTrainModule($q_group) . "' WHERE q_id=$questionID");
-      $update->execute();
-      $update->close();
-      $check->close();
+    //delete the paper if it is not on any other modules
+    $tmp_paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+    if ( count($tmp_paper_modules) == 0) {
+      Paper_utils::delete_paper($paperID, $mysqli);
     }
-  }
 }
 $result->close();
 
 $mysqli->close();
-header("location: index.php");
+//header("location: index.php");
 ?>
