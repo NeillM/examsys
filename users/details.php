@@ -1011,7 +1011,7 @@ if (isset($_POST['update']) and $demo == false) {
   $stmt->bind_result($mod_id, $moduleID, $fullname, $calendar_year, $type, $value);
   while ($stmt->fetch()) {
     echo "<tr><td>&nbsp;$moduleID: $fullname<input type=\"hidden\" name=\"meta_moduleID$metadata_no\" value=\"$mod_id\" /></td><td>$calendar_year<input type=\"hidden\" name=\"meta_calendar_year$metadata_no\" value=\"$calendar_year\" /></td><td>$type<input type=\"hidden\" name=\"meta_type$metadata_no\" value=\"$type\" /></td><td><select name=\"meta_value$metadata_no\">";
-    $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE calendar_year=? AND moduleID=? AND type=?");
+    $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE calendar_year=? AND idMod=? AND type=?");
     $result->bind_param('sis', $calendar_year, $mod_id, $type);
     $result->execute();
     $result->store_result();
