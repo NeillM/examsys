@@ -15,7 +15,7 @@ $string['importedquestions'] = 'Zaimportowano %d pytań.';
 $string['backtopaper'] = 'Powrót do arkusza';
 $string['errmsg1'] = 'Ten typ eksportu nie jest obsługiwany';
 $string['errmsg2'] = 'Ten typ importu nie jest obsługiwany';
-// Niko
+
 $string['invalidxml'] = '%s jest nieprawidłowym plikiem XML';
 $string['invalidzip'] = 'Załadowano nieprawidłowy plik ZIP';
 $string['noqtiinzip'] = 'Brak plików QTI XML w pliku ZIP';
