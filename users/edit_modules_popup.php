@@ -60,24 +60,18 @@
       echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
     }
     
-    $mod_count = count($mod);
-    for ($module_no=0; $module_no<$mod_count; $module_no++) {
-      $moduleid = $mod[$module_no]['id'];
-      $fullname = $mod[$module_no]['fullname'];
+    foreach($mod as $idMod => $mod_info) {
+      $moduleid = $mod_info['moduleid'];
+      $fullname = $mod_info['fullname'];
       
       if ($old_letter != strtoupper(substr($moduleid,0,1))) {
         echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
       }
-
-      $match = false;
-      foreach ($student_mod as $tmp_module) {
-        if ($tmp_module['id'] == $moduleid and $tmp_module['attempt'] == $id) $match = true;
-      }
    
-      if ($match == true) {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $module_no . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $module_no . "')\" name=\"mod" . $id . "_" . $module_no . "\" value=\"" . $moduleid . "\" checked />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
+      if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
+        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" checked />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
       } else {
-        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $module_no . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $module_no . "')\" name=\"mod" . $id . "_" . $module_no . "\" value=\"" . $moduleid . "\" />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
+        echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $idMod . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $idMod . "')\" name=\"mod" . $id . "_" . $idMod . "\" value=\"" . $idMod . "\" />&nbsp;$moduleid:&nbsp;$fullname</div>\n";
       }
       $old_letter = strtoupper(substr($moduleid,0,1));
     }
@@ -87,7 +81,7 @@
   if (isset($_POST['submit'])) {
     for ($attempt=1; $attempt<=3; $attempt++) {
       // Clear the student of all modules.
-      $result = $mysqli->prepare("DELETE FROM student_modules WHERE userID=? AND calendar_year=? AND attempt=?");
+      $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID=? AND calendar_year=? AND attempt=?");
       $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
       $result->execute();  
       $result->close();
@@ -95,8 +89,8 @@
       // Insert a record for each module.
       for ($i=0; $i<$_POST['mod_count']; $i++) {
         if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
-          $result = $mysqli->prepare("INSERT INTO student_modules VALUES (NULL,?,?,?,?,0)");
-          $result->bind_param('issi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
+          $result = $mysqli->prepare("INSERT INTO modules_student VALUES (NULL,?,?,?,?,0)");
+          $result->bind_param('iisi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
           $result->execute();
           $result->close();
         }
@@ -185,15 +179,13 @@
 <?php
   // Get existing modules for the user in passed calendar year.
   $student_modules = array();
-  $student_mod_count = 0;
-  $result = $mysqli->prepare("SELECT moduleid, attempt FROM student_modules WHERE userID=? AND calendar_year=?");
+  $result = $mysqli->prepare("SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID=? AND calendar_year=?");
   $result->bind_param('is', $_GET['userID'], $session);
   $result->execute();
-  $result->bind_result($moduleid, $attempt);
+  $result->bind_result($idMod, $moduleid, $attempt);
   while ($result->fetch()) {
-    $student_modules[$student_mod_count]['id'] = $moduleid;
-    $student_modules[$student_mod_count]['attempt'] = $attempt;
-    $student_mod_count++;
+    $student_modules[$idMod]['moduleid'] = $moduleid;
+    $student_modules[$idMod]['attempt'] = $attempt;
   }
   $result->close();
 
@@ -202,13 +194,13 @@
   $modules = array();
   $mod_count = 0;
   
-  $result = $mysqli->prepare("SELECT moduleid, fullname FROM modules, schools WHERE modules.schoolid=schools.id AND active=1 ORDER BY moduleid");
+  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid=schools.id AND active=1 ORDER BY moduleid");
   $result->execute();
   $result->store_result();
-  $result->bind_result($moduleid, $fullname);
+  $result->bind_result($idMod, $moduleid, $fullname);
   while ($result->fetch()) {
-    $modules[$mod_count]['id'] = $moduleid;
-    $modules[$mod_count]['fullname'] = $fullname;
+    $modules[$idMod]['moduleid'] = $moduleid;
+    $modules[$idMod]['fullname'] = $fullname;
     $mod_count++;
   }
   $result->close();
