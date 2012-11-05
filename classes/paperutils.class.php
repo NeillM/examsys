@@ -90,6 +90,21 @@ Class Paper_utils {
     $editProperties->close();
   }
 
+  /**
+  * remove modules from a paper 
+  * @param $paper_modules an array of modules keyed on idMod
+  * @param $paperID the id of the paper or property_id
+  * @return void 
+  */
+  static function remove_modules($paper_modules, $paperID, $db) {
+    $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod=?");
+    foreach ($paper_modules as $idMod => $ModuleID) {
+      $remove->bind_param('ii', $paperID, $idMod);
+      $remove->execute();
+    }
+    $remove->close();
+  }
+
   static function is_paper_title_unique($title, $db) {
     $unique = true;
     $result = $db->prepare("SELECT property_id FROM properties WHERE paper_title=? LIMIT 1");
@@ -104,6 +119,19 @@ Class Paper_utils {
       $unique = false;
     }
     return $unique;
+  }
+
+  /**
+  * Delete a paper from rogo (N.B sets the deleted field we don't actuality delete the row form the papers table)
+  * @param $paperID the id of the paper or property_id
+  * @return void 
+  */
+  static function delete_paper($paperID, $db) {
+    //delete the paper
+    $update = $db->prepare("UPDATE properties SET deleted=NOW(), paper_ownerID=-1 WHERE property_id=?");
+    $update->bind_param('i', $paperID);
+    $update->execute();
+    $update->close();
   }
 
 }

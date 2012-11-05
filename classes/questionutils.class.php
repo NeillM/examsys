@@ -150,7 +150,7 @@ SQL;
   /**
   * add modules to a question ignoring any duplicates  
   * @param $modules an array of modules keyed on idMod
-  * @param $paperID the id of the paper or property_id
+  * @param $q_id the id of the question
   * @return void 
   */
   static function add_modules($modules, $q_id, $db) {
@@ -160,6 +160,35 @@ SQL;
       $update->execute();
     }
     $update->close();
+  }
+
+  /**
+  * remove a module from a question  
+  * @param $idMod an array of modules to remove keyed on idMod
+  * @param $q_id the id of the question or property_id
+  * @return void 
+  */
+  static function remove_modules($modules, $q_id, $db) {
+    $update = $db->prepare("DELETE FROM questions_modules WHERE q_id = ? AND idMod = ?");
+    foreach ($modules as $idMod => $ModuleID) {
+      $update->bind_param('ii', $q_id, $idMod);
+      $update->execute();
+    }
+    $update->close();
+  }
+
+/**
+  * remove a question from rogo (N.B sets the deleted field we don't actuality delete the row form the questions table)  
+  * @param $idMod an array of modules to remove keyed on idMod
+  * @param $q_id the id of the question or property_id
+  * @return void 
+  */
+  static function delete_question($q_id, $db) {
+    $delete = $db->prepare("UPDATE questions SET deleted=NOW() WHERE q_id=?");
+    $delete->bind_param('i', $q_id);
+    $delete->execute();
+    $delete->close();
+    //TODO:: If we delete a question should we remove it from any staff_modules?
   }
 
   static function lock_question($q_id, $db) {
