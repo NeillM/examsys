@@ -83,13 +83,15 @@ require_once 'ldap.php';
  */
 
 function db_userlookup($u, $db, $useridlookup = false) {
-  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+  //global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
   global $cfg_db_student_user, $cfg_db_student_passwd;
   global $cfg_db_external_user, $cfg_db_external_passwd;
   global $cfg_db_inv_user, $cfg_db_inv_passwd;
+
+  global $db_errors, $cfg_install_type, $cfg_db_database, $string;
 
   if ($u == '') {
     return false;
@@ -120,10 +122,10 @@ function db_userlookup($u, $db, $useridlookup = false) {
   return array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username);
 }
 
-function db_change_user($db) {
+function db_change_user($db,$userObject) {
 
 
-  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+//  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
@@ -131,6 +133,9 @@ function db_change_user($db) {
   global $cfg_db_external_user, $cfg_db_external_passwd;
   global $cfg_db_inv_user, $cfg_db_inv_passwd;
 
+  global $db_errors, $cfg_install_type, $cfg_db_database, $string;
+
+  $userroles = $userObject->old_getuserroles();
   //select the aproprate database user
   if (strpos($userroles, 'SysAdmin') !== false) {
     $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
@@ -153,17 +158,20 @@ function db_change_user($db) {
   return true;
 }
 
-function db_auth($u, $p, $db, $changeuser = true) {
+function db_auth($u, $p, $db, $changeuser = true, &$userObject) {
   // return 0 if password or user missing, -1 if no user in table, -2 if password doesnt match, -3 if cant change user
 
 
-  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string, $cfg_encrypt_salt;
+  //global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string, $cfg_encrypt_salt;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
   global $cfg_db_student_user, $cfg_db_student_passwd;
   global $cfg_db_external_user, $cfg_db_external_passwd;
   global $cfg_db_inv_user, $cfg_db_inv_passwd;
+
+  global $db_errors, $cfg_install_type, $cfg_db_database, $string,$cfg_encrypt_salt,$cfg_db_database;
+
 
   if ($u == '') {
     return 0;
@@ -175,7 +183,10 @@ function db_auth($u, $p, $db, $changeuser = true) {
   $record_no = 0;
 
   //look up user based on username and set globals
-  list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($u, $db);
+  $array = db_userlookup($u, $db);
+  list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = $array;
+
+  $userObject->old_load($array);
 
   if ($record_no > 0) {
 
@@ -212,7 +223,7 @@ function db_auth($u, $p, $db, $changeuser = true) {
       }
 
       if ($changeuser) {
-        $ret2 = db_change_user($db);
+        $ret2 = db_change_user($db,$userObject);
         if ($ret2 === false) {
           $ret = -3;
         } else {
@@ -312,7 +323,8 @@ function gen_password($len = 8) {
 *
 */
 function get_staff_modules($userID, $db) {
-  $teams = array();
+  error_disp("GET_STAFF_MODULE called");
+  $staff_modules = array();
 
   $result = $db->prepare("SELECT idMod,moduleID FROM modules_staff,modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
   $result->bind_param('i', $userID);
@@ -326,4 +338,14 @@ function get_staff_modules($userID, $db) {
   return $staff_modules;
 }
 
+function error_disp($message,$level=E_USER_WARNING) {
+
+  $str='';
+  $caller=debug_backtrace();
+  array_shift($caller);
+  foreach($caller as $key=>$called) {
+    $str=$str . '<br>#' . $key . ' ' . $called['function'] . ' called at [' . $called['file'] . ':' . $called['line'] . ']';
+  }
+  trigger_error($message  . $str, $level);
+}
 ?>

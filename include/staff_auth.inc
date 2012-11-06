@@ -25,8 +25,9 @@
  */
 
 require_once 'staff_student_auth.inc';
+global $userObject;
 
-if (strpos($userroles, 'Staff') === false AND strpos($userroles, 'External Examiner') === false) {
+if (!$userObject->HasRole('Staff', 'ExternalExaminer')) {
   access_denied('You are attempting to access a <strong>Staff Only</strong> page.', true);
 }
 
@@ -44,17 +45,17 @@ $external_allowed_pages = array(
                               '/reviews/start.php'=>1,
                               '/reviews/finish.php'=>1
                             );
-if (strpos($userroles, 'External Examiner') !== false) {
+if ($userObject->HasRole('ExternalExaminer')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/reviews/");
   }
 }
 
 // Get teams if the user is not an External Examiner.
-if(strpos($userroles, 'External Examiner') !== false) {  
+if($userObject->HasRole('ExternalExaminer')) {
   $staff_modules = array();
 } else {
-  $staff_modules = get_staff_modules($userID, $mysqli);
+  $staff_modules = $userObject->GetStaffModules();
 }
 
 $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
@@ -63,10 +64,10 @@ $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative 
 //default security checks
 //
 
-if (strpos($userroles, 'SysAdmin') !== false) {
+if ($userObject->HasRole('SysAdmin')) {
   //sysadmin can access any thing !!!
 
-} elseif (strpos($userroles, 'Admin') !== false) {
+} elseif ($userObject->HasRole('Admin')) {
   //For 'Admin' users look up permissions from 'admin_access' table.
 
   $on_staff_module = false;
