@@ -28,7 +28,7 @@ require '../include/std_set_shared_functions.inc';
 $paperID = $_GET['paperID'];
 
 function displayReview($review) {
-  global $userID, $userroles;
+  global $REPLACEMEuserIDold, $userroles;
   
   $setter_id = $review['setter_id'];
   

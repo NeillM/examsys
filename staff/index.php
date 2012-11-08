@@ -321,9 +321,14 @@ require_once '../include/staff_auth.inc';
   }
 
   $mysqli->close();
-?>
-</div>
-</div>
 
+
+
+  ?>
+
+
+</div>
+</div>
 </body>
 </html>
+

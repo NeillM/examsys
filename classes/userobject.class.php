@@ -100,7 +100,7 @@ class UserObject {
       // assume array
       if($exclusive == 0 or ($exclusive == 1 and count($this->roles) == count($roles))) {
         foreach($roles as $role) {
-          if($isset($this->roles[$role])) {
+          if(isset($this->roles[$role])) {
             return true;
           }
         }
@@ -117,7 +117,7 @@ class UserObject {
     return $this->year;
   }
 
-  function GetUserID() {
+  function &GetUserID() {
     return $this->userID;
   }
 
@@ -144,5 +144,17 @@ class UserObject {
 
     return $this->staffModules;
 
+  }
+
+  function IsSpecialNeeds() {
+    if($this->special_needs != 0) {
+      return true;
+    }
+    return false;
+  }
+
+
+  function GetGrade() {
+    return $this->grade;
   }
 }

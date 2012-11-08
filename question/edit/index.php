@@ -35,7 +35,7 @@ require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
 require_once '../../include/mapping.inc';
 
-$state = $stateutil->getState($userID, $mysqli);
+$state = $stateutil->getState($userObject->GetUserID(), $mysqli);
 
 $question = null;
 $logger = new Logger($mysqli);
@@ -63,9 +63,9 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
     $critical_error = sprintf($string['typeinvalid'], htmlentities($_GET['type']));
   } else {
     try {
-      $question = Question::question_factory($mysqli, $userID, $string, $_GET['type']);
+      $question = Question::question_factory($mysqli, $userObject->GetUserID(), $string, $_GET['type']);
       $question->set_type($_GET['type']);
-      $question->set_owner_id($userID);
+      $question->set_owner_id($userObject->GetUserID());
       $question->set_teams(Paper_utils::get_modules($paper_id, $mysqli));
     } catch (ClassNotFoundException $ex) {
       $critical_error = $ex->getMessage();
@@ -76,7 +76,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   $mode = $string['edit'];
   
   try {
-    $question = Question::question_factory($mysqli, $userID, $string, $_REQUEST['q_id']);
+    $question = Question::question_factory($mysqli, $userObject->GetUserID(), $string, $_REQUEST['q_id']);
   } catch (Exception $ex) {
     $critical_error = $ex->getMessage();
   }
@@ -118,7 +118,7 @@ if ($critical_error == '') {
   // If existing question, check how many summative papers it is on
   if ($mode == 'Edit') {
     $paper_count = $question->get_other_summative_count($paper_id);
-  }
+  } //TODO why is this block and above in distinct if statements
 
   // Get any existing media
   $current_media = $question->get_media();
@@ -483,7 +483,7 @@ if ($critical_error == '') {
 <?php
   $banner_spacer = '';
   $editor = $question->get_checkout_author_name();
-  $q_disabled = check_edit_rights($question->id, $question->get_checkout_author_id(), $editor, $question->get_checkout_time('timestamp'), $question->get_locked(), $mysqli);
+  $q_disabled = check_edit_rights($question->id, $question->get_checkout_author_id(), $editor, $question->get_checkout_time('timestamp'), $question->get_locked(), $mysqli, $userObject);
 
   if ($q_disabled != '') {
     $banner_spacer = ' class="banner-spaced"';

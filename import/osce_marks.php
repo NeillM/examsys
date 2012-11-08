@@ -25,7 +25,7 @@
 require '../include/staff_auth.inc';
 
 function marks_from_file($fileName, $mysqlidb) {
-  global $userID;
+  global $REPLACEMEuserIDold;
 
   // Get properties of the paper.
   $result = $mysqlidb->prepare("SELECT property_id, moduleID, calendar_year, start_date, marking FROM properties WHERE property_id=?");

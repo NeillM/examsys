@@ -83,7 +83,7 @@ require_once 'ldap.php';
  */
 
 function db_userlookup($u, $db, $useridlookup = false) {
-  //global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+  //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
@@ -125,7 +125,7 @@ function db_userlookup($u, $db, $useridlookup = false) {
 function db_change_user($db,$userObject) {
 
 
-//  global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
+//  global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
@@ -158,11 +158,11 @@ function db_change_user($db,$userObject) {
   return true;
 }
 
-function db_auth($u, $p, $db, $changeuser = true, &$userObject) {
+function db_auth($u, $p, $db, $changeuser = true, $userObject) {
   // return 0 if password or user missing, -1 if no user in table, -2 if password doesnt match, -3 if cant change user
 
 
-  //global $userID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string, $cfg_encrypt_salt;
+  //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string, $cfg_encrypt_salt;
   global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
   global $cfg_db_admin_user, $cfg_db_admin_passwd;
   global $cfg_db_staff_user, $cfg_db_staff_passwd;
@@ -338,14 +338,5 @@ function get_staff_modules($userID, $db) {
   return $staff_modules;
 }
 
-function error_disp($message,$level=E_USER_WARNING) {
 
-  $str='';
-  $caller=debug_backtrace();
-  array_shift($caller);
-  foreach($caller as $key=>$called) {
-    $str=$str . '<br>#' . $key . ' ' . $called['function'] . ' called at [' . $called['file'] . ':' . $called['line'] . ']';
-  }
-  trigger_error($message  . $str, $level);
-}
 ?>

@@ -28,15 +28,16 @@ require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
 require_once $cfg_web_root . 'classes/paperutils.class.php';
 
+global $userObject;
 
 $paperID = $_GET['paperID'];
 
 $modules_array = array();
 
-$my_folders_array = get_folders($staff_modules, $userID, $mysqli);
+$my_folders_array = get_folders($staff_modules, $userObject->GetUserID(), $mysqli);
 $full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_array, $mysqli);
 $staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
-$keywords_array = get_keywords($staff_modules, $userID, $mysqli);
+$keywords_array = get_keywords($staff_modules, $userObject->GetUserID(), $mysqli);
 
 if (!isset($paper_title) or $paper_title == '') {
   $max_screen = 0;
@@ -306,10 +307,10 @@ $stmt->close();
 <input type="hidden" name="current_pos" id="current_pos" value="" />
 <?php
 $module_member = false;
-if ($paper_ownerID == $userID or strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
+if ($paper_ownerID == $userObject->GetUserID() or $userObject->HasRole(array('Admin','SysAdmin'))) {
   $module_member = true;
 } else {
-  if(in_array($moduleID, $staff_modules)) {
+  if(in_array($moduleID, $userObject->GetStaffModules())) {
     $module_member = true;
   }
 }

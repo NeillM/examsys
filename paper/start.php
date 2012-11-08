@@ -32,6 +32,8 @@ require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require '../include/paper_security.inc';
 
+global $userObject;
+
 check_var('id', 'GET', true, false);
 
 function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
@@ -167,7 +169,7 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
 
 if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
-if ($special_needs == 1) {
+if ($userObject->IsSpecialNeeds()) {
   $stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?");
   $stmt->bind_param('i', $userID);
   $stmt->execute();
@@ -213,7 +215,7 @@ $attempt = 1; //default attempt to 1 overwritten if the student is resit candida
 
 $moduleID = Paper_utils::get_modules($property_id,$mysqli);
 
-if (stripos($userroles,'Student') !== false) {
+if ($userObject->HasRole('Student')) {
   // Check for additional password on the paper
   check_paper_password($password);
 
@@ -327,7 +329,7 @@ if ($paper_type == '3') {
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <?php
 $css = '';
-if ($special_needs == 1 and $bgcolor != '#FFFFFF') {
+if ($userObject->IsSpecialNeeds() and $bgcolor != '#FFFFFF') {
   $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
 }
 if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
@@ -650,7 +652,7 @@ if ($css != '') {
 </script>
 </head>
 <?php
-if (stripos($userroles,'Student') !== false) {
+if ($userObject->HasRole('Student')) {
   echo '<body oncontextmenu="return false;" onload="StartClock();" onunload="KillClock()">';
 } else {
   echo '<body onload="StartClock();" onunload="KillClock()">';

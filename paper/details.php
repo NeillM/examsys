@@ -737,7 +737,7 @@ function check_latex_random($q_ids, $mysqli) {
     $folder = '';
     $paper_modules = explode(',', $module);
     if (count($paper_modules) > 0) {     // Paper is on multiple modules
-      if (strpos($userroles, 'Admin') !== false) {
+      if ($userObject->HasRole('Admin')) {
         $module = $paper_modules[0];
       } else {
         for ($i=count($paper_modules)-1; $i>0; $i--) {
@@ -764,7 +764,7 @@ function check_latex_random($q_ids, $mysqli) {
     $folder = '';
   }
 
-  if (strpos($userroles,'Admin') === false) {
+  if ($userObject->HasRole('Admin')) {
     $OKmodules = array();
     $module_split = explode(',', $module);
     foreach ($module_split as $individual_module) {
@@ -799,7 +799,7 @@ function check_latex_random($q_ids, $mysqli) {
   } else {
     echo "<tr class=\"retired\">\n";
   }
-  if (strpos($userroles,'Demo') !== false) {
+  if ($userObject->HasRole('Demo')) {
     $paper_owner = 'Mr J, Bloggs';
   }
   echo "<th colspan=\"3\" style=\"font-size:90%;padding-left:10px\"><strong>" . $string['start'] . ":</strong> ";
@@ -883,7 +883,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
     $old_screen = $temp_array[$x]['screen'];
     $teamOK = false;
-    if ($temp_array[$x]['ownerID'] == $userID or $paper_ownerID == $userID or strpos($userroles,'SysAdmin') !== false) {
+    if ($temp_array[$x]['ownerID'] == $userObject->GetUserID() or $paper_ownerID == $userObject->GetUserID() or $userObject->HasRole('SysAdmin')) {
       $teamOK = true;
     } else {
       foreach ($staff_modules as $individual_team) {

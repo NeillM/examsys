@@ -26,7 +26,7 @@
 
 require_once 'staff_student_auth.inc';
   
-if (!$userObject->HasRole('SysAdmin') {
+if (!$userObject->HasRole('SysAdmin')) {
   access_denied($string['accessdeniedsysadmin'], true);
 } 
 

@@ -1099,8 +1099,10 @@ QUERY;
       $editor->execute();
       $editor->bind_result($title, $initials, $surname);
       $editor->fetch();
+      if($editor->num_rows !== 0) {
+        $name = $title . ' ' . $initials . ' ' . $surname;
+      }
       $editor->close();
-      $name = $title . ' ' . $initials . ' ' . $surname;
     }
 
     return $name;
