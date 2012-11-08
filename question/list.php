@@ -25,6 +25,7 @@
 require_once '../include/staff_auth.inc';
 require_once '../lang/' . $language . '/include/question_types.inc';
 require_once '../classes/stateutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 $state = $stateutil->getState($userID, $mysqli);
 
@@ -35,6 +36,7 @@ if (isset($_GET['type'])) {
   if ($_GET['type'] != '%') {
     $typeSQL = " AND q_type = '" . $_GET['type'] . "'";
   }
+}
 if (isset($_GET['userid'])) {
   $userid = $_GET['userid'];
 } else {
@@ -116,28 +118,23 @@ if (isset($_GET['checked'])) {
   if ($_GET['type'] != '%') {
     $bank_type = ': ' . $_GET['type'];
   }
-
+  $staff_modules_sql = '';
   if ($module != '') {
     if (in_array($module, $staff_modules)) {
-      $module_sql = 'q_group LIKE "%' . $module . '%"';
+      $idMod = module_utils::get_idMod($module, $mysqli);
+      $module_sql = "idMod = $idMod";
     } else {
       echo "<tr><td colspan=\"4\">" . $string['notinteam'] . "</td></tr>\n</body>\n</html>\n";
       exit;
     }
   } else {
     if (count($staff_modules) > 0) {
-      $staff_modules_sql = implode("','", $staff_modules);
-      if ($staff_modules_sql != '') $staff_modules_sql = "q_group IN ('$staff_modules')";
-      $staff_modules_sql .= " OR users.id=$userID";
+      $staff_modules_sql = implode(',', array_keys($staff_modules));
+      $staff_modules_sql = " (idMod IN ($staff_modules_sql)";
+      $staff_modules_sql .= " OR users.id=$userID) AND ";
     }
   }
   
-  if ($keyword != '%' and $keyword != '') {
-    $keyword = ' AND keywordID=' . $parts[0];
-  } else {
-    $keyword = '';
-  }
-
   if ($module_sql != '') {
     $module_sql = '(' . $module_sql .') AND';
   } else {
@@ -145,17 +142,23 @@ if (isset($_GET['checked'])) {
     $module_sql .= "users.id=$userID AND";
   }
 
+  if ($keyword != '%' and $keyword != '') {
+    $keyword = ' AND keywordID=' . $parts[0];
+  } else {
+    $keyword = '';
+  }
+
   $hits = 0;
   $display_no = 0;
   
-  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, status FROM (users, questions)";
+  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, status FROM (users, questions, questions_modules)";
   if ($keyword != '%' and $keyword != '') {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }
   if ($state_checked == 'true') {
-    $query_string .= " WHERE $module_sql users.id=questions.ownerID AND ownerID=$userID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND $module_sql $staff_modules_sql users.id=questions.ownerID AND ownerID=$userID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   } else {
-    $query_string .= " WHERE $module_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND $module_sql $staff_modules_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   }
   $search_results = $mysqli->prepare($query_string);
   $search_results->execute();
