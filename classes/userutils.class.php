@@ -229,7 +229,7 @@ Class UserUtils {
     $exists = ($result->num_rows > 0);
     $result->close();
     return $exists;
-  }
+  }  //todo move to userobject
 
   static function fixcase_callback($word) {
     $word = $word[1];
@@ -282,7 +282,7 @@ $module=strtoupper($module);
     else {
       return false;
     }
-  }
+  } //todo move to userobject
 
 }
 

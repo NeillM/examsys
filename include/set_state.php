@@ -21,7 +21,7 @@
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
-
+//todo check if needed and merge with userobject
   require '../include/staff_auth.inc';
   
   $prefix = $protocol . $_SERVER['HTTP_HOST'];

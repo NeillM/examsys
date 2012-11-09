@@ -52,43 +52,6 @@ class UserObject {
     return $this->userroles;
   }
 
-
-  function IsExternalExaminer($exclusive=0) {
-    if($exclusive == 0) {
-      if(isset($this->roles['ExternalExaminer'])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function IsSysAdmin($exclusive=0) {
-    if($exclusive == 0) {
-      if(isset($this->roles['SysAdmin'])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function IsInvigilator($exclusive=0) {
-    if($exclusive == 0) {
-      if(isset($this->roles['Invigilator'])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function IsStaff($exclusive=0) {
-    if($exclusive == 0) {
-      if(isset($this->roles['Staff'])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function HasRole($roles, $exclusive = 0) {
     if (is_string($roles)) {
       if ($exclusive == 0  or ($exclusive == 1 and count($this->roles) == 1)) {
