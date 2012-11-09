@@ -50,8 +50,8 @@ require '../../include/staff_auth.inc';
 </head>
 
 <?php
-  if ((isset($_GET['id']) and $_GET['id'] != '1') or strpos($userroles,'SysAdmin') === false) {   // Don't record the homepage or SysAdmin activities.
-    $query = "INSERT INTO help_log VALUES (NULL, 'staff', $userID, NOW(), " . $_GET['id'] . ")";
+  if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->HasRole('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
+    $query = "INSERT INTO help_log VALUES (NULL, 'staff', " . $userObject->GetUserID() . ", NOW(), " . $_GET['id'] . ")"; //TODO fix the sql to use prepared statement
     if (!$mysqli->query($query)) {
       echo "<p>" . $mysqli->errno . " Error writing to log: $query.</p>";
     }

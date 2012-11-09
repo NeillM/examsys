@@ -256,9 +256,10 @@ Class UserUtils {
   }
 
   static function staff_on_team($module, $db, $tmp_userID = -99) {
-    global $userID;
+    global $REPLACEMEuserIDold;
     if ($tmp_userID == -99) {
-      $tmp_userID = $userID;
+      global $userObject; //TODO FIX THIS!
+      $tmp_userID = $userObject->GetUserID();
     }
 
     $teams = array();

@@ -88,7 +88,7 @@
   $error = array();
   if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     // Copy the properties (properties table)
-    $new_paper_id = copyProperties($userID, $mysqli, $calendar_year, $new_calendar_year, $moduleIDs);
+    $new_paper_id = copyProperties($userObject->GetUserID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs);
 
     // Copy the question pointers (papers table)
     $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper=?");
@@ -116,7 +116,7 @@
     }
   } else {    // Copy the paper and the questions.
     // Copy the properties (properties table)
-    $new_paper_id = copyProperties($userID, $mysqli, $calendar_year, $new_calendar_year, $moduleIDs);
+    $new_paper_id = copyProperties($userObject->GetUserID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs);
   	
     // Copy the question and option data (questions and options tables)
     $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper=? ORDER BY display_pos");
@@ -202,8 +202,8 @@
         if ($marks_correct == '') $marks_correct = 1;
         if ($line == 0) {  // First record - write out the question, all the rest are options.
         	$bloom = (empty($bloom)) ? NULL : $bloom;
-          $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, " . $userID . ", ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
-          $addQuestion->bind_param('sssssssssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
+          $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+          $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->GetUserID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
           $addQuestion->execute();
           $new_qids[] = $question_id = $mysqli->insert_id;
           if($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;
@@ -216,14 +216,14 @@
           $addNewPaper->close();
 
           // Create a track changes record to say where question was copied from.
-          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Copied Question', ?, " . $userID . ", ?, ?, NOW(), 'Copied Question')");
-          $trackChange->bind_param('iss', $question_id, $question, $question_id);
+          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Copied Question', ?, ?, ?, ?, NOW(), 'Copied Question')");
+          $trackChange->bind_param('iiss', $question_id, $userObject->GetUserID(), $question, $question_id);
           $trackChange->execute();
           $trackChange->close();
 
           // Create a track changes record to say new question added to paper.
-          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Alter Paper', ?, " . $userID . ", '', ?, NOW(), 'Add Question')");
-          $trackChange->bind_param('is', $new_paper_id, $question_id);
+          $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Alter Paper', ?, ?, '', ?, NOW(), 'Add Question')");
+          $trackChange->bind_param('iis', $new_paper_id, $userObject->GetUserID(), $question_id);
           $trackChange->execute();
           $trackChange->close();
           
@@ -432,7 +432,7 @@
     $addPaper->close();
     
     //set the modules on the new paper
-    Paper_utils::update_modules($moduleIDs, $new_paper_id, $mysqlidb);
+    Paper_utils::update_modules($moduleIDs, $new_paper_id, $mysqlidb,$userObject);
 
     if ($paper_type == 2 and $cfg_summative_mgmt) {
       if (isset($_POST['barriers_needed'])) {

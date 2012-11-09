@@ -376,7 +376,7 @@ Class webServiceRestAPI extends restAPI {
   public function createAccount() {
     global $userroles;
     
-    if (strpos($userroles,'SysAdmin') === false) {
+    if ($userObject->HasRole('SysAdmin')) {
       return 'accessdenied';
     }
     

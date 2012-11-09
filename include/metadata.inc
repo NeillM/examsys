@@ -26,8 +26,8 @@
   require_once '../../classes/schoolutils.class.php';
   require_once '../../classes/logger.class.php';
   
-  function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled, &$string) {
-    global $staff_modules, $userID, $userroles, $faculty;
+  function render_metadata($mysqlidb, $question, $bloom_on, $module, $disabled, &$string, $userObject) {
+    global $staff_modules, $DISABLEDuserID, $userroles, $faculty;
 
     $current_status = ($question->get_status() == '') ? $string['normal'] : $question->get_status();
     
@@ -105,7 +105,7 @@ META;
     }
     $current_teams = $module;
 
-    $teams_array = search_utils::get_staff_modules($staff_modules, $userroles, $userID, $mysqlidb);
+    $teams_array = search_utils::get_staff_modules($staff_modules, $userroles, $userObject->GetUserID(), $mysqlidb, $userObject);
     
     // Team keyword lists by module
     if (count($module) == 0) {
@@ -122,7 +122,7 @@ META;
 META;
 
     if (count($module) > 0) {
-      $keywords = search_utils::get_keywords($mysqlidb, $module, $userID);
+      $keywords = search_utils::get_keywords($mysqlidb, $module, $userObject->GetUserID());
       $question_keywords = $question->get_keywords();
       
       $i = 0;

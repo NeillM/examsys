@@ -81,7 +81,7 @@ if (isset($_GET['scrOfY'])) {
 </table>
 <?php
   $result = $mysqli->prepare("SELECT name, COUNT(groupID) AS count_no FROM teams WHERE name IN (SELECT name FROM teams WHERE memberID=?) GROUP BY teams.name");
-  $result->bind_param('i', $userID);
+  $result->bind_param('i', $userObject->GetUserID());
   $result->execute();
   $result->bind_result($team_name, $count_no);
   while ($result->fetch()) {

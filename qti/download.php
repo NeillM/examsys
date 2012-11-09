@@ -38,7 +38,7 @@ if (!file_exists($accessfile)) exit;
 $xmlStr = file_get_contents($accessfile);
 $xml = simplexml_load_string($xmlStr);
 
-if ($userID != $xml->owner) exit;
+if ($userObject->GetUserID() != $xml->owner) exit;
 
 $xmlfile = $base_dir.$path."/".$file;
 $ext = strtolower(substr($file, strrpos($file, ".") + 1));

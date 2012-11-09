@@ -100,9 +100,9 @@ function drawHeader($tmp_page_no) {
   echo "<div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . sprintf($string['searchedfor'], $_GET['searchstring']) . "</div>\n<br />\n";
   
   if (isset($_GET['searchstring'])) {
-    if (strpos($userroles,'SysAdmin') !== false) {
+    if ($userObject->HasRole('SysAdmin')) {
       $roles_check = 'AND roles IN ("SysAdmin","Admin","Staff")';
-    } elseif (strpos($userroles,'Admin') !== false) {
+    } elseif ($userObject->HasRole('Admin')) {
       $roles_check = 'AND roles IN ("Admin","Staff")';
     } else {
       $roles_check = 'AND roles="Staff"';
@@ -115,9 +115,9 @@ function drawHeader($tmp_page_no) {
     $search_results->bind_result($id, $title, $score);
     $total_hits = $search_results->num_rows;
     $page_size = 25;
-    if (strpos($userroles,'SysAdmin') === false) {   // Don't record SysAdmin searches.
+    if ($userObject->HasRole('SysAdmin')) {   // Don't record SysAdmin searches.
       $result = $mysqli->prepare("INSERT INTO help_searches VALUES (NULL,'staff',?, NOW(),?,?)");
-      $result->bind_param('isi', $userID, $_GET['searchstring'], $total_hits);
+      $result->bind_param('isi', $userObject->GetUserID(), $_GET['searchstring'], $total_hits);
       $result->execute();  
       $result->close();
     }

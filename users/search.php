@@ -27,7 +27,7 @@
 require '../include/staff_auth.inc';
 require '../include/demo_replace.inc';
 
-if (strpos($userroles,'Demo') !== false) {
+if ($userObject->HasRole('Demo')) {
   $demo = true;
 } else {
   $demo = false;
@@ -422,7 +422,7 @@ if ($sortby == 'title') {
       echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     }
 
-    if (strpos($userroles,'SysAdmin') !== false) {
+    if ($userObject->HasRole('SysAdmin')) {
       echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
       if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
         echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
@@ -506,7 +506,7 @@ if ($sortby == 'title') {
 <script language="JavaScript">
 <?php
   if ($user_data->num_rows > 0) {
-    if (strpos($userroles,'SysAdmin') !== false) {
+    if ($userObject->HasRole('SysAdmin')) {
       echo "document.getElementById('menu3a').style.display = 'none';\n";
       echo "document.getElementById('menu3c').style.display = 'block';\n";
     } else {

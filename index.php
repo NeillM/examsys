@@ -31,9 +31,9 @@ require_once './classes/networkutils.class.php';
 require_once './classes/paperutils.class.php';
 
 // Redirect External Exminers and Invigilators to their own areas.
-  if ($userroles == 'External Examiner') {
+  if ($userObject->HasRole('ExternalExaminer')) {
     header("location: reviews/");
-  } elseif ($userroles == 'Invigilator') {
+  } elseif ($userObject->HasRole('Invigilator')) {
     header("location: invigilator/");
   }
 
@@ -130,7 +130,7 @@ require_once './classes/paperutils.class.php';
         }
         $module_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
         $moduleInfo = $mysqli->prepare("SELECT userID FROM modules_student WHERE userID=? $cal_sql AND idMod IN ($module_in)");
-        $moduleInfo->bind_param('i', $userID);
+        $moduleInfo->bind_param('i', $userObject->GetUserID());
         $moduleInfo->execute();
         $moduleInfo->store_result();
         $moduleInfo->bind_result($tmp_userID);
@@ -138,13 +138,13 @@ require_once './classes/paperutils.class.php';
         if ($moduleInfo->num_rows() > 0) $moduleOK = true;
         $moduleInfo->close();
       } else {
-        $moduleOK = true;
-      }
-    } else {
       $moduleOK = true;
     }
-    if ($machineOK == true and $moduleOK == true) {
-      $paper_display[$paper_no]['paper_title'] = $paper_title;
+  } else {
+  $moduleOK = true;
+}
+if ($machineOK == true and $moduleOK == true) {
+  $paper_display[$paper_no]['paper_title'] = $paper_title;
       $paper_display[$paper_no]['crypt_name'] = $crypt_name;
       $paper_display[$paper_no]['paper_type'] = $paper_type;
       $paper_display[$paper_no]['max_screen'] = $max_screen;
@@ -241,7 +241,7 @@ require_once './classes/paperutils.class.php';
     echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 class=\"dkblue_header\" style=\"margin-left:60px\">" . $string['cannotfindexams'] . "</h1>\n"; 
 
-    if (strpos($userroles,'Staff') !== false) {
+    if ($userObject->HasRole('Staff')) {
       echo "<p style=\"margin-left:60px; color:#C00000\">" . $string['note1'] . " <img src=\"{$cfg_root_path}/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"staff/index.php\" style=\"color:blue\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
     }
 
@@ -262,10 +262,11 @@ require_once './classes/paperutils.class.php';
     echo "<li>" . $string['IPaddress'] . " - " . NetworkUtils::get_ipaddress() . " $computer_lab</li>\n";
     echo "<li>" . $string['Time/Date'] . " - " . date('d/m/Y H:i:s') . "</li>\n";
     echo "<li>" . $string['yearofstudy'] . " - ";
-    if ($year == '') {
+
+    if ($userObject->GetYear() == '') {
       echo '<span style="color:red">' . $string['noyear'] . '</span>';
     } else {
-      echo $year;
+      echo $userObject->GetYear();
     }
     echo "</li>\n";
     echo "<li>" . $string['Modules'] . " - \n";
@@ -274,7 +275,7 @@ require_once './classes/paperutils.class.php';
     $last_cal_year = '';
     $i = 0;
     $info = $mysqli->prepare("SELECT moduleID, calendar_year FROM modules_student,modules WHERE modules.id = modules_student.idMod AND userID=? ORDER BY calendar_year DESC, moduleID");
-    $info->bind_param('i', $userID);
+    $info->bind_param('i', $userObject->GetUserID());
     $info->execute();
     $info->bind_result($user_moduleID, $user_calendar_year);
     $info->store_result();
@@ -293,7 +294,7 @@ require_once './classes/paperutils.class.php';
     $info->close();
     echo "</li>\n";
     echo '<li>' . $string['UserRoles'] . ' - ';
-    $userRolesArray = explode(',', $userroles);
+    $userRolesArray = $userObject->ListUserRoles();
     foreach ($userRolesArray as $ur) {
       if ($ur != 'Student') {
         $ur = str_replace('Demo', '', $ur);
@@ -306,9 +307,9 @@ require_once './classes/paperutils.class.php';
     echo "</li>\n</ul>\n<p style=\"margin-left:60px\">" . $string['try'] . ":</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['f5'] . "</li>\n<li>" . $string['RaiseYourHand '] . "</li>\n</ul>\n";
 
     // Show staff a list of summative papers in the next 6 weeks with a link to test & preview
-    if (strpos($userroles, 'Staff') !== false) {
+    if ($userObject->HasRole('Staff')) {
       if (!isset($staff_modules)){
-        $staff_modules = get_staff_modules($userID, $mysqli);
+        $staff_modules = $userObject->GetStaffModules();
       }
       $papers = array();
       foreach ($staff_modules as $idMod => $moduleID) {

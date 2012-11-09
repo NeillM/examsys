@@ -32,6 +32,6 @@
   $page = $parts[0];
 
   $result = $mysqli->prepare("REPLACE INTO state (userID, state_name, content, page) VALUES (?, ?, ?, ?)");
-  $result->bind_param('isss', $userID, $_REQUEST['state_name'], $_REQUEST['content'], $page);
+  $result->bind_param('isss', $userObject->GetUserID(), $_REQUEST['state_name'], $_REQUEST['content'], $page);
   $result->execute();
 ?>

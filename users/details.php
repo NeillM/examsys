@@ -36,7 +36,7 @@ require_once '../classes/dateutils.class.php';
 
 check_var('userID', 'GET', true, false);
 
-if (strpos($userroles,'Demo') !== false) {
+if ($userObject->HasRole('Demo')) {
   $demo = true;
 } else {
   $demo = false;
@@ -336,7 +336,7 @@ if (isset($_POST['update']) and $demo == false) {
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $_GET['userID']; ?>" method="post">
 <?php
   
-  if (strpos($userroles,'Admin') !== false or strpos($userroles,'SysAdmin') !== false) {
+  if ($userObject->HasRole(array('Admin','SysAdmin'))) {
     if (strpos($tmp_roles,'Student') !== false or stripos($tmp_roles,'graduate') !== false or strpos($tmp_roles,'left') !== false or strpos($tmp_roles,'suspended') !== false) {
       $student_photo =  $cfg_web_root . 'users/photos/' . $original_username . '.jpg';
       $row_no = 7;
@@ -443,10 +443,10 @@ if (isset($_POST['update']) and $demo == false) {
     $old_optgroup = '';
 
     $roles_array = array('#Staff', 'Staff');
-    if (strpos($userroles,'SysAdmin') !== false) {
+    if $userObject->HasRole('SysAdmin')) {
       $roles_array[] = 'Staff,Admin';
       $roles_array[] = 'Staff,SysAdmin';
-    } elseif (strpos($userroles,'Admin') !== false) {
+    } elseif ($userObject->HasRole('Admin')) {
       $roles_array[] = 'Staff,Admin';
     }
     $roles_array[] = 'Staff,Student';
@@ -476,7 +476,7 @@ if (isset($_POST['update']) and $demo == false) {
     }
     echo "</optgroup>\n</select></td></tr>\n";
 
-    if (strpos($userroles, 'SysAdmin') !== false ) {
+    if ($userObject->HasRole('SysAdmin')) {
       echo "<tr><td>&nbsp;" . $string['username'] . "&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"username\" value=\"$username\" /></td><td>&nbsp;" . $string['password'] . "</td><td colspan=\"2\">";
       if ($cfg_use_ldap and array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
         echo $string['externalauth'];
@@ -484,7 +484,7 @@ if (isset($_POST['update']) and $demo == false) {
         $url_email = urlencode($email);
         echo "<input type=\"button\" onclick=\"resetPassword('$url_email')\" value=\"{$string['reset']}\" />";
 
-        if (strpos($userroles, 'SysAdmin')) {
+        if ($userObject->HasRole('SysAdmin')) {
           echo "&nbsp;<input type=\"button\" onclick=\"forceResetPassword('$username')\" value=\"{$string['forcereset']}\" />";
         }
         
@@ -504,7 +504,7 @@ if (isset($_POST['update']) and $demo == false) {
     echo "</select></td><td>&nbsp;" . $string['databaseid'] . "</td><td colspan=\"2\">" . $_GET['userID'] . "</td></tr>\n";
     echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   } else {
-    if (strpos($tmp_roles,'Student') !== false) {
+    if ($userObject->HasRole('Student')) {
       $student_photo =  $cfg_web_root ."users/photos/$username.jpg";
       $row_no = 10;
       if (file_exists($student_photo)) {
@@ -516,7 +516,7 @@ if (isset($_POST['update']) and $demo == false) {
       $row_no = 5;
       echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td width=\"110\">&nbsp;Name</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
     }
-    if (strpos($tmp_roles,'Student') !== false) {
+    if ($userObject->HasRole('Student')) {
       if ($student_id == '') $student_id = $string['unknown'];
       echo "<tr><td>&nbsp;Student ID</td><td>$student_id</td></tr>\n";
     }
@@ -556,7 +556,7 @@ if (isset($_POST['update']) and $demo == false) {
   $results_no = 0;
   $paper = array();
 
-  if (strpos($tmp_roles,'External Examiner') !== false) {      // Get the papers the External is down to review.
+  if ($userObject->HasRole('External Examiner')) {      // Get the papers the External is down to review.
     $external_array = array();
 
     $stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type FROM properties LEFT JOIN review_comments ON property_id=review_comments.q_paper AND reviewer=? WHERE deleted IS NULL AND externals LIKE ? AND reviewed IS NULL ORDER BY paper_title");
@@ -659,7 +659,7 @@ if (isset($_POST['update']) and $demo == false) {
   } elseif ($sortby == 'ipaddress') {
     echo '<tr><td colspan="2" class="coltitle" style="width:240px" onclick="window.location=\'details.php?userID=' . $_GET['userID'] . '&sortby=q_paper&ordering=asc\'">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['papername'] . '&nbsp;</td><td class="coltitle" onclick="window.location=\'details.php?userID=' . $_GET['userID'] . '&sortby=paper_type&ordering=asc\'">' . $string['type'] . '&nbsp;</td><td class="coltitle" onclick="window.location=\'details.php?userID=' . $_GET['userID'] . '&sortby=started&ordering=asc\'">' . $string['started'] . '&nbsp;</td><td class="coltitle" onclick="window.location=\'details.php?userID=' . $_GET['userID'] . '&sortby=duration&ordering=asc\'">' . $string['duration'] . '&nbsp;</td><td class="coltitle" onclick="window.location=\'details.php?userID=' . $_GET['userID'] . '&sortby=ipaddress&ordering=' . $new_order . '\'">' . $string['ipaddress'] . '&nbsp;<img src="../artwork/' . $new_order . '.gif" width="9" height="7" border="0" />&nbsp;</td></tr>';
   }
-  if (strpos($userroles,'Admin') !== false or $userID == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
+  if ($userObject->HasRole('Admin') or $userObject->GetUserID() == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
     for ($i=0; $i<$results_no; $i++) {
       if (strpos($paper[$i]['q_paper'],'[deleted') !== false ) {
         $paper[$i]['q_paper'] = '<span style="color:#808080; text-decoration:line-through">' . $paper[$i]['q_paper'] . '</span>';
@@ -781,7 +781,7 @@ if (isset($_POST['update']) and $demo == false) {
       echo '<tr><td colspan="2"><table border="0" style="padding-top:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $faculty . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
     }
     
-    if (strpos($userroles, 'SysAdmin') === false) {
+    if (!$userObject->HasRole('SysAdmin')) {
       if (in_array($schoolID, $current_schools)) {
       echo "<tr><td style=\"padding-left:20px\">$school</td></tr>\n";
       }
@@ -800,7 +800,7 @@ if (isset($_POST['update']) and $demo == false) {
   }
   $results->close();
   echo "</table>\n</td></tr>\n";
-  if (strpos($userroles, 'SysAdmin') !== false) {
+  if ($userObject->HasRole('SysAdmin')) {
     echo '<tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="' . $string['save'] . '" style="width:100px" /><input type="hidden" name="admin_school_no" value="' . $admin_school_no . '" /></td></tr>';
   }
   ?>
@@ -1043,11 +1043,11 @@ if (isset($_POST['update']) and $demo == false) {
   }
   echo drawTabs('Teams', 4, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td></tr>\n";
-  if (strpos($userroles,'Admin') !== false) {
+  if ($userObject->HasRole('Admin')) {
     echo "<tr><td colspan=\"4\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;" . $string['editteams'] . "</a></td></tr>\n";
   }
   
-  if (strpos($userroles,'Admin') !== false or $userID == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
+  if $userObject->HasRole('Admin') or $userObject->GetUserID() == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
     $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod=modules.id AND memberID=? ORDER BY moduleID");
     $result->bind_param('i', $tmp_id);
     $result->execute();

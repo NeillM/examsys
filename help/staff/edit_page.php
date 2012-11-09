@@ -60,7 +60,7 @@
     exit;
   } elseif (isset($_POST['cancel'])) {
     // Release authoring lock.
-    if ($_POST['checkout_authorID'] == $userID) {
+    if ($_POST['checkout_authorID'] == $userObject->GetUserID()) {
       $result = $mysqli->prepare("UPDATE staff_help SET checkout_time=NULL, checkout_authorID=NULL WHERE id=?");
       $result->bind_param('i', $_POST['edit_id']);
       $result->execute();  
@@ -161,7 +161,7 @@
   // Check for lockout.
   $current_time = date('YmdHis');
   $disabled = '';
-  if ($userID != $page_checkout_authorID) {
+  if ($userObject->GetUserID() != $page_checkout_authorID) {
     if ($page_checkout_time != '' and $current_time - $page_checkout_time < 10000) {
       $editor = $mysqli->prepare("SELECT title, initials, surname FROM users WHERE id=?");
       $editor->bind_param('i', $page_checkout_authorID);
@@ -177,14 +177,14 @@
     } else {
       // Set the lock to the current time/author.
       $result = $mysqli->prepare("UPDATE staff_help SET checkout_time=NOW(), checkout_authorID=? WHERE id=?");
-      $result->bind_param('ii', $userID, $edit_id);
+      $result->bind_param('ii', $userObject->GetUserID(), $edit_id);
       $result->execute();  
       $result->close();
-      $checkout_authorID = $userID;
+      $checkout_authorID = $userObject->GetUserID();
 
     }
-  } elseif ($disabled == '' and $userID == $page_checkout_authorID) {
-    $checkout_authorID = $userID;
+  } elseif ($disabled == '' and $userObject->GetUserID() == $page_checkout_authorID) {
+    $checkout_authorID = $userObject->GetUserID();
   }
   ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID; ?>" />
