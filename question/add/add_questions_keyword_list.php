@@ -69,7 +69,7 @@
   $stmt->close();
 
   echo "<table border=\"0\" style=\"padding-top:3px; padding-bottom:2px; width:100%; color:#1E3287; white-space:nowrap\"><tr><td>" . $string['mykeywords'] . " </td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-  $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=$userID ORDER BY keyword");
+  $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=$userObject->GetUserID() ORDER BY keyword");
   $stmt->execute();
   $stmt->bind_result($keywordID, $keyword);
   while ($stmt->fetch()) {

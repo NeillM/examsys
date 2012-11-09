@@ -241,7 +241,7 @@ if ($critical_error == '') {
           $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
         } else {
           // Create new option if have required data
-          $option = Option::option_factory($mysqli, $userID, $question, $option_no, $string, array('marks' => 1));
+          $option = Option::option_factory($mysqli, $userObject->GetUserID(), $question, $option_no, $string, array('marks' => 1));
           
           if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
             $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';
@@ -287,7 +287,7 @@ if ($critical_error == '') {
     }
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
     $question->clear_checkout();
-    redirect();
+    redirect($userObject);
   }
 
   if ($do_save) {
@@ -316,7 +316,7 @@ if ($critical_error == '') {
             insert_into_papers($paper_id, $question->id);
           }
 
-          save_keywords($question, $userID, true, $mysqli, $string);
+          save_keywords($question, $userObject->GetUserID(), true, $mysqli, $string);
 
           if (isset($_POST['objective_modules'])) {
             // Write out curriculum mapping.
@@ -332,7 +332,7 @@ if ($critical_error == '') {
               $q_teams = $question->get_teams();
               if (is_array($q_teams) and count($q_teams) > 0) $team_for_state = $q_teams[0];
             }
-            $state = $stateutil->setState($userID, 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);
+            $state = $stateutil->setState($userObject->GetUserID(), 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);
           }
 
           // Stuff not to do on correction/limited save
@@ -345,10 +345,10 @@ if ($critical_error == '') {
             // For likert, save the scale to a state to ease creation of multiple questions with same scale
             if ($mode == 'Add' and $question->get_type() == 'likert') {
               $scale_type = $question->get_scale_type();
-              $state = $stateutil->setState($userID, 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
+              $state = $stateutil->setState($userObject->GetUserID(), 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
 
               if ($scale_type == 'custom') {
-                $state = $stateutil->setState($userID, 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
+                $state = $stateutil->setState($userObject->GetUserID(), 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
               }
             }
           }
@@ -581,7 +581,7 @@ if (count($question->get_teams()) > 0) {
   $q_teams = explode(',', $state['default_team']);
 }
 
-echo render_metadata($mysqli, $question, $question->use_bloom(), $q_teams, $q_disabled, $string);
+echo render_metadata($mysqli, $question, $question->use_bloom(), $q_teams, $q_disabled, $string,$userObject);
 ?>
         </div>
       </div>
@@ -632,10 +632,10 @@ echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 
     <div id="button-bar">
 <?php
-echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_correction(), $userID, $question->get_checkout_author_id(), $paper_id, $paper_count, $string);
+echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_correction(), $userObject->GetUserID(), $question->get_checkout_author_id(), $paper_id, $paper_count, $string);
 ?>
       <input type="hidden" name="q_id" value="<?php echo $question->id ?>" />
-      <input name="checkout_author" value="<?php echo $userID ?>" type="hidden" />
+      <input name="checkout_author" value="<?php echo $userObject->GetUserID() ?>" type="hidden" />
       <input id="calling" name="calling" value="<?php echo $calling; ?>" type="hidden" />
       <input id="module" name="module" value="<?php echo $module; ?>" type="hidden" />
       <input id="folder" name="folder" value="<?php echo $folder; ?>" type="hidden" />

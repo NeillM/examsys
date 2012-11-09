@@ -137,15 +137,15 @@ function db_change_user($db,$userObject) {
 
   $userroles = $userObject->old_getuserroles();
   //select the aproprate database user
-  if (strpos($userroles, 'SysAdmin') !== false) {
+  if ($userObject->HasRole('SysAdmin')) {
     $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-  } else if (strpos($userroles, 'Staff') !== false or strpos($userroles, 'Admin') !== false) { // Process staff first to get higher priority than students
+  } else if ($userObject->HasRole(array('Staff','Admin'))) { // Process staff first to get higher priority than students
     $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
-  } else if (strpos($userroles, 'Student') !== false) {
+  } else if ($userObject->HasRole('Student')) {
     $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-  } else if (strpos($userroles, 'External Examiner') !== false) {
+  } else if ($userObject->HasRole('External Examiner')) {
     $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
-  } else if (strpos($userroles, 'Invigilator') !== false) {
+  } else if ($userObject->HasRole('Invigilator')) {
     $result = $db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
   } else {
     $result = false;
@@ -207,7 +207,7 @@ function db_auth($u, $p, $db, $changeuser = true, $userObject) {
         $stmt->close();
       }
 
-      if (strpos($userroles, 'Staff') !== false and count($split_username) > 1) {
+      if ($userObject->HasRole('Staff') and count($split_username) > 1) {
         //for Sysadmin only 
         if ($split_username[1] == 'staff') {
           //set the role to staff
@@ -215,7 +215,7 @@ function db_auth($u, $p, $db, $changeuser = true, $userObject) {
         } elseif ($split_username[1] == 'demo') {
           //set the role to demo: this will anonomise any user data for public demos
           $userroles .= ',Demo';
-        } elseif (strpos($userroles, 'SysAdmin') !== false) {
+        } elseif ($userObject->HasRole('SysAdmin')) {
           // Look up all the authentication details of the user you are pretending to log in as.
           list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($split_username[1], $db);
           $cfg_install_type .= " " . $string['as'] . " $title $surname";
@@ -322,7 +322,7 @@ function gen_password($len = 8) {
 *
 *
 */
-function get_staff_modules($userID, $db) {
+function get_staff_modules($userID, $db,$userObject) {
   error_disp("GET_STAFF_MODULE called");
   $staff_modules = array();
 

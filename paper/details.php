@@ -38,7 +38,7 @@ check_var('paperID', 'GET', true, false);
 $paperID = $_GET['paperID'];
 
 // Unlock code - emergency use only!
-if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and strpos($userroles,'SysAdmin') !== false) {
+if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->HasRole('SysAdmin')) {
   $tmp_date = new DateTime();
   $tmp_date->modify('+28 day');
   $tmp_start_date = $tmp_date->format('Ymd' . '100000');
@@ -512,7 +512,7 @@ function check_latex_random($q_ids, $mysqli) {
     echo "<h1 class=\"midblue_header\" style=\"margin-left:70px;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
     $deleted_parts = explode('[deleted', $paper_title);
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:70px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-top:10px; margin-left:70px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<ul style=\"margin-left:80px\">\n";
-    if ($paper_ownerID == $userID) {
+    if ($paper_ownerID == $userObject->GetUserID()) {
       echo "<li>" . $string['deleted_msg2'] . "</li>\n";
     } else {
       $result = $mysqli->prepare("SELECT title, surname, email FROM users WHERE id=?");
@@ -539,7 +539,7 @@ function check_latex_random($q_ids, $mysqli) {
 
   // Log the hit in recent_papers.
   $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE accessed=NOW();");
-  $result->bind_param('ii', $userID, $paperID);
+  $result->bind_param('ii', $userObject->GetUserID(), $paperID);
   $result->execute();
   $result->close();
 
@@ -827,7 +827,7 @@ function check_latex_random($q_ids, $mysqli) {
   
   if ($summative_lock) {
     echo "<tr><td colspan=\"2\" style=\"text-align:right; vertical-align:middle\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"19\" height=\"24\" alt=\"Locked\" style=\"position:relative; top:2px\" />&nbsp;&nbsp;</div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\">";
-    if (strpos($userroles, 'Admin') !== false) {
+    if ($userObject->HasRole('Admin')) {
       $record_no = 0;
       $result = $mysqli->prepare("SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE paperID=? AND log_metadata.userID=users.id AND roles='Student'");
       $result->bind_param('i', $paperID);

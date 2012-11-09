@@ -27,8 +27,8 @@ require_once $cfg_web_root . 'classes/dbutils.class.php';
 set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
-  global $mysqli, $userID, $debug_pagestart, $dbclass, $cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset;
-
+  global $mysqli, $DISABLEDuserID, $debug_pagestart, $dbclass, $cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset;
+global $userObject; // TODO fix this fudge
 
 
 
@@ -106,7 +106,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $log_error->bind_param('issssssssisss', $userID, $_SERVER['PHP_AUTH_USER'], $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+    $log_error->bind_param('issssssssisss', $userObject->GetUserID(), $_SERVER['PHP_AUTH_USER'], $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
     $log_error->execute();
     $log_error->close();
     $mysqli2->close();
@@ -117,7 +117,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   return false;
 }
 
-function ErrorDisp($message,$level=E_USER_WARNING) {
+function error_disp($message,$level=E_USER_WARNING) {
 
   $str=DebugBackTraceDisplay(debug_backtrace());
 
@@ -129,7 +129,11 @@ function DebugBackTraceDisplay($obj) {
   $caller=$obj;
   //array_shift($caller);
   foreach($caller as $key=>$called) {
-    $str=$str . '<br>#' . $key . ' ' . $called['function'] . ' called at [' . $called['file'] . ':' . $called['line'] . ']';
+    if($called['function']=='customErrorHandler') {
+      $str .= '<br>#' . $key . ' CustomeErrorHandler';
+    } else {
+      $str=$str . '<br>#' . $key . ' ' . $called['function'] . ' called at [' . $called['file'] . ':' . $called['line'] . ']';
+    }
   }
   $str=$str . '<br>';
   return $str;

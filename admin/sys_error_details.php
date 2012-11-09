@@ -33,7 +33,7 @@ $result = $mysqli->prepare("SELECT sys_errors.id, auth_user, title, initials, su
 $result->bind_param('i', $_GET['errorID']);
 $result->execute();
 $result->store_result();
-$result->bind_result($error_id, $auth_user, $title, $initials, $surname, $occurred, $userID, $errtype, $errstr, $errfile, $errline, $php_self, $query_string, $request_method, $fixed, $paperID, $post_data, $variables, $backtrace);
+$result->bind_result($error_id, $auth_user, $title, $initials, $surname, $occurred, $uID, $errtype, $errstr, $errfile, $errline, $php_self, $query_string, $request_method, $fixed, $paperID, $post_data, $variables, $backtrace); //TODO changed $userID to $uID
 $result->fetch();
 $result->close();
 

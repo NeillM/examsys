@@ -26,7 +26,7 @@
   require '../include/errors.inc';
   require_once '../classes/stateutils.class.php';
   
-  $state = $stateutil->getState($userID, $mysqli, $cfg_root_path . '/reports/textbox_header.php');
+  $state = $stateutil->getState($userObject->GetUserID(), $mysqli, $cfg_root_path . '/reports/textbox_header.php');
   
   $paperID = $_GET['paperID'];
   $q_id = $_GET['q_id'];
@@ -72,7 +72,7 @@
     for ($i=1; $i<=$_POST['answer_no']; $i++) {
       if ($_POST["mark$i"] != 'NULL') {
         $result = $mysqli->prepare("INSERT INTO textbox_marking VALUES (NULL, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?)");
-        $result->bind_param('iiiidsiis', $paperID, $q_id, $_POST["logrec$i"], $userID, $_POST["mark$i"], $comments, $phase, $_POST["log$i"], $_POST["username$i"]);
+        $result->bind_param('iiiidsiis', $paperID, $q_id, $_POST["logrec$i"], $userObject->GetUserID(), $_POST["mark$i"], $comments, $phase, $_POST["log$i"], $_POST["username$i"]);
         $result->execute();
         $result->close();
       }

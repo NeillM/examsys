@@ -35,16 +35,16 @@ Class search_utils {
    * @param object $db database connection
    * @return array of staff module information
    */
-  static function get_staff_modules($staff_modules, $userroles, $userID, $db) {
+  static function get_staff_modules($staff_modules, $userroles, $userID, $db, $userObject) {
     $staff_modules_list = array();
 
     $staff_modules_sql = implode("','", $staff_modules);
     if ($staff_modules_sql != '') $staff_modules_sql = "'$staff_modules_sql'";
     
-    if ($staff_modules_sql != '' or strpos($userroles,'Admin') !== false) {
-      if (strpos($userroles,'SysAdmin') !== false) {
+    if ($staff_modules_sql != '' or $userObject->HasRole('Admin')) {
+      if ($userObject->HasRole('SysAdmin')) {
         $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
-      } elseif (strpos($userroles,'Admin') !== false) {
+      } elseif ($userObject->HasRole('Admin')) {
         $schoolIDs = implode(',', SchoolUtils::get_admin_schools($userID, $db));
         if ($schoolIDs != '') {
           $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID";
@@ -114,10 +114,10 @@ Class search_utils {
    * @param object $db database connection
    * @return string HTML of the dropdown menu
    */
-  static function display_staff_modules_dropdown($staff_modules, $userroles, $userID, $db) {
+  static function display_staff_modules_dropdown($staff_modules, $userroles, $userID, $db, $userObject) {
     global $string;
     
-    $staff_modules = self::get_staff_modules($staff_modules, $userroles, $userID, $db);
+    $staff_modules = self::get_staff_modules($staff_modules, $userroles, $userID, $db, $userObject->GetUserID());
     
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
@@ -145,8 +145,8 @@ Class search_utils {
    * @param object $db database connection
    * @return array of name data
    */
-  static function get_owners($teams, $userroles, $db) {
-    if (strpos($userroles,'Admin') !== false) {
+  static function get_owners($teams, $userroles, $db, $userObject) {
+    if ($userObject->HasRole('Admin')) {
       $stmt = $db->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' ORDER BY surname, initials");
     } else {
       $stmt = $db->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users, teams WHERE users.id=teams.memberID AND name IN (\"" . implode('","', $teams) . "\") AND (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') ORDER BY surname, initials");

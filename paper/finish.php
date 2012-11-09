@@ -82,10 +82,10 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
       $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
       
       // get modules if the user is a student and the paper is not formative
-      $attempt = check_modules($userID, $moduleID, $calendar_year, $mysqli);
+      $attempt = check_modules($userObject->GetUserID(), $moduleID, $calendar_year, $mysqli);
       
       // Check for any metadata security restrictions
-      check_metadata($paperID, $userID, $moduleID, $mysqli);
+      check_metadata($paperID, $userObject->GetUserID(), $moduleID, $mysqli);
       
       if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
         $paper_type = '_late';
@@ -204,7 +204,7 @@ require '../config/finish.inc';
 
   echo $top_table_html;
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-  if ($paper_type < 2 or strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false) {
+  if ($paper_type < 2 or $userObject->HasRole(array('Staff','SysAdmin'))) {
     echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
     if (isset($_GET['userid'])) echo " for $tmp_title $tmp_surname, $tmp_initials ($tmp_student_id)";
     echo '</span>';
@@ -217,9 +217,9 @@ require '../config/finish.inc';
   if ($paper_type == '0') {
     $show_feedback = true;
   } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
-    if (strpos($userroles,'Student') !== false) {
+    if ($userObject->HasRole('Student')) {
       $show_feedback = false;
-    } elseif (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false) {
+    } elseif ($userObject->HasRole(array('Staff') ,'SysAdmin')) {
       $show_feedback = true;
     }
   }

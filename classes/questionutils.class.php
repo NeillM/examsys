@@ -125,14 +125,14 @@ SQL;
   * @param $q_id the id of the question
   * @return void 
   */
-  static function update_modules($modules, $q_id, $db) {
-    global $REPLACEMEuserIDold, $userroles, $staff_modules; //these will come form the users object later
+  static function update_modules($modules, $q_id, $db, $userObject) {
+    global $REPLACEMEuserIDold, $DISABLEDuserroles, $staff_modules; //these will come form the users object later
 
-    if(count($staff_modules) > 0 and strpos($userroles,'SysAdmin') !== false) {
-       $user_modules = get_staff_modules($userID, $db);
+    if(count($staff_modules) > 0 and $userObject->HasRole('SysAdmin')) {
+       $user_modules = get_staff_modules($userObject->GetUserID(), $db,$userObject->GetUserID());
     }
 
-    if(strpos($userroles,'SysAdmin') !== false) {
+    if($userObject->HasRole('SysAdmin')) {
       //sysadmin 
       $user_can_delete = ''; //no restrictions
     } else {

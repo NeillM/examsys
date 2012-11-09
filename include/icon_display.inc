@@ -62,8 +62,8 @@ function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retire
   return $html;
 }
 
-function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID, $password) {
-  global $userroles, $type, $folder, $module, $mysqli, $userID, $teams, $string;
+function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID, $password, $userObject) {
+  global $DISABLEDuserroles, $type, $folder, $module, $mysqli, $DISABLEDuserID, $teams, $string;
   
   if ($retired != '') {
     echo '<div class="file retired">';
@@ -83,7 +83,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
   } else {
     $title_class = 'greylink';
   }
-  if ($paper_ownerID == $userID or strpos($userroles, 'Admin') !== false or strpos($userroles, 'SysAdmin') !== false or ($icon_type != '2' and $icon_type != '4')) {
+  if ($paper_ownerID == $userObject->GetUserID() or $userObject->HasRole(array('Admin', 'SysAdmin')) or ($icon_type != '2' and $icon_type != '4')) {
     echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . displayIcon($icon_type, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
     echo "<td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"$title_class\">" . $paper_title . '</a>';
     if ($password != '') {

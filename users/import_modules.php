@@ -61,7 +61,7 @@ require_once '../classes/userutils.class.php';
 <?php
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userID . "_cohort_update.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userObject->GetUserID() . "_cohort_update.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
@@ -87,7 +87,7 @@ require_once '../classes/userutils.class.php';
 
         $modulesAdded = 0;
         $missing_users = array();
-        $lines = file($cfg_tmpdir . $userID . "_cohort_update.csv");
+        $lines = file($cfg_tmpdir . $userObject->GetUserID() . "_cohort_update.csv");
 
         // Build an array of unique student names.
         $students = array();
@@ -162,7 +162,7 @@ require_once '../classes/userutils.class.php';
         }
       }
     }
-    unlink($cfg_tmpdir . $userID . "_cohort_update.csv");
+    unlink($cfg_tmpdir . $userObject->GetUserID() . "_cohort_update.csv");
 
     echo "<h2>$modulesAdded " . $string['enrolementsperformed'] . "</h2>";
     echo "<p>" . count($missing_users) . " " . $string['missingusers'] . "</p>";

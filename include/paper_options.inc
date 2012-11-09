@@ -338,7 +338,7 @@ $stmt->close();
 
   if ($module_member == true) {
     if ($summative_lock == 1) {
-      if (strpos($userroles,'SysAdmin') !== false) {
+      if ($userObject->HasRole('SysAdmin')) {
         echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
         echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"{$cfg_root_path}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
       } else {
