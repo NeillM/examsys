@@ -49,7 +49,7 @@ Class question_info {
     if ($q_group == '') $q_group = '<span style="color:#808080">' . $string['na'] . '</span>';
     if ($locked == '') $locked = '<span style="color:#808080">' . $string['na'] . '</span>';
 
-    if ($userObject->HasRole('Demo')) {
+    if ($userObject->has_role('Demo')) {
       $owner = 'Dr J, Bloggs (<a href="">joe.bloggs@uni.ac.uk</a>)';
     } else {
       $owner = "$title $initials $surname (<a href=\"mailto:$email\">$email</a>)";

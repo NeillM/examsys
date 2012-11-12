@@ -37,7 +37,7 @@ require '../classes/paperutils.class.php';
 
 check_var('id', 'GET', true, false);
 
-getSpecialSettings($userObject->GetUserID(), $mysqli);
+getSpecialSettings($userObject->get_user_ID(), $mysqli);
 
 if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
   $paper_properties->bind_param('s', $_GET['id']);
@@ -59,7 +59,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
     $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions 
     $low_bandwidth = 0;
 
-    if ($userObject->HasRole('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->GetUserID()) {
+    if ($userObject->has_role('Staff') and isset($_GET['userid']) and $_GET['userid'] != $userObject->get_user_ID()) {
       // Turn on all feedback if staff and a student exam script is being reviewed.
       $display_correct_answer = 1;
       $display_question_mark = 1;
@@ -70,7 +70,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
 
     $moduleID = Paper_utils::get_modules($paperID,$mysqli);
 
-    if ($userObject->HasRole('Student')) {
+    if ($userObject->has_role('Student')) {
       if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
       // Check for additional password on the paper
@@ -82,10 +82,10 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
       $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
       
       // get modules if the user is a student and the paper is not formative
-      $attempt = check_modules($userObject->GetUserID(), $moduleID, $calendar_year, $mysqli);
+      $attempt = check_modules($userObject->get_user_ID(), $moduleID, $calendar_year, $mysqli);
       
       // Check for any metadata security restrictions
-      check_metadata($paperID, $userObject->GetUserID(), $moduleID, $mysqli);
+      check_metadata($paperID, $userObject->get_user_ID(), $moduleID, $mysqli);
       
       if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
         $paper_type = '_late';
@@ -114,7 +114,7 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <?php
   $css = '';
-  if ($userObject->IsSpecialNeeds() and $bgcolor != '#FFFFFF') {
+  if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
     $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
   }
   if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
@@ -146,7 +146,7 @@ require '../config/finish.inc';
    echo "<script type=\"text/javascript\" src=\"../js/jquery-1.6.1.min.js\"></script>";
    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
   }
-  if (($userObject->HasRole('Student',1) and $paper_type < 2) or $userObject->HasRole('Staff')) {
+  if (($userObject->has_role('Student',1) and $paper_type < 2) or $userObject->has_role('Staff')) {
     echo "<script src=\"../js/ie_fix.js\" type=\"text/javascript\"></script>\n";
   }
 ?>
@@ -166,7 +166,7 @@ require '../config/finish.inc';
 </head>
 
 <?php
-  if ($userObject->HasRole('Student')) {
+  if ($userObject->has_role('Student')) {
     echo '<body oncontextmenu="return false;">';
   } else {
     echo '<body>';
@@ -178,7 +178,7 @@ require '../config/finish.inc';
   }
   if ($current_screen > 1 and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
     // Record answers from the previous screen.
-    record_marks($paperID, $mysqli, $userObject->GetUserID(), $paper_type, $userObject->GetGrade(), $userObject->GetYear(), $attempt, $userObject->ListUserRoles());
+    record_marks($paperID, $mysqli, $userObject->get_user_ID(), $paper_type, $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles());
   }
 
   if (isset($_GET['userid'])) {
@@ -191,7 +191,7 @@ require '../config/finish.inc';
     $result->fetch();
     $result->close();
   } else {
-    $temp_userID = $userObject->GetUserID();
+    $temp_userID = $userObject->get_user_ID();
   }
   $old_q_id = 0;
   $old_screen = 0;
@@ -204,7 +204,7 @@ require '../config/finish.inc';
 
   echo $top_table_html;
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-  if ($paper_type < 2 or $userObject->HasRole(array('Staff','SysAdmin'))) {
+  if ($paper_type < 2 or $userObject->has_role(array('Staff','SysAdmin'))) {
     echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
     if (isset($_GET['userid'])) echo " for $tmp_title $tmp_surname, $tmp_initials ($tmp_student_id)";
     echo '</span>';
@@ -217,15 +217,15 @@ require '../config/finish.inc';
   if ($paper_type == '0') {
     $show_feedback = true;
   } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
-    if ($userObject->HasRole('Student')) {
+    if ($userObject->has_role('Student')) {
       $show_feedback = false;
-    } elseif ($userObject->HasRole(array('Staff') ,'SysAdmin')) {
+    } elseif ($userObject->has_role(array('Staff') ,'SysAdmin')) {
       $show_feedback = true;
     }
   }
   
   if ($show_feedback) {
-    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject->ListUserRoles(), $mysqli);
+    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject->list_user_roles(), $mysqli);
   } else {
     echo '<blockquote>';
     if ($language == 'en') {

@@ -29,7 +29,7 @@
 * @package
 */
 
-if ($userObject->HasRole('Demo')) {
+if ($userObject->has_role('Demo')) {
   $demo = true;
 } else {
   $demo = false;

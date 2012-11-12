@@ -43,7 +43,7 @@ function getLastFolder($path) {
   }
 }
 
-$state = $stateutil->getState($userObject->GetUserID(), $mysqli);
+$state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
 $folder_name = '';
 $folder_type = '';
@@ -85,7 +85,7 @@ if ($folder != '') {
         $part_sql .= ';' . $part;
       }
       $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
-      $parent_results->bind_param('si', $part_sql, $userObject->GetUserID());
+      $parent_results->bind_param('si', $part_sql, $userObject->get_user_ID());
       $parent_results->execute();
       $parent_results->bind_result($parent_id, $parent_name);
       $parent_results->fetch();
@@ -113,7 +113,7 @@ if (isset($_POST['submit'])) {
   $duplicate_name = 0;
   
   $folder_details = $mysqli->prepare("SELECT name FROM folders WHERE ownerID=? AND name=?");
-  $folder_details->bind_param('is', $userObject->GetUserID(), $new_folder_name);
+  $folder_details->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
   $folder_details->execute();
   $folder_details->store_result();
   $folder_details->bind_result($name);
@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
   
   if ($duplicate_name == 0) {
     if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, ?, NOW(), 'yellow', NULL)")) {
-      $folder_query->bind_param('iss', $userObject->GetUserID(), $new_folder_name, $_GET['newteam']);
+      $folder_query->bind_param('iss', $userObject->get_user_ID(), $new_folder_name, $_GET['newteam']);
       $folder_query->execute();
       $folder_query->close();
     } else {
@@ -245,24 +245,24 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   $member_details->bind_result($surname, $initials, $title, $tmp_userID);
 
   $tmp_html = '';
-  if ($userObject->HasRole('Demo')) {
+  if ($userObject->has_role('Demo')) {
     $i = 0;
   }
   if ($member_details->num_rows > 0) $tmp_html = '<ul type="square" style="line-height:155%; font-size:90%; color:#8492A6; margin-top:4px; margin-bottom:4px; margin-left:20px; padding-left:0px">';
   while ($member_details->fetch()) {
-    if ($userObject->HasRole('Demo')) {
+    if ($userObject->has_role('Demo')) {
       $tmp_html .= "<li><span style=\"color:#254280\">" . demo_replace_name($i) . "</span></li>\n";
       $i++;
-    } elseif ($userObject->HasRole('Admin')) {
+    } elseif ($userObject->has_role('Admin')) {
       $tmp_html .= "<li><a style=\"color:#254280\" href=\"../users/details.php?userID=$tmp_userID&module=" . $_GET['module'] . "\" target=\"_top\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</a></li>\n";
     } else {
       $tmp_html .= "<li><span style=\"color:#254280\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</span></li>\n";
     }
-    if ($tmp_userID == $userObject->GetUserID()) $add_member = true;
+    if ($tmp_userID == $userObject->get_user_ID()) $add_member = true;
   }
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
   echo '<div style="box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';
-  if ($add_member == true or $userObject->HasRole('Admin')) {
+  if ($add_member == true or $userObject->has_role('Admin')) {
     echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
   } else {
     echo '<div style="padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB">' . $string['teammembers'] . '</div>';
@@ -286,7 +286,7 @@ if ($folder != '') {
   
   $tmp_folder_name = $orig_folder_name . ';%';
   $folder_details = $mysqli->prepare("SELECT folders.id, name, moduleid, color FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND folders_modules_staff.idMod = modules.id AND (ownerID=? $tmp_string) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
-  $folder_details->bind_param('is', $userObject->GetUserID(), $tmp_folder_name);
+  $folder_details->bind_param('is', $userObject->get_user_ID(), $tmp_folder_name);
   $folder_details->execute();
   $folder_details->bind_result($id, $name, $staff_modules, $color);
   while ($folder_details->fetch()) {

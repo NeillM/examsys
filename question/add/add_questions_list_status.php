@@ -102,7 +102,7 @@ require_once '../../classes/questionutils.class.php';
   $myteams = implode("','", $teams);
   
   $stmt = $mysqli->prepare("SELECT q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM questions WHERE status=? AND (ownerID=? OR q_group IN ('$myteams')) AND deleted IS NULL ORDER BY $order $direction");
-  $stmt->bind_param('si', $_GET['status'], $userObject->GetUserID());
+  $stmt->bind_param('si', $_GET['status'], $userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date, $locked);

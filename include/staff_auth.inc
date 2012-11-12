@@ -27,7 +27,7 @@
 require_once 'staff_student_auth.inc';
 global $userObject;
 
-if (!$userObject->HasRole('Staff', 'ExternalExaminer')) {
+if (!$userObject->has_role('Staff', 'ExternalExaminer')) {
   access_denied('You are attempting to access a <strong>Staff Only</strong> page.', true);
 }
 
@@ -45,17 +45,17 @@ $external_allowed_pages = array(
                               '/reviews/start.php'=>1,
                               '/reviews/finish.php'=>1
                             );
-if ($userObject->HasRole('ExternalExaminer')) {
+if ($userObject->has_role('ExternalExaminer')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/reviews/");
   }
 }
 
 // Get teams if the user is not an External Examiner.
-if($userObject->HasRole('ExternalExaminer')) {
+if($userObject->has_role('ExternalExaminer')) {
   $staff_modules = array();
 } else {
-  $staff_modules = $userObject->GetStaffModules();
+  $staff_modules = $userObject->get_staff_modules();
 }
 
 $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
@@ -64,10 +64,10 @@ $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative 
 //default security checks
 //
 
-if ($userObject->HasRole('SysAdmin')) {
+if ($userObject->has_role('SysAdmin')) {
   //sysadmin can access any thing !!!
 
-} elseif ($userObject->HasRole('Admin')) {
+} elseif ($userObject->has_role('Admin')) {
   //For 'Admin' users look up permissions from 'admin_access' table.
 
   $on_staff_module = false;
@@ -93,7 +93,7 @@ if ($userObject->HasRole('SysAdmin')) {
       //$result->close();
 
       // Check which Schools the moduleID(s) are in.
-      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=" . $userObject->GetUserID() . " AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); //TODO fix the sql to use prepared statement
+      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=" . $userObject->get_user_ID() . " AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); //TODO fix the sql to use prepared statement
       $result->execute();
       $result->store_result();
       $result->bind_result($paper_school);
@@ -116,7 +116,7 @@ if ($userObject->HasRole('SysAdmin')) {
   if ($on_staff_module == false and isset($_GET['module']) and $_GET['module'] != '') {
     // Is 'Admin' on the module as normal
     $result = $mysqli->prepare("SELECT groupID FROM modules_staff WHERE memberID=? AND name=?");
-    $result->bind_param('is', $userObject->GetUserID(), $_GET['module']);
+    $result->bind_param('is', $userObject->get_user_ID(), $_GET['module']);
     $result->execute();
     $result->store_result();
     $result->bind_result($groupID);
@@ -129,7 +129,7 @@ if ($userObject->HasRole('SysAdmin')) {
 
     if ($on_staff_module == false) { // Check which Schools the moduleID(s) are in and match school to 'Admin' person.
       $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid=?");
-      $result->bind_param('is', $userObject->GetUserID(), $_GET['module']);
+      $result->bind_param('is', $userObject->get_user_ID(), $_GET['module']);
       $result->execute();
       $result->store_result();
       $result->bind_result($paper_school);
@@ -162,13 +162,13 @@ if ($userObject->HasRole('SysAdmin')) {
         $result->fetch();
         $group_array = explode(';', strtoupper($q_group));
 
-        if ($ownerID != $userObject->GetUserID() and !in_array('SYSTEM', $group_array) and count(array_intersect($group_array, $staff_modules)) == 0) {
+        if ($ownerID != $userObject->get_user_ID() and !in_array('SYSTEM', $group_array) and count(array_intersect($group_array, $staff_modules)) == 0) {
           // Not owner or on staff_module so check schools
           $is_admin = false;
           if (count($group_array) > 0) {
             $module_list = "'" . str_replace(';', ',', $q_group) . "'";
             $result2 = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND moduleid IN ({$module_list})");
-            $result2->bind_param('i', $userObject->GetUserID());
+            $result2->bind_param('i', $userObject->get_user_ID());
             $result2->execute();
             $result2->store_result();
             if ($result2->num_rows > 0) {
@@ -216,7 +216,7 @@ if ($userObject->HasRole('SysAdmin')) {
       $result->execute();
       $result->bind_result($moduleID, $paper_ownerID);
       while ($result->fetch()) {
-        if ($paper_ownerID != $userObject->GetUserID()) {
+        if ($paper_ownerID != $userObject->get_user_ID()) {
           $moduleIDs = explode(',', $moduleID);
           foreach ($moduleIDs as $g) {
             if (isset($staff_modules[strtoupper($g)])) {
@@ -254,7 +254,7 @@ if ($userObject->HasRole('SysAdmin')) {
         }
 
         //allow acsess to the TRAIN module for training!
-        if ($ownerID != $userObject->GetUserID() and $access == false and !in_array('SYSTEM', $moduleIDs)) {
+        if ($ownerID != $userObject->get_user_ID() and $access == false and !in_array('SYSTEM', $moduleIDs)) {
           access_denied($string['denied_question'], false);
         }
       }

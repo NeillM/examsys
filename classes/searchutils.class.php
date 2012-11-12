@@ -41,10 +41,10 @@ Class search_utils {
     $staff_modules_sql = implode("','", $staff_modules);
     if ($staff_modules_sql != '') $staff_modules_sql = "'$staff_modules_sql'";
     
-    if ($staff_modules_sql != '' or $userObject->HasRole('Admin')) {
-      if ($userObject->HasRole('SysAdmin')) {
+    if ($staff_modules_sql != '' or $userObject->has_role('Admin')) {
+      if ($userObject->has_role('SysAdmin')) {
         $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
-      } elseif ($userObject->HasRole('Admin')) {
+      } elseif ($userObject->has_role('Admin')) {
         $schoolIDs = implode(',', SchoolUtils::get_admin_schools($userID, $db));
         if ($schoolIDs != '') {
           $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID";
@@ -117,7 +117,7 @@ Class search_utils {
   static function display_staff_modules_dropdown($staff_modules, $userroles, $userID, $db, $userObject) {
     global $string;
     
-    $staff_modules = self::get_staff_modules($staff_modules, $userroles, $userID, $db, $userObject->GetUserID());
+    $staff_modules = self::get_staff_modules($staff_modules, $userroles, $userID, $db, $userObject->get_user_ID());
     
     echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
@@ -146,7 +146,7 @@ Class search_utils {
    * @return array of name data
    */
   static function get_owners($teams, $userroles, $db, $userObject) {
-    if ($userObject->HasRole('Admin')) {
+    if ($userObject->has_role('Admin')) {
       $stmt = $db->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE roles LIKE 'Staff%' ORDER BY surname, initials");
     } else {
       $stmt = $db->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users, teams WHERE users.id=teams.memberID AND name IN (\"" . implode('","', $teams) . "\") AND (roles LIKE 'Staff%' OR roles LIKE '%SysAdmin%') ORDER BY surname, initials");

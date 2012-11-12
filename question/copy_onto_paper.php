@@ -98,7 +98,7 @@ if (!isset($_POST['submit'])) {
   <table cellpadding="0" cellspacing="1" border="0" width="95%">
 <?php
   $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, start_date, end_date, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')) AND deleted IS NULL  ORDER BY paper_title");
-  $result->bind_param('i', $userObject->GetUserID());
+  $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
@@ -215,7 +215,7 @@ if (!isset($_POST['submit'])) {
       
       if ($line == 0) {  // First record - write out the question, all the rest are options.
         $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
-        $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->GetUserID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
+        $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
         $addQuestion->execute();
         $question_id = $mysqli->insert_id;
         $addQuestion->close();
@@ -223,7 +223,7 @@ if (!isset($_POST['submit'])) {
         // Create a track changes record to say where question came from.
         $question_id = intval($question_id);
         $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Copied Question', ?, ?, ?, ?, NOW(), 'Copied Question')");
-        $trackChange->bind_param('iiss', $question_id, $userObject->GetUserID(), $q_IDs[$i], $question_id);
+        $trackChange->bind_param('iiss', $question_id, $userObject->get_user_ID(), $q_IDs[$i], $question_id);
         $trackChange->execute();
         $trackChange->close();
 
@@ -259,7 +259,7 @@ if (!isset($_POST['submit'])) {
 
     // Create a track changes record to say new question added.
     $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Alter Paper', ?, ?, '', ?, NOW(), 'Add Question')");
-    $trackChange->bind_param('iis', $property_id, $userObject->GetUserID(), $question_id);
+    $trackChange->bind_param('iis', $property_id, $userObject->get_user_ID(), $question_id);
     $trackChange->execute();
     $trackChange->close();
   }

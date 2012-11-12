@@ -259,7 +259,7 @@ Class UserUtils {
     global $REPLACEMEuserIDold;
     if ($tmp_userID == -99) {
       global $userObject; //TODO FIX THIS!
-      $tmp_userID = $userObject->GetUserID();
+      $tmp_userID = $userObject->get_user_ID();
     }
 
     $teams = array();

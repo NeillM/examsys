@@ -56,11 +56,11 @@ Class Paper_utils {
     global $REPLACEMEuserIDold, $DISABLEDuserroles, $staff_modules; //these will come form the users object later
 
     if(count($staff_modules) < 0) {
-      $user_modules = get_staff_modules($userObject->GetUserID(), $db, $userObject->GetUserID());
+      $user_modules = get_staff_modules($userObject->get_user_ID(), $db, $userObject->get_user_ID());
     }
 
     if(count($staff_modules) > 0) {
-      if($userObject->HasRole('SysAdmin')) {
+      if($userObject->has_role('SysAdmin')) {
         //sysadmin 
         $user_can_delete = ''; //no restrictions
       } else {

@@ -232,7 +232,7 @@ if (isset($_POST['submit'])) {
     // If no specific owner set lock down by team (apart from SysAdmin).
     if (count($staff_modules) > 0 and $_POST['module'] == '') {
       $user_string = implode(',', array_keys($staff_modules));
-      $user_string = " AND (idMod IN ($user_string) OR users.id=$userObject->GetUserID())";
+      $user_string = " AND (idMod IN ($user_string) OR users.id=$userObject->get_user_ID())";
     } else {
       $user_string = '';
     }

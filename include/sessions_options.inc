@@ -28,7 +28,7 @@ require_once '../classes/mappingutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
 
-if (in_array($_GET['module'], $staff_modules) === false and !$userObject->HasRole('SysAdmin')) {
+if (in_array($_GET['module'], $staff_modules) === false and !$userObject->has_role('SysAdmin')) {
   exit;
 }
 

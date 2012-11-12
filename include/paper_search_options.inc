@@ -214,8 +214,8 @@ $state = $stateutil->getState($userID, $mysqli, $cfg_root_path . '/paper/search.
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; ?> <?php search_utils::display_staff_modules_dropdown($staff_modules, $userroles, $userObject->GetUserID(), $mysqli,$userObject); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; ?> <?php search_utils::display_owners_dropdown($staff_modules, $userroles, $userObject->GetUserID(), $mysqli, 'papers'); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module']; ?> <?php search_utils::display_staff_modules_dropdown($staff_modules, $userroles, $userObject->get_user_ID(), $mysqli,$userObject); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner']; ?> <?php search_utils::display_owners_dropdown($staff_modules, $userroles, $userObject->get_user_ID(), $mysqli, 'papers'); ?></div>
 </td></tr>
 </table>
 

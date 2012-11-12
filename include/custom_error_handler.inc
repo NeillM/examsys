@@ -79,7 +79,9 @@ global $userObject; // TODO fix this fudge
 //    $variables=CaptureVarDump($context);
 //$variables=var_export($context,TRUE);
 
-    $variables=dump($context);
+    //$variables=dump($context);
+
+    $variables=serialize($context);
 
     $backtrace=DebugBackTraceDisplay(debug_backtrace());
 
@@ -106,7 +108,7 @@ global $userObject; // TODO fix this fudge
     }
 
     $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $log_error->bind_param('issssssssisss', $userObject->GetUserID(), $_SERVER['PHP_AUTH_USER'], $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+    $log_error->bind_param('issssssssisss', $userObject->get_user_ID(), $_SERVER['PHP_AUTH_USER'], $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
     $log_error->execute();
     $log_error->close();
     $mysqli2->close();

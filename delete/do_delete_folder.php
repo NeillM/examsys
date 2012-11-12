@@ -48,19 +48,19 @@ if (count($directories) > 1) {
 
 if ($parent != '') {
   $result = $mysqli->prepare("SELECT id FROM folders WHERE name=? AND ownerID=?");
-  $result->bind_param('si', $parent, $userObject->GetUserID());
+  $result->bind_param('si', $parent, $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($parentID);
   $result->fetch();
   $result->close();
 }
 
-if ($userObject->HasRole('SysAdmin')) {
+if ($userObject->has_role('SysAdmin')) {
   $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id=?");
   $result->bind_param('i', $_POST['folderID']);
 } else {
   $result = $mysqli->prepare("UPDATE folders SET deleted=NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id=? AND ownerID=?");
-  $result->bind_param('ii', $_POST['folderID'],$userObject->GetUserID());
+  $result->bind_param('ii', $_POST['folderID'],$userObject->get_user_ID());
 }
 
 $result->execute();

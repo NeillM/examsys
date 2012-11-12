@@ -28,7 +28,7 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 
-$state = $stateutil->getState($userObject->GetUserID(), $mysqli, $cfg_root_path . '/question/search.php');
+$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $cfg_root_path . '/question/search.php');
 
 ?>
 <script type="text/javascript" src="../js/state.js"></script>
@@ -353,8 +353,8 @@ $state = $stateutil->getState($userObject->GetUserID(), $mysqli, $cfg_root_path 
 //TODO this area similar to the question_list_options file
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($staff_modules, $userroles, $userObject->GetUserID(), $mysqli,$userObject); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($staff_modules, $userroles, $userObject->GetUserID(), $mysqli, 'questions'); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($staff_modules, $userroles, $userObject->get_user_ID(), $mysqli,$userObject); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($staff_modules, $userroles, $userObject->get_user_ID(), $mysqli, 'questions'); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['status']; search_utils::display_status_dropdown(); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['blooms']; search_utils::display_blooms_dropdown(); ?></div>
   
@@ -382,7 +382,7 @@ $state = $stateutil->getState($userObject->GetUserID(), $mysqli, $cfg_root_path 
   
   echo "<optgroup label=\"Personal Keywords\">\n";
   $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=? ORDER BY keyword");
-  $stmt->bind_param('i', $userObject->GetUserID());
+  $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
   $stmt->bind_result($keywordID, $keyword);
   while ($stmt->fetch()) {

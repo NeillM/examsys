@@ -107,7 +107,7 @@
     $variables[] = $_POST['module'];
     $params .= 'i';
   } else {
-    if (!$userObject->HasRole('SysAdmin')) {
+    if (!$userObject->has_role('SysAdmin')) {
       $moduleid = "AND idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
     }
   }
@@ -186,7 +186,7 @@
         } else {
           $locked = '';
         }
-        if ($paper_ownerID == $userObject->GetUserID() or$userObject->HasRole(array('SysAdmin','Admin'))or $type != 2) {
+        if ($paper_ownerID == $userObject->get_user_ID() or$userObject->has_role(array('SysAdmin','Admin'))or $type != 2) {
           echo "<a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">" . displayIcon($type, $title, $initials, $surname, '', $locked, $retired) . "</a></td>\n";
           echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">$paper_title</a><br />";
         } else {

@@ -108,7 +108,7 @@ function branchingQOverwrite(&$questions,$branching_q_data,$paper_type,$user_ans
     if (!in_array($op_qid,$target_questionIDs) and isset($user_answers[$current_screen][$op_qid])) {
       //if any of the possible qids are set on this screen remove old answer as the user is no on a different branch 
       $stmt = $mysqli->prepare("DELETE FROM log$paper_type WHERE userid=? AND screen=? AND started=? AND q_id=?");
-      $stmt->bind_param('iisi',$userObject->GetUserID(), $current_screen, $sessionid, $op_qid);
+      $stmt->bind_param('iisi',$userObject->get_user_ID(), $current_screen, $sessionid, $op_qid);
       $stmt->execute();
     }
   }

@@ -87,7 +87,7 @@ function usercheck($db, $lti) {
       }
       if ($returned2 > 0) {
         //insert ID into table
-        $returned3 = $lti->add_lti_user($userObject->GetUserID());
+        $returned3 = $lti->add_lti_user($userObject->get_user_ID());
         $returned4 = $lti->lookup_lti_user();
         $ret = db_change_user($db);
         return $returned4;

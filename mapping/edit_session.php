@@ -24,7 +24,7 @@
 
 require '../include/staff_auth.inc';
 
-  if (in_array($_GET['module'], $teams) === false and $userObject->HasRole('SysAdmin')) {
+  if (in_array($_GET['module'], $teams) === false and $userObject->has_role('SysAdmin')) {
       exit;
   }
   

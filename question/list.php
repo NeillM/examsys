@@ -27,7 +27,7 @@ require_once '../lang/' . $language . '/include/question_types.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
-$state = $stateutil->getState($userObject->GetUserID(), $mysqli);
+$state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
 $typeSQL = '';
 $type = '';
@@ -131,7 +131,7 @@ if (isset($_GET['checked'])) {
     if (count($staff_modules) > 0) {
       $staff_modules_sql = implode(',', array_keys($staff_modules));
       $staff_modules_sql = " (idMod IN ($staff_modules_sql)";
-      $staff_modules_sql .= " OR users.id=" . $userObject->GetUserID() . ") AND ";
+      $staff_modules_sql .= " OR users.id=" . $userObject->get_user_ID() . ") AND ";
     }
   }
   
@@ -139,7 +139,7 @@ if (isset($_GET['checked'])) {
     $module_sql = '(' . $module_sql .') AND';
   } else {
     // Reset to just look for current owners paper if not on any teams.
-    $module_sql .= "users.id=" . $userObject->GetUserID() . " AND";
+    $module_sql .= "users.id=" . $userObject->get_user_ID() . " AND";
   }
 
   if ($keyword != '%' and $keyword != '') {
@@ -156,7 +156,7 @@ if (isset($_GET['checked'])) {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }
   if ($state_checked == 'true') {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND $module_sql $staff_modules_sql users.id=questions.ownerID AND ownerID=" . $userObject->GetUserID() . " $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND $module_sql $staff_modules_sql users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   } else {
     $query_string .= " WHERE questions.q_id = questions_modules.q_id AND $module_sql $staff_modules_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   }
@@ -199,7 +199,7 @@ if (isset($_GET['checked'])) {
     }
     
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
-    if ($userObject->HasRole('Demo')) {
+    if ($userObject->has_role('Demo')) {
       $owner = 'Dr J, Bloggs';
     } else {
       $owner = "$title $initials, $surname";

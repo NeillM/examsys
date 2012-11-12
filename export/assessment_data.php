@@ -34,7 +34,7 @@ check_var('enddate', 'GET', true, false);
 
 $displayDebug = false; //disable debud output in this script as it effects the output
 
-if ($userObject->HasRole('Demo')) {
+if ($userObject->has_role('Demo')) {
   $demo = true;
 } else {
   $demo = false;

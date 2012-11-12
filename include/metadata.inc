@@ -105,7 +105,7 @@ META;
     }
     $current_teams = $module;
 
-    $teams_array = search_utils::get_staff_modules($staff_modules, $userroles, $userObject->GetUserID(), $mysqlidb, $userObject);
+    $teams_array = search_utils::get_staff_modules($staff_modules, $userroles, $userObject->get_user_ID(), $mysqlidb, $userObject);
     
     // Team keyword lists by module
     if (count($module) == 0) {
@@ -122,7 +122,7 @@ META;
 META;
 
     if (count($module) > 0) {
-      $keywords = search_utils::get_keywords($mysqlidb, $module, $userObject->GetUserID());
+      $keywords = search_utils::get_keywords($mysqlidb, $module, $userObject->get_user_ID());
       $question_keywords = $question->get_keywords();
       
       $i = 0;

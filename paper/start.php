@@ -169,9 +169,9 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
 
 if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
-if ($userObject->IsSpecialNeeds()) {
+if ($userObject->is_special_needs()) {
   $stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?");
-  $stmt->bind_param('i', $userObject->GetUserID());
+  $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
@@ -215,7 +215,7 @@ $attempt = 1; //default attempt to 1 overwritten if the student is resit candida
 
 $moduleID = Paper_utils::get_modules($property_id,$mysqli);
 
-if ($userObject->HasRole('Student')) {
+if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
   check_paper_password($password);
 
@@ -226,10 +226,10 @@ if ($userObject->HasRole('Student')) {
   $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
   
   // get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject->GetUserID(), $moduleID, $calendar_year, $mysqli);
+  $attempt = check_modules($userObject->get_user_ID(), $moduleID, $calendar_year, $mysqli);
   
   // Check for any metadata security restrictions
-  check_metadata($property_id, $userObject->GetUserID(), $moduleID, $mysqli);
+  check_metadata($property_id, $userObject->get_user_ID(), $moduleID, $mysqli);
 }
 
 //check for submissions after the enddate and set them to save in log_late
@@ -274,7 +274,7 @@ if (isset($_POST['sessionid'])) {
   $current_screen = 1;
   if (($original_paper_type == '1' or $original_paper_type == '2' or $original_paper_type == '3') and !isset($_GET['mode'])) {  //Mode is used for staff preview.
     $stmt = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
-    $stmt->bind_param('ii', $property_id, $userObject->GetUserID());
+    $stmt->bind_param('ii', $property_id, $userObject->get_user_ID());
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($sessionid, $current_screen);
@@ -288,7 +288,7 @@ if (isset($_POST['sessionid'])) {
     } else if($paper_type == '_late') {
       //look in the original log for previous session (only happens if we are after the endDate of the paper and are restarting with no records in log_late) 
       $stmt2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),\"%Y%m%d%H%i%s\") AS started, MAX(screen) AS screen FROM log$original_paper_type WHERE q_paper=? AND userID=? GROUP BY screen DESC LIMIT 1");
-      $stmt2->bind_param('ii', $property_id, $userObject->GetUserID());
+      $stmt2->bind_param('ii', $property_id, $userObject->get_user_ID());
       $stmt2->execute();
       $stmt2->store_result();
       $stmt2->bind_result($sessionid, $current_screen);
@@ -329,7 +329,7 @@ if ($paper_type == '3') {
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <?php
 $css = '';
-if ($userObject->IsSpecialNeeds() and $bgcolor != '#FFFFFF') {
+if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
   $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
 }
 if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
@@ -652,7 +652,7 @@ if ($css != '') {
 </script>
 </head>
 <?php
-if ($userObject->HasRole('Student')) {
+if ($userObject->has_role('Student')) {
   echo '<body oncontextmenu="return false;" onload="StartClock();" onunload="KillClock()">';
 } else {
   echo '<body onload="StartClock();" onunload="KillClock()">';
@@ -671,7 +671,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
   <tr><td valign="top">
 <?php
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    record_marks($property_id, $mysqli, $userObject->GetUserID(), $paper_type, $grade, $year, $attempt, $userroles);
+    record_marks($property_id, $mysqli, $userObject->get_user_ID(), $paper_type, $grade, $year, $attempt, $userroles);
   }
   echo $top_table_html;
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
@@ -714,7 +714,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     if ($paper_type == '_late') { 
       //if we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
       $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE userID=? AND started=? and q_paper=?");
-      $log_data->bind_param('isi', $userObject->GetUserID(), $sessionid, $property_id);
+      $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
       $log_data->execute();
       $log_data->store_result();
       $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
@@ -733,7 +733,7 @@ echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear 
     }
     //get user answers from whichever log is pointed to by log$paper_type
     $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE userID=? AND started=? and q_paper=? ORDER BY id");
-    $log_data->bind_param('isi', $userObject->GetUserID(), $sessionid, $property_id);
+    $log_data->bind_param('isi', $userObject->get_user_ID(), $sessionid, $property_id);
     $log_data->execute();
     $log_data->store_result();
     $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);

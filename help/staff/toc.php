@@ -51,9 +51,9 @@ require '../../include/staff_auth.inc';
 
 <div id="main">
 <?php
-  if ($userObject->HasRole('SysAdmin')) {
+  if ($userObject->has_role('SysAdmin')) {
     $roles_check = 'roles IN ("SysAdmin","Admin","Staff")';
-  } elseif ($userObject->HasRole('Admin')) {
+  } elseif ($userObject->has_role('Admin')) {
     $roles_check = 'roles IN ("Admin","Staff")';
   } else {
     $roles_check = 'roles="Staff"';

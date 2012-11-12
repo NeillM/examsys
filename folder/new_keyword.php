@@ -30,7 +30,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   if ($new_keyword != '') {
     if ($_POST['module'] == '') {
       $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL,?,?,'personal')");
-      $result->bind_param('is', $userObject->GetUserID(),$new_keyword);
+      $result->bind_param('is', $userObject->get_user_ID(),$new_keyword);
       $result->execute();  
       $result->close();
     } else {

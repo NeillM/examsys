@@ -151,7 +151,7 @@ Class debug_mysqli_stmt extends mysqli_stmt {
 }
 
 function outputDebug() {
-  if ($userObject->HasRole('SysAdmin')) {
+  if ($userObject->has_role('SysAdmin')) {
     outputLoadTimes();
   }
 }

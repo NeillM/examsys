@@ -103,7 +103,7 @@ if (isset($_POST['Submit'])) {
     
   if (strtolower($new_folder) != strtolower($_POST['old_folder'])) {
     $result = $mysqli->prepare("SELECT name FROM folders WHERE name=? AND ownerID=? LIMIT 1");
-    $result->bind_param('si', $new_folder, $userObject->GetUserID());
+    $result->bind_param('si', $new_folder, $userObject->get_user_ID());
     $result->execute();
     $result->store_result();
     $result->bind_result($name);
@@ -114,12 +114,12 @@ if (isset($_POST['Submit'])) {
 
       // Alter the name of the folder in the 'folders' table first.
       $editProperties = $mysqli->prepare("UPDATE folders SET name=?, team_name=?, color=? WHERE name=? AND ownerID=?");
-      $editProperties->bind_param('ssssi', $new_folder, $module_string, $_POST['color'], $_POST['old_folder'], $userObject->GetUserID());
+      $editProperties->bind_param('ssssi', $new_folder, $module_string, $_POST['color'], $_POST['old_folder'], $userObject->get_user_ID());
       $editProperties->execute();  
       $editProperties->close();
 
       // Alter the prefix of any child folders.
-      if (!$mysqli->query("UPDATE folders SET name=REPLACE(name,\"" . $_POST['old_folder'] . ";\",\"" . $new_folder . ";\") WHERE name LIKE \"" . $_POST['old_folder'] . ";%\" AND ownerID=". $userObject->GetUserID())) { //TODO this needs sql fixing to a prepare statement
+      if (!$mysqli->query("UPDATE folders SET name=REPLACE(name,\"" . $_POST['old_folder'] . ";\",\"" . $new_folder . ";\") WHERE name LIKE \"" . $_POST['old_folder'] . ";%\" AND ownerID=". $userObject->get_user_ID())) { //TODO this needs sql fixing to a prepare statement
         echo "<p class=\"error\">Folders Edit Error 2</p>\n<p>Query: " . $editProperties . "</p>\n<p>" . mysql_error($link_id) . "</p>\n";
         echo "</body>\n</html>\n";
         exit;
@@ -127,7 +127,7 @@ if (isset($_POST['Submit'])) {
       
       // Next update the folder name in the 'properties' table (moves papers).
       $editProperties = $mysqli->prepare("UPDATE properties SET folder=? WHERE folder=? AND paper_ownerID=?");
-      $editProperties->bind_param('ssi', $new_folder, $_POST['old_folder'], $userObject->GetUserID());
+      $editProperties->bind_param('ssi', $new_folder, $_POST['old_folder'], $userObject->get_user_ID());
       $editProperties->execute();  
       $editProperties->close();
     }
@@ -137,7 +137,7 @@ if (isset($_POST['Submit'])) {
   } else {
     
     $editProperties = $mysqli->prepare("UPDATE folders SET team_name=?, color=? WHERE name=? AND ownerID=?");
-    $editProperties->bind_param('sssi', $module_string, $_POST['color'], $_POST['old_folder'], $userObject->GetUserID());
+    $editProperties->bind_param('sssi', $module_string, $_POST['color'], $_POST['old_folder'], $userObject->get_user_ID());
     $editProperties->execute();  
     $editProperties->close();
   }
@@ -224,9 +224,9 @@ if ($unique_name) {
 	    $module_sql = implode("','", $total_modules);
        
 	    if ($module_sql != '') $module_sql = "'$module_sql'";
-	      if ($userObject->HasRole('SysAdmin')) {
+	      if ($userObject->has_role('SysAdmin')) {
           $module_details = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleID");
-        } elseif ($userObject->HasRole('Admin')) {
+        } elseif ($userObject->has_role('Admin')) {
           $module_details = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules, schools WHERE modules.school=schools.school AND faculty='$faculty' ORDER BY moduleID");
         } else {
           $module_details = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($module_sql) ORDER BY moduleID");
@@ -240,7 +240,7 @@ if ($unique_name) {
             if ($separate_module == $moduleid) $match = true;
           }
           if ($match == true) {
-            if (in_array($moduleid, $teams) or $userObject->HasRole('SysAdmin')) {
+            if (in_array($moduleid, $teams) or $userObject->has_role('SysAdmin')) {
               echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $moduleid . "\" checked>&nbsp;" . $moduleid . ": " . substr($fullname,0,60) . "</div>\n";
             } else {
               echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $moduleid . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $moduleid . "\" checked>&nbsp;" . $moduleid . ": " . substr($fullname,0,60) . "</div>\n";

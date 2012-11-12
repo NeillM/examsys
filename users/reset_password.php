@@ -94,13 +94,13 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
           $delete->close();
           
           $redirect_url = $protocol. $_SERVER['HTTP_HOST'] . $cfg_root_path . "/";
-          if ($userObject->HasRole('External Examiner')) {
+          if ($userObject->has_role('External Examiner')) {
             $redirect_url .= "reviews/";
-          } elseif ($userObject->HasRole('Invigilator')) {
+          } elseif ($userObject->has_role('Invigilator')) {
             $redirect_url .= "invigilator/";
-          } elseif ($userObject->HasRole('Student')) {
+          } elseif ($userObject->has_role('Student')) {
             $redirect_url .= "students/";
-          } elseif ($userObject->HasRole('Staff')) {
+          } elseif ($userObject->has_role('Staff')) {
             $redirect_url .= "staff/";
           }
           

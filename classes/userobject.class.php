@@ -52,7 +52,7 @@ class UserObject {
     return $this->userroles;
   }
 
-  function HasRole($roles, $exclusive = 0) {
+  function has_role($roles, $exclusive = 0) {
     if (is_string($roles)) {
       if ($exclusive == 0  or ($exclusive == 1 and count($this->roles) == 1)) {
         if (isset($this->roles[$roles])) {
@@ -72,7 +72,7 @@ class UserObject {
     return false;
   }
 
-  function ListUserRoles() {
+  function list_user_roles() {
     return array_keys($this->roles);
   }
 
@@ -80,20 +80,20 @@ class UserObject {
     return $this->year;
   }
 
-  function &GetUserID() {
+  function &get_user_ID() {
     return $this->userID;
   }
 
   function GetStaffModules() {
     if(count($this->staffModules)<1) {
-      $this->LoadStaffModules();
+      $this->load_staff_modules();
     }
     return $this->staffModules;
 
   }
 
 
-  function LoadStaffModules() {
+  function load_staff_modules() {
     $this->staffModules = array();
 
     $result = $this->db->prepare("SELECT idMod,moduleID FROM modules_staff,modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
@@ -109,7 +109,7 @@ class UserObject {
 
   }
 
-  function IsSpecialNeeds() {
+  function is_special_needs() {
     if($this->special_needs != 0) {
       return true;
     }
@@ -117,7 +117,7 @@ class UserObject {
   }
 
 
-  function GetGrade() {
+  function get_grade() {
     return $this->grade;
   }
 }
