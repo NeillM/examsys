@@ -81,7 +81,7 @@ global $userObject; // TODO fix this fudge
 
     //$variables=dump($context);
 
-    $variables=serialize($context);
+    $variables=base64_encode(serialize($context));
 
     $backtrace=DebugBackTraceDisplay(debug_backtrace());
 

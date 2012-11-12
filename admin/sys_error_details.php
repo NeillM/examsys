@@ -103,7 +103,20 @@ if ($fixed == '') {
 </form>
 <table>
     <tr><td class="f" style="vertical-align: top"><?php echo $string['backtrace']; ?></td><td><?php echo $backtrace; ?></td></tr>
-    <tr><td class="f" style="vertical-align: top"><?php echo $string['variables']; ?></td><td><?php echo $variables; ?></td></tr>
+<?php
+echo <<<END
+  <tr><td class="f" style="vertical-align: top">
+END;
+
+echo $string['variables'] . '</td><td>';
+$variables=unserialize(base64_decode($variables));
+  var_dump($variables);
+echo <<<END
+    </td></tr>
+END;
+
+
+?>
 </table>
 <?php
 $mysqli->close();

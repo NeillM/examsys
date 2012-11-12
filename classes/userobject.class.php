@@ -76,7 +76,7 @@ class UserObject {
     return array_keys($this->roles);
   }
 
-  function GetYear() {
+  function get_year() {
     return $this->year;
   }
 
