@@ -466,6 +466,7 @@ if ($css != '') {
       submitted = true;
       return true;
     } else {
+      document.body.style.cursor = '';
       return false;
     }
   }
@@ -532,19 +533,21 @@ if ($css != '') {
   var userSubmit = function (event) {
     submitType = 'userSubmit';
     stopAutoSave();
-
-    $('#saveError').fadeOut('slow');
-    $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
-    document.body.style.cursor = 'wait';
-
-    //log which method the users submited the page via
     if (!!event) {
-    $('#button_pressed').attr('value',event.target.id);
-      if(event.target.id != 'finish') {
-        $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
-      }
+      $('#button_pressed').attr('value',event.target.id);
     }
-    ajaxSave();
+    if (confirmSubmit()) {
+      $('#saveError').fadeOut('slow');
+      $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
+
+      //log which method the users submited the page via
+      if (!!event) {
+        if(event.target.id != 'finish') {
+          $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
+        }
+      }
+      ajaxSave();
+    }
   }
   
   var startAutoSave = function () { 
@@ -661,11 +664,10 @@ $show_ref_material = false;
 echo "<div id=\"maincontent\">\n";
 
 if ($current_screen < $no_screens) {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\"";
+  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\">";
 } else {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . "\"";
+  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . "\">";
 }
-echo ' onsubmit="return confirmSubmit()">';   // Warning message only in linear navigation mode.
 ?>
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr><td valign="top">
