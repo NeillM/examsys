@@ -310,11 +310,10 @@ require_once '../include/staff_auth.inc';
     $result->execute();
     $result->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
     $result->store_result();
-    $moduleID = '';
     if ($result->num_rows > 0) {
       echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $result->num_rows . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
       while ($result->fetch()) {
-        display_paper_icon($userObject->get_user_ID(), $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleID, $password);
+        display_paper_icon($userObject->get_user_ID(), $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
       }
     }
     $result->close();

@@ -353,8 +353,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $cfg_root_pat
 //TODO this area similar to the question_list_options file
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($staff_modules, $userroles, $userObject->get_user_ID(), $mysqli,$userObject); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($staff_modules, $userroles, $userObject->get_user_ID(), $mysqli, 'questions'); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions'); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['status']; search_utils::display_status_dropdown(); ?></div>
   <div style="margin-left:4px"><br /><?php echo $string['blooms']; search_utils::display_blooms_dropdown(); ?></div>
   

@@ -332,7 +332,6 @@ $sent_clear_all = false;
 if ($display_papers) {
   if ($results->num_rows > 0) {
     while ($results->fetch()) {
-      $moduleIds = Paper_utils::get_modules($property_id, $mysqli); 
       if ($old_p_type != $paper_type and (isset($_GET['module']) and $_GET['module'] != '') ) {
         if ($sent_clear_all) {
           echo "<br clear=\"all\" />";
@@ -346,7 +345,7 @@ if ($display_papers) {
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
         echo "<br />\n";
       }
-      display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $moduleIds, $password, $userObject);
+      display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
       $old_p_type = $paper_type;
       $file_no++;
     }

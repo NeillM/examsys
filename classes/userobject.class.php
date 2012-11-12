@@ -13,6 +13,9 @@
  * @copyright Copyright (c) 2012 The University of Nottingham
  * @package
  */
+
+require_once $cfg_web_root . 'classes/schoolutils.class.php';
+
 class UserObject {
 
   // include old variables as private ones in this class
@@ -85,13 +88,60 @@ class UserObject {
   }
 
   function get_staff_modules() {
+    
+    if ( !$this->has_role( array('Staff','Admin','SysAdmin') ) ) {
+      //this is not a staff user so it cant be on any modules
+      return false;
+    }
+
     if(count($this->staffModules)<1) {
       $this->load_staff_modules();
     }
     return $this->staffModules;
-
   }
 
+  /**
+   * @param $moduleID an array of modules keyed on idMod
+   * @return bool true if staff member is on a module
+   */
+  function is_staff_user_on_module($moduleID) {
+    
+    if ( !$this->has_role( array('Staff','Admin','SysAdmin') ) ) {
+      //this is not a staff user so it cant be on any modules
+      return false;
+    }
+
+    if (count($this->staffModules)<1) {
+      $this->load_staff_modules();
+    }
+
+    switch ( gettype($moduleID) ) {
+      case 'array':
+        if(count($moduleID) > 1) {
+          throw new Exception("is_staff_user_on_module:: only accepts one module at a time.");
+        }
+        foreach($moduleID as $idMod => $full_moduleID) {
+          if (isset($this->staffModules[$idMod])) {
+            return true;
+          }
+        }
+        break;
+      case 'string':
+        if (in_array($this->staffModules, $moduleID)) {
+          return true;
+        }
+        break;
+      case 'integer':
+        if (isset($this->staffModules[$moduleID])) {
+          return true;
+        }
+        break;
+      default:
+        return false;
+    }
+
+    return false;
+  }
 
   function load_staff_modules() {
     $this->staffModules = array();
@@ -106,7 +156,6 @@ class UserObject {
     $result->close();
 
     return $this->staffModules;
-
   }
 
   function is_special_needs() {
@@ -120,4 +169,46 @@ class UserObject {
   function get_grade() {
     return $this->grade;
   }
+
+  /**
+   * Get a list of modules the current user has access to.
+   * @return array of staff module that this user has access to.
+   */
+  function get_staff_accessable_modules() {
+    $staff_modules_list = array();
+
+    $staff_modules_sql = implode("','", $this->get_staff_modules());
+    if ($staff_modules_sql != '') $staff_modules_sql = "'$staff_modules_sql'";
+    
+    if ($staff_modules_sql != '' or $this->has_role('Admin')) {
+      if ($this->has_role('SysAdmin')) {
+        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
+      } elseif ($this->has_role('Admin')) {
+        $schoolIDs = implode(',', SchoolUtils::get_admin_schools($this->userID, $this->db));
+        if ($schoolIDs != '') {
+          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID";
+        } elseif ($staff_modules_sql != '') {
+          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($staff_modules_sql) ORDER BY school, moduleID";
+        }
+      } else {
+        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($staff_modules_sql) ORDER BY school, moduleID";
+      }
+
+      if (isset($sql)) {
+        $result = $this->db->prepare($sql);
+        $result->execute();
+        $result->bind_result($idMod, $moduleid, $fullname, $school);
+        while ($result->fetch()) {
+          $staff_modules_list[$idMod]['school'] = $school;
+          $staff_modules_list[$idMod]['id'] = $moduleid;
+          $staff_modules_list[$idMod]['idMod'] = $idMod;
+          $staff_modules_list[$idMod]['fullname'] = $fullname;
+        }
+        $result->close();
+      }
+    }
+
+    return $staff_modules_list;
+  }
+
 }
