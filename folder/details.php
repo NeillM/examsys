@@ -123,8 +123,8 @@ if (isset($_POST['submit'])) {
   $folder_details->close();
   
   if ($duplicate_name == 0) {
-    if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, ?, NOW(), 'yellow', NULL)")) {
-      $folder_query->bind_param('iss', $userObject->get_user_ID(), $new_folder_name, $_GET['newteam']);
+    if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, NOW(), 'yellow', NULL)")) {
+      $folder_query->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
       $folder_query->execute();
       $folder_query->close();
     } else {
@@ -285,14 +285,14 @@ if ($folder != '') {
   }
   
   $tmp_folder_name = $orig_folder_name . ';%';
-  $folder_details = $mysqli->prepare("SELECT folders.id, name, moduleid, color FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND folders_modules_staff.idMod = modules.id AND (ownerID=? $tmp_string) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
+  $folder_details = $mysqli->prepare("SELECT folders.id, name, color FROM folders WHERE (ownerID=?) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
   $folder_details->bind_param('is', $userObject->get_user_ID(), $tmp_folder_name);
   $folder_details->execute();
-  $folder_details->bind_result($id, $name, $staff_modules, $color);
+  $folder_details->bind_result($id, $name, $color);
   while ($folder_details->fetch()) {
     $display_name = str_replace("$orig_folder_name;","",$name);
     if (substr_count($display_name,';') == 0) {
-      if ($staff_modules == '') {
+      if (count($staff_modules) > 0) {
         echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";
       } else {
         echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"details.php?folder=$id\"><img src=\"../artwork/shared_" . $color . "_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"details.php?folder=$id\" class=\"blacklink\">$display_name</a></td></tr></table></div>\n";

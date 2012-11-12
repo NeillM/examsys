@@ -114,7 +114,7 @@ require_once '../include/staff_auth.inc';
     $folder_details->close();
 
     if ($duplicate_name == 0) {
-      if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, '', NOW(), 'yellow', NULL)")) {
+      if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, NOW(), 'yellow', NULL)")) {
         $folder_query->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
         $folder_query->execute();
         $folder_query->close();
@@ -252,11 +252,11 @@ require_once '../include/staff_auth.inc';
 <?php
   // -- Display personal folders --------------------------------------
   $module_sql = '';
-  if (count($staff_modules) > 0) {
-    $module_sql == " OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "'') ";
+  if (count($userObject->get_staff_modules()) > 0) {
+    $module_sql = " OR idMod IN (" . implode(",",array_keys($userObject->get_staff_modules())) . ")";
   }
 
-  $result = $mysqli->prepare("SELECT id, name, color FROM folders,folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
+  $result = $mysqli->prepare("SELECT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE  (ownerID=? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($id, $name, $color);
