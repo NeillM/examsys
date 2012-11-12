@@ -84,7 +84,7 @@ class UserObject {
     return $this->userID;
   }
 
-  function GetStaffModules() {
+  function get_staff_modules() {
     if(count($this->staffModules)<1) {
       $this->load_staff_modules();
     }
