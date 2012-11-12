@@ -33,7 +33,7 @@ Class Paper_utils {
   * @param $paperID the id of the paper or property_id
   * @return array 
   */
-  static function get_modules($paperID,$db) {
+  static function get_modules($paperID, $db) {
     $modules = array();
     $result = $db->prepare("SELECT idMod,moduleid FROM modules,properties_modules WHERE idMod = id AND  property_id = ?");
     $result->bind_param('i', $paperID);
