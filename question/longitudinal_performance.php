@@ -36,7 +36,7 @@ check_var('q_id', 'GET', true, false);
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  <title>Longitudinal Performance<?php echo ' ' . $cfg_install_type; ?></title>
+  <title><?php echo $string['longitudinalperformance'] .  ' ' . $cfg_install_type; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -66,23 +66,23 @@ check_var('q_id', 'GET', true, false);
 <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
 <tr>
 <th></th>
-<th>Paper Name</th>
-<th>Calendar Year</th>
-<th>Question No</th>
-<th>Date Taken</th>
-<th>Cohort</th>
+<th><?php echo $string['papername']; ?></th>
+<th><?php echo $string['calendaryear']; ?></th>
+<th><?php echo $string['questionno']; ?></th>
+<th><?php echo $string['datetaken']; ?></th>
+<th><?php echo $string['cohort']; ?></th>
 <th></th>
-<th>P</th>
-<th>D</th>
+<th><?php echo $string['p']; ?></th>
+<th><?php echo $string['d']; ?></th>
 <th style="width:40%"></th>
 </tr>
 <?php
   $q_id = (int)$_GET['q_id'];
 
-  $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, q_group, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
+  $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
   $question_data->bind_param('i', $q_id);
   $question_data->execute();
-  $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_group, $q_type, $std, $status);
+  $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_type, $std, $status);
   $question_data->store_result();
   $question_data->fetch();
   $question_data->close();

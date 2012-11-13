@@ -33,23 +33,36 @@ Class question_info {
    * @param object $db
    * @return formated HTML for display of question information
    */
-  static function full_question_information($q_id, $db, $userObject) {
-    global $cfg_short_date, $cfg_long_date_time, $userroles, $string;
+  static function full_question_information($q_id, $db, $userObj) {
+    global $cfg_short_date, $cfg_long_date_time, $string;
     
     $html = '';
      
-    $question_data = $db->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, q_group, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
+    $question_data = $db->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked,  q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
     $question_data->bind_param('i', $_GET['q_id']);
     $question_data->execute();
-    $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_group, $q_type, $std, $status);
+    $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_type, $std, $status);
     $question_data->store_result();
     $question_data->fetch();
-    $question_data->close(); 
+    $question_data->close();
     
-    if ($q_group == '') $q_group = '<span style="color:#808080">' . $string['na'] . '</span>';
+    $modules = QuestionUtils::get_modules($q_id, $db);
+
+    $q_group = '';
+    if (count($modules) == 0) {
+      $q_group = '<span style="color:#808080">' . $string['na'] . '</span>';
+    } else {
+      foreach($modules as $code=>$module) {
+        if ($q_group == '') {
+          $q_group = $module;
+        } else {
+          $q_group = ', ' . $module;
+        }
+      }
+    }
     if ($locked == '') $locked = '<span style="color:#808080">' . $string['na'] . '</span>';
 
-    if ($userObject->has_role('Demo')) {
+    if ($userObj->has_role('Demo')) {
       $owner = 'Dr J, Bloggs (<a href="">joe.bloggs@uni.ac.uk</a>)';
     } else {
       $owner = "$title $initials $surname (<a href=\"mailto:$email\">$email</a>)";
@@ -122,7 +135,7 @@ Class question_info {
    * @return array of performance data
    */
   static function question_performance($q_id, $db) {
-    global $cfg_short_date, $cfg_long_date_time, $userroles, $string;
+    global $cfg_short_date, $cfg_long_date_time, $string;
 
     $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer');
     $performance = array();

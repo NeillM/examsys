@@ -25,6 +25,7 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   require '../classes/questioninfo.class.php';
+  require '../classes/questionutils.class.php';
   
   check_var('q_id', 'GET', true, false);
 ?>
@@ -73,7 +74,7 @@
 </td>
 </tr>
 <?php
-  echo question_info::full_question_information($_GET['q_id'], $mysqli,$userObject);
+  echo question_info::full_question_information($_GET['q_id'], $mysqli, $userObject);
 ?>
 </table>
 </div>
