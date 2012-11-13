@@ -25,6 +25,7 @@
 */
 
 require_once '../include/staff_auth.inc';
+require_once '../include/errors.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
@@ -33,8 +34,10 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/questionutils.class.php';
 
+check_var('paperID', 'REQUEST', true, false);
+
 if (!isset($staff_modules)){
-   $staff_modules = get_staff_modules($userObject->get_user_ID(), $mysqli, $userObject);
+  $staff_modules = get_staff_modules($userObject->get_user_ID(), $mysqli, $userObject);
 }
 
 function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
