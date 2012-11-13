@@ -115,7 +115,6 @@ function getPaper($paperID) {
     .mapping {font-size:90%; color:#FF6300; font-weight:normal}
     .mapping_exclueded {color:red;font-weight:normal;text-decoration:line-through}
     .unmapped {color:#C0C0C0}
-    li {padding-left:32px; text-indent:-16px;}
     a {text-decoration: none}
     .m_s {background-image:url('../artwork/red_hash_background.png'); background-repeat:repeat}
     .o_s {background-color:#99FF99}
