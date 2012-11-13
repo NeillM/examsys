@@ -289,7 +289,7 @@ $current_screen = 1;
     });
   </script>
 </head>
-<body>#
+<body>
 
   <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr><td valign="top">
