@@ -300,43 +300,5 @@ function gen_password($len = 8) {
   return $pass;
 }
 
-//TODO REMOVE ME
-/*function getUserTeams($userID, $db) {
-  $teams = array();
-
-  $result = $db->prepare("SELECT name FROM teams WHERE memberID=? AND name IS NOT NULL ORDER BY name");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->bind_result($team_name);
-  while ($result->fetch()) {
-    $team_name = strtoupper($team_name);
-    $teams[$team_name] = $team_name;
-  }
-  $result->close();
-
-  return $teams;
-}*/
-
-/***
-*
-*
-*
-*/
-function get_staff_modules($userID, $db,$userObject) {
-  error_disp("GET_STAFF_MODULE called");
-  $staff_modules = array();
-
-  $result = $db->prepare("SELECT idMod,moduleID FROM modules_staff,modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->bind_result($idMod,$moduleID);
-  while ($result->fetch()) {
-    $staff_modules[$idMod] = $moduleID;
-  }
-  $result->close();
-
-  return $staff_modules;
-}
-
 
 ?>

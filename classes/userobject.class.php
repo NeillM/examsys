@@ -30,7 +30,7 @@ class UserObject {
   // include old variables as private ones in this class
   private $password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username;
 
-  private $roles,$staffModules,$db;
+  private $roles, $staffModules, $db;
 
   /**
    * constructor
@@ -39,7 +39,7 @@ class UserObject {
    * @return none
    */
   function __construct(&$db) {
-    $this->db=$db;
+    $this->db = $db;
   }
 
   /**
@@ -52,19 +52,19 @@ class UserObject {
     list($this->password, $this->userID, $this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->record_no, $this->split_username) = $array;
 
     if (strpos($this->userroles, 'SysAdmin') !== false) {
-      $this->roles['SysAdmin']=1;
+      $this->roles['SysAdmin'] = 1;
     }
     if (strpos($this->userroles, 'Staff') !== false or strpos($userroles, 'Admin') !== false) { // Process staff first to get higher priority than students --no need
-      $this->roles['Staff']=1;
+      $this->roles['Staff'] = 1;
     }
     if (strpos($this->userroles, 'Student') !== false) {
-      $this->roles['Student']=1;
+      $this->roles['Student'] = 1;
     }
     if (strpos($this->userroles, 'External Examiner') !== false) {
-      $this->roles['ExternalExaminer']=1;
+      $this->roles['ExternalExaminer'] = 1;
     }
     if (strpos($this->userroles, 'Invigilator') !== false) {
-      $this->roles['Invigilator']=1;
+      $this->roles['Invigilator'] = 1;
     }
   }
 
@@ -94,9 +94,9 @@ class UserObject {
       }
     } else {
       // assume array
-      if($exclusive == 0 or ($exclusive == 1 and count($this->roles) == count($roles))) {
-        foreach($roles as $role) {
-          if(isset($this->roles[$role])) {
+      if ($exclusive == 0 or ($exclusive == 1 and count($this->roles) == count($roles))) {
+        foreach ($roles as $role) {
+          if (isset($this->roles[$role])) {
             return true;
           }
         }
@@ -126,7 +126,6 @@ class UserObject {
   /**
    * returns the userID
    *
-
    * @return userID
    */
   function &get_user_ID() {
@@ -139,13 +138,13 @@ class UserObject {
    * @return false if not staff else an array of the modules by id & CODE
    */
   function get_staff_modules() {
-    
-    if ( !$this->has_role( array('Staff','Admin','SysAdmin') ) ) {
+
+    if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       //this is not a staff user so it cant be on any modules
       return false;
     }
 
-    if(count($this->staffModules)<1) {
+    if (count($this->staffModules) < 1) {
       $this->load_staff_modules();
     }
     return $this->staffModules;
@@ -156,22 +155,22 @@ class UserObject {
    * @return bool true if staff member is on a module
    */
   function is_staff_user_on_module($moduleID) {
-    
-    if ( !$this->has_role( array('Staff','Admin','SysAdmin') ) ) {
+
+    if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
       //this is not a staff user so it cant be on any modules
       return false;
     }
 
-    if (count($this->staffModules)<1) {
+    if (count($this->staffModules) < 1) {
       $this->load_staff_modules();
     }
 
-    switch ( gettype($moduleID) ) {
+    switch (gettype($moduleID)) {
       case 'array':
-        if(count($moduleID) > 1) {
+        if (count($moduleID) > 1) {
           throw new Exception("is_staff_user_on_module:: only accepts one module at a time.");
         }
-        foreach($moduleID as $idMod => $full_moduleID) {
+        foreach ($moduleID as $idMod => $full_moduleID) {
           if (isset($this->staffModules[$idMod])) {
             return true;
           }
@@ -205,7 +204,7 @@ class UserObject {
     $result = $this->db->prepare("SELECT idMod,moduleID FROM modules_staff,modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
     $result->bind_param('i', $this->userID);
     $result->execute();
-    $result->bind_result($idMod,$moduleID);
+    $result->bind_result($idMod, $moduleID);
     while ($result->fetch()) {
       $this->staffModules[$idMod] = $moduleID;
     }
@@ -220,7 +219,7 @@ class UserObject {
    * @return true if has special needs
    */
   function is_special_needs() {
-    if($this->special_needs != 0) {
+    if ($this->special_needs != 0) {
       return true;
     }
     return false;
@@ -244,7 +243,7 @@ class UserObject {
 
     $staff_modules_sql = implode("','", $this->get_staff_modules());
     if ($staff_modules_sql != '') $staff_modules_sql = "'$staff_modules_sql'";
-    
+
     if ($staff_modules_sql != '' or $this->has_role('Admin')) {
       if ($this->has_role('SysAdmin')) {
         $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id ORDER BY school, moduleID";
