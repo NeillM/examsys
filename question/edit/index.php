@@ -63,7 +63,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
     $critical_error = sprintf($string['typeinvalid'], htmlentities($_GET['type']));
   } else {
     try {
-      $question = Question::question_factory($mysqli, $userObject->get_user_ID(), $string, $_GET['type']);
+      $question = Question::question_factory($mysqli, $userObject, $string, $_GET['type']);
       $question->set_type($_GET['type']);
       $question->set_owner_id($userObject->get_user_ID());
       $question->set_teams(Paper_utils::get_modules($paper_id, $mysqli));
@@ -76,7 +76,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   $mode = $string['edit'];
   
   try {
-    $question = Question::question_factory($mysqli, $userObject->get_user_ID(), $string, $_REQUEST['q_id']);
+    $question = Question::question_factory($mysqli, $userObject, $string, $_REQUEST['q_id']);
   } catch (Exception $ex) {
     $critical_error = $ex->getMessage();
   }
@@ -287,7 +287,7 @@ if ($critical_error == '') {
     }
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
     $question->clear_checkout();
-    redirect($userObject);
+    redirect($userObject,$mysqli);
   }
 
   if ($do_save) {
@@ -358,7 +358,7 @@ if ($critical_error == '') {
       }
     }
 
-    if (count($errors) == 0) redirect();
+    if (count($errors) == 0) redirect($userObject,$mysqli);
   }
 
   $q_type_display = '';
@@ -581,7 +581,7 @@ if (count($question->get_teams()) > 0) {
   $q_teams = explode(',', $state['default_team']);
 }
 
-echo render_metadata($mysqli, $question, $question->use_bloom(), $q_teams, $q_disabled, $string,$userObject);
+echo render_metadata($mysqli, $question, $question->use_bloom(), $q_teams, $q_disabled, $string, $userObject);
 ?>
         </div>
       </div>

@@ -106,7 +106,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
       } else {
         echo "$title&nbsp;$initials&nbsp;$surname";
       }
-      echo "</div></td><td><div class=\"err\">$tmp_userID</div>Quadcor3
+      echo "</div></td><td><div class=\"err\">$tmp_userID</div>
       </td></tr>\n";
     }
   }

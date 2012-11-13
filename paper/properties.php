@@ -37,7 +37,7 @@ if (!isset($staff_modules)){
    $staff_modules = get_staff_modules($userObject->get_user_ID(), $mysqli, $userObject);
 }
 
-function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userroles, $db) {
+function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
   if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role('Admin')) {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
@@ -1324,7 +1324,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     if ($module_sql == '') {
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"0\" /></div>\n";
     } else {
-      $module_array = search_utils::get_staff_modules($staff_modules, $userroles, $userObject->get_user_ID(), $mysqli, $userObject);
+      $module_array = $userObject->get_staff_accessable_modules();
       $module_no = 0;
       $old_school = '';
       foreach ($module_array as $module) {
@@ -1351,7 +1351,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</td>\n";
     
-    echo "<td>" . output_labs($labs, $cfg_summative_mgmt, $paper_type, $userroles, $mysqli) . "</td></tr>\n";
+    echo "<td>" . output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $mysqli) . "</td></tr>\n";
 
   ?>
   </td></tr>

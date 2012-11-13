@@ -31,7 +31,6 @@ require_once './classes/networkutils.class.php';
 require_once './classes/paperutils.class.php';
 
 
-echo $sdgdfgdfg[dgfdfgdgdgdsg];
 // Redirect External Exminers and Invigilators to their own areas.
   if ($userObject->has_role('ExternalExaminer')) {
     header("location: reviews/");

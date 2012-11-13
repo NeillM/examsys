@@ -116,7 +116,7 @@
     }
   } else {    // Copy the paper and the questions.
     // Copy the properties (properties table)
-    $new_paper_id = copyProperties($userObject->get_user_ID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs);
+    $new_paper_id = copyProperties($userObject->get_user_ID(), $mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject);
   	
     // Copy the question and option data (questions and options tables)
     $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper=? ORDER BY display_pos");
@@ -133,7 +133,7 @@
       $qData->bind_param('i', $question);
       $qData->execute();
       $qData->store_result();
-      $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
+      $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
       while ($qData->fetch()) {
         $old_qids[$question] = $question; 
         // Question data
@@ -202,7 +202,18 @@
         if ($marks_correct == '') $marks_correct = 1;
         if ($line == 0) {  // First record - write out the question, all the rest are options.
         	$bloom = (empty($bloom)) ? NULL : $bloom;
-          $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+          $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type,theme,scenario,leadin,correct_fback,incorrect_fback,display_method,notes,ownerID,q_media,q_media_width, q_media_height, creation_date,last_edited,bloom,scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked,std,status,q_option_order,score_method) VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+
+          if ($mysqli->error) {
+            try {
+              throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+            }
+            catch (Exception $e) {
+              echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+              echo nl2br($e->getTraceAsString());
+            }
+          }
+
           $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
           $addQuestion->execute();
           $new_qids[] = $question_id = $mysqli->insert_id;
@@ -384,7 +395,7 @@
   }
   $mysqli->close();
   
-  function copyProperties($userID, $mysqlidb, &$calendar_year, &$new_calendar_year, &$moduleIDs) {
+  function copyProperties($userID, $mysqlidb, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj) {
     global $cfg_summative_mgmt;
     
     $moduleIDs = Paper_utils::get_modules($_POST['paperID'],$mysqlidb);
@@ -432,7 +443,7 @@
     $addPaper->close();
     
     //set the modules on the new paper
-    Paper_utils::update_modules($moduleIDs, $new_paper_id, $mysqlidb,$userObject);
+    Paper_utils::update_modules($moduleIDs, $new_paper_id, $mysqlidb, $userObj);
 
     if ($paper_type == 2 and $cfg_summative_mgmt) {
       if (isset($_POST['barriers_needed'])) {

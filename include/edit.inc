@@ -67,8 +67,8 @@ function check_fullSave($q_id, $mysqli) {
   }
 }
 
-function redirect($userObject) {
-  global $protocol, $mysqli, $q_id, $DISABLEDuserID, $cfg_root_path;
+function redirect($userObject,$mysqli) {
+  global $protocol, $DISABLEDmysqli, $q_id, $DISABLEDuserID, $cfg_root_path;
   // Release the lock.
   if ($_POST['checkout_author'] == $userObject->get_user_ID()) {
     $result = $mysqli->prepare("UPDATE questions SET checkout_time=NULL, checkout_authorID=NULL WHERE q_id=?");

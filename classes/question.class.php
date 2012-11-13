@@ -125,10 +125,11 @@ Class Question extends RogoObject {
    * properties from an associative array
    * @param mixed $data
    */
-  function __construct($mysqli, $user_id, $lang_strings, $data = null) {
+  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
     // Store the database connection reference and current user
     $this->_mysqli = $mysqli;
-    $this->_user_id = $user_id;
+    $this->_user_id = $userObj->get_user_ID();
+    $this->_userObj = $userObj;
     $this->_lang_strings = $lang_strings;
     
     // Initialise language specific elements
@@ -362,7 +363,7 @@ QUERY;
       
       if ($success) {
         //updates the teams/question modules
-        QuestionUtils::update_modules($this->teams, $this->id, $this->_mysqli);
+        QuestionUtils::update_modules($this->teams, $this->id, $this->_mysqli, $this->_userObj);
       }
 
       if ($success) {
