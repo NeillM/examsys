@@ -202,7 +202,7 @@
         if ($marks_correct == '') $marks_correct = 1;
         if ($line == 0) {  // First record - write out the question, all the rest are options.
         	$bloom = (empty($bloom)) ? NULL : $bloom;
-          $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type,theme,scenario,leadin,correct_fback,incorrect_fback,display_method,notes,ownerID,q_media,q_media_width, q_media_height, creation_date,last_edited,bloom,scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked,std,status,q_option_order,score_method) VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+          $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type,theme,scenario,leadin,correct_fback,incorrect_fback,display_method,notes,ownerID,q_media,q_media_width, q_media_height, creation_date,last_edited,bloom,scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked,std,status,q_option_order,score_method) VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
 
           if ($mysqli->error) {
             try {
@@ -307,8 +307,8 @@
     } else {
       //we are copying between sessions we need to check for changed sessions/objectives
       $mappings_copy_objID = array();
-      $old_course = getObjectives($moduleID, $calendar_year, $_POST['paperID'], '', $mysqli);
-      $new_course = getObjectives($moduleID, $new_calendar_year, $_POST['paperID'], '', $mysqli);
+      $old_course = getObjectives($moduleIDs, $calendar_year, $_POST['paperID'], '', $mysqli);
+      $new_course = getObjectives($moduleIDs, $new_calendar_year, $_POST['paperID'], '', $mysqli);
       if (count($old_course) > 0 and count($new_course) > 0) {
         foreach ($old_course as $module=>&$sessions) {
           foreach ($sessions as $identifier=>&$session) {

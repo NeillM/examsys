@@ -53,8 +53,9 @@ Class Paper_utils {
   * @return void 
   */
   static function update_modules($paper_modules, $paperID, $db, $userObject) {
-    global $REPLACEMEuserIDold, $DISABLEDuserroles, $staff_modules; //these will come form the users object later
+    global $REPLACEMEuserIDold, $DISABLEDuserroles, $DISABLEDstaff_modules; //these will come form the users object later
 
+    $staff_modules=$userObject->get_staff_modules();
     if(count($staff_modules) < 0) {
       $user_modules = get_staff_modules($userObject->get_user_ID(), $db, $userObject->get_user_ID());
     }
