@@ -54,6 +54,8 @@ if (isset($_POST['submit'])) {
   $similar_errors = $result->num_rows();
   $result->close();
 }
+$variables=unserialize(base64_decode($variables));
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -73,6 +75,7 @@ td {border: 1px solid #C0C0C0; padding:2px}
 
 <body>
 
+<div style="overflow:auto; height:745px">
 <table>
 <tr><td class="f"><?php echo $string['date']; ?></td><td><?php echo $occurred; ?></td></tr>
 <tr><td class="f"><?php echo $string['staff']; ?></td><td><?php echo $title . ' ' . $initials . ' ' . $surname; ?></td></tr>
@@ -87,8 +90,10 @@ td {border: 1px solid #C0C0C0; padding:2px}
 <tr><td class="f"><?php echo $string['requestmethod']; ?></td><td><?php echo $request_method; ?></td></tr>
 <tr><td class="f" style="vertical-align: top;" ><?php echo $string['occurranceoferror']; ?></td><td><?php echo $similar_errors; ?></td></tr>
 <tr><td class="f"><?php echo $string['datefixed']; ?></td><td><?php echo ($fixed == '' ? 'n/a' : $fixed); ?></td></tr>
+<tr><td class="f" style="vertical-align: top"><?php echo $string['backtrace']; ?></td><td><?php echo $backtrace; ?></td></tr>
+<tr><td class="f" style="vertical-align: top"><?php echo $string['variables']; ?></td><td><?php var_dump($variables); ?></td></tr>
 </table>
-
+</div>
 <br />
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>?errorID=<?php echo $_GET['errorID']; ?>" method="post" name="myform">
 <div style="text-align:center"><input type="button" name="close" value="<?php echo $string['close']; ?>" style="width:100px" onclick="javascript:window.close();" />&nbsp;&nbsp;
@@ -101,23 +106,7 @@ if ($fixed == '') {
 ?>
 </div>
 </form>
-<table>
-    <tr><td class="f" style="vertical-align: top"><?php echo $string['backtrace']; ?></td><td><?php echo $backtrace; ?></td></tr>
-<?php
-echo <<<END
-  <tr><td class="f" style="vertical-align: top">
-END;
 
-echo $string['variables'] . '</td><td>';
-$variables=unserialize(base64_decode($variables));
-  var_dump($variables);
-echo <<<END
-    </td></tr>
-END;
-
-
-?>
-</table>
 <?php
 $mysqli->close();
 ?>
