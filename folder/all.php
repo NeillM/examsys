@@ -48,8 +48,8 @@
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script language="JavaScript">
     function displayCredits(){
-      notice=window.open("../credits/credits.php","credits","width=700,height=487,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
-      notice.moveTo(screen.width/2-350,screen.height/2-243)
+      notice=window.open("../credits/index.php","credits","width=696,height=500,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
+      notice.moveTo(screen.width/2-350,screen.height/2-250)
       if (window.focus) {
         notice.focus();
       }
