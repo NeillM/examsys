@@ -45,11 +45,7 @@ class UserObject {
     if (strpos($this->userroles, 'Invigilator') !== false) {
       $this->roles['Invigilator']=1;
     }
-
-
-
   }
-
 
   function old_getuserroles() {
     return $this->userroles;
@@ -164,7 +160,6 @@ class UserObject {
     }
     return false;
   }
-
 
   function get_grade() {
     return $this->grade;

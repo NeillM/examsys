@@ -100,9 +100,13 @@ function check_var($var_name, $method, $mandatory, $headers, $type = '') {
       if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
       }
-    } else {
+    } elseif ($method == 'POST') {
       if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg2'], $headers);
+      }
+    } else {
+      if (!isset($_REQUEST[$var_name]) or $_REQUEST[$var_name] === '' ) {
+        display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
       }
     }
   }
