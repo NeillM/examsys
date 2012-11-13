@@ -27,7 +27,7 @@ require '../include/std_set_shared_functions.inc';
 
 $paperID = $_GET['paperID'];
 
-function displayReview($review) {
+function displayReview($review, $userObj) {
   global $REPLACEMEuserIDold, $userroles;
   
   $setter_id = $review['setter_id'];
@@ -47,7 +47,7 @@ function displayReview($review) {
   }
   
   $html = '';
-  if ($setter_id == $userObject->get_user_ID() or $userObject->has_role('SysAdmin')) {
+  if ($setter_id == $userObj->get_user_ID() or $userObj->has_role('SysAdmin')) {
     $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
   } else {
     $html .= "<tr id=\"review{$review['review_no']}\" style=\"cursor:hand\" onmouseover=\"highlight({$review['review_no']})\" onmouseout=\"unhighlight({$review['review_no']})\" onclick=\"selReview('$setter_id','{$review['date']}',{$review['review_no']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" border=\"0\" /></td><td>&nbsp;";
@@ -176,7 +176,7 @@ $no_reviews = 0;
 $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
 
 foreach ($reviews as $review) {
-  $reviews_html .= displayReview($review);
+  $reviews_html .= displayReview($review, $userObject);
 }
 require '../include/std_set_menu.inc';
 ?>
