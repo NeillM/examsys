@@ -82,7 +82,6 @@ if (isset($_GET['scrOfY'])) {
 <?php
   $sql = "SELECT modules.id, modules.moduleid, fullname, COUNT(groupID) AS count_no FROM (modules_staff, modules) WHERE modules_staff.idMod=modules.id AND idMod IN (" . implode(',', array_keys($userObject->get_staff_modules())) . ") GROUP BY fullname";
   $result = $mysqli->prepare($sql);
-  $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($mod_id, $moduleid, $module_name, $count_no);
   while ($result->fetch()) {
