@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
   $similar_errors = $result->num_rows();
   $result->close();
 }
-$variables=unserialize(base64_decode($variables));
+$variables = unserialize(base64_decode($variables));
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
