@@ -150,7 +150,7 @@ SQL;
   * @return void 
   */
   static function add_modules($modules, $q_id, $db) {
-    $update = $db->prepare("INSERT INTO questions_modules VALUES(?,?) ON DUPLICATE KEY UPDATE idMod=idMod");
+    $update = $db->prepare("INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod=idMod");
     foreach ($modules as $idMod => $ModuleID) {
       $update->bind_param('ii', $q_id, $idMod);
       $update->execute();
@@ -188,7 +188,7 @@ SQL;
   }
 
   static function lock_question($q_id, $db) {
-    $lock = $mysqli->prepare("UPDATE questions SET locked=NOW() WHERE q_id=? AND locked IS NULL");
+    $lock = $db->prepare("UPDATE questions SET locked=NOW() WHERE q_id=? AND locked IS NULL");
     $lock->bind_param('i', $q_id);
     $lock->execute();
     $lock->close();
