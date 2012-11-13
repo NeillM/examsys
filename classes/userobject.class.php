@@ -14,6 +14,15 @@
  * @package
  */
 
+/**
+ *
+ * class for the currently logged in user and any functions related to this
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
 
 class UserObject {
@@ -23,10 +32,22 @@ class UserObject {
 
   private $roles,$staffModules,$db;
 
+  /**
+   * constructor
+   *
+   * @param $db is a mysqli link to db
+   * @return none
+   */
   function __construct(&$db) {
     $this->db=$db;
   }
 
+  /**
+   * TEMP Function loads old style data in - a temp translation function
+   *
+   * @param $array array of data in old format
+   * @return array
+   */
   function old_load($array) {
     list($this->password, $this->userID, $this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs, $this->record_no, $this->split_username) = $array;
 
@@ -47,10 +68,23 @@ class UserObject {
     }
   }
 
+  /**
+   * TEMP Function exports user roles in old style
+   *
+   * @param $array array of data in old format
+   * @return list of roles
+   */
   function old_getuserroles() {
     return $this->userroles;
   }
 
+  /**
+   * checks if user has role(s) specified
+   *
+   * @param $roles either a string or an array of strings
+   * @param $exclusive if this should only have this role
+   * @return true if has role(s)
+   */
   function has_role($roles, $exclusive = 0) {
     if (is_string($roles)) {
       if ($exclusive == 0  or ($exclusive == 1 and count($this->roles) == 1)) {
@@ -71,18 +105,39 @@ class UserObject {
     return false;
   }
 
+  /**
+   * list the users roles
+   *
+   * @return array of the users roles
+   */
   function list_user_roles() {
     return array_keys($this->roles);
   }
 
+  /**
+   * returns the year of the user
+   *
+   * @return the year of the user
+   */
   function get_year() {
     return $this->year;
   }
 
+  /**
+   * returns the userID
+   *
+
+   * @return userID
+   */
   function &get_user_ID() {
     return $this->userID;
   }
 
+  /**
+   * get the staff modules
+   *
+   * @return false if not staff else an array of the modules by id & CODE
+   */
   function get_staff_modules() {
     
     if ( !$this->has_role( array('Staff','Admin','SysAdmin') ) ) {
@@ -139,6 +194,11 @@ class UserObject {
     return false;
   }
 
+  /**
+   * loads the staff modules
+   *
+   * @return the staf module list //TODO probably dont need the return
+   */
   function load_staff_modules() {
     $this->staffModules = array();
 
@@ -154,6 +214,11 @@ class UserObject {
     return $this->staffModules;
   }
 
+  /**
+   * checks if user has special needs
+   *
+   * @return true if has special needs
+   */
   function is_special_needs() {
     if($this->special_needs != 0) {
       return true;
@@ -161,6 +226,11 @@ class UserObject {
     return false;
   }
 
+  /**
+   * returns the grade of the user
+   *
+   * @return the grade
+   */
   function get_grade() {
     return $this->grade;
   }
