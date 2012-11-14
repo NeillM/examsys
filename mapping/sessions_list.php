@@ -22,14 +22,15 @@
 * @package
 */
 
-  require_once '../include/staff_auth.inc';
-  require_once '../include/errors.inc';
-  
-  check_var('module', 'GET', true, false);
+require_once '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/moduleutils.class.php';
 
-  if (in_array($_GET['module'], $staff_modules) === false and !$userObject->has_role('SysAdmin')) {
-    exit;
-  }
+check_var('module', 'GET', true, false);
+
+//if (in_array($_GET['module'], $staff_modules) === false and !$userObject->has_role('SysAdmin')) {
+//  exit;
+//}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html onclick="hideSessCopyMenu(event);">
@@ -103,13 +104,13 @@
 <div id="content" class="content">
 <?php
   if (isset($_GET['module'])) {
-    $module = $_GET['module'];
+    $module = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   } else {
     $module = '';
   }
-
+  
   echo "<table class=\"header\">\n";
-  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=" . $_GET['module'] . "\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
   echo "<tr><th style=\"padding-left:10px\">" . $string['date'] . "&nbsp;</th>\n";
   echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" />&nbsp;" . $string['name'] . "&nbsp;</th>\n";
   echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" />&nbsp;" . $string['objectives'] . "&nbsp;</th><th>&nbsp;</th></tr>\n";

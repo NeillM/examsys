@@ -50,10 +50,14 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
-<title><?php echo $string['editkeyword']; ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
+  <title><?php echo $string['editkeyword']; ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-size:90%; background-color:#EEEEEE}
+    body {font-size:90%; background-color:#EEEEEE; padding:4px}
     h1 {font-size:120%}
   </style>
   <script language="JavaScript">
@@ -90,7 +94,7 @@ if (isset($_POST['submit'])) {
 <body onload="document.myform.new_keyword.focus();">
 <h1><?php echo $string['editkeyword']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<div><input type="text" style="width:100%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
+<div><input type="text" style="width:99%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
 <div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
 </form>
 

@@ -29,21 +29,13 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   $new_keyword = trim($_POST['new_keyword']);
   if ($new_keyword != '') {
     if ($_POST['module'] == '') {
-      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL,?,?,'personal')");
-      $result->bind_param('is', $userObject->get_user_ID(),$new_keyword);
+      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL, ?, ?, 'personal')");
+      $result->bind_param('is', $userObject->get_user_ID(), $new_keyword);
       $result->execute();  
       $result->close();
     } else {
-      // Get the numeric ID of the module to store in keywords_user as the userID.
-      $result = $mysqli->prepare("SELECT id FROM modules WHERE moduleid=?");
-      $result->bind_param('s', $_POST['module']);
-      $result->execute();
-      $result->bind_result($tmp_userID);
-      $result->fetch();
-      $result->close();
-    
-      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL,$tmp_userID,?,'team')");
-      $result->bind_param('s', $new_keyword);
+      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL, ?, ?, 'team')");
+      $result->bind_param('is', $_POST['module'], $new_keyword);
       $result->execute();  
       $result->close();
     }

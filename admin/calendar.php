@@ -218,10 +218,11 @@ function echoButtons($year) {
   $paper_details = array();
   if ($schools_sql != '' OR !isset($_GET['school']) OR (isset($_GET['school']) AND ($_GET['school'] == -1 OR $_GET['school'] == ''))) {
     // Get papers running on various dates.
-    $result = $mysqli->prepare("SELECT password, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%Y') AS cal_year, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, moduleID, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND  properties_modules.idmod = modules.id AND start_date>=" . $current_year . "0101000000 AND end_date<=" . $current_year . "1231235959 AND paper_type='2' AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
+    $result = $mysqli->prepare("SELECT password, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%Y') AS cal_year, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND  properties_modules.idmod = modules.id AND start_date>=" . $current_year . "0101000000 AND end_date<=" . $current_year . "1231235959 AND paper_type='2' AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
     $result->execute();
-    $result->bind_result($password, $main_date, $labs, $start_time, $end_time, $property_id, $paper_title, $month, $cal_year, $start_day, $end_date, $moduleID, $paper_type);
+    $result->bind_result($password, $main_date, $labs, $start_time, $end_time, $property_id, $paper_title, $month, $cal_year, $start_day, $end_date, $idMod, $paper_type);
     while ($result->fetch()) {
+      /*
       $paper_details[$paper_no]['labs'] = $labs;
       $paper_details[$paper_no]['date'] = $main_date;
       $paper_details[$paper_no]['start_day'] = $start_day;
@@ -237,6 +238,21 @@ function echoButtons($year) {
       $paper_details[$paper_no]['moduleID'] = $tmp_modules[0];
       $paper_details[$paper_no]['password'] = $password;
       $paper_no++;
+      */
+      
+      $paper_details[$property_id]['labs'] = $labs;
+      $paper_details[$property_id]['date'] = $main_date;
+      $paper_details[$property_id]['start_day'] = $start_day;
+      $paper_details[$property_id]['end_date'] = $end_date;
+      $paper_details[$property_id]['paper_title'] = $paper_title;
+      $paper_details[$property_id]['property_id'] = $property_id;
+      $paper_details[$property_id]['month'] = $month;
+      $paper_details[$property_id]['cal_year'] = $cal_year;
+      $paper_details[$property_id]['start_time'] = $start_time;
+      $paper_details[$property_id]['end_time'] = $end_time;
+      $paper_details[$property_id]['paper_type'] = $paper_type;
+      $paper_details[$property_id]['idMod'] = $idMod;
+      $paper_details[$property_id]['password'] = $password;
     }
     $result->close();
   }
@@ -345,7 +361,8 @@ function echoButtons($year) {
               $papers++;
               echo "<tr><td style=\"color:#294C7A; text-align:right; width:50px\" valign=\"top\">";
               if ($individual_paper['start_time'] == $individual_paper['end_time']) echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" align="texttop" alt="Warning: problem with times!" />';
-              echo $individual_paper['start_time'] . "&nbsp;&nbsp;</td><td style=\"color:#294C7A; width:38px\" valign=\"top\">" . $individual_paper['end_time'] . "&nbsp;</td><td><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&module=" . $individual_paper['moduleID'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
+              echo $individual_paper['start_time'] . "&nbsp;&nbsp;</td><td style=\"color:#294C7A; width:38px\" valign=\"top\">" . $individual_paper['end_time'] . "&nbsp;</td><td><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&module=" . $individual_paper['idMod'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
+              //echo $individual_paper['start_time'] . "&nbsp;&nbsp;</td><td style=\"color:#294C7A; width:38px\" valign=\"top\">" . $individual_paper['end_time'] . "&nbsp;</td><td><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
               $rooms = explode(',', $individual_paper['labs']);
               $html = '';
               foreach ($rooms as $individual_room) {
@@ -384,7 +401,7 @@ function echoButtons($year) {
                 if ($individual_paper['start_day'] == (($day_no + 1) - $subtract) and $individual_paper['cal_year'] == $current_year and $individual_paper['month'] == $current_month) {
                   echo "<tr><td style=\"color:#294C7A; text-align:right\" valign=\"top\">&nbsp;";
                   if ($individual_paper['start_time'] == $individual_paper['end_time']) echo '<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" align="texttop" alt="Warning: problem with times!" />';
-                  echo $individual_paper['start_time'] . "&nbsp;&nbsp;</td><td style=\"color:#294C7A\" valign=\"top\">" . $individual_paper['end_time'] . "&nbsp;</td><td><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&module=" . $individual_paper['moduleID'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
+                  echo $individual_paper['start_time'] . "&nbsp;&nbsp;</td><td style=\"color:#294C7A\" valign=\"top\">" . $individual_paper['end_time'] . "&nbsp;</td><td><a href=\"../paper/details.php?paperID=" . $individual_paper['property_id'] . "&module=" . $individual_paper['idMod'] . "&folder=\">" . $individual_paper['paper_title'] . "</a>&nbsp;";
                   $rooms = explode(',',$individual_paper['labs']);
                   $html = '';
                   foreach ($rooms as $individual_room) {

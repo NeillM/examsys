@@ -4870,6 +4870,11 @@ QUERY;
   $mysqli->query($sql);
   echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
 
+  //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".folders_modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

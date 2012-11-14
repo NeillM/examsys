@@ -43,18 +43,11 @@ function keywords_from_file($fileName,$userObject) {
     $result->close();
   } else {
     $type = 'team';
-    // Get the ID of the module
-    $result = $mysqli->prepare("SELECT id FROM modules WHERE moduleid=?");
-    $result->bind_param('s', $_GET['module']);
-    $result->execute();
-    $result->bind_result($tmp_userID);
-    $result->fetch();
-    $result->close();
 
     // Get the existing team keywords for the folder.
     $existing_keywords = array();
     $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
-    $result->bind_param('i', $tmp_userID);
+    $result->bind_param('i', $_GET['module']);
     $result->execute();
     $result->bind_result($keyword);
     while ($result->fetch()) {
@@ -69,7 +62,7 @@ function keywords_from_file($fileName,$userObject) {
     $separate_line = trim($separate_line);
     if (!isset($existing_keywords[$separate_line])) {
       $result = $mysqli->prepare("INSERT INTO keywords_user VALUES(NULL, ?, ?, ?)");
-      $result->bind_param('iss', $tmp_userID, $separate_line, $type);
+      $result->bind_param('iss', $_GET['module'], $separate_line, $type);
       $result->execute();
       $result->close();
     }
@@ -82,7 +75,7 @@ if (isset($_POST['submit'])) {
       echo uploadError($_FILES['txtfile']['error']);
       exit;
     } else {
-      keywords_from_file($cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt',$userObject->get_user_ID());
+      keywords_from_file($cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt', $userObject->get_user_ID());
       unlink($cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt');
       header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
     }

@@ -30,8 +30,8 @@ header('Content-Disposition: attachment; filename=keywords.txt');
 
 if ($_GET['module'] != '') {
   // Look up team keywords
-  $result = $mysqli->prepare("SELECT keywords_user.id, keyword FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND keyword_type='team' AND moduleid=? ORDER BY keyword");
-  $result->bind_param('s', $_GET['module']);
+  $result = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE keyword_type='team' AND userID=? ORDER BY keyword");
+  $result->bind_param('i', $_GET['module']);
   $result->execute();
   $result->bind_result($keywordID, $keyword);
   while ($result->fetch()) {
@@ -41,7 +41,7 @@ if ($_GET['module'] != '') {
 } else {
   // Lookup personal keywords
   $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE keyword_type='personal' AND userID=? ORDER BY keyword");
-  $result->bind_param('s', $userObject->get_user_ID());
+  $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($keyword);
   while ($result->fetch()) {

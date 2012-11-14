@@ -27,19 +27,20 @@ require_once '../classes/dateutils.class.php';
 require_once '../classes/mappingutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
+//if (in_array($_GET['module'], $staff_modules) === false and !$userObject->has_role('SysAdmin')) {
+//  exit;
+//}
 
-if (in_array($_GET['module'], $staff_modules) === false and !$userObject->has_role('SysAdmin')) {
-  exit;
-}
-
-$idMod = module_utils::get_idMod($_GET['module'], $mysqli);
+//$idMod = module_utils::get_idMod($_GET['module'], $mysqli);
+$idMod = $_GET['module'];
 
 $session = date_utils::get_current_academic_year();
 $vle_api_cache = array();
 $vle_api = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);
 if ($vle_api != '') {
   $vle = VLEFactory::GetVLEAPI($vle_api);
-  $objsBySession = $vle->getObjectives($_GET['module'], $session);
+  $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+  $objsBySession = $vle->getObjectives($module_code, $session);
   $vle_name = $vle->getFriendlyName();
   $vle_name_a = $vle->getFriendlyName(true);
 } else {

@@ -33,6 +33,7 @@ require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 check_var('paperID', 'GET', true, false);
 $paperID = $_GET['paperID'];
@@ -538,7 +539,7 @@ function check_latex_random($q_ids, $mysqli) {
   $q_highlight = 0;
 
   // Log the hit in recent_papers.
-  $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE accessed=NOW();");
+  $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed=NOW();");
   $result->bind_param('ii', $userObject->get_user_ID(), $paperID);
   $result->execute();
   $result->close();
@@ -782,7 +783,8 @@ function check_latex_random($q_ids, $mysqli) {
   
   echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
   if ($module != '') {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module . '</a>';
+    $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
+    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
   } elseif ($folder != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } else {

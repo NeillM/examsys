@@ -91,13 +91,13 @@ Class RecycleBin {
    * @param resource $db database connection
 	 * @return array of recycle bin contents
 	 */
-  static function get_recyclebin_contents($userID, $teams, $db) {
+  static function get_recyclebin_contents($userObj, $db) {
     $recycle_bin = array();
   
     // Query the Papers tables.
     $i = 0;
-    $stmt = $db->prepare("SELECT property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties WHERE (paper_ownerID=? OR moduleID IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
-    $stmt->bind_param('i', $userID);
+    $stmt = $db->prepare("SELECT DISTINCT properties.property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties, properties_modules WHERE properties.property_id=properties_modules.property_id AND (paper_ownerID=? OR idMod IN (" . implode("','", array_keys($userObj->get_staff_modules())) . ")) AND deleted IS NOT NULL");
+    $stmt->bind_param('i', $userObj->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($id, $paper_type, $paper_title, $deleted);
     while ($stmt->fetch()) {
@@ -111,8 +111,8 @@ Class RecycleBin {
     $stmt->close();
 
     // Query the Questions tables.
-    $stmt = $db->prepare("SELECT q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions WHERE (ownerID=? OR q_group IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
-    $stmt->bind_param('i', $userID);
+    $stmt = $db->prepare("SELECT DISTINCT questions.q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions, questions_modules WHERE questions.q_id=questions_modules.q_id AND (ownerID=? OR idMod IN (" . implode("','", array_keys($userObj->get_staff_modules())) . ")) AND deleted IS NOT NULL");
+    $stmt->bind_param('i', $userObj->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($id, $q_type, $leadin_plain, $deleted);
     while ($stmt->fetch()) {
@@ -126,8 +126,8 @@ Class RecycleBin {
     $stmt->close();
 
     // Query the Folder tables.
-    $stmt = $db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders WHERE (ownerID=? OR team_name IN ('" . implode("','",$teams) . "')) AND deleted IS NOT NULL");
-    $stmt->bind_param('i', $userID);
+    $stmt = $db->prepare("SELECT DISTINCT folders.id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders, folders_modules_staff WHERE folders.id=folders_modules_staff.folders_id AND (ownerID=? OR idMod IN (" . implode("','", array_keys($userObj->get_staff_modules())) . ")) AND deleted IS NOT NULL");
+    $stmt->bind_param('i', $userObj->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {

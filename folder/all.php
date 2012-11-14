@@ -82,13 +82,13 @@
   $module_block = false;
   $block_id=0;
   if ($userObject->has_role('SysAdmin')) {
-    $results = $mysqli->prepare("SELECT DISTINCT faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school, moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school, moduleid");
   } else {
-    $results = $mysqli->prepare("SELECT DISTINCT faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID=faculty.id AND schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=? AND schools.deleted IS NULL ORDER BY faculty.name, school, moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID=faculty.id AND schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=? AND schools.deleted IS NULL ORDER BY faculty.name, school, moduleid");
     $results->bind_param('i',$userObject->get_user_ID());
   }
   $results->execute();
-  $results->bind_result($faculty, $school, $moduleid, $fullname);
+  $results->bind_result($modID, $faculty, $school, $moduleid, $fullname);
   while ($results->fetch()) {
     if ($old_faculty != $faculty or $old_school != $school) {
       if ($module_block == true) {
@@ -112,7 +112,7 @@
       }
     }
     if ($moduleid != '') {
-      echo "<div class=\"mod\"><a href=\"details.php?module=$moduleid\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" /></a>&nbsp;<a href=\"details.php?module=$moduleid\">$moduleid: $fullname</a></div>\n";
+      echo "<div class=\"mod\"><a href=\"details.php?module=$modID\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" /></a>&nbsp;<a href=\"details.php?module=$modID\">$moduleid: $fullname</a></div>\n";
     }
     $old_faculty = $faculty;
     $old_school = $school;
@@ -130,13 +130,13 @@
   $old_letter = '';
   $module_block = false;
   if ($userObject->has_role('SysAdmin')) {
-    $results = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM modules ORDER BY moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules ORDER BY moduleid");
   } else {
-    $results = $mysqli->prepare("SELECT DISTINCT moduleid, fullname FROM (schools, admin_access, modules) WHERE schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=? ORDER BY moduleid");
+    $results = $mysqli->prepare("SELECT DISTINCT modules.id, moduleid, fullname FROM (schools, admin_access, modules) WHERE schools.id=modules.schoolid AND schools.id=admin_access.schools_id AND admin_access.userID=? ORDER BY moduleid");
     $results->bind_param('i',$userObject->get_user_ID());
   }
   $results->execute();
-  $results->bind_result($moduleid, $fullname);
+  $results->bind_result($modID, $moduleid, $fullname);
   while ($results->fetch()) {
     if ($old_letter !== substr($moduleid,0,1)) {
       if ($module_block == true) {
@@ -155,7 +155,7 @@
       }
     }
     if ($moduleid !== '') {
-      echo "<div class=\"mod\"><a href=\"details.php?module=$moduleid\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" /></a>&nbsp;<a href=\"details.php?module=$moduleid\">$moduleid: $fullname</a></div>\n";
+      echo "<div class=\"mod\"><a href=\"details.php?module=$modID\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\" border=\"0\" /></a>&nbsp;<a href=\"details.php?module=$modID\">$moduleid: $fullname</a></div>\n";
     }
     $old_letter = substr($moduleid,0,1);
   }

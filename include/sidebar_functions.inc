@@ -67,12 +67,12 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db) {
     $team_sql = implode("','", $teams);
     if ($team_sql != '') $team_sql = "'$team_sql'";
     
-    $result = $db->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    $result = $db->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
     $result->execute();
-    $result->bind_result($tmp_moduleid, $tmp_fullname);
+    $result->bind_result($modID, $tmp_moduleid, $tmp_fullname);
     while ($result->fetch()) {
       $title = $tmp_moduleid . ' - ' . str_replace("'", "\'", $tmp_fullname);
-      $url = '/folder/details.php?module=' . $tmp_moduleid;
+      $url = '/folder/details.php?module=' . $modID;
       $modules_array[$title] = $url;
     }
     $result->close();

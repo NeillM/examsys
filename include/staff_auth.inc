@@ -189,7 +189,7 @@ if ($userObject->has_role('SysAdmin')) {
     $staff_module_match = false;
     $module_list = explode(',', $_GET['module']);
     foreach ($module_list as $module) {
-      if ($userObject->is_staff_user_on_module($module)) {
+      if ($userObject->is_staff_user_on_module((int)$module)) {
         $staff_module_match = true;
       }
     }

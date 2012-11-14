@@ -387,6 +387,9 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
   $objsBySession = array();
 
   $module_list = $thisModuleid;
+  if (!is_array($module_list)) {
+    $module_list = array($module_list);
+  }
   foreach ($module_list as $thisidMod => $thisModuleid) {
     // Get which API to use to get the learning objectives
     $vle_api = MappingUtils::get_vle_api($thisidMod, $session, $vle_api_cache, $rogodb);
