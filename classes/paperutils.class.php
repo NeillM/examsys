@@ -28,6 +28,24 @@
 Class Paper_utils {
 
   /**
+  * Return the user ID of the paper owner
+  *
+  * @param $paperID the id of the paper or property_id
+  * @return integer 
+  */
+  static function get_ownerID($paperID, $db) {
+    $modules = array();
+    $result = $db->prepare("SELECT paper_ownerID FROM properties WHERE property_id = ? LIMIT 1");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($paper_ownerID);
+    $result->fetch();
+    $result->close();
+
+    return $paper_ownerID;
+  } 
+
+  /**
   * Return a array of modules assigned to a paper
   *
   * @param $paperID the id of the paper or property_id
@@ -35,7 +53,7 @@ Class Paper_utils {
   */
   static function get_modules($paperID, $db) {
     $modules = array();
-    $result = $db->prepare("SELECT idMod,moduleid FROM modules,properties_modules WHERE idMod = id AND  property_id = ?");
+    $result = $db->prepare("SELECT idMod, moduleid FROM (modules, properties_modules) WHERE idMod = id AND property_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($idMod, $moduleid);
@@ -43,6 +61,7 @@ Class Paper_utils {
       $modules[$idMod] = $moduleid;
     }
     $result->close();
+    
     return $modules;
   } 
 

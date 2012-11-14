@@ -33,8 +33,26 @@ Class QuestionUtils {
    * @param resource $db
    * @return string The leadin
    */
+  static function get_ownerID($q_id, $db) {
+    $stmt = $db->prepare("SELECT ownerID FROM questions WHERE q_id=? LIMIT 1");
+    $stmt->bind_param('i', $q_id);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($ownerID);
+    $stmt->fetch();
+    $stmt->close();
+    
+    return $ownerID;
+  }
+
+  /**
+   * Get the leading for a give question ID
+   * @param integer $q_id
+   * @param resource $db
+   * @return string The leadin
+   */
   static function get_leadin($q_id, $db) {
-    $stmt = $db->prepare("SELECT leadin FROM questions WHERE q_id=?");
+    $stmt = $db->prepare("SELECT leadin FROM questions WHERE q_id=? LIMIT 1");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->store_result();
@@ -150,12 +168,15 @@ SQL;
   * @return void 
   */
   static function add_modules($modules, $q_id, $db) {
+  /*
     $update = $db->prepare("INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod=idMod");
     foreach ($modules as $idMod => $ModuleID) {
       $update->bind_param('ii', $q_id, $idMod);
+
       $update->execute();
     }
     $update->close();
+    */
   }
 
   /**

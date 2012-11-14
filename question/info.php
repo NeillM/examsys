@@ -25,7 +25,7 @@
   require '../include/staff_auth.inc';
   require '../include/errors.inc';
   require '../classes/questioninfo.class.php';
-  require '../classes/questionutils.class.php';
+  require_once '../classes/questionutils.class.php';
   
   check_var('q_id', 'GET', true, false);
 ?>

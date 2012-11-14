@@ -673,7 +673,7 @@ function check_latex_random($q_ids, $mysqli) {
 
       // Set the question modules to that of the paper if the question is not on a module.
       if (count($temp_array[$row_no]['questions_modules']) == 0) {
-        $paper_modules = Paper_utils::get_modules($_GET['paperID'],$mysqli);
+        $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);
         QuestionUtils::add_modules($paper_modules, $q_id, $mysqli);
       }
       
@@ -882,14 +882,6 @@ function check_latex_random($q_ids, $mysqli) {
       echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="subsect opaque">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';
     }
     $old_screen = $temp_array[$x]['screen'];
-    $teamOK = false;
-    if ($temp_array[$x]['ownerID'] == $userObject->get_user_ID() or $paper_ownerID == $userObject->get_user_ID() or $userObject->has_role('SysAdmin')) {
-      $teamOK = true;
-    } else {
-      foreach ($staff_modules as $individual_team) {
-        if (in_array($individual_team,$temp_array[$x]['q_group'])) $teamOK = true;
-      }
-    }
 
     if ($q_highlight == $temp_array[$x]['display_pos']) {
       echo "<script defer language=\"JavaScript\">\n";
@@ -932,22 +924,19 @@ function check_latex_random($q_ids, $mysqli) {
     if ($temp_array[$x]['q_type'] != 'info') {
       $q_screen[$temp_array[$x]['q_id']][] = ($question_number+1);
     }
-    if ($teamOK == true) {
-      if (isset($temp_array[$x - 1]['screen'])) {
-        $prevous_screen = $temp_array[$x - 1]['screen'];
-      }
-      $next_screen = '';
-      if (isset($temp_array[$x + 1]['screen'])) {
-        $next_screen = $temp_array[$x + 1]['screen'];
-      }
 
-      if ($summative_lock) {
-        echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
-      } else {
-        echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
-      }
-    } else {
+    if (isset($temp_array[$x - 1]['screen'])) {
+      $prevous_screen = $temp_array[$x - 1]['screen'];
+    }
+    $next_screen = '';
+    if (isset($temp_array[$x + 1]['screen'])) {
+      $next_screen = $temp_array[$x + 1]['screen'];
+    }
+
+    if ($summative_lock) {
       echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+    } else {
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     }
 
     echo '<td>';

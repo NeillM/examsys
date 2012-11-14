@@ -4278,10 +4278,10 @@ if (!isset($_POST['update'])) {
   @flush();
 
   // 03/09/2012 Permissions fix for staff users
-  $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log5 TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
-  $sql = "GRANT SELECT,INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".log_metadata TO '". $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>$sql</li>\n";
 
@@ -4858,6 +4858,15 @@ QUERY;
   // End ------------------------------------------------------------------
   echo "</ol>\n";
 
+  //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to questions.
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+  //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
 
   //Close the database
   $mysqli->close();

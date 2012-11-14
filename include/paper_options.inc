@@ -61,7 +61,6 @@ if (!isset($paper_title) or $paper_title == '') {
   $stmt->close();
 }
 
-
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $module = $_GET['module'];
 } else {
@@ -306,15 +305,6 @@ $stmt->close();
 <input type="hidden" name="scrOfY" id="scrOfY" value="0" />
 <input type="hidden" name="current_pos" id="current_pos" value="" />
 <?php
-$module_member = false;
-if ($paper_ownerID == $userObject->get_user_ID() or $userObject->has_role(array('Admin','SysAdmin'))) {
-  $module_member = true;
-} else {
-  if(in_array($moduleID, $userObject->get_staff_modules())) {
-    $module_member = true;
-  }
-}
-
 $stmt = $mysqli->prepare("SELECT COUNT(p_id) FROM papers WHERE paper=?");
 $stmt->bind_param('i', $_GET['paperID']);
 $stmt->execute();
@@ -336,61 +326,49 @@ $stmt->close();
     }
   }
 
-  if ($module_member == true) {
-    if ($summative_lock == 1) {
-      if ($userObject->has_role('SysAdmin')) {
-        echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-        echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"{$cfg_root_path}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
-      } else {
-        echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
-        echo "<tr><td><a href=\"\" onclick=\"return lockedPaperProperties();\"><img src=\"{$cfg_root_path}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return lockedPaperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
-      }
-    } else {
-      $max_screen = ($max_screen != '') ? $max_screen : 0;
-      echo "<tr><td><a href=\"\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
+  if ($summative_lock == 1) {
+    if ($userObject->has_role('SysAdmin')) {
+      echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
       echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"{$cfg_root_path}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
-    }
-    if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2' or $paper_type == '5' or $paper_type == '6') {
-      if ($p_id_count == 0) {
-        echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"greymenuitem\"><span id=\"reports\">" . $string['reports'] . "</span></td></tr>\n";
-      } else {
-        echo "<tr><td><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\"><img src=\"{$cfg_root_path}/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></a></td><td class=\"menuitem sub\"><span id=\"reports\"><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\">" . $string['reports'] . "</a></span></td></tr>\n";
-      }
-      if (strpos($checklist,'mapping') !== false and $paper_type != '6') {
-        echo "<tr><td><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
-      }
-      if ($paper_type == '5') {
-        echo "<tr><td><a href=\"{$cfg_root_path}/import/offline_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/import_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importmarks'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/import/offline_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importmarks'] . "</a></td></tr>\n";
-      } elseif ($paper_type != '6') {
-        if (strpos($checklist,'stdset') !== false) {
-          echo "<tr><td><a href=\"{$cfg_root_path}/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/std_set_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['standardssetting'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['standardssetting'] . "</a></td></tr>\n";
-        }
-      }
-    } elseif ($paper_type == '3') {
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"menuitem sub\"><span id=\"reports\"><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\">" . $string['reports'] . "</a></span></td></tr>\n";
-    } elseif ($paper_type == '4') {
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"menuitem sub\"><span id=\"reports\"><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\">" . $string['reports'] . "</a></span></td></tr>\n";
-      echo "<tr><td><a href=\"{$cfg_root_path}/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/import_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importoscemarks'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importoscemarks'] . "</a></td></tr>\n";
-      if (strpos($checklist,'mapping') !== false) {
-        echo "<tr><td><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
-      }
+    } else {
+      echo "<tr><td><a href=\"\" onclick=\"noAdd('$start_date','$end_date'); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"greymenuitem\"><a href=\"#\" onclick=\"noAdd('$start_date','$end_date'); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
+      echo "<tr><td><a href=\"\" onclick=\"return lockedPaperProperties();\"><img src=\"{$cfg_root_path}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return lockedPaperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
     }
   } else {
-    echo "<tr><td><img src=\"{$cfg_root_path}/artwork/add_questions_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></td><td class=\"greymenuitem\">" . $string['addquestionspaper'] . "</td></tr>\n";
-    echo "<tr><td><img src=\"{$cfg_root_path}/artwork/properties_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></td><td class=\"greymenuitem\">" . $string['editproperties'] . "</td></tr>\n";
-    if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" border=\"0\" /></td><td class=\"greymenuitem\">" . $string['reports'] . "</td></tr>\n";
-      if (strpos($checklist,'stdset') !== false) {
-        echo "<tr><td><a href=\"{$cfg_root_path}/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/std_set_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['standardssetting'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['standardssetting'] . "</a></td></tr>\n";
-      }
+    $max_screen = ($max_screen != '') ? $max_screen : 0;
+    echo "<tr><td><a href=\"\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\"><img src=\"{$cfg_root_path}/artwork/add_questions_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['addquestionspaper'] . "\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"addQuestions(" . ($max_display_pos + 1) . ",$max_screen); return false;\">" . $string['addquestionspaper'] . "</a></td></tr>\n";
+    echo "<tr><td><a href=\"\" onclick=\"return paperProperties();\"><img src=\"{$cfg_root_path}/artwork/properties_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['editproperties'] . "\" /></a></td><td class=\"menuitem\"><a href=\"\" onclick=\"return paperProperties();\">" . $string['editproperties'] . "</a></td></tr>\n";
+  }
+  if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2' or $paper_type == '5' or $paper_type == '6') {
+    if ($p_id_count == 0) {
+      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"greymenuitem\"><span id=\"reports\">" . $string['reports'] . "</span></td></tr>\n";
     } else {
-      echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon_grey.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"greymenuitem\">" . $string['reports'] . "</td></tr>\n";
+      echo "<tr><td><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\"><img src=\"{$cfg_root_path}/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></a></td><td class=\"menuitem sub\"><span id=\"reports\"><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\">" . $string['reports'] . "</a></span></td></tr>\n";
+    }
+    if (strpos($checklist,'mapping') !== false and $paper_type != '6') {
+      echo "<tr><td><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
+    }
+    if ($paper_type == '5') {
+      echo "<tr><td><a href=\"{$cfg_root_path}/import/offline_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/import_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importmarks'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/import/offline_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importmarks'] . "</a></td></tr>\n";
+    } elseif ($paper_type != '6') {
+      if (strpos($checklist,'stdset') !== false) {
+        echo "<tr><td><a href=\"{$cfg_root_path}/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/std_set_icon_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['standardssetting'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/std_setting/index.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['standardssetting'] . "</a></td></tr>\n";
+      }
+    }
+  } elseif ($paper_type == '3') {
+    echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"menuitem sub\"><span id=\"reports\"><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\">" . $string['reports'] . "</a></span></td></tr>\n";
+  } elseif ($paper_type == '4') {
+    echo "<tr><td><img src=\"{$cfg_root_path}/artwork/statistics_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['reports'] . "\" /></td><td class=\"menuitem sub\"><span id=\"reports\"><a onclick=\"showAssStatsMenu(false, event); return false;\" href=\"#\">" . $string['reports'] . "</a></span></td></tr>\n";
+    echo "<tr><td><a href=\"{$cfg_root_path}/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/import_16.gif\" width=\"16\" height=\"16\" alt=\"" . $string['importoscemarks'] . "\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\">" . $string['importoscemarks'] . "</a></td></tr>\n";
+    if (strpos($checklist,'mapping') !== false) {
+      echo "<tr><td><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\"><img src=\"{$cfg_root_path}/artwork/curriculum_map_small.png\" width=\"16\" height=\"16\" alt=\"" . $string['mappedobjectives'] . "\" border=\"0\" /></a></td><td class=\"menuitem\"><a href=\"{$cfg_root_path}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=$paper_title&sd=$start_date&ed=$end_date&module=" . $module . "&folder=" . $folder . "\">" . $string['mappedobjectives'] . "</a></td></tr>\n";
     }
   }
+  
 ?>
 <tr><td><a onclick="showCopyMenu(false, event); return false;" href="#"><img src="<?php echo $cfg_root_path ?>/artwork/copy_icon.gif" width="16" height="16" alt="<?php echo $string['copypaper']; ?>" /></a></td><td class="menuitem sub"><span id="copy"><a onclick="showCopyMenu(false, event); return false;" href="#"><?php echo $string['copypaper']; ?></a></span></td></tr>
 <?php
-  if ($module_member == true and $summative_lock != 1) {
+  if ($summative_lock != 1) {
     echo '<tr><td><a href="#" onclick="deletePaper(); return false;"><img src="' . $cfg_root_path . '/artwork/delete_paper_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" border="0" /></a></td><td class="menuitem"><a href="#" onclick="deletePaper(); return false;">' . $string['deletepaper'] . '</a></td></tr>';
   } else {
     echo '<tr><td><img src="' . $cfg_root_path . '/artwork/delete_paper_grey_16.gif" width="16" height="16" alt="' . $string['deletepaper'] . '" /></td><td class="greymenuitem">' . $string['deletepaper'] . '</td></tr>';
@@ -468,7 +446,6 @@ if ($summative_lock == 1) {
   echo '</ul>';
 }
 ?>
-
 <div class="submenuheading" id="banktasks"><?php echo $string['questionbanktasks']; ?></div>
 
 <table class="sidebar_tbl">
@@ -497,7 +474,6 @@ if ($paper_type == '2') {
 <div class="submenuheading"><?php echo $string['summativechecklist']; ?></div>
 
 <table class="sidebar_tbl">
-
 <?php
   // Session
   $year_in_title = false;

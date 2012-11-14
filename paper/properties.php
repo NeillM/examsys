@@ -1113,7 +1113,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <tr>
 <td style="text-align:center; vertical-align:top" colspan="2">
 <?php
-    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role('Admin')) {
+    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role('Admin') and !$userObject->has_role('SysAdmin')) {
       $sum_disabled = ' disabled'; 
     } else {
       $sum_disabled = ''; 
@@ -1339,7 +1339,7 @@ if ($paper_type != '4' and $paper_type != '5') {
           if ($separate_module == $module['id']) $match = true;
         }
         if ($match == true) {
-          if (in_array($module['id'],$staff_modules) or $userObject->has_role('SysAdmin')) {
+          if (in_array($module['id'], $staff_modules) or $userObject->has_role('SysAdmin')) {
             echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
           } else {
             echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['id'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";

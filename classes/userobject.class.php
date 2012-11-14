@@ -54,6 +54,9 @@ class UserObject {
     if (strpos($this->userroles, 'SysAdmin') !== false) {
       $this->roles['SysAdmin'] = 1;
     }
+    if (strpos($this->userroles, 'Admin') !== false and strpos($this->userroles, 'SysAdmin') === false) {
+      $this->roles['Admin'] = 1;
+    }
     if (strpos($this->userroles, 'Staff') !== false or strpos($userroles, 'Admin') !== false) { // Process staff first to get higher priority than students --no need
       $this->roles['Staff'] = 1;
     }
@@ -177,7 +180,7 @@ class UserObject {
         }
         break;
       case 'string':
-        if (in_array($this->staffModules, $moduleID)) {
+        if (in_array($moduleID, $this->staffModules)) {
           return true;
         }
         break;

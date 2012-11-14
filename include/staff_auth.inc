@@ -25,6 +25,8 @@
  */
 
 require_once 'staff_student_auth.inc';
+require_once $cfg_web_root . 'classes/paperutils.class.php';
+require_once $cfg_web_root . 'classes/questionutils.class.php';
 global $userObject;
 
 if (!$userObject->has_role('Staff', 'ExternalExaminer')) {
@@ -52,7 +54,7 @@ if ($userObject->has_role('ExternalExaminer')) {
 }
 
 // Get teams if the user is not an External Examiner.
-if($userObject->has_role('ExternalExaminer')) {
+if ($userObject->has_role('ExternalExaminer')) {
   $staff_modules = array();
 } else {
   $staff_modules = $userObject->get_staff_modules();
@@ -75,22 +77,13 @@ if ($userObject->has_role('SysAdmin')) {
 
   //Can the user access the paper?
   if ((isset($_GET['paperID']) and $_GET['paperID'] != '') or (isset($_POST['paperID']) and $_POST['paperID'] != '')) {
-    if (isset($_GET['paperID'])) {
-      $tmp_paperID = $_GET['paperID'];
-    } else {
-      $tmp_paperID = $_POST['paperID'];
-    }
+    $tmp_paperID = $_REQUEST['paperID'];
+
     if (substr($tmp_paperID, 0, 5) != 'find:') {
 
       // Get the moduleID of the paper
-      $moduleIDs = Paper_utils::get_modules($property_id, $mysqli);
+      $moduleIDs = Paper_utils::get_modules($tmp_paperID, $mysqli);
       $module_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
-      //$result = $mysqli->prepare("SELECT moduleID, paper_ownerID FROM properties WHERE property_id=?");
-      //$result->bind_param('i', $tmp_paperID);
-      //$result->execute();
-      //$result->bind_result($moduleID, $paper_ownerID);
-      //$result->fetch();
-      //$result->close();
 
       // Check which Schools the moduleID(s) are in.
       $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=" . $userObject->get_user_ID() . " AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); //TODO fix the sql to use prepared statement
@@ -194,9 +187,11 @@ if ($userObject->has_role('SysAdmin')) {
   //can the user acsess the module
   if (isset($_GET['module']) and $_GET['module'] != '' and !isset($_GET['paperID'])) {
     $staff_module_match = false;
-    $paper_modules = explode(',', $_GET['module']);
-    foreach ($paper_modules as $paper_module) {
-      if (in_array(strtoupper($paper_module), $teams)) $team_match = true;
+    $module_list = explode(',', $_GET['module']);
+    foreach ($module_list as $module) {
+      if ($userObject->is_staff_user_on_module($module)) {
+        $staff_module_match = true;
+      }
     }
     if ($staff_module_match == false) {
       access_denied(str_replace('%s', $_GET['module'], $string['denied_team']), false);
@@ -204,32 +199,25 @@ if ($userObject->has_role('SysAdmin')) {
   }
 
   //Can the user acsess the paper?
-  if ((isset($_GET['paperID']) and $_GET['paperID'] != '') OR (isset($_POST['paperID']) and $_POST['paperID'] != '')) {
-    if (isset($_GET['paperID'])) {
-      $tmp_paperID = $_GET['paperID'];
-    } else {
-      $tmp_paperID = $_POST['paperID'];
-    }
+  if ((isset($_REQUEST['paperID']) and $_REQUEST['paperID'] != '')) {
+    $tmp_paperID = $_REQUEST['paperID'];
     if (substr($tmp_paperID, 0, 5) != 'find:') {
-      $result = $mysqli->prepare("SELECT moduleID, paper_ownerID FROM properties WHERE property_id=?");
-      $result->bind_param('i', $tmp_paperID);
-      $result->execute();
-      $result->bind_result($moduleID, $paper_ownerID);
-      while ($result->fetch()) {
-        if ($paper_ownerID != $userObject->get_user_ID()) {
-          $moduleIDs = explode(',', $moduleID);
-          foreach ($moduleIDs as $g) {
-            if (isset($staff_modules[strtoupper($g)])) {
-              $on_staff_module = true;
-              break;
-            }
-          } //allow acsess to the SYSTEM module for training!
-          if ($on_staff_module == false and strpos($moduleID, 'SYSTEM') === false) {
-            access_denied($string['denied_paper'], false);
+      $paper_ownerID = Paper_utils::get_ownerID($tmp_paperID, $mysqli);
+    
+      if ($paper_ownerID == $userObject->get_user_ID()) {
+        $on_staff_module = true;
+      } else {
+        $paper_modules = Paper_utils::get_modules($tmp_paperID, $mysqli);
+        foreach ($paper_modules as $paper_moduleID=>$paper_module) {
+          if ($userObject->is_staff_user_on_module($paper_moduleID)) {
+            $on_staff_module = true;
           }
         }
       }
-      $result->close();
+
+      if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
+        access_denied($string['denied_paper'], false);
+      }
     }
   }
 
@@ -239,22 +227,23 @@ if ($userObject->has_role('SysAdmin')) {
     $q_id_list = explode(',', $tmp_q_id);
     foreach ($q_id_list as $tmp_q_id) {
       if ($tmp_q_id != -1) {
-        $result = $mysqli->prepare("SELECT q_group, ownerID FROM questions WHERE q_id=?");
-        $result->bind_param('i', $tmp_q_id);
-        $result->execute();
-        $result->bind_result($q_group, $ownerID);
-        $result->fetch();
-        $result->close();
-
         $access = false;
-        $moduleIDs = explode(';', $q_group);
-        //$question_teams = explode(';', $q_group);
-        foreach ($moduleIDs as $question_modles) {
-          if (isset($staff_modules[$question_modles])) $access = true;
+        
+        $ownerID = QuestionUtils::get_ownerID($tmp_q_id, $mysqli);
+        
+        if ($ownerID == $userObject->get_user_ID()) {
+          $access = true;
+        } else {
+          $question_modules = QuestionUtils::get_modules($tmp_q_id, $mysqli);
+          foreach ($question_modules as $question_moduleID=>$question_module) {
+            if ($userObject->is_staff_user_on_module($question_moduleID)) {
+              $access = true;
+            }
+          }
         }
 
         //allow acsess to the TRAIN module for training!
-        if ($ownerID != $userObject->get_user_ID() and $access == false and !in_array('SYSTEM', $moduleIDs)) {
+        if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
           access_denied($string['denied_question'], false);
         }
       }
