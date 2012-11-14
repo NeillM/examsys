@@ -238,6 +238,30 @@ class UserObject {
   }
 
   /**
+   * Return the user's title
+   * @return string Title
+   */
+  function get_title() {
+    return $this->title;
+  }
+
+  /**
+   * Return the user's initials
+   * @return string Initials
+   */
+  function get_initials() {
+    return $this->initials;
+  }
+
+  /**
+   * Return the user's surname
+   * @return string Surname
+   */
+  function get_surname() {
+    return $this->surname;
+  }
+
+  /**
    * Get a list of modules the current user has access to.
    * @return array of staff module that this user has access to.
    */

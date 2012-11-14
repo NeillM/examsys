@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -33,13 +33,13 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
 
   <title><?php echo $string['externalexaminerarea']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%}
     p {line-height:150%}
   </style>
-  
+
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="JavaScript">
     function startPaper(paperID, fullsc) {
@@ -61,7 +61,7 @@
 <td><div style="padding-left:15px">
   <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
   <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
-  <div style="color:#1F497D; font-size:9pt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $title . ' ' . $initials . ' ' . $surname; ?>)</div>
+  <div style="color:#1F497D; font-size:9pt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
 </div>
 </td>
 <td align="right"><?php echo $logo_html; ?></td>
@@ -78,7 +78,7 @@
 <?php
   $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,'$cfg_short_date') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id=papers.paper AND externals LIKE ? GROUP BY paper");
   $tVar= '%'. $userObject->get_user_ID() . '%';
-  $result->bind_param('i',$tVar)
+  $result->bind_param('i', $tVar);
   $result->execute();
   $result->store_result();
   $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $display_deadline, $crypt_name);
@@ -111,17 +111,17 @@
     }
     echo "</td></tr>\n<tr><td colspan=\"2\" style=\"font-size:80%\">&nbsp;</td>\n</tr>\n";
   }
-  
+
   if ($result->num_rows == 0) {
     echo "<tr><td colspan=\"2\"><p style=\"color:red\">" . $string['nopapersfound'] . "</p></td></tr>\n";
   }
   $result->close();
   echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n<tr><td colspan=\"2\" style=\"text-align:left\"><hr noshade=\"noshade\" align=\"left\" style=\"text-align:left; background-color:#C0C0C0; color:#C0C0C0; height:1px; border:0; width:400px\" /></td>\n</tr>\n";
   echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"#\" onclick=\"launchHelp(); return false;\"><img src=\"../artwork/help_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"#\" onclick=\"launchHelp(); return false;\">" . $string['helpandsupport'] . "</a><br /><span style=\"color:#808080\">" . $string['onlinesupportsystem'] . "</span></td></tr>\n";
-  
+
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
   echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></td>\n</td><td><a href=\"mailto:$support_email\">$support_email</a><br /><span style=\"color:#808080\">" . $string['helpandsupportext'] . "</span></td></tr>\n";
-  
+
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
   echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:$support_email\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" border=\"0\" /></a></td>\n</td><td><span style=\"color:#808080\">" . sprintf($string['rogodetails'], $rogo_version) . "</a> <a href=\"http://rogo-oss.nottingham.ac.uk\">rogo-oss.nottingham.ac.uk</a></td></tr>\n";
   $mysqli->close();

@@ -29,7 +29,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 global $userObject;
 
-if (!$userObject->has_role('Staff', 'ExternalExaminer')) {
+if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
   access_denied('You are attempting to access a <strong>Staff Only</strong> page.', true);
 }
 
@@ -47,14 +47,14 @@ $external_allowed_pages = array(
                               '/reviews/start.php'=>1,
                               '/reviews/finish.php'=>1
                             );
-if ($userObject->has_role('ExternalExaminer')) {
+if ($userObject->has_role('External Examiner')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
     header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/reviews/");
   }
 }
 
 // Get teams if the user is not an External Examiner.
-if ($userObject->has_role('ExternalExaminer')) {
+if ($userObject->has_role('External Examiner')) {
   $staff_modules = array();
 } else {
   $staff_modules = $userObject->get_staff_modules();

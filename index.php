@@ -32,7 +32,7 @@ require_once './classes/paperutils.class.php';
 
 
 // Redirect External Exminers and Invigilators to their own areas.
-  if ($userObject->has_role('ExternalExaminer')) {
+  if ($userObject->has_role('External Examiner')) {
     header("location: reviews/");
   } elseif ($userObject->has_role('Invigilator')) {
     header("location: invigilator/");

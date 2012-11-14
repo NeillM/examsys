@@ -37,7 +37,7 @@ global $userObject;
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
   header("location: ../students/");
   exit;
-} elseif ($userObject->has_role('ExternalExaminer')) {
+} elseif ($userObject->has_role('External Examiner')) {
   header("location: ../reviews/");
   exit;
 } elseif ($userObject->has_role('Invigilator')) {
