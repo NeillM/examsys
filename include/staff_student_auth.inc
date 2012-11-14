@@ -30,9 +30,6 @@
 *  in include/custom_error_handler.inc
 */
 
-
-
-
 function handle_early_errors($errno, $errstr, $errfile, $errline) {
  if(strpos($errstr,'config.inc.php')) {
     //turn a missing config file working into an exception so we can catch it
@@ -62,10 +59,6 @@ require_once $cfg_web_root . 'include/lti_func.php';
 require_once $cfg_web_root . 'classes/lti_integration.class.php';
 
 require_once $cfg_web_root . 'classes/userobject.class.php';
-
-
-
-
 
 // Check to see if the update script has been run.
 if ($rogo_version != '4.4') {
