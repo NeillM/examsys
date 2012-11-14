@@ -143,8 +143,8 @@ Class UserUtils {
    *
    */
   static function clear_staff_modules_by_moduleID($moduleID, $db) {
-    $result = $db->prepare("DELETE FROM modules_staff WHERE idMod = (SELECT idMod FROM modules WHERE moduleid=? limit 1");
-    $result->bind_param('s', $moduleID);
+    $result = $db->prepare("DELETE FROM modules_staff WHERE idMod = ?");
+    $result->bind_param('i', $moduleID);
     $result->execute();
     $result->close();
   }
@@ -157,10 +157,32 @@ Class UserUtils {
    *
    */
   static function clear_staff_modules_by_userID($tmp_userID, $db) {
-    $result = $db->prepare("DELETE FROM modules_staff WHERE memberID=?");
+    $result = $db->prepare("DELETE FROM modules_staff WHERE memberID = ?");
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->close();
+  }
+
+  /**
+   * Get a list of members of a team.
+   *
+   * @param integer $modID The ID of the team to query
+   * @param object $db mysqli database connection
+   * @return array list of UserIDs for member of the team
+   *
+   */
+  static function get_staff_modules_list_by_modID($modID, $db) {
+    $team_members = array();
+    $result = $db->prepare("SELECT memberID FROM modules_staff WHERE idMod = ?");
+    $result->bind_param('i', $modID);
+    $result->execute();
+    $result->bind_result($memberID);
+    while ($result->fetch()) {
+      $team_members[] = $memberID;
+    }
+    $result->close();
+
+    return $team_members;
   }
 
   /**
@@ -173,7 +195,7 @@ Class UserUtils {
    */
   static function get_staff_modules_list_by_name($team_name, $db) {
     $team_members = array();
-    $result = $db->prepare("SELECT memberID FROM teams WHERE name=?");
+    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod=modules.id AND moduleid=?");
     $result->bind_param('s', $team_name);
     $result->execute();
     $result->bind_result($memberID);
@@ -274,7 +296,7 @@ Class UserUtils {
       $teams[$team_name] = $team_name;
     }
     $result->close();
-$module=strtoupper($module);
+    $module=strtoupper($module);
     if (isset($teams[$module])) {
       return true;
 

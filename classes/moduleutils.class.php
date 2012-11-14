@@ -121,6 +121,22 @@ Class module_utils {
     return array('fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
   }
   
+  static function get_moduleid_from_id($modID, $db) {
+    $result = $db->prepare("SELECT moduleid FROM modules WHERE id=?");
+    $result->bind_param('i', $modID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($moduleid);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $result->close();
+      return false;
+    }
+    $result->close();
+    
+    return $moduleid;
+  }
+  
   static function get_idMod($module_id, $db) {
     $result = $db->prepare("SELECT id FROM modules WHERE moduleid=?");
     $result->bind_param('s', $module_id);

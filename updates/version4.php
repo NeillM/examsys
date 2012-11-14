@@ -4855,9 +4855,6 @@ QUERY;
   }
   $findsql->close();
 
-  // End ------------------------------------------------------------------
-  echo "</ol>\n";
-
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to questions.
   $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".questions_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
@@ -4867,6 +4864,15 @@ QUERY;
   $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
   echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".papers_modules TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+  //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
+  $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_staff TO '" . $cfg_db_staff_user . "'@'". $cfg_db_host . "'</li>\n";
+
+
+  // End ------------------------------------------------------------------
+  echo "</ol>\n";
 
   //Close the database
   $mysqli->close();

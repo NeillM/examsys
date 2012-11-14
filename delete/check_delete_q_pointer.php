@@ -27,6 +27,7 @@ require '../include/errors.inc';
 
 check_var('questionID', 'GET', true, false);
 check_var('pID', 'GET', true, false);
+check_var('paperID', 'GET', true, false);
 
 $mysqli->close();
 ?>

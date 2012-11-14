@@ -25,18 +25,20 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/userutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 check_var('teamID', 'GET', true, false);
 $teamID = $_GET['teamID'];
+$module_code = module_utils::get_moduleid_from_id($_GET['teamID'], $mysqli);
 
 if (isset($_POST['submit'])) {
   // Clear the team of all members.
-  UserUtils::clear_team_by_team_name($teamID, $mysqli);
+  UserUtils::clear_staff_modules_by_moduleID($teamID, $mysqli);
   
   // Insert a record for each team member.
   for ($i=0; $i<$_POST['staff_no']; $i++) {
     if (isset($_POST["staff$i"]) and $_POST["staff$i"] != '') {
-      UserUtils::add_staff_to_team($_POST["staff$i"], $teamID, $mysqli);
+      UserUtils::add_staff_to_module($_POST["staff$i"], $teamID, $mysqli);
     }
   }
 ?>
@@ -44,10 +46,10 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['teammembers'] . ' ' . $teamID; ?></title>
+  <title><?php echo $string['teammembers'] . ' ' . $module_code; ?></title>
   <script language="JavaScript">
     function closeWindow() {
-      window.opener.location.href = '../folder/details.php?module=<?php echo $teamID; ?>';
+      window.opener.location.href = '../folder/details.php?module=<?php echo $module_code; ?>';
       self.close();
     }
   </script>
@@ -57,13 +59,14 @@ if (isset($_POST['submit'])) {
 </html>
 <?php
   } else {
+  
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset; ?>" />
-  <title><?php echo $string['teammembers'] . ' ' . $_GET['teamID'] . ' ' . $cfg_install_type; ?></title>
+  <title><?php echo $string['teammembers'] . ' ' . $module_code . ' ' . $cfg_install_type; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -106,11 +109,11 @@ if (isset($_POST['submit'])) {
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/team_members.png" width="32" height="32 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $_GET['teamID']; ?></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/team_members.png" width="32" height="32 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_code; ?></td></tr>
   </table>
 
 <?php
-  $team_members = UserUtils::get_team_list_by_name($_GET['teamID'], $mysqli);
+  $team_members = UserUtils::get_staff_modules_list_by_modID($_GET['teamID'], $mysqli);
 
   echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:12px 4px 8px 4px; font-size:90%\" id=\"list\">";
   $staff_no = 0;

@@ -29,6 +29,7 @@ require_once '../include/icon_display.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
+require_once '../classes/moduleutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
 
@@ -193,7 +194,7 @@ if ($folder != '') {
     }
     
     function addTeamMember() {
-      notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo module_utils::get_idMod($_GET['module'], $mysqli); ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }
