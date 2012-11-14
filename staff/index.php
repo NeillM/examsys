@@ -200,7 +200,7 @@ require_once '../include/staff_auth.inc';
   $db=$mysqli;
   if ($db->error) {
     try {
-      throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+      throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
     }
     catch (Exception $e) {
       echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -208,7 +208,7 @@ require_once '../include/staff_auth.inc';
     }
   }
   $tmp='%' . $userObject->get_user_ID() . '%';
-  $result->bind_param('i', $tmp);
+  $result->bind_param('s', $tmp);
   $db=$mysqli;
   if ($db->error) {
     try {
