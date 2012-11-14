@@ -52,11 +52,11 @@ $stmt->close();
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, moduleID, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $moduleID, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password);
 while ($stmt->fetch()) {
   $no_screens = $screen;
   $original_paper_type = $paper_type;
@@ -75,7 +75,7 @@ while ($stmt->fetch()) {
   if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
   $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
-  if ($userroles == 'External Examiner') {
+  if ($userObject->has_role('External Examiner')) {
     $review_type = 'External';
     $review_deadline = $external_review_deadline;
   } else { 
@@ -340,8 +340,8 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $previous_duration = 0;
   $screen_pre_submitted = 0;
   $reviews_array = array();
-  $result = $mysqli->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen=? AND reviewer=$userObject->get_user_ID()");
-  $result->bind_param('ii', $property_id, $current_screen);
+  $result = $mysqli->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen=? AND reviewer=?");
+  $result->bind_param('iii', $property_id, $current_screen, $userObject->get_user_ID());
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);
