@@ -53,7 +53,7 @@ if ($marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
 if ($themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
 if ($labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
 
-if ($userroles == 'External Examiner') {
+if ($userObject->has_role('External Examiner')) {
   $review_type = 'External';
   $external_review_deadline = $external_review_deadline;
 } else { 
