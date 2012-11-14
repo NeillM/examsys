@@ -86,8 +86,7 @@ Class RecycleBin {
   
 	/**
 	 * Get a list of recycle bin contents for the current user
-   * @param integer $userID ID of the current user
-   * @param array $teams array of teams the current user is on
+   * @param object $userObj current user object
    * @param resource $db database connection
 	 * @return array of recycle bin contents
 	 */
@@ -96,7 +95,7 @@ Class RecycleBin {
   
     // Query the Papers tables.
     $i = 0;
-    $stmt = $db->prepare("SELECT DISTINCT properties.property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties, properties_modules WHERE properties.property_id=properties_modules.property_id AND (paper_ownerID=? OR idMod IN (" . implode("','", array_keys($userObj->get_staff_modules())) . ")) AND deleted IS NOT NULL");
+    $stmt = $db->prepare("SELECT property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $userObj->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($id, $paper_type, $paper_title, $deleted);
@@ -111,7 +110,7 @@ Class RecycleBin {
     $stmt->close();
 
     // Query the Questions tables.
-    $stmt = $db->prepare("SELECT DISTINCT questions.q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions, questions_modules WHERE questions.q_id=questions_modules.q_id AND (ownerID=? OR idMod IN (" . implode("','", array_keys($userObj->get_staff_modules())) . ")) AND deleted IS NOT NULL");
+    $stmt = $db->prepare("SELECT q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions WHERE ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $userObj->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($id, $q_type, $leadin_plain, $deleted);
@@ -126,7 +125,7 @@ Class RecycleBin {
     $stmt->close();
 
     // Query the Folder tables.
-    $stmt = $db->prepare("SELECT DISTINCT folders.id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders, folders_modules_staff WHERE folders.id=folders_modules_staff.folders_id AND (ownerID=? OR idMod IN (" . implode("','", array_keys($userObj->get_staff_modules())) . ")) AND deleted IS NOT NULL");
+    $stmt = $db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders WHERE ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $userObj->get_user_ID());
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);

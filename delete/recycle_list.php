@@ -166,14 +166,14 @@ $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Ex
 $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_review_16.gif');
 $list_size = count($recycle_bin);
 for ($item=0; $item<$list_size; $item++) {
+  $split_name = explode('[deleted', $recycle_bin[$item]['name']);
   if ($recycle_bin[$item]['type'] == 'paper') {
     $temp_type = $recycle_bin[$item]['subtype'];
-    $split_name = explode('[deleted',$recycle_bin[$item]['name']);
     echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'p" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $split_name[0] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string[strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
   } elseif ($recycle_bin[$item]['type'] == 'folder') {
-    echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'f" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $recycle_bin[$item]['name'] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string['folder'] . "</nobr></td></tr>\n";
+    echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'f" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $split_name[0] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string['folder'] . "</nobr></td></tr>\n";
   } else {
-    echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'q" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $recycle_bin[$item]['name'] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
+    echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'q" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $split_name[0] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
   }
 }
 echo "</table>\n";
