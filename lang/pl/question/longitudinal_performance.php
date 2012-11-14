@@ -1,10 +1,10 @@
 <?php
-$string['longitudinalperformance'] = 'Longitudinal Performance';   // Niko, whole file please
-$string['papername'] = 'Paper Name';
-$string['calendaryear'] = 'Calendar Year';
-$string['questionno'] = 'Question No';
-$string['datetaken'] = 'Date Taken';
-$string['cohort'] = 'Cohort';
+$string['longitudinalperformance'] = 'Wyniki długoterminowe';  
+$string['papername'] = 'Nazwa arkusza';
+$string['calendaryear'] = 'Rok kalendarzowy';
+$string['questionno'] = 'Numer pytania';
+$string['datetaken'] = 'Data egazminu';
+$string['cohort'] = 'Grupa';
 $string['p'] = 'P';
 $string['d'] = 'D';
 ?>
