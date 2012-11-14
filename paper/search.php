@@ -190,12 +190,7 @@
           echo "<a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">" . displayIcon($type, $title, $initials, $surname, '', $locked, $retired) . "</a></td>\n";
           echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">$paper_title</a><br />";
         } else {
-          $access = false;
-          foreach ($teams as $individual_team) {
-            if (strpos($moduleID,$individual_team) !== false) $access = true;
-          }
-        
-          if ($access = true) {
+          if ($userObject->is_staff_user_on_module($moduleID)) {
             echo "<a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">" . displayIcon(2, $title, $initials, $surname, '', $locked, $retired) . "</a></td>\n";
             echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">$paper_title</a><br />";
           } else {

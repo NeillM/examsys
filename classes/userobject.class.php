@@ -154,7 +154,7 @@ class UserObject {
   }
 
   /**
-   * @param $moduleID an array of modules keyed on idMod
+   * @param string $moduleID an array of modules keyed on idMod
    * @return bool true if staff member is on a module
    */
   function is_staff_user_on_module($moduleID) {
