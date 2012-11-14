@@ -63,6 +63,7 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
+    input[type=checkbox] {margin-right:8px}
   </style>
   <script language="JavaScript">
     function toggle(objectID) {
@@ -123,11 +124,11 @@ if (isset($_POST['submit'])) {
     }
    
     if (isset($user_modules[$idMod])) {
-      echo "<div style=\"background-color:#B3C8E8\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" value=\"$idMod\" checked />";
+      echo "<div style=\"background-color:#B3C8E8\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" checked />";
     } else {
-      echo "<div style=\"background-color:white\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" value=\"$idMod\" />";
+      echo "<div style=\"background-color:white\" id=\"divmod$mod_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$mod_no')\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" />";
     }
-    echo "&nbsp;$moduleid: $fullname</span></div>\n";
+    echo "<label for=\"mod$mod_no\">$moduleid: $fullname</label></div>\n";
     $old_school = $school;
     $mod_no++;
   }

@@ -134,7 +134,7 @@ if (isset($_POST['update']) and $demo == false) {
 
   //Remove from teams if 'left'.
   if ($grade == 'left') {
-    $result = $mysqli->prepare("DELETE FROM teams WHERE memberID=?");
+    $result = $mysqli->prepare("DELETE FROM modules_staff WHERE memberID=?");
     $result->bind_param('i', $_POST['old_userID']);
     $result->execute();
     $result->close();
@@ -1047,11 +1047,11 @@ if (isset($_POST['update']) and $demo == false) {
   }
   echo drawTabs('Teams', 4, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td></tr>\n";
-  if ($userObject->has_role('Admin')) {
+  if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
     echo "<tr><td colspan=\"4\"><a href=\"\" onclick=\"editMultiTeams(); return false;\">&nbsp;" . $string['editteams'] . "</a></td></tr>\n";
   }
   
-  if ($userObject->has_role('Admin') or $userObject->get_user_ID() == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
+  if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin') or $userObject->get_user_ID() == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
     $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod=modules.id AND memberID=? ORDER BY moduleID");
     $result->bind_param('i', $tmp_id);
     $result->execute();
