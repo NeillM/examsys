@@ -265,11 +265,14 @@ class UserObject {
    * Get a list of modules the current user has access to.
    * @return array of staff module that this user has access to.
    */
-  function get_staff_accessable_modules() {
+  function get_staff_accessable_modules($additional_mods = array()) {
     $staff_modules_list = array();
 
-    $staff_modules_sql = implode("','", $this->get_staff_modules());
-    if ($staff_modules_sql != '') $staff_modules_sql = "'$staff_modules_sql'";
+    $staff_modules_sql = implode(',', array_keys($this->get_staff_modules()));
+    $default_modules = array_keys($this->get_staff_modules());
+    
+    $new_array = array_merge($default_modules, $additional_mods);
+    $staff_modules_sql = implode(',', array_unique($new_array));
 
     if ($staff_modules_sql != '' or $this->has_role('Admin')) {
       if ($this->has_role('SysAdmin')) {
@@ -279,10 +282,10 @@ class UserObject {
         if ($schoolIDs != '') {
           $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND schoolid IN ($schoolIDs) ORDER BY school, moduleID";
         } elseif ($staff_modules_sql != '') {
-          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($staff_modules_sql) ORDER BY school, moduleID";
+          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id IN ($staff_modules_sql) ORDER BY school, moduleID";
         }
       } else {
-        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid IN ($staff_modules_sql) ORDER BY school, moduleID";
+        $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id IN ($staff_modules_sql) ORDER BY school, moduleID";
       }
 
       if (isset($sql)) {

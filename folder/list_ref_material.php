@@ -24,6 +24,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require_once '../classes/moduleutils.class.php';
 
 check_var('module', 'GET', true, false);
  
@@ -98,20 +99,28 @@ check_var('module', 'GET', true, false);
 <body onclick="deselRef()">
 <?php
   $reference_materials = array();
-  $old_id = '';
 
-  $result = $mysqli->prepare("SELECT reference_material.id, reference_material.title, modules.moduleid FROM (reference_material, reference_modules, modules) WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod=modules.id AND modules.moduleid=? ORDER BY reference_material.id");
-  $result->bind_param('s', $_GET['module']);
+  $result = $mysqli->prepare("SELECT reference_material.id, reference_material.title FROM reference_material, reference_modules WHERE reference_material.id=reference_modules.refID AND reference_material.deleted IS NULL AND idMod = ? ORDER BY reference_material.id");
+  $result->bind_param('i', $_GET['module']);
   $result->execute();
-  $result->bind_result($id, $title, $moduleid);
+  $result->store_result();
+  $result->bind_result($id, $title);
   while ($result->fetch()) {
-    if (isset($reference_materials[$id]['modules'])) {
-      $reference_materials[$id]['modules'] = $reference_materials[$id]['modules'] . ', ' . $moduleid;
-    } else {
-      $reference_materials[$id]['modules'] = $moduleid;
+    $sub_result = $mysqli->prepare("SELECT moduleid FROM reference_modules, modules WHERE reference_modules.idMod = modules.id AND refID = ?");
+    $sub_result->bind_param('i', $id);
+    $sub_result->execute();
+    $sub_result->store_result();
+    $sub_result->bind_result($moduleid);
+    while ($sub_result->fetch()) {
+      if (isset($reference_materials[$id]['modules'])) {
+        $reference_materials[$id]['modules'] .= ', ' . $moduleid;
+      } else {
+        $reference_materials[$id]['modules'] = $moduleid;
+      }
     }
+    $sub_result->close();
+    
     $reference_materials[$id]['title'] = $title;
-    $old_id = $id;
   }
   $result->close();
 
@@ -122,7 +131,7 @@ check_var('module', 'GET', true, false);
 <table class="header">
 <tr>
 <?php
-  echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . $_GET['module'] . "</a></div><div style=\"margin-left:10px; font-size:200%; font-weight:bold\">" . $string['referencematerial'] . "</th>\n";
+  echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . "</a></div><div style=\"margin-left:10px; font-size:200%; font-weight:bold\">" . $string['referencematerial'] . "</th>\n";
 ?>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(237); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
 </tr>

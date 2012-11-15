@@ -26,6 +26,7 @@
 
 require_once 'staff_student_auth.inc';
 require_once $cfg_web_root . 'classes/paperutils.class.php';
+require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 global $userObject;
 
@@ -194,7 +195,9 @@ if ($userObject->has_role('SysAdmin')) {
       }
     }
     if ($staff_module_match == false) {
-      access_denied(str_replace('%s', $_GET['module'], $string['denied_team']), false);
+      
+      access_denied(str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
+      //access_denied(str_replace('%s', $_GET['module'], $string['denied_team']), false);
     }
   }
 

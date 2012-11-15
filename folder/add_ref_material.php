@@ -51,7 +51,9 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
   <title><?php echo $string['newreferencematerial'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -79,7 +81,7 @@ if (isset($_POST['submit'])) {
 
 <table class="header" cellspacing="0" cellpadding="0" border="0" style="font-size:80%">
 <tr><th>
-  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?module=<?php echo $_GET['module']; ?>"><?php echo $_GET['module']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?module=<?php echo $_GET['module']; ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
   <div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['newreferencematerial']; ?></div>
 </th></tr>
 <tr><th class="bevel"></th></tr>
@@ -102,26 +104,21 @@ for ($size=200; $size<850; $size+=50) {
 <?php
   echo "<div style=\"margin-top:1px; display:block; width:400px; height:604px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
   $modules_array = array();
-  $total_modules = array_merge($teams, $modules_array);
-    
-  $module_array = search_utils::get_teams($teams, $userroles, $userObject->get_user_ID(), $mysqli);
+  $module_array = $userObject->get_staff_accessable_modules();
+  
   $module_no = 0;
   $old_school = '';
-  foreach ($module_array as $module) {
+  foreach ($module_array as $modID=>$module) {
     if ($module['school'] != $old_school) {
       echo "<div style=\"padding-top:2px\"><strong>" . $module['school'] . "</strong></div>";
     }
     $match = false;
-    if ($_GET['module'] == $module['id']) $match = true;
+    if ($_GET['module'] == $modID) $match = true;
     
     if ($match == true) {
-      if (in_array($module['id'],$teams) or $userObject->has_role('SysAdmin')) {
-        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['recordid'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
-      } else {
-        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['recordid'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
-      }
+      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['recordid'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"module$module_no\" id=\"module$module_no\" value=\"$modID\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
     }
     $module_no++;  
     $old_school = $module['school'];        
