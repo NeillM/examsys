@@ -28,6 +28,9 @@ require './include/staff_student_auth.inc';
 require './include/errors.inc';
 require './include/paper_security.inc';
 
+require './classes/paperutils.class.php';
+require './classes/moduleutils.class.php';
+
 check_var('id', 'GET', true, false);
 
 function display_duration($normal, $extra) {
@@ -60,7 +63,7 @@ function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_sty
   echo '</td></tr>';
 }
 
-if ($special_needs == 1) {
+if ($userObject->is_special_needs()) {
   //look up special_needs data
   if ($stmt = $mysqli->prepare("SELECT extra_time, textsize, font FROM special_needs WHERE userid=?")) {
     $stmt->bind_param('i',$userObject->get_user_ID());
@@ -83,15 +86,15 @@ if ($special_needs == 1) {
 if ($textsize == '') $textsize = 95;
 if ($font == '') $font = 'Arial';
   
-$person = $title . ' ' . $surname;
+$person = $userObject->get_title() . ' ' . $userObject->get_surname();
 $total_random_mark = 0;
 $total_marks = 0;
 
 //get paper info
-$paper_info = $mysqli->prepare("SELECT DISTINCT property_id, paper_title, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, moduleID, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.crypt_name=? AND properties.property_id=papers.paper ORDER BY screen DESC LIMIT 1");
+$paper_info = $mysqli->prepare("SELECT DISTINCT property_id, paper_title, random_mark, total_mark, bidirectional, screen, paper_type, UNIX_TIMESTAMP(start_date) AS start_date, start_date AS display_start_date, UNIX_TIMESTAMP(end_date) AS end_date, end_date AS display_end_date, timezone, fullscreen, marking, labs, rubric, exam_duration, calendar_year, sound_demo, password FROM (properties, papers) WHERE properties.crypt_name=? AND properties.property_id=papers.paper ORDER BY screen DESC LIMIT 1");
 $paper_info->bind_param('s', $_GET['id']);
 $paper_info->execute();
-$paper_info->bind_result($property_id, $paper_title, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $moduleID, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password);
+$paper_info->bind_result($property_id, $paper_title, $total_random_mark, $total_marks, $navigation, $paper_screens, $test_type, $paper_start, $display_start_date, $paper_end, $display_end_date, $timezone, $fullscreen, $marking, $labs, $rubric, $exam_duration, $calendar_year, $sound_demo, $password);
 $paper_info->store_result();
 $paper_info->fetch();
 
@@ -101,6 +104,8 @@ if ($paper_info->num_rows == 0) {
 }
 $paper_info->free_result();
 $paper_info->close();
+
+$modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
 // Adjust for timezones.
 $UK_time = new DateTimeZone("Europe/London");
@@ -118,7 +123,7 @@ $display_end_date = $display_end_date->format($tmp_cfg_long_date_time);
 
 $previously_submitted = 0;
 
-if (stripos($userroles,'Student') !== false) {
+if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
   check_paper_password($password, true);
 
@@ -126,7 +131,7 @@ if (stripos($userroles,'Student') !== false) {
   //Check this PC is registered for this exam
   $low_bandwidth = check_labs($test_type, $labs, $password, $mysqli);
 
-  $attempt = check_modules($userObject->get_user_ID(), $moduleID, $calendar_year, $mysqli);
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -216,8 +221,17 @@ if ($textsize > 120) {
   if ($test_type != 2) echo '<tr><td class="f"><nobr>' . $string['availability'] .'</nobr></td><td colspan="3">' . $display_start_date . ' to '. $display_end_date;
   if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   echo '<input type="hidden" name="startdate" value="' . $display_start_date . '" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";
-  echo "<tr><td class=\"f\"><nobr>" . $string['candidates'] . "</nobr></td><td colspan=\"3\">" . str_replace(',',', ',$moduleID);
-  echo '</td></tr><tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
+  echo "<tr><td class=\"f\"><nobr>" . $string['candidates'] . "</nobr></td><td colspan=\"3\">";
+  $html = '';
+  foreach ($modIDs as $modID) {
+    $mod_details = module_utils::get_full_details_by_ID($modID, $mysqli);
+    if ($html == '') {
+      $html = $mod_details['moduleid'];
+    } else {
+      $html .= ', ' . $mod_details['moduleid'];
+    }
+  }
+  echo $html . '</td></tr><tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
   echo '<td class="f">' . $string['navigation'] . '</td><td>';
   if ($navigation == 1) {
     echo $string['bidirectional'];

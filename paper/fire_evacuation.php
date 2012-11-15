@@ -34,6 +34,8 @@ require '../include/marking_functions.inc';
 require '../include/errors.inc';
 require '../include/paper_security.inc';
 
+require '../classes/paperutils.class.php';
+
 check_var('id', 'GET', true, false);
 
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
@@ -45,14 +47,16 @@ if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_col
 }
 $stmt->close();
 
-$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), moduleID, calendar_year, password FROM properties WHERE crypt_name=?");
+$stmt = $mysqli->prepare("SELECT property_id, paper_type, labs, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), calendar_year, password FROM properties WHERE crypt_name = ? LIMIT 1");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $moduleID, $calendar_year, $password);
+$stmt->bind_result($property_id, $paper_type, $labs, $start_date, $end_date, $calendar_year, $password);
 while ($stmt->fetch()) {
   $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions 
   $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+  $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
+  
   if ($userObject->has_role('Student')) {
   
     // Check for additional password on the paper
@@ -65,10 +69,10 @@ while ($stmt->fetch()) {
     $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
       
     //get modules if the user is a student and the paper is not formative
-    $attempt = check_modules($userObject->get_user_ID(), $moduleID, $calendar_year, $mysqli);
+    $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
     // Check for any metadata security restrictions
-    check_metadata($property_id, $userObject->get_user_ID(), $moduleID, $mysqli);
+    check_metadata($property_id, $userObject, $modIDs, $mysqli);
 
     if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
       $paper_type = '_late';

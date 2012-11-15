@@ -204,7 +204,7 @@ class UserObject {
   function load_staff_modules() {
     $this->staffModules = array();
 
-    $result = $this->db->prepare("SELECT idMod,moduleID FROM modules_staff,modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
+    $result = $this->db->prepare("SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
     $result->bind_param('i', $this->userID);
     $result->execute();
     $result->bind_result($idMod, $moduleID);
@@ -259,6 +259,14 @@ class UserObject {
    */
   function get_surname() {
     return $this->surname;
+  }
+
+  /**
+   * Return the user's username
+   * @return string username
+   */
+  function get_username() {
+    return $this->username;
   }
 
   /**

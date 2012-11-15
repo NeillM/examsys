@@ -68,7 +68,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
       $hide_if_unanswered = 0;
     }
 
-    $moduleID = Paper_utils::get_modules($paperID,$mysqli);
+    $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
     if ($userObject->has_role('Student')) {
       if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
@@ -78,14 +78,15 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
 
       // Check time security
       check_datetime($start_date, $end_date);
+      
       //Check room security
       $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
 
       // get modules if the user is a student and the paper is not formative
-      $attempt = check_modules($userObject->get_user_ID(), $moduleID, $calendar_year, $mysqli);
+      $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
       // Check for any metadata security restrictions
-      check_metadata($paperID, $userObject->get_user_ID(), $moduleID, $mysqli);
+      check_metadata($paperID, $userObject, $modIDs, $mysqli);
 
       if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
         $paper_type = '_late';

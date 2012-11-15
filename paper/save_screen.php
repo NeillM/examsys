@@ -43,7 +43,7 @@ $stmt->close();
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 
-$moduleID = Paper_utils::get_modules($property_id,$mysqli);
+$modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
 if ($userObject->has_role('Student')) {
 
@@ -57,10 +57,10 @@ if ($userObject->has_role('Student')) {
   $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
 
   //get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject->get_user_ID(), $moduleID, $calendar_year, $mysqli);
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
   // Check for any metadata security restrictions
-  check_metadata($property_id, $userObject->get_user_ID(), $moduleID, $mysqli);
+  check_metadata($property_id, $userObject, $modIDs, $mysqli);
 
   if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
     $paper_type = '_late';

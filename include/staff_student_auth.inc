@@ -155,7 +155,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
       //
       //  MAIN AUTHENTICATION ROUTINES
       //
-      if (($dbret = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli,true,$userObject)) <= 0) {
+      if (($dbret = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, true, $userObject)) <= 0) {
         //try LDAP
         if ($cfg_use_ldap == true and ($db_errors != '<strong>' . $string['notsaccount'] . '</strong>' or $dbret == -2)) {
           $ldap_user_data = array();
@@ -178,7 +178,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
               access_denied($message, true);
             }
             $stmt->close();
-            db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli);
+            db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, true, $userObject);
           } else {
             //Ad Account NOT OK
             $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";

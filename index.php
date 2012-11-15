@@ -129,7 +129,7 @@ require_once './classes/paperutils.class.php';
         } else {
           $cal_sql = '';
         }
-        $module_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
+        $module_in = implode(",",array_keys($moduleIDs));
         $moduleInfo = $mysqli->prepare("SELECT userID FROM modules_student WHERE userID=? $cal_sql AND idMod IN ($module_in)");
         $moduleInfo->bind_param('i', $userObject->get_user_ID());
         $moduleInfo->execute();

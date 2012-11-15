@@ -225,7 +225,7 @@ if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcol
 if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
-$moduleID = Paper_utils::get_modules($property_id,$mysqli);
+$modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
@@ -238,10 +238,10 @@ if ($userObject->has_role('Student')) {
   $low_bandwidth = check_labs($paper_type, $labs, $password, $mysqli);
 
   // get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject->get_user_ID(), $moduleID, $calendar_year, $mysqli);
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
   // Check for any metadata security restrictions
-  check_metadata($property_id, $userObject->get_user_ID(), $moduleID, $mysqli);
+  check_metadata($property_id, $userObject, $modIDs, $mysqli);
 }
 
 //check for submissions after the enddate and set them to save in log_late
@@ -629,8 +629,9 @@ if ($css != '') {
               return;
           },
           success: function (data, jqXHR, textStatus) {
-              submitPending = false
-              if(data == randomPageID) {
+              submitPending = false;
+              //$('#mymsg').text(data);  // Remove when working.
+              if (data == randomPageID) {
                   success = true;
                   saveSuccess();
                   return;
@@ -880,6 +881,8 @@ if (!isset($_GET['q_id'])) {
     printf($string['pleasecomplete'], $current_screen);
     echo "</div>\n<br >\n";
   }
+  
+  //echo '<div id="mymsg">Hi</div>';  // Remove when working.
 
   echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
 

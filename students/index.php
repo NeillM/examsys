@@ -62,11 +62,12 @@ $lab_info->close();
 // Get modules
 $modules = array();
 $i = 0;
-if ($stmt = $mysqli->prepare("SELECT m.ModuleID, m.fullname, sm.calendar_year FROM modules m INNER JOIN student_modules sm on m.moduleID = sm.moduleid WHERE sm.userID = ? AND m.active = 1 ORDER BY sm.calendar_year ASC, m.fullname ASC")) {
+if ($stmt = $mysqli->prepare("SELECT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
   $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
-  $stmt->bind_result($moduleID, $module_name, $module_year);
+  $stmt->bind_result($idMod, $moduleID, $module_name, $module_year);
   while ($stmt->fetch()) {
+		$modules[$i]['idMod'] = $idMod;
 		$modules[$i]['id'] = $moduleID;
 		$modules[$i]['name'] = $module_name;
 		$modules[$i]['year'] = $module_year;
@@ -80,10 +81,12 @@ $sessions_with_papers = array();
 // Get papers for this module - types 0,1,3, valid for this date
 $papers = 0;
 $papers_query = <<< QUERY
-SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM properties p
+SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
 INNER JOIN papers pa ON p.property_id = pa.paper
 WHERE p.paper_type IN ('0','1','3','6')
-AND p.moduleID LIKE ? AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
+AND p.property_id=pm.property_id
+AND idMod = ?
+AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
 AND p.start_date < NOW() AND p.end_date > NOW()
 AND p.deleted IS NULL
 GROUP BY p.property_id
@@ -91,10 +94,10 @@ ORDER BY p.paper_title
 QUERY;
 
 for ($i = 0; $i < count($modules); $i++) {
-  $mod_id = $modules[$i]['id'];
-	if ($stmt = $mysqli->prepare($papers_query)) {
-		$mod_string = '%'.$mod_id.'%';
-	  $stmt->bind_param('ss', $mod_string, $modules[$i]['year']);
+
+  if ($stmt = $mysqli->prepare($papers_query)) {
+
+	  $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
 	  $stmt->execute();
 	  $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year, $crypt_name, $password);
 	  $stmt->store_result();
@@ -133,21 +136,20 @@ $stmt->close();
 
 // Get any objectives-based feedback released.
 $feedback_query = <<< QUERY
-SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date FROM feedback_release f, properties p
-WHERE f.paper_id=p.property_id
+SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, p.start_date FROM (feedback_release f, properties p, properties_modules pm)
+WHERE f.paper_id = p.property_id
+AND p.property_id = pm.property_id
+AND idMod = ?
 AND NOW() > f.date
 AND p.paper_type IN ('0','1','2')
-AND p.moduleID LIKE ?
 AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
 AND p.end_date < NOW()
 ORDER BY p.paper_title
 QUERY;
 
 for ($i = 0; $i < count($modules); $i++) {
-  $mod_id = $modules[$i]['id'];
 	if ($stmt = $mysqli->prepare($feedback_query)) {
-		$mod_string = '%' . $mod_id . '%';
-	  $stmt->bind_param('ss', $mod_string, $modules[$i]['year']);
+	  $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
 	  $stmt->execute();
 	  $stmt->bind_result($paper_id, $calendar_year, $paper_title, $crypt_name, $feedback_type, $start_date);
 	  $stmt->store_result();

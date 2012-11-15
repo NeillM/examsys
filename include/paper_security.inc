@@ -78,27 +78,37 @@ function check_datetime($start_date, $end_date) {
   }
 }
 
-function check_modules($userID, $moduleID, $calendar_year, $mysqlidb) { //TODO this needs fixing $moduleID is now an array!!!
-  global $string, $title, $surname, $username;
+function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
+  global $string;
   
   $attempt = 1;
-  $usern = $username;
+  $usern = $userObj->get_username();
   if (isset($_SERVER['PHP_AUTH_USER'])) {
     $usern = $_SERVER['PHP_AUTH_USER'];
   }
 
   if (stripos($usern, 'user') !== 0) {
-     if ($moduleID != '') {
+     if (count($moduleIDs) > 0) {
       $cal_year_sql = '';
       if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
       
-      $stmt = $mysqlidb->prepare("SELECT moduleid, attempt FROM student_modules WHERE userID=$userID AND moduleid IN ('" . str_replace(",","','",$moduleID) . "') $cal_year_sql");
+      $stmt = $db->prepare("SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND idMod IN (" . implode(',', $moduleIDs) . ") $cal_year_sql");
+      $stmt->bind_param('i', $userObj->get_user_ID());
       $stmt->execute();
       $stmt->bind_result($moduleid, $attempt);
       $stmt->store_result();
       if ($stmt->num_rows == 0) {
         if ($calendar_year == '') $calendar_year = 'current year';
-        $tmp_string = sprintf($string['notregistered'], $title, $surname, $username, $moduleID, $calendar_year);
+        $html = '';
+        foreach ($moduleIDs as $modID) {
+          $mod_details = module_utils::get_full_details_by_ID($modID, $db);
+          if ($html == '') {
+            $html = $mod_details['moduleid'];
+          } else {
+            $html .= ', ' . $mod_details['moduleid'];
+          }
+        }
+        $tmp_string = sprintf($string['notregistered'], $userObj->get_title(), $userObj->get_surname(), $userObj->get_username(), $html, $calendar_year);
         access_denied($tmp_string, $output_header = false);
       } else {
         $stmt->fetch();
@@ -112,17 +122,18 @@ function check_modules($userID, $moduleID, $calendar_year, $mysqlidb) { //TODO t
   return $attempt;
 }
 
-function check_metadata($property_id, $userID, $moduleID, $mysqlidb) {
+// Needs fixing
+function check_metadata($property_id, $userObj, $moduleIDs, $db) {
   global $string;
 
-  $stmt = $mysqlidb->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID=?");
+  $stmt = $db->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
   $stmt->bind_param('i', $property_id);
   $stmt->execute();
   $stmt->bind_result($security_type, $security_value);
   $stmt->store_result();
   while ($stmt->fetch()) {
-    $check_security = $mysqlidb->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.moduleid=modules.id AND modules.moduleid IN ('" . str_replace(",", "','", $moduleID) . "') AND userID=? AND type=? AND value=?");
-    $check_security->bind_param('iss', $userID, $security_type, $security_value);
+    $check_security = $db->prepare("SELECT users_metadata.userID FROM users_metadata, modules WHERE users_metadata.moduleid = modules.id AND modules.id IN (" . implode(',', $moduleIDs) . ") AND userID = ? AND type = ? AND value=?");
+    $check_security->bind_param('iss', $userObj->get_user_ID(), $security_type, $security_value);
     $check_security->execute();
     $check_security->store_result();
     if ($check_security->num_rows == 0) {

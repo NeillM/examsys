@@ -99,7 +99,7 @@ function get_log_metadata_record_id($u_id, $p_id, $sessionid, $db) {
  * @param mixed $userroles 
  *
  */
-function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, $student_year, $attempt, $userroles, $preview_q_id=null) {
+function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $student_year, $attempt, $userroles, $preview_q_id=null) {
   global $original_paper_type; //TODO: move this into the function definition
   $screen_no =  $_POST['old_screen'];
   $extra_duration = $_POST['previous_duration'];
@@ -114,10 +114,10 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   $option_order = '';
   $old_display_pos = 0;
   if (isset($preview_q_id)) {
-    $questions = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND questions.q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+    $questions = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND questions.q_id=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
     $questions->bind_param('ii', $paper_id, $preview_q_id);
   } else {
-    $questions = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+    $questions = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions, options WHERE paper=? AND screen=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
     $questions->bind_param('ii', $paper_id, $screen_no);
   }
   $questions->execute();
@@ -145,7 +145,7 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach ($selected_q_id as &$used_qid) {
 	        // Look up database.
-          $random_data = $dblink->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+          $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
           $random_data->bind_param('i', $used_qid); 
           $random_data->execute();
           $random_data->store_result();
@@ -171,23 +171,23 @@ function record_marks($paper_id, $dblink, $userid, $paper_type, $student_grade, 
   }
   $questions->close();
   
-  $log_ids = get_log_ids($userid, $paper_id, $paper_type, $screen_no, $_POST['sessionid'], $dblink);
+  $log_ids = get_log_ids($userid, $paper_id, $paper_type, $screen_no, $_POST['sessionid'], $db);
   
   if (count($log_ids) > 0) {
     // prepare to update old records
-    $save_answers = $dblink->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
+    $save_answers = $db->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
     $save_answers->bind_param('dsisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
   } else {
     // Set up new insert query ready.
-    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$dblink) === false) {       
+    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$db) === false) {       
       // Write log_metadata first on screen 1 only
       $tmp_ip_address = NetworkUtils::get_ipaddress();
-      $save_metadata = $dblink->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+      $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
       $save_metadata->bind_param('iisssii', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
       $save_metadata->execute();
       $save_metadata->close();
     }
-    $save_answers = $dblink->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
+    $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
     $save_answers->bind_param('isiidisiiss', $userid, $_POST['sessionid'], $paper_id, $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order);
   }
     
