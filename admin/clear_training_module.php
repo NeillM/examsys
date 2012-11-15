@@ -87,5 +87,5 @@ while ($result->fetch()) {
 $result->close();
 
 $mysqli->close();
-//header("location: index.php");
+header("location: index.php");
 ?>

@@ -265,7 +265,7 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
   }
   if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
   echo '<div style="box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); float:right; width:165px; margin-right:10px; border:1px solid #8492A6; background-color:#FCFCFC">';
-  if ($add_member == true or $userObject->has_role('Admin')) {
+  if ($add_member == true or $userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
     echo '<div style="float:left; width:95%; padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
   } else {
     echo '<div style="padding:4px; background-color:#F1F5FB; border-bottom:1px solid #CFDBEB">' . $string['teammembers'] . '</div>';

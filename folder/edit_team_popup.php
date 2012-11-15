@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['teammembers'] . ' ' . $module_code; ?></title>
   <script language="JavaScript">
     function closeWindow() {
-      window.opener.location.href = '../folder/details.php?module=<?php echo $module_code; ?>';
+      window.opener.location.href = '../folder/details.php?module=<?php echo $teamID; ?>';
       self.close();
     }
   </script>
