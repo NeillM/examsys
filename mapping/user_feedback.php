@@ -38,6 +38,8 @@
   }
   
   $showReflection = true;
+  $userID = $userObject->get_user_ID();
+  
   if ($userObject->has_role(array('Staff','SysAdmin'))) {
     if (isset($_GET['userID']) and $_GET['userID'] != '') {
       $userID = $_GET['userID'];  //TODO Why is it doing this?
@@ -47,8 +49,8 @@
   }
 
   //check the feedback has been released !!!
-  if ($userObject->has_role('Student')=) {
-    $result = $mysqli->prepare("SELECT property_id, date FROM feedback_release, properties WHERE properties.property_id=feedback_release.paper_id AND crypt_name=? AND date < NOW()");
+  if ($userObject->has_role('Student')) {
+    $result = $mysqli->prepare("SELECT property_id, date FROM feedback_release, properties WHERE properties.property_id=feedback_release.paper_id AND crypt_name = ? AND date < NOW()");
     $result->bind_param('s', $_GET['id']);
     $result->execute();
     $result->bind_result($paperID, $date);
@@ -59,7 +61,7 @@
       exit;
     }
   } else {
-    $result = $mysqli->prepare("SELECT property_id FROM properties WHERE crypt_name=?");
+    $result = $mysqli->prepare("SELECT property_id FROM properties WHERE crypt_name = ?");
     $result->bind_param('s', $_GET['id']);
     $result->execute();
     $result->bind_result($paperID);
@@ -81,6 +83,8 @@
     exit;
   }
   
+  $moduleID = Paper_utils::get_modules($paperID, $mysqli);
+  
   //check the user sat the paper!
   if ($paper_type == '5') {
     $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, NULL AS updated FROM log5 WHERE q_paper=? AND userID=? LIMIT 1");
@@ -89,7 +93,7 @@
   } else {
     $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log$paper_type WHERE q_paper=? AND userID=? ORDER BY screen DESC LIMIT 1");
   }
-  $result->bind_param('ii', $paperID, $userObject->get_user_ID());
+  $result->bind_param('ii', $paperID, $userID);
   $result->execute();
   $result->bind_result($started, $updated);
   $result->store_result();
@@ -105,12 +109,12 @@
   $time_spent = $updated - $start_seconds;
 
   $result = $mysqli->prepare("SELECT username, title, initials, surname FROM users WHERE id=?");
-  $result->bind_param('i', $userObject->get_user_ID());
+  $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($tmp_username, $title, $initials, $surname);
   $result->fetch();
   $result->close();
-  $student_name = $title . ' ' . demo_replace($initials,$demo) . ' ' . demo_replace($surname,$demo);
+  $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_replace($surname, $demo);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -140,7 +144,7 @@
   </style>
 </head>
 <body>
-    <table style="position:relative; border: 1px solid #808080; box-shadow: 2px 2px 2px #C0C0C0; z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:5px">
+    <table style="position:relative; border: 1px solid #808080; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:8px">
     <tr><td colspan="2" style="padding-left:10px; padding-right:10px"><strong><?php echo $string['key']; ?></strong></td></tr>
     <tr><td style="padding-left:10px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td style="padding-right:10px"><?php echo $string['greenicon']; ?></td></tr>
     <tr><td style="padding-left:10px"><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td style="padding-right:10px"><?php echo $string['ambericon']; ?></td></tr>
@@ -166,18 +170,17 @@
     $startedSQL = ' AND started = "' . $_GET['started'] . '"';;
   }
   
-  if($paper_type == '4') {
+  if ($paper_type == '4') {
     $result = $mysqli->prepare("SELECT log4.q_id, rating as mark,score_method FROM log$paper_type LEFT JOIN questions ON log4.q_id = questions.q_id WHERE  log4.q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? $startedSQL ORDER BY  log4.q_id, started");
   } else {
     $result = $mysqli->prepare("SELECT q_id, mark, totalpos FROM log$paper_type WHERE q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper=?) AND userID=? AND q_paper=? $startedSQL ORDER BY q_id, started");
   }
-
-  $result->bind_param('iii', $paperID, $userObject->get_user_ID(), $paperID);
+  $result->bind_param('iii', $paperID, $userID, $paperID);
   $result->execute();
   $result->bind_result($q_id, $mark, $totalpos);
   $total_student_mark = 0;
   while ($result->fetch()) {
-    if(is_string($totalpos)) {
+    if (is_string($totalpos)) {
       $question_data[$q_id]['totalpos'] = count(explode('|',$totalpos)) - 2;
     } else {
       $question_data[$q_id]['totalpos'] = $totalpos;
@@ -191,6 +194,7 @@
   $objectives = array();
   $qid_list = substr($qid_list,0,-1);
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
+  
   unset($objByModule['none_of_the_above']);
   if (count($objByModule) > 0) {
     foreach ($objByModule as $module => $mappings) {

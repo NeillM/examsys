@@ -25,12 +25,13 @@
  */
 
 class MappingUtils {
-  public static function get_vle_api($idMod, $session, &$vle_api_cache, $rogodb) {
-
+  public static function get_vle_api($idMod, $session, &$vle_api_cache, $db) {
+  
+ 
     if (!isset($vle_api_cache[$idMod])) {
       // Are there any existing relationships for the module in this session?
-      $stmt = $rogodb->prepare("SELECT vle_api FROM relationships WHERE idMod = ? AND calendar_year=? LIMIT 1");
-      $stmt->bind_param('ss', $idMod, $session);
+      $stmt = $db->prepare("SELECT vle_api FROM relationships WHERE idMod IN (" . $idMod . ") AND calendar_year = ? LIMIT 1");
+      $stmt->bind_param('s', $session);
       $stmt->execute();
       $stmt->store_result();
       if ($stmt->num_rows > 0) {
@@ -39,7 +40,7 @@ class MappingUtils {
         $stmt->close();
       } else {
         // No existing relationships. Use VLE API as defined in the module
-        $stmt = $rogodb->prepare("SELECT vle_api FROM modules WHERE id=? LIMIT 1");
+        $stmt = $db->prepare("SELECT vle_api FROM modules WHERE id=? LIMIT 1");
         $stmt->bind_param('s', $idMod);
         $stmt->execute();
         $stmt->bind_result($vle_api);

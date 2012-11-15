@@ -27,16 +27,17 @@ require_once '../classes/paperutils.class.php';
 function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $repmodule, $repyear, $paperID, $paper_type, $direction, &$student_no = 0, &$user_total = 0, $percent = 100) {
   global $qid_list;
   
+  $users_on_modules = '';
+
   // Get all the users on the module(s) the paper is on.
   if (is_array($moduleIDs)) {
-    $users_on_modules = '';
     $moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
     $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student,modules WHERE modules.id = modules_student.idMod and idMod IN ($moduleIDs_in)");
     $mod_query->execute();
     $mod_query->bind_result($tmp_userID, $tmp_moduleid);
     $mod_query->store_result();
     while ($mod_query->fetch()) {
-	  if (isset($repmodule) AND $repmodule != '' AND $tmp_moduleid != $repmodule) {
+	  if (isset($repmodule) and $repmodule != '' and $tmp_moduleid != $repmodule) {
       continue; //this user is not on the module set in repmodule so dont put them in the array
 	  }
 	  if ($users_on_modules == '') {
@@ -48,7 +49,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     $mod_query->close();
   }
   $student_modules_sql = '';
-  if ($users_on_modules != '' AND isset($repmodule) AND $repmodule != '') {
+  if ($users_on_modules != '' and isset($repmodule) and $repmodule != '') {
     $student_modules_sql = " AND log$paper_type.userID IN ($users_on_modules)";
   } 
 

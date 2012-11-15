@@ -28,7 +28,7 @@
  * This is function displayObjectivesMappingForm it displays objectives by session
  *
  * @param int $paper_id 
- * @param object $rogodb
+ * @param object $db
  * 
  */
  
@@ -158,7 +158,7 @@ HTML;
   return $html;
 }
 
-function displayObjectivesMappingForm($paper_id, $rogodb, $cfg_root_path) {
+function displayObjectivesMappingForm($paper_id, $db, $cfg_root_path) {
   global $vle_api_cache;
 
   //get module and session from paper id
@@ -166,7 +166,7 @@ function displayObjectivesMappingForm($paper_id, $rogodb, $cfg_root_path) {
   $query = <<<QUERY
 SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id=pm.property_id INNER JOIN modules m ON pm.idMod=m.id WHERE p.property_id=?
 QUERY;
-  $result = $rogodb->prepare($query);
+  $result = $db->prepare($query);
   $result->bind_param('i', $paper_id);
   $result->execute();
   $result->store_result();
@@ -185,7 +185,7 @@ QUERY;
     $q_id = '';
   }
   
-  $objsByModuleSession = getObjectives($modules_array, $session, $paper_id, $q_id, $rogodb);
+  $objsByModuleSession = getObjectives($modules_array, $session, $paper_id, $q_id, $db);
 
   if (isset($objsByModuleSession['none_of_the_above'])) {
     $none_of_the_above = $objsByModuleSession['none_of_the_above'];
@@ -275,7 +275,7 @@ QUERY;
  *
  * @param int $paper_id 
  * @param int $question_id 
- * @param object $rogodb 
+ * @param object $db 
  * 
  */
 function save_objective_mappings($db, $modules, $paper_id, $question_id) {
@@ -328,10 +328,10 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
  *
  * @param int $paper_id 
  * @param int $question_id 
- * @param object $rogodb 
+ * @param object $db 
  * 
  */
-function saveObjMappings($paper_id, $question_id, $rogodb) {
+function saveObjMappings($paper_id, $question_id, $db) {
   if (isset($_POST['modules']) and $paper_id != '' and substr($paper_id,0,5) != 'find:') {
     $modules = $_POST['modules'];
     $modules = explode(',',$modules);
@@ -364,14 +364,13 @@ function saveObjMappings($paper_id, $question_id, $rogodb) {
             array_unshift($sql, $delete);
           }
           foreach($sql as $query) {
-            if (!$result = $rogodb->query($query)) {
-              echo "Question Mapping Error #1 " . $rogodb->error . "<br/> $query <br/>";
+            if (!$result = $db->query($query)) {
+              echo "Question Mapping Error #1 " . $db->error . "<br/> $query <br/>";
             }
           }
         }
       }
     }
-
   }
 }
 
@@ -384,7 +383,7 @@ function saveObjMappings($paper_id, $question_id, $rogodb) {
  * @param string $session A session in the format yyyy/yy
  * @param mixed $paperID 
  * @param mixed $questionID 
- * @param mixed $rogodb 
+ * @param mixed $db 
  * @return array an array of objectives and mappings
  *
  */
@@ -392,18 +391,18 @@ function saveObjMappings($paper_id, $question_id, $rogodb) {
 $objsBySession_cache = array();
 $vle_api_cache = array(); // cache the vle api to save some queries
 
-function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, $scope='latest') {
+function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $scope = 'latest') {
   global $objsBySession_cache, $vle_api_cache, $cfg_short_date, $cfg_web_root;
   $original_thisModuleid = $thisModuleid;
   $objsBySession = array();
 
   $module_list = $thisModuleid;
   if (!is_array($module_list)) {
-    $module_list = array($module_list);
+    $module_list = array($thisModuleid);
   }
   foreach ($module_list as $thisidMod => $thisModuleid) {
     // Get which API to use to get the learning objectives
-    $vle_api = MappingUtils::get_vle_api($thisidMod, $session, $vle_api_cache, $rogodb);
+    $vle_api = MappingUtils::get_vle_api($thisidMod, $session, $vle_api_cache, $db);
 
     if ($vle_api != '') {
       // Get objectives from the VLE via REST request
@@ -420,17 +419,17 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
     } else {
       // Use Rogō's internally stored objectves
       if ($scope == 'all') {
-      	$sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod=? ORDER BY calendar_year, sess_id";
-      	$stmt = $rogodb->prepare($sql);
-        $stmt->bind_param('s', $thisidMod);
+      	$sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? ORDER BY calendar_year, sess_id";
+      	$stmt = $db->prepare($sql);
+        $stmt->bind_param('i', $thisidMod);
       } elseif ($session == '' and $scope == 'latest') {
-        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod=? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
-        $stmt = $rogodb->prepare($sql);
-        $stmt->bind_param('s', $thisidMod);
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bind_param('i', $thisidMod);
       } else {
-        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod=? AND calendar_year=? ORDER BY sess_id";
-        $stmt = $rogodb->prepare($sql);
-        $stmt->bind_param('ss', $thisidMod, $session);
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=? ORDER BY sess_id";
+        $stmt = $db->prepare($sql);
+        $stmt->bind_param('is', $thisidMod, $session);
       }
       $stmt->execute();
       $stmt->store_result();
@@ -450,14 +449,14 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
       if (isset($objsBySession[$thisModuleid]) and count($objsBySession[$thisModuleid]) > 0) {
         //GET objs from Touchstone
         foreach ($objsBySession[$thisModuleid] as $identifier => $sess) {
-          $sql = "SELECT obj_id,objective,sequence FROM objectives WHERE identifier=? AND calendar_year=? ORDER BY sequence";
-          $stmt = $rogodb->prepare($sql);
+          $sql = "SELECT obj_id,objective,sequence FROM objectives WHERE identifier=? AND calendar_year = ? ORDER BY sequence";
+          $stmt = $db->prepare($sql);
           $stmt->bind_param('ss',$identifier,$sess['calendar_year']);
           $stmt->execute();
           //$stmt->store_result();
           $stmt->bind_result($obj_id, $objective, $sequence);
           $i = 0;
-          while ($row = $stmt->fetch()) {
+          while ($stmt->fetch()) {
             $objsBySession[$thisModuleid][$identifier]['objectives'][$obj_id]['content'] = $objective;
             $objsBySession[$thisModuleid][$identifier]['objectives'][$obj_id]['id'] = $obj_id;
             $objsBySession[$thisModuleid][$identifier]['objectives'][$obj_id]['mapped'] = 0;
@@ -473,17 +472,17 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
   //START:: get the currently mapped objectives in Rogo.
   $mapped = array();
   if ($questionID != '') {
-    $original_thisModuleid_in = "'" . implode("','",array_keys($original_thisModuleid)) . "'";
-    if ($result = $rogodb->prepare("SELECT obj_id, question_id FROM relationships WHERE idMod IN($original_thisModuleid_in) AND paper_id=? AND calendar_year=? AND question_id IN ($questionID) AND vle_api=?")) {
+    $original_thisModuleid_in = "'" . implode("','", array_keys($original_thisModuleid)) . "'";
+    if ($result = $db->prepare("SELECT obj_id, question_id FROM relationships WHERE idMod IN($original_thisModuleid_in) AND paper_id=? AND calendar_year=? AND question_id IN ($questionID) AND vle_api=?")) {
       $result->bind_param('iss', $paperID, $session, $vle_api);
       $result->execute();
       $result->bind_result($obj_id, $question_id);
-      while ($row = $result->fetch()) {
+      while ($result->fetch()) {
         $mapped[$obj_id][] = $question_id;
       }
       $result->close();
     } else {
-      echo "Error: " . $rogodb->error;
+      echo "Error: " . $db->error;
     }
   }
   //END:: get the currently mapped objetives in Rogo
@@ -521,13 +520,13 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb, 
  * @param string $session A session in the format yyyy/yy
  * @param int $paperID 
  * @param int $questionID 
- * @param object $rogodb 
+ * @param object $db 
  * @return array This is the return value description
  *
  */
-function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, $rogodb) {
+function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, $db) {
 
-  $objsBySession = getObjectives($thisModuleid, $session, $paperID, $questionID, $rogodb);
+  $objsBySession = getObjectives($thisModuleid, $session, $paperID, $questionID, $db);
   $objsByMapping = array();
 
   if (isset($objsBySession['none_of_the_above']['mapped']) and $objsBySession['none_of_the_above']['mapped'] == 1) {
