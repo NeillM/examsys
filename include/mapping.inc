@@ -41,8 +41,12 @@ require_once $cfg_web_root . 'classes/moduleutils.class.php';
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   global $vle_api_cache;
 
-  //get module and session form paper id
-  $result = $db->prepare("SELECT moduleID, idMod, calendar_year, paper_type FROM properties, properties_modules, modules WHERE properties_modules.property_id = properties.property_id and modules.id = idMod AND properties.property_id=?");
+  //get module and session from paper id
+  $modules_array = array();
+  $query = <<<QUERY
+SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id=pm.property_id INNER JOIN modules m ON pm.idMod=m.id WHERE p.property_id=?
+QUERY;
+  $result = $db->prepare($query);
   $result->bind_param('i', $paper_id);
   $result->execute();
   $result->store_result();
@@ -156,13 +160,19 @@ HTML;
 function displayObjectivesMappingForm($paper_id, $rogodb, $cfg_root_path) {
   global $vle_api_cache;
 
-  //get module and session form paper id
-  $result = $rogodb->prepare("SELECT moduleID, calendar_year, paper_type FROM properties WHERE property_id=?");
+  //get module and session from paper id
+  $modules_array = array();
+  $query = <<<QUERY
+SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id=pm.property_id INNER JOIN modules m ON pm.idMod=m.id WHERE p.property_id=?
+QUERY;
+  $result = $rogodb->prepare($query);
   $result->bind_param('i', $paper_id);
   $result->execute();
   $result->store_result();
-  $result->bind_result($modules, $session, $paper_type);
-  $result->fetch();
+  $result->bind_result($moduleId, $idMod, $session, $paper_type);
+  while($result->fetch()) {
+    $modules_array[$idMod] = $moduleId;
+  }
   if ($result->num_rows == 0) {
     return 0;
   }
@@ -174,7 +184,7 @@ function displayObjectivesMappingForm($paper_id, $rogodb, $cfg_root_path) {
     $q_id = '';
   }
   
-  $objsByModuleSession = getObjectives($modules, $session, $paper_id, $q_id, $rogodb);
+  $objsByModuleSession = getObjectives($modules_array, $session, $paper_id, $q_id, $rogodb);
 
   if (isset($objsByModuleSession['none_of_the_above'])) {
     $none_of_the_above = $objsByModuleSession['none_of_the_above'];
@@ -240,7 +250,8 @@ function displayObjectivesMappingForm($paper_id, $rogodb, $cfg_root_path) {
   $html .= "<div style=\"color:#800000\">";
   $checked = '';
   if(isset($none_of_the_above['mapped'])) $checked = ' checked';
-  $html .= "<input type=\"checkbox\" value =\"-1\" name=\"none_of_the_above\"$checked /> <strong>None of the Above</strong><br />Check here if the current question does not match any of the above objectives from $modules.";
+  $modules_str = implode(', ', array_values($modules_array));
+  $html .= "<input type=\"checkbox\" value =\"-1\" name=\"none_of_the_above\"$checked /> <strong>None of the Above</strong><br />Check here if the current question does not match any of the above objectives from $modules_str.";
   $html .= "</div>";
 
 
@@ -250,7 +261,7 @@ function displayObjectivesMappingForm($paper_id, $rogodb, $cfg_root_path) {
   } else {
     $html .= "<input id=\"questionID\" name=\"questionID\" type=\"hidden\" value=\"\" />\n";
   }
-  $html .= "<input id=\"modules\" name=\"modules\" type=\"hidden\" value=\"$modules\" />\n";
+  $html .= "<input id=\"modules\" name=\"modules\" type=\"hidden\" value=\"" . implode(',', array_keys($modules_array)) . "\" />\n";
   return $html;
 }
 
@@ -366,7 +377,7 @@ function saveObjMappings($paper_id, $question_id, $rogodb) {
 
 
 /**
- * This is function getObjectives this function get objevive to be mapped. It can Retrieve objectives from 
+ * This is function getObjectives this function gets objectives to be mapped. It can Retrieve objectives from
  * the internal database or an external application 
  *
  * @param string $thisModuleid module code

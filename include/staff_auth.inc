@@ -28,6 +28,7 @@ require_once 'staff_student_auth.inc';
 require_once $cfg_web_root . 'classes/paperutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
+require_once $cfg_web_root . 'classes/moduleutils.class.php';
 global $userObject;
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
@@ -62,6 +63,9 @@ if ($userObject->has_role('External Examiner')) {
 }
 
 $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
+
+// The SYSTEM module is special, get its ID
+$system_id = module_utils::get_idMod('SYSTEM', $mysqli);
 
 //
 //default security checks
@@ -148,15 +152,18 @@ if ($userObject->has_role('SysAdmin')) {
     $q_id_list = explode(',', $tmp_q_id);
     foreach ($q_id_list as $tmp_q_id) {
       if ($tmp_q_id != -1) {
-        $result = $mysqli->prepare("SELECT q_group, ownerID FROM questions WHERE q_id=?");
+        $group_array = array();
+
+        $result = $mysqli->prepare("SELECT qm.idMod, q.ownerID FROM questions q INNER JOIN questions_modules qm ON q.q_id=qm.q_id WHERE q.q_id=?");
         $result->bind_param('i', $tmp_q_id);
         $result->execute();
         $result->store_result();
         $result->bind_result($q_group, $ownerID);
-        $result->fetch();
-        $group_array = explode(';', strtoupper($q_group));
+        while($result->fetch()) {
+          $group_array[] = $q_group;
+        }
 
-        if ($ownerID != $userObject->get_user_ID() and !in_array('SYSTEM', $group_array) and count(array_intersect($group_array, $staff_modules)) == 0) {
+        if ($ownerID != $userObject->get_user_ID() and !in_array($system_id, $group_array) and count(array_intersect($group_array, array_keys($staff_modules))) == 0) {
           // Not owner or on staff_module so check schools
           $is_admin = false;
           if (count($group_array) > 0) {
