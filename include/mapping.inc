@@ -76,6 +76,9 @@ QUERY;
   
   foreach ($objsByModuleSession as $moduleid => $objsBySession) {
     $moduleid_forform = str_replace(' ', '_', $moduleid);
+    $tmp = array_flip($modules_array);
+    $idmod = $tmp[$moduleid_forform];
+
     $html .= <<< HTML
         <h2>{$moduleid} {$string['objectives']}</h2>
         
@@ -111,7 +114,7 @@ HTML;
           }
           $obj_text = strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>');
           $html .= <<< HTML
-        				<li><input id="objective{$objcount}" name="{$moduleid_forform}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$obj_text}</label></li>
+        				<li><input id="objective{$objcount}" name="{$idmod}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$obj_text}</label></li>
   
 HTML;
           $objcount++;
@@ -134,12 +137,10 @@ HTML;
         </ul>
 
 HTML;
-    $tmp = array_flip($modules_array);
-    $idmod = $tmp[$moduleid_forform];
     $html .= <<< HTML
-    		<input name="{$moduleid_forform}_session" type="hidden" value="{$session}"/>
-    		<input name="{$moduleid_forform}_old_mappings" type="hidden" value="{$old_mappings}" />
-        <input name="{$moduleid_forform}_vle_api" type="hidden" value="$vle_api_cache[$idmod]"/>
+    		<input name="{$idmod}_session" type="hidden" value="{$session}"/>
+    		<input name="{$idmod}_old_mappings" type="hidden" value="{$old_mappings}" />
+        <input name="{$idmod}_vle_api" type="hidden" value="$vle_api_cache[$idmod]"/>
 
 HTML;
   }
@@ -150,7 +151,7 @@ HTML;
   $nota_message = sprintf($string['noneabovemsg'], $modules_string);
   $html .= <<< HTML
         <p class="warning"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>{$string['noneabove']}</strong></label><br />{$nota_message}</p>
-        <input id="objective_modules" name="objective_modules" type="hidden" value="{$modules_string}" />
+        <input id="objective_modules" name="objective_modules" type="hidden" value="{$modules_keys_string}" />
         
 HTML;
     
@@ -193,6 +194,9 @@ QUERY;
   
   $html = '';
   foreach ($objsByModuleSession as $moduleid => $objsBySession) {
+    $tmp = array_flip($modules_array);
+    $idmod = $tmp[$moduleid];
+
     $html .= "<h1>$moduleid Objectives</h1>";
     $old_mappings = '';
     $objcount = 0;
@@ -223,7 +227,7 @@ QUERY;
           } else {
             $checked = '';
           }
-          $html .= "\t<div style=\"margin-left:15px\"><input id=\"" . $moduleid . "obj$objcount\" name=\"" . $moduleid . "obj$objcount\" type=\"checkbox\" value=\"" . $objectives['id'] . "\" $checked />&nbsp;" . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . "</div>\n";
+          $html .= "\t<div style=\"margin-left:15px\"><input id=\"" . $idmod . "obj$objcount\" name=\"" . $idmod . "obj$objcount\" type=\"checkbox\" value=\"" . $objectives['id'] . "\" $checked />&nbsp;" . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . "</div>\n";
           $objcount++;
         }
         $html .= "</div>\n";
@@ -239,10 +243,10 @@ QUERY;
         $html .= "</div>\n";
       }
     }
-    $html .= "<input id=\"" . $moduleid . "_objectiveCount\" name=\"" . $moduleid . "_objectiveCount\" type=\"hidden\" value=\"$objcount\"/>\n";
-    $html .= "<input name=\"" . $moduleid . "_session\" type=\"hidden\" value=\"$session\"/>\n";
-    $html .= "<input name=\"" . $moduleid . "_old_mappings\" type=\"hidden\" value=\"$old_mappings\"/>\n";
-    $html .= "<input name=\"" . $moduleid . "_vle_api\" type=\"hidden\" value=\"$vle_api_cache[$moduleid]\"/>\n";
+    $html .= "<input id=\"" . $idmod . "_objectiveCount\" name=\"" . $idmod . "_objectiveCount\" type=\"hidden\" value=\"$objcount\"/>\n";
+    $html .= "<input name=\"" . $idmod . "_session\" type=\"hidden\" value=\"$session\"/>\n";
+    $html .= "<input name=\"" . $idmod . "_old_mappings\" type=\"hidden\" value=\"$old_mappings\"/>\n";
+    $html .= "<input name=\"" . $idmod . "_vle_api\" type=\"hidden\" value=\"$vle_api_cache[$idmod]\"/>\n";
   }
 
   //display none of the above !
@@ -282,17 +286,13 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
 
     $sql = array();
 
-    foreach ($modules as $moduleid) {
-      $moduleid_forform = str_replace(' ', '_', $moduleid);
-
-      $idMod = module_utils::get_idMod($moduleid_forform, $db);
-
-      if (isset($_POST[$moduleid_forform . '_session'])) {
-        $session = $_POST[$moduleid_forform . '_session'];
-        $old_mappings = $_POST[$moduleid_forform . '_old_mappings'];
-        $vle_api = $_POST[$moduleid_forform . '_vle_api'];
-        if (isset($_POST[$moduleid_forform . '_objectives'])) {
-          foreach ($_POST[$moduleid_forform . '_objectives'] as $objective_id) {
+    foreach ($modules as $idMod) {
+      if (isset($_POST[$idMod . '_session'])) {
+        $session = $_POST[$idMod . '_session'];
+        $old_mappings = $_POST[$idMod . '_old_mappings'];
+        $vle_api = $_POST[$idMod . '_vle_api'];
+        if (isset($_POST[$idMod . '_objectives'])) {
+          foreach ($_POST[$idMod . '_objectives'] as $objective_id) {
             $sql[] = "INSERT INTO relationships VALUES (NULL, $idMod, $paper_id, $question_id, $objective_id, '$session', '$vle_api')";
             $new_mappings .= $objective_id . ',';
           }
@@ -335,23 +335,23 @@ function saveObjMappings($paper_id, $question_id, $rogodb) {
   if (isset($_POST['modules']) and $paper_id != '' and substr($paper_id,0,5) != 'find:') {
     $modules = $_POST['modules'];
     $modules = explode(',',$modules);
-    foreach ($modules as $moduleid) {
-      if (isset($_POST[$moduleid . '_session'])) {
-        $session = $_POST[$moduleid . '_session'];
-        $objectiveCount = $_POST[$moduleid . '_objectiveCount'];
-        $old_mappings = $_POST[$moduleid . '_old_mappings'];
-        $vle_api = $_POST[$moduleid . '_vle_api'];
+    foreach ($modules as $idMod) {
+      if (isset($_POST[$idMod . '_session'])) {
+        $session = $_POST[$idMod . '_session'];
+        $objectiveCount = $_POST[$idMod . '_objectiveCount'];
+        $old_mappings = $_POST[$idMod . '_old_mappings'];
+        $vle_api = $_POST[$idMod . '_vle_api'];
         $sql = array();
         $new_mappings = '';
         for ($i = 0; $i < $objectiveCount; $i++ ) {
-          if (isset($_POST[$moduleid . 'obj' . $i])) {
-            $sql[] = "INSERT INTO relationships VALUES (NULL, '$moduleid', $paper_id, $question_id, " . $_POST[$moduleid . 'obj' . $i] . ", '$session', '$vle_api')";
-            $new_mappings .= $_POST[$moduleid . 'obj' . $i] . ',';
+          if (isset($_POST[$idMod . 'obj' . $i])) {
+            $sql[] = "INSERT INTO relationships VALUES (NULL, '$idMod', $paper_id, $question_id, " . $_POST[$idMod . 'obj' . $i] . ", '$session', '$vle_api')";
+            $new_mappings .= $_POST[$idMod . 'obj' . $i] . ',';
           }
         }
         //check for none of the above
         if (isset($_POST['none_of_the_above']) and $_POST['none_of_the_above'] == -1 AND count($sql) == 0) {
-          $sql[] = "INSERT INTO relationships VALUES (NULL, '$moduleid', $paper_id, $question_id, -1, '$session', '$vle_api')";
+          $sql[] = "INSERT INTO relationships VALUES (NULL, '$idMod', $paper_id, $question_id, -1, '$session', '$vle_api')";
           $new_mappings .= '-1,';
         } else {
           $old_mappings .= '-1,';
@@ -360,7 +360,7 @@ function saveObjMappings($paper_id, $question_id, $rogodb) {
         if ($new_mappings != $old_mappings) {
           //preappend the delete
           if ($old_mappings != '') {
-            $delete = "DELETE FROM relationships WHERE module_id = '$moduleid' AND paper_id = $paper_id AND question_id = $question_id AND calendar_year = '$session' AND vle_api= '$vle_api'";
+            $delete = "DELETE FROM relationships WHERE idMod={$idMod} AND paper_id = $paper_id AND question_id = $question_id AND calendar_year = '$session' AND vle_api= '$vle_api'";
             array_unshift($sql, $delete);
           }
           foreach($sql as $query) {
