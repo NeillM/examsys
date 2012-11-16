@@ -277,11 +277,11 @@ if ($textsize > 120) {
   $display_date = '';
   
   if ($test_type == 0) {
-    $log_info = $mysqli->prepare("SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 WHERE q_paper=? AND userID=? GROUP BY started DESC, screen UNION SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 WHERE q_paper=? AND userID=? GROUP BY started DESC, screen");
-    $log_info->bind_param('iiii',$property_id,$userObject->get_user_ID(),$property_id,$userObject->get_user_ID());
+    $log_info = $mysqli->prepare("SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 0 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log0 WHERE q_paper = ? AND userID = ? GROUP BY started DESC, screen UNION SELECT screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log1 WHERE q_paper = ? AND userID = ? GROUP BY started DESC, screen");
+    $log_info->bind_param('iiii', $property_id, $userObject->get_user_ID(), $property_id, $userObject->get_user_ID());
   } else {
-    $log_info = $mysqli->prepare("SELECT MAX(screen) AS screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log$test_type WHERE q_paper= AND userID=? GROUP BY started DESC");
-    $log_info->bind_param('iii',$test_type,$property_id,$userObject->get_user_ID());
+    $log_info = $mysqli->prepare("SELECT MAX(screen) AS screen, SUM(mark) AS mark, DATE_FORMAT(started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log$test_type WHERE q_paper = ? AND userID = ? GROUP BY started DESC");
+    $log_info->bind_param('iii', $test_type, $property_id, $userObject->get_user_ID());
   }
   $log_info->execute();
   $log_info->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date); //TODO last 3 seem unused
