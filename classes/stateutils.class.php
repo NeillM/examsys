@@ -22,7 +22,7 @@
 * @package
 */
 
-Class StateUtils { //todo merge with userobject
+Class StateUtils {
 
   function getState($userID, $db, $page = '') {
     $state_array = array();

@@ -28,9 +28,12 @@ require_once $cfg_web_root . 'classes/schoolutils.class.php';
 class UserObject {
 
   // include old variables as private ones in this class
+  /**
+   * @var
+   */
   private $password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username;
 
-  private $roles, $staffModules, $db;
+  private $roles, $staffModules, $studentModules, $db;
 
   /**
    * constructor
@@ -64,7 +67,7 @@ class UserObject {
       $this->roles['Student'] = 1;
     }
     if (strpos($this->userroles, 'External Examiner') !== false) {
-      $this->roles['External Examiner'] = 1;
+      $this->roles['ExternalExaminer'] = 1;
     }
     if (strpos($this->userroles, 'Invigilator') !== false) {
       $this->roles['Invigilator'] = 1;
@@ -199,12 +202,20 @@ class UserObject {
   /**
    * loads the staff modules
    *
-   * @return the staf module list //TODO probably dont need the return
+   * @return the staff module list //TODO probably dont need the return
    */
   function load_staff_modules() {
     $this->staffModules = array();
 
     $result = $this->db->prepare("SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID");
+    if ($this->db->error) {
+      try {
+        throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+      } catch (Exception $e) {
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo nl2br($e->getTraceAsString());
+      }
+    }
     $result->bind_param('i', $this->userID);
     $result->execute();
     $result->bind_result($idMod, $moduleID);
@@ -311,6 +322,119 @@ class UserObject {
     }
 
     return $staff_modules_list;
+  }
+
+  /** loads the student modules
+   *
+   * @return array the student module list //TODO probably dont need the return
+   */
+  function load_student_modules() {
+    $this->studentModules = array();
+
+    // studentmodule year -> module ->decode
+    $result = $this->db->prepare("SELECT idMod,moduleID,calendar_year FROM modules_student,modules WHERE modules_student.idMod = modules.id AND userID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result->bind_param('is', $this->get_user_ID());
+    $result->execute();
+
+    $result->bind_result($idMod, $moduleID, $calyear);
+    while ($result->fetch()) {
+      $this->studentModules[$calyear][$idMod] = $moduleID;
+    }
+    $result->close();
+
+    return $this->studentModules;
+  }
+
+  /**
+   * checks to see is user is on a student module
+   * @param $moduleID an integer or string of a module
+   * @param $calendar_year the calendar year being looked for
+   * @return bool true if student member is on a module
+   */
+  function is_student_user_on_module($moduleID, $calendar_year) {
+
+    if (!$this->has_role('Student')) {
+      //this is not a staff user so it cant be on any modules
+      return false;
+    }
+
+    if (count($this->studentModules) < 1) {
+      $this->load_student_modules();
+    }
+
+    switch (gettype($moduleID)) {
+      case 'array':
+        if (count($moduleID) > 1) {
+          throw new Exception("is_student_user_on_module:: only accepts one module at a time.");
+        }
+        foreach ($moduleID as $idMod => $full_moduleID) {
+          if (isset($this->studentModules[$calendar_year][$idMod])) {
+            return true;
+          }
+        }
+        break;
+      case 'string':
+        if (in_array($moduleID, $this->studentModules[$calendar_year])) {
+          return true;
+        }
+        break;
+      case 'integer':
+        if (isset($this->studentModules[$calendar_year][$moduleID])) {
+          return true;
+        }
+        break;
+      default:
+        return false;
+    }
+
+    return false;
+  }
+
+
+  /**
+   * Enrole the student on a module.
+   *
+   * @param $idMod moduleID of module
+   * @param $attempt
+   * @param $session session of module
+   * @param int $auto_update if system add
+   * @return bool return true if successful.
+   */
+  function add_student_to_module($idMod, $attempt, $session, $auto_update = 0) {
+    // need to check its a self reg module
+
+    if (module_utils::module_check_self_enrol($idMod, $this->db) === false) {
+      return false;
+    }
+    if (UserUtils::is_user_on_module($this, $idMod, $session, $this->db)) {
+      //dont add a user to a module multiple times
+      return true;
+    }
+    $return = UserUtils::add_student_to_module($this->get_user_ID(), $idMod, $attempt, $session, $auto_update);
+
+    $this->load_student_modules();
+
+    return $return;
+  }
+
+
+  /**
+   * add current user to module as staff
+   * @param $idMod
+   */
+  function add_staff_to_module($idMod) {
+    $return = UserUtils::add_staff_to_module($this->get_user_ID(), $idMod, $this->db);
+    $this->load_staff_modules();
+    return $return;
+  }
+
+  /**
+   * remove current user to module as staff //not implimented
+   * @param $idMod
+   */
+  function remove_staff_from_module($idMod) {
+    // not implimented
+    trigger_error('remove_staff_from_module not yet implimented', E_USER_WARNING);
   }
 
 }

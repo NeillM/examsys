@@ -161,6 +161,9 @@ Class UserUtils {
     $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->close();
+    if(isset($GLOBALS['userObject'])) {
+      $GLOBALS['userObject']->load_staff_modules();
+    }
   }
 
   /**
@@ -217,6 +220,9 @@ Class UserUtils {
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
+
+
+
     if (UserUtils::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
       //dont add a user to a module multiple times
       return true;
@@ -227,6 +233,10 @@ Class UserUtils {
       $result->close();
       if ($db->errno != 0) {
         return false;
+      }
+      global $userObject;
+      if($tmp_userID === $userObject->get_user_ID()) {
+        $userObject->load_student_modules();
       }
       return true;
     }
@@ -243,15 +253,8 @@ Class UserUtils {
    *
    */
   static function is_user_on_module($tmp_userID, $idMod, $session, $db) {
-    $result = $db->prepare("SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
-    $result->bind_param('iss', $tmp_userID, $idMod, $session);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($tmp_userID);
-    $exists = ($result->num_rows > 0);
-    $result->close();
-    return $exists;
-  }  //todo move to userobject
+    trigger_error('is_user_on_module called and now part of the user object', E_USER_WARNING);
+  } 
 
   static function fixcase_callback($word) {
     $word = $word[1];

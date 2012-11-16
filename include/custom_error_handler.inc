@@ -118,7 +118,7 @@ function error_disp($message, $level = E_USER_WARNING) {
 function DebugBackTraceDisplay($obj) {
   $str = '';
   $caller = $obj;
-  //array_shift($caller);
+
   foreach ($caller as $key => $called) {
     if ($called['function'] == 'customErrorHandler') {
       $str .= '<br />#' . $key . ' CustomeErrorHandler';

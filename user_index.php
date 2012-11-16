@@ -284,7 +284,7 @@ if ($textsize > 120) {
     $log_info->bind_param('iii', $test_type, $property_id, $userObject->get_user_ID());
   }
   $log_info->execute();
-  $log_info->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date); //TODO last 3 seem unused
+  $log_info->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
   $log_info->store_result();
   if ($userObject->has_role(array('Staff','Admin'))) {
     echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"" . $string['start'] . "\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";

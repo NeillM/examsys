@@ -26,8 +26,8 @@
   require '../include/add_edit.inc';  // needed for the WYSIWYG editor
 
   $message = '';
-  if (file_exists("../email_templates/" $userObject->get_user_ID() . ".txt")) {
-    $file = fopen("../email_templates/" $userObject->get_user_ID() . ".txt",'r');
+  if (file_exists("../email_templates/" . $userObject->get_user_ID() . ".txt")) {
+    $file = fopen("../email_templates/" . $userObject->get_user_ID() . ".txt",'r');
     $from = fgets($file, 64000);
     $ccaddress = fgets($file, 64000);
     $bccaddress = fgets($file, 64000);
