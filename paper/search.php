@@ -25,6 +25,7 @@
 */
 
   require '../include/staff_auth.inc';
+  require_once '../classes/moduleutils.class.php';
   
   function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked, $retired) {
     global $string;
@@ -37,25 +38,25 @@
     
     switch ($paper_type) {
       case 0:
-        $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative'] ."&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative'] ."&#013;" . $string['author'] . ": $title $initials $surname\" />";
         break;
       case 1:
-        $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progresstest'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['progresstest'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
         break;
       case 2:
-        $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['summative'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
         break;
       case 3:
-        $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['survey'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
         break;
       case 4:
-        $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['oscestation'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['oscestation'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
         break;
       case 5:
-        $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offlinepaper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['offlinepaper'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
         break;
       case 6:
-        $html = "<img src=\"../artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['peerreview'] . "&#013;" . $string['author'] . ": $title $initials $surname\" border=\"0\" />";
+        $html = "<img src=\"../artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['peerreview'] . "&#013;" . $string['author'] . ": $title $initials $surname\" />";
         break;
     }
     return $html;
@@ -160,7 +161,7 @@
   }
 
   if (isset($_POST['submit'])) {
-    $results = $mysqli->prepare("SELECT DISTINCT properties.property_id, title, initials, surname, moduleID, paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, retired FROM (properties, users, properties_modules, modules) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.paper_ownerID=users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
+    $results = $mysqli->prepare("SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, retired FROM (properties, users, properties_modules, modules) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.paper_ownerID=users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
     if (count($variables) > 0) {
 	    array_unshift($variables, $params);
 	    $vars = array();
@@ -186,13 +187,17 @@
         } else {
           $locked = '';
         }
-        if ($paper_ownerID == $userObject->get_user_ID() or$userObject->has_role(array('SysAdmin','Admin'))or $type != 2) {
-          echo "<a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">" . displayIcon($type, $title, $initials, $surname, '', $locked, $retired) . "</a></td>\n";
-          echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">$paper_title</a><br />";
+        if ($paper_ownerID == $userObject->get_user_ID() or $userObject->has_role(array('SysAdmin','Admin'))or $type != 2) {
+          $codes = module_utils::get_idMod(explode(',', $moduleID), $mysqli);
+          $html = implode(',', $codes);
+          echo "<a href=\"../paper/details.php?paperID=$property_id&module=$html\">" . displayIcon($type, $title, $initials, $surname, '', $locked, $retired) . "</a></td>\n";
+          echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$html\">$paper_title</a><br />";
         } else {
           if ($userObject->is_staff_user_on_module($moduleID)) {
-            echo "<a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">" . displayIcon(2, $title, $initials, $surname, '', $locked, $retired) . "</a></td>\n";
-            echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$moduleID\">$paper_title</a><br />";
+            $codes = module_utils::get_idMod(explode(',', $moduleID), $mysqli);
+            $html = implode(',', $codes);
+            echo "<a href=\"../paper/details.php?paperID=$property_id&module=$html\">" . displayIcon(2, $title, $initials, $surname, '', $locked, $retired) . "</a></td>\n";
+            echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$html\">$paper_title</a><br />";
           } else {
             echo "<img src=\"../artwork/noentry_question_icon_48.png\" width=\"48\" height=\"48\" alt=\"Type: Summative Exam (Restricted Access)&#013;Author: $title $initials $surname\" border=\"0\" /></td>\n";
             echo "</td><td>$paper_title<br />";
@@ -204,7 +209,7 @@
         } else {
           echo ' ' . $string['screens'] . ', ';
         }
-        echo str_replace(',',' ',$moduleID) . '<br />';
+        echo $moduleID . '<br />';
         echo '  ' . $display_start_date. ' ' . $string['to'] . ' ' . $display_end_date .  '</td></tr></table>';
         echo "</div>\n";
       }

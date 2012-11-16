@@ -139,7 +139,7 @@ Class module_utils {
   }
   
   static function get_moduleid_from_id($modID, $db) {
-    $result = $db->prepare("SELECT moduleid FROM modules WHERE id=?");
+    $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ?");
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
@@ -155,22 +155,42 @@ Class module_utils {
   }
   
   static function get_idMod($module_id, $db) {
-    $result = $db->prepare("SELECT id FROM modules WHERE moduleid=?");
-    $result->bind_param('s', $module_id);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id);
-    $result->fetch();
-    if ($result->num_rows == 0) {
+    if (is_array($module_id)) {
+      $ids = array();
+      
+      $sql = implode("','", $module_id);
+      $sql = str_replace("',' ", "','", $sql);
+    
+      $result = $db->prepare("SELECT id FROM modules WHERE moduleid IN ('$sql')");
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($id);
+      while ($result->fetch()) {
+        $ids[] = $id;
+      }
       $result->close();
-      return false;
+      if (count($ids) == 0) {
+        return false;
+      }
+      return $ids;      
+    } else {
+      $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ?");
+      $result->bind_param('s', $module_id);
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($id);
+      $result->fetch();
+      if ($result->num_rows == 0) {
+        $result->close();
+        return false;
+      }
+      $result->close();
+      return $id;
     }
-    $result->close();
-    return $id;
   }
 
   static function get_moduleID($idMod, $db) {
-    $result = $db->prepare("SELECT moduleID FROM modules WHERE id=?");
+    $result = $db->prepare("SELECT moduleID FROM modules WHERE id = ?");
     $result->bind_param('s', $idMod);
     $result->execute();
     $result->store_result();
