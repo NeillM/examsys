@@ -274,7 +274,7 @@ if ($machineOK == true and $moduleOK == true) {
     
     $last_cal_year = '';
     $i = 0;
-    $info = $mysqli->prepare("SELECT moduleID, calendar_year FROM modules_student,modules WHERE modules.id = modules_student.idMod AND userID=? ORDER BY calendar_year DESC, moduleID");
+    $info = $mysqli->prepare("SELECT moduleID, calendar_year FROM modules_student, modules WHERE modules.id = modules_student.idMod AND userID = ? ORDER BY calendar_year DESC, moduleID");
     $info->bind_param('i', $userObject->get_user_ID());
     $info->execute();
     $info->bind_result($user_moduleID, $user_calendar_year);
