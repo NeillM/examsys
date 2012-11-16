@@ -61,9 +61,9 @@ Class UserUtils {
         $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
         if ($db->error) {
           try {
-            throw new Exception("0MySQL error $db->error <br> Query:<br> ", $db->errno);
+            throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
           } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
             echo nl2br($e->getTraceAsString());
           }
         }
@@ -71,7 +71,7 @@ Class UserUtils {
         $result->execute();
         $result->close();
       }
-      
+
       return $tmp_userID;
     }
 
