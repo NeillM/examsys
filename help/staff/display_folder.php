@@ -51,13 +51,18 @@ require '../../include/staff_auth.inc';
 
 <?php
   if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
-    $query = "INSERT INTO help_log VALUES (NULL, 'staff', " . $userObject->get_user_ID() . ", NOW(), " . $_GET['id'] . ")"; //TODO fix the sql to use prepared statement
-    if (!$mysqli->query($query)) {
+    $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'staff', ?, NOW(), ?)");
+    $result->bind_param('ii',$userObject->get_user_ID(), $_GET['id']);
+    $result->execute();
+    $result->close();
+    if ($mysqli->error) {
       echo "<p>" . $mysqli->errno . " Error writing to log: $query.</p>";
     }
   }
   
-  $search_results = $mysqli->prepare("SELECT id, title, type FROM staff_help WHERE title LIKE '" . $_GET['title'] . "/%' ORDER BY title");
+  $search_results = $mysqli->prepare("SELECT id, title, type FROM staff_help WHERE title LIKE ? ORDER BY title");
+  $t=$_GET['title'] . '/%';
+  $search_results->bind_param('s',$t);
   $search_results->execute();
   $search_results->store_result();
   $search_results->bind_result($id, $title, $type);

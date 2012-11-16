@@ -114,8 +114,19 @@ if (isset($_POST['Submit'])) {
       $editProperties->execute();  
       $editProperties->close();
 
+      $result = $mysqli->prepare("UPDATE folders SET name=REPLACE(name, ? , ?) WHERE name LIKE ? AND ownerID=?");
+      $t0 = $_POST['old_folder'] . ';';
+      $t1 = $new_folder . ';';
+      $t2 = $_POST['old_folder'] . ';%';
+      $result->bind_param('sssi', $t0, $t1, $t2, $userObject->get_user_ID());
+      $result->execute();
+      $result->close();
+
+
+
+      // !$mysqli->query("UPDATE folders SET name=REPLACE(name,\"" . $_POST['old_folder'] . ";\",\"" . $new_folder . ";\") WHERE name LIKE \"" . $_POST['old_folder'] . ";%\" AND ownerID=". $userObject->get_user_ID())
       // Alter the prefix of any child folders.
-      if (!$mysqli->query("UPDATE folders SET name=REPLACE(name,\"" . $_POST['old_folder'] . ";\",\"" . $new_folder . ";\") WHERE name LIKE \"" . $_POST['old_folder'] . ";%\" AND ownerID=". $userObject->get_user_ID())) { //TODO this needs sql fixing to a prepare statement
+      if ($mysqli->error) {
         echo "<p class=\"error\">Folders Edit Error 2</p>\n<p>Query: " . $editProperties . "</p>\n<p>" . mysql_error($link_id) . "</p>\n";
         echo "</body>\n</html>\n";
         exit;

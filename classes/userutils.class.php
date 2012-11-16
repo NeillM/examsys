@@ -253,8 +253,15 @@ Class UserUtils {
    *
    */
   static function is_user_on_module($tmp_userID, $idMod, $session, $db) {
-    trigger_error('is_user_on_module called and now part of the user object', E_USER_WARNING);
-  } 
+    $result = $db->prepare("SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result->bind_param('iss', $tmp_userID, $idMod, $session);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($tmp_userID);
+    $exists = ($result->num_rows > 0);
+    $result->close();
+    return $exists;
+  }
 
   static function fixcase_callback($word) {
     $word = $word[1];
@@ -281,10 +288,11 @@ Class UserUtils {
   }
 
   static function staff_on_team($module, $db, $tmp_userID = -99) {
+    trigger_error('the staff_on_team function is now available in userObject for the current user',E_USER_WARNING);
+
     global $REPLACEMEuserIDold;
-    if ($tmp_userID == -99) {
-      global $userObject; //TODO FIX THIS!
-      $tmp_userID = $userObject->get_user_ID();
+    if ($tmp_userID == -99 and isset($GLOBALS['userObject'])) {
+      $tmp_userID = $GLOBALS['userObject']->get_user_ID();
     }
 
     $teams = array();
@@ -307,8 +315,7 @@ Class UserUtils {
     else {
       return false;
     }
-  } //todo move to userobject
-
+  }
 }
 
 ?>
