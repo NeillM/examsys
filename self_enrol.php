@@ -42,8 +42,8 @@ if (UserUtils::username_exists($_SERVER['PHP_AUTH_USER'], $mysqli) === false ) {
     $lti_i = lti_integration::load();
   }
 
-  if($lti_i->description !=='Default') {
-    $returned=$lti_i::user_add($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+  if ($lti_i->description !=='Default') {
+    $returned = $lti_i::user_add($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
   } else {
     $SMS = SMSutils::GetSmsUtils();
     $user_data = $SMS->getUserData($_SERVER['PHP_AUTH_USER']);
@@ -70,16 +70,17 @@ if (UserUtils::username_exists($_SERVER['PHP_AUTH_USER'], $mysqli) === false ) {
     }
   }
 }
-$returned_check = module_utils::module_check_self_enrol($_GET['moduleid'], $mysqli);
-if ($returned_check === false) {
+
+$modID = module_utils::get_idMod($_GET['moduleid'], $mysqli);  // Translate module code into ID
+
+$mod_details = module_utils::get_full_details_by_ID($modID, $mysqli);
+if ($mod_details === false) {
   display_error('Module ID error', 'Module code ' . $_GET['moduleid'] . ' not found.', false, true);
 }
 
-list($fullname, $school, $active, $selfenroll) = $returned_check;
-
-if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils::is_user_on_module($userObject->get_user_ID(), $_GET['moduleid'], $_POST['session'], $mysqli)) {
+if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_POST['submit'])) {
   // Insert new module enrollment
-  UserUtils::add_student_to_module($userObject->get_user_ID(), $_GET['moduleid'], 1, $_POST['session'], $mysqli);
+  UserUtils::add_student_to_module($userObject->get_user_ID(), $modID, 1, $_POST['session'], $mysqli);
 }
 
 ?>
@@ -121,8 +122,8 @@ if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils
   echo '<tr><td class="topbar" style="text-align:right; width:55px"><img src="./artwork/modules_icon.png" width="48" height="48" alt="modules" /></td><td class="topbar" style="padding-left:15px; text-align:left">' . $string['moduleselfenrolment'] . '</td></tr>';
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2"><table border="0" style="width:100%; text-align:left"><tr><td class="field" style="width:120px">' . $string['moduleid'] . '</td><td>' . $_GET['moduleid'] . '</td></tr>';
-  echo '<tr><td class="field">' . $string['name'] . '</td><td>' . $fullname . '</td></tr>';
-  echo '<tr><td class="field">' . $string['school'] . '</td><td>' . $school . '</td></tr>';
+  echo '<tr><td class="field">' . $string['name'] . '</td><td>' . $mod_details['fullname'] . '</td></tr>';
+  echo '<tr><td class="field">' . $string['school'] . '</td><td>' . $mod_details['school'] . '</td></tr>';
   echo '<tr><td class="field">' . $string['academicyear'] . '</td><td><select name="session">';
   foreach ($years as $year) {
     if (isset($_POST['session']) and $_POST['session'] == $year) {
@@ -138,13 +139,13 @@ if ($active == 1 and $selfenroll == 1 and isset($_POST['submit']) and !UserUtils
     echo '<tr><td colspan="2">&nbsp;</td></tr>';
     echo '<tr><td colspan="2"><a href="/"><img src="/artwork/link.png" width="16" height="16" alt=">" border="0" /></a>&nbsp;<strong><a href="/students/" style="color:blue">' . $string['icanaccess'] . '</a></strong></td></tr>';
   } else {
-    echo '<tr><td colspan="2">&nbsp;' . sprintf($string['iwouldliketo'], $title, $initials, $surname, $username) . '</td></tr>';
+    echo '<tr><td colspan="2">&nbsp;' . sprintf($string['iwouldliketo'], $userObject->get_title(), $userObject->get_initials(), $userObject->get_surname(), $userObject->get_username()) . '</td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';
-    if ($active == 0) {
+    if ($mod_details['active'] == 0) {
       echo '<tr><td colspan="2" style="color:#C00000">' . $string['notactive'] . '</td></tr>';
       echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submitdisabled" value="' . $string['enroll'] . '" style="width:100px" disabled />&nbsp;<input type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back();" style="width:100px" /></td></tr>';
     } else {
-      if ($selfenroll == 0) {
+      if ($mod_details['selfenroll'] == 0) {
         echo '<tr><td colspan="2" style="color:#C00000">' . $string['notavailableselfenrollment'] . '</td></tr>';
         echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submitdisabled" value="' . $string['enroll'] . '" style="width:100px" disabled />&nbsp;<input type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back();" style="width:100px" /></td></tr>';
       } else {

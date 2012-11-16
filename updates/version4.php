@@ -4886,9 +4886,9 @@ QUERY;
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
 
   //brzsw 14/11/2012 - Add new grants for staff users needing to add modules to papers.
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
 
 
   // End ------------------------------------------------------------------

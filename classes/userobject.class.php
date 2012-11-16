@@ -332,8 +332,8 @@ class UserObject {
     $this->studentModules = array();
 
     // studentmodule year -> module ->decode
-    $result = $this->db->prepare("SELECT idMod,moduleID,calendar_year FROM modules_student,modules WHERE modules_student.idMod = modules.id AND userID=? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
-    $result->bind_param('is', $this->get_user_ID());
+    $result = $this->db->prepare("SELECT idMod,moduleID,calendar_year FROM modules_student,modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result->bind_param('i', $this->get_user_ID());
     $result->execute();
 
     $result->bind_result($idMod, $moduleID, $calyear);
@@ -390,7 +390,6 @@ class UserObject {
     return false;
   }
 
-
   /**
    * Enrole the student on a module.
    *
@@ -403,11 +402,11 @@ class UserObject {
   function add_student_to_module($idMod, $attempt, $session, $auto_update = 0) {
     // need to check its a self reg module
 
-    if (module_utils::module_check_self_enrol($idMod, $this->db) === false) {
+    if (module_utils::get_full_details_by_ID($idMod, $this->db) === false) {
       return false;
     }
     if (UserUtils::is_user_on_module($this, $idMod, $session, $this->db)) {
-      //dont add a user to a module multiple times
+      //don't add a user to a module multiple times
       return true;
     }
     $return = UserUtils::add_student_to_module($this->get_user_ID(), $idMod, $attempt, $session, $auto_update);
@@ -425,6 +424,7 @@ class UserObject {
   function add_staff_to_module($idMod) {
     $return = UserUtils::add_staff_to_module($this->get_user_ID(), $idMod, $this->db);
     $this->load_staff_modules();
+    
     return $return;
   }
 

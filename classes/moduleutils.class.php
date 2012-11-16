@@ -87,27 +87,10 @@ Class module_utils {
     return $unique_moduleid;
   }
 
-  static function module_check_self_enrol($module_id, $db) {
-    // returns false if not self enrol else returns needed data;
-    $result = $db->prepare("SELECT fullname, school, active, selfenroll FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
-    $result->bind_param('s', $module_id);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($fullname, $school, $active, $selfenroll);
-    $result->fetch();
-    if ($result->num_rows == 0) {
-      $result->close();
-      return false;
-    }
-    $result->close();
-
-    return array($fullname, $school, $active, $selfenroll);
-  }
-
   static function get_full_details_by_ID($modID, $db) {
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT moduleid, fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id = ?");
-    $result->bind_param('s', $modID);
+    $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
     $result->bind_result($moduleid, $fullname, $school, $active, $selfenroll, $checklist);
@@ -119,23 +102,6 @@ Class module_utils {
     $result->close();
 
     return array('moduleid'=>$moduleid, 'fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
-  }
-  
-  static function get_full_details($module_id, $db) {
-    // returns false if not self enrol else returns needed data;
-    $result = $db->prepare("SELECT fullname, school, active, selfenroll, checklist FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
-    $result->bind_param('s', $module_id);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($fullname, $school, $active, $selfenroll, $checklist);
-    $result->fetch();
-    if ($result->num_rows == 0) {
-      $result->close();
-      return false;
-    }
-    $result->close();
-
-    return array('fullname'=>$fullname, 'school'=>$school, 'active'=>$active, 'selfenroll'=>$selfenroll, 'checklist'=>$checklist);
   }
   
   static function get_moduleid_from_id($modID, $db) {

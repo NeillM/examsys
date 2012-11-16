@@ -220,25 +220,24 @@ Class UserUtils {
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
+    global $userObject;
 
-
-
-    if (UserUtils::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
-      //dont add a user to a module multiple times
+    if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
+      //don't add a user to a module multiple times
       return true;
     } else {
-      $result = $db->prepare("INSERT INTO modules_student VALUES(NULL, ?, ?, ?, ?, ?)");
+      $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
       $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
       $result->execute();
       $result->close();
       if ($db->errno != 0) {
         return false;
       }
-      global $userObject;
-      if($tmp_userID === $userObject->get_user_ID()) {
+      if ($tmp_userID === $userObject->get_user_ID()) {
         $userObject->load_student_modules();
       }
       return true;
+
     }
   }
 
