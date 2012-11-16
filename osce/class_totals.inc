@@ -27,8 +27,11 @@
   } else {
     $demo = false;
   }
+  
   require_once '../include/demo_replace.inc';
   require_once '../include/sort.inc';
+  
+  require_once '../classes/paperutils.class.php';
 
   $paperID = '';
   $sortby = '';
@@ -39,12 +42,14 @@
   if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
 
   // Get the module ID and calendar year of the OSCE station.
-  $result = $mysqli->prepare("SELECT paper_title, moduleID, calendar_year, marking, crypt_name FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT paper_title, calendar_year, marking, crypt_name FROM properties WHERE property_id=?");
   $result->bind_param('i', $paperID);
   $result->execute();
-  $result->bind_result($paper, $moduleID, $calendar_year, $marking, $crypt_name);
+  $result->bind_result($paper, $calendar_year, $marking, $crypt_name);
   $result->fetch();
   $result->close();
+  
+  $modIDs = implode(',', array_keys(Paper_utils::get_modules($paperID, $mysqli)));
   
   // Get the students who are enrolled on the module/session.
   $user_no = 0;
@@ -52,7 +57,7 @@
     $result = $mysqli->prepare("SELECT DISTINCT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (users AS students, users AS examiners, sid, log4_overall) WHERE students.id=log4_overall.userID AND examiners.id=log4_overall.examinerID AND started>=? AND started<=? AND q_paper=? AND students.id=sid.userID ORDER BY students.surname, students.initials");
     $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
   } else {
-    $result = $mysqli->prepare("SELECT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (student_modules, users AS students, sid) LEFT JOIN log4_overall ON students.id=log4_overall.userID AND q_paper=? LEFT JOIN users AS examiners ON log4_overall.examinerID=examiners.id WHERE student_modules.userID=students.id AND students.id=sid.userID AND moduleid=? AND calendar_year=? ORDER BY students.surname, students.initials");
+    $result = $mysqli->prepare("SELECT students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'$cfg_long_date_time') AS display_started, overall_rating, numeric_score, examiners.title, examiners.surname, examiners.initials FROM (modules_student, users AS students, sid) LEFT JOIN log4_overall ON students.id=log4_overall.userID AND q_paper=? LEFT JOIN users AS examiners ON log4_overall.examinerID=examiners.id WHERE modules_students.userID=students.id AND students.id=sid.userID AND modules_students.idMod IN ($modIDs) AND calendar_year=? ORDER BY students.surname, students.initials");
     $result->bind_param('iss', $_GET['paperID'], $moduleID, $calendar_year);
   }
   $result->execute();
