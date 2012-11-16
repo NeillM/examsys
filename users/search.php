@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * The results screen of a search for a user(s).
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -35,9 +35,87 @@ if ($userObject->has_role('Demo')) {
 $sortby = 'surname';
 $ordering = 'asc';
 $moduleID = '%';
-$calendar_year = '%';
+$calendar_year =  (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '') ? $_GET['calendar_year'] : '%';
 
-if (isset($_GET['submit'])) {
+if ($calendar_year == '%') {
+  $calendar_year_sql = '';
+} else {
+  $calendar_year_sql = " AND calendar_year = '$calendar_year'";
+}
+
+
+
+
+if (isset($_GET['paperID'])) {
+  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
+  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+
+  $needs_array = array();
+  $result = $mysqli->prepare("SELECT userID FROM special_needs");
+  $result->execute();
+  $result->bind_result($tmp_userID);
+  while ($result->fetch()) {
+    $needs_array[$tmp_userID] = '1';
+  }
+  $result->close();
+
+  // Get the year and modules from the paper properties.
+  $paper_modules = array();
+  $result = $mysqli->prepare("SELECT p.calendar_year, m.id, m.moduleid FROM properties p INNER JOIN properties_modules pm ON p.property_id=pm.property_id INNER JOIN modules m ON pm.idMod=m.id WHERE p.property_id=?");
+  $result->bind_param('i', $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($paper_calendar_year, $idMod, $paper_moduleID);
+  While ($result->fetch()) {
+    $paper_modules[$idMod] = $paper_moduleID;
+  }
+  $result->close();
+
+  $module_list = implode(',', array_keys($paper_modules));
+  $roles_sql = "AND roles='Student' AND grade != 'left'";
+
+  $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, m.moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID INNER JOIN modules m ON modules_student.idMod=m.id WHERE users.id=modules_student.userID AND idMod IN ($module_list) AND calendar_year='$paper_calendar_year' $roles_sql ORDER BY " . $sortby . " " . $ordering;
+  $user_data = $mysqli->prepare($query_string);
+  $user_data->execute();
+  $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
+  $user_data->store_result();
+  $user_no = number_format($user_data->num_rows);
+} elseif (isset($_GET['team'])) {
+  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
+  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+
+  $needs_array = array();
+  $result = $mysqli->prepare("SELECT userID FROM special_needs");
+  $result->execute();
+  $result->bind_result($tmp_userID);
+  while ($result->fetch()) {
+    $needs_array[$tmp_userID] = '1';
+  }
+  $result->close();
+
+  // Sanitise module IDs from query string
+  $tmp_modules = explode(',', $_GET['team']);
+  $module_list_safe = '';
+  foreach ($tmp_modules as $tmp_module) {
+    if (ctype_digit($tmp_module)) {
+      $module_list_safe .= $tmp_module . ',';
+    }
+  }
+
+  if ($module_list_safe != '') {
+    $module_list_safe = rtrim($module_list_safe, ',');
+
+    $roles_sql = "AND roles='Student' AND grade != 'left'";
+
+    $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, m.moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID INNER JOIN modules m ON modules_student.idMod=m.id WHERE users.id=modules_student.userID AND idMod IN ($module_list_safe) $calendar_year_sql $roles_sql ORDER BY " . $sortby . " " . $ordering;
+    $user_data = $mysqli->prepare($query_string);
+    $user_data->execute();
+    $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
+    $user_data->store_result();
+    $user_no = number_format($user_data->num_rows);
+  } else {
+    $user_no = 0;
+  }
+} elseif (isset($_GET['submit'])) {
   $username_sql = '';
   $title_sql = '';
   $surname_sql = '';
@@ -48,17 +126,16 @@ if (isset($_GET['submit'])) {
   if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
   if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
   if (isset($_GET['module']) and $_GET['module'] != '') $moduleID = $_GET['module'];
-  if (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '') $calendar_year = $_GET['calendar_year'];
-  
+
   if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
     $tmp_surname = str_replace("*","%",trim($_GET['search_surname']));
-    
+
     $tmp_titles = explode(',', $string['title_types']);
     foreach ($tmp_titles as $tmp_title) {
       if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) $title_sql = " AND title='$tmp_title'";
       $tmp_surname = preg_replace("/(" . $tmp_title . " )/i","",$tmp_surname);
     }
-    
+
     $sections = preg_split('[,.]',$tmp_surname);
     if (count($sections) > 1) {    // Search for initials.
       if (strlen($sections[0]) < strlen($sections[1])) {
@@ -104,12 +181,6 @@ if (isset($_GET['submit'])) {
     $needs_array[$tmp_userID] = '1';
   }
   $result->close();
-  
-  if ($calendar_year == '%') {
-    $calendar_year_sql = '';
-  } else {
-    $calendar_year_sql = " AND calendar_year = '$calendar_year'";
-  }
 
   $user_no = 0;
   if ($roles_sql != '') {
@@ -135,67 +206,13 @@ if (isset($_GET['submit'])) {
         $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql AND user_deleted IS NULL ORDER BY " . $sortby . " " . $ordering;
       }
     }
-    
+
     $user_data = $mysqli->prepare($query_string);
     $user_data->execute();
     $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
     $user_data->store_result();
     $user_no = number_format($user_data->num_rows);
   }
-} elseif (isset($_GET['paperID'])) {
-  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
-
-  $needs_array = array();
-  $result = $mysqli->prepare("SELECT userID FROM special_needs");
-  $result->execute();
-  $result->bind_result($tmp_userID);
-  while ($result->fetch()) {
-    $needs_array[$tmp_userID] = '1';
-  }
-  $result->close();
-  
-  // Get the year and modules from the paper properties.
-  $result = $mysqli->prepare("SELECT calendar_year, moduleID FROM properties WHERE property_id=?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($paper_calendar_year, $paper_moduleID);
-  $result->fetch();
-  $result->close();
-  
-  $moduleID = str_replace(",", "','", $paper_moduleID);
-  $roles_sql = "AND roles='Student' AND grade != 'left'";
-
-  $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID AND moduleid IN ('$moduleID') AND calendar_year='$paper_calendar_year' $roles_sql ORDER BY " . $sortby . " " . $ordering;
-  $user_data = $mysqli->prepare($query_string);
-  $user_data->execute();
-  $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
-  $user_data->store_result();
-  $user_no = number_format($user_data->num_rows);
-} elseif (isset($_GET['moduleID'])) {
-  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
-
-  $needs_array = array();
-  $result = $mysqli->prepare("SELECT userID FROM special_needs");
-  $result->execute();
-  $result->bind_result($tmp_userID);
-  while ($result->fetch()) {
-    $needs_array[$tmp_userID] = '1';
-  }
-  $result->close();
-  
-  $calendar_year = '2011/12';
-  
-  $moduleID = $_GET['moduleID'];
-  $roles_sql = "AND roles='Student' AND grade != 'left'";
-
-  $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, moduleid FROM (users, modules_student) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID AND moduleid IN ('$moduleID') AND calendar_year='$calendar_year' $roles_sql ORDER BY " . $sortby . " " . $ordering;
-  $user_data = $mysqli->prepare($query_string);
-  $user_data->execute();
-  $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_moduleid);
-  $user_data->store_result();
-  $user_no = number_format($user_data->num_rows);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -236,11 +253,11 @@ if (isset($_GET['submit'])) {
     function clearAll() {
       $('.highlight').removeClass('highlight');
     }
-  
+
     function selUser(userID, lineID, menuID, evt) {
       document.getElementById('menu2a').style.display = 'none';
       document.getElementById('menu' + menuID).style.display = 'block';
-     
+
       if (evt.ctrlKey == false) {
         clearAll();
         $('#' + lineID).addClass('highlight');
@@ -260,18 +277,18 @@ if (isset($_GET['submit'])) {
       document.getElementById('menu2a').style.display = 'block';
       document.getElementById('menu2b').style.display = 'none';
       document.getElementById('menu2c').style.display = 'none';
-      
+
       clearAll();
     }
 
     function profile(userID) {
       document.location.href='details.php?search_surname=<?php if (isset($_GET['search_surname'])) echo $_GET['search_surname']; ?>&search_username=<?php if (isset($_GET['search_username'])) echo $_GET['search_username']; ?>&student_id=<?php if (isset($_GET['student_id'])) echo $_GET['student_id']; ?>&moduleID=<?php if (isset($_GET['team'])) echo $_GET['team']; ?>&calendar_year=<?php if (isset($_GET['calendar_year'])) echo $_GET['calendar_year']; ?>&students=<?php if (isset($_GET['students'])) echo $_GET['students']; ?>&submit=Search&userID=' + userID + '&email=<?php if (isset($_GET['email'])) echo $_GET['email']; ?>&tmp_surname=<?php if (isset($_GET['tmp_surname'])) echo $_GET['tmp_surname']; ?>&tmp_courseID=<?php if (isset($_GET['tmp_courseID'])) echo $_GET['tmp_courseID']; ?>&tmp_yearID=<?php if (isset($_GET['tmp_yearID'])) echo $_GET['tmp_yearID']; ?>';
     }
-    
+
     function getLastID(IDs) {
       var id_list = IDs.split(",");
       last_elm = id_list.length - 1;
-      
+
       return id_list[last_elm];
     }
   </script>
@@ -280,15 +297,15 @@ if (isset($_GET['submit'])) {
 <?php
   if (isset($_GET['submit']) or isset($_GET['paperID']) or isset($_GET['moduleID'])) {
     echo "<body>\n";
-    
+
     include '../include/user_search_options.inc';
-    
+
     echo "<div id=\"content\" class=\"content\">\n";
   } else {
     echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
-    
+
     include '../include/user_search_options.inc';
-    
+
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['usersearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(92); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>";
@@ -402,7 +419,7 @@ if ($sortby == 'title') {
   if ($user_data->num_rows == 0) {
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;".$string['msg2']."</td></tr></table>\n";
   }
-  
+
   $old_letter = '';
   $old_title = '';
   $old_username = '';
@@ -489,7 +506,7 @@ if ($sortby == 'title') {
     if (isset($_GET['paperID'])) {
       echo $tmp_moduleid;
     } else {
-      echo $tmp_grade; 
+      echo $tmp_grade;
     }
     echo "</td></tr>\n";
     $old_letter = strtoupper(substr($tmp_surname, 0, 1));
@@ -511,11 +528,11 @@ if ($sortby == 'title') {
       echo "document.getElementById('menu3c').style.display = 'block';\n";
     } else {
       echo "document.getElementById('menu3a').style.display = 'none';\n";
-      echo "document.getElementById('menu3b').style.display = 'block';\n";    
+      echo "document.getElementById('menu3b').style.display = 'block';\n";
     }
   } else {
     echo "document.getElementById('menu3a').style.display = 'block';\n";
-    echo "document.getElementById('menu3b').style.display = 'none';\n";    
+    echo "document.getElementById('menu3b').style.display = 'none';\n";
     echo "document.getElementById('menu3c').style.display = 'none';\n";
   }
   $user_data->close();
