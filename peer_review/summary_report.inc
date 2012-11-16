@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -24,18 +24,18 @@
 
 function padDecimals($number, $rounding) {
   $number = round($number, $rounding);
-  
+
   $parts = explode('.', $number);
-  
+
   $integer = $parts[0];
   if (isset($parts[1])) {
     $decimals = $parts[1];
   } else {
     $decimals = '';
   }
-  
+
   $dec_len = strlen($decimals);
-  
+
   for ($i=$dec_len; $i<$rounding; $i++) {
     $decimals .= '0';
   }
@@ -44,10 +44,10 @@ function padDecimals($number, $rounding) {
 }
 
 // Get some properties of the paper.
-$result = $mysqli->prepare("SELECT property_id, paper_title, modules.id, properties.moduleID, calendar_year, rubric, marking, display_question_mark FROM properties, modules WHERE properties.moduleID=modules.moduleid AND property_id=?");
+$result = $mysqli->prepare("SELECT p.property_id, p.paper_title, m.id, m.moduleid, p.calendar_year, p.rubric, p.marking, p.display_question_mark FROM properties p INNER JOIN properties_modules pm ON p.property_id=pm.property_id INNER JOIN modules m ON pm.idMod=m.id WHERE p.property_id=?");
 $result->bind_param('i', $_GET['paperID']);
 $result->execute();
-$result->bind_result($property_id, $paper_title, $moduleID, $moduleID_text, $calendar_year, $type, $marking, $review_type);
+$result->bind_result($property_id, $paper_title, $idMod, $moduleID_text, $calendar_year, $type, $marking, $review_type);
 $result->fetch();
 $result->close();
 
@@ -91,11 +91,11 @@ $user_data = array();
 $groups = array();
 
 if ($group == '%') {
-  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? ORDER BY surname, initials");
-  $result->bind_param('iss', $moduleID, $calendar_year, $type);
+  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod=? AND calendar_year=? AND type=? ORDER BY surname, initials");
+  $result->bind_param('iss', $idMod, $calendar_year, $type);
 } else {
-  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND moduleID=? AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
-  $result->bind_param('isss', $moduleID, $calendar_year, $type, $group);
+  $result = $mysqli->prepare("SELECT users_metadata.userID, value, surname, first_names, title, student_id FROM (users_metadata, users) LEFT JOIN sid ON users.id=sid.userID WHERE users_metadata.userID=users.id AND idMod=? AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials");
+  $result->bind_param('isss', $idMod, $calendar_year, $type, $group);
 }
 $result->execute();
 $result->bind_result($userID, $group, $surname, $first_names, $title, $student_id); //TODO userID here?
@@ -106,7 +106,7 @@ while ($result->fetch()) {
   $user_data[$userID]['title'] = $title;
   $user_data[$userID]['student_id'] = $student_id;
   $user_data[$userID]['userID'] = $userID;
-  
+
   $groups[$group][$student_id] = $student_id;
 }
 $result->close();

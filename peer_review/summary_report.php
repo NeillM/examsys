@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -36,9 +36,9 @@ check_var('enddate', 'GET', true, false);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  
+
   <title><?php echo $string['reviewsummary'] . ' ' . $cfg_install_type; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
@@ -49,7 +49,7 @@ check_var('enddate', 'GET', true, false);
     .title {padding-left:10px}
     .line {padding-top:1px; padding-bottom:1px; padding-left:6px; border-bottom:solid #EEEEEE 1px}
   </style>
-  
+
   <script language="JavaScript">
   var ie  = document.all;
   var ns6 = document.getElementById&&!document.all;
@@ -79,7 +79,7 @@ check_var('enddate', 'GET', true, false);
     var scrOfY = getScrollY();
 
     document.getElementById('userID').value = tmpUserID;
-    
+
     document.getElementById('menudiv').style.left = currentX+scrOfX + 'px';
     document.getElementById('menudiv').style.top = currentY+scrOfY + 'px';
 
@@ -105,7 +105,7 @@ check_var('enddate', 'GET', true, false);
     }
     return scrollOfX;
   }
-  
+
   function getScrollY() {
     var scrollOfY = 0;
     if( typeof( window.pageYOffset ) == 'number' ) {
@@ -120,7 +120,7 @@ check_var('enddate', 'GET', true, false);
     }
     return scrollOfY;
   }
-  
+
   function menuRowOn(rowID) {
     // Left menu column
     document.getElementById('item'+rowID+'a').style.backgroundColor='#FFE7A2';
@@ -150,12 +150,12 @@ check_var('enddate', 'GET', true, false);
     document.getElementById('item'+rowID+'b').style.borderRight='1px solid #FFFFFF';
     document.getElementById('item'+rowID+'b').style.borderLeft='1px solid #FFFFFF';
   }
-  
+
   function viewProfile() {
     document.getElementById('menudiv').style.display = 'none';
     window.location = '../users/details.php?paperID=<?php echo $_GET['paperID']; ?>&userID=' + document.getElementById('userID').value;
   }
-  
+
   function viewReviews() {
     document.getElementById('menudiv').style.display = 'none';
     var winwidth = screen.width-80;
@@ -185,7 +185,7 @@ check_var('enddate', 'GET', true, false);
 <?php
   echo "<table class=\"header\" style=\"font-size:80%\">\n";
   echo "<tr><th colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
-  if ($moduleID != '') {
+  if ($idMod != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID_text . '">' . $moduleID_text . '</a>';
   } elseif ($folder != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
@@ -228,7 +228,7 @@ check_var('enddate', 'GET', true, false);
   foreach ($heading as $k => $h) {
     echo '<th class="' . $k . '"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
     echo "<a style=\"color:black;text-decoration:none\" href=\"" . $_SERVER['PHP_SELF'] . '?' . $query_string . "&sortby=$k&ordering=$ordering" . "\">";
-    echo  $h; 
+    echo  $h;
     if ($k == $sortby) {
       echo $ordering_img;
     }
@@ -297,11 +297,11 @@ check_var('enddate', 'GET', true, false);
           $q_no++;
         }
       }
-      
+
       $user_number++;
     }
   }
-  
+
   // Sort the data.
   $master_array = array_csort($master_array, $sortby, $ordering);
 
