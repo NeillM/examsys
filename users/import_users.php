@@ -27,7 +27,7 @@
   require '../include/admin_auth.inc';
   require '../include/errors.inc';
   require '../include/import_users.inc';
-  
+
   set_time_limit(0);
   ob_start();
 ?>
@@ -44,14 +44,14 @@
   <style type="text/css">
     label.error {display:block; color:#f00}
   </style>
-  
+
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
     function updateMsg() {
       document.getElementById('msg').innerHTML = '';
     }
-  
+
     $(function () { $('#import_form').validate(); });
   </script>
 </head>
@@ -77,9 +77,9 @@
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
-        
+
         $users = add_users_from_file($cfg_tmpdir . $userObject->get_user_ID() . '_new_cohort.csv');
-        unlink($cfg_tmpdir . $userID . '_new_cohort.csv');
+        unlink($cfg_tmpdir . $userObject->get_user_ID() . '_new_cohort.csv');
         if (isset($users['error'])) {
           echo "<p>" . $string['followingerrors'] . "</p><ul>";
           foreach ($users['error'] as $msg) {
@@ -88,20 +88,6 @@
           echo "</ul>";
         } else {
           echo $users['html'];
-          /*
-          echo "<ul>\n";
-          if (isset($users['added'])) {
-            echo "<li>" . count($users['added']) . " " . $string['usersadded'] . "</li>\n";
-          } else {
-            echo "<li>0 " . $string['usersadded'] . "</li>\n";
-          }
-          if (isset($users['updated'])) {
-            echo "<li>" . count($users['updated']) . " " . $string['usersupdated'] . "</li>\n";
-          } else {
-            echo "<li>0 " . $string['usersupdated'] . "</li>\n";
-          }
-          echo "</ul>\n";
-          */
         }
       }
     }
@@ -120,7 +106,7 @@
 
 <p><?php echo $string['msg1']; ?></p>
 <blockquote>Type, ID, First Names, Family Name, Title, Course, Year of Study and Email</blockquote>
-<p><?php echo $string['msg2']; ?></p> 
+<p><?php echo $string['msg2']; ?></p>
 
 <div style="text-align:center"><img src="../artwork/student_import_headings.png" width="749" height="59" alt="Headings" style="border:1px solid black" /></div>
 <br />
