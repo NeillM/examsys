@@ -34,7 +34,7 @@
 function get_folders($staff_modules, $userID, $db) {
   $staff_modules_string = '';
   if (count($staff_modules) > 0) {
-    $staff_modules_string = " OR idMod IN('" . implode("','",$staff_modules) . "')";
+    $staff_modules_string = " OR idMod IN(" . implode(',',array_keys($staff_modules)) . ")";
   }
   $my_folders_array = array();
   $result = $db->prepare("SELECT id, name FROM folders,folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID=? $staff_modules_string) AND deleted IS NULL ORDER BY name");
@@ -64,10 +64,9 @@ function get_folders($staff_modules, $userID, $db) {
  */
 function get_modules($teams, $my_folders_array, &$modules_array, $db) {
   if (count($teams) > 0) {
-    $team_sql = implode("','", $teams);
-    if ($team_sql != '') $team_sql = "'$team_sql'";
+    $team_sql = implode(",", array_keys($teams));
     
-    $result = $db->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE moduleid IN($team_sql) ORDER BY moduleID");
+    $result = $db->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE id IN($team_sql) ORDER BY moduleID");
     $result->execute();
     $result->bind_result($modID, $tmp_moduleid, $tmp_fullname);
     while ($result->fetch()) {
@@ -106,9 +105,9 @@ function get_staff_module_links($staff_modules, $db) {
   $modules_array = array();
 
   if (count($staff_modules) > 0) {
-    $staff_modules_sql = "'" . implode("','", $staff_modules) . "'";
+    $staff_modules_sql = implode(',', array_keys($staff_modules));
     
-    $result = $db->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE moduleid IN($staff_modules_sql) ORDER BY moduleID");
+    $result = $db->prepare("SELECT DISTINCT moduleid, fullname FROM modules WHERE id IN($staff_modules_sql) ORDER BY moduleID");
     $result->execute();
     $result->bind_result($tmp_moduleid, $tmp_fullname);
     while ($result->fetch()) {
@@ -134,7 +133,7 @@ function get_keywords($teams, $userID, $db) {
   $keywords_array = array();
   $keyword_no = 0;
   $old_moduleID = '';
-  $result = $db->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','",$teams) . "') ORDER BY moduleid, keyword");
+  $result = $db->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND modules.id IN ('" . implode(',',array_keys($teams)) . "') ORDER BY moduleid, keyword");
   $result->execute();
   $result->store_result();
   $result->bind_result($moduleID, $tmp_keyword, $keywordID);
