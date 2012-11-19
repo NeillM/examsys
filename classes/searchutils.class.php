@@ -87,7 +87,7 @@ Class search_utils {
         if ($old_school != '') echo "</optgroup>\n";
         echo "<optgroup label=\"" . $module['school'] . "\">\n";
       }
-      if ((isset($_POST['moduleid']) and $module['id'] == $_POST['moduleid']) or (isset($_GET['moduleID']) and $module['id'] == $_GET['moduleID']) or (isset($_POST['module']) and $module['idMod'] == $_POST['module']) or (isset($_GET['module']) and $module['idMod'] == $_GET['module']) or (isset($_GET['module']) and $module['id'] == $_GET['module'])) {
+      if ((isset($_POST['moduleid']) and $module['idMod'] == $_POST['moduleid']) or (isset($_GET['moduleID']) and $module['idMod'] == $_GET['moduleID']) or (isset($_POST['module']) and $module['idMod'] == $_POST['module']) or (isset($_GET['module']) and $module['idMod'] == $_GET['module']) or (isset($_GET['module']) and $module['id'] == $_GET['module'])) {
         echo "<option value=\"" . $module['idMod'] . "\" selected>" . $module['id'] . ": " . $module['fullname'] . "</option>\n";
       } else {
         echo "<option value=\"" . $module['idMod'] . "\">" . $module['id'] . ": " . $module['fullname'] . "</option>\n";

@@ -43,9 +43,6 @@ if ($calendar_year == '%') {
   $calendar_year_sql = " AND calendar_year = '$calendar_year'";
 }
 
-
-
-
 if (isset($_GET['paperID'])) {
   if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
   if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
@@ -323,8 +320,8 @@ if (isset($_GET['paperID'])) {
   echo str_replace(',', ', ', $paper_moduleID) . ' (' . $paper_calendar_year . ')';
 } elseif (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
   echo $_GET['search_surname'];
-} elseif (isset($_GET['team']) and $_GET['team'] != '%') {
-  echo $_GET['team'];
+} elseif (isset($_GET['module']) and $_GET['module'] != '%') {
+  echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   if (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '' and isset($_GET['students']) and $_GET['students'] != '') {
     echo ' (' . $_GET['calendar_year'] . ')';
   }
@@ -373,16 +370,16 @@ if (isset($_GET['student_id'])) {
   $tmp_student_id = '';
 }
 
-if (isset($_GET['team'])) {
-  $tmp_team = $_GET['team'];
+if (isset($_GET['module'])) {
+  $tmp_module = $_GET['module'];
 } else {
-  $tmp_team = '';
+  $tmp_module = '';
 }
 
 if (isset($_GET['paperID'])) {
   $additional_param = '&paperID=' . $_GET['paperID'];
 } else {
-  $additional_param = '&team=' . $tmp_team . '&search_surname=' . $tmp_surname . '&search_username=' . $tmp_username . '&student_id=' . $tmp_student_id . '&moduleID=' . $moduleID . '&calendar_year=' . $calendar_year . '&submit=Search&userID=';
+  $additional_param = '&module=' . $tmp_module . '&search_surname=' . $tmp_surname . '&search_username=' . $tmp_username . '&student_id=' . $tmp_student_id . '&moduleID=' . $moduleID . '&calendar_year=' . $calendar_year . '&submit=Search&userID=';
 }
 $user_types = array('students', 'graduates', 'leavers', 'suspended', 'staff', 'adminstaff', 'inactive', 'externals', 'invigilators');
 foreach ($user_types as $user_type) {
@@ -428,15 +425,15 @@ if ($sortby == 'title') {
   $x = 0;
   while ($user_data->fetch()) {
     if ($old_letter != strtoupper(substr($tmp_surname, 0, 1)) and $sortby == 'surname') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . strtoupper(substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . strtoupper(substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_title != $tmp_title and $sortby == 'title') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $string[strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_username != substr($tmp_username, 0, 4) and $sortby == 'username') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_grade != $tmp_grade and $sortby == 'grade') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     } elseif ($old_year != $tmp_yearofstudy and $sortby == 'yearofstudy') {
-      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:100%\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
+      echo "<tr><td colspan=\"8\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
     }
 
     if ($userObject->has_role('SysAdmin')) {
