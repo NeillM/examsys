@@ -36,11 +36,11 @@ Class RecycleBin {
     $recycle_bin_no = 0;
     
     if (count($staff_modules) == 0) {
-      $staff_module_sql = '';
+      $staff_module_in = '';
     } else {
-      $staff_module_in = "'" . implode("','",array_keys($staff_modules)) . "'";
+      $staff_module_in = "OR idMod IN (" . implode(",",array_keys($staff_modules)) . ")";
     }
-    $stmt = $db->prepare("SELECT properties.property_id FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ($staff_module_in)) AND deleted IS NOT NULL LIMIT 1");
+    $stmt = $db->prepare("SELECT properties.property_id FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? $staff_module_in) AND deleted IS NOT NULL LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->bind_result($no_deleted);
