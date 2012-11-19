@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -24,7 +24,7 @@
 
 require  '../../../../../../include/staff_auth.inc';
 $path = $cfg_web_root . 'help/staff/images/';
-  
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -36,7 +36,7 @@ $path = $cfg_web_root . 'help/staff/images/';
 
   <link rel="stylesheet" type="text/css" href="../../../../../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../../../../../css/dialog.css" />
-  <style type="text/css"> 
+  <style type="text/css">
     body {font-size:90%}
     .field {text-align:right}
     .note {font-size:90%; color:#808080}
@@ -44,16 +44,16 @@ $path = $cfg_web_root . 'help/staff/images/';
 <?php
   if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
-    
+
     $filename = $_FILES['FileName']['tmp_name'];
-    
+
     //make the dirs
     if (!file_exists($path)) {
       mkdir($path, 0744);
     }
-        
-    //move orignal file 
-    $imageInfo = getimagesize($_FILES['FileName']['tmp_name']); 
+
+    //move orignal file
+    $imageInfo = getimagesize($_FILES['FileName']['tmp_name']);
     $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path . $_FILES['FileName']['name']);
     if (!$worked) {
       echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
@@ -64,9 +64,9 @@ $path = $cfg_web_root . 'help/staff/images/';
     } else {
       $class = 'class="image_no_brd"';
     }
-    
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" ' . $class . ' />'; 
-    
+
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" ' . $class . ' />';
+
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
         <script type="text/javascript" language="javascript">
@@ -89,20 +89,20 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
       </head>
 
       <body onload="ExampleDialog.insert();" class="dialog_body">
-    <?php    
+    <?php
 } else {
   //defaut state
-  echo "<body class=\"dialog_body\">";   
+  echo "<body class=\"dialog_body\">";
   showForm('');
-  exit;  
-} 
+  exit;
+}
 
 function showForm($error) {
 ?>
-<script type="text/javascript" language="javascript"> 
+<script type="text/javascript" language="javascript">
     var winx = (screen.width / 2) - 250;
     var winy = (screen.height / 2) - 150;
-    window.resizeTo(500, 300);
+    window.resizeTo(500, 350);
     window.moveTo(winx, winy);
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
@@ -119,7 +119,7 @@ function showForm($error) {
 <tr><td colspan="2" align="center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" style="width:110px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:110px" /></td></tr>
 </table>
 </form>
- 
+
 <?php
 }
 ?>
