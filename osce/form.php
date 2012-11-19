@@ -81,6 +81,9 @@ if (isset($_POST['submit'])) {
     $surname = 'Student';
     $first_names = 'Test';
     $student_id = '0123456';
+    $username = 't;est';
+    $grade = 'A100';
+    $year = '1';
     $test = true;
   } else {
     $result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id=? AND users.id=sid.userID");
