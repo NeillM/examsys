@@ -39,12 +39,12 @@ $unique_moduleid = true;
 if (isset($_POST['submit'])) {
   // Check for unique moduleID
   //TODO this has been moved to moduleutils
-  $moduleid = trim($_POST['moduleid']);
+  $modulecode = trim($_POST['modulecode']);
   $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
-  $result->bind_param('s', $moduleid);
+  $result->bind_param('s', $modulecode);
   $result->execute();
   $result->store_result();
-  $result->bind_result($tmp_moduleid);
+  $result->bind_result($tmp_modulecode);
   $result->fetch();
   if ($result->num_rows > 0) {
     $unique_moduleid = false;
@@ -83,7 +83,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   
   $ebel_grid_template = $_POST['ebel_grid_template'];
   
-  module_utils::add_modules($moduleid, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
+  module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
   
   if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     $enrolements = 0;
@@ -92,7 +92,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $session = date_utils::get_current_academic_year();
     $session_parts = explode('/',$session);
 
-    $module = trim($_POST['moduleid']);
+    $module = trim($_POST['modulecode']);
     // UoN code to strip off prefix codes.
     //------------------------------------
     $replaced_module = str_replace('_UNMC','',$module);
@@ -215,11 +215,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_moduleid == false) {
-      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"moduleid\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_moduleid\" /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"modulecode\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_modulecode\" /></td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"moduleid\" value=\"";
-      if (isset($_GET['moduleid'])) echo $_GET['moduleid'];
-      echo "\" /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"modulecode\" value=\"\" /></td></tr>\n";
     }
     ?>
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" /></td></tr>

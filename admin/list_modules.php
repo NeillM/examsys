@@ -36,50 +36,34 @@ require '../include/sort.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .l {cursor:pointer}
     .t {color:black; text-decoration:none}
     .col {padding-left:5px}
     .col1 {padding-left:20px}
+    .l:hover {cursor:pointer; background-color:#eee}
+    .l.highlight {background-color:#B3C8E8}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="javascript">
-    function selMod(divID, moduleID, evt) {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
+    function selMod(moduleID, evt) {
+      $('.highlight').removeClass('highlight');
 
       document.getElementById('menu1a').style.display = 'none';
       document.getElementById('menu1b').style.display = 'block';
-      document.myform.divID.value = divID;
       
-      document.myform.moduleID.value = moduleID;
+      document.getElementById('moduleID').value = moduleID;
       
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
+      $('#' + moduleID).addClass('highlight');
       evt.cancelBubble = true;
     }
     
     function deselMod() {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-      document.myform.divID.value = '';
+      $('.highlight').removeClass('highlight');
+
+      document.getElementById('moduleID').value = '';
       document.getElementById('menu1b').style.display = 'none';
       document.getElementById('menu1a').style.display = 'block';
-    }
-
-    function lon(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
     }
     
     function edit(moduleID) {
@@ -137,10 +121,11 @@ $module_no = 0;
 
 $modules = array();
 
-$result = $mysqli->prepare("SELECT moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid=schools.id");
+$result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid=schools.id");
 $result->execute();
-$result->bind_result($moduleid, $fullname, $school, $active);
+$result->bind_result($id, $moduleid, $fullname, $school, $active);
 while ($result->fetch()) {
+  $modules[$module_no]['id'] = $id;
   $modules[$module_no]['moduleid'] = $moduleid;
   $modules[$module_no]['name'] = $fullname;
   $modules[$module_no]['school'] = $school;
@@ -173,7 +158,7 @@ for ($i=0; $i<$module_no; $i++) {
   } elseif ($sortby == 'active' and $old_active != $modules[$i]['active']) {
     echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $tmp_active . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
-  echo "<tr id=\"$i\" onclick=\"selMod($i,'" . $modules[$i]['moduleid'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['moduleid'] . "')\" onmouseover=\"lon($i)\" onmouseout=\"loff($i)\" class=\"l\"><td><div class=\"col1\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
+  echo "<tr class=\"l\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selMod('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col1\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
   
   $old_moduleid_letter = substr($modules[$i]['moduleid'], 0, 1);
   $old_name_letter = substr($modules[$i]['name'], 0, 1);

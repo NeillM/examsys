@@ -23,16 +23,19 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require '../include/errors.inc';
+
+check_var('moduleid', 'GET', true, false);
 
 $unique_moduleid = true;
-if (isset($_POST['submit']) and $_POST['moduleid'] != $_POST['old_moduleid']) {
+if (isset($_POST['submit']) and $_POST['modulecode'] != $_POST['old_modulecode']) {
   // Check for unique moduleid
-  $tmp_moduleid = trim($_POST['moduleid']);
+  $tmp_modulecode = trim($_POST['modulecode']);
   $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
-  $result->bind_param('s', $tmp_moduleid);
+  $result->bind_param('s', $tmp_modulecode);
   $result->execute();
   $result->store_result();
-  $result->bind_result($tmp_moduleid);
+  $result->bind_result($tmp_modulecode);
   $result->fetch();
   if ($result->num_rows > 0) $unique_moduleid = false;
   $result->free_result();
@@ -62,26 +65,25 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['mapping'])) $checklist .= ',mapping';
 
   // Update the properties of the module.
-  $tmp_moduleid = trim($_POST['moduleid']);
+  $tmp_modulecode = trim($_POST['modulecode']);
   $tmp_fullname = trim($_POST['fullname']);
-  $tmp_checklist = substr($checklist,1); 
+  $tmp_checklist = substr($checklist, 1); 
   
-  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=?, ebel_grid_template=? WHERE moduleid=?");
-  $result->bind_param('ssisssiiiis', $tmp_moduleid, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $_POST['old_moduleid']);
+  $result = $mysqli->prepare("UPDATE modules SET moduleid=?, fullname=?, active=?, sms=?, vle_api=?, checklist=?, selfenroll=?, schoolid=?, neg_marking=?, ebel_grid_template=? WHERE id=?");
+  $result->bind_param('ssisssiiiii', $tmp_modulecode, $tmp_fullname, $active, $_POST['sms_api'], $_POST['vle_api'], $tmp_checklist, $selfenroll, $_POST['schoolid'], $neg_marking, $_POST['ebel_grid_template'], $_GET['moduleid']);
   $result->execute();
   $result->close();
 
   $mysqli->close();
   header("location: list_modules.php");
 } else {
-  $moduleid = $_GET['moduleid'];
-  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template FROM modules, schools WHERE modules.schoolid=schools.id AND moduleid=?");
-  $stmt->bind_param('s', $moduleid);
+  $stmt = $mysqli->prepare("SELECT moduleid, fullname, active, school, vle_api, checklist, sms, selfenroll, neg_marking, ebel_grid_template FROM modules, schools WHERE modules.schoolid=schools.id AND modules.id=?");
+  $stmt->bind_param('i', $_GET['moduleid']);
   $stmt->execute();
-  $stmt->bind_result($moduleid, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid);
+  $stmt->bind_result($modulecode, $fullname, $active, $school, $vle_api, $checklist, $sms, $selfenroll, $neg_marking, $current_ebel_grid);
   $stmt->fetch();
   $stmt->close();
-  
+
   require_once '../classes/smsutils.class.php';
 
   $SMS = SMSutils::GetSmsUtils();
@@ -137,7 +139,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if ($unique_moduleid == false) {
   ?>
   function moduleWarning() {
-    alert("<?php echo sprintf($string['moduleidinuse'], $tmp_moduleid); ?>");
+    alert("<?php echo sprintf($string['moduleidinuse'], $tmp_modulecode); ?>");
   }
   <?php
   }
@@ -165,10 +167,10 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_moduleid == false) {
-      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"moduleid\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_moduleid\" /><input type=\"hidden\" name=\"old_moduleid\" value=\"$tmp_moduleid\" /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['moduleid'] . "</td><td><input type=\"text\" size=\"10\" name=\"modulecode\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$modulecode\" /></td></tr>\n";
     } else {
     ?>
-      <tr><td class="field"><?php echo $string['moduleid']; ?></td><td><input type="text" size="10" name="moduleid" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" /><input type="hidden" name="old_moduleid" value="<?php echo $moduleid; ?>" /></td></tr>
+      <tr><td class="field"><?php echo $string['moduleid']; ?></td><td><input type="text" size="10" name="modulecode" value="<?php echo $modulecode; ?>" /></td></tr>
     <?php
     }
     ?>
@@ -251,7 +253,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     ?></select></td></tr>
   <?php
     echo "</table>\n";
-    echo "<input type=\"hidden\" name=\"old_moduleid\" value=\"" . $_GET['moduleid'] . "\" />\n";
+    echo "<input type=\"hidden\" name=\"old_modulecode\" value=\"" . $modulecode . "\" />\n";
   ?>
     <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>

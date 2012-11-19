@@ -65,6 +65,5 @@ $session = date_utils::get_current_academic_year();
 </table>
 
 <input type="hidden" name="moduleID" id="moduleID" value="" />
-<input type="hidden" name="divID" value="" />
 </form>
 </div>
