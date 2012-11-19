@@ -25,11 +25,11 @@
 ?>
 <script language="JavaScript">
   function editTemplate() {
-    document.location.href='<?php echo $cfg_root_path ?>/admin/edit_ebel_grid.php?id=' + document.getElementById('divID').value;
+    document.location.href='<?php echo $cfg_root_path ?>/admin/edit_ebel_grid.php?id=' + document.getElementById('lineID').value;
   }
   
   function deleteTemplate() {
-    notice=window.open("../delete/check_delete_ebel_template.php?gridID=" + document.getElementById('divID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_ebel_template.php?gridID=" + document.getElementById('lineID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -53,6 +53,6 @@
 <tr><td class="ico"><img onclick="deleteTemplate()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteTemplate(); return false;"><?php echo $string['deletegrid']; ?></a></td></tr>
 </table>
 
-<input type="hidden" name="divID" id="divID" value="" />
+<input type="hidden" name="LineID" id="lineID" value="" />
 </form>
 </div>

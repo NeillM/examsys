@@ -28,28 +28,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['smsimportsummary'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .no {text-align:right}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
+  
+  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script language="javascript">
-    function lon(lineID) {
-      if (lineID != document.myform.oldDivID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.myform.oldDivID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
-    }
-  </script>
 </head>
 <body>
 <?php
@@ -72,15 +62,12 @@
   $result->store_result();
   $result->bind_result($updated, $display_updated, $module_no, $enrolement_no, $deletion_no);
   while ($result->fetch()) {
-    echo "<tr id=\"$id\" onclick=\"window.location='sms_import_detail.php?day=$updated';\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td style=\"padding-left:10px\">$display_updated</td><td class=\"no\">$module_no</td><td class=\"no\">$enrolement_no</td><td class=\"no\">$deletion_no</td><td>&nbsp;</td></tr>\n";
+    echo "<tr id=\"$id\" onclick=\"window.location='sms_import_detail.php?day=$updated';\" class=\"l\"><td style=\"padding-left:10px\">$display_updated</td><td class=\"no\">$module_no</td><td class=\"no\">$enrolement_no</td><td class=\"no\">$deletion_no</td><td>&nbsp;</td></tr>\n";
     $id++;
   }
 ?>
 </table>
-
 </div>
-<form name="myform">
-<input type="hidden" name="oldDivID" value="" />
-</form>
+
 </body>
 </html>

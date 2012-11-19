@@ -33,42 +33,23 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
   <title><?php echo $string['systemerrrorreport'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
-    .no {text-align:right}
-    .err {padding-left:6px; vertical-align:top}
     .errl {padding-right:6px; vertical-align:top; text-align:right}
   </style>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/list.js"></script>
   <script language="JavaScript">
     function refreshPage() {
       window.location = 'sys_error_list.php';
-    }
-
-    function selErr(lineID) {
-      tmp_ID = document.getElementById('errorID').value;
-      if (tmp_ID != '') {
-        document.getElementById('link' + tmp_ID).style.backgroundColor = 'white';
-      }
-      document.getElementById('link' + lineID).style.backgroundColor = '#B3C8E8';
-      document.getElementById('errorID').value = lineID;   
-    }
-    
-    function lon(lineID) {
-      if (lineID != document.getElementById('errorID').value) {
-        document.getElementById('link' + lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.getElementById('errorID').value) {
-        document.getElementById('link' + lineID).style.backgroundColor = '';
-      }
     }
   </script>
 </head>
@@ -82,7 +63,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 <th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['systemerrrorreport']; ?></th>
 <th colspan="3" style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" onclick="refreshPage();"<?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') echo ' checked="checked"'; ?> /> <?php echo $string['showfixed']; ?></div></th>
 </tr>
-<tr><th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['message']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['file']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['lineno']; ?>&nbsp;</nobr></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['user']; ?></nobr></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['userid']; ?>&nbsp;</nobr></th></tr>
+<tr><th><div class="col10"><?php echo $string['date']; ?></div></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['message']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['file']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['lineno']; ?>&nbsp;</nobr></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['user']; ?></nobr></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /><nobr>&nbsp;<?php echo $string['userid']; ?>&nbsp;</nobr></th></tr>
 <tr><th colspan="7" class="bevel"></th></tr>
 
 <?php
@@ -98,15 +79,15 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   $result->bind_result($fixed, $errorID, $title, $initials, $surname, $occurred, $errtype, $errstr, $errfile, $errline, $tmp_userID);
   while ($result->fetch()) {
     if ($fixed == '') {
-      echo "<tr onclick=\"selErr($errorID)\" onmouseover=\"lon($errorID)\" onmouseout=\"loff($errorID)\" id=\"link$errorID\"><td><div class=\"err\"><nobr>$occurred<nobr></div></td><td><div class=\"err\">$errtype</div></td><td><div class=\"err\">$errstr</div></td><td><div class=\"err\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"err\">$title&nbsp;$initials&nbsp;$surname</div></td><td><div class=\"err\">$tmp_userID</div></td></tr>\n";
+      echo "<tr class=\"l\" onclick=\"selLine($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred<nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">$title&nbsp;$initials&nbsp;$surname</div></td><td><div class=\"col\">$tmp_userID</div></td></tr>\n";
     } else {
-      echo "<tr onclick=\"selErr($errorID)\" onmouseover=\"lon($errorID)\" onmouseout=\"loff($errorID)\" id=\"link$errorID\" style=\"color:#808080\"><td><div class=\"err\"><nobr>$occurred</nobr></div></td><td><div class=\"err\">$errtype</div></td><td><div class=\"err\">$errstr</div></td><td><div class=\"err\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"err\">";
+      echo "<tr class=\"l deleted\" onclick=\"selLine($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred</nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">";
       if ($surname == '') {
         echo '<span class="grey">unauthenticated</span>';
       } else {
         echo "$title&nbsp;$initials&nbsp;$surname";
       }
-      echo "</div></td><td><div class=\"err\">$tmp_userID</div>
+      echo "</div></td><td><div class=\"col\">$tmp_userID</div>
       </td></tr>\n";
     }
   }

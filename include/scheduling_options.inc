@@ -25,7 +25,7 @@
 ?>
 <script language="JavaScript">
   function viewDetails() {
-    window.location = "scheduling_details.php?paperID=" + document.getElementById('divID').value;
+    window.location = "scheduling_details.php?paperID=" + document.getElementById('lineID').value;
   }
 </script>
 
@@ -44,6 +44,6 @@
 </td></tr>
 </table>
 
-<input type="hidden" id="divID" name="divID" value="" />
+<input type="hidden" id="lineID" name="lineID" value="" />
 </form>
 </div>

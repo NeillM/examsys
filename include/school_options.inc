@@ -25,11 +25,11 @@
 ?>
 <script language="JavaScript">
   function editSchool() {
-    window.location.href='./edit_school.php?schoolid=' + document.getElementById('divID').value;
+    window.location.href='./edit_school.php?schoolid=' + document.getElementById('lineID').value;
   }
   
   function deleteSchool() {
-    notice=window.open("../delete/check_delete_school.php?schoolID=" + document.getElementById('divID').value + "","schools","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_school.php?schoolID=" + document.getElementById('lineID').value + "","schools","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -67,6 +67,6 @@ if ($faculties > 0) {
 </td></tr>
 </table>
 
-<input type="hidden" id="divID" name="divID" value="" />
+<input type="hidden" id="lineID" name="lineID" value="" />
 </form>
 </div>

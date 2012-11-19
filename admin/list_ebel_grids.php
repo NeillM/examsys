@@ -29,56 +29,20 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title>Ebel Grids<?php echo ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .mid {padding-left:10px}
-    .l {cursor:pointer}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script language="javascript">
-    function selFac(divID, evt) {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-      document.myform.divID.value = divID;
-         
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-      evt.cancelBubble = true;
-    }
-    
-    function deselFac() {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-      document.myform.oldDivID.value = '';
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
-    }
-
-    function lon(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
-    }
-  </script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/list.js"></script>
 </head>
 
-<body onclick="deselFac()">
+<body>
 <?php
   require '../include/ebel_grid_options.inc';
 ?>
@@ -90,7 +54,7 @@
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr>
-<th><div class="mid"><?php echo $string['gridnames']; ?>&nbsp;</div></th><th>&nbsp;</th></tr>
+<th><div class="col10"><?php echo $string['gridnames']; ?>&nbsp;</div></th><th>&nbsp;</th></tr>
 <tr><th colspan="2" class="bevel"></th></tr>
 <?php
 $old_faculty = '';
@@ -100,7 +64,7 @@ $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY na
 $result->execute();
 $result->bind_result($id, $name);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" onclick=\"selFac($id,event)\" ondblclick=\"editTemplate()\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td colspan=\"2\"><div class=\"mid\">$name</div></td></tr>\n";
+  echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"editTemplate()\" class=\"l\"><td colspan=\"2\"><div class=\"col10\">$name</div></td></tr>\n";
   $id++;
 }
 $result->close();

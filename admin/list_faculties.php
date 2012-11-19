@@ -29,56 +29,20 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['faculties'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-  .mid {padding-left:10px}
-  .l {cursor:pointer}
-  .no {text-align:right; padding-right:10px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script language="javascript">
-    function selFac(divID, evt) {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-      document.myform.divID.value = divID;
-         
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-      evt.cancelBubble = true;
-    }
-    
-    function deselFac() {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
-    }
-
-    function lon(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
-    }
-  </script>
+  <script src="../js/list.js" type="text/javascript"></script>
 </head>
 
-<body onclick="deselFac()">
+<body>
 <?php
   require '../include/faculty_options.inc';
 ?>
@@ -90,7 +54,7 @@
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr>
-<th><div class="mid"><?php echo $string['name']; ?>&nbsp;</div></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['schoolno']; ?></th><th style="width:50%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th></tr>
+<th><div class="col10"><?php echo $string['name']; ?>&nbsp;</div></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['schoolno']; ?></th><th style="width:50%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th></tr>
 <tr><td colspan="3" class="bevel"></th></tr>
 <?php
 $old_faculty = '';
@@ -100,7 +64,7 @@ $result = $mysqli->prepare("SELECT faculty.id, name, COUNT(school) FROM faculty 
 $result->execute();
 $result->bind_result($id, $name, $school_no);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" onclick=\"selFac($id,event)\" ondblclick=\"edit('$id')\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><div class=\"mid\">$name</div></td><td class=\"mid\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
+  echo "<tr id=\"$id\" onclick=\"selLine($id, event)\" ondblclick=\"editFaculty()\" class=\"l\"><td><div class=\"col10\">$name</div></td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
   $id++;
 }
 $result->close();

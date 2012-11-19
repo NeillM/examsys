@@ -32,14 +32,14 @@
   }
 
   function editFaculty() {
-    facultywin=window.open("/admin/edit_faculty.php?facultyID=" + document.getElementById('divID').value + "","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    facultywin=window.open("/admin/edit_faculty.php?facultyID=" + document.getElementById('lineID').value + "","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       facultywin.focus();
     }
   }
   
   function deleteFaculty() {
-    notice=window.open("../delete/check_delete_faculty.php?facultyID=" + document.getElementById('divID').value + "","faculties","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_faculty.php?facultyID=" + document.getElementById('lineID').value + "","faculties","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -63,6 +63,6 @@
 <tr><td class="ico"><img onclick="deleteCourse()" src="../artwork/red_cross.png" width="16" height="16" alt="" /></td><td class="menuitem"><a href="" onclick="deleteFaculty(); return false;"><?php echo $string['deletefaculty']; ?></a></td></tr>
 </table>
 
-<input type="hidden" id="divID" name="divID" value="" />
+<input type="hidden" id="lineID" name="lineID" value="" />
 </form>
 </div>

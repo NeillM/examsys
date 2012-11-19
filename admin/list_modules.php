@@ -31,48 +31,25 @@ require '../include/sort.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['modules'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .t {color:black; text-decoration:none}
-    .col {padding-left:5px}
-    .col1 {padding-left:20px}
-    .l:hover {cursor:pointer; background-color:#eee}
-    .l.highlight {background-color:#B3C8E8}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/list.js"></script>
   <script language="javascript">
-    function selMod(moduleID, evt) {
-      $('.highlight').removeClass('highlight');
-
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-      
-      document.getElementById('moduleID').value = moduleID;
-      
-      $('#' + moduleID).addClass('highlight');
-      evt.cancelBubble = true;
-    }
-    
-    function deselMod() {
-      $('.highlight').removeClass('highlight');
-
-      document.getElementById('moduleID').value = '';
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
-    }
-    
     function edit(moduleID) {
       document.location.href='./edit_module.php?moduleid=' + moduleID;
     }
   </script>
 </head>
 
-<body onclick="deselMod()">
+<body>
 <?php
   require '../include/module_options.inc';
 ?>
@@ -158,7 +135,7 @@ for ($i=0; $i<$module_no; $i++) {
   } elseif ($sortby == 'active' and $old_active != $modules[$i]['active']) {
     echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $tmp_active . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
-  echo "<tr class=\"l\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selMod('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col1\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
+  echo "<tr class=\"l\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selLine('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col1\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
   
   $old_moduleid_letter = substr($modules[$i]['moduleid'], 0, 1);
   $old_name_letter = substr($modules[$i]['name'], 0, 1);

@@ -36,60 +36,18 @@ $result->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['schools'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-  .mid {padding-left:30px}
-  .l {cursor:pointer}
-  .no {text-align:right; padding-right:10px}
-  .deleted {color:red; text-decoration:line-through}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
-  <script src="../js/staff_help.js" type="text/javascript"></script>
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
-  <script language="javascript">
-    $(function () {
-      $('body').click(deselSch);
-    });
-
-    function selSch(divID, evt) {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-      document.myform.divID.value = divID;
-         
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-      evt.cancelBubble = true;
-    }
-    
-    function deselSch() {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-  //    document.myform.oldDivID.value = '';
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
-    }
-
-    function lon(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
-    }
-    
+  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script src="../js/list.js" type="text/javascript"></script>
+  <script language="javascript">    
     function edit(schoolID) {
       document.location.href='./edit_school.php?schoolid=' + schoolID;
     }
@@ -108,7 +66,7 @@ $result->close();
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr>
-<th><div class="mid"><?php echo $string['name']; ?>&nbsp;</div></th>
+<th><div class="col10"><?php echo $string['name']; ?>&nbsp;</div></th>
 <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['faculty']; ?>&nbsp;</th>
 <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
 </tr>
@@ -117,26 +75,22 @@ $result->close();
 
 if ($faculties > 0) {
   $old_faculty = '';
-$id = 0;
+  $id = 0;
 
-$result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
-$result->execute();
-$result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
-while ($result->fetch()) {
-  if ($old_faculty != $faculty) {
-    $del = ($faculty_deleted != '') ? ' class="deleted"' : '';
-    echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; padding-bottom:5px; width:100%\"><tr><td{$del}><nobr>$faculty</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+  $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
+  $result->execute();
+  $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
+  while ($result->fetch()) {
+    if ($old_faculty != $faculty) {
+      $del = ($faculty_deleted != '') ? ' class="deleted"' : '';
+      echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; padding-bottom:5px; width:100%\"><tr><td{$del}><nobr>$faculty</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    }
+    echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit('$id')\" class=\"l\"><td><div class=\"col30\">$school</div></td><td class=\"col\">$faculty</td><td><div class=\"no\">" . number_format($module_no) . "</div></td></tr>\n";
+    $old_faculty = $faculty;
+    $id++;
   }
-  echo "<tr";
-  if ($module_no == 0) {
-    echo ' style="color:#808080"';
-  }
-  echo " id=\"$id\" onclick=\"selSch($id,event)\" ondblclick=\"edit('$id')\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><div class=\"mid\">$school</div></td><td>$faculty</td><td><div class=\"no\">" . number_format($module_no) . "</div></td></tr>\n";
-  $old_faculty = $faculty;
-  $id++;
-}
-$result->close();
-$mysqli->close();
+  $result->close();
+  $mysqli->close();
 } else {
   echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"4\">{$string['musthavefaculty']}</td></tr>\n";

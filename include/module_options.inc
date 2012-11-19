@@ -29,15 +29,15 @@ $session = date_utils::get_current_academic_year();
 ?>
 <script language="JavaScript">
   function editModule() {
-    window.location.href='./edit_module.php?moduleid=' + document.getElementById('moduleID').value;
+    window.location.href='./edit_module.php?moduleid=' + document.getElementById('lineID').value;
   }
 
   function jumpToModule() {
-    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path; ?>/folder/details.php?module=' + document.getElementById('moduleID').value;
+    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path; ?>/folder/details.php?module=' + document.getElementById('lineID').value;
   }
   
   function studentCohort() {
-    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path; ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#moduleID').val() + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
+    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path; ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#lineID').val() + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
   }
   
 </script>
@@ -64,6 +64,6 @@ $session = date_utils::get_current_academic_year();
 </td></tr>
 </table>
 
-<input type="hidden" name="moduleID" id="moduleID" value="" />
+<input type="hidden" name="lineID" id="lineID" value="" />
 </form>
 </div>

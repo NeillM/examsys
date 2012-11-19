@@ -61,51 +61,11 @@ function getLabs($labs, $mysqlidb) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .s {padding-left:6px}
-    .grey {color:#808080}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
+
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script language="javascript">
-  
-    $('body').click(desel);
-
-    function sel(divID, evt) {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-      document.myform.divID.value = divID;
-         
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-      evt.cancelBubble = true;
-    }
-    
-    function desel() {
-      tmp_ID = document.getElementById('divID').value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
-    }
-
-    function lon(lineID) {
-      if (lineID != document.getElementById('divID').value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.getElementById('divID').value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
-    }
-  </script>
+  <script type="text/javascript" src="../js/list.js"></script>
 </head>
 
 <body>
@@ -119,7 +79,7 @@ function getLabs($labs, $mysqlidb) {
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(0); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr>
-<th><div class="mid s"><?php echo $string['title']; ?>&nbsp;</div></th>
+<th><div class="col10 s"><?php echo $string['title']; ?>&nbsp;</div></th>
 <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['month']; ?>&nbsp;</th>
 <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['campus']; ?>&nbsp;</th>
 <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modules']; ?>&nbsp;</th>
@@ -156,8 +116,8 @@ function getLabs($labs, $mysqlidb) {
       $display_month = '&lt;unknown&gt;';
     }
     
-    echo "<tr onclick=\"sel($property_id)\" onmouseover=\"lon($property_id)\" onmouseout=\"loff($property_id)\" ondblclick=\"viewDetails()\" id=\"$property_id\">";
-    echo "<td class=\"s\" style=\"padding-left:24px\">" . $paper_details['paper_title'] . "</td><td class=\"s\">$display_month</td><td class=\"s\">". $paper_details['campus'] . "</td><td class=\"s\">";
+    echo "<tr class=\"l\" onclick=\"selLine($property_id,event)\" ondblclick=\"viewDetails()\" id=\"$property_id\">";
+    echo "<td class=\"col\" style=\"padding-left:24px\">" . $paper_details['paper_title'] . "</td><td class=\"col\">$display_month</td><td class=\"col\">". $paper_details['campus'] . "</td><td class=\"col\">";
     $html = '';
     foreach ($paper_details['modules'] as $individual_module) {
       if ($html == '') {
@@ -166,7 +126,7 @@ function getLabs($labs, $mysqlidb) {
         $html .= ', ' . $individual_module;
       }
     }
-    echo "$html</td><td class=\"s\">$cohort_size</td></tr>\n";
+    echo "$html</td><td class=\"col\">$cohort_size</td></tr>\n";
   }
 ?>
   <tr><td colspan="5">&nbsp;</td></tr>
@@ -190,8 +150,8 @@ function getLabs($labs, $mysqlidb) {
     $cohort_size = str_replace('<', '&lt;', $paper_details['cohort_size']);
     $cohort_size = str_replace('>', '&gt;', $cohort_size);
 
-    echo "<tr onclick=\"sel($property_id)\" onmouseover=\"lon($property_id)\" onmouseout=\"loff($property_id)\" ondblclick=\"viewDetails()\" id=\"$property_id\">";
-    echo "<td class=\"s\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" border=\"0\" />&nbsp;" . $paper_details['paper_title'] . "</td><td class=\"s\">" . $paper_details['start_date'] . "</td><td class=\"s\">$campus " . getLabs($paper_details['labs'], $mysqli) . "</td><td class=\"s\">";
+    echo "<tr class=\"l\" onclick=\"selLine($property_id,event)\" ondblclick=\"viewDetails()\" id=\"$property_id\">";
+    echo "<td class=\"col\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" border=\"0\" />&nbsp;" . $paper_details['paper_title'] . "</td><td class=\"col\">" . $paper_details['start_date'] . "</td><td class=\"col\">$campus " . getLabs($paper_details['labs'], $mysqli) . "</td><td class=\"col\">";
     $html = '';
     foreach ($paper_details['modules'] as $individual_module) {
       if ($html == '') {
@@ -200,7 +160,7 @@ function getLabs($labs, $mysqlidb) {
         $html .= ', ' . $individual_module;
       }
     }
-    echo "$html</td><td class=\"s\">$cohort_size</td></tr>\n";
+    echo "$html</td><td class=\"col\">$cohort_size</td></tr>\n";
   }
 ?>
 </table>

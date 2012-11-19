@@ -24,11 +24,11 @@
 ?>
 <script language="JavaScript">
   function editAnnouncement() {
-    window.location.href='./edit_announcement.php?announcementid=' + document.getElementById('announcementID').value;
+    window.location.href='./edit_announcement.php?announcementid=' + document.getElementById('lineID').value;
   }
   
   function deleteAnnouncement() {
-    notice=window.open("../delete/check_delete_announcement.php?announcementID=" + document.getElementById('announcementID').value + "","announcements","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("../delete/check_delete_announcement.php?announcementID=" + document.getElementById('lineID').value + "","announcements","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -55,7 +55,6 @@
 </td></tr>
 </table>
 
-<input type="hidden" name="announcementID" id="announcementID" value="" />
-<input type="hidden" name="divID" value="" />
+<input type="hidden" name="lineID" id="lineID" value="" />
 </form>
 </div>

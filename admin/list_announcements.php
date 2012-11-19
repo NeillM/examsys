@@ -29,65 +29,25 @@ require '../include/sysadmin_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  
   <title><?php echo $string['newsannouncements'] . ' ' . $cfg_install_type; ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .l {cursor:pointer}
-    .t {color:black; text-decoration:none}
-    .col {padding-left:5px}
-    .col1 {padding-left:20px}
-    .deleted {color:#808080}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/list.js"></script>
   <script language="javascript">
-    function selAnnounce(divID, announcementID, evt) {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-
-      document.getElementById('menu1a').style.display = 'none';
-      document.getElementById('menu1b').style.display = 'block';
-      document.myform.divID.value = divID;
-      
-      document.myform.announcementID.value = announcementID;
-      
-      document.getElementById(divID).style.backgroundColor = '#B3C8E8';
-      evt.cancelBubble = true;
-    }
-    
-    function deselAnnounce() {
-      tmp_ID = document.myform.divID.value;
-      if (tmp_ID != '') {
-        document.getElementById(tmp_ID).style.backgroundColor = 'white';
-      }
-      document.myform.divID.value = '';
-      document.getElementById('menu1b').style.display = 'none';
-      document.getElementById('menu1a').style.display = 'block';
-    }
-
-    function lon(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '#EEEEEE';
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != document.myform.divID.value) {
-        document.getElementById(lineID).style.backgroundColor = '';
-      }
-    }
-    
-    function edit(announcementID) {
-      document.location.href='./edit_announcement.php?announcementid=' + announcementID;
+    function edit(lineID) {
+      document.location.href='./edit_announcement.php?announcementid=' + lineID;
     }
   </script>
 </head>
 
-<body onclick="deselMod()">
+<body>
 <?php
   require '../include/announcement_options.inc';
 ?>
@@ -112,8 +72,8 @@ require '../include/sysadmin_auth.inc';
   $table_order = array($string['title']=>'title', $string['startdate']=>'startdate', $string['enddate']=>'enddate');
   foreach($table_order as $display => $key) {
     echo '<th>';
-    if ($key == 'moduleid') {
-      echo '<div style="padding-left:10px">';
+    if ($key == 'title') {
+      echo '<div class="col10">';
     } else {
       echo '<div><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
     }
@@ -166,7 +126,7 @@ for ($i=0; $i<$announcements_no; $i++) {
   } else {
     $deleted = '';
   }
-  echo "<tr id=\"$i\" onclick=\"selAnnounce($i,'" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" onmouseover=\"lon($i)\" onmouseout=\"loff($i)\" class=\"l\"><td><div class=\"col$deleted\">" . $announcements[$i]['title'] . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['startdate']  . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['enddate']  . "</div></td></tr>\n";
+  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td><div class=\"col10$deleted\">" . $announcements[$i]['title'] . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['startdate']  . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['enddate']  . "</div></td></tr>\n";
 }
 
 $mysqli->close();

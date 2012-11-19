@@ -70,11 +70,11 @@ function get_list($list, $db) {
 <tr><th colspan="7" class="bevel"></th></tr>
 
 <?php
-  $result = $mysqli->prepare("SELECT moduleid, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports WHERE updated=? ORDER BY moduleid");
+  $result = $mysqli->prepare("SELECT idMod, moduleid, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");
   $db = $mysqli;
   if ($db->error) {
     try {
-      throw new Exception("0MySQL error $db->error <br> Query:<br> $query", $db->errno);
+      throw new Exception("MySQL error $db->error <br> Query:<br> $query", $db->errno);
     } catch (Exception $e) {
       echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
       echo nl2br($e->getTraceAsString());
@@ -84,9 +84,9 @@ function get_list($list, $db) {
   $result->bind_param('s',$_GET['day']);
   $result->execute();
   $result->store_result();
-  $result->bind_result($moduleid, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
+  $result->bind_result($idMod, $moduleid, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
   while ($result->fetch()) {
-    echo "<tr><td style=\"padding-left:10px\"><a href=\"../folder/details.php?module=$moduleid\">$moduleid</a></td><td class=\"no\">$enrolements</td><td>" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>" . $import_type . "</td><td></td></tr>\n";
+    echo "<tr><td style=\"padding-left:10px\"><a href=\"../folder/details.php?module=$idMod\">$moduleid</a></td><td class=\"no\">$enrolements</td><td>" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>" . $import_type . "</td><td></td></tr>\n";
   }
 
 ?>
