@@ -661,7 +661,7 @@ if ($paper_type == '2') {
   if ($summative_lock == 1) {
     $params = "&scrOfY=' + document.getElementById('scrOfY').value + '";
   } else {
-    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=" . $_GET['module']. "&calling=paper";
+    $params = "&scrOfY=' + document.getElementById('scrOfY').value + '&paperID=$paperID&folder=$folder&module=" . $module. "&calling=paper";
   }
 
   if ($paper_type == '6') {
