@@ -32,16 +32,18 @@ require '../include/mapping.inc';
 require '../include/finish_functions.inc';
 require '../include/paper_security.inc';
 require '../include/media.inc';
+require '../classes/paperutils.class.php';
+
 
 check_var('id', 'GET', true, false);
 
 getSpecialSettings($userObject->get_user_ID(), $mysqli);
   
-if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
+if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_year, display_correct_answer, display_question_mark, display_students_response, display_feedback, hide_if_unanswered, paper_title, paper_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, marking, paper_postscript, pass_mark, latex_needed, password FROM properties WHERE crypt_name=?")) {
   $paper_properties->bind_param('s', $_GET['id']);
   $paper_properties->execute();
   $paper_properties->store_result();
-  $paper_properties->bind_result($paperID, $labs, $moduleID, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
+  $paper_properties->bind_result($paperID, $labs, $calendar_year, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $marking, $paper_postscript, $pass_mark, $latex_needed, $password);
   while ($paper_properties->fetch()) {
     // If set overwrite the default colours with the current users' special settings
     if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
@@ -56,7 +58,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, ca
     $low_bandwidth = 0;
     $sessionid = '';
     
-    if ($userroles == 'Student') {
+    if ($userObject->has_role('Student')) {
       // Check for additional password on the paper
       check_paper_password($password);
     
@@ -96,6 +98,10 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, moduleID, ca
 } else {
   display_error("Properties Query Error", $mysqli->error);
 }
+
+$preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
+$moduleID = Paper_utils::get_modules($paperID, $mysqli);
+
 require '../config/finish.inc';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -113,7 +119,7 @@ require '../config/finish.inc';
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <?php
   $css = '';
-  if ($special_needs == 1 and $bgcolor != '#FFFFFF') {
+  if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
     $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
   }
   if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
@@ -170,7 +176,7 @@ require '../config/finish.inc';
   echo $logo_html;
   echo '</table>';
 
-  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqli);
+  display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $mysqli, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();

@@ -143,7 +143,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
   return $value;
 }
 
-function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userroles, $mysqlidb, $preview_q_id=null) {
+function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $mysqlidb, $preview_q_id=null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $cfg_root_path, $strong_on, $strong_off;
   
   $strong_on = '';
@@ -160,7 +160,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   }
   $exclude_query->close();
 
-  if ($paper_type == '2' and (strpos($userroles,'Staff') !== false or strpos($userroles,'SysAdmin') !== false)) {
+  if ($paper_type == '2' and ($userObj->has_role(array('Staff','SysAdmin')))) {
     if (!isset($_GET['userid'])) {
       $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
       echo '<blockquote><p style="font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p><p>' . $tmp_string . '</p>';
@@ -2325,8 +2325,7 @@ echo '</script>';
       $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $mysqlidb);
       if (count($objByModule) > 0) {
         echo "<br />\n<div class=\"objH\">" . $string['learningobjectives'] . "</div>\n<ul>\n";
-        $module_list = explode(',',$moduleID);
-        foreach ($module_list as $thisModuleid) {
+        foreach ($moduleID as $thisIdMod => $thisModuleid) {
           if (isset($objByModule[$thisModuleid])) {
             foreach ($objByModule[$thisModuleid] as $id => $mappingData) {
               echo "<li>" . $mappingData['content'];

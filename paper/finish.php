@@ -231,7 +231,7 @@ require '../config/finish.inc';
   }
 
   if ($show_feedback) {
-    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject->list_user_roles(), $mysqli, $preview_q_id);
+    display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $mysqli, $preview_q_id);
   } else {
     echo '<blockquote>';
     if ($language == 'en') {
