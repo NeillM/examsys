@@ -90,7 +90,13 @@ if (isset($_GET['checked'])) {
   <script language="JavaScript">
     function myQuestions(thisObj) {
       var content = $(thisObj).is(':checked');
-      window.location = 'list.php?type=<?php echo $_GET['type']; ?>&checked=' + content;
+      <?php
+      $qs = '';
+      if(isset($_GET['type'])) $qs .= "&type={$_GET['type']}";
+      if(isset($_GET['keyword'])) $qs .= "&keyword={$_GET['keyword']}";
+      if(isset($_GET['module'])) $qs .= "&module={$_GET['module']}";
+      ?>
+      window.location = 'list.php?type=<?php echo $qs; ?>&checked=' + content;
     }
   </script>
 </head>
@@ -156,7 +162,7 @@ if (isset($_GET['checked'])) {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }
   if ($state_checked == 'true') {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql AND users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   } else {
     $query_string .= " WHERE questions.q_id = questions_modules.q_id AND users.id=questions.ownerID $module_sql $staff_modules_sql $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   }
