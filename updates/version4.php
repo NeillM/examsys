@@ -4890,6 +4890,11 @@ QUERY;
   $mysqli->query($sql);
   echo "<li>GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
 
+  //brzab3 14/11/2012 - Add new grants for student users needing select from schools.
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'";
+  $mysqli->query($sql);
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".schools TO '" . $cfg_db_student_user . "'@'". $cfg_db_host . "'</li>\n";
+
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";
