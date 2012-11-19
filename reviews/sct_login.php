@@ -22,14 +22,17 @@
 * @package
 */
 
+
 require_once '../config/config.inc.php';
 require_once '../classes/lang.class.php';
-require '../include/media.inc';
-require '../include/errors.inc';
-require '../include/sct_review.inc';
-require '../config/start.inc';
+require_once '../include/errors.inc';
 
 check_var('paperID', 'GET', true, false);
+
+require_once '../include/media.inc';
+require_once '../include/sct_review.inc';
+require_once '../config/start.inc';
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

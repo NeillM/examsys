@@ -1,3 +1,4 @@
 <?php
-require './start.php';
+require '../lang/' . $language . '/paper/start.php';
+
 ?>
