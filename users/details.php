@@ -179,6 +179,7 @@ if (isset($_POST['update']) and $demo == false) {
   if ($_POST['theme_radio'] == '0') $themecolor = 'NULL';
   $labelcolor = $_POST['labelcolor'];
   if ($_POST['labels_radio'] == '0') $labelcolor = 'NULL';
+  if (isset($_POST['unanswered_radio']) and $_POST['unanswered_radio'] == '0') $unanswered = 'NULL';
 
   $result = $mysqli->prepare("DELETE FROM special_needs WHERE userID=?");
   $result->bind_param('i', $_GET['userID']);
@@ -186,8 +187,8 @@ if (isset($_POST['update']) and $demo == false) {
   $result->close();
 
   if ($background != 'NULL' or $foreground != 'NULL' or $marks_color != 'NULL' or $textsize != 'null' or $extra_time != 'null' or $themecolor != 'NULL' or $labelcolor != 'NULL') {
-    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL,?,?,?,?,?,?,?,?,?)");
-    $result->bind_param('issiissss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $_POST['font']);
+    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL,?,?,?,?,?,?,?,?,?,?)");
+    $result->bind_param('issiisssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $_POST['font'],$unanswered);
     $result->execute();
     $result->close();
 
