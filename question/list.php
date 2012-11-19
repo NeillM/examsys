@@ -130,17 +130,17 @@ if (isset($_GET['checked'])) {
   } else {
     if (count($staff_modules) > 0) {
       $staff_modules_sql = implode(',', array_keys($staff_modules));
-      $staff_modules_sql = " (idMod IN ($staff_modules_sql)";
-      $staff_modules_sql .= " OR users.id=" . $userObject->get_user_ID() . ") AND ";
+      $staff_modules_sql = " AND (idMod IN ($staff_modules_sql)";
+      $staff_modules_sql .= " OR users.id=" . $userObject->get_user_ID() . ") ";
+    } else {
+      // Reset to just look for current owners paper if not on any teams.
+      $staff_modules_sql .= "AND users.id=" . $userObject->get_user_ID() . " ";
     }
   }
   
   if ($module_sql != '') {
-    $module_sql = '(' . $module_sql .') AND';
-  } else {
-    // Reset to just look for current owners paper if not on any teams.
-    $module_sql .= "users.id=" . $userObject->get_user_ID() . " AND";
-  }
+    $module_sql = 'AND (' . $module_sql .')';
+  } 
 
   if ($keyword != '%' and $keyword != '') {
     $keyword = ' AND keywordID=' . $parts[0];
@@ -156,9 +156,9 @@ if (isset($_GET['checked'])) {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }
   if ($state_checked == 'true') {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND $module_sql $staff_modules_sql users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql users.id=questions.ownerID AND ownerID=" . $userObject->get_user_ID() . " $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   } else {
-    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND $module_sql $staff_modules_sql users.id=questions.ownerID $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
+    $query_string .= " WHERE questions.q_id = questions_modules.q_id AND users.id=questions.ownerID $module_sql $staff_modules_sql $typeSQL $keyword AND status != 'retired' AND deleted IS NULL GROUP BY q_id ORDER BY leadin_plain, q_id";
   }
   $search_results = $mysqli->prepare($query_string);
   $search_results->execute();
