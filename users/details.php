@@ -726,16 +726,17 @@ if (isset($_POST['update']) and $demo == false) {
   $user_modules = array();
   $current_year = false;  
   
-  $results = $mysqli->prepare("SELECT DISTINCT modules.moduleid, fullname, modules_student.calendar_year, attempt FROM (modules_student, modules) WHERE modules_student.idMod=modules.id AND userID=? ORDER BY modules_student.calendar_year DESC, modules.moduleid");
+  $results = $mysqli->prepare("SELECT DISTINCT modules.id, modules.moduleid, fullname, modules_student.calendar_year, attempt FROM (modules_student, modules) WHERE modules_student.idMod=modules.id AND userID=? ORDER BY modules_student.calendar_year DESC, modules.moduleid");
   $results->bind_param('i', $tmp_id);
   $results->execute();
   $results->store_result();
-  $results->bind_result($moduleid, $fullname, $calendar_year, $attempt);
+  $results->bind_result($idMod, $moduleid, $fullname, $calendar_year, $attempt);
   while ($results->fetch()) {
     $user_modules[$row_no]['moduleid'] = $moduleid;
     $user_modules[$row_no]['fullname'] = $fullname;
     $user_modules[$row_no]['calendar_year'] = $calendar_year;
     $user_modules[$row_no]['attempt'] = $attempt;
+    $user_modules[$row_no]['idMod'] = $idMod;
     if ($calendar_year == date_utils::get_current_academic_year()) {
       $current_year = true;
     }
@@ -755,7 +756,7 @@ if (isset($_POST['update']) and $demo == false) {
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
-    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['moduleid']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['moduleid']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
+    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
     $old_year = $user_modules[$i]['calendar_year'];
   }
   
