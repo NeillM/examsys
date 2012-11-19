@@ -53,7 +53,7 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
 <table class="sidebar_tbl">
 <?php
-  if (count($staff_modules) > 0 or $userObject->has_role('Admin')) {    // Allow SysAdmin and Admin users not on any team to still create papers.
+  if (count($staff_modules) > 0 or $userObject->has_role(array('Admin','SysAdmin'))) {    // Allow SysAdmin and Admin users not on any team to still create papers.
     echo "<tr><td style=\"text-align:left\"><a href=\"#\" onclick=\"newPaper(); return false;\"><img style=\"text-align:center\" src=\"{$cfg_root_path}/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></a></td><td class=\"menuitem\"><a href=\"#\" onclick=\"newPaper(); return false;\">" . $string['createnewpaper'] . "</a></td></tr>\n";
   } else {
     echo "<tr><td style=\"text-align:left; color:#808080\"><img style=\"text-align:center\" src=\"{$cfg_root_path}/artwork/new_paper_icon_16.gif\" width=\"16\" height=\"16\" alt=\"New Paper\" /></td><td class=\"menuitem\" style=\"color:#808080\">" . $string['createnewpaper'] . "</td></tr>\n";
