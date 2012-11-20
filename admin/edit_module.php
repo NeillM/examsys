@@ -130,7 +130,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     function setSidebarMenu() {
       $('#menu1a').css('display','none');
       $('#menu1b').css('display','block');
-      $('#moduleID').val('<?php echo $_GET['moduleid']; ?>');
+      $('#lineID').val('<?php echo $_GET['moduleid']; ?>');
     }
     
     $(document).ready(setSidebarMenu);

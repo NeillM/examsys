@@ -33,7 +33,7 @@ $session = date_utils::get_current_academic_year();
   }
 
   function jumpToModule() {
-    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path; ?>/folder/details.php?module=' + document.getElementById('lineID').value;
+    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path; ?>/folder/details.php?module=' + $('#lineID').val();
   }
   
   function studentCohort() {
