@@ -30,7 +30,7 @@ require_once '../classes/moduleutils.class.php';
 $header = array();
 $needed_cols1 = array('student_id','first names','surname','title','course code','year of course','local email');
 $needed_cols2 = array('id','forenames','family name','title','course','year of study','email');
-$optional_cols = array('modules','session');
+$optional_cols = array('type','modules','session');
 
 function add_users_from_file($fileName) {
   global $header, $needed_cols1, $needed_cols2, $optional_cols, $mysqli, $string, $cfg_encrypt_salt;
