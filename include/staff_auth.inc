@@ -91,7 +91,8 @@ if ($userObject->has_role('SysAdmin')) {
       $module_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
 
       // Check which Schools the moduleID(s) are in.
-      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=" . $userObject->get_user_ID() . " AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); //TODO fix the sql to use prepared statement
+      $result = $mysqli->prepare("SELECT school FROM schools, modules, admin_access WHERE admin_access.userID=? AND admin_access.schools_id=schools.id AND schools.id=modules.schoolid AND modules.id IN ($module_in)"); 
+      $result->bind_param('i',$userObject->get_user_ID());
       $result->execute();
       $result->store_result();
       $result->bind_result($paper_school);

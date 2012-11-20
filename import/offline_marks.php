@@ -32,10 +32,10 @@
     global $mysqli, $cfg_tmpdir;
   
     // Get properties of the paper.
-    $result = $mysqli->prepare("SELECT property_id, moduleID, calendar_year, start_date FROM properties WHERE property_id=?");
+    $result = $mysqli->prepare("SELECT property_id, calendar_year, start_date FROM properties WHERE property_id=?");
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
-    $result->bind_result($property_id, $moduleID, $session, $paper_date);
+    $result->bind_result($property_id, $session, $paper_date);
     $result->fetch();
     $result->close();
     
@@ -43,11 +43,12 @@
       unlink($cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
       exit;    
     }
+    $moduleIDs=Paper_utils::get_modules($_GET['paperID'], $mysqli);
     
     // Get the questions on the paper.
     $paper = array();
     $question_no = 0;
-    $result = $mysqli->prepare("SELECT question, marks_correct FROM papers, options WHERE paper=? AND papers.question=options.o_id ORDER BY screen, display_pos");
+    $result = $mysqli->prepare("SELECT question, sum(marks_correct) as sum FROM papers, options WHERE paper=? AND papers.question=options.o_id GROUP BY question ORDER BY screen, display_pos");
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
     $result->bind_result($question, $marks_correct);
@@ -60,8 +61,11 @@
     
     // Get student data.
     $students = array();
-    $result = $mysqli->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, student_modules WHERE users.id=sid.userID AND users.id=student_modules.userID AND moduleid=? AND calendar_year=?");
-    $result->bind_param('ss', $moduleID, $session);
+    $modids=implode(',',array_keys($moduleIDs));
+    $result = $mysqli->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id=sid.userID AND users.id=modules_student.userID AND idMod IN ($modids) AND calendar_year=?");
+
+    print $mysqli->error;
+    $result->bind_param('s', $session);
     $result->execute();
     $result->bind_result($id, $student_id, $username, $year, $grade);
     while ($row = $result->fetch()) {
@@ -74,13 +78,13 @@
 
     $lines = file($fileName);
     $line_written = 0;
-    if ($_POST['header_row'] == '1') {
+    if ( isset($_POST['header_row']) and $_POST['header_row'] == '1') {
       echo "<ol start=\"1\">\n";
     } else {
       echo "<ol>\n";
     }
     foreach ($lines as $separate_line) {
-      if ($_POST['header_row'] != '1' or $line_written > 0) {
+      if ((!isset($_POST['header_row']) or $_POST['header_row'] !=1 ) or $line_written > 0) {
         $fields = explode(',',$separate_line);
         $sid = trim($fields[0]);
         if (!isset($students[$sid]['username'])) {  // Student is not in class List.
@@ -99,7 +103,7 @@
           }
           $result->close();          
         }
-        if ($students[$sid]['username'] != '') {  // Student is in class List.
+        if (isset($students[$sid]) and $students[$sid]['username'] != '') {  // Student is in class List.
           
           $result = $mysqli->prepare("DELETE FROM log_metadata WHERE userID=? AND paperID=? AND started=?");
           $result->bind_param('iis', $students[$sid]['id'], $_GET['paperID'], $paper_date);

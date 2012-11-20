@@ -92,22 +92,33 @@
           $total_parts++;
         }
 
-        $std_query = "INSERT INTO standards_setting VALUES (NULL, ". $userObject->get_user_ID() .", $log_id, '$now', '$rating', $paperID, '$tmp_method', '$group_review')"; //TODO fix sql to prepared state
-        if (!$mysqli->query($std_query)) {
+
+        $result = $mysqli->prepare("INSERT INTO standards_setting (`id`, `setterID`, `questionID`, `std_set`, `rating`, `paperID`, `method`, `group_review`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+        $result->bind_param('iississ', $userObject->get_user_ID(), $log_id, $now, $rating, $paperID, $tmp_method, $group_review);
+        $result->execute();
+        $result->close();
+        if ($mysqli->error) {
           display_error('Error writing to standards_setting table', $mysqli->error, true, true);
           $mysqli->close();
           exit;
         }
         if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
-          $std_query = "UPDATE questions SET std='$rating' WHERE q_id=$log_id";
-          if (!$mysqli->query($std_query)) {
+          $result = $mysqli->prepare("UPDATE questions SET std=? WHERE q_id=?");
+          $result->bind_param('si', $rating, $log_id);
+          $result->execute();
+          $result->close();
+          if ($mysqli->error)) {
             display_error('Error writing to questions table', $mysqli->error, true, true);
             $mysqli->close();
             exit;
           }
           if ($rating != $_POST["old$log_id"]) {
-            $std_query = "INSERT INTO track_changes VALUES (NULL, 'Edit Question', $log_id, " . $userObject->get_user_ID() . ", '" . $_POST["old$log_id"] . "', '$rating', '$now', 'Std Setting')"; //todo fix sql to prepared state
-            if (!$mysqli->query($std_query)) {
+            $result = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Edit Question', ?, ?, ?, ?, ?, 'Std Setting')");
+            $t0 = $_POST["old$log_id"];
+            $result->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
+            $result->execute();
+            $result->close();
+            if ($mysqli->error)) {
               display_error('Error writing to track_changes table', $mysqli->error, true, true);
               $mysqli->close();
               exit;
@@ -374,26 +385,38 @@
     if ($_POST["$qid"] != '') $last_question = $question_no;
     if ($tmp_method == 'Modified Angoff') $total_rating += $_POST["$qid"];
   }
-
-  $std_query = "INSERT INTO standards_setting VALUES (NULL," . $userObject->get_user_ID() . ",$log_id,'$now','$rating',$paperID,'$tmp_method','$group_review')"; //todo fix sql to prepared state
-  if (!$mysqli->query($std_query)) {
-    echo "<p>Error writing to standards_setting table: ". $mysqli->error . "</p>\n";
-    echo "<p>Query: $std_query</p>\n";
-    $mysqli->close();
-    exit;
-  }
+$std_query = "INSERT INTO standards_setting (`id`, `setterID`, `questionID`, `std_set`, `rating`, `paperID`, `method`, `group_review`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+$result = $mysqli->prepare($std_query);
+$result->bind_param('iississ', $userObject->get_user_ID(), $log_id, $now, $rating, $paperID, $tmp_method, $group_review);
+$result->execute();
+$result->close();
+  if ($mysqli->error)) {
+  echo "<p>Error writing to standards_setting table: " . $mysqli->error . "</p>\n";
+  echo "<p>Query: $std_query</p>\n";
+  $mysqli->close();
+  exit;
+}
   if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
-    $std_query = "UPDATE questions SET std='$rating' WHERE q_id=$log_id";
-    if (!$mysqli->query($std_query)) {
-      echo "<p>Error writing to questions table: ". $mysqli->error . "</p>\n";
+    $std_query = "UPDATE questions SET std=? WHERE q_id=?";
+    $result = $mysqli->prepare();
+    $result->bind_param('si', $rating, $log_id);
+    $result->execute();
+    $result->close();
+    if ($mysqli->error) {
+      echo "<p>Error writing to questions table: " . $mysqli->error . "</p>\n";
       echo "<p>Query: $std_query</p>\n";
       $mysqli->close();
       exit;
     }
     if ($rating != $_POST["old$log_id"]) {
-      $std_query = "INSERT INTO track_changes VALUES (NULL,'Edit Question',$log_id," . $userObject->get_user_ID() . ",'" . $_POST["old$log_id"] . "','$rating','$now','Std Setting')"; //todo fix sql to prepared state
-      if (!$mysqli->query($std_query)) {
-        echo "<p>Error writing to track_changes: ". $mysqli->error . "</p>\n";
+      $std_query="INSERT INTO track_changes VALUES (NULL, 'Edit Question', ?, ?, ?, ?, ?, 'Std Setting')";
+      $result = $mysqli->prepare();
+      $t0 = $_POST["old$log_id"];
+      $result->bind_param('iisss', $log_id, $userObject->get_user_ID(), $t0, $rating, $now);
+      $result->execute();
+      $result->close();
+      if ($mysqli->error) {
+        echo "<p>Error writing to track_changes: " . $mysqli->error . "</p>\n";
         echo "<p>Query: $std_query</p>\n";
         $mysqli->close();
         exit;
@@ -433,8 +456,11 @@
     if ($tmp_method == 'Angoff (Yes/No)' or $tmp_method = 'Modified Angoff') {
       $pass_mark = round($total_rating/$total_parts);
 
-      $std_query = "UPDATE properties SET pass_mark=$pass_mark WHERE property_id=$paperID";
-      if (!$mysqli->query($std_query)) {
+      $std_query = $mysqli->prepare("UPDATE properties SET pass_mark=? WHERE property_id=?");
+      $std_query->bind_param('ii', $pass_mark, $paperID);
+      $std_query->execute();
+      $std_query->close();
+      if (!$mysqli->error) {
         echo "<p>Error updating paper properties: ". $mysqli->error . "</p>\n";
         echo "<p>Query: $std_query</p>\n";
         $mysqli->close();

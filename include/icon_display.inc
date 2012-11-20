@@ -65,7 +65,7 @@ function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retire
 }
 
 function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj) { //todo TAKES USEROBJECT AND PARATMETR FROM FIX
-  global $DISABLEDuserroles, $type, $folder, $module, $mysqli, $DISABLEDuserID, $string;
+  global $folder, $module, $mysqli, $string;
   
   $paper_modules = Paper_utils::get_modules($property_id, $mysqli);
 

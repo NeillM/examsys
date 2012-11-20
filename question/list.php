@@ -38,7 +38,7 @@ if (isset($_GET['type'])) {
   }
 }
 if (isset($_GET['userid'])) {
-  $userid = $_GET['userid']; //TODO fix this
+  $userid = $_GET['userid'];
 } else {
   $userid = '';
 }
