@@ -24,17 +24,17 @@
 
 require '../include/staff_auth.inc';
 
-function keywords_from_file($fileName,$userObject) {
+function keywords_from_file($fileName,$tmp_userID) {
   global $mysqli, $DISABLEDuserID;
 
   if ($_GET['module'] == '') {
     $type = 'personal';
-    $tmp_userID = $userObject->get_user_ID();
+    //$tmp_userID = $userObject->get_user_ID();
     
     // Get the existing personal keywords.
     $existing_keywords = array();
     $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE userID=?");
-    $result->bind_param('i', $userObject->get_user_ID());
+    $result->bind_param('i', $tmp_userID);
     $result->execute();
     $result->bind_result($keyword);
     while ($result->fetch()) {
