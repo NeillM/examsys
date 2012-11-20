@@ -23,23 +23,21 @@
 */
 
 require '../../include/staff_auth.inc';
+require_once '../../classes/paperutils.class.php';
+require_once '../../classes/logger.class.php';
 
 if ($_POST['questions_to_add'] != '') {
+  $logger = new Logger($mysqli);
   $questions = explode(',',$_POST['questions_to_add']);
   $display_pos = $_GET['display_pos'];
+  
   foreach ($questions as $item) {
-    $result = $mysqli->prepare("INSERT INTO papers VALUES (NULL,?,?,?,?)");
-    $result->bind_param('iiii', $_GET['paperID'], $item, $_POST['screen'], $display_pos);
-    $result->execute();
-    $result->close();
+    Paper_utils::add_question($_GET['paperID'], $item, $_POST['screen'], $display_pos, $mysqli);
     $display_pos++;
 
     // Create a track changes record to say new question added.
     $tmp_paperID = intval($_GET['paperID']);
-    $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL,'Alter Paper',?,?,'',?,NOW(),'Add Question')");
-    $trackChange->bind_param('iis', $tmp_paperID, $userObject->get_user_ID(), $item);
-    $trackChange->execute();
-    $trackChange->close();
+    $success = $logger->track_change('Alter Paper', $tmp_paperID, $userObject->get_user_ID(), '', $item, 'Add Question');
   }
 }
 $mysqli->close();

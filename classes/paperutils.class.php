@@ -100,7 +100,7 @@ Class Paper_utils {
         //sysadmin 
         $user_can_delete = ''; //no restrictions
       } else {
-        $user_can_delete = "AND idMod IN (" . implode(',',array_keys($staff_modules)) . ")"; //users can only remove modules if they are on the team
+        $user_can_delete = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; //users can only remove modules if they are on the team
       }
 
       $editProperties = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $user_can_delete");
@@ -118,7 +118,7 @@ Class Paper_utils {
   * @return void 
   */
   static function add_modules($paper_modules, $paperID, $db) {
-    $editProperties = $db->prepare("INSERT INTO properties_modules VALUES(?,?) ON DUPLICATE KEY UPDATE idMod=idMod");
+    $editProperties = $db->prepare("INSERT INTO properties_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod");
     foreach ($paper_modules as $idMod => $ModuleID) {
       $editProperties->bind_param('ii', $paperID, $idMod);
       $editProperties->execute();
@@ -133,7 +133,7 @@ Class Paper_utils {
   * @return void 
   */
   static function remove_modules($paper_modules, $paperID, $db) {
-    $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod=?");
+    $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod = ?");
     foreach ($paper_modules as $idMod => $ModuleID) {
       $remove->bind_param('ii', $paperID, $idMod);
       $remove->execute();
