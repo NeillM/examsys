@@ -144,7 +144,8 @@ require_once '../classes/moduleutils.class.php';
 <tr>
 <?php
   if (isset($_GET['module']) and $_GET['module'] != '') {
-    echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . sprintf($string['modulekeywords'], $module_code) . "</th>\n";
+    $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+    echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . $module_code . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . sprintf($string['modulekeywords'], $module_code) . "</th>\n";
   } else {
     echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . $string['mypersonalkeywords'] . "</th>\n";
   }

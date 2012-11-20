@@ -24,12 +24,12 @@
 
 require '../include/staff_auth.inc';
 
-function keywords_from_file($fileName,$tmp_userID) {
-  global $mysqli, $DISABLEDuserID;
-
+function keywords_from_file($fileName, $userObj) {
+  global $mysqli;
+  
   if ($_GET['module'] == '') {
     $type = 'personal';
-    //$tmp_userID = $userObject->get_user_ID();
+    $tmp_userID = $userObj->get_user_ID();
     
     // Get the existing personal keywords.
     $existing_keywords = array();
@@ -43,6 +43,8 @@ function keywords_from_file($fileName,$tmp_userID) {
     $result->close();
   } else {
     $type = 'team';
+    
+    $tmp_userID = $_GET['module'];
 
     // Get the existing team keywords for the folder.
     $existing_keywords = array();
@@ -62,7 +64,7 @@ function keywords_from_file($fileName,$tmp_userID) {
     $separate_line = trim($separate_line);
     if (!isset($existing_keywords[$separate_line])) {
       $result = $mysqli->prepare("INSERT INTO keywords_user VALUES(NULL, ?, ?, ?)");
-      $result->bind_param('iss', $_GET['module'], $separate_line, $type);
+      $result->bind_param('iss', $tmp_userID, $separate_line, $type);
       $result->execute();
       $result->close();
     }
@@ -70,12 +72,13 @@ function keywords_from_file($fileName,$tmp_userID) {
 }
 
 if (isset($_POST['submit'])) {
+  $filename = $cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt';
   if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
-    if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . "_keywords.txt"))  {
+    if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
       exit;
     } else {
-      keywords_from_file($cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt', $userObject->get_user_ID());
+      keywords_from_file($filename, $userObject);
       unlink($cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt');
       header("location: list_keywords.php?paperID=". $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
     }
@@ -88,7 +91,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
   
-  <title><?php echo $string['loadkeywords']; ?></title>
+  <title><?php echo 'x'. $string['loadkeywords'] . 'x'; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
