@@ -52,8 +52,8 @@ Class Logger {
 
     if ($object_id > 0) {
 
-      if(is_array($orig_val)) $orig_val = implode(',',$orig_val);
-      if(is_array($new_val)) $new_val = implode(',',$new_val);
+      if (is_array($orig_val)) $orig_val = implode(',',$orig_val);
+      if (is_array($new_val)) $new_val = implode(',',$new_val);
 
       $query = <<< QUERY
 INSERT INTO track_changes(type, typeID, editor, old, new, changed, part)
