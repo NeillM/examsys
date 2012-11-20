@@ -137,6 +137,16 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
     exit;
   }
 
+  if (isset($_POST['submit-UserPW'])) {
+    $_SERVER['PHP_AUTH_USER'] = $_POST['PHP_USER'];
+    $_SERVER['PHP_AUTH_PW'] = $_POST['PHP_PW'];
+    $_SESSION['PHP_USER'] = $_POST['PHP_USER'];
+    $_SESSION['PHP_PW'] = $_POST['PHP_PW'];
+  } elseif (isset($_SESSION['PHP_USER'])) {
+    $_SERVER['PHP_AUTH_USER'] = $_SESSION['PHP_USER'];
+    $_SERVER['PHP_AUTH_PW'] = $_SESSION['PHP_PW'];
+  }
+
   if (!$lti->valid) {
     if (!isset($_SERVER['PHP_AUTH_USER']) and !($lti->valid)) {
 

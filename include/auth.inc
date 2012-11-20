@@ -44,11 +44,23 @@ function display_notice($title, $msg, $icon, $title_color = 'black') {
 function access_denied($message, $output_header = false, $output_footer = true) {
   global $mysqli, $string, $cfg_root_path;
 
-  if ($output_header == true) {
-    Header("WWW-authenticate: basic realm=\"Rogo\"");
-    Header("HTTP/1.0 401 Unauthorised");
-  }
   display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
+
+  if ($output_header == true) {
+print <<<END
+
+<div>
+<form method="POST">
+<p>Username:<input type="text" size="20" name="PHP_USER"><br /></p>
+<p>Password:<input type="password" size="20" name="PHP_PW"><br /></p>
+<p><input type="submit" name="submit-UserPW" value="submit"><br /></p>
+</form>
+</div>
+END;
+
+
+
+  }
 
   if ($output_footer) {
     echo "\n</body>\n</html>";
