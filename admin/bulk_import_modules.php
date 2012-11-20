@@ -24,19 +24,18 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require '../classes/moduleutils.class.php';
-  require '../classes/schoolutils.class.php';
-  
-  function returnTrueFalse($value) {
-    $value = strtolower(trim($value));
-  
-    if ($value == 'yes' or $value == 'y' or $value == 'true') {
-      return true;
-    } else {
-      return false;
-    }
+require '../include/admin_auth.inc';
+require_once '../classes/moduleutils.class.php';
+
+function returnTrueFalse($value) {
+  $value = strtolower(trim($value));
+
+  if ($value == 'yes' or $value == 'y' or $value == 'true') {
+    return true;
+  } else {
+    return false;
   }
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
