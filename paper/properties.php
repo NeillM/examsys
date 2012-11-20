@@ -41,7 +41,7 @@ if (!isset($staff_modules)){
 }
 
 function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) {
-  if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role('Admin')) {
+  if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
     $disabled = ' disabled';
@@ -149,7 +149,7 @@ if (isset($_POST['Submit'])) {
       $hide_if_unanswered = '0';
     }
     
-    if (($cfg_summative_mgmt and $paper_type == '2' and $userObject->has_role('Admin')) or !$cfg_summative_mgmt or $paper_type != '2') {
+    if (($cfg_summative_mgmt and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$cfg_summative_mgmt or $paper_type != '2') {
       $local_time = new DateTimeZone($cfg_timezone);
       $target_timezone = new DateTimeZone($_POST['timezone']);
       
@@ -322,7 +322,7 @@ if (isset($_POST['Submit'])) {
     $password = trim($_POST['password']);
     $paperID = $_POST['paperID'];
     
-    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role('Admin')) {
+    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
       $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
       $editProperties->bind_param('ssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
@@ -523,7 +523,7 @@ if (isset($_POST['Submit'])) {
     $end_date = $end_date->format("Y/m/d H:i:s");
   }
   
-if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role('Admin')) {
+if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
   $sum_disabled = ' disabled'; 
 } else {
   $sum_disabled = ''; 
