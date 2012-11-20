@@ -22,7 +22,7 @@
 * @package
 */
 
-require '../../classes/questionutils.class.php';
+require_once '../../classes/questionutils.class.php';
 ?>
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
@@ -41,8 +41,7 @@ require '../../classes/questionutils.class.php';
 $i = 1;
 foreach ($question->options as $option):
   $option_text = ltrim(strip_tags(QuestionUtils::get_leadin($option->get_text(), $mysqli)));
-  if (strlen($option_text) > 200)
-  {
+  if (strlen($option_text) > 200) {
       $option_text = wordwrap($option_text, 200);
       $option_text = substr($option_text, 0, strpos($option_text, "\n")) . '&hellip;';
   }
