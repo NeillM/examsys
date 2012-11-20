@@ -196,30 +196,33 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
       $tolerance = $tmp_score_method[1];
       $tmp_first_split = explode('|', $answer);
       $user_ans_clean = $saved_response_clean = str_replace(',', '', str_replace(' ', '', $tmp_first_split[0]));
-      if ($user_ans_clean == $tmp_first_split[1]) {
-        if (isset($log_array[$qID][1]['correct'])) {
-          $log_array[$qID][1]['correct']++;
-        } else {
-          $log_array[$qID][1]['correct'] = 1;
-        }
-      } else {
-        if ($user_ans_clean == '') {
-          if (isset($log_array[$qID][1]['u'])) {
-            $log_array[$qID][1]['u']++;
+
+      if (isset($tmp_first_split[1])) {
+        if ($user_ans_clean == $tmp_first_split[1]) {
+          if (isset($log_array[$qID][1]['correct'])) {
+            $log_array[$qID][1]['correct']++;
           } else {
-            $log_array[$qID][1]['u'] = 1;
-          }
-        } elseif (abs($user_ans_clean - $tmp_first_split[1]) <= $tolerance) {
-          if (isset($log_array[$qID][1]['tolerance'])) {
-            $log_array[$qID][1]['tolerance']++;
-          } else {
-            $log_array[$qID][1]['tolerance'] = 1;
+            $log_array[$qID][1]['correct'] = 1;
           }
         } else {
-          if (isset($log_array[$qID][1]['incorrect'])) {
-            $log_array[$qID][1]['incorrect']++;
+          if ($user_ans_clean == '') {
+            if (isset($log_array[$qID][1]['u'])) {
+              $log_array[$qID][1]['u']++;
+            } else {
+              $log_array[$qID][1]['u'] = 1;
+            }
+          } elseif (abs($user_ans_clean - $tmp_first_split[1]) <= $tolerance) {
+            if (isset($log_array[$qID][1]['tolerance'])) {
+              $log_array[$qID][1]['tolerance']++;
+            } else {
+              $log_array[$qID][1]['tolerance'] = 1;
+            }
           } else {
-            $log_array[$qID][1]['incorrect'] = 1;
+            if (isset($log_array[$qID][1]['incorrect'])) {
+              $log_array[$qID][1]['incorrect']++;
+            } else {
+              $log_array[$qID][1]['incorrect'] = 1;
+            }
           }
         }
       }
