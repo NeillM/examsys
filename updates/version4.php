@@ -3470,13 +3470,14 @@ if (!isset($_POST['update'])) {
       try {
         throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
       } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());        exit();
       }
     }
-    $ext='';
-    while ($mysqli->next_result()) {
-      if($mysqli->insert_id>0) $ext=$ext . ' '.  $mysqli->insert_id;
+    $ext = '';
+    while ($mysqli->more_results()) {
+      $mysqli->next_result();
+      if ($mysqli->insert_id>0) $ext = $ext . ' '.  $mysqli->insert_id;
     }
     echo "<li>LOADED staff_help: " . $ext . "</li>\n";
   }
@@ -3485,9 +3486,9 @@ if (!isset($_POST['update'])) {
     $adjust = $mysqli->prepare("TRUNCATE student_help");
     if ($mysqli->error) {
       try {
-        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
       } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
         exit();
       }
@@ -3500,16 +3501,17 @@ if (!isset($_POST['update'])) {
     $mysqli->multi_query($file);
     if ($mysqli->error) {
       try {
-        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
       } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
         exit();
       }
     }
     $ext='';
-    while ($mysqli->next_result()) {
-      if($mysqli->insert_id>0) $ext=$ext . ' '.  $mysqli->insert_id;
+    while ($mysqli->more_results()) {
+      $mysqli->next_result();
+      if ($mysqli->insert_id>0) $ext = $ext . ' '.  $mysqli->insert_id;
     }
     echo "<li>LOADED student_help: " . $ext. "</li>\n";
   }
