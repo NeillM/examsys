@@ -26,6 +26,9 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
 require '../classes/dateutils.class.php';
+require_once '../classes/questionutils.class.php';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/logger.class.php';
 
 check_var('q_id', 'GET', true, false);
 
@@ -107,7 +110,7 @@ if (!isset($_POST['submit'])) {
     } elseif ($start_date < date("Y-m-d H:i:s") and $end_date > date("Y-m-d H:i:s")) {
       echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_warning_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } else {
-      echo "<tr><td style=\"width:20px\">&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"$property_id\">$paper_title</td></tr>\n";
+      echo "<tr><td style=\"width:20px\">&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"$property_id\" id=\"$property_id\"><label for=\"$property_id\">$paper_title</label></td></tr>\n";
     }
   }
   $result->close();
@@ -133,16 +136,10 @@ if (!isset($_POST['submit'])) {
 <?php
   $property_id = $_POST['property_id'];
   $q_id = $_GET['q_id'];
+  $logger = new Logger($mysqli);
 
   //- Handle paper data first ------------------------------------------------------------------------------------------------------------------------------------
-  // Get the paper name.
-  $result = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
-  $result->bind_param('i', $property_id);
-  $result->execute();
-  $result->bind_result($paper_title);
-  $result->fetch();
-  $result->close();
-
+  
   // Get the maximum display position for an existing paper.
   $result = $mysqli->prepare("SELECT MAX(display_pos), MAX(screen) FROM papers WHERE paper=?");
   $result->bind_param('i', $property_id);
@@ -161,7 +158,7 @@ if (!isset($_POST['submit'])) {
     $result->bind_param('i', $q_IDs[$i]);
     $result->execute();
     $result->store_result();
-    $result->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
+    $result->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
     $line = 0;
     while ($result->fetch()) {
       // Question data
@@ -214,7 +211,7 @@ if (!isset($_POST['submit'])) {
       }
       
       if ($line == 0) {  // First record - write out the question, all the rest are options.
-        $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, '', ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
+        $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, 'Normal', ?, ?)");
         $addQuestion->bind_param('ssssssssisssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $q_option_order, $score_method);
         $addQuestion->execute();
         $question_id = $mysqli->insert_id;
@@ -222,24 +219,16 @@ if (!isset($_POST['submit'])) {
 
         // Create a track changes record to say where question came from.
         $question_id = intval($question_id);
-        $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Copied Question', ?, ?, ?, ?, NOW(), 'Copied Question')");
-        $trackChange->bind_param('iiss', $question_id, $userObject->get_user_ID(), $q_IDs[$i], $question_id);
-        $trackChange->execute();
-        $trackChange->close();
+        $success = $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $q_IDs[$i], $question_id, 'Copied Question');
 
         // Lookup and copy the keywords
-        $keyword_result = $mysqli->prepare("SELECT keywordID FROM keywords_question WHERE q_id=?");
-        $keyword_result->bind_param('i', $q_IDs[$i]);
-        $keyword_result->execute();
-        $keyword_result->store_result();
-        $keyword_result->bind_result($keywordID);
-        while ($keyword_result->fetch()){
-          $addKeyword = $mysqli->prepare("INSERT INTO keywords_question VALUES (?,?)");
-          $addKeyword->bind_param('ii', $question_id, $keywordID);
-          $addKeyword->execute();
-          $addKeyword->close();
-        }
-        $keyword_result->close();
+        $keywords = QuestionUtils::get_keywords($q_IDs[$i], $mysqli);
+        QuestionUtils::add_keywords($keywords, $question_id, $mysqli);     
+
+        // Lookup modules
+        $modules = QuestionUtils::get_modules($q_IDs[$i], $mysqli);
+        QuestionUtils::add_modules($modules, $question_id, $mysqli);     
+        
       }
       $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
       $addOption->bind_param('isssssssddd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
@@ -251,23 +240,17 @@ if (!isset($_POST['submit'])) {
     $result->close();
 
     //- Add the question to the paper ------------------------------------------------------------------------------------------------------------------------------
-    $result = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
-    $result->bind_param('iiii',$property_id,$question_id,$screen,$display_pos);
-    $result->execute();
-    $result->close();
-
+    Paper_utils::add_question($property_id, $question_id, $screen, $display_pos, $mysqli);
 
     // Create a track changes record to say new question added.
-    $trackChange = $mysqli->prepare("INSERT INTO track_changes VALUES (NULL, 'Alter Paper', ?, ?, '', ?, NOW(), 'Add Question')");
-    $trackChange->bind_param('iis', $property_id, $userObject->get_user_ID(), $question_id);
-    $trackChange->execute();
-    $trackChange->close();
+    $success = $logger->track_change('Alter Paper', $property_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
+
   }
 
-  $mysqli->close();
-
-  echo "<p>" . sprintf($string['success'], $paper_title) . "</p>\n";
+  echo "<p>" . sprintf($string['success'], Paper_utils::get_title($property_id, $mysqli)) . "</p>\n";
   echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></p>\n";
+  
+  $mysqli->close();
 }
 ?>
 </body>

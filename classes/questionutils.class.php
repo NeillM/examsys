@@ -83,6 +83,27 @@ Class QuestionUtils {
   }
 
   /**
+   * returns an array of id/keywords that the question is on 
+   * @param intager $q_id the id of the questions
+   * @param resource $db
+   * @return array of keywords
+   */
+  static function get_keywords($q_id, $db) {
+    $keywords = array();
+
+    $stmt = $db->prepare("SELECT keywordID, keyword FROM keywords_question, keywords_user WHERE q_id=? and keywords_question.keywordID = keywords_user.id");
+    $stmt->bind_param('i', $q_id);
+    $stmt->execute();
+    $stmt->bind_result($keywordID, $keyword);
+    while($res = $stmt->fetch()) {
+      $keywords[$keywordID] = $keyword;
+    }
+    $stmt->close();
+    
+    return $keywords;
+  }
+
+  /**
    * returns an array of modules/teams that the question is on 
    * @param intager $q_id the id of the questions
    * @param resource $db
@@ -90,6 +111,7 @@ Class QuestionUtils {
    */
   static function get_modules($q_id, $db) {
     $modules = array();
+    
     $stmt = $db->prepare("SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id=? and questions_modules.idMod = modules.id");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
@@ -98,6 +120,7 @@ Class QuestionUtils {
       $modules[$idMod] = $moduleID;
     }
     $stmt->close();
+    
     return $modules;
   }
 
@@ -168,15 +191,31 @@ SQL;
   * @return void 
   */
   static function add_modules($modules, $q_id, $db) {
-  /*
-    $update = $db->prepare("INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod=idMod");
+  
+    $update = $db->prepare("INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod");
     foreach ($modules as $idMod => $ModuleID) {
       $update->bind_param('ii', $q_id, $idMod);
-
       $update->execute();
     }
     $update->close();
-    */
+  
+  }
+
+  /**
+  * add keywords to a question  
+  * @param $keywords an array of keywords keyed on IDs
+  * @param $q_id the id of the question
+  * @return void 
+  */
+  static function add_keywords($keywords, $q_id, $db) {
+  
+    $update = $db->prepare("INSERT INTO keywords_question VALUES (?, ?)");
+    foreach ($keywords as $keywordID => $keyword) {
+      $update->bind_param('ii', $q_id, $keywordID);
+      $update->execute();
+    }
+    $update->close();
+  
   }
 
   /**

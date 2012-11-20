@@ -28,6 +28,22 @@
 Class Paper_utils {
 
   /**
+  * Add a question onto a paper
+  *
+  * @param $paperID ID of the paper to be used
+  * @param $questionID ID of the question to be added
+  * @param $screen_no number of the screen to add to
+  * @param $display_pos the display position of the new question
+  * @param $db database connection
+  */
+  static function add_question($paperID, $questionID, $screen_no, $display_pos, $db) {
+    $result = $db->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
+    $result->bind_param('iiii', $paperID, $questionID, $screen_no, $display_pos);
+    $result->execute();
+    $result->close();
+  } 
+
+  /**
   * Return the user ID of the paper owner
   *
   * @param $paperID the id of the paper or property_id
@@ -125,9 +141,24 @@ Class Paper_utils {
     $remove->close();
   }
 
+  static function get_title($paperID, $db) {
+    $result = $db->prepare("SELECT paper_title FROM properties WHERE property_id = ? LIMIT 1");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($paper_title);
+    $result->fetch();
+    $result->close();
+    
+    if ($paper_title == '') {
+      return false;
+    }
+    
+    return $paper_title;
+  }
+  
   static function is_paper_title_unique($title, $db) {
     $unique = true;
-    $result = $db->prepare("SELECT property_id FROM properties WHERE paper_title=? LIMIT 1");
+    $result = $db->prepare("SELECT property_id FROM properties WHERE paper_title = ? LIMIT 1");
     $result->bind_param('s', $title);
     $result->execute();  
     $result->store_result();
@@ -135,9 +166,11 @@ Class Paper_utils {
     $rows_found = $result->num_rows;
     $result->free_result();
     $result->close();
-    if($rows_found > 0) {
+    
+    if ($rows_found > 0) {
       $unique = false;
     }
+    
     return $unique;
   }
 
