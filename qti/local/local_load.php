@@ -212,7 +212,7 @@ class IE_Local_Load extends IE_Main {
     $store->leadin = $q_row['leadin'];
     $store->theme = $q_row['theme'];
     $store->notes = $q_row['notes'];
-    $store->q_group = $q_row['q_group'];
+    $store->q_group = isset($q_row['q_group'])?$q_row['q_group']:'';
     $store->bloom = $q_row['bloom'];
     $store->score_method = $q_row['score_method'];
 
@@ -400,7 +400,7 @@ class IE_Local_Load extends IE_Main {
       $ems = new STQ_Extm_Scenario();
       $ems->stem = $scenarios[$i];
       
-      $this->AddMedia($ems, $medias[$i + 1], $media_widths[$i + 1], $media_heights[$i + 1]);
+      if(isset($medias[$i + 1])) $this->AddMedia($ems, $medias[$i + 1], $media_widths[$i + 1], $media_heights[$i + 1]);
       
       $ems->marks_correct = $o_rows[0]['marks_correct'];
       $ems->marks_incorrect = $o_rows[0]['marks_incorrect'];
