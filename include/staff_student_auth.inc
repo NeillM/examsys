@@ -40,6 +40,9 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
 }
 set_error_handler("handle_early_errors");
 
+
+
+
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . 'include/auth.inc';
 try {
@@ -49,6 +52,9 @@ try {
   echo "\n</body>\n</html>\n";
   exit;
 }
+
+
+
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
@@ -59,6 +65,10 @@ require_once $cfg_web_root . 'include/lti_func.php';
 require_once $cfg_web_root . 'classes/lti_integration.class.php';
 
 require_once $cfg_web_root . 'classes/userobject.class.php';
+require_once $cfg_web_root . 'classes/configobject.class.php';
+
+$configObject=new Config();
+
 
 // Check to see if the update script has been run.
 if ($rogo_version != '4.4') {
@@ -231,4 +241,33 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   echo "\n</body>\n</html>\n";
   exit;
 }
+
+// at this point I have an auth object with a userid
+
+//$uID=$authentication->get_userID();
+
+$uID=$userObject->get_user_ID();
+$userObject->load($uID);
+$userObject->db_user_change();
+
+
+
+$configObject=new Config();
+
+function fgdfgdfgf ($conf='') {
+  global $configObject;
+  $data=$configObject->export_all();
+  foreach($data as $k=>$v) {
+    $$k=$v;
+  }
+  unset($data);
+  unset($rt);
+
+  var_dump(get_defined_vars());
+
+}
+
+//fgdfgdfgf();
+//var_dump($rt->get('cfg_db_external_user'));
+
 ?>

@@ -29,8 +29,8 @@ $mysqli->close();
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['questionsbank'] . $cfg_install_type; ?></title>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['questionsbank'] . $configObject->get('cfg_install_type'); ?></title>
 </head>
 
   <frameset rows="*,32" frameborder="0" framespacing="0" border="0">

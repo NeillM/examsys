@@ -254,9 +254,9 @@ if (!$lti->isInstructor()) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=$cfg_page_charset" />
+  <meta http-equiv="content-type" content="text/html;charset={$configObject->get('cfg_page_charset')}" />
   
-  <title>Rogō $cfg_install_type</title>
+  <title>Rogō $configObject->get('cfg_install_type')</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

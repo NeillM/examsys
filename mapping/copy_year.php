@@ -48,9 +48,9 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō: Copy Objectives<?php echo ' ' . $cfg_install_type; ?></title>
+  <title>Rogō: Copy Objectives<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />

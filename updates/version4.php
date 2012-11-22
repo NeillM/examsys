@@ -78,7 +78,7 @@ function gen_random_salt() {
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
     
     <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
     
@@ -1862,7 +1862,7 @@ if (!isset($_POST['update'])) {
   // 19/01/2012 - Add default install type to config file.
   $new_cfg_str = array();
   $new_cfg_str[] = "  default:\n";
-  $new_cfg_str[] = "    \$cfg_install_type = '';\n";
+  $new_cfg_str[] = "    \$configObject->get('cfg_install_type') = '';\n";
   $new_cfg_str[] = "    error_reporting(0);\n";
   $new_cfg_str[] = "    break;\n";
 
@@ -1993,7 +1993,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 24/02/2012 - Add new page character set to configuration file.
-  $new_cfg_str =  array("\$cfg_page_charset = 'UTF-8';\n");
+  $new_cfg_str =  array("\{$configObject->get('cfg_page_charset')} = 'UTF-8';\n");
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
   //remove refrances to old vars

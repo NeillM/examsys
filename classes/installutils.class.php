@@ -50,7 +50,7 @@ Class InstallUtils {
   public static $cfg_db_username;
   public static $cfg_db_password;
   public static $cfg_db_charset;
-  public static $cfg_page_charset;
+  public static {$configObject->get('cfg_page_charset')};
 
   public static $cfg_db_student_user;
   public static $cfg_db_student_passwd;
@@ -208,7 +208,7 @@ Class InstallUtils {
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
     self::$cfg_db_charset = $_POST['mysql_db_charset'];
-    self::$cfg_page_charset = $_POST['page_charset'];
+    self::{$configObject->get('cfg_page_charset')} = $_POST['page_charset'];
     self::$cfg_db_port = $_POST['mysql_db_port'];
     self::$cfg_db_name = $_POST['mysql_db_name'];
     self::$db_admin_username = $_POST['mysql_admin_user'];
@@ -1074,7 +1074,7 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_web_root = get_root_path() . '/';
 \$cfg_root_path = rtrim('/' . trim(str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/'), '/');
 \$protocol = 'https://';
-\$cfg_page_charset 	   = '{cfg_page_charset}';
+\{$configObject->get('cfg_page_charset')} 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
 \$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
@@ -1154,14 +1154,14 @@ SCRIPT;
 //Server specific configuration based on hostname.
 switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   case 'rogo.local':
-    \$cfg_install_type = ' (local)';
+    \$configObject->get('cfg_install_type') = ' (local)';
     break;
   case 'rogotest.local':
-    \$cfg_install_type = ' (local testing)';
+    \$configObject->get('cfg_install_type') = ' (local testing)';
     error_reporting(E_ALL);
     break;
   default:
-    \$cfg_install_type = '';
+    \$configObject->get('cfg_install_type') = '';
     error_reporting(0);
     break;
 }
@@ -1189,7 +1189,7 @@ CONFIG;
     $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
     $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
     $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
-    $config = str_replace('{cfg_page_charset}', self::$cfg_page_charset, $config);
+    $config = str_replace('{cfg_page_charset}', self::{$configObject->get('cfg_page_charset')}, $config);
     $config = str_replace('{cfg_company}', self::$cfg_company, $config);
 
     $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);

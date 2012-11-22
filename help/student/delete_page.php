@@ -37,7 +37,7 @@
 
   $path = $cfg_web_root . 'student_help';
   
-  header('Content-Type: text/html; charset=' . $cfg_page_charset);
+  header('Content-Type: text/html; charset=' . {$configObject->get('cfg_page_charset')});
   $image_list = array();
 
   // Is the current page real or a pointer.
@@ -74,7 +74,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>Delete Page</title>
   <script type="text/javascript">
     function reloadHelp() {

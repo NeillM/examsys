@@ -33,9 +33,9 @@ require '../lang/' . $language. '/include/timezones.inc';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['createnewpaper'] . $cfg_install_type; ?></title>
+  <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
 <?php
   // Delete any half completed papers owned by current user.
   $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID=?");
