@@ -243,7 +243,7 @@ function emergencyNumbers($support_numbers) {
       }
       echo "</div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
 
-      $sql = 'SELECT
+       = 'SELECT
                   idMod as moduleID
                 FROM
                   properties_modules
@@ -251,7 +251,7 @@ function emergencyNumbers($support_numbers) {
                   property_id = ?';
 
       $module_results->bind_param( 'i', $property_id );
-      $module_results->execute();
+      $module_results->execute( $sql );
       $module_results->store_result();
       $module_results->bind_result( $moduleID );
 
