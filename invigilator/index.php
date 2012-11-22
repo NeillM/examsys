@@ -42,7 +42,7 @@ function get_students($modules, $session, $paperID, $exam_length) {
 
   echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
 
-  $sql = "SELECT DISTINCT extra_time, modules_students.userID, surname, first_names, title FROM modules_students, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ( " . $modules . ") AND calendar_year=? AND modules_student.userID=users.id ORDER BY surname, initials";
+  $sql = "SELECT DISTINCT extra_time, modules_students.userID, surname, first_names, title FROM modules_students, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ( " . $modules . ") AND calendar_year=? AND modules_students.userID=users.id ORDER BY surname, initials";
 
   echo $sql;
 
