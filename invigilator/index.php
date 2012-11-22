@@ -255,7 +255,7 @@ function emergencyNumbers($support_numbers) {
       $module_results->store_result();
       $module_results->bind_result( $moduleID );
 
-      while ( $paper_results->fetch() ) {
+      while ( $module_results->fetch() ) {
 
         get_students( $moduleID, $calendar_year, $property_id, $exam_duration);
 
