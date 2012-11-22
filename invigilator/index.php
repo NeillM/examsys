@@ -262,7 +262,7 @@ function emergencyNumbers($support_numbers) {
         $modules[] = $moduleID;
       }
 
-      $modules = implode('\',\'', $pieces);
+      $modules = implode('\',\'', $modules);
 
       $modules = '\''. $modules . '\'';
 
