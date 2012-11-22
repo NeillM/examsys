@@ -4903,9 +4903,9 @@ QUERY;
   echo "<li>GRANT SELECT ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
   //brzsw 22/11/2012 - Add new grants for invigilator users needing select from properties_modules
-  $sql = "GRANT SELECT ON " . $cfg_db_database . ".module_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".modules_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'";
   $mysqli->query($sql);
-  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".module_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
+  echo "<li>GRANT SELECT ON " . $cfg_db_database . ".modules_students TO '" . $cfg_db_inv_username . "'@'". $cfg_db_host . "'</li>\n";
 
   $mysqli->query( 'FLUSH PRIVILEGES' );
 
