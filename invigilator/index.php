@@ -256,7 +256,7 @@ function emergencyNumbers($support_numbers) {
       $module_results->store_result();
       $module_results->bind_result( $moduleID );
 
-      $modules = new array();
+      $modules = array();
 
       while ( $module_results->fetch() ) {
         $modules[] = $moduleID;
