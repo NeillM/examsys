@@ -249,6 +249,8 @@ function emergencyNumbers($support_numbers) {
                 WHERE
                   property_id = ?';
 
+      $module_results = $mysqli->prepare( $sql );
+
       $module_results->bind_param( 'i', $property_id );
       $module_results->execute( $sql );
       $module_results->store_result();
