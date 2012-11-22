@@ -357,7 +357,7 @@
 </head>
 <?php
   if (count($error) == 0) {
-  	echo "<body onload=\"javascript:window.location='" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/paper/details.php?paperID=$new_paper_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "';\">";
+  	echo "<body onload=\"javascript:window.location='" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "';\">";
   } else {
 ?>
   <body onclick="hideMenus()">
@@ -382,7 +382,7 @@
     }
    ?>
     </ul>
-    <div style="text-align:center"><input type="button" name="OK" value=" <?php echo $string['ok']; ?> " onclick="javascript:window.location='<?php echo $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
+    <div style="text-align:center"><input type="button" name="OK" value=" <?php echo $string['ok']; ?> " onclick="javascript:window.location='<?php echo $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $new_paper_id . '&module=' . $_POST['module'] . '&folder=' . $_POST['folder']; ?>'" style="width:100px" /></div>
     <br />
     </td>
     </tr>

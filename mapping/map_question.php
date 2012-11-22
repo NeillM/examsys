@@ -113,7 +113,7 @@ if (isset($_POST['submit']) AND $_POST['submit'] == 'Save Changes') {
 
   echo "<div style=\"margin-left:10px\">\n";
   echo "<form method=\"post\">";
-  echo displayObjectivesMappingForm($paperID, $mysqli, $cfg_root_path);
+  echo displayObjectivesMappingForm($paperID, $mysqli, $configObject->get('cfg_root_path'));
   echo "<br />";
   echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"Save Changes\" />&nbsp;";
   echo "<input style=\"width:120px\" type=\"button\" value=\"Cancel\" onclick=\"window.close()\"/></div>";

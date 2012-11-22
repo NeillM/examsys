@@ -70,7 +70,7 @@ function checkVariables($number) {
 }
 
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $user_answers, &$unanswered) {
-  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $user_order, $string, $language, $cfg_root_path, $configObject;
+  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $user_order, $string, $language, $configObject->get('cfg_root_path'), $configObject;
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
 
@@ -351,7 +351,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 24); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path; ?>/question/edit/area.swf" />');
+          write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')}; ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -363,8 +363,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('<param name="salign" value="top" />');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
           write_string('<!--[if !IE]>-->');
-          write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 24); ?>">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path; ?>/question/edit/area.swf" />');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 24); ?>">');
+          write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')}; ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -382,7 +382,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('<!--<![endif]-->');
           write_string('</object>');
           
-          sendTextToAS3('<?php echo $language; ?>','q<?php echo $question_no; ?>', 1, '<?php echo $cfg_root_path . '/media/' . $question['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $tmp_user_answer; ?>');
+          sendTextToAS3('<?php echo $language; ?>','q<?php echo $question_no; ?>', 1, '<?php echo {$configObject->get('cfg_root_path')} . '/media/' . $question['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $tmp_user_answer; ?>');
           
         </script>
         </div>

@@ -422,7 +422,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
 }
 
 function display_option($firstoption, $q_id, $question_no, &$part_id, $display_option, $std_method, $is_group, &$marks, $exclude, $review_val, &$matching_options, $review_mean, $tmp_reviews, $option_no, &$stdID, &$std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback) {
-  global $string, $language, $cfg_root_path;
+  global $string, $language, $configObject->get('cfg_root_path');
   $qn_excluded = ($exclude == '1');
   
   switch ($firstoption['q_type']) {
@@ -436,7 +436,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       ?>
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 24); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -448,8 +448,8 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
           write_string('<param name="salign" value="top" />');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
           write_string('<!--[if !IE]>-->');
-          write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 24); ?>">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 24); ?>">');
+          write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');

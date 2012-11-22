@@ -25,12 +25,12 @@
 ?>
 <script language="JavaScript">
   function editProperties(paperID) {
-    properties=window.open("<?php echo $cfg_root_path ?>/paper/properties.php?paperID=<?php echo $_GET['paperID']; ?>&caller=scheduling&noadd=y","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    properties=window.open("<?php echo {$configObject->get('cfg_root_path')} ?>/paper/properties.php?paperID=<?php echo $_GET['paperID']; ?>&caller=scheduling&noadd=y","properties","width=862,height=650,left="+(screen.width/2-431)+",top="+(screen.height/2-325)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     properties.focus();
   }
   
   function convtFormative() {
-    notice=window.open("<?php echo $cfg_root_path ?>check_convert_formative.php?paperID=<?php echo $_GET['paperID']; ?>","notice","width=350,height=150,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("<?php echo {$configObject->get('cfg_root_path')} ?>check_convert_formative.php?paperID=<?php echo $_GET['paperID']; ?>","notice","width=350,height=150,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-175,screen.height/2-75);
     if (window.focus) {
       notice.focus();

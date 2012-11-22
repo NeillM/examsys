@@ -48,7 +48,7 @@
     <title>Rogo</title>
     <script language="JavaScript">
       function reloadHelp() {
-        window.top.location='<?php echo $cfg_root_path ?>/help/staff/index.php?id=<?php echo $page_id; ?>';
+        window.top.location='<?php echo {$configObject->get('cfg_root_path')} ?>/help/staff/index.php?id=<?php echo $page_id; ?>';
       }
     </script>
     </head>

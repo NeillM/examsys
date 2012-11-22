@@ -24,15 +24,15 @@
 
 echo $configObject->get('cfg_js_root');
 ?>
-<script language="JavaScript" type="text/javascript" src="<?php echo $cfg_root_path ?>/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?php echo {$configObject->get('cfg_root_path')} ?>/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <?php
 if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
 ?>
-<script language="JavaScript" type="text/javascript" src="<?php echo $cfg_root_path ?>/tools/tinymce/jscripts/tiny_mce/tiny_config_unanswered.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?php echo {$configObject->get('cfg_root_path')} ?>/tools/tinymce/jscripts/tiny_mce/tiny_config_unanswered.js"></script>
 <?php
 } else {
 ?>
-<script language="JavaScript" type="text/javascript" src="<?php echo $cfg_root_path ?>/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js"></script>
+<script language="JavaScript" type="text/javascript" src="<?php echo {$configObject->get('cfg_root_path')} ?>/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js"></script>
 <?php
 }
 ?>

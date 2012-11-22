@@ -100,7 +100,7 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db) {
  * @return array list of module URLs.
  */
 function get_staff_module_links($staff_modules, $db) {
-  global $cfg_root_path;
+  global {$configObject->get('cfg_root_path')};
   
   $modules_array = array();
 
@@ -112,7 +112,7 @@ function get_staff_module_links($staff_modules, $db) {
     $result->bind_result($tmp_moduleid, $tmp_fullname);
     while ($result->fetch()) {
       $title = $tmp_moduleid . ' - ' . str_replace("'", "\'", $tmp_fullname);
-      $modules_array[$title] = $cfg_root_path . '/question/list.php?type=%&module=' . $tmp_moduleid;
+      $modules_array[$title] = {$configObject->get('cfg_root_path')} . '/question/list.php?type=%&module=' . $tmp_moduleid;
     }
     $result->close();
   }
@@ -128,7 +128,7 @@ function get_staff_module_links($staff_modules, $db) {
  * @return array list of keywords URLs.
  */
 function get_keywords($teams, $userID, $db) {
-  global $cfg_root_path;
+  global {$configObject->get('cfg_root_path')};
 
   $keywords_array = array();
   $keyword_no = 0;
@@ -141,7 +141,7 @@ function get_keywords($teams, $userID, $db) {
     if ($old_moduleID != $moduleID) {
       $keywords_array[$keyword_no] = "#$moduleID";
     }
-    $keywords_array[htmlspecialchars($moduleID . '[BR]' . $tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
+    $keywords_array[htmlspecialchars($moduleID . '[BR]' . $tmp_keyword)] = {$configObject->get('cfg_root_path')} . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
     $old_moduleID = $moduleID;
     $keyword_no++;
   }
@@ -153,7 +153,7 @@ function get_keywords($teams, $userID, $db) {
   $result->execute();
   $result->bind_result($keywordID, $tmp_keyword);
   while ($result->fetch()) {
-    $keywords_array[htmlspecialchars($tmp_keyword)] = $cfg_root_path . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
+    $keywords_array[htmlspecialchars($tmp_keyword)] = {$configObject->get('cfg_root_path')} . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
   }
   $result->close();
   

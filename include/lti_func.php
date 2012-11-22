@@ -32,7 +32,7 @@
  */
 
 function usercheck($db, $lti) {
-  global $string, $DISABLEDuserID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_root_path,  $cfg_db_database, $cfg_use_ldap, $fp_link, $cfg_encrypt_salt;
+  global $string, $DISABLEDuserID, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_db_database, $cfg_use_ldap, $fp_link, $cfg_encrypt_salt;
 
   global $configObject;
   

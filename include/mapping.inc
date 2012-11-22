@@ -158,7 +158,7 @@ HTML;
   return $html;
 }
 
-function displayObjectivesMappingForm($paper_id, $db, $cfg_root_path) {
+function displayObjectivesMappingForm($paper_id, $db, $configObject->get('cfg_root_path')) {
   global $vle_api_cache;
 
   //get module and session from paper id
@@ -204,10 +204,10 @@ QUERY;
       if (isset($class['objectives']) and count($class['objectives']) > 0) {
         $html .= "<div style=\"cursor:pointer; color:#316AC5; font-weight:bold; margin-top:6px\" onclick=\"showHide('$moduleid$id')\">";
         if($class['mapped'] == 0) {
-          $html .= "<img id=\"img_$moduleid$id\" src='$cfg_root_path/artwork/plus.png' />&nbsp;";
+          $html .= "<img id=\"img_$moduleid$id\" src='{$configObject->get('cfg_root_path')}/artwork/plus.png' />&nbsp;";
           $display = 'none';
         } else {
-          $html .= "<img id=\"img_$moduleid$id\" src='$cfg_root_path/artwork/minus.png' />&nbsp;";
+          $html .= "<img id=\"img_$moduleid$id\" src='{$configObject->get('cfg_root_path')}/artwork/minus.png' />&nbsp;";
           $display = 'block';
         }
 
@@ -232,7 +232,7 @@ QUERY;
         }
         $html .= "</div>\n";
       } else {
-        $html .= "<div style=\"color:#808080; font-weight:bold; margin-top:6px\"><img src='$cfg_root_path/artwork/grey_plus.gif' />&nbsp;";
+        $html .= "<div style=\"color:#808080; font-weight:bold; margin-top:6px\"><img src='{$configObject->get('cfg_root_path')}/artwork/grey_plus.gif' />&nbsp;";
         if($class['class_code'] != '') {
           $html .= $class['class_code'] . ' - ';
         }

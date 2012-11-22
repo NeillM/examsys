@@ -86,7 +86,7 @@ if (isset($_POST['submit'])) {
   }
   
   unlink($cfg_tmpdir . $userObject->get_user_ID() . '_load_objectives.txt');
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/mapping/sessions_list.php?module=" . $_POST['module']);
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['module']);
 } else {
   //display the form
 ?>

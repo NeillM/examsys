@@ -1072,7 +1072,7 @@ require \$root . '/include/path_functions.inc.php';
 
 \$rogo_version = '{rogo_version}';
 \$cfg_web_root = get_root_path() . '/';
-\$cfg_root_path = rtrim('/' . trim(str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/'), '/');
+\{$configObject->get('cfg_root_path')} = rtrim('/' . trim(str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/'), '/');
 \$protocol = 'https://';
 \{$configObject->get('cfg_page_charset')} 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
@@ -1138,7 +1138,7 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_js_root = <<< SCRIPT
 <script type="text/javascript">
   if (typeof cfgRootPath == 'undefined') {
-    var cfgRootPath = '\$cfg_root_path';
+    var cfgRootPath = '\{$configObject->get('cfg_root_path')}';
   }
 </script>
 SCRIPT;
@@ -1147,8 +1147,8 @@ SCRIPT;
   \$cfg_editor_name = 'tinymce';
   \$cfg_editor_javascript = <<< SCRIPT
 \$cfg_js_root
-<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
+<script type="text/javascript" src="\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
 SCRIPT;
 
 //Server specific configuration based on hostname.

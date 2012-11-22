@@ -82,7 +82,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 ?>
                 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>" id="externalinterfaceoption_correct_1" align="top">
-                  <param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />
+                  <param name="movie" value="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" />
                   <param name="quality" value="high" />
                   <param name="bgcolor" value="#ffffff" />
                   <param name="play" value="true" />
@@ -95,8 +95,8 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
                   <param name="allowScriptAccess" value="sameDomain" />
                   <!--<param name="FlashVars" value="imgtt=Isles" />-->
                   <!--[if !IE]>-->
-                  <object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceoption_correct_2" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>">
-                    <param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />
+                  <object type="application/x-shockwave-flash" data="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" id="externalinterfaceoption_correct_2" width="<?php echo $plugin_width ?>" height="<?php echo $plugin_height ?>">
+                    <param name="movie" value="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" />
                     <param name="quality" value="high" />
                     <param name="bgcolor" value="#ffffff" />
                     <param name="play" value="true" />

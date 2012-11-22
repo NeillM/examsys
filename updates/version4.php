@@ -1736,7 +1736,7 @@ if (!isset($_POST['update'])) {
   // 19/01/2012 - Add URL root to config file.
   $new_cfg_str = array();
   $new_cfg_str[] = "\$cfg_web_root = get_root_path() . '/';\n";
-  $new_cfg_str[] = "\$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
+  $new_cfg_str[] = "\{$configObject->get('cfg_root_path')} = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
@@ -1782,7 +1782,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "\$cfg_js_root = <<< SCRIPT\n";
   $new_cfg_str[] = "<script type=\"text/javascript\">\n";
   $new_cfg_str[] = "if (typeof cfgRootPath == 'undefined') {\n";
-  $new_cfg_str[] = "var cfgRootPath = '\$cfg_root_path';\n";
+  $new_cfg_str[] = "var cfgRootPath = '\{$configObject->get('cfg_root_path')}';\n";
   $new_cfg_str[] = "}\n";
   $new_cfg_str[] = "</script>\n";
   $new_cfg_str[] = "SCRIPT;\n\n";
@@ -1816,8 +1816,8 @@ if (!isset($_POST['update'])) {
     $new_cfg_str = array();
     $new_cfg_str[] = "\$cfg_editor_javascript = <<< SCRIPT\n";
     $new_cfg_str[] = "\$cfg_js_root\n";
-    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
-    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
+    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
+    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
     $new_cfg_str[] = "SCRIPT;\n";
 
     $index = 0;

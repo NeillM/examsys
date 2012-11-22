@@ -53,6 +53,9 @@ try {
   exit;
 }
 
+require_once $cfg_web_root . 'classes/configobject.class.php';
+
+$configObject=new Config();
 
 
 require_once $cfg_web_root . 'classes/lang.class.php';
@@ -65,9 +68,6 @@ require_once $cfg_web_root . 'include/lti_func.php';
 require_once $cfg_web_root . 'classes/lti_integration.class.php';
 
 require_once $cfg_web_root . 'classes/userobject.class.php';
-require_once $cfg_web_root . 'classes/configobject.class.php';
-
-$configObject=new Config();
 
 
 // Check to see if the update script has been run.
@@ -83,7 +83,7 @@ ini_set('log_errors', 1);
 ini_set('xdebug.remote_autostart', 1);
 */
 
-$fp_link = "<p style=\"margin-left:60px\"><a href=\"{$cfg_root_path}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
+$fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
 if ($protocol == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
   $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';

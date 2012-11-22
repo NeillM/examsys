@@ -26,10 +26,10 @@
 
 
 function display_notice($title, $msg, $icon, $title_color = 'black') {
-  global $cfg_root_path;
+  global $configObject;
 
-  echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>$title</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/notice.css\" />\n</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"" . $cfg_root_path . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
+  echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>$title</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
+  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"" . $configObject->get('cfg_root_path') . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 style=\"color:$title_color\">$title</h1>\n";
   echo "<hr />\n<p>$msg</p>";
 }
@@ -42,7 +42,7 @@ function display_notice($title, $msg, $icon, $title_color = 'black') {
  *
  */
 function access_denied($message, $output_header = false, $output_footer = true) {
-  global $mysqli, $string, $cfg_root_path;
+  global $mysqli, $string, $configObject;
 
   display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 

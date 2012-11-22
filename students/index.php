@@ -32,7 +32,7 @@ require '../classes/dateutils.class.php';
 // Redirect External Examiners if they are straying
 if ($userObject->has_role('External Examiner')) {
   if ($_SERVER['PHP_SELF'] != '/staff/index.php' and $_SERVER['PHP_SELF'] != '/reviews/index.php' and $_SERVER['PHP_SELF'] != '/reviews/start.php' and $_SERVER['PHP_SELF'] != '/reviews/finish.php') {
-    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . $cfg_root_path . "/reviews/");
+    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/");
   }
 }
 

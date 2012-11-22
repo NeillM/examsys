@@ -136,7 +136,7 @@ if (!$lti->isInstructor()) {
   //student
   if ($returned === false) {
     // no data selected for this
-    display_notice($string['warning'], $string['ltinotconfigured'], $cfg_root_path . '/artwork/access_denied.png', $title_color = '#C00000');
+    display_notice($string['warning'], $string['ltinotconfigured'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', $title_color = '#C00000');
     echo "\n</body>\n</html>\n";
     exit();
   } else {
@@ -177,7 +177,7 @@ if (!$lti->isInstructor()) {
       if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
         UserUtils::add_staff_to_team($userObject->get_user_ID(), $v[1], $mysqli);
       } elseif (!UserUtils::staff_on_team($v[1], $mysqli) and !$lti_i::allow_staff_module_register($v)) {
-        $error[] = '<img src="' . $cfg_root_path . '../artwork/exclamation_64.png' . '"><h1>' . $string['NotAddedToModuleTitle'] . '</h1>' . $string['NotAddedToModule'] . $v[1] . '<br />';
+        $error[] = '<img src="' . $configObject->get('cfg_root_path') . '../artwork/exclamation_64.png' . '"><h1>' . $string['NotAddedToModuleTitle'] . '</h1>' . $string['NotAddedToModule'] . $v[1] . '<br />';
       }
     }
 
