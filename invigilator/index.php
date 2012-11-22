@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -27,7 +27,7 @@ require_once '../classes/networkutils.class.php';
 
 function get_students($modules, $session, $paperID, $exam_length) {
   global $string, $mysqli;
-  
+
   // Get any student notes;
   $notes_array = array();
   $notes_results = $mysqli->prepare("SELECT note_id, userID FROM student_notes WHERE paper_id=?");
@@ -40,7 +40,7 @@ function get_students($modules, $session, $paperID, $exam_length) {
   }
   $notes_results->close();
 
-  echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";    
+  echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
   $results = $mysqli->prepare("SELECT DISTINCT extra_time, student_modules.userID, surname, first_names, title FROM student_modules, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ('" . str_replace(",","','",$modules) . "') AND calendar_year=? AND student_modules.userID=users.id ORDER BY surname, initials");
   $results->bind_param('s', $session);
   $results->execute();
@@ -74,7 +74,7 @@ function get_students($modules, $session, $paperID, $exam_length) {
   $results->close();
   echo "</table>\n</div>\n";
 }
-  
+
 function emergencyNumbers($support_numbers) {
   global $string;
 
@@ -127,7 +127,7 @@ function emergencyNumbers($support_numbers) {
       clockID  = 0;
     }
   }
-  
+
   function newStudentNote(userID, paperID, display_name) {
     studentnote = window.open("new_student_note.php?userID=" + userID + "&paperID=" + paperID + "","studentnote","width=650,height=430,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
@@ -164,7 +164,7 @@ function emergencyNumbers($support_numbers) {
       document.styleSheets[0].addRule(".cohortlist", "height:" + myHeight + "px; overflow:auto");
     }
   }
-  
+
 </script>
 
 </head>
@@ -187,9 +187,9 @@ function emergencyNumbers($support_numbers) {
 <th><div style="padding-left:10px; font-size:24pt; font-weight:bold">
 <?php
   if ($room_name == '') {
-    echo NetworkUtils::get_ipaddress() . $string['unknownlab']; 
+    echo NetworkUtils::get_ipaddress() . $string['unknownlab'];
   } else {
-    echo $string['lab'] . ' ' . $room_name; 
+    echo $string['lab'] . ' ' . $room_name;
   }
 ?>
 </div><div style="padding-left:10px; font-size:10pt; font-weight:bold"><?php echo $string['invigilatoraccess']; ?></div></th>
@@ -200,8 +200,36 @@ function emergencyNumbers($support_numbers) {
 <?php
 
   $current_lab = '%' . $lab . '%';
-  
-  $paper_results = $mysqli->prepare("SELECT property_id, paper_title, moduleID, date_format(start_date,'%d/%m/%Y %T'), exam_duration, calendar_year, password FROM properties WHERE paper_type='2' AND labs LIKE ? AND start_date < DATE_ADD(NOW(), interval 30 minute) AND end_date > NOW() AND deleted IS NULL");
+
+  $sql = 'SELECT
+              properties.property_id
+            , paper_title
+            , idMod as moduleID
+            , date_format(start_date,"%d/%m/%Y %T")
+            , exam_duration
+            , calendar_year
+            , password
+          FROM
+              properties
+          INNER JOIN
+              properties_modules
+          ON
+              properties.property_id = properties_modules.property_id
+          WHERE
+              paper_type="2"
+          AND
+              labs
+          LIKE
+              ?
+          AND
+              start_date < DATE_ADD(NOW(), interval 30 minute)
+          AND
+              end_date > NOW()
+          AND
+              deleted IS NULL';
+
+  $paper_results = $mysqli->prepare( $sql );
+
   $paper_results->bind_param('s', $current_lab);
   $paper_results->execute();
   $paper_results->store_result();
@@ -222,9 +250,9 @@ function emergencyNumbers($support_numbers) {
     echo "<td style=\"vertical-align:top; width:$col_width%\">";
     echo sprintf($string['checklist'],'../lang/' . $language . '/invigilator/');
     ?>
-    
+
     <br />
-    
+
     <?php
     emergencyNumbers($emergency_support_numbers);
     echo "</td></tr>\n</table>\n";
