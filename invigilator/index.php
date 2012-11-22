@@ -204,17 +204,12 @@ function emergencyNumbers($support_numbers) {
   $sql = 'SELECT
               properties.property_id
             , paper_title
-            , idMod as moduleID
-            , date_format(start_date,"%d/%m/%Y %T")
+            , date_format( start_date,"%d/%m/%Y %T" )
             , exam_duration
             , calendar_year
             , password
           FROM
               properties
-          INNER JOIN
-              properties_modules
-          ON
-              properties.property_id = properties_modules.property_id
           WHERE
               paper_type="2"
           AND
@@ -222,7 +217,7 @@ function emergencyNumbers($support_numbers) {
           LIKE
               ?
           AND
-              start_date < DATE_ADD(NOW(), interval 30 minute)
+              start_date < DATE_ADD( NOW(), interval 30 minute )
           AND
               end_date > NOW()
           AND
@@ -233,17 +228,38 @@ function emergencyNumbers($support_numbers) {
   $paper_results->bind_param('s', $current_lab);
   $paper_results->execute();
   $paper_results->store_result();
-  $paper_results->bind_result($property_id, $paper_title, $moduleID, $start_date, $exam_duration, $calendar_year, $password);
-  if ($paper_results->num_rows > 0 and $room_name != '') {
+  $paper_results->bind_result( $property_id, $paper_title, $start_date, $exam_duration, $calendar_year, $password );
+
+
+  if ( $paper_results->num_rows > 0 and $room_name != '' ) {
+
     $col_width = round(100 / ($paper_results->num_rows + 1));
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%\">\n<tr>\n";
-    while ($paper_results->fetch()) {
+
+    while ( $paper_results->fetch() ) {
       echo "<td style=\"vertical-align:top; width:$col_width%\"><div style=\"display:inline\"><img src=\"../artwork/summative.png\" align=\"left\" width=\"48\" height=\"48\" alt=\"paper icon\" border=\"0\" /></div><div style=\"margin-left:52px; display:block\"><strong>$paper_title</strong><br />" . $string['start'] . " $start_date<br />" . $string['duration'] . " $exam_duration " . $string['mins'] . " &nbsp;&nbsp;&nbsp;<a href=\"\" onclick=\"newPaperNote($property_id); return false;\" style=\"color:blue\">" . $string['papernote'] . "</a>";
       if ($password != '') {
         echo "<br />Password: $password";
       }
       echo "</div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
-      get_students($moduleID, $calendar_year, $property_id, $exam_duration);
+
+      $sql = 'SELECT
+                  idMod as moduleID
+                FROM
+                  properties_modules
+                WHERE
+                  property_id = ?';
+
+      $module_results->bind_param( 'i', $property_id );
+      $module_results->execute();
+      $module_results->store_result();
+      $module_results->bind_result( $moduleID );
+
+      while ( $paper_results->fetch() ) {
+
+        get_students( $moduleID, $calendar_year, $property_id, $exam_duration);
+
+      }
       echo "</td>";
     }
     $paper_results->close();
