@@ -43,7 +43,7 @@ function get_students($modules, $session, $paperID, $exam_length) {
   echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
   $results = $mysqli->prepare("SELECT DISTINCT extra_time, student_modules.userID, surname, first_names, title FROM module_students, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ( " . $modules . ") AND calendar_year=? AND student_modules.userID=users.id ORDER BY surname, initials");
 
-  echo $sql;
+  //echo $sql;
 
   echo $mysqli->error;
 
