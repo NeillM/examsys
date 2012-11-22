@@ -28,7 +28,7 @@
   $tmp_session = $_GET['session'];
   $tmp_moduleID = $_GET['moduleID'];
   
-  $question_data = $mysqli->prepare("SELECT DATE_FORMAT(occurrence,'$cfg_long_date_time'), title FROM sessions WHERE identifier=? AND calendar_year=? AND moduleID=?");
+  $question_data = $mysqli->prepare("SELECT DATE_FORMAT(occurrence,'$configObject->get('cfg_long_date_time')'), title FROM sessions WHERE identifier=? AND calendar_year=? AND moduleID=?");
   $question_data->bind_param('dss', $tmp_identifier, $tmp_session, $tmp_moduleID);
   $question_data->execute();
   $question_data->bind_result($occurrence, $session_title);

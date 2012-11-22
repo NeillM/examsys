@@ -299,9 +299,9 @@ if (isset($paper['password']) and $paper['password'] != '') {
 	    						<?php 
 
                     if ($paper['type'] == 'objectives') {
-                      echo $string['objectivesbased'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start']));
+                      echo $string['objectivesbased'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start']));
                     } elseif ($paper['type'] == 'questions') {
-                      echo $string['questionsbased'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start']));
+                      echo $string['questionsbased'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start']));
                     } else {
                       echo $paper['screens'] . ' ';
                       if ($paper['screens'] == 1) {
@@ -310,7 +310,7 @@ if (isset($paper['password']) and $paper['password'] != '') {
                         echo $string['screens'];
                       }
                       echo '<br />';
-                      echo date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start'])) . ' ' . $string['to'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['end']));
+                      echo date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start'])) . ' ' . $string['to'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['end']));
                     }
                   ?>
 	    					</span>

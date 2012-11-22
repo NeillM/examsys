@@ -65,7 +65,7 @@ function getImages($html) {
   </style>
 
   <script language="JavaScript" src="../js/staff_help.js"></script>
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script language="JavaScript" src="../js/sidebar.js"></script>
 </head>
 

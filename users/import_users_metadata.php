@@ -55,7 +55,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script type="text/javascript">
     function changeMsg() {

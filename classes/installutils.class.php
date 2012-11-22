@@ -40,7 +40,7 @@ Class InstallUtils {
 
   public static $cfg_company;
   public static $cfg_short_date;
-  public static $cfg_long_date_time;
+  public static $configObject->get('cfg_long_date_time');
   public static $cfg_timezone;
   public static $cfg_tmpdir;
 
@@ -220,7 +220,7 @@ Class InstallUtils {
     self::$cfg_SysAdmin_username = $_POST['SysAdmin_username'];
 
     self::$cfg_short_date = $_POST['cfg_short_date'];
-    self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
+    self::$configObject->get('cfg_long_date_time') = $_POST['cfg_long_date_time'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
     self::$cfg_tmpdir = $_POST['tmpdir'];
 
@@ -1108,7 +1108,7 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
   // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
-  \$cfg_long_date_time = '{cfg_long_date_time}';
+  \$configObject->get('cfg_long_date_time') = '{cfg_long_date_time}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 
@@ -1212,7 +1212,7 @@ CONFIG;
     $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
 
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
-    $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
+    $config = str_replace('{cfg_long_date_time}', self::$configObject->get('cfg_long_date_time'), $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
 

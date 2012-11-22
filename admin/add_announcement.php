@@ -62,8 +62,8 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <?php
 // Override this variable with a specific configuration file for announcements.
 $cfg_editor_javascript = <<< SCRIPT
-$cfg_js_root
-<script type="text/javascript" src="$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+{$configObject->get('cfg_js_root')}
+<script type="text/javascript" src="{$cfg_root_path}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
 SCRIPT;
 

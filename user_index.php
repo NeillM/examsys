@@ -116,7 +116,7 @@ $display_end_date = new dateTime($display_end_date, $UK_time);
 $display_start_date->setTimezone($target_timezone);
 $display_end_date->setTimezone($target_timezone);
 
-$tmp_cfg_long_date_time = str_replace('%', '', $cfg_long_date_time);
+$tmp_cfg_long_date_time = str_replace('%', '', $configObject->get('cfg_long_date_time'));
 
 $display_start_date = $display_start_date->format($tmp_cfg_long_date_time);
 $display_end_date = $display_end_date->format($tmp_cfg_long_date_time);

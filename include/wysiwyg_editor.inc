@@ -22,7 +22,7 @@
 * @package
 */
 
-echo $cfg_js_root;
+echo $configObject->get('cfg_js_root');
 ?>
 <script language="JavaScript" type="text/javascript" src="<?php echo $cfg_root_path ?>/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <?php

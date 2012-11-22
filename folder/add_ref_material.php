@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
     .r1 {text-indent:-23px; padding-left:23px; background-color:white}
     .r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
   </style>
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>

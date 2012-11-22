@@ -44,7 +44,7 @@
   .icon_title {display:inline-block; height:25px; line-height:25px; cursor:pointer}
 </style>
 
-<?php echo $cfg_js_root ?>
+<?php echo $configObject->get('cfg_js_root') ?>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
   function highlightResource(resourceID,highlightColor) {

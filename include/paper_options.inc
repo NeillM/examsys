@@ -97,7 +97,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 ?>
 
-<?php echo $cfg_js_root ?>
+<?php echo $configObject->get('cfg_js_root') ?>
 <script language="JavaScript" src="<?php echo $cfg_root_path ?>/js/sidebar.js"></script>
 <script language="JavaScript">
   function startPaper(fullsc, preview) {

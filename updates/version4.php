@@ -717,7 +717,7 @@ if (!isset($_POST['update'])) {
   // 26/08/2011 - Add date and time formats to config file.
   $new_cfg_str[] =  "// Date formats in MySQL DATE_FORMAT format\n";
   $new_cfg_str[] =  "  \$cfg_short_date = '%m/%d/%y';\n";
-  $new_cfg_str[] =  "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
+  $new_cfg_str[] =  "  \$configObject->get('cfg_long_date_time') = '%m/%d/%Y %H:%i';\n";
   $new_cfg_str[] =  "  \$cfg_timezone = 'Europe/London';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;

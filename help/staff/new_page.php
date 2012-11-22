@@ -81,7 +81,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     .subheading {font-weight:bold; font-style:italic}
   </style>
   
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
   <script language="JavaScript">

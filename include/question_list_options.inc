@@ -34,7 +34,7 @@ $full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_ar
 $staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
 $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysqli);
 ?>
-<?php echo $cfg_js_root ?>
+<?php echo $configObject->get('cfg_js_root') ?>
 <script src="<?php echo $cfg_root_path ?>/js/sidebar.js" type="text/javascript"></script>
 <script language="JavaScript">
   function getLastID(IDs) {

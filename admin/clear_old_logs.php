@@ -40,7 +40,7 @@ ob_start();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <script language="JavaScript" src="../js/staff_help.js"></script>
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script language="JavaScript" src="../js/sidebar.js"></script>
 </head>
 

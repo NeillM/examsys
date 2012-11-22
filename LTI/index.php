@@ -40,12 +40,11 @@ require_once '../classes/smsutils.class.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/facultyutils.class.php';
 
-global $cfg_long_date_time;
 
 $choicetype='radio';
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type='') {
-  global $cfg_long_date_time, $icons;
+  global $configObject, $icons;
 
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
@@ -268,7 +267,7 @@ if (!$lti->isInstructor()) {
   .greysch {padding-left:12px; color:#808080}
   .mod {padding-left:60px; text-indent:-30px}
   </style>
-   $cfg_js_root
+   {$configObject->get('cfg_js_root')}
   <script language="JavaScript">
     function showHide(sectionID) {
       sectionID = 'block' + sectionID;

@@ -163,7 +163,7 @@ if ($folder != '') {
   ?>
   </style>
   
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -312,7 +312,7 @@ if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['s
 
 // Get current owner papers.
 if ($folder != '') {
-  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
+  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$configObject->get('cfg_long_date_time')') AS display_start_date, DATE_FORMAT(end_date,'$configObject->get('cfg_long_date_time')') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
   $results = $mysqli->prepare($query_string);
 } elseif ($_GET['module'] != '') {
   $paper_types = array();
@@ -326,7 +326,7 @@ if ($folder != '') {
   }
   $results->close();
   
-  $query_string = "SELECT DISTINCT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, DATE_FORMAT(end_date,'$cfg_long_date_time') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND properties.paper_ownerID=users.id AND modules.id = ? AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
+  $query_string = "SELECT DISTINCT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'$configObject->get('cfg_long_date_time')') AS display_start_date, DATE_FORMAT(end_date,'$configObject->get('cfg_long_date_time')') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND properties.paper_ownerID=users.id AND modules.id = ? AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
   $results = $mysqli->prepare($query_string);
   $results->bind_param('i', $_GET['module']);
 }
