@@ -230,7 +230,6 @@ function emergencyNumbers($support_numbers) {
   $paper_results->store_result();
   $paper_results->bind_result( $property_id, $paper_title, $start_date, $exam_duration, $calendar_year, $password );
 
-
   if ( $paper_results->num_rows > 0 and $room_name != '' ) {
 
     $col_width = round(100 / ($paper_results->num_rows + 1));
@@ -256,15 +255,13 @@ function emergencyNumbers($support_numbers) {
       $module_results->bind_result( $moduleID );
 
       while ( $module_results->fetch() ) {
-
-        get_students( $moduleID, $calendar_year, $property_id, $exam_duration);
-
+        get_students( $moduleID, $calendar_year, $property_id, $exam_duration );
       }
       echo "</td>";
     }
     $paper_results->close();
     echo "<td style=\"vertical-align:top; width:$col_width%\">";
-    echo sprintf($string['checklist'],'../lang/' . $language . '/invigilator/');
+    echo sprintf( $string['checklist'],'../lang/' . $language . '/invigilator/' );
     ?>
 
     <br />
