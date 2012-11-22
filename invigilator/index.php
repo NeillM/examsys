@@ -243,7 +243,7 @@ function emergencyNumbers($support_numbers) {
       }
       echo "</div><hr style=\"border:0px; height:1px\" noshade=\"noshade\" size=\"1\" />";
 
-       = 'SELECT
+      $sql  = 'SELECT
                   idMod as moduleID
                 FROM
                   properties_modules
