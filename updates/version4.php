@@ -716,7 +716,7 @@ if (!isset($_POST['update'])) {
   
   // 26/08/2011 - Add date and time formats to config file.
   $new_cfg_str[] =  "// Date formats in MySQL DATE_FORMAT format\n";
-  $new_cfg_str[] =  "  \$cfg_short_date = '%m/%d/%y';\n";
+  $new_cfg_str[] =  "  \ {$configObject->get('cfg_short_date')} = '%m/%d/%y';\n";
   $new_cfg_str[] =  "  \$configObject->get('cfg_long_date_time') = '%m/%d/%Y %H:%i';\n";
   $new_cfg_str[] =  "  \$cfg_timezone = 'Europe/London';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
@@ -3394,7 +3394,7 @@ if (!isset($_POST['update'])) {
 
   // 24/04/2012 - Add temp directory specification to config file.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_tmpdir = '/tmp/';\n";
+  $new_cfg_str[] =  "\ $configObject->get('cfg_tmpdir') = '/tmp/';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
   foreach ($cfg as $line) {
@@ -4040,7 +4040,7 @@ if (!isset($_POST['update'])) {
 
   // 03/08/2012 - Add session change over date.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_academic_year_start = '07/01';\n";
+  $new_cfg_str[] =  "\ $configObject->get('cfg_academic_year_start') = '07/01';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
   foreach ($cfg as $line) {

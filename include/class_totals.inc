@@ -40,7 +40,7 @@ require_once '../include/sort.inc';
 require_once '../classes/paperutils.class.php';
 
 function getRandomDetails($questionID, &$random_q_ids) {
-  global $cfg_short_date, $paper_buffer, $mysqli;
+  global  $configObject, $paper_buffer, $mysqli;
 
   $random_q_ids[] = $questionID;
 

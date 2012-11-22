@@ -34,7 +34,7 @@ Class question_info {
    * @return formated HTML for display of question information
    */
   static function full_question_information($q_id, $db, $userObj) {
-    global $cfg_short_date, $configObject->get('cfg_long_date_time'), $string;
+    global  $configObject, $string;
     
     $html = '';
      
@@ -135,13 +135,13 @@ Class question_info {
    * @return array of performance data
    */
   static function question_performance($q_id, $db) {
-    global $cfg_short_date, $configObject->get('cfg_long_date_time'), $string;
+    global  $configObject, $string;
 
     $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer');
     $performance = array();
   
     //get performace data from all papers this question has appered on
-    $result = $db->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\"$cfg_short_date\"), part_no, p, d FROM performance_main, performance_details WHERE performance_main.id=performance_details.perform_id AND q_id=?");
+    $result = $db->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\" {$configObject->get('cfg_short_date')}\"), part_no, p, d FROM performance_main, performance_details WHERE performance_main.id=performance_details.perform_id AND q_id=?");
     $result->bind_param('i', $q_id);
     $result->execute();
     $result->bind_result($paperID, $cohort_size, $taken, $part_no, $p, $d);

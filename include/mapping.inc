@@ -392,7 +392,7 @@ $objsBySession_cache = array();
 $vle_api_cache = array(); // cache the vle api to save some queries
 
 function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $scope = 'latest') {
-  global $objsBySession_cache, $vle_api_cache, $cfg_short_date, $cfg_web_root;
+  global $objsBySession_cache, $vle_api_cache,  $configObject;
   $original_thisModuleid = $thisModuleid;
   $objsBySession = array();
 
@@ -419,15 +419,15 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
     } else {
       // Use Rogō's internally stored objectves
       if ($scope == 'all') {
-      	$sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? ORDER BY calendar_year, sess_id";
+      	$sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,' {$configObject->get('cfg_short_date')}') AS occurrence FROM sessions WHERE idMod = ? ORDER BY calendar_year, sess_id";
       	$stmt = $db->prepare($sql);
         $stmt->bind_param('i', $thisidMod);
       } elseif ($session == '' and $scope == 'latest') {
-        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,' {$configObject->get('cfg_short_date')}') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
         $stmt = $db->prepare($sql);
         $stmt->bind_param('i', $thisidMod);
       } else {
-        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=? ORDER BY sess_id";
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,' {$configObject->get('cfg_short_date')}') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=? ORDER BY sess_id";
         $stmt = $db->prepare($sql);
         $stmt->bind_param('is', $thisidMod, $session);
       }

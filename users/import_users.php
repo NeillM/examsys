@@ -73,13 +73,13 @@
     flush();
 
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . "_new_cohort.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_new_cohort.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
 
-        $users = add_users_from_file($cfg_tmpdir . $userObject->get_user_ID() . '_new_cohort.csv');
-        unlink($cfg_tmpdir . $userObject->get_user_ID() . '_new_cohort.csv');
+        $users = add_users_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_new_cohort.csv');
+        unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_new_cohort.csv');
         if (isset($users['error'])) {
           echo "<p>" . $string['followingerrors'] . "</p><ul>";
           foreach ($users['error'] as $msg) {

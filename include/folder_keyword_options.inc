@@ -30,21 +30,21 @@
 ?>
 <script language="JavaScript">
   function newKeyword() {
-    keywordwin=window.open("<?php echo {$configObject->get('cfg_root_path')} ?>/folder/new_keyword.php?module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    keywordwin=window.open("<?php echo $configObject->get('cfg_root_path') ?>/folder/new_keyword.php?module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       keywordwin.focus();
     }
   }
 
   function editKeyword() {
-    keywordwin=window.open("<?php echo {$configObject->get('cfg_root_path')} ?>/folder/edit_keyword.php?keywordID=" + getLastID(document.getElementById('keywordID').value) + "&module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    keywordwin=window.open("<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_keyword.php?keywordID=" + getLastID(document.getElementById('keywordID').value) + "&module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       keywordwin.focus();
     }
   }
 
   function deleteKeyword() {
-    keywordwin=window.open("<?php echo {$configObject->get('cfg_root_path')} ?>/delete/check_delete_team_keyword.php?keywordID=" + document.getElementById('keywordID').value + "&module=<?php echo $module; ?>","keywords","width=500,height=120,left="+(screen.width/2-250)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    keywordwin=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_team_keyword.php?keywordID=" + document.getElementById('keywordID').value + "&module=<?php echo $module; ?>","keywords","width=500,height=120,left="+(screen.width/2-250)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       keywordwin.focus();
     }

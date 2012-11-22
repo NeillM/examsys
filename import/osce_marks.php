@@ -36,7 +36,7 @@ function marks_from_file($fileName, $mysqlidb) {
   $result->close();
   
   if ($property_id == '') {   // Paper could not be found, exit.
-    unlink($cfg_tmpdir . $userObject->get_user_ID() . '_osce_marks.csv');
+    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
     exit;    
   }
   
@@ -174,12 +174,12 @@ function marks_from_file($fileName, $mysqlidb) {
 
 if (isset($_POST['submit'])) {
   if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-    if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . "_osce_marks.csv"))  {
+    if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_osce_marks.csv"))  {
       echo uploadError($_FILES['csvfile']['error']);
       exit;
     } else {
-      marks_from_file($cfg_tmpdir . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli);
-      unlink($cfg_tmpdir . $userObject->get_user_ID() . '_osce_marks.csv');
+      marks_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli);
+      unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
       ?>
       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html>

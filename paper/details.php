@@ -136,7 +136,7 @@ function have_valid_labels($correct) {
 }
 
 function randomDetails($questionID) {
-  global $cfg_short_date, $mysqli;
+  global  $configObject->get('cfg_short_date'), $mysqli;
 
   $question_no = 0;
   $random_questions = array();
@@ -147,7 +147,7 @@ function randomDetails($questionID) {
   $old_correct = array();
   $old_option_text = array();
 
-  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,'$cfg_short_date'), status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=? ");
+  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status FROM options AS options1, questions, options AS options2 WHERE options1.option_text=questions.q_id AND questions.q_id=options2.o_id AND options1.o_id=? ");
   $result->bind_param('i', $questionID);
   $result->execute();
   $result->store_result();
@@ -580,7 +580,7 @@ function check_latex_random($q_ids, $mysqli) {
   $rnd_q_ids = array();
   
   // Get the questions (if any).
-  $result = $mysqli->prepare("SELECT theme, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
+  $result = $mysqli->prepare("SELECT theme, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();

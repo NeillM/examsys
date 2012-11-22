@@ -465,8 +465,8 @@ endif;
 <?php 
 if ($critical_error == '') {
   $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
-  $creation_date = ($mode == 'Edit') ? strftime($cfg_short_date, $question->get_created('timestamp')) : strftime($cfg_short_date, time());
-  $modified_date = ($question->get_last_edited('timestamp')) ? strftime($cfg_short_date, $question->get_last_edited('timestamp')) : $string['na'];
+  $creation_date = ($mode == 'Edit') ? strftime( $configObject->get('cfg_short_date'), $question->get_created('timestamp')) : strftime( $configObject->get('cfg_short_date'), time());
+  $modified_date = ($question->get_last_edited('timestamp')) ? strftime( $configObject->get('cfg_short_date'), $question->get_last_edited('timestamp')) : $string['na'];
 ?>
     <div class="tab-bar">
       <div class="tab-holder">

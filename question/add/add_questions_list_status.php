@@ -103,7 +103,7 @@ require_once '../../classes/questionutils.class.php';
   $teams = $userObject->get_staff_modules();
   $module_id_list = implode(',', array_keys($teams));
   
-  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM (questions, questions_modules, modules) WHERE questions.q_id=questions_modules.q_id AND questions_modules.idMod=modules.id AND status=? AND (ownerID=? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $order $direction");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, questions_modules, modules) WHERE questions.q_id=questions_modules.q_id AND questions_modules.idMod=modules.id AND status=? AND (ownerID=? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $order $direction");
   $stmt->bind_param('si', $_GET['status'], $userObject->get_user_ID());
   $stmt->execute();
   $stmt->store_result();

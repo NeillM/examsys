@@ -82,7 +82,7 @@ require_once '../../classes/questionutils.class.php';
   echo "<tr><th colspan=\"7\" class=\"bevel\"></th></tr>\n";
 
   // Get the questions in order off the paper.
-  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, parts FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id=question_exclude.q_id WHERE papers.paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('i', $_GET['question_paper']);
   $stmt->execute();
   $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts);

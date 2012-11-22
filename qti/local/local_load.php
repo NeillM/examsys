@@ -763,7 +763,7 @@ class IE_Local_Load extends IE_Main {
   }
 
   function GetMedia($filename) {
-    global $cfg_web_root;
+    global $configObject
     if (file_exists($cfg_web_root.'media/'.$filename)) {
       //echo "Copied /var/www/media/" . $filename . " to " . $this->params->base_dir . $this->params->dir."/".$filename . "<br>";
       copy($cfg_web_root . 'media/'. $filename, $this->params->base_dir . $this->params->dir . "/" . $filename);

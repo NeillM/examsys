@@ -26,7 +26,7 @@
 $menuNo = 0;
 
 function makeMenu($options) {
-  global $menuNo, $configObject->get('cfg_root_path');
+  global $menuNo, $configObject;
   
   // Work out the width of the menu
   $longest_string = 0;

@@ -379,7 +379,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         <br />
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 1); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
-          write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" />');
+          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -391,8 +391,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('<param name="salign" value="top" />');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
           write_string('<!--[if !IE]>-->');
-          write_string('<object type="application/x-shockwave-flash" data="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 1); ?>">');
-          write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')} ?>/question/edit/area.swf" />');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($question['q_media_width'] + 2); ?>" height="<?php echo ($question['q_media_height'] + 1); ?>">');
+          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -773,10 +773,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="always" />');
-          write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')}; ?>/paper/hotspot_answer.swf" />');
+          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path'); ?>/paper/hotspot_answer.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="<?php echo $tmp_bgcolor; ?>" />');
-          write_string('<embed src="<?php echo {$configObject->get('cfg_root_path')}; ?>/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+          write_string('<embed src="<?php echo $configObject->get('cfg_root_path'); ?>/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $tmp_bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 300); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
           write_string('</object>');
         </script>
         </div><br />
@@ -833,10 +833,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($question['q_media_width'] + 220); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="<?php echo {$configObject->get('cfg_root_path')}; ?>/paper/label_question.swf" />');
+    write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path'); ?>/paper/label_question.swf" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-    write_string('<embed src="<?php echo {$configObject->get('cfg_root_path')}; ?>/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="<?php echo $configObject->get('cfg_root_path'); ?>/paper/label_question.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($question['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
   </script>
 

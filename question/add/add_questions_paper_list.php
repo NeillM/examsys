@@ -108,9 +108,9 @@ if (isset($_GET['order'])) {
   $paper_details = array();
   
   if (isset($_GET['paper_type'])) {
-    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
+    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_short_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
   } else {
-    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $_GET['teamID'] . " AND deleted IS NULL AND paper_ownerID=users.id";
+    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_short_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $_GET['teamID'] . " AND deleted IS NULL AND paper_ownerID=users.id";
   }
   $sql .= " ORDER BY {$order} " . strtoupper($direction);
   $result = $mysqli->prepare($sql);

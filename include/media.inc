@@ -34,7 +34,7 @@ include_once $cfg_web_root . 'tools/getid3/getid3.php';
  *
  */
 function display_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false) {
-  global {$configObject->get('cfg_root_path')};
+  global $configObject;
 
   $html = '';
   
@@ -103,7 +103,7 @@ DELETE;
  *
  */
 function unique_filename($filename) {
-  global $cfg_web_root;
+  global $configObject;
   
   $ext = substr($filename, strrpos($filename, '.'));
   $fileno = date('U');
@@ -126,7 +126,7 @@ function unique_filename($filename) {
  *
  */
 function uploadFile($fileID) {
-  global $cfg_web_root;
+  global $configObject;
   
   $file_width = 0;
   $file_height = 0;
@@ -279,7 +279,7 @@ function uploadFile($fileID) {
 }
 
 function deleteMedia($filename) {
-  global $cfg_web_root;
+  global $configObject;
   
   if ($filename != '') {
     $file = $cfg_web_root . 'media/' . $filename;

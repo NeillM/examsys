@@ -823,7 +823,7 @@ if (isset($_POST['update']) and $demo == false) {
   echo drawTabs('Notes', 4, $link_html, $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;" . $string['date'] . "</td><td class=\"coltitle\">" . $string['paper'] . "</td><td class=\"coltitle\">" . $string['note'] . "</td><td class=\"coltitle\">" . $string['author'] . "</td></tr>\n";
   
-  $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \"$cfg_short_date\"), paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, properties_modules, modules, users) WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=?");
+  $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \" {$configObject->get('cfg_short_date')}\"), paper_id, moduleID, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, properties_modules, modules, users) WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND student_notes.paper_id=properties.property_id AND student_notes.note_authorID=users.id AND student_notes.userID=?");
   $results->bind_param('i', $tmp_id);
   $results->execute();
   $results->store_result();

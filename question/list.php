@@ -157,7 +157,7 @@ if (isset($_GET['checked'])) {
   $hits = 0;
   $display_no = 0;
   
-  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, status FROM (users, questions, questions_modules)";
+  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, status FROM (users, questions, questions_modules)";
   if ($keyword != '%' and $keyword != '') {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }

@@ -34,7 +34,7 @@
 <body>
 <h1>Renaming Photos</h1>
 <?php
-  $d = dir($cfg_tmpdir . 'new_photos/');
+  $d = dir( $configObject->get('cfg_tmpdir') . 'new_photos/');
   while (false !== ($filename = $d->read())) {
     if ($filename != '.' and $filename != '..') {
       $result = $mysqli->prepare("SELECT username FROM users, sid WHERE sid.userID=users.id AND student_id='" . str_replace('.jpg','',$filename) . "'");
@@ -44,8 +44,8 @@
       if ($result->num_rows() == 1) {
         $result->fetch();
         echo $filename . " = " . $username . "<br />\n";
-        if (!rename($cfg_tmpdir . "new_photos/$filename", $cfg_web_root . "users/new_photos/" . $username . '.jpg')) {
-          echo "Fail - \"" . $cfg_tmpdir . "new_photos/$filename\", \"/users/new_photos/" . $username . '.jpg<br />';
+        if (!rename( $configObject->get('cfg_tmpdir') . "new_photos/$filename", $cfg_web_root . "users/new_photos/" . $username . '.jpg')) {
+          echo "Fail - \"" .  $configObject->get('cfg_tmpdir') . "new_photos/$filename\", \"/users/new_photos/" . $username . '.jpg<br />';
         }
       } else {
         echo "<span style=\"color:red\">" . $query_string ."</span><br />\n";

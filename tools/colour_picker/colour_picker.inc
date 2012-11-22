@@ -82,7 +82,7 @@
   }
   
   function moreColours() {
-    notice=window.open("<?php echo {$configObject->get('cfg_root_path')} ?>/tools/colour_picker/more_colours.php?swatch=" + textBox + "","colours","width=450,height=370,left="+(screen.width/2-225)+",top="+(screen.height/2-185)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/tools/colour_picker/more_colours.php?swatch=" + textBox + "","colours","width=450,height=370,left="+(screen.width/2-225)+",top="+(screen.height/2-185)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }

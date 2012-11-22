@@ -708,11 +708,11 @@ if ($language != 'en') {
       }
     }
   }
-  $scatter_file = fopen($cfg_tmpdir . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
+  $scatter_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
   fwrite($scatter_file,$scatter_data . "\n");
   fclose($scatter_file);
   
-  $distribution_file = fopen($cfg_tmpdir . $userObject->get_user_ID() . '_distribution.dat', 'w');         // Distribution data
+  $distribution_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');         // Distribution data
   fwrite($distribution_file, serialize($distribution) . "\n");
   fclose($distribution_file);
 

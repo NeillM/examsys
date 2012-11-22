@@ -64,7 +64,7 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function deleteUser() {
-    notice=window.open("<?php echo {$configObject->get('cfg_root_path')} ?>/delete/check_delete_user.php?id=" + document.getElementById('userID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + document.getElementById('userID').value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
