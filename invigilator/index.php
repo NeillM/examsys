@@ -41,7 +41,7 @@ function get_students($modules, $session, $paperID, $exam_length) {
   $notes_results->close();
 
   echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
-  $results = $mysqli->prepare("SELECT DISTINCT extra_time, student_modules.userID, surname, first_names, title FROM module_students, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ('" . str_replace(",","','",$modules) . "') AND calendar_year=? AND student_modules.userID=users.id ORDER BY surname, initials");
+  $results = $mysqli->prepare("SELECT DISTINCT extra_time, student_modules.userID, surname, first_names, title FROM module_students, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ( " . $modules) . ") AND calendar_year=? AND student_modules.userID=users.id ORDER BY surname, initials");
   $results->bind_param('s', $session);
   $results->execute();
   $results->store_result();
@@ -256,12 +256,17 @@ function emergencyNumbers($support_numbers) {
       $module_results->store_result();
       $module_results->bind_result( $moduleID );
 
-      $modules = '';
+      $modules = new array();
 
       while ( $module_results->fetch() ) {
-        $modules .= $moduleID .  ',';
+        $modules[] = $moduleID;
       }
-        get_students( $modules, $calendar_year, $property_id, $exam_duration );
+
+      $modules = implode('\',\'', $pieces);
+
+      $modules = '\''. $modules . '\'';
+
+      get_students( $modules, $calendar_year, $property_id, $exam_duration );
       echo "</td>";
     }
     $paper_results->close();
