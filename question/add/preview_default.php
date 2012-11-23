@@ -29,7 +29,7 @@ $html = <<< HTML
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset={{$configObject->get('cfg_page_charset')}}" />
+  <meta http-equiv="content-type" content="text/html;charset={$cfg_page_charset}" />
   <title>{$string['preview']}</title>
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 </head>

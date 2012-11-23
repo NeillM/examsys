@@ -52,7 +52,7 @@ if (isset($_POST['Submit'])) {
     if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
     if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
     
-    $local_time = new DateTimeZone($cfg_timezone);
+    $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
     $target_timezone = new DateTimeZone($_POST['timezone']);
     
     $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
@@ -197,7 +197,7 @@ if (isset($_POST['Submit'])) {
   $result->fetch();
   $result->close();
   
-  $local_time = new DateTimeZone($cfg_timezone);
+  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   $target_timezone = new DateTimeZone($timezone);
   $start_date = new dateTime($start_date, $local_time);
   $end_date = new dateTime($end_date, $local_time);

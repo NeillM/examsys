@@ -460,7 +460,7 @@ if ($_POST['paper_type'] == 'summative') {
 
     echo "<tr><td align=\"right\">" . $string['timezone'] . "</td><td colspan=\"3\"><select name=\"timezone\">";
     foreach ($timezone_array as $individual_zone => $display_zone) {
-      if ($individual_zone == $cfg_timezone) {
+      if ($individual_zone == $configObject->get('cfg_timezone')) {
         echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
       } else {
         echo "<option value=\"$individual_zone\">$display_zone</option>";

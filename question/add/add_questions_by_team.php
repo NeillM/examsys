@@ -73,7 +73,7 @@ require_once '../../classes/questionutils.class.php';
     $order = 'leadin';
     $direction = 'asc';
   }
-  $team = $_GET['team'];
+  $team = $_GET['teamID'];
   //$team_sql = "%" . $_GET['team'] . "%";
   
   $module = '';
@@ -132,7 +132,8 @@ require_once '../../classes/questionutils.class.php';
     }
     $stmt->close();
   } else {
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['warningnoquestion'] . " <strong>" . $_GET['team'] . ".</td></tr></table>\n";
+    $team=module_utils::get_moduleID($_GET['teamID'],$mysqli);
+    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['warningnoquestion'] . " <strong>" . $team . ".</td></tr></table>\n";
   }
   $mysqli->close();
 ?>

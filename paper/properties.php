@@ -150,7 +150,7 @@ if (isset($_POST['Submit'])) {
     }
     
     if (($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and $userObject->has_role('Admin')) or !$configObject->get('cfg_summative_mgmt') or $paper_type != '2') {
-      $local_time = new DateTimeZone($cfg_timezone);
+      $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
       $target_timezone = new DateTimeZone($_POST['timezone']);
       
       $null_start_date = false;
@@ -508,7 +508,7 @@ if (isset($_POST['Submit'])) {
   $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $timezone, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $password, $crypt_name);
   $result->fetch();
   $result->close();
-  $local_time = new DateTimeZone($cfg_timezone);
+  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   $target_timezone = new DateTimeZone($timezone);
   
   if ($start_date != '') {
