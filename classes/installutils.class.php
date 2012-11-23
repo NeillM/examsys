@@ -39,8 +39,8 @@ Class InstallUtils {
   public static $warnings;
 
   public static $cfg_company;
-  public static $configObject->get('cfg_short_date');
-  public static $configObject->get('cfg_long_date_time');
+  public static $cfg_short_date;
+  public static $cfg_long_date_time;
   public static $cfg_timezone;
   public static $cfg_tmpdir;
 
@@ -50,7 +50,7 @@ Class InstallUtils {
   public static $cfg_db_username;
   public static $cfg_db_password;
   public static $cfg_db_charset;
-  public static {$configObject->get('cfg_page_charset')};
+  public static $cfg_page_charset;
 
   public static $cfg_db_student_user;
   public static $cfg_db_student_passwd;
@@ -208,7 +208,7 @@ Class InstallUtils {
     //check admin database user name and password and create the connection
     self::$cfg_db_host = $_POST['mysql_db_host'];
     self::$cfg_db_charset = $_POST['mysql_db_charset'];
-    self::{$configObject->get('cfg_page_charset')} = $_POST['page_charset'];
+    self::$cfg_page_charset = $_POST['page_charset'];
     self::$cfg_db_port = $_POST['mysql_db_port'];
     self::$cfg_db_name = $_POST['mysql_db_name'];
     self::$db_admin_username = $_POST['mysql_admin_user'];
@@ -219,8 +219,8 @@ Class InstallUtils {
 
     self::$cfg_SysAdmin_username = $_POST['SysAdmin_username'];
 
-    self:: $configObject->get('cfg_short_date') = $_POST['cfg_short_date'];
-    self::$configObject->get('cfg_long_date_time') = $_POST['cfg_long_date_time'];
+    self::$cfg_short_date = $_POST['cfg_short_date'];
+    self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
     self::$cfg_tmpdir = $_POST['tmpdir'];
 
@@ -1072,11 +1072,11 @@ require \$root . '/include/path_functions.inc.php';
 
 \$rogo_version = '{rogo_version}';
 \$cfg_web_root = get_root_path() . '/';
-\{$configObject->get('cfg_root_path')} = rtrim('/' . trim(str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/'), '/');
+\$cfg_root_path = rtrim('/' . trim(str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/'), '/');
 \$protocol = 'https://';
-\{$configObject->get('cfg_page_charset')} 	   = '{cfg_page_charset}';
+\$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
-\ $configObject->get('cfg_academic_year_start') = '07/01';
+\$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
 \$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
@@ -1107,8 +1107,8 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_db_inv_user = '{cfg_db_inv_user}';
   \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
   // Date formats in MySQL DATE_FORMAT format
-  \ $configObject->get('cfg_short_date') = '{cfg_short_date}';
-  \$configObject->get('cfg_long_date_time') = '{cfg_long_date_time}';
+  \$cfg_short_date = '{cfg_short_date}';
+  \$cfg_long_date_time = '{cfg_long_date_time}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 
@@ -1138,7 +1138,7 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_js_root = <<< SCRIPT
 <script type="text/javascript">
   if (typeof cfgRootPath == 'undefined') {
-    var cfgRootPath = '\{$configObject->get('cfg_root_path')}';
+    var cfgRootPath = '\$cfg_root_path';
   }
 </script>
 SCRIPT;
@@ -1147,21 +1147,21 @@ SCRIPT;
   \$cfg_editor_name = 'tinymce';
   \$cfg_editor_javascript = <<< SCRIPT
 \$cfg_js_root
-<script type="text/javascript" src="\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
+<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
 SCRIPT;
 
 //Server specific configuration based on hostname.
 switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   case 'rogo.local':
-    \$configObject->get('cfg_install_type') = ' (local)';
+    \$cfg_install_type = ' (local)';
     break;
   case 'rogotest.local':
-    \$configObject->get('cfg_install_type') = ' (local testing)';
+    \$cfg_install_type = ' (local testing)';
     error_reporting(E_ALL);
     break;
   default:
-    \$configObject->get('cfg_install_type') = '';
+    \$cfg_install_type = '';
     error_reporting(0);
     break;
 }
@@ -1189,7 +1189,7 @@ CONFIG;
     $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
     $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
     $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
-    $config = str_replace('{cfg_page_charset}', self::{$configObject->get('cfg_page_charset')}, $config);
+    $config = str_replace('{cfg_page_charset}', self::$cfg_page_charset, $config);
     $config = str_replace('{cfg_company}', self::$cfg_company, $config);
 
     $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);
@@ -1211,8 +1211,8 @@ CONFIG;
     $config = str_replace('{cfg_support_email}', self::$cfg_support_email, $config);
     $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
 
-    $config = str_replace('{cfg_short_date}', self:: $configObject->get('cfg_short_date'), $config);
-    $config = str_replace('{cfg_long_date_time}', self::$configObject->get('cfg_long_date_time'), $config);
+    $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
+    $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
 
