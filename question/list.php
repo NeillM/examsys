@@ -69,9 +69,9 @@ if (isset($_GET['checked'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogo: <?php echo $string['questionbank'] . ' ' . $cfg_install_type; ?></title>
+  <title>Rogo: <?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -157,7 +157,7 @@ if (isset($_GET['checked'])) {
   $hits = 0;
   $display_no = 0;
   
-  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, locked, status FROM (users, questions, questions_modules)";
+  $query_string = "SELECT questions.q_id, title, initials, surname, ownerID, leadin_plain AS leadin, q_type, q_media, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, status FROM (users, questions, questions_modules)";
   if ($keyword != '%' and $keyword != '') {
   	$query_string .= " LEFT JOIN keywords_question ON questions.q_id=keywords_question.q_id";
   }

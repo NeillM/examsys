@@ -752,7 +752,7 @@ class ST_QTI12_Material // <material>
     global $import_directory;
     global $q_warnings;
     global $q_errors;
-    global $cfg_web_root;
+    global $configObject
     global $file;
     global $wct;
     global $load_params;

@@ -149,9 +149,8 @@ if (isset($_POST['Submit'])) {
       $hide_if_unanswered = '0';
     }
     
-    if (($cfg_summative_mgmt and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$cfg_summative_mgmt or $paper_type != '2') {
-      $local_time = new DateTimeZone($cfg_timezone);
-      $target_timezone = new DateTimeZone($_POST['timezone']);
+        if (($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or!$configObject->get('cfg_summative_mgmt') or  $paper_type != '2') {
+  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));      $target_timezone = new DateTimeZone($_POST['timezone']);
       
       $null_start_date = false;
       if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
@@ -322,7 +321,7 @@ if (isset($_POST['Submit'])) {
     $password = trim($_POST['password']);
     $paperID = $_POST['paperID'];
     
-    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
+    if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
       $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
       $editProperties->bind_param('ssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
       $editProperties->execute();
@@ -432,7 +431,7 @@ if (isset($_POST['Submit'])) {
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
     
     <title><?php echo $string['edittitle']; ?></title>
     
@@ -475,7 +474,7 @@ if (isset($_POST['Submit'])) {
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
     
     <title><?php echo $string['edittitle']; ?></title>
   </head>
@@ -508,7 +507,7 @@ if (isset($_POST['Submit'])) {
   $result->bind_result($display_students_response, $display_correct_answer, $display_question_mark, $display_feedback, $hide_if_unanswered, $paper_title, $paper_type, $start_date, $end_date, $timezone, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $folder, $labs, $rubric, $calculator, $externals, $exam_duration, $calendar_year, $internal_reviewers, $external_review_deadline, $internal_review_deadline, $sound_demo, $password, $crypt_name);
   $result->fetch();
   $result->close();
-  $local_time = new DateTimeZone($cfg_timezone);
+  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   $target_timezone = new DateTimeZone($timezone);
   
   if ($start_date != '') {
@@ -523,7 +522,7 @@ if (isset($_POST['Submit'])) {
     $end_date = $end_date->format("Y/m/d H:i:s");
   }
   
-if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
+if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
   $sum_disabled = ' disabled'; 
 } else {
   $sum_disabled = ''; 
@@ -534,9 +533,9 @@ if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array(
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['propertiestitle'] . ' ' . $cfg_install_type; ?></title>
+  <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <style type="text/css">
@@ -845,11 +844,11 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '2') {
-       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "</a> " . $string['onlyonexamday'] . "</td></tr>\n";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "</a> " . $string['onlyonexamday'] . "</td></tr>\n";
      } elseif ($paper_type == '4') {
-       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/osce/\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/osce/</a> " . $string['onlyonexamday'] . "</td></tr>\n";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/</a> " . $string['onlyonexamday'] . "</td></tr>\n";
      } else {
-       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/user_index.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/user_index.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
+       echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/user_index.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
      }
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper_title\" /><input type=\"hidden\" name=\"original_paper_title\" value=\"$paper_title\"><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
    ?>
@@ -1118,7 +1117,7 @@ if ($paper_type != '4' and $paper_type != '5') {
 <tr>
 <td style="text-align:center; vertical-align:top" colspan="2">
 <?php
-    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role('Admin') and !$userObject->has_role('SysAdmin')) {
+    if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role('Admin') and !$userObject->has_role('SysAdmin')) {
       $sum_disabled = ' disabled'; 
     } else {
       $sum_disabled = ''; 
@@ -1359,7 +1358,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
     echo "</td>\n";
     
-    echo "<td>" . output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $mysqli) . "</td></tr>\n";
+    echo "<td>" . output_labs($labs, $configObject->get('cfg_summative_mgmt'), $paper_type, $userObject, $mysqli) . "</td></tr>\n";
 
   ?>
   </td></tr>
@@ -1390,7 +1389,7 @@ if ($paper_type != '4' and $paper_type != '5') {
   $result->fetch();
   $result->close();
   if ($sct_no > 0) {
-    echo '<a href="' . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '" target="_blank" style="color:blue">' . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '</a>';
+    echo '<a href="' . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '" target="_blank" style="color:blue">' . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_login.php?paperID=' . $_GET['paperID'] . '</a>';
   }
 
 ?></td></tr>

@@ -51,9 +51,9 @@ require_once '../include/staff_auth.inc';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō<?php echo ' ' . $cfg_install_type; ?></title>
+  <title>Rogō<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -62,7 +62,7 @@ require_once '../include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
   
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script language="JavaScript">
     function illegalChar(codeID) {
@@ -158,9 +158,9 @@ require_once '../include/staff_auth.inc';
   </tr>
 </table>
 <?php
-  $as_pos = strpos($cfg_install_type,' as ');
+  $as_pos = strpos($configObject->get('cfg_install_type'),' as ');
   if ($as_pos !== false) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Locked\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($cfg_install_type, ($as_pos+4)) . "</div></td></tr></table>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:32px\"><div class=\"greywarn\"><img src=\"../artwork/agent.png\" width=\"28\" height=\"28\" alt=\"Locked\" style=\"position:relative; left:6px; top:1px\" /></div></td><td><div class=\"greywarn\">&nbsp;&nbsp;" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
   }
 ?>
 <div style="padding-left:6px; padding-right:14px">
@@ -305,7 +305,7 @@ require_once '../include/staff_auth.inc';
     echo '<br clear="left" /><br />';
 
     // -- Display papers not assigned to a module -------------------
-    $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'$cfg_short_date') AS start_date, DATE_FORMAT(start_date,'$cfg_short_date %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_ownerID=? AND idMod is NULL AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
+    $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,' {$configObject->get('cfg_short_date')}') AS start_date, DATE_FORMAT(start_date,' {$configObject->get('cfg_short_date')} %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_ownerID=? AND idMod is NULL AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
     $result->bind_param('i', $userObject->get_user_ID());
     $result->execute();
     $result->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);

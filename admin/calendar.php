@@ -58,9 +58,9 @@ function echoButtons($year) {
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-<title>Rogō: <?php echo $string['calendar'] . ' ' . $cfg_install_type; ?></title>
-<?php echo $cfg_js_root ?>
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+<title>Rogō: <?php echo $string['calendar'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+<?php echo $configObject->get('cfg_js_root') ?>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script language="JavaScript">
   function go() {

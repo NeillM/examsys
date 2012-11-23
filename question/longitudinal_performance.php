@@ -34,9 +34,9 @@ check_var('q_id', 'GET', true, false);
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['longitudinalperformance'] .  ' ' . $cfg_install_type; ?></title>
+  <title><?php echo $string['longitudinalperformance'] .  ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -79,7 +79,7 @@ check_var('q_id', 'GET', true, false);
 <?php
   $q_id = (int)$_GET['q_id'];
 
-  $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$cfg_long_date_time\") AS locked, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
+  $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$configObject->get('cfg_long_date_time')\") AS locked, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
   $question_data->bind_param('i', $q_id);
   $question_data->execute();
   $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_type, $std, $status);

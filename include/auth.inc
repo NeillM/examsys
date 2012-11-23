@@ -26,10 +26,10 @@
 
 
 function display_notice($title, $msg, $icon, $title_color = 'black') {
-  global $cfg_root_path, $cfg_page_charset;
+  global $configObject;
 
-  echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset=$cfg_page_charset\" />\n<title>$title</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$cfg_root_path}/css/notice.css\" />\n</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"" . $cfg_root_path . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
+  echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>$title</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
+  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"" . $configObject->get('cfg_root_path') . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 style=\"color:$title_color\">$title</h1>\n";
   echo "<hr />\n<p>$msg</p>";
 }
@@ -42,13 +42,25 @@ function display_notice($title, $msg, $icon, $title_color = 'black') {
  *
  */
 function access_denied($message, $output_header = false, $output_footer = true) {
-  global $mysqli, $string, $cfg_root_path;
+  global $mysqli, $string, $configObject;
+
+  display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
   if ($output_header == true) {
-    Header("WWW-authenticate: basic realm=\"Rogo\"");
-    Header("HTTP/1.0 401 Unauthorised");
+print <<<END
+
+<div>
+<form method="POST">
+<p>Username:<input type="text" size="20" name="PHP_USER"><br /></p>
+<p>Password:<input type="password" size="20" name="PHP_PW"><br /></p>
+<p><input type="submit" name="submit-UserPW" value="Login"><br /></p>
+</form>
+</div>
+END;
+
+
+
   }
-  display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
   if ($output_footer) {
     echo "\n</body>\n</html>";
@@ -83,15 +95,8 @@ require_once 'ldap.php';
  */
 
 function db_userlookup($u, $db, $useridlookup = false) {
-  //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
-  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
-  global $cfg_db_admin_user, $cfg_db_admin_passwd;
-  global $cfg_db_staff_user, $cfg_db_staff_passwd;
-  global $cfg_db_student_user, $cfg_db_student_passwd;
-  global $cfg_db_external_user, $cfg_db_external_passwd;
-  global $cfg_db_inv_user, $cfg_db_inv_passwd;
+  //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string;
 
-  global $db_errors, $cfg_install_type, $cfg_db_database, $string;
 
   if ($u == '') {
     return false;
@@ -122,30 +127,32 @@ function db_userlookup($u, $db, $useridlookup = false) {
   return array($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username);
 }
 
-function db_change_user($db,$userObject) {
+function db_change_user($db,$userObj) {
 
 
-//  global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string;
-  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
-  global $cfg_db_admin_user, $cfg_db_admin_passwd;
-  global $cfg_db_staff_user, $cfg_db_staff_passwd;
-  global $cfg_db_student_user, $cfg_db_student_passwd;
-  global $cfg_db_external_user, $cfg_db_external_passwd;
-  global $cfg_db_inv_user, $cfg_db_inv_passwd;
+//  global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string;
+  $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
-  global $db_errors, $cfg_install_type, $cfg_db_database, $string;
+  global $configObject;
+  $arr=$configObject->get($getback);
+  foreach($arr as $k=>$v) {
+    ${$k}=$v;
+  }
+    global $db_errors, $string;
 
-  $userroles = $userObject->old_getuserroles();
+
+
+  $userroles = $userObj->old_getuserroles();
   //select the aproprate database user
-  if ($userObject->has_role('SysAdmin')) {
+  if ($userObj->has_role('SysAdmin')) {
     $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-  } else if ($userObject->has_role(array('Staff','Admin'))) { // Process staff first to get higher priority than students
+  } else if ($userObj->has_role(array('Staff','Admin'))) { // Process staff first to get higher priority than students
     $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
-  } else if ($userObject->has_role('Student')) {
+  } else if ($userObj->has_role('Student')) {
     $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-  } else if ($userObject->has_role('External Examiner')) {
+  } else if ($userObj->has_role('External Examiner')) {
     $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
-  } else if ($userObject->has_role('Invigilator')) {
+  } else if ($userObj->has_role('Invigilator')) {
     $result = $db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
   } else {
     $result = false;
@@ -158,20 +165,15 @@ function db_change_user($db,$userObject) {
   return true;
 }
 
-function db_auth($u, $p, $db, $changeuser = true, $userObject) {
+function db_auth($u, $p, $db, $changeuser = true, $userObj) {
   // return 0 if password or user missing, -1 if no user in table, -2 if password doesnt match, -3 if cant change user
 
 
-  //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $cfg_install_type, $cfg_db_database, $string, $cfg_encrypt_salt;
-  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
-  global $cfg_db_admin_user, $cfg_db_admin_passwd;
-  global $cfg_db_staff_user, $cfg_db_staff_passwd;
-  global $cfg_db_student_user, $cfg_db_student_passwd;
-  global $cfg_db_external_user, $cfg_db_external_passwd;
-  global $cfg_db_inv_user, $cfg_db_inv_passwd;
+  //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string, $cfg_encrypt_salt;
 
-  global $db_errors, $cfg_install_type, $cfg_db_database, $string,$cfg_encrypt_salt,$cfg_db_database;
 
+  global $db_errors, $string;
+global $configObject;
 
   if ($u == '') {
     return 0;
@@ -186,7 +188,7 @@ function db_auth($u, $p, $db, $changeuser = true, $userObject) {
   $array = db_userlookup($u, $db);
   list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = $array;
 
-  $userObject->old_load($array);
+  $userObj->old_load($array);
 
   if ($record_no > 0) {
 
@@ -196,7 +198,7 @@ function db_auth($u, $p, $db, $changeuser = true, $userObject) {
       $encrypt_type = 'SHA-512';
     }
 
-    $encrypt_password = encpw($cfg_encrypt_salt, $u, $p, $encrypt_type);
+    $encrypt_password = encpw($configObject->get('cfg_encrypt_salt'), $u, $p, $encrypt_type);
 
     if ($encrypt_password == $password) {
       if ($encrypt_type == 'MD5') { // Re-encrypt MD5 passwords using SHA-512.
@@ -207,7 +209,7 @@ function db_auth($u, $p, $db, $changeuser = true, $userObject) {
         $stmt->close();
       }
 
-      if ($userObject->has_role('Staff') and count($split_username) > 1) {
+      if ($userObj->has_role('Staff') and count($split_username) > 1) {
         //for Sysadmin only 
         if ($split_username[1] == 'staff') {
           //set the role to staff
@@ -215,15 +217,15 @@ function db_auth($u, $p, $db, $changeuser = true, $userObject) {
         } elseif ($split_username[1] == 'demo') {
           //set the role to demo: this will anonomise any user data for public demos
           $userroles .= ',Demo';
-        } elseif ($userObject->has_role('SysAdmin')) {
+        } elseif ($userObj->has_role('SysAdmin')) {
           // Look up all the authentication details of the user you are pretending to log in as.
           list($password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username) = db_userlookup($split_username[1], $db);
-          $cfg_install_type .= " " . $string['as'] . " $title $surname";
+       //   $configObject->get('cfg_install_type') .= " " . $string['as'] . " $title $surname";
         }
       }
 
       if ($changeuser) {
-        $ret2 = db_change_user($db,$userObject);
+        $ret2 = db_change_user($db,$userObj);
         if ($ret2 === false) {
           $ret = -3;
         } else {

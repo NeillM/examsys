@@ -207,7 +207,7 @@ Class webServiceRestAPI extends restAPI {
 
 
   public function getModulePaperList($team) {
-    global $protocol, $cfg_root_path;
+    global $protocol, $configObject->get('cfg_root_path');
     $moduleSQL='';
     $moduleSQL .= " (moduleID LIKE ? OR  moduleID LIKE ? OR  moduleID LIKE ? or  moduleID LIKE ?)";
     $typeSQL = " paper_type!='2'";
@@ -233,8 +233,8 @@ Class webServiceRestAPI extends restAPI {
         $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
-        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/user_index.php?id=' . $crypt_name;
+        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;
@@ -300,7 +300,7 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function getOwnerPaperList($username, $types) {
-    global $protocol, $cfg_root_path;
+    global $protocol, $configObject->get('cfg_root_path');
         
     $tmp_userID = $this->get_user_ID($username, true);
     if ($tmp_userID == '') {
@@ -358,8 +358,8 @@ Class webServiceRestAPI extends restAPI {
         $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
-        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/paper/details.php?paperID=' . $property_id;
-        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/user_index.php?id=' . $crypt_name;
+        $papers[$paper_no]['staff_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $property_id;
+        $papers[$paper_no]['student_url'] = $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/user_index.php?id=' . $crypt_name;
         $papers[$paper_no]['start_date'] = $start_date;
         $papers[$paper_no]['end_date'] = $end_date;
         $papers[$paper_no]['created'] = $created;

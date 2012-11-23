@@ -43,7 +43,7 @@ if (isset($_POST['submit'])) {
   $result->execute();
   $result->close();
   
-  echo "<html>\n<head><meta http-equiv=\"content-type\" content=\"text/html;charset={$cfg_page_charset}\" /><title>Error Details</title></head>\n<body onload=\"window.opener.location='sys_error_list.php'; window.close();\"></body>\n<html>\n";
+  echo "<html>\n<head><meta http-equiv=\"content-type\" content=\"text/html;charset={{$configObject->get('cfg_page_charset')}}\" /><title>Error Details</title></head>\n<body onload=\"window.opener.location='sys_error_list.php'; window.close();\"></body>\n<html>\n";
   exit;
 } else {
   $result = $mysqli->prepare("SELECT id FROM sys_errors WHERE errstr=? AND errfile=? AND errline=?");
@@ -61,7 +61,7 @@ $variables = unserialize(base64_decode($variables));
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 <title><?php printf($string['errordetails'], $error_id); ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />

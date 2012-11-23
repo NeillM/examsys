@@ -30,7 +30,7 @@ if (isset($_POST['submit'])) {
   $session_flag = false;
 
   if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
-    if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . '_load_objectives.txt'))  {
+    if (!move_uploaded_file($_FILES['txtfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt'))  {
       echo uploadError($_FILES['txtfile']['error']);
       exit;
     } else {
@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
       $result->close();
       $identifier = $largest + 1;
       
-      $lines = file($cfg_tmpdir . $userObject->get_user_ID() . '_load_objectives.txt');
+      $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
       foreach ($lines as $separate_line) {
 
         if (substr($separate_line,0,1) == '#') {   // Sub-heading
@@ -85,8 +85,8 @@ if (isset($_POST['submit'])) {
     }
   }
   
-  unlink($cfg_tmpdir . $userObject->get_user_ID() . '_load_objectives.txt');
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/mapping/sessions_list.php?module=" . $_POST['module']);
+  unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['module']);
 } else {
   //display the form
 ?>
@@ -94,8 +94,8 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title>Rogo: <?php echo $string['importfromfile'] . ' ' . $cfg_install_type; ?></title>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title>Rogo: <?php echo $string['importfromfile'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />

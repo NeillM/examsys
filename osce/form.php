@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   // Redirect back to the class list to get the next student.
-  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/osce/class_list.php?id=" . $_GET['id']);
+  header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
 } else {
   // Get the module ID and calendar year of the OSCE station.
   if (isset($_GET['username']) and $_GET['username'] == 'test') {
@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
 <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title><?php echo $string['osceform']; ?></title>
   

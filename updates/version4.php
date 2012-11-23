@@ -78,7 +78,7 @@ function gen_random_salt() {
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
     <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
 
@@ -716,8 +716,8 @@ if (!isset($_POST['update'])) {
 
   // 26/08/2011 - Add date and time formats to config file.
   $new_cfg_str[] =  "// Date formats in MySQL DATE_FORMAT format\n";
-  $new_cfg_str[] =  "  \$cfg_short_date = '%m/%d/%y';\n";
-  $new_cfg_str[] =  "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
+  $new_cfg_str[] =  "  \ {$configObject->get('cfg_short_date')} = '%m/%d/%y';\n";
+  $new_cfg_str[] =  "  \$configObject->get('cfg_long_date_time') = '%m/%d/%Y %H:%i';\n";
   $new_cfg_str[] =  "  \$cfg_timezone = 'Europe/London';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
@@ -1736,7 +1736,7 @@ if (!isset($_POST['update'])) {
   // 19/01/2012 - Add URL root to config file.
   $new_cfg_str = array();
   $new_cfg_str[] = "\$cfg_web_root = get_root_path() . '/';\n";
-  $new_cfg_str[] = "\$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
+  $new_cfg_str[] = "\{$configObject->get('cfg_root_path')} = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
 
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
@@ -1782,7 +1782,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "\$cfg_js_root = <<< SCRIPT\n";
   $new_cfg_str[] = "<script type=\"text/javascript\">\n";
   $new_cfg_str[] = "if (typeof cfgRootPath == 'undefined') {\n";
-  $new_cfg_str[] = "var cfgRootPath = '\$cfg_root_path';\n";
+  $new_cfg_str[] = "var cfgRootPath = '\{$configObject->get('cfg_root_path')}';\n";
   $new_cfg_str[] = "}\n";
   $new_cfg_str[] = "</script>\n";
   $new_cfg_str[] = "SCRIPT;\n\n";
@@ -1816,8 +1816,8 @@ if (!isset($_POST['update'])) {
     $new_cfg_str = array();
     $new_cfg_str[] = "\$cfg_editor_javascript = <<< SCRIPT\n";
     $new_cfg_str[] = "\$cfg_js_root\n";
-    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
-    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
+    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>\n";
+    $new_cfg_str[] = "<script type=\"text/javascript\" src=\"\{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config.js\"></script>\n";
     $new_cfg_str[] = "SCRIPT;\n";
 
     $index = 0;
@@ -1862,7 +1862,7 @@ if (!isset($_POST['update'])) {
   // 19/01/2012 - Add default install type to config file.
   $new_cfg_str = array();
   $new_cfg_str[] = "  default:\n";
-  $new_cfg_str[] = "    \$cfg_install_type = '';\n";
+  $new_cfg_str[] = "    \$configObject->get('cfg_install_type') = '';\n";
   $new_cfg_str[] = "    error_reporting(0);\n";
   $new_cfg_str[] = "    break;\n";
 
@@ -1993,7 +1993,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 24/02/2012 - Add new page character set to configuration file.
-  $new_cfg_str =  array("\$cfg_page_charset = 'UTF-8';\n");
+  $new_cfg_str =  array("\{$configObject->get('cfg_page_charset')} = 'UTF-8';\n");
   $cfg = file($cfg_web_root . 'config/config.inc.php');
 
   //remove refrances to old vars
@@ -3394,7 +3394,7 @@ if (!isset($_POST['update'])) {
 
   // 24/04/2012 - Add temp directory specification to config file.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_tmpdir = '/tmp/';\n";
+  $new_cfg_str[] =  "\ $configObject->get('cfg_tmpdir') = '/tmp/';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
   foreach ($cfg as $line) {
@@ -4042,7 +4042,7 @@ if (!isset($_POST['update'])) {
 
   // 03/08/2012 - Add session change over date.
   $new_cfg_str = array();
-  $new_cfg_str[] =  "\$cfg_academic_year_start = '07/01';\n";
+  $new_cfg_str[] =  "\ $configObject->get('cfg_academic_year_start') = '07/01';\n";
   $cfg = file($cfg_web_root . 'config/config.inc.php');
   $found = false;
   foreach ($cfg as $line) {

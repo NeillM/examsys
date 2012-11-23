@@ -44,7 +44,7 @@ if (isset($_POST['moduleID'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['folderproperties']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -184,7 +184,7 @@ if (isset($_POST['Submit'])) {
   $folder_team = $_POST['folder_team'];
   
 } else {
-  $result = $mysqli->prepare("SELECT folders.id, name, color, DATE_FORMAT(created, '$cfg_long_date_time'), title, initials, surname FROM folders, users WHERE folders.ownerID=users.id AND folders.id=?");
+  $result = $mysqli->prepare("SELECT folders.id, name, color, DATE_FORMAT(created, '{$configObject->get('cfg_long_date_time')}'), title, initials, surname FROM folders, users WHERE folders.ownerID=users.id AND folders.id=?");
   $result->bind_param('i', $_GET['folder']);
   $result->execute();
   $result->bind_result($folder_id, $full_path, $color, $created, $title, $initials, $surname);

@@ -29,7 +29,7 @@
   $summative_lock = 0; 
   
   function marks_from_file($fileName) {
-    global $mysqli, $cfg_tmpdir;
+    global $mysqli,  $configObject->get('cfg_tmpdir');
   
     // Get properties of the paper.
     $result = $mysqli->prepare("SELECT property_id, calendar_year, start_date FROM properties WHERE property_id=?");
@@ -40,7 +40,7 @@
     $result->close();
     
     if ($property_id == '') {   // Paper could not be found, exit.
-      unlink($cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+      unlink( $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
       exit;    
     }
     $moduleIDs=Paper_utils::get_modules($_GET['paperID'], $mysqli);
@@ -142,17 +142,17 @@
 
   if (isset($_POST['submit']) and $_POST['submit']) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . "_spotter_marks.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . "_spotter_marks.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
-        marks_from_file($cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
-        unlink($cfg_tmpdir . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+        marks_from_file( $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
+        unlink( $configObject->get('cfg_tmpdir') . $_SERVER['PHP_AUTH_USER'] . '_spotter_marks.csv');
         ?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html>
         <head>
-        <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+        <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
         <title><?php echo $string['loadofflinemarks']; ?></title>
         </head>
         <body>
@@ -167,7 +167,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title><?php echo $string['loadofflinemarks']; ?></title>
   

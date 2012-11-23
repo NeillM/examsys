@@ -72,7 +72,7 @@ function keywords_from_file($fileName, $userObj) {
 }
 
 if (isset($_POST['submit'])) {
-  $filename = $cfg_tmpdir . $userObject->get_user_ID() . '_keywords.txt';
+  $filename =$configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_keywords.txt';
   if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo  $configObject->get('cfg_page_charset') ?>" />
   
   <title><?php echo 'x'. $string['loadkeywords'] . 'x'; ?></title>
   

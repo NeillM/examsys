@@ -6,7 +6,7 @@
  * Time: 12:00
  * To change this template use File | Settings | File Templates.
  */
-global $cfg_web_root;
+global $configObject;
 require_once $cfg_web_root . 'classes/userutils.class.php';
 
 class lti_integration {
@@ -16,7 +16,7 @@ class lti_integration {
 
     // Load the appropriate  lti integration class (if new one found load that else use this)
 
-    global $cfg_web_root;
+    global $configObject;
     if (file_exists($cfg_web_root . 'config/integration/lti_integration.class.php')) {
       require_once $cfg_web_root . 'config/integration/lti_integration.class.php';
       return new lti_integration_extended();

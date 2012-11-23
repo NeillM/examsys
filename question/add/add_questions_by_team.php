@@ -31,7 +31,7 @@ require_once '../../classes/moduleutils.class.php';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo$configObject->get('cfg_page_charset') ?>" />
   
   <title>Add new Question</title>
   
@@ -109,7 +109,7 @@ require_once '../../classes/moduleutils.class.php';
   if ($order == 'leadin') $order = 'leadin_plain';
   
   
-  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM (questions, questions_modules) WHERE questions.q_id=questions_modules.q_id AND idMod=? AND deleted IS NULL ORDER BY $order $direction");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,{$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, questions_modules) WHERE questions.q_id=questions_modules.q_id AND idMod=? AND deleted IS NULL ORDER BY $order $direction");
   $stmt->bind_param('i', $_GET['teamID']);
   $stmt->execute();
   $stmt->store_result();

@@ -33,7 +33,7 @@
   $property_id = $_POST['property_id'];
   $session = $_POST['session'];
 
-  if (!$cfg_summative_mgmt or $_POST['paper_type'] != 'summative') {
+  if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
     if ((modulo($_POST['fyear'],4) == 0 and modulo($_POST['fyear'],100) != 0) or modulo($_POST['fyear'],400) == 0) {
       $leap = true;
     } else {
@@ -98,7 +98,7 @@
   
   $hash = $property_id . $created . $paper_ownerID;   // Generate the encrypted name of the paper.
 
-  if ($cfg_summative_mgmt and $_POST['paper_type'] == 'summative') {
+  if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     $result = $mysqli->prepare("UPDATE properties SET deleted=NULL, crypt_name=?, calendar_year=?, exam_duration=? WHERE property_id=? LIMIT 1");
     $result->bind_param('ssii', $hash, $session, $_POST['duration'], $property_id);
     $result->execute();  
@@ -132,7 +132,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>New Paper</title>
   <script type="text/javascript">
     function jumpToPaper() {

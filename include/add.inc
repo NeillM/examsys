@@ -25,7 +25,7 @@
 require_once 'add_edit.inc';
 
 function displayEditTab() {
-  global $string, $cfg_short_date;
+  global $string,  $configObject;
 
   $html = "<div id=\"editortab\" style=\"font-size:100%\">\n";
   $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; width:100%; background-color:#D6DFF7\">\n<tr><td>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:90%; width:252px\">\n<tr>";
@@ -35,7 +35,7 @@ function displayEditTab() {
   } else {
     $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_disabled.gif)\">" . $string['mapping'] . "</td>\n";
   }
-  $html .= "</tr></table>\n</td><td style=\"width:100%; background-color:#DFECFF; text-align:right; font-size:90%\"><strong>" . $string['created'] . "</strong>&nbsp;" . date(str_replace('%','',$cfg_short_date)) . "&nbsp;</td></tr>\n";
+  $html .= "</tr></table>\n</td><td style=\"width:100%; background-color:#DFECFF; text-align:right; font-size:90%\"><strong>" . $string['created'] . "</strong>&nbsp;" . date(str_replace('%','', $configObject->get('cfg_short_date'))) . "&nbsp;</td></tr>\n";
   $html .= "<tr><td colspan=\"2\" style=\"background-color:#1E3C7B\">&nbsp;</td></tr>\n</table>\n";
 
   return $html;
@@ -46,13 +46,13 @@ function redirect($p_id) {
   
   if (substr($p_id,0,5) == 'list:') {
     $type = substr($p_id,5);
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/question/list.php");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/question/list.php");
   } elseif ($p_id != '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/folder/details.php?module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/folder/details.php?module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
   } else {
-    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/");
+    header("location: " . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/");
   }
   $mysqli->close();
   exit;   // Stop script execution after the redirect.

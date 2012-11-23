@@ -144,7 +144,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
 }
 
 function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $mysqlidb, $preview_q_id=null) {
-  global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $cfg_root_path, $strong_on, $strong_off;
+  global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $configObject->get('cfg_root_path'), $strong_on, $strong_off;
   
   $strong_on = '';
   $strong_off = '';
@@ -503,7 +503,7 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
         ?>
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo $paper[$question]['q_media_width'] + 2; ?>" height="<?php echo $paper[$question]['q_media_height'] + 24; ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -515,8 +515,8 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
           write_string('<param name="salign" value="top" />');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
           write_string('<!--[if !IE]>-->');
-          write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo $paper[$question]['q_media_width'] + 2; ?>" height="<?php echo $paper[$question]['q_media_height'] + 24; ?>">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo $paper[$question]['q_media_width'] + 2; ?>" height="<?php echo $paper[$question]['q_media_height'] + 24; ?>">');
+          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -2083,10 +2083,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
     }
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="always" />');
-    write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/paper/hotspot_answer.swf" />');
+    write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/paper/hotspot_answer.swf" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-    write_string('<embed src="<?php echo $cfg_root_path ?>/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="<?php echo $configObject->get('cfg_root_path') ?>/paper/hotspot_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 301); ?>" height="<?php echo ($paper[$question]['q_media_height'] + 30); ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
   </script>
   </div>
@@ -2262,10 +2262,10 @@ function display_feedback($sessionid, $temp_userID, $paperID, $paper_type, $log_
   }
   write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" align="middle">');
   write_string('<param name="allowScriptAccess" value="always" />');
-  write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/paper/label_answer.swf" />');
+  write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/paper/label_answer.swf" />');
   write_string('<param name="quality" value="high" />');
   write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-  write_string('<embed src="<?php echo $cfg_root_path ?>/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+  write_string('<embed src="<?php echo $configObject->get('cfg_root_path') ?>/paper/label_answer.swf" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo ($paper[$question]['q_media_width'] + 250); ?>" height="<?php echo $tmp_height; ?>" swliveconnect="true" id="flash<?php echo $question_no; ?>" name="flash<?php echo $question_no; ?>" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
   write_string('</object>');
 <?php
 

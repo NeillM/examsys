@@ -31,7 +31,7 @@ require_once '../../classes/questionutils.class.php';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title>Rogō</title>
   
@@ -159,10 +159,10 @@ require_once '../../classes/questionutils.class.php';
       } else {
         $team_sql = '';
       }
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND (questions.ownerID=?$team_sql) AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND (questions.ownerID=?$team_sql) AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
       $result->bind_param('issssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     } else {
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked FROM (questions, options) WHERE questions.q_id=options.o_id AND questions.ownerID=? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $order $direction, q_id");
       $result->bind_param('issssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     }
     $result->execute();  

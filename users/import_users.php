@@ -35,8 +35,8 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['importusers'] . " $cfg_install_type"; ?></title>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['importusers'] . " $configObject->get('cfg_install_type')"; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -73,13 +73,13 @@
     flush();
 
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . "_new_cohort.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_new_cohort.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
 
-        $users = add_users_from_file($cfg_tmpdir . $userObject->get_user_ID() . '_new_cohort.csv');
-        unlink($cfg_tmpdir . $userObject->get_user_ID() . '_new_cohort.csv');
+        $users = add_users_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_new_cohort.csv');
+        unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_new_cohort.csv');
         if (isset($users['error'])) {
           echo "<p>" . $string['followingerrors'] . "</p><ul>";
           foreach ($users['error'] as $msg) {

@@ -26,7 +26,7 @@
   require '../../include/errors.inc';
   require '../../include/help.inc';
 
-  header('Content-Type: text/html; charset=' . $cfg_page_charset);
+  header('Content-Type: text/html; charset=' . {$configObject->get('cfg_page_charset')});
 
   if (isset($_POST['save_changes'])) {
     $tmp_title = $_POST['title'];
@@ -48,7 +48,7 @@
     <title>Rogo</title>
     <script language="JavaScript">
       function reloadHelp() {
-        window.top.location='<?php echo $cfg_root_path ?>/help/staff/index.php?id=<?php echo $page_id; ?>';
+        window.top.location='<?php echo $configObject->get('cfg_root_path') ?>/help/staff/index.php?id=<?php echo $page_id; ?>';
       }
     </script>
     </head>
@@ -65,7 +65,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>">
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
   
   <title>New Help Page</title>
   
@@ -81,7 +81,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     .subheading {font-weight:bold; font-style:italic}
   </style>
   
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
   <script language="JavaScript">

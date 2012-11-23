@@ -39,9 +39,9 @@ ob_start();
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title>Rogō: <?php echo $string['classtotals'] . ' ' . $cfg_install_type; ?></title>
+<title>Rogō: <?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -708,11 +708,11 @@ if ($language != 'en') {
       }
     }
   }
-  $scatter_file = fopen($cfg_tmpdir . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
+  $scatter_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
   fwrite($scatter_file,$scatter_data . "\n");
   fclose($scatter_file);
   
-  $distribution_file = fopen($cfg_tmpdir . $userObject->get_user_ID() . '_distribution.dat', 'w');         // Distribution data
+  $distribution_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');         // Distribution data
   fwrite($distribution_file, serialize($distribution) . "\n");
   fclose($distribution_file);
 

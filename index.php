@@ -30,6 +30,8 @@ require_once './include/staff_student_auth.inc';
 require_once './classes/networkutils.class.php';
 require_once './classes/paperutils.class.php';
 
+
+
 // Redirect External Exminers and Invigilators to their own areas.
   if ($userObject->has_role('External Examiner')) {
     header("location: reviews/");
@@ -158,12 +160,12 @@ if ($machineOK == true and $moduleOK == true) {
   if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     header("location: user_index.php?id=" . $paper_display[0]['crypt_name']);
   } elseif ($paper_no == 0) {
-    echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$cfg_page_charset}\" />\n<title>{$string['exams']}</title>\n";
+    echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>{$string['exams']}</title>\n";
 ?>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset; ?>" />
+<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>" />
 
 <title><?php echo $string['exams']; ?></title>
 
@@ -238,11 +240,11 @@ if ($machineOK == true and $moduleOK == true) {
 </style>
 <?php
     echo "</head>\n<body>\n";
-    echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$cfg_root_path}/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
+    echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/orange_alert_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 class=\"dkblue_header\" style=\"margin-left:60px\">" . $string['cannotfindexams'] . "</h1>\n"; 
 
     if ($userObject->has_role('Staff')) {
-      echo "<p style=\"margin-left:60px; color:#C00000\">" . $string['note1'] . " <img src=\"{$cfg_root_path}/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"staff/index.php\" style=\"color:blue\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
+      echo "<p style=\"margin-left:60px; color:#C00000\">" . $string['note1'] . " <img src=\"{$configObject->get('cfg_root_path')}/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"staff/index.php\" style=\"color:blue\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
     }
 
     echo "<hr noshade=\"noshade\" style=\"margin-left:60px; border:0px; height:1px; color:#C0C0C0; background-color:#C0C0C0; width:500px\" align=\"left\" />\n<p style=\"margin-left:60px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
@@ -271,7 +273,8 @@ if ($machineOK == true and $moduleOK == true) {
     echo "</li>\n";
     echo "<li>" . $string['Modules'] . " - \n";
     
-    
+
+
     $last_cal_year = '';
     $i = 0;
     $info = $mysqli->prepare("SELECT moduleID, calendar_year FROM modules_student, modules WHERE modules.id = modules_student.idMod AND userID = ? ORDER BY calendar_year DESC, moduleID");
@@ -313,7 +316,7 @@ if ($machineOK == true and $moduleOK == true) {
       }
       $papers = array();
       foreach ($staff_modules as $idMod => $moduleID) {
-        $paper_q = $mysqli->prepare("SELECT DISTINCT properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'$cfg_long_date_time') AS display_start_date, exam_duration, crypt_name, fullscreen, labs FROM properties LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_type='2' AND start_date > NOW() AND start_date < DATE_ADD(NOW(), INTERVAL 42 DAY) AND idMod = ?  AND deleted IS NULL AND retired IS NULL GROUP BY paper_title HAVING MAX(screen) > 0 ORDER BY paper_type, paper_title");
+        $paper_q = $mysqli->prepare("SELECT DISTINCT properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, exam_duration, crypt_name, fullscreen, labs FROM properties LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_type='2' AND start_date > NOW() AND start_date < DATE_ADD(NOW(), INTERVAL 42 DAY) AND idMod = ?  AND deleted IS NULL AND retired IS NULL GROUP BY paper_title HAVING MAX(screen) > 0 ORDER BY paper_type, paper_title");
         $paper_q->bind_param('i', $idMod);
         $paper_q->execute();
         $paper_q->store_result();
@@ -323,7 +326,6 @@ if ($machineOK == true and $moduleOK == true) {
         }
         $paper_q-> close();
       }
-
       if (count($papers) > 0) {
 ?>
         <div id="summ_test">
@@ -339,7 +341,7 @@ if ($machineOK == true and $moduleOK == true) {
           foreach ($paper_list as $paper) {
             $screen_plural = ($paper['screens'] > 1) ? 'screens' : 'screen';
             $start_hour = substr($paper['start_date'], 11, 2);
-            $start_warning = (intval($start_hour) < $cfg_hour_warning) ? display_warning(sprintf($string['startwarning'], $cfg_hour_warning)) : '';
+            $start_warning = (intval($start_hour) < $configObject->get('cfg_hour_warning')) ? display_warning(sprintf($string['startwarning'], $configObject->get('cfg_hour_warning'))) : '';
 
             $labs = get_labs($mysqli, $paper['labs']);
             $lab_html = display_labs($labs, $computer_lab_short, $string);
@@ -371,7 +373,7 @@ if ($machineOK == true and $moduleOK == true) {
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>" />
     
     <title><?php echo $string['exams']; ?></title>
     

@@ -67,7 +67,7 @@ require_once '../classes/dateutils.class.php';
 
 <div class="popup" style="z-index:20; display:none; font-size:90%; background-color:white; position:fixed; left:200px; top:100px; width:630px; height:320px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
-if ($cfg_summative_mgmt) {
+if ($configObject->get('cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
 } else {
   echo '<form method="post" action="../paper/copy.php">';
@@ -141,7 +141,7 @@ if ($cfg_summative_mgmt) {
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <?php
-if ($paper_type == '2' and $cfg_summative_mgmt) {
+if ($paper_type == '2' and $configObject->get('cfg_summative_mgmt')) {
   echo '<td align="center" colspan="5"><input type="button" style="width:100px; display_block" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" style="width:100px; display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 } else {
   echo '<td align="center" colspan="5"><input type="button" style="width:100px; display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" style="width:100px; display:block" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';

@@ -53,11 +53,11 @@ Class date_utils {
 	 * @return string
 	 */
 	static function get_academic_year($date) {
-    global $cfg_academic_year_start;
+    global  $configObject;
     
 		$date_as_time = strtotime($date);
-    if (isset($cfg_academic_year_start)) {
-      $start_this_year = strtotime(date('Y') . '/' . $cfg_academic_year_start);
+    if ($configObject->get('cfg_academic_year_start')!='') {
+      $start_this_year = strtotime(date('Y') . '/' .  $configObject->get('cfg_academic_year_start'));
     } else {
       $start_this_year = strtotime(date('Y') . '/' . self::$academic_year_start);
     }

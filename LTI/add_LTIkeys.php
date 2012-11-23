@@ -39,8 +39,8 @@ if (isset($_POST['submit'])) {
   <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>"/>
-    <title><?php echo $string['addltikeys'] . ' ' . $cfg_install_type; ?></title>
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+    <title><?php echo $string['addltikeys'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
     
     <link rel="stylesheet" href="../css/add_edit.css" type="text/css"/>
     

@@ -28,7 +28,7 @@ require '../../include/errors.inc';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title>Rogō</title>
   
@@ -99,7 +99,7 @@ require '../../include/errors.inc';
   if ($order == 'q_type') $order = 'CAST(q_type AS CHAR)';
   
   $question_array = array();
-  $result = $mysqli->prepare("SELECT question, q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'$cfg_short_date') AS display_date FROM papers RIGHT JOIN questions ON papers.question=questions.q_id WHERE questions.ownerID=? AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction");
+  $result = $mysqli->prepare("SELECT question, q_id, q_type, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date FROM papers RIGHT JOIN questions ON papers.question=questions.q_id WHERE questions.ownerID=? AND status != 'retired' AND deleted IS NULL ORDER BY $order $direction");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($question, $q_id, $q_type, $leadin, $q_media, $q_media_width, $q_media_height, $display_date);

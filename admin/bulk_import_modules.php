@@ -41,8 +41,8 @@ function returnTrueFalse($value) {
 <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['bulkmoduleimport'] . ' ' . $cfg_install_type; ?></title>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['bulkmoduleimport'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
@@ -70,7 +70,7 @@ function returnTrueFalse($value) {
 <?php
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . "_module_create.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
@@ -111,7 +111,7 @@ function returnTrueFalse($value) {
         $result->close();
 
         $modulesAdded = 0;
-        $lines = file($cfg_tmpdir . $userObject->get_user_ID() . "_module_create.csv");
+        $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
 
         $students = array();
         foreach ($lines as $separate_line) {
@@ -163,7 +163,7 @@ function returnTrueFalse($value) {
         }
       }
     }
-    unlink($cfg_tmpdir . $userObject->get_user_ID() . "_module_create.csv");
+    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
 
     echo "</ul>";
     echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_modules.php'\" style=\"width:100px\" /></div>\n";

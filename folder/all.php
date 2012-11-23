@@ -29,9 +29,9 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō<?php echo " $cfg_install_type"; ?></title>
+  <title>Rogō<?php echo " $configObject->get('cfg_install_type')"; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -44,7 +44,7 @@
   </style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script language="JavaScript">
     function displayCredits(){

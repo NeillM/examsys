@@ -93,7 +93,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
           $delete->execute();
           $delete->close();
           
-          $redirect_url = $protocol. $_SERVER['HTTP_HOST'] . $cfg_root_path . "/";
+          $redirect_url = $protocol. $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/";
           if ($userObject->has_role('External Examiner')) {
             $redirect_url .= "reviews/";
           } elseif ($userObject->has_role('Invigilator')) {
@@ -117,9 +117,9 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['resetpassword'] . " $cfg_install_type"; ?></title>
+  <title><?php echo $string['resetpassword'] . " $configObject->get('cfg_install_type')"; ?></title>
   
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />

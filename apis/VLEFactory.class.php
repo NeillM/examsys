@@ -29,7 +29,7 @@ require_once $cfg_web_root . 'classes/exceptions.inc.php';
 
 class VLEFactory {
   public static function GetVLEAPI($vleapi) {
-    global $cfg_web_root;
+    global $configObject;
 
     $classname = 'VLE_' . $vleapi;
     $classfile = 'VLE_' . $vleapi . '.class.php';

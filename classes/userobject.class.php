@@ -437,4 +437,74 @@ class UserObject {
     trigger_error('remove_staff_from_module not yet implimented', E_USER_WARNING);
   }
 
+  function load($userID) {
+    $stmt = $this->db->prepare("SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id=?");
+    $stmt->bind_param('i', $userID);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs);
+    $stmt->fetch();
+    $record_no = $stmt->num_rows();
+    $stmt->close();
+    if($record_no==0) {
+      return false;
+    }
+
+    if (strpos($this->userroles, 'SysAdmin') !== false) {
+      $this->roles['SysAdmin'] = 1;
+    }
+    if (strpos($this->userroles, 'Admin') !== false and strpos($this->userroles, 'SysAdmin') === false) {
+      $this->roles['Admin'] = 1;
+    }
+    if (strpos($this->userroles, 'Staff') !== false or strpos($this->userroles, 'Admin') !== false) { // Process staff first to get higher priority than students --no need
+      $this->roles['Staff'] = 1;
+    }
+    if (strpos($this->userroles, 'Student') !== false) {
+      $this->roles['Student'] = 1;
+    }
+    if (strpos($this->userroles, 'External Examiner') !== false) {
+      $this->roles['ExternalExaminer'] = 1;
+    }
+    if (strpos($this->userroles, 'Invigilator') !== false) {
+      $this->roles['Invigilator'] = 1;
+    }
+
+  }
+
+  function db_user_change() {
+/*    global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
+    global $cfg_db_admin_user, $cfg_db_admin_passwd;
+    global $cfg_db_staff_user, $cfg_db_staff_passwd;
+    global $cfg_db_student_user, $cfg_db_student_passwd;
+    global $cfg_db_external_user, $cfg_db_external_passwd;
+    global $cfg_db_inv_user, $cfg_db_inv_passwd;
+*/
+
+    global $db_errors, $cfg_db_database, $string;
+
+    global $configObject;
+    $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
+
+    global $configObject;
+    $arr=$configObject->get($getback);
+    foreach($arr as $k=>$v) {
+      ${$k}=$v;
+    }
+
+    $userroles = $this->old_getuserroles();
+    //select the aproprate database user
+    if ($this->has_role('SysAdmin')) {
+      $result = $this->db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
+    } else if ($this->has_role(array('Staff','Admin'))) { // Process staff first to get higher priority than students
+      $result = $this->db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
+    } else if ($this->has_role('Student')) {
+      $result = $this->db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
+    } else if ($this->has_role('External Examiner')) {
+      $result = $this->db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
+    } else if ($this->has_role('Invigilator')) {
+      $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
+    } else {
+      $result = false;
+    }
+  }
 }

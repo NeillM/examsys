@@ -46,7 +46,7 @@ foreach ($keyword_list as $individualID) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title>Keyword Deleted</title>
   
@@ -55,7 +55,7 @@ foreach ($keyword_list as $individualID) {
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
     $(function () {
-      window.opener.location.href = '<?php echo $cfg_root_path ?>/folder/list_keywords.php?module=<?php echo $_POST['module']; ?>';
+      window.opener.location.href = '<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php?module=<?php echo $_POST['module']; ?>';
       self.close();
     });
   </script>
@@ -71,7 +71,7 @@ foreach ($keyword_list as $individualID) {
 
 <div style="text-align:center">
 <form action="" method="get">
-<input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="javascript:self.opener.location.href='<?php echo $cfg_root_path ?>/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
+<input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="javascript:self.opener.location.href='<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
 </form>
 </div>
 </td></tr>

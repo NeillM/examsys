@@ -158,8 +158,8 @@ HTML;
   return $html;
 }
 
-function displayObjectivesMappingForm($paper_id, $db, $cfg_root_path) {
-  global $vle_api_cache;
+function displayObjectivesMappingForm($paper_id, $db,$cfg_root_path2) {
+  global $vle_api_cache,$configObject;
 
   //get module and session from paper id
   $modules_array = array();
@@ -204,10 +204,10 @@ QUERY;
       if (isset($class['objectives']) and count($class['objectives']) > 0) {
         $html .= "<div style=\"cursor:pointer; color:#316AC5; font-weight:bold; margin-top:6px\" onclick=\"showHide('$moduleid$id')\">";
         if($class['mapped'] == 0) {
-          $html .= "<img id=\"img_$moduleid$id\" src='$cfg_root_path/artwork/plus.png' />&nbsp;";
+          $html .= "<img id=\"img_$moduleid$id\" src='{$configObject->get('cfg_root_path')}/artwork/plus.png' />&nbsp;";
           $display = 'none';
         } else {
-          $html .= "<img id=\"img_$moduleid$id\" src='$cfg_root_path/artwork/minus.png' />&nbsp;";
+          $html .= "<img id=\"img_$moduleid$id\" src='{$configObject->get('cfg_root_path')}/artwork/minus.png' />&nbsp;";
           $display = 'block';
         }
 
@@ -232,7 +232,7 @@ QUERY;
         }
         $html .= "</div>\n";
       } else {
-        $html .= "<div style=\"color:#808080; font-weight:bold; margin-top:6px\"><img src='$cfg_root_path/artwork/grey_plus.gif' />&nbsp;";
+        $html .= "<div style=\"color:#808080; font-weight:bold; margin-top:6px\"><img src='{$configObject->get('cfg_root_path')}/artwork/grey_plus.gif' />&nbsp;";
         if($class['class_code'] != '') {
           $html .= $class['class_code'] . ' - ';
         }
@@ -392,7 +392,7 @@ $objsBySession_cache = array();
 $vle_api_cache = array(); // cache the vle api to save some queries
 
 function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $scope = 'latest') {
-  global $objsBySession_cache, $vle_api_cache, $cfg_short_date, $cfg_web_root;
+  global $objsBySession_cache, $vle_api_cache,  $configObject;
   $original_thisModuleid = $thisModuleid;
   $objsBySession = array();
 
@@ -419,15 +419,15 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
     } else {
       // Use Rogō's internally stored objectves
       if ($scope == 'all') {
-      	$sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? ORDER BY calendar_year, sess_id";
+      	$sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,' {$configObject->get('cfg_short_date')}') AS occurrence FROM sessions WHERE idMod = ? ORDER BY calendar_year, sess_id";
       	$stmt = $db->prepare($sql);
         $stmt->bind_param('i', $thisidMod);
       } elseif ($session == '' and $scope == 'latest') {
-        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,' {$configObject->get('cfg_short_date')}') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=(SELECT MAX(calendar_year) FROM objectives) ORDER BY sess_id";
         $stmt = $db->prepare($sql);
         $stmt->bind_param('i', $thisidMod);
       } else {
-        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,'$cfg_short_date') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=? ORDER BY sess_id";
+        $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,' {$configObject->get('cfg_short_date')}') AS occurrence FROM sessions WHERE idMod = ? AND calendar_year=? ORDER BY sess_id";
         $stmt = $db->prepare($sql);
         $stmt->bind_param('is', $thisidMod, $session);
       }

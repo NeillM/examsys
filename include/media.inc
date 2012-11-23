@@ -34,7 +34,7 @@ include_once $cfg_web_root . 'tools/getid3/getid3.php';
  *
  */
 function display_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false) {
-  global $cfg_root_path;
+  global $configObject;
 
   $html = '';
   
@@ -44,14 +44,14 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
   // Is the file an image or something else (e.g. RasMol)?
   if (in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
     if ($border_color == '') {
-      $html .= "<img src=\"{$cfg_root_path}/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top\" />";
+      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top\" />";
     } else {
-      $html .= "<img src=\"{$cfg_root_path}/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top; border: 1px solid $border_color\" />";
+      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top; border: 1px solid $border_color\" />";
     }
   } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-    $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"{$cfg_root_path}/media/$filename\">Audio Clip</a>";
+    $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"{$configObject->get('cfg_root_path')}/media/$filename\">Audio Clip</a>";
   } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
-    $html .= "<iframe src=\"{$cfg_root_path}/media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
+    $html .= "<iframe src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
   } elseif ($fn_parts['extension'] == 'flv') {
     if ($width == 0 or $height == 0) {
       $width = 320;
@@ -73,18 +73,18 @@ OBJEMBED;
     $html .= <<< OBJEMBED
 <object type="application/x-shockwave-flash" data="/paper/player_mp3_maxi.swf" width="200" height="20">
 <param name="wmode" value="transparent" />
-<param name="movie" value="{$cfg_root_path}/paper/player_mp3_maxi.swf" />
-<param name="FlashVars" value="mp3={$cfg_root_path}/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
+<param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" />
+<param name="FlashVars" value="mp3={$configObject->get('cfg_root_path')}/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
 </object>  
 OBJEMBED;
   } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-    $html .= "<embed src=\"{$cfg_root_path}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+    $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   } else {
-    $html .= "<embed src=\"{$cfg_root_path}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+    $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   }
   if ($imageid > -1 and !$locked) {
     $html .= <<< DELETE
-<a href="#" class="media-delete" rel="{$imageid}"><img class="align-bottom" src="{$cfg_root_path}/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
+<a href="#" class="media-delete" rel="{$imageid}"><img class="align-bottom" src="{$configObject->get('cfg_root_path')}/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
 <label class="hide"><input type="checkbox" id="delete_media{$imageid}" name="delete_media{$imageid}" /> Delete image {$imageid}</label>
 <input type="hidden" id="existing_media{$imageid}" name="existing_media{$imageid}" value="$filename" />
 
@@ -103,7 +103,7 @@ DELETE;
  *
  */
 function unique_filename($filename) {
-  global $cfg_web_root;
+  global $configObject;
   
   $ext = substr($filename, strrpos($filename, '.'));
   $fileno = date('U');
@@ -126,7 +126,7 @@ function unique_filename($filename) {
  *
  */
 function uploadFile($fileID) {
-  global $cfg_web_root;
+  global $configObject;
   
   $file_width = 0;
   $file_height = 0;
@@ -279,7 +279,7 @@ function uploadFile($fileID) {
 }
 
 function deleteMedia($filename) {
-  global $cfg_web_root;
+  global $configObject;
   
   if ($filename != '') {
     $file = $cfg_web_root . 'media/' . $filename;

@@ -31,7 +31,7 @@ require_once '../classes/dateutils.class.php';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title><?php echo $string['systeminformation']; ?></title>
   
@@ -140,7 +140,7 @@ require_once '../classes/dateutils.class.php';
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:400px">
 <tr><td colspan="2" class="sechead"><?php echo $string['application']; ?></td></tr>
 <tr><td><?php echo $string['version']; ?></td><td><?php echo $rogo_version; ?></td></tr>
-<tr><td><?php echo $string['webroot']; ?></td><td><?php echo $cfg_web_root; ?></td></tr>
+<tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root') ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $cfg_db_database; ?></td></tr>
 <?php
 if ($cfg_use_ldap == true) {

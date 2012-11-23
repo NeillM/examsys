@@ -33,9 +33,9 @@ set_time_limit(0);
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō: <?php echo $string['questionsearch'] . " $cfg_install_type"; ?></title>
+  <title>Rogō: <?php echo $string['questionsearch'] . " $configObject->get('cfg_install_type')"; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -300,9 +300,9 @@ if (isset($_POST['submit'])) {
   }
   
   if ($keywordsSQL == '') {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, options, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status FROM (questions, users, options, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
   } else {
-    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,'$cfg_short_date') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
+    $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status FROM (questions, users, keywords_question, options, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = options.o_id AND questions.q_id=keywords_question.q_id $keywordsSQL AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
   }
 
   $result = $mysqli->prepare($sql);

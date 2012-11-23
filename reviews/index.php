@@ -30,7 +30,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
   <title><?php echo $string['externalexaminerarea']; ?></title>
 
@@ -76,7 +76,7 @@
 <p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,'$cfg_short_date') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id=papers.paper AND externals LIKE ? GROUP BY paper");
+  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, DATE_FORMAT(external_review_deadline,'%Y%m%d') AS external_review_deadline, DATE_FORMAT(external_review_deadline,' {$configObject->get('cfg_short_date')}') AS display_deadline, crypt_name FROM (properties, papers) WHERE deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() or start_date IS NULL) AND properties.property_id=papers.paper AND externals LIKE ? GROUP BY paper");
   $tVar= '%'. $userObject->get_user_ID() . '%';
   $result->bind_param('s', $tVar);
   $result->execute();
@@ -84,7 +84,7 @@
   $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $display_deadline, $crypt_name);
   while ($result->fetch()) {
     $reviewed = '';
-    $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'$cfg_long_date_time') AS started FROM review_comments WHERE reviewer=? and q_paper=?");
+    $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'{$configObject->get('cfg_long_date_time')}') AS started FROM review_comments WHERE reviewer=? and q_paper=?");
     $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $log_results->execute();
     $log_results->store_result();

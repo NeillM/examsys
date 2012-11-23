@@ -94,7 +94,7 @@ if (isset($_POST['Submit'])) {
   ?>
     <html>
     <head>
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
     <title>Edit</title>
     <script language="JavaScript">
       function closeWindow() {
@@ -134,9 +134,9 @@ if (isset($_POST['Submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Properties<?php echo " $cfg_install_type"; ?></title>
+  <title>Properties<?php echo " $configObject->get('cfg_install_type')"; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">

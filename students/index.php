@@ -32,7 +32,7 @@ require '../classes/dateutils.class.php';
 // Redirect External Examiners if they are straying
 if ($userObject->has_role('External Examiner')) {
   if ($_SERVER['PHP_SELF'] != '/staff/index.php' and $_SERVER['PHP_SELF'] != '/reviews/index.php' and $_SERVER['PHP_SELF'] != '/reviews/start.php' and $_SERVER['PHP_SELF'] != '/reviews/finish.php') {
-    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . $cfg_root_path . "/reviews/");
+    header("location: " . $protocol. $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/");
   }
 }
 
@@ -173,9 +173,9 @@ for ($i = 0; $i < count($modules); $i++) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō<?php echo " $cfg_install_type"; ?></title>
+  <title>Rogō<?php echo " $configObject->get('cfg_install_type')"; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -299,9 +299,9 @@ if (isset($paper['password']) and $paper['password'] != '') {
 	    						<?php 
 
                     if ($paper['type'] == 'objectives') {
-                      echo $string['objectivesbased'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start']));
+                      echo $string['objectivesbased'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start']));
                     } elseif ($paper['type'] == 'questions') {
-                      echo $string['questionsbased'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start']));
+                      echo $string['questionsbased'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start']));
                     } else {
                       echo $paper['screens'] . ' ';
                       if ($paper['screens'] == 1) {
@@ -310,7 +310,7 @@ if (isset($paper['password']) and $paper['password'] != '') {
                         echo $string['screens'];
                       }
                       echo '<br />';
-                      echo date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['start'])) . ' ' . $string['to'] . ' ' . date(str_replace('%', '', $cfg_long_date_time), strtotime($paper['end']));
+                      echo date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start'])) . ' ' . $string['to'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['end']));
                     }
                   ?>
 	    					</span>

@@ -31,8 +31,8 @@ require_once '../classes/userutils.class.php';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['impmodtitle'] . ' ' . $cfg_install_type; ?></title>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['impmodtitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -61,7 +61,7 @@ require_once '../classes/userutils.class.php';
 <?php
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . "_cohort_update.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
         exit;
       } else {
@@ -88,7 +88,7 @@ require_once '../classes/userutils.class.php';
         $modulesAdded = 0;
         $missing_users = array();
         $unknow_ModuleID = array();
-        $lines = file($cfg_tmpdir . $userObject->get_user_ID() . "_cohort_update.csv");
+        $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv");
 
         // Build an array of unique student names.
         $students = array();
@@ -163,7 +163,7 @@ require_once '../classes/userutils.class.php';
         }
       }
     }
-    unlink($cfg_tmpdir . $userObject->get_user_ID() . "_cohort_update.csv");
+    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv");
 
     echo "<h2>$modulesAdded " . $string['enrolementsperformed'] . "</h2>";
     echo "<p>" . count($missing_users) . " " . $string['missingusers'] . "</p>";

@@ -47,15 +47,15 @@ if (module_utils::module_exists($module, $mysqli) === false) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō: <?php echo $string['importmetadata'] . ' ' . $cfg_install_type; ?></title>
+  <title>Rogō: <?php echo $string['importmetadata'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   
-  <?php echo $cfg_js_root ?>
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script type="text/javascript">
     function changeMsg() {
@@ -91,7 +91,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
     $idMod = module_utils::get_idMod($_GET['module'], $mysqli);
   
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $cfg_tmpdir . $userObject->get_user_ID() . "_import_metadata.csv"))  {
+      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv"))  {
         echo 'Problem - ';
         if ($_FILES['csvfile']['error'] == "0") {
           echo("Value 0: No problem, the file is uploaded.");
@@ -120,7 +120,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
         }
         $stmt->close();
         
-        $lines = file($cfg_tmpdir . $userObject->get_user_ID() . '_import_metadata.csv');
+        $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
         $type = '';
         $value = '';
         
@@ -167,7 +167,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
     }
     echo "<br />\n<input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>";
     
-    unlink($cfg_tmpdir . $userObject->get_user_ID() . "_import_metadata.csv");
+    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv");
 
     $mysqli->close();
     exit;

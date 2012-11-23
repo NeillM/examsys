@@ -27,7 +27,7 @@ require '../../include/staff_auth.inc';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>by Paper</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
@@ -108,9 +108,9 @@ if (isset($_GET['order'])) {
   $paper_details = array();
   
   if (isset($_GET['paper_type'])) {
-    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
+    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_short_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
   } else {
-    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,'$cfg_short_date') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $_GET['teamID'] . " AND deleted IS NULL AND paper_ownerID=users.id";
+    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_short_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $_GET['teamID'] . " AND deleted IS NULL AND paper_ownerID=users.id";
   }
   $sql .= " ORDER BY {$order} " . strtoupper($direction);
   $result = $mysqli->prepare($sql);

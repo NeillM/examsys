@@ -32,9 +32,9 @@ check_var('module', 'GET', true, false);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><?php echo $string['referencematerial'] . ' ' . $cfg_install_type; ?></title>
+  <title><?php echo $string['referencematerial'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -83,11 +83,11 @@ check_var('module', 'GET', true, false);
     }
     
     function editReference() {
-      window.location="<?php echo $cfg_root_path ?>/folder/edit_ref_material.php?refID=" + document.getElementById('divID').value + "&module=<?php echo $_GET['module']; ?>";
+      window.location="<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + document.getElementById('divID').value + "&module=<?php echo $_GET['module']; ?>";
     }
     
     function deleteReference() {
-      notice=window.open("<?php echo $cfg_root_path ?>/delete/check_delete_ref_material.php?refID=" + document.getElementById('divID').value + "&module=<?php echo $_GET['module']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + document.getElementById('divID').value + "&module=<?php echo $_GET['module']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       notice.moveTo(screen.width/2-210,screen.height/2-85);
       if (window.focus) {
         notice.focus();

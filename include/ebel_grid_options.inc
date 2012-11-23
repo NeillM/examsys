@@ -25,7 +25,7 @@
 ?>
 <script language="JavaScript">
   function editTemplate() {
-    document.location.href='<?php echo $cfg_root_path ?>/admin/edit_ebel_grid.php?id=' + document.getElementById('lineID').value;
+    document.location.href='<?php echo $configObject->get('cfg_root_path') ?>/admin/edit_ebel_grid.php?id=' + document.getElementById('lineID').value;
   }
   
   function deleteTemplate() {

@@ -23,13 +23,13 @@
 */
 
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
-  global $cfg_long_date_time;
+  global $configObject->get('cfg_long_date_time');
   $reviews = array();
   
   if ($mode == 'index') {
-    $result = $mysqli->prepare("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'$cfg_long_date_time') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=? ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
+    $result = $mysqli->prepare("SELECT q_type, questionID, category, percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, paper_title FROM (standards_setting, properties, questions, users) LEFT JOIN ebel ON (standards_setting.setterID=ebel.setterID AND standards_setting.std_set=ebel.date_set) WHERE standards_setting.questionID=questions.q_id AND standards_setting.paperID=properties.property_id AND standards_setting.setterID=users.id AND paperID=? ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
   } else {
-    $result = $mysqli->prepare("SELECT '' AS q_type, questionID, '' AS category, 0 AS percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'$cfg_long_date_time') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, '' AS paper_title FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
+    $result = $mysqli->prepare("SELECT '' AS q_type, questionID, '' AS category, 0 AS percentage, group_review, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, rating, standards_setting.setterID, method, title, initials, surname, '' AS paper_title FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY standards_setting.std_set DESC, standards_setting.setterID, standards_setting.id");
   }
   $result->bind_param('i', $paperID);
   $result->execute();
@@ -422,7 +422,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
 }
 
 function display_option($firstoption, $q_id, $question_no, &$part_id, $display_option, $std_method, $is_group, &$marks, $exclude, $review_val, &$matching_options, $review_mean, $tmp_reviews, $option_no, &$stdID, &$std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback) {
-  global $string, $language, $cfg_root_path;
+  global $string, $language, $configObject->get('cfg_root_path');
   $qn_excluded = ($exclude == '1');
   
   switch ($firstoption['q_type']) {
@@ -436,7 +436,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       ?>
         <script language="javascript">
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 24); ?>" id="externalinterfaceq<?php echo $question_no; ?>_1" align="top">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');
@@ -448,8 +448,8 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
           write_string('<param name="salign" value="top" />');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
           write_string('<!--[if !IE]>-->');
-          write_string('<object type="application/x-shockwave-flash" data="<?php echo $cfg_root_path ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 24); ?>">');
-          write_string('<param name="movie" value="<?php echo $cfg_root_path ?>/question/edit/area.swf" />');
+          write_string('<object type="application/x-shockwave-flash" data="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" id="externalinterfaceq<?php echo $question_no; ?>_2" width="<?php echo ($display_option['q_media_width'] + 2); ?>" height="<?php echo ($display_option['q_media_height'] + 24); ?>">');
+          write_string('<param name="movie" value="<?php echo $configObject->get('cfg_root_path') ?>/question/edit/area.swf" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           write_string('<param name="play" value="true" />');

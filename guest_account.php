@@ -62,7 +62,7 @@ if ($paper_match == false) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title><?php echo $string['guestaccount']; ?></title>
   
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
   echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' . $_POST['username'] . '</tt></td></tr>';
   echo '<tr><td style="padding:6px">' . $string['password'] . '</td><td><tt>' . $_POST['password'] . '</tt></td></tr>';
   echo '<tr><td colspan="2"><td>&nbsp;</td></tr>';
-  echo '<tr><td style="text-align:center"><td><input type="button" name="login" value="' . $string['login'] . '" style="width:120px" onclick="window.location=\'' . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . '/index.php\';" /></td></tr>';
+  echo '<tr><td style="text-align:center"><td><input type="button" name="login" value="' . $string['login'] . '" style="width:120px" onclick="window.location=\'' . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/index.php\';" /></td></tr>';
   echo '<tr><td><td>&nbsp;</td></tr>';
   echo '</table></td></tr></table></div>';
 } else {
@@ -132,7 +132,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
   <title><?php echo $string['guestaccount']; ?></title>
   

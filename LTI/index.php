@@ -40,12 +40,11 @@ require_once '../classes/smsutils.class.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/facultyutils.class.php';
 
-global $cfg_long_date_time;
 
 $choicetype='radio';
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false, $type='') {
-  global $cfg_long_date_time, $icons;
+  global $configObject, $icons;
 
   $query_string = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, moduleID FROM properties WHERE (moduleID = '" . $moduleid . "' OR moduleID LIKE '%," . $moduleid . ",%' OR moduleID LIKE '" . $moduleid . ",%' OR moduleID LIKE '%," . $moduleid . "') AND deleted IS NULL AND paper_type IN ('0','1','3') ORDER BY paper_type, paper_title";
   $results2 = $mysqli->prepare($query_string);
@@ -137,7 +136,7 @@ if (!$lti->isInstructor()) {
   //student
   if ($returned === false) {
     // no data selected for this
-    display_notice($string['warning'], $string['ltinotconfigured'], $cfg_root_path . '/artwork/access_denied.png', $title_color = '#C00000');
+    display_notice($string['warning'], $string['ltinotconfigured'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', $title_color = '#C00000');
     echo "\n</body>\n</html>\n";
     exit();
   } else {
@@ -178,7 +177,7 @@ if (!$lti->isInstructor()) {
       if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
         UserUtils::add_staff_to_team($userObject->get_user_ID(), $v[1], $mysqli);
       } elseif (!UserUtils::staff_on_team($v[1], $mysqli) and !$lti_i::allow_staff_module_register($v)) {
-        $error[] = '<img src="' . $cfg_root_path . '../artwork/exclamation_64.png' . '"><h1>' . $string['NotAddedToModuleTitle'] . '</h1>' . $string['NotAddedToModule'] . $v[1] . '<br />';
+        $error[] = '<img src="' . $configObject->get('cfg_root_path') . '../artwork/exclamation_64.png' . '"><h1>' . $string['NotAddedToModuleTitle'] . '</h1>' . $string['NotAddedToModule'] . $v[1] . '<br />';
       }
     }
 
@@ -254,9 +253,9 @@ if (!$lti->isInstructor()) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=$cfg_page_charset" />
+  <meta http-equiv="content-type" content="text/html;charset={$configObject->get('cfg_page_charset')}" />
   
-  <title>Rogō $cfg_install_type</title>
+  <title>Rogō $configObject->get('cfg_install_type')</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -268,7 +267,7 @@ if (!$lti->isInstructor()) {
   .greysch {padding-left:12px; color:#808080}
   .mod {padding-left:60px; text-indent:-30px}
   </style>
-   $cfg_js_root
+   {$configObject->get('cfg_js_root')}
   <script language="JavaScript">
     function showHide(sectionID) {
       sectionID = 'block' + sectionID;

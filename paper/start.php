@@ -335,7 +335,7 @@ if ($paper_type == '3') {
 $url_mod = (isset($_GET['q_id'])) ? '&amp;q_id=' . $_GET['q_id'] : '';
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $cfg_page_charset ?>" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="pragma" content="no-cache" />

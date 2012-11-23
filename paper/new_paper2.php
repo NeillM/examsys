@@ -33,9 +33,9 @@ require '../lang/' . $language. '/include/timezones.inc';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['createnewpaper'] . $cfg_install_type; ?></title>
+  <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
 <?php
   // Delete any half completed papers owned by current user.
   $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID=?");
@@ -191,7 +191,7 @@ require '../lang/' . $language. '/include/timezones.inc';
     exit;
   }
   
-  if ($cfg_summative_mgmt and $_POST['paper_type'] == 'summative') {
+  if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     // Summative paper so set null dates
     $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,NULL,NULL,'Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',?,'',NULL,NULL,'0',0,'',NULL,NULL)");
   } else {
@@ -313,7 +313,7 @@ if ($_POST['paper_type'] == 'summative') {
 <td>
 <?php
   echo "<table width=\"100%\" border=\"0\">\n";
-  if (!$cfg_summative_mgmt or $_POST['paper_type'] != 'summative') {
+  if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
     echo "<tr><td><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['availability'] . "<span></td></tr>\n";
   } else {
     echo "<tr><td colspan=\"3\"><span style=\"font-weight:bold; color:#001687; font-size:120%\">".$string['summativeexamdetails']."<span></td></tr>\n";
@@ -349,7 +349,7 @@ if ($_POST['paper_type'] == 'summative') {
     echo "<input type=\"hidden\" name=\"session\" value=\"null\" />\n";
   }
   
-  if (!$cfg_summative_mgmt or $_POST['paper_type'] != 'summative') {
+  if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
     echo "</tr><tr><td align=\"right\" valign=\"top\">" . $string['from'] . "&nbsp;</td><td>";
     $date_array = getdate();
 
@@ -460,7 +460,7 @@ if ($_POST['paper_type'] == 'summative') {
 
     echo "<tr><td align=\"right\">" . $string['timezone'] . "</td><td colspan=\"3\"><select name=\"timezone\">";
     foreach ($timezone_array as $individual_zone => $display_zone) {
-      if ($individual_zone == $cfg_timezone) {
+      if ($individual_zone == $configObject->get('cfg_timezone')) {
         echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
       } else {
         echo "<option value=\"$individual_zone\">$display_zone</option>";

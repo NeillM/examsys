@@ -52,7 +52,7 @@ if (isset($_POST['Submit'])) {
     if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
     if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
     
-    $local_time = new DateTimeZone($cfg_timezone);
+    $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
     $target_timezone = new DateTimeZone($_POST['timezone']);
     
     $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
@@ -153,7 +153,7 @@ if (isset($_POST['Submit'])) {
     <html>
     <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
     <title><?php echo $string['edittitle']; ?></title>
     <meta http-equiv="pragma" content="no-cache" />
     <script language="JavaScript">
@@ -177,7 +177,7 @@ if (isset($_POST['Submit'])) {
     <html>
     <head>
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+      <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
       <title><?php echo $string['edittitle']; ?></title>
     </head>
     <body>
@@ -197,7 +197,7 @@ if (isset($_POST['Submit'])) {
   $result->fetch();
   $result->close();
   
-  $local_time = new DateTimeZone($cfg_timezone);
+  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   $target_timezone = new DateTimeZone($timezone);
   $start_date = new dateTime($start_date, $local_time);
   $end_date = new dateTime($end_date, $local_time);
@@ -212,8 +212,8 @@ if (isset($_POST['Submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
-  <title><?php echo $string['propertiestitle'] . ' ' . $cfg_install_type; ?></title>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -344,7 +344,7 @@ if (isset($_POST['Submit'])) {
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-     echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/peer_review/form.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $cfg_root_path . "/peer_review/form.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
+     echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($crypt_name) ."\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/peer_review/form.php?id=" . urlencode($crypt_name) ."</a></td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\"><input type=\"text\" size=\"75\" maxlength=\"255\" value=\"$paper_title\" name=\"paper_title\" /><input type=\"hidden\" name=\"original_paper_title\" value=\"$paper_title\"><input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\"></td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td colspan=\"3\" valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
      echo "<option value=\"\"></option>";
