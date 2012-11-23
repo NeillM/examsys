@@ -158,8 +158,8 @@ HTML;
   return $html;
 }
 
-function displayObjectivesMappingForm($paper_id, $db, $configObject->get('cfg_root_path')) {
-  global $vle_api_cache;
+function displayObjectivesMappingForm($paper_id, $db,$cfg_root_path2) {
+  global $vle_api_cache,$configObject;
 
   //get module and session from paper id
   $modules_array = array();

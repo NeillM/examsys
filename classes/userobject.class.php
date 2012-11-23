@@ -472,16 +472,24 @@ class UserObject {
   }
 
   function db_user_change() {
-    global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
+/*    global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
     global $cfg_db_admin_user, $cfg_db_admin_passwd;
     global $cfg_db_staff_user, $cfg_db_staff_passwd;
     global $cfg_db_student_user, $cfg_db_student_passwd;
     global $cfg_db_external_user, $cfg_db_external_passwd;
     global $cfg_db_inv_user, $cfg_db_inv_passwd;
+*/
 
     global $db_errors, $cfg_db_database, $string;
 
     global $configObject;
+    $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
+
+    global $configObject;
+    $arr=$configObject->get($getback);
+    foreach($arr as $k=>$v) {
+      ${$k}=$v;
+    }
 
     $userroles = $this->old_getuserroles();
     //select the aproprate database user

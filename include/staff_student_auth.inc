@@ -57,6 +57,22 @@ require_once $cfg_web_root . 'classes/configobject.class.php';
 
 $configObject=new Config();
 
+$list=get_defined_vars();
+
+foreach ($list as $k => $v) {
+//  print $k;
+  if ((strpos($k, 'cfg_') !== false) and ((strpos($k,'cfg_web_root') === false)) and (strpos($k,'cfg_editor_javascript') === false))
+  {
+//    print ':UNSET';
+
+    unset($$k);
+  }
+//  print '<br>';
+}
+unset($list);
+unset($v);
+unset($k);
+
 
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
@@ -92,7 +108,7 @@ if ($protocol == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SER
   exit;
 }
 if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version)) {
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $dbclass);
   if(!isset($userObject)) {
     global $userObject;
     $userObject = new UserObject($mysqli);
@@ -163,13 +179,13 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
       //replace with function for standard login failure
 
       $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
-      if ($cfg_use_ldap == true) $message .= "<li>" . $string['tsonldap'] . "</li>\n";
+      if ($configObject->get('cfg_use_ldap') == true) $message .= "<li>" . $string['tsonldap'] . "</li>\n";
       $message .= '<li>' . $string['pressf5'] . '</li>';
       if ($_SERVER['PHP_SELF'] == '/index.php') {
         $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
       }
       $message .= "</ul>";
-      if ($cfg_use_ldap != true) $message .= $fp_link;
+      if ($configObject->get('cfg_use_ldap') != true) $message .= $fp_link;
       access_denied($message, true);
     } else {
       //
@@ -177,11 +193,11 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
       //
       if (($dbret = db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, true, $userObject)) <= 0) {
         //try LDAP
-        if ($cfg_use_ldap == true and ($db_errors != '<strong>' . $string['notsaccount'] . '</strong>' or $dbret == -2)) {
+        if ($configObject->get('cfg_use_ldap') == true and ($db_errors != '<strong>' . $string['notsaccount'] . '</strong>' or $dbret == -2)) {
           $ldap_user_data = array();
           if (ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true) {
             //Ad Account OK
-            $encpw_details = encpw($cfg_encrypt_salt, $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $encpw_details = encpw($configObject->get('cfg_encrypt_salt'), $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
             $stmt = $mysqli->prepare("UPDATE users SET password = ? WHERE username = ?");
             $stmt->bind_param('ss', $encpw_details, $_SERVER['PHP_AUTH_USER']);
             $stmt->execute();

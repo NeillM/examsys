@@ -396,7 +396,7 @@
   $mysqli->close();
   
   function copyProperties($userID, $mysqlidb, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj) {
-    global $cfg_summative_mgmt;
+    global $configObject;
     
     $moduleIDs = Paper_utils::get_modules($_POST['paperID'],$mysqlidb);
 
@@ -412,7 +412,7 @@
     $paper_type = $_POST['paper_type'];      // Override the paper type with what is posted.
     
     if ($paper_type == 2) {
-      if ($cfg_summative_mgmt) {
+      if ($configObject->get('cfg_summative_mgmt')) {
         $tmp_start_date = NULL;
         $tmp_end_date = NULL;
       } else {
@@ -445,7 +445,7 @@
     //set the modules on the new paper
     Paper_utils::update_modules($moduleIDs, $new_paper_id, $mysqlidb, $userObj);
 
-    if ($paper_type == 2 and $cfg_summative_mgmt) {
+    if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
       if (isset($_POST['barriers_needed'])) {
         $barriers_needed = 1;
       } else {

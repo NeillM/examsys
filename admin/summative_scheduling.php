@@ -134,7 +134,7 @@ function getLabs($labs, $mysqlidb) {
 <?php
   $papers = array();
   
-  $results = $mysqli->prepare("SELECT properties.property_id, paper_title, moduleid, period, barriers_needed, cohort_size, campus, DATE_FORMAT(start_date,'$configObject->get('cfg_long_date_time')'), end_date, labs FROM (properties, properties_modules, modules, scheduling) WHERE start_date > NOW() AND properties.property_id=scheduling.paperID AND properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND deleted IS NULL ORDER BY period");
+  $results = $mysqli->prepare("SELECT properties.property_id, paper_title, moduleid, period, barriers_needed, cohort_size, campus, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}'), end_date, labs FROM (properties, properties_modules, modules, scheduling) WHERE start_date > NOW() AND properties.property_id=scheduling.paperID AND properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND deleted IS NULL ORDER BY period");
   $results->execute();
   $results->store_result();
   $results->bind_result($property_id, $paper_title, $moduleID, $period, $barriers_needed, $cohort_size, $campus, $start_date, $end_date, $labs);

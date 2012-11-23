@@ -184,7 +184,7 @@ if (isset($_POST['Submit'])) {
   $folder_team = $_POST['folder_team'];
   
 } else {
-  $result = $mysqli->prepare("SELECT folders.id, name, color, DATE_FORMAT(created, '$configObject->get('cfg_long_date_time')'), title, initials, surname FROM folders, users WHERE folders.ownerID=users.id AND folders.id=?");
+  $result = $mysqli->prepare("SELECT folders.id, name, color, DATE_FORMAT(created, '{$configObject->get('cfg_long_date_time')}'), title, initials, surname FROM folders, users WHERE folders.ownerID=users.id AND folders.id=?");
   $result->bind_param('i', $_GET['folder']);
   $result->execute();
   $result->bind_result($folder_id, $full_path, $color, $created, $title, $initials, $surname);

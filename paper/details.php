@@ -59,7 +59,7 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
   $summative_lock = false;
 }
 
-$result = $mysqli->prepare("SELECT DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%H') as start_hour, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'$configObject->get('cfg_long_date_time')') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
+$result = $mysqli->prepare("SELECT DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%H') as start_hour, DATE_FORMAT(start_date,'%Y%m%d%H%i') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed FROM (properties, users) WHERE property_id=? AND paper_ownerID=users.id LIMIT 1");
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($created, $paper_title, $pass_mark, $title, $initials, $surname, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $tmp_start_hour, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed);
@@ -136,7 +136,7 @@ function have_valid_labels($correct) {
 }
 
 function randomDetails($questionID) {
-  global  $configObject->get('cfg_short_date'), $mysqli;
+  global  $configObject, $mysqli;
 
   $question_no = 0;
   $random_questions = array();
@@ -459,7 +459,7 @@ function check_latex_random($q_ids, $mysqli) {
 <?php
   $max_screen = 0;
 
-  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos), paper_ownerID, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'$configObject->get('cfg_long_date_time')') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed, retired, crypt_name, labs, calendar_year, exam_duration, display_question_mark, fullscreen, externals, internal_reviewers FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? AND paper_ownerID=users.id GROUP BY paper_title LIMIT 1");
+  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos), paper_ownerID, paper_title, pass_mark, users.title, users.initials, users.surname, folder, random_mark, total_mark, marking, paper_ownerID, DATE_FORMAT(start_date,'%Y%m%d%H%is') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i') AS end_date, paper_type, deleted, latex_needed, retired, crypt_name, labs, calendar_year, exam_duration, display_question_mark, fullscreen, externals, internal_reviewers FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE property_id=? AND paper_ownerID=users.id GROUP BY paper_title LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($max_screen, $max_display_pos, $paper_ownerID, $paper_title, $pass_mark, $title, $initials, $surname, $tmp_folder, $random_mark, $total_mark, $marking, $paper_ownerID, $start_date, $display_start_date, $end_date, $paper_type, $deleted, $latex_needed, $retired, $crypt_name, $labs, $session, $exam_duration, $display_question_mark, $fullscreen, $externals, $internal_reviewers);

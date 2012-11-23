@@ -27,9 +27,10 @@ require_once $cfg_web_root . 'classes/dbutils.class.php';
 set_error_handler("customErrorHandler");
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
-  global $mysqli, $DISABLEDuserID, $debug_pagestart, $dbclass, $cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset;
+  global $debug_pagestart, $dbclass;
  // global $userObject; // TODO fix this fudge
 
+  global $configObject;
 
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them
@@ -78,7 +79,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
     // Query may fail if we try to insert while another statement is open.
     // Since we don't have a handle on the original statement, create another DB link
-    $mysqli2 = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $dbclass);
 
     $paperID = NULL;
     if (isset($_GET['paperID'])) {

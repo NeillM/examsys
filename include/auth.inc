@@ -96,14 +96,7 @@ require_once 'ldap.php';
 
 function db_userlookup($u, $db, $useridlookup = false) {
   //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string;
-  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
-  global $cfg_db_admin_user, $cfg_db_admin_passwd;
-  global $cfg_db_staff_user, $cfg_db_staff_passwd;
-  global $cfg_db_student_user, $cfg_db_student_passwd;
-  global $cfg_db_external_user, $cfg_db_external_passwd;
-  global $cfg_db_inv_user, $cfg_db_inv_passwd;
 
-  global $db_errors, $cfg_db_database, $string;
 
   if ($u == '') {
     return false;
@@ -138,14 +131,14 @@ function db_change_user($db,$userObj) {
 
 
 //  global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string;
-  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
-  global $cfg_db_admin_user, $cfg_db_admin_passwd;
-  global $cfg_db_staff_user, $cfg_db_staff_passwd;
-  global $cfg_db_student_user, $cfg_db_student_passwd;
-  global $cfg_db_external_user, $cfg_db_external_passwd;
-  global $cfg_db_inv_user, $cfg_db_inv_passwd;
+  $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
-  global $db_errors,$cfg_db_database, $string;
+  global $configObject;
+  $arr=$configObject->get($getback);
+  foreach($arr as $k=>$v) {
+    ${$k}=$v;
+  }
+    global $db_errors, $string;
 
 
 
@@ -177,15 +170,10 @@ function db_auth($u, $p, $db, $changeuser = true, $userObj) {
 
 
   //global $REPLACEMEuserIDold, $userroles, $faculty, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $db_errors, $configObject->get('cfg_install_type'), $cfg_db_database, $string, $cfg_encrypt_salt;
-  global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
-  global $cfg_db_admin_user, $cfg_db_admin_passwd;
-  global $cfg_db_staff_user, $cfg_db_staff_passwd;
-  global $cfg_db_student_user, $cfg_db_student_passwd;
-  global $cfg_db_external_user, $cfg_db_external_passwd;
-  global $cfg_db_inv_user, $cfg_db_inv_passwd;
 
-  global $db_errors,$cfg_db_database, $string,$cfg_encrypt_salt,$cfg_db_database;
 
+  global $db_errors, $string;
+global $configObject;
 
   if ($u == '') {
     return 0;
@@ -210,7 +198,7 @@ function db_auth($u, $p, $db, $changeuser = true, $userObj) {
       $encrypt_type = 'SHA-512';
     }
 
-    $encrypt_password = encpw($cfg_encrypt_salt, $u, $p, $encrypt_type);
+    $encrypt_password = encpw($configObject->get('cfg_encrypt_salt'), $u, $p, $encrypt_type);
 
     if ($encrypt_password == $password) {
       if ($encrypt_type == 'MD5') { // Re-encrypt MD5 passwords using SHA-512.

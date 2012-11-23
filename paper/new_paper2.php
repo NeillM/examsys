@@ -191,7 +191,7 @@ require '../lang/' . $language. '/include/timezones.inc';
     exit;
   }
   
-  if ($cfg_summative_mgmt and $_POST['paper_type'] == 'summative') {
+  if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     // Summative paper so set null dates
     $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL,?,NULL,NULL,'Europe/London',?,'','','white','black','#316AC5','#C00000','1','1','1',40,70,?,?,'',?,1,'',NULL,'00000000000000',NOW(),0,0,'1','1','1','1','0',?,'',NULL,NULL,'0',0,'',NULL,NULL)");
   } else {
@@ -313,7 +313,7 @@ if ($_POST['paper_type'] == 'summative') {
 <td>
 <?php
   echo "<table width=\"100%\" border=\"0\">\n";
-  if (!$cfg_summative_mgmt or $_POST['paper_type'] != 'summative') {
+  if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
     echo "<tr><td><span style=\"font-weight:bold; color:#001687; font-size:120%\">" . $string['availability'] . "<span></td></tr>\n";
   } else {
     echo "<tr><td colspan=\"3\"><span style=\"font-weight:bold; color:#001687; font-size:120%\">".$string['summativeexamdetails']."<span></td></tr>\n";
@@ -349,7 +349,7 @@ if ($_POST['paper_type'] == 'summative') {
     echo "<input type=\"hidden\" name=\"session\" value=\"null\" />\n";
   }
   
-  if (!$cfg_summative_mgmt or $_POST['paper_type'] != 'summative') {
+  if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
     echo "</tr><tr><td align=\"right\" valign=\"top\">" . $string['from'] . "&nbsp;</td><td>";
     $date_array = getdate();
 

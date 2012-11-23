@@ -68,9 +68,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
 <?php
   if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
-    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'$configObject->get('cfg_long_date_time')'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID ORDER BY occurred DESC LIMIT 1000";
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID ORDER BY occurred DESC LIMIT 1000";
   } else {
-    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'$configObject->get('cfg_long_date_time')'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID WHERE fixed IS NULL ORDER BY occurred DESC LIMIT 1000";
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID WHERE fixed IS NULL ORDER BY occurred DESC LIMIT 1000";
   }
 
   $result = $mysqli->prepare($sql);

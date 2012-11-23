@@ -84,7 +84,7 @@
   $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $display_deadline, $crypt_name);
   while ($result->fetch()) {
     $reviewed = '';
-    $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'$configObject->get('cfg_long_date_time')') AS started FROM review_comments WHERE reviewer=? and q_paper=?");
+    $log_results = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'{$configObject->get('cfg_long_date_time')}') AS started FROM review_comments WHERE reviewer=? and q_paper=?");
     $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $log_results->execute();
     $log_results->store_result();

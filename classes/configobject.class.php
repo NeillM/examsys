@@ -41,9 +41,11 @@ class Config {
         return $this->data[$var];
       }
     } elseif(is_array($var)) {
-      $data=array();
+      $dat=array();
       foreach($var as $key) {
-        $dat[$key]=$this->data[$key];
+        if(isset($this->data[$key])) {
+          $dat[$key]=$this->data[$key];
+        }
       }
       return $dat;
     }
