@@ -33,16 +33,18 @@ class UserObject {
    */
   private $password, $userID, $userroles, $title, $initials, $surname, $username, $email, $grade, $year, $special_needs, $record_no, $split_username;
 
-  private $roles, $staffModules, $studentModules, $db;
+  private $roles, $staffModules, $studentModules, $db, $configObj;
 
   /**
    * constructor
    *
    * @param $db is a mysqli link to db
+   * @param $configObject a Rogo config object populated from config.inc
    * @return none
    */
-  function __construct(&$db) {
+  function __construct($configObject, &$db) {
     $this->db = $db;
+    $this->configObj = $configObject;
   }
 
   /**
@@ -472,21 +474,11 @@ class UserObject {
   }
 
   function db_user_change() {
-/*    global $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd;
-    global $cfg_db_admin_user, $cfg_db_admin_passwd;
-    global $cfg_db_staff_user, $cfg_db_staff_passwd;
-    global $cfg_db_student_user, $cfg_db_student_passwd;
-    global $cfg_db_external_user, $cfg_db_external_passwd;
-    global $cfg_db_inv_user, $cfg_db_inv_passwd;
-*/
+    global $db_errors, $string;
 
-    global $db_errors, $cfg_db_database, $string;
-
-    global $configObject;
     $getback=array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd','cfg_db_staff_user', 'cfg_db_staff_passwd','cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd','cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
 
-    global $configObject;
-    $arr=$configObject->get($getback);
+    $arr=$this->configObj->get($getback);
     foreach($arr as $k=>$v) {
       ${$k}=$v;
     }

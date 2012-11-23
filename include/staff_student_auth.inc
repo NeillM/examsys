@@ -111,7 +111,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $dbclass);
   if(!isset($userObject)) {
     global $userObject;
-    $userObject = new UserObject($mysqli);
+    $userObject = new UserObject($configObject, $mysqli);
   }
   session_start();
   $lti = new UoN_LTI($mysqli);
