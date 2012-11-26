@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -25,7 +25,8 @@
   require '../../include/sysadmin_auth.inc';
   require '../../include/errors.inc';
   require '../../include/help.inc';
-  header('Content-Type: text/html; charset=' . {$configObject->get('cfg_page_charset')});
+
+  header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset') );
 
   if (isset($_POST['save_changes'])) {
     // Update help file record
@@ -35,26 +36,26 @@
     $tmp_body_plain = str_replace($order,' ',$tmp_body_plain);
     $tmp_body_plain = str_replace('  ',' ',$tmp_body_plain);
     $tmp_title = $_POST['page_title'];
-    
+
     if ($_POST['edit_id'] == $_POST['original_id']) {
       // Editing normal page.
       $result = $mysqli->prepare("UPDATE staff_help SET title=?, body=?, body_plain=?, checkout_time=NULL, checkout_authorID=NULL, roles=? WHERE id=?");
       $result->bind_param('ssssi', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['page_roles'], $_POST['edit_id']);
-      $result->execute();  
+      $result->execute();
       $result->close();
     } else {
       // Editing a page pointed to.
       $result = $mysqli->prepare("UPDATE staff_help SET title=? WHERE id=?");
       $result->bind_param('si', $tmp_title, $_POST['original_id']);
-      $result->execute();  
+      $result->execute();
       $result->close();
-      
+
       $result = $mysqli->prepare("UPDATE staff_help SET body=?, body_plain=?, checkout_time=NULL, checkout_authorID=NULL, roles=? WHERE id=?");
       $result->bind_param('sssi', $tmp_body, $tmp_body_plain, $_POST['page_roles'], $_POST['edit_id']);
-      $result->execute();  
+      $result->execute();
       $result->close();
     }
-    
+
     $mysqli->close();
     header("location: display_page.php?id=" . $_POST['original_id']);
     exit;
@@ -63,7 +64,7 @@
     if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
       $result = $mysqli->prepare("UPDATE staff_help SET checkout_time=NULL, checkout_authorID=NULL WHERE id=?");
       $result->bind_param('i', $_POST['edit_id']);
-      $result->execute();  
+      $result->execute();
       $result->close();
     }
     $mysqli->close();
@@ -76,16 +77,16 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
-  
+
   <title>Edit Help File</title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
-  
+
   <?php echo $configObject->get('cfg_js_root') ?>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
-  <script language="JavaScript"> 
+  <script language="JavaScript">
     function getSize() {
       if (parseInt(navigator.appVersion)>3) {
         if (navigator.appName=="Netscape") {
@@ -98,7 +99,7 @@
       winH = winH - 155;
       return winH + 'px';
     }
-    
+
     function checkForm() {
       if (document.add_form.title.value == "" || document.add_form.title.value == " ") {
         alert ('<?php echo $string['entertitle']; ?>');
@@ -132,7 +133,7 @@
 
   if ($type == 'pointer') {
     $edit_id = $body;
-    
+
     $result = $mysqli->prepare("SELECT body FROM staff_help WHERE id=?");
     $result->bind_param('i', $body);
     $result->execute();
@@ -153,11 +154,11 @@
       echo "<option value=\"$category\">$category</option>\n";
     }
   }
-  
+
   echo "</select>\n</td></tr></table>\n<br />\n";
-  
+
   echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" .  htmlspecialchars($body, ENT_NOQUOTES) . "</textarea>\n";
-  
+
   // Check for lockout.
   $current_time = date('YmdHis');
   $disabled = '';
@@ -178,7 +179,7 @@
       // Set the lock to the current time/author.
       $result = $mysqli->prepare("UPDATE staff_help SET checkout_time=NOW(), checkout_authorID=? WHERE id=?");
       $result->bind_param('ii', $userObject->get_user_ID(), $edit_id);
-      $result->execute();  
+      $result->execute();
       $result->close();
       $checkout_authorID = $userObject->get_user_ID();
 

@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -56,7 +56,7 @@ $errors = array();
 if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
   // We're adding a new question
   $mode = $string['add'];
-  
+
   if (!isset($_GET['type'])) {
     $critical_error = $string['typeundefined'];
   } elseif (!in_array($_GET['type'], Question::$types)) {
@@ -74,7 +74,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
 } else {
   // We're editing an existing question
   $mode = $string['edit'];
-  
+
   try {
     $question = Question::question_factory($mysqli, $userObject, $string, $_REQUEST['q_id']);
   } catch (Exception $ex) {
@@ -96,8 +96,8 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
   } else {
     $critical_error = $string['mediauploaderror'];
   }
-  
-  // Handle label images for Labelling questions. These never really hit the question object as items in their own right  
+
+  // Handle label images for Labelling questions. These never really hit the question object as items in their own right
   // but are used in parameters to the Flash setup JS function
   if ($question->get_type() == 'labelling') {
     $label_images = array();
@@ -136,7 +136,7 @@ if ($critical_error == '') {
     } else {
       $unified_part_names = $question->get_unified_fields();
       $save_individual = in_array('correct', array_keys($unified_part_names));
-      
+
       if ($save_individual) {
         // calculation, mcq
         $part_names = $question->get_change_fields();
@@ -149,7 +149,7 @@ if ($critical_error == '') {
         // dichotomous, mrq, rank, extmatch, matrix
         $first = reset($question->options);
         $compound_part_names = $first->get_compound_fields();
-        
+
         if (is_array($compound_part_names) and in_array('correct', array_keys($compound_part_names))) {
           $loop_limit = $question->max_stems;
         } else {
@@ -169,7 +169,7 @@ if ($critical_error == '') {
             }
           }
         }
-        
+
         $errors = $question->update_correct($correct_answers, $paper_id);
       }
 
@@ -190,16 +190,16 @@ if ($critical_error == '') {
   } elseif ((isset($_POST['submit']) and $_POST['submit'] == $string['save']) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
    // Save data
     if ($question->id == -1 or check_fullSave($question->id, $mysqli)) {
-      
+
       $part_names = $question->get_editable_fields();
       $compound_fields = $question->get_compound_fields();
       $question->populate($part_names, $_POST, $compound_fields);
-      
+
       // Handle changes in media if not a compound field
       if (!in_array('media', $question->get_compound_fields())) {
         $question->populate_media('q_media', $_FILES, $_POST);
       }
-            
+
       // Save compound fields
       $question->populate_compound($compound_fields, $_POST, array('media'), $prefix='question_');
 
@@ -207,7 +207,7 @@ if ($critical_error == '') {
       if (in_array('media', $compound_fields)) {
         $question->populate_compound_media($_FILES, $_POST, 'q_media', 'question_media');
       }
-      
+
       // Strip MS Office HTML.
       $question->set_scenario(clearMSOtags($question->get_scenario()));
       $question->set_leadin(clearMSOtags($question->get_leadin()));
@@ -222,50 +222,50 @@ if ($critical_error == '') {
       $question->set_teams($question_teams);
 
       $unified_part_names = $question->get_unified_fields();
-            
+
       for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
         $option = null;
-        
+
         if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {
           // Editing existing option
           $option = $question->options[$_POST["optionid$option_no"]];
           $part_names = $option->get_editable_fields();
-          
+
           // Build arrays for compound fields
           $compound_fields = $option->get_compound_fields();
           if (!isset($existing_values)) $existing_values = array();
           $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
-          
+
           // Save editable fields that aren't unified
           $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
-          
+
           // Save fields that are the same across options
           $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
         } else {
           // Create new option if have required data
           $option = Option::option_factory($mysqli, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
-          
+
           if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
             $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';
             $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
-            
+
             $part_names = $option->get_editable_fields();
-            
+
             // Build arrays for compound fields
             $compound_fields = $option->get_compound_fields();
             if (!isset($existing_values)) $existing_values = array();
             $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
-                                    
+
             // Save editable fields that aren't unified
             $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
-            
+
             // Save fields that are the same across options
             $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
 
             $question->options[] = $option;
           }
         }
-        
+
         if ($option != null and !in_array('media', $question->get_compound_fields())) {
           // Handle changes in media
           $old_media = $option->get_media();
@@ -282,7 +282,7 @@ if ($critical_error == '') {
             }
           }
         }
-        
+
       }
 
       $do_save = true;
@@ -365,7 +365,7 @@ if ($critical_error == '') {
 
   $q_type_display = '';
   $q_type_full = '';
-  
+
   if ($question->get_type() != 'info' and !empty($q_no)) {
     $q_type_display .= ' ' . $q_no;
   }
@@ -399,7 +399,16 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 <link rel="stylesheet" href="../../css/tipTip.css" type="text/css" />
 
-<?php echo $cfg_editor_javascript; ?>
+<?php
+// Override this variable with a specific configuration file for the question editor.
+$cfg_editor_javascript = <<< SCRIPT
+{$configObject->get('cfg_js_root')}
+<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config_question_editor.js"></script>
+SCRIPT;
+
+echo $cfg_editor_javascript;
+?>
 <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
 <script type="text/javascript" src="../../js/state.js"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
@@ -462,7 +471,7 @@ endif;
       ?></h1>
 		</div>
 
-<?php 
+<?php
 if ($critical_error == '') {
   $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
   $creation_date = ($mode == 'Edit') ? strftime( $configObject->get('cfg_short_date'), $question->get_created('timestamp')) : strftime( $configObject->get('cfg_short_date'), time());
@@ -489,7 +498,7 @@ if ($critical_error == '') {
 
   if ($q_disabled != '') {
     $banner_spacer = ' class="banner-spaced"';
-    
+
     if ($q_disabled == 'locked') {
 ?>
     <div class="yellowwarn" style="font-size:90%">&nbsp;<img src="../../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" style="position:relative; top:2px\" />&nbsp;&nbsp;<?php echo $string['lockedmsg'] ?></div>
@@ -516,7 +525,7 @@ if($critical_error != '') {
   </div>
 <?php
 } else {
-  
+
   $query_string = '';
   if($question->id != -1) {
     $query_string = '?q_id=' . $question->id;
@@ -537,13 +546,13 @@ if($critical_error != '') {
 
     <div id="tabbed-content"<?php echo $banner_spacer ?>>
 			<div id="editor" class="tab-area">
-        
+
 				<div class="message">
 					<p>
 						<span class="mandatory">*</span> <?php echo $string['mandatory'] ?>
 					</p>
 				</div>
-        
+
 <?php
 if (count($errors) > 0) {
 ?>
@@ -566,8 +575,8 @@ if (count($errors) > 0) {
           <div class="form">
             <h2 class="midblue_header"><?php echo $string['question'] ?></h2>
           </div>
-        
-<?php 
+
+<?php
 if ($question->get_type() != '') require_once '../../include/question/addedit/' . $question->get_type() . '.php'
 ?>
 
@@ -607,7 +616,7 @@ echo render_comments($comments, $string);
 <?php
     echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
     $performance_array = ($question->id > -1) ? question_info::question_performance($question->id, $mysqli) : array();
-    
+
     foreach ($performance_array as $paper => $performance) {
       echo "<tr><td><img src=\"../../artwork/" . $performance['icon'] . "\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
       echo "<td>" . $performance['title'] . "</td>";
@@ -618,7 +627,7 @@ echo render_comments($comments, $string);
       } else {
         echo "<td></td><td></td><td></td><td></td><td></td>";
       }
-      echo "</tr>\n";    
+      echo "</tr>\n";
     }
 ?>
       </table>
@@ -628,7 +637,7 @@ echo render_comments($comments, $string);
 <?php
 echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 ?>
-        
+
       </div>
     </div>
 

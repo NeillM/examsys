@@ -23,7 +23,7 @@
 */
 
 require  '../../../../../../include/staff_auth.inc';
-$path = $cfg_web_root . 'help/staff/images/';
+$path = $cfg_web_root . 'media/';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -52,20 +52,22 @@ $path = $cfg_web_root . 'help/staff/images/';
       mkdir($path, 0744);
     }
 
-    //move orignal file
+    //move original file
     $imageInfo = getimagesize($_FILES['FileName']['tmp_name']);
     $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path . $_FILES['FileName']['name']);
+
     if (!$worked) {
       echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
       exit;
     }
+
     if (isset($_POST['border']) and $_POST['border'] == 1) {
       $class = 'class="image_brd"';
     } else {
       $class = 'class="image_no_brd"';
     }
 
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" ' . $class . ' />';
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="../../media/' . $_FILES['FileName']['name'] . '" ' . $class . ' />';
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
