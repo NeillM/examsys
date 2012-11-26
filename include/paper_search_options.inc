@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -31,7 +31,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <script language="JavaScript">
   function updateDropdownState(mySel, NameOfState) {
     setting = mySel.options[mySel.selectedIndex].value;
-    updateState(NameOfState, setting);    
+    updateState(NameOfState, setting);
   }
 
   function updateMenu(ID) {
@@ -39,7 +39,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     document.getElementById('menu' + ID).style.display = current;
 
     <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '$protocol" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
+      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('protocol')}" . $_SERVER['HTTP_HOST'] . "{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
     ?>
     alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
     document.getElementById('icon' + ID).setAttribute('src',icon);
@@ -173,7 +173,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <tr><td><div style="margin-left:4px"><?php echo $string['lab']; ?>&nbsp;</div></td><td><select style="width:150px" name="lab"><option value=""><?php echo $string['anylab']; ?></option>
 <?php
   $old_campus = '';
-  
+
   $result = $mysqli->prepare("SELECT DISTINCT id, name, campus FROM labs ORDER BY campus, name");
   $result->execute();
   $result->bind_result($lab_id, $lab_name, $campus);
@@ -189,7 +189,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     $old_campus = $campus;
   }
   $result->close();
-  echo "</optgroup>\n";  
+  echo "</optgroup>\n";
 ?>
 </select></td></tr>
 <tr><td>&nbsp;</td></tr>
