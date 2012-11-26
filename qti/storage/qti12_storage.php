@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../include/media.inc';
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 
 // main question object
 class ST_QTI12_Question // <item

@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 
 require_once '../classes/installutils.class.php';
 require_once '../include/auth.inc';
@@ -682,7 +682,7 @@ if (!isset($_POST['update'])) {
     $new_cfg_str[] =  "  \$cfg_db_sysadmin_user = '$cfg_db_sysadmin_user';\n";
     $new_cfg_str[] =  "  \$cfg_db_sysadmin_passwd = '$cfg_db_sysadmin_passwd';\n";
 
-    $cfg = file($cfg_web_root . 'config/config.inc.php');
+    $cfg = file($cfg_web_root . 'include/load_config.php');
 
     //remove refrances to old vars
     $cfg_new = array();
@@ -703,11 +703,11 @@ if (!isset($_POST['update'])) {
     //add the new config chunk
     array_splice($cfg_new,18,0,$new_cfg_str);
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root. 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root. 'include/load_config.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -719,7 +719,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] =  "  \$cfg_short_date = '%m/%d/%y';\n";
   $new_cfg_str[] =  "  \$cfg_long_date_time = '%m/%d/%Y %H:%i';\n";
   $new_cfg_str[] =  "  \$cfg_timezone = 'Europe/London';\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'Date formats in MySQL DATE_FORMAT') !== false) {
@@ -729,11 +729,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg,36,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old2.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old2.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<div>Added date and time formats to config file.</div>\n";
@@ -744,7 +744,7 @@ if (!isset($_POST['update'])) {
   // 05/09/2011 - Add company name config file.
   $new_cfg_str = array();
   $new_cfg_str[] =  "\$cfg_company = 'The University of Nottingham';\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'cfg_company') !== false) {
@@ -754,11 +754,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg,16,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added company name config file.</li>\n";
@@ -1285,17 +1285,17 @@ if (!isset($_POST['update'])) {
     $new_cfg_str[] =  "  \$cfg_db_sct_user = '$cfg_db_sct_username';\n";
     $new_cfg_str[] =  "  \$cfg_db_sct_passwd = '$cfg_db_sct_password';\n";
 
-    $cfg = file($cfg_web_root . 'config/config.inc.php');
+    $cfg = file($cfg_web_root . 'include/load_config.php');
 
     //add the new config chunk
     array_splice($cfg, 36, 0, $new_cfg_str);
 
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -1349,17 +1349,17 @@ if (!isset($_POST['update'])) {
     $new_cfg_str[] =  "  \$cfg_db_inv_user = '$cfg_db_inv_username';\n";
     $new_cfg_str[] =  "  \$cfg_db_inv_passwd = '$cfg_db_inv_password';\n";
 
-    $cfg = file($cfg_web_root . 'config/config.inc.php');
+    $cfg = file($cfg_web_root . 'include/load_config.php');
 
     //add the new config chunk
     array_splice($cfg, 36, 0, $new_cfg_str);
 
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     ///////////////////////  update the config file!! //////////////////////////////////////
@@ -1627,7 +1627,7 @@ if (!isset($_POST['update'])) {
 
   // 13/01/2012 - Add new character set to configuration file.
   $new_cfg_str[] =  "  \$cfg_db_charset = 'latin1';\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
 
   //remove refrances to old vars
   $cfg_new = array();
@@ -1643,11 +1643,11 @@ if (!isset($_POST['update'])) {
     //add the new config chunk
     array_splice($cfg_new,25,0,$new_cfg_str);
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old1.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old1.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added database charset.</li>\n";
@@ -1694,7 +1694,7 @@ if (!isset($_POST['update'])) {
 
   // 19/01/2012 - Update the version number
   $cfg_new = array();
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   foreach ($cfg as $line) {
     if (strpos($line,'ts_version') !== false) {
       $cfg_new[] = "\$rogo_version = '$version';\n";
@@ -1702,7 +1702,7 @@ if (!isset($_POST['update'])) {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+  if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg_new) === false) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
 
@@ -1711,7 +1711,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "if (empty(\$root)) \$root = str_replace('/config', '/', str_replace('\\\\', '/', dirname(__FILE__)));\n";
   $new_cfg_str[] = "require \$root . '/include/path_functions.inc.php';\n\n";
 
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'dirname(__FILE__)') !== false) {
@@ -1721,11 +1721,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg,11,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added root path functions to config file.</li>\n";
@@ -1738,7 +1738,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "\$cfg_web_root = get_root_path() . '/';\n";
   $new_cfg_str[] = "\$cfg_root_path = rtrim('/' . str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/');\n";
 
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'cfg_root_path') !== false) {
@@ -1764,11 +1764,11 @@ if (!isset($_POST['update'])) {
       array_splice($cfg, 17, 0, $new_cfg_str);
     }
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old5.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old5.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added URL root to config file.</li>\n";
@@ -1787,7 +1787,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "</script>\n";
   $new_cfg_str[] = "SCRIPT;\n\n";
 
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'Root path for JS') !== false) {
@@ -1847,11 +1847,11 @@ if (!isset($_POST['update'])) {
       array_merge($cfg, $new_cfg_str);
     }
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old6.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old6.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added root path for JavaScript to config file.</li>\n";
@@ -1866,7 +1866,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "    error_reporting(0);\n";
   $new_cfg_str[] = "    break;\n";
 
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   $last_break = 0;
   $index = 0;
@@ -1882,11 +1882,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg, $last_break+1, 0, $new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old7.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old7.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added default install type to config file.</li>\n";
@@ -1963,7 +1963,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   $new_cfg_str[] = "  \$cfg_ldap_user_prefix   = 'sAMAccountName='; // Nottingham specific.  Please change.\n";
 
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   $ldap_pass_location = 0;
   $index = 0;
@@ -1979,22 +1979,22 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg, $ldap_pass_location+1, 0, $new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old8.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added LDAP user search prefix to config file.\n";
-    echo "<br /><strong>If you use LDAP authentication then you will need to change the value <code>\$cfg_ldap_user_prefix</code> in <code>/config/config.inc.php</code></strong></li>\n";
+    echo "<br /><strong>If you use LDAP authentication then you will need to change the value <code>\$cfg_ldap_user_prefix</code> in <code>/include/load_config.php</code></strong></li>\n";
     ob_flush();
     flush();
   }
 
   // 24/02/2012 - Add new page character set to configuration file.
   $new_cfg_str =  array("\$cfg_page_charset = 'UTF-8';\n");
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
 
   //remove refrances to old vars
   $cfg_new = array();
@@ -2021,11 +2021,11 @@ if (!isset($_POST['update'])) {
     //add the new config chunk
     array_splice($cfg_new, $index + 1, 0, $new_cfg_str);
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old8.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old8.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added page charset to configuration file.</li>\n";
@@ -3360,7 +3360,7 @@ if (!isset($_POST['update'])) {
   // 24/04/2012 - Add default timezone config file.
   $new_cfg_str = array();
   $new_cfg_str[] =  "  date_default_timezone_set(\$cfg_timezone);\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   $target_line = 53;
   $cur_line = 0;
@@ -3376,11 +3376,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg,$target_line,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add default timezone config file.</li>\n";
@@ -3395,7 +3395,7 @@ if (!isset($_POST['update'])) {
   // 24/04/2012 - Add temp directory specification to config file.
   $new_cfg_str = array();
   $new_cfg_str[] =  "\$cfg_tmpdir = '/tmp/';\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'cfg_tmpdir') !== false) {
@@ -3405,11 +3405,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg,22,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add temp directory to config file.</li>\n";
@@ -3423,7 +3423,7 @@ if (!isset($_POST['update'])) {
 
   // 25/04/2012 - Remove define lines not used.
   $new_cfg_str = array();
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,"define('TOUCHSTONE'") === false and strpos($line,"define('DIR_SEPARATOR'") === false and strpos($line,"\$news") === false) {
@@ -3436,11 +3436,11 @@ if (!isset($_POST['update'])) {
   $cfg = $new_cfg_str;
 
   if ($found) {
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old4.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old4.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Removed unneccessary lines from configuration (defines and \$news).</li>\n";
@@ -3518,7 +3518,7 @@ if (!isset($_POST['update'])) {
 
   // 02/05/2012 - Update the version number
   $cfg_new = array();
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   foreach ($cfg as $line) {
     if (strpos($line,'rogo_version') !== false) {
       $cfg_new[] = "\$rogo_version = '$version';\n";
@@ -3526,7 +3526,7 @@ if (!isset($_POST['update'])) {
       $cfg_new[] = $line;
     }
   }
-  if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+  if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg_new) === false) {
     echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
   }
     @ob_flush();
@@ -3619,7 +3619,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str = array();
   //$new_cfg_str[] =  "  \$cfg_encrypt_salt = 'K8m2hzflkgjzdfgj';\n";
   $new_cfg_str[] =  "  \$cfg_encrypt_salt       = '" . gen_random_salt() . "';    // Do not alter if not on LDAP.\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   $cur_line = 0;
   $target_line = 66;
@@ -3635,11 +3635,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg,$target_line,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add \$cfg_encrypt_salt to config file.</li>\n";
@@ -3732,7 +3732,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str =  array("\n//Paper auto saving time out in seconds - default 180s == 3 minutes\n",
                         "  \$cfg_autosave_timeout = 180;\n");
 
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
 
   //remove refrances to old vars
   $cfg_new = array();
@@ -3759,11 +3759,11 @@ if (!isset($_POST['update'])) {
     //add the new config chunk
     array_splice($cfg_new, $index + 1, 0, $new_cfg_str);
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old10.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old10.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added  new autosave timeout to configuration file.</li>\n";
@@ -3809,7 +3809,7 @@ if (!isset($_POST['update'])) {
 
     $new_cfg_str = array();
     $new_cfg_str[] =  "\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.";
-    $cfg = file($cfg_web_root . 'config/config.inc.php');
+    $cfg = file($cfg_web_root . 'include/load_config.php');
     $found = false;
     $cur_line = 0;
     $target_line = 24;
@@ -3825,11 +3825,11 @@ if (!isset($_POST['update'])) {
 
     if (!$found) {
       array_splice($cfg,$target_line,0,$new_cfg_str);
-      if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-        rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+      if (file_exists($cfg_web_root . 'include/load_config.php')) {
+        rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old3.php');
       }
 
-      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+      if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
         echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
       }
       echo "<li>Add \$cfg_summative_mgmt = false.</li>\n";
@@ -4043,7 +4043,7 @@ if (!isset($_POST['update'])) {
   // 03/08/2012 - Add session change over date.
   $new_cfg_str = array();
   $new_cfg_str[] =  "\$cfg_academic_year_start = '07/01';\n";
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
   $found = false;
   foreach ($cfg as $line) {
     if (strpos($line,'cfg_academic_year_start') !== false) {
@@ -4053,11 +4053,11 @@ if (!isset($_POST['update'])) {
 
   if (!$found) {
     array_splice($cfg,20,0,$new_cfg_str);
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old3.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old3.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Added academic_year_start to config file.</li>\n";
@@ -4325,7 +4325,7 @@ if (!isset($_POST['update'])) {
   $new_cfg_str[] = "\$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist\r\n";
   $new_cfg_str[] = "\r\n";
 
-  $cfg = file($cfg_web_root . 'config/config.inc.php');
+  $cfg = file($cfg_web_root . 'include/load_config.php');
 
 
   // 17/09/2012 cczsa1 update to make database consistant with new install
@@ -4407,11 +4407,11 @@ if (!isset($_POST['update'])) {
     array_splice($cfg_new,$target_line,0,$new_cfg_str);
 
 
-    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      rename($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.old12.php');
+    if (file_exists($cfg_web_root . 'include/load_config.php')) {
+      rename($cfg_web_root . 'include/load_config.php', $cfg_web_root . 'config/config.inc.old12.php');
     }
 
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
+    if (file_put_contents($cfg_web_root . 'include/load_config.php', $cfg_new) === false) {
       echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
     }
     echo "<li>Add lti config variables</li>\n";
@@ -4909,6 +4909,8 @@ QUERY;
 
   $mysqli->query( 'FLUSH PRIVILEGES' );
 
+
+  // cczsa1 split the user table to remove the passowrd,username and id out of it
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

@@ -26,7 +26,17 @@ class Config {
   /**
    *
    */
-  function __construct() {
+
+  public static function Instance()
+  {
+    static $inst = null;
+    if ($inst == null) {
+      $inst = new Config();
+    }
+    return $inst;
+  }
+
+  private function __construct() {
     include __DIR__ . '/../config/config.inc.php';
     $this->data = get_defined_vars();
   }

@@ -25,7 +25,7 @@
 * @package
 */
 
-require_once './config/config.inc.php';
+require_once './include/load_config.php';
 require_once './classes/lang.class.php';
 require_once './include/auth.inc';
 require_once './classes/networkutils.class.php';

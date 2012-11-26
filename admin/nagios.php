@@ -23,7 +23,7 @@
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */ 
-  require "../config/config.inc.php";
+  require "../include/load_config.php";
   require_once $cfg_web_root . 'classes/dbutils.class.php';
   $error = false;
   $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);

@@ -24,7 +24,7 @@
  * @package
  */
 
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 
 require_once '../include/auth.inc';
 require_once '../include/mb_string.inc.php';

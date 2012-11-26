@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 require_once $cfg_web_root . 'classes/formutils.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';

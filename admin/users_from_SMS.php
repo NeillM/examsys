@@ -40,7 +40,7 @@ $path = str_replace('/admin', '', str_replace('\\', '/', dirname(__FILE__)));
 if ($path == '') {
   $path = $_SERVER['DOCUMENT_ROOT'];
 }
-require_once $path . '/config/config.inc.php';
+require_once $path . '/include/load_config.php';
 require_once $path . '/classes/dateutils.class.php';
 require_once $path . '/classes/dbutils.class.php';
 require_once $path . '/classes/userutils.class.php';
