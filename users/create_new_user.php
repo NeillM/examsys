@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Creates a new user (staff or student).
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
     $unique_username = false;
     $problem = true;
   }
-  
+
   switch($_POST['new_grade']) {
     case 'University Lecturer':
     case 'University Admin':
@@ -71,13 +71,13 @@ if (isset($_POST['submit'])) {
   $new_first_names = UserUtils::my_ucwords(trim($_POST['new_first_names']));
   $new_grade = $_POST['new_grade'];
 }
-  
-if (isset($_POST['submit']) and $unique_username == true) { 
+
+if (isset($_POST['submit']) and $unique_username == true) {
   if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_grade == '') {
     $problem = true;
   } else {
     UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], 1, $tmp_roles, $_POST['new_sid'], $mysqli);
-    
+
     // Send out email welcome.
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
       $result = $mysqli->prepare("SELECT email FROM users WHERE username=?");
@@ -86,7 +86,7 @@ if (isset($_POST['submit']) and $unique_username == true) {
       $result->bind_result($tmp_email);
       $result->fetch();
       $result->close();
-      
+
       $subject = "{$string['newrogoaccount']}";
       $headers = "From: $tmp_email\n";
       $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
@@ -127,9 +127,9 @@ MESSAGE;
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō: <?php echo "{$string['createnewuser']} $configObject->get('cfg_install_type')"; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
@@ -150,7 +150,7 @@ MESSAGE;
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō: <?php echo "{$string['createnewuser']} $configObject->get('cfg_install_type')"; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -225,7 +225,7 @@ MESSAGE;
 <tr><td>
 <table border="0" cellspacing="6" cellpadding="0" style="background-color:#F1F5FB">
 <?php
-  if ($cfg_use_ldap == true) {
+  if ($configObject->get('cfg_use_ldap') == true) {
     echo '<tr><td colspan=\"4\"><input type="button" name="lookup" value="' . $string['getldapdetails'] . '" onclick="ldaplookup();" /><td></tr>';
   }
 ?>
@@ -290,7 +290,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
   $result->bind_result($name, $description, $school);
   while ($result->fetch()) {
     if ($old_school != $school) {
-      echo "</optgroup>\n<optgroup label=\"" . $string['students'] . " - $school\">\n";    
+      echo "</optgroup>\n<optgroup label=\"" . $string['students'] . " - $school\">\n";
     }
     echo "<option value=\"$name\">$name: $description</option>\n";
     $old_school = $school;
@@ -325,7 +325,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 <?php
   }
   $mysqli->close();
-  
+
   if ($unique_username != true) {
     echo '<script language="JavaScript">alert("' . sprintf($string['usernameinuse'],$_POST['new_username']) . '")</script>';
   }
