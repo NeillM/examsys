@@ -25,7 +25,7 @@
  */
 
 /**
-*  This function is used to catch early errors and convert them to exeptions 
+*  This function is used to catch early errors and convert them to exeptions
 *  so we can catch them. I is later replaced by the more complex customErrorHandler
 *  in include/custom_error_handler.inc
 */
@@ -55,7 +55,6 @@ try {
 
 require_once $cfg_web_root . 'classes/configobject.class.php';
 
-
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
@@ -66,13 +65,6 @@ require_once $cfg_web_root . 'include/lti_func.php';
 require_once $cfg_web_root . 'classes/lti_integration.class.php';
 
 require_once $cfg_web_root . 'classes/userobject.class.php';
-
-
-
-
-$cdgfdfgfd=Config::Instance();
-
-
 
 // Check to see if the update script has been run.
 if ($configObject->get('rogo_version') != '4.4') {
@@ -112,7 +104,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
     if ($check > 0) {
       $datareturned=db_userlookup($check[0], $mysqli, true);
-      
+
       if ($datareturned === false) {
         display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
         exit();
@@ -206,7 +198,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
           } else {
             //Ad Account NOT OK
             $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
-            if ($cfg_use_ldap == true) {
+            if ($configObject->get('cfg_use_ldap') == true) {
               $message .= "<li>" . $string['tsonldap'] . "</li>\n";
             }
             $message .= '<li>' . $string['pressf5'] . '</li>';
@@ -214,14 +206,14 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
               $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
             }
             $message .= "<li>" . $ldap_user_data['error'] . "</li></ul>";
-            if (!array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
+            if (!array_reduce($configObject->get('cfg_institutional_domains'), 'NetworkUtils::check_email_domain')) {
               $message .= $fp_link;
             }
             access_denied($message, true);
           }
         } else {
           // Internal DB authentication failed.
-          if ($cfg_use_ldap == true and  ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true and strpos($_SERVER['PHP_SELF'], 'self_enrol.php') !== FALSE) {
+          if ($configObject->get('cfg_use_ldap') == true and  ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true and strpos($_SERVER['PHP_SELF'], 'self_enrol.php') !== FALSE) {
             //we have a valid LDAP account - we are in the self enrol script allow execution to continue
             //continue
             $result = $mysqli->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database); // Swap to staff user for appropriate database permissions
