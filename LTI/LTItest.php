@@ -11,7 +11,7 @@ require_once 'ims-lti\UoN_LTI.php';
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $root = $root . '/../';
 
-require_once  $root . 'config/config.inc.php';
+require_once  $root . 'include/load_config.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
 //print_r($_REQUEST);

@@ -1,5 +1,5 @@
 <?php
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 $deb32434=1;
 // This file is part of Rogō
 //

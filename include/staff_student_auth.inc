@@ -25,7 +25,7 @@
  */
 
 /**
-*  This function is used to catch early errors and convert them to exeptions 
+*  This function is used to catch early errors and convert them to exeptions
 *  so we can catch them. I is later replaced by the more complex customErrorHandler
 *  in include/custom_error_handler.inc
 */
@@ -46,7 +46,7 @@ set_error_handler("handle_early_errors");
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . 'include/auth.inc';
 try {
-  include_once $root . 'config/config.inc.php';
+  include_once $root . 'include/load_config.php';
 } catch (Exception $e) {
    display_notice('Install Required', 'Rogō needs installing before use. The Installer is avalable <a href="./install/index.php">here</a>.', '../artwork/software_64.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
@@ -54,25 +54,6 @@ try {
 }
 
 require_once $cfg_web_root . 'classes/configobject.class.php';
-
-$configObject=new Config();
-
-$list=get_defined_vars();
-
-foreach ($list as $k => $v) {
-//  print $k;
-  if ((strpos($k, 'cfg_') !== false) and ((strpos($k,'cfg_web_root') === false)) and (strpos($k,'cfg_editor_javascript') === false))
-  {
-//    print ':UNSET';
-
-    unset($$k);
-  }
-//  print '<br>';
-}
-unset($list);
-unset($v);
-unset($k);
-
 
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
@@ -85,9 +66,8 @@ require_once $cfg_web_root . 'classes/lti_integration.class.php';
 
 require_once $cfg_web_root . 'classes/userobject.class.php';
 
-
 // Check to see if the update script has been run.
-if ($rogo_version != '4.4') {
+if ($configObject->get('rogo_version') != '4.4') {
   display_notice('Update Required', 'System needs configuring before use. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
@@ -101,14 +81,14 @@ ini_set('xdebug.remote_autostart', 1);
 
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
-if ($protocol == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
+if ($configObject->get('protocol') == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
   $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';
   display_notice($string['secureconnection'], $msg, '../artwork/secure_connection.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
 }
 if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape6|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Netscape\/7.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|Mozilla\/5.0|', $_SERVER['HTTP_USER_AGENT'], $log_version) or preg_match('|PHP-SOAP|', $_SERVER['HTTP_USER_AGENT'], $log_version)) {
-  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $dbclass);
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $configObject->get('dbclass'));
   if(!isset($userObject)) {
     global $userObject;
     $userObject = new UserObject($configObject, $mysqli);
@@ -124,7 +104,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
 
     if ($check > 0) {
       $datareturned=db_userlookup($check[0], $mysqli, true);
-      
+
       if ($datareturned === false) {
         display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
         exit();
@@ -218,7 +198,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
           } else {
             //Ad Account NOT OK
             $message = $string['authenticationfailed'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['usernamecasesensitive'] . "</li>\n";
-            if ($cfg_use_ldap == true) {
+            if ($configObject->get('cfg_use_ldap') == true) {
               $message .= "<li>" . $string['tsonldap'] . "</li>\n";
             }
             $message .= '<li>' . $string['pressf5'] . '</li>';
@@ -226,14 +206,14 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
               $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>";
             }
             $message .= "<li>" . $ldap_user_data['error'] . "</li></ul>";
-            if (!array_reduce($cfg_institutional_domains, 'NetworkUtils::check_email_domain')) {
+            if (!array_reduce($configObject->get('cfg_institutional_domains'), 'NetworkUtils::check_email_domain')) {
               $message .= $fp_link;
             }
             access_denied($message, true);
           }
         } else {
           // Internal DB authentication failed.
-          if ($cfg_use_ldap == true and  ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true and strpos($_SERVER['PHP_SELF'], 'self_enrol.php') !== FALSE) {
+          if ($configObject->get('cfg_use_ldap') == true and  ldap_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $ldap_user_data) == true and strpos($_SERVER['PHP_SELF'], 'self_enrol.php') !== FALSE) {
             //we have a valid LDAP account - we are in the self enrol script allow execution to continue
             //continue
             $result = $mysqli->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database); // Swap to staff user for appropriate database permissions
@@ -268,20 +248,7 @@ $userObject->db_user_change();
 
 
 
-$configObject=new Config();
 
-function fgdfgdfgf ($conf='') {
-  global $configObject;
-  $data=$configObject->export_all();
-  foreach($data as $k=>$v) {
-    $$k=$v;
-  }
-  unset($data);
-  unset($rt);
-
-  var_dump(get_defined_vars());
-
-}
 
 //fgdfgdfgf();
 //var_dump($rt->get('cfg_db_external_user'));

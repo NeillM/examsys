@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Displays the results of a paper search.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -26,16 +26,16 @@
 
   require '../include/staff_auth.inc';
   require_once '../classes/moduleutils.class.php';
-  
+
   function displayIcon($paper_type, $title, $initials, $surname, $shared, $locked, $retired) {
     global $string;
-    
+
     if (strlen($retired) == 0) {
       $retired = '';
     } else {
       $retired = '_retired';
     }
-    
+
     switch ($paper_type) {
       case 0:
         $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"" . $string['type'] . ": " . $string['formative'] ."&#013;" . $string['author'] . ": $title $initials $surname\" />";
@@ -76,7 +76,7 @@
     if (isset($_POST['peerreview']) and $_POST['peerreview'] == '1') $type .= " OR paper_type='6'";
     if (strlen($type) > 0) $type = 'AND (' . substr($type,4) . ')';
   }
-  
+
   $params = '';
   $variables = array();
   if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
@@ -126,8 +126,8 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rogō<?php echo " $configObject->get('cfg_install_type')"; ?></title>
-  
+  <title>Rogō<?php echo " {$configObject->get('cfg_install_type')}"; ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -135,7 +135,7 @@
   .f a {color:black}
   .f {float:left; width:375px; height:74px; padding-left:12px}
   </style>
-  
+
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
@@ -144,16 +144,16 @@
 <?php
   if (isset($_POST['submit'])) {
     echo "<body>\n";
-    
+
     require '../include/paper_search_options.inc';
-    
+
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
   } else {
     echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
-    
+
     require '../include/paper_search_options.inc';
-    
+
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>";
@@ -173,7 +173,7 @@
     $results->execute();
     $results->store_result();
     $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_ownerID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
-    
+
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
     echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
     if ($results->num_rows > 0) {

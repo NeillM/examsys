@@ -32,7 +32,7 @@
 // TODO : if neg feedback is empty use positive one for both question and options
 // TODO : Status is a field in the database, stick it in the struct
 
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 
 class IE_Local_Load extends IE_Main {
   var $type = "";

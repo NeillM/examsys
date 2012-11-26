@@ -250,8 +250,8 @@ Class InstallUtils {
     // Check we can write to the config file first if not passwords will be lost!
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
 
-    if (file_exists($rogo_path . '/config/config.inc.php')) {
-      if (!is_writable($rogo_path . '/config/config.inc.php')) {
+    if (file_exists($rogo_path . '/include/load_config.php')) {
+      if (!is_writable($rogo_path . '/include/load_config.php')) {
         self::displayError(array(300=>'Could not write config file!'));
       }
     } elseif (!is_writable($rogo_path . '/config')) {
@@ -811,8 +811,8 @@ Class InstallUtils {
     global $string;
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
-    if (file_exists($rogo_path . '/config/config.inc.php')) {
-      $errors['90'] =  "<p>" . sprintf($string['errors1'],$rogo_path."/config/config.inc.php") . "</p>";
+    if (file_exists($rogo_path . '/include/load_config.php')) {
+      $errors['90'] =  "<p>" . sprintf($string['errors1'],$rogo_path."/include/load_config.php") . "</p>";
       $errors['90'] .= "<p>" . sprintf($string['errors2'],"<a href=\"/staff\">") . "</a></p>";
       self::displayError($errors);
     }
@@ -827,7 +827,7 @@ Class InstallUtils {
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
-    if (is_writable($rogo_path . '/config/config.inc.php')) {
+    if (is_writable($rogo_path . '/include/load_config.php')) {
       return true;
     } else {
       return false;
@@ -854,7 +854,7 @@ Class InstallUtils {
     if (!is_writable(self::$rogo_path . '/qti/exports')) {
       $errors['104'] = sprintf($string['errors6'], self::$rogo_path);
     }
-    if (!is_writable(self::$rogo_path . '/config/config.inc.php')) {
+    if (!is_writable(self::$rogo_path . '/include/load_config.php')) {
       if (!is_writable(self::$rogo_path . '/config')) {
         $errors['901'] = sprintf($string['errors16'], self::$rogo_path);
       }
@@ -1232,11 +1232,11 @@ CONFIG;
 
     $config = str_replace('{SERVER_NAME}', $_SERVER['HTTP_HOST'], $config);
 
-    if (file_exists(self::$rogo_path . '/config/config.inc.php')) {
-      rename(self::$rogo_path . '/config/config.inc.php', self::$rogo_path . '/config/config.inc.old.php');
+    if (file_exists(self::$rogo_path . '/include/load_config.php')) {
+      rename(self::$rogo_path . '/include/load_config.php', self::$rogo_path . '/config/config.inc.old.php');
     }
 
-    if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === false) {
+    if (file_put_contents(self::$rogo_path . '/include/load_config.php', $config) === false) {
       self::displayError(array(300=>'Could not write config file!'));
     }
   }
