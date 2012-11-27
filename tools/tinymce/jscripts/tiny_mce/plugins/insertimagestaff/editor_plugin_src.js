@@ -10,9 +10,9 @@
 
 (function() {
 	// Load plugin specific language pack
-	tinymce.PluginManager.requireLangPack('insertimagequestioneditor');
+	tinymce.PluginManager.requireLangPack('insertimagestaff');
 
-	tinymce.create('tinymce.plugins.insertimagequestioneditorPlugin', {
+	tinymce.create('tinymce.plugins.insertimagestaffPlugin', {
 		/**
 		 * Initializes the plugin, this will be executed after the plugin has been created.
 		 * This call is done before the editor instance has finished it's initialization so use the onInit event
@@ -22,12 +22,12 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 		init : function(ed, url) {
-			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceinsertimagequestioneditor');
-			ed.addCommand('mceinsertimagequestioneditor', function() {
+			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceinsertimagestaff');
+			ed.addCommand('mceinsertimagestaff', function() {
 				ed.windowManager.open({
 					file : url + '/dialog.php',
-					width : 320 + parseInt(ed.getLang('insertimagequestioneditor.delta_width', 0)),
-					height : 120 + parseInt(ed.getLang('insertimagequestioneditor.delta_height', 0)),
+					width : 320 + parseInt(ed.getLang('insertimagestaff.delta_width', 0)),
+					height : 120 + parseInt(ed.getLang('insertimagestaff.delta_height', 0)),
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
@@ -35,16 +35,16 @@
 				});
 			});
 
-			// Register insertimagequestioneditor button
-			ed.addButton('insertimagequestioneditor', {
-				title : 'insertimagequestioneditor.desc',
-				cmd : 'mceinsertimagequestioneditor',
+			// Register insertimagestaff button
+			ed.addButton('insertimagestaff', {
+				title : 'insertimagestaff.desc',
+				cmd : 'mceinsertimagestaff',
 				image : url + '/img/image.gif'
 			});
 
 			// Add a node change handler, selects the button in the UI when a image is selected
 			ed.onNodeChange.add(function(ed, cm, n) {
-				cm.setActive('insertimagequestioneditor', n.nodeName == 'IMG');
+				cm.setActive('insertimagestaff', n.nodeName == 'IMG');
 			});
 		},
 
@@ -70,15 +70,15 @@
 		 */
 		getInfo : function() {
 			return {
-				longname : 'insertimagequestioneditor plugin',
+				longname : 'insertimagestaff plugin',
 				author : 'Simon Wilkinson',
 				authorurl : 'http://tinymce.moxiecode.com',
-				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/insertimagequestioneditor',
+				infourl : 'http://wiki.moxiecode.com/index.php/TinyMCE:Plugins/insertimagestaff',
 				version : "1.0"
 			};
 		}
 	});
 
 	// Register plugin
-	tinymce.PluginManager.add('insertimagequestioneditor', tinymce.plugins.insertimagequestioneditorPlugin);
+	tinymce.PluginManager.add('insertimagestaff', tinymce.plugins.insertimagestaffPlugin);
 })();
