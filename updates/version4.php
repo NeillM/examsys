@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once '../config/config.inc.php';
+require_once '../include/load_config.php';
 
 require_once '../classes/installutils.class.php';
 require_once '../include/auth.inc';
@@ -78,9 +78,9 @@ function gen_random_salt() {
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $cfg_page_charset ?>" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-    <title>Rogo <?php echo $rogo_version . ' to ' . $version; ?> update Script</title>
+    <title>Rogo <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -110,7 +110,7 @@ function gen_random_salt() {
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
       <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
       <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogo</div>
-      <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $rogo_version . ' to ' . $version; ?>)</div>
+      <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $configObject->get('rogo_version') . ' to ' . $version; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px">
       <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" />
@@ -137,7 +137,7 @@ if (!isset($_POST['update'])) {
     <?php
     if (!InstallUtils::configFileIsWriteable()) {
       ?>
-       <h2><?php echo $string['updatefromversion'] . ' ' . $rogo_version . ' to ' . $version; ?></h2>
+       <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
        <div><?php echo $string['warning1']; ?></div>
        <div><?php echo $string['warning1']; ?></div>
       <?php
@@ -165,11 +165,13 @@ if (!isset($_POST['update'])) {
   <?php
 
 } else {
-  if (!isset($cfg_db_charset)) {
+  if ($configObject->get('cfg_db_charset') == null) {
     $cfg_db_charset = 'latin1';
+  } else {
+    $cfg_db_charset = $configObject->get('cfg_db_charset');
   }
 
-  $mysqli = DBUtils::get_mysqli_link($cfg_db_host , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $cfg_db_database, $cfg_db_charset, $dbclass);
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $configObject->get('dbclass'));
 
   if ($mysqli->connect_error) {
     echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' .  $_POST['mysql_admin_pass'] . '</div>';
@@ -177,6 +179,14 @@ if (!isset($_POST['update'])) {
     echo "</html>";
     exit;
   }
+
+  // Avoid repeated method calls
+  $cfg_db_database = $configObject->get('cfg_db_database');
+  $cfg_db_student_user = $configObject->get('cfg_db_student_user');
+  $cfg_db_staff_user = $configObject->get('cfg_db_staff_user');
+  $cfg_db_host = $configObject->get('cfg_db_host');
+  $cfg_db_username = $configObject->get('cfg_db_username');
+  $cfg_db_external_user = $configObject->get('cfg_db_external_user');
 
   echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
   ob_start();
@@ -3924,6 +3934,7 @@ if (!isset($_POST['update'])) {
       echo '<li class="error">ERROR: could not set permissions ' . $sql . '</li>';
     }
   }
+
   // 21/03/2012 - Move to InnoDB for all table except help tables SHOULD not go live untill ver 4.3 - With full testing
   $result = $mysqli->prepare("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE ENGINE='MyISAM' AND TABLE_SCHEMA = '" . $cfg_db_database . "'");
   $result->execute();

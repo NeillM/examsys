@@ -1,7 +1,7 @@
 <?php
 $string['systemupdate'] = 'System Update';
 $string['actionrequired'] = 'Action Required';
-$string['readonly'] = "Don't forget to make the <strong>/include/load_config.php</strong> readonly! (chmod 444)";
+$string['readonly'] = "Don't forget to make the <strong>/config/config.inc.php</strong> readonly! (chmod 444)";
 $string['finished'] = 'Finished!';
 $string['couldnotwrite'] = 'Error: could not write config file!';
 $string['msg1'] = 'This script updates the database structures to match the new %s code. No harm will come if this script is run multiple times as it checks the current database structure before applying any changes.';

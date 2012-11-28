@@ -59,5 +59,7 @@ class Config {
       }
       return $dat;
     }
+
+    return null;
   }
 }
