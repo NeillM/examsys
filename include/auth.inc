@@ -202,7 +202,7 @@ global $configObject;
 
     if ($encrypt_password == $password) {
       if ($encrypt_type == 'MD5') { // Re-encrypt MD5 passwords using SHA-512.
-        $encpw_details = encpw($cfg_encrypt_salt, $u, $p);
+        $encpw_details = encpw($configObject->get('cfg_encrypt_salt'), $u, $p);
         $stmt = $db->prepare("UPDATE users SET password = ? WHERE username = ?");
         $stmt->bind_param('ss', $encpw_details, $u);
         $stmt->execute();
