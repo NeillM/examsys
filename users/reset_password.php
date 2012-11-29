@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/formutils.class.php';
 require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host , $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $configObject->get('dbclass'));
 
 $password = $password_confirm = $email = '';
 $message = '';
@@ -81,7 +81,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
         $errors[] = $string['incorrectemail'];
       } else {
         // Update user's password
-        $new_pw = encpw($cfg_encrypt_salt, $username, $password);
+        $new_pw = encpw($configObject->get('cfg_encrypt_salt'), $username, $password);
         $update = $mysqli->prepare("UPDATE users SET password=? WHERE id=?");
         $update->bind_param('si', $new_pw, $user_id);
         if(!$update->execute()) {
@@ -93,14 +93,14 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
           $delete->execute();
           $delete->close();
 
-          $redirect_url = $protocol. $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/";
-          if ($userObject->has_role('External Examiner')) {
+          $redirect_url = $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/";
+          if (strpos($userroles, 'External Examiner') !== false) {
             $redirect_url .= "reviews/";
-          } elseif ($userObject->has_role('Invigilator')) {
+          } elseif (strpos($userroles, 'Invigilator') !== false) {
             $redirect_url .= "invigilator/";
-          } elseif ($userObject->has_role('Student')) {
+          } elseif (strpos($userroles, 'Student') !== false) {
             $redirect_url .= "students/";
-          } elseif ($userObject->has_role('Staff')) {
+          } elseif (strpos($userroles, 'Staff') !== false) {
             $redirect_url .= "staff/";
           }
 

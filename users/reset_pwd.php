@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -28,9 +28,9 @@ require '../include/sysadmin_auth.inc';
 <html>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['passwordreset'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <style type="text/css">
@@ -44,7 +44,7 @@ require '../include/sysadmin_auth.inc';
 <body class="dialog_body">
 <?php
   $new_password = gen_password();
-  $encrypt_password = encpw($cfg_encrypt_salt, $_GET['username'], $new_password);
+  $encrypt_password = encpw($configObject->get('cfg_encrypt_salt'), $_GET['username'], $new_password);
 
   $stmt = $mysqli->prepare("UPDATE users SET password=? WHERE id=?");
   $stmt->bind_param('si', $encrypt_password, $_GET['userID']);

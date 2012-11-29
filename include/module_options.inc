@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -35,11 +35,11 @@ $session = date_utils::get_current_academic_year();
   function jumpToModule() {
     window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path'); ?>/folder/details.php?module=' + $('#lineID').val();
   }
-  
+
   function studentCohort() {
-    window.location = '<?php echo $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path'}; ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#lineID').val() + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
+    window.location = '<?php echo $configObject->get('protocol') . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#lineID').val() + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
   }
-  
+
 </script>
 
 <div id="left-sidebar" class="sidebar">
