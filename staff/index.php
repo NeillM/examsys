@@ -52,15 +52,15 @@ require_once '../include/staff_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
-  
+
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>
@@ -145,11 +145,11 @@ require_once '../include/staff_auth.inc';
 <table cellpadding="0" cellspacing="0" border="0" class="header">
   <tr>
     <th style="padding-left:16px; padding-top:5px">
-    
+
     <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
     <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rogō</div>
     <div style="color:#1F497D; font-size:9pt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
-    
+
     </th>
     <th style="text-align:right; padding-right:10px"><?php echo $logo_html; ?></th>
   </tr>
@@ -187,7 +187,7 @@ require_once '../include/staff_auth.inc';
   $result->store_result();
   echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myrecentpapers'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   while ($result->fetch()) {
-    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);  
+    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $moduleID = implode(',',array_keys($moduleIDs));
     echo "<div style=\"padding-left:22px\"><a href=\"../paper/details.php?paperID=" . $paperID . "&folder=&module=" . $moduleID . "\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" alt=\"" . $paper_type . "\" /></a>&nbsp;<a class=\"recent\"";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
@@ -297,9 +297,9 @@ require_once '../include/staff_auth.inc';
 	    $title_parts = explode(' - ',$folder_title);
 	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" border=\"0\" align=\"middle\" /></a>&nbsp;</td><td><a href=\"$url\" class=\"blacklink\">" . $title_parts[0] . "</a><br /><span style=\"color:#808080\">" . $title_parts[1] . "</span></td></tr></table></div>\n";
     }
-    
+
     if ($module_no == 0) {
-      echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</div>';
+      echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
     }
 
     echo '<br clear="left" /><br />';
