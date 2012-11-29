@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -34,7 +34,7 @@ $cfg_sms_sources = array();
 if (is_object($SMS)) {
   $cfg_sms_sources =  $SMS->getModuleSources();
 }
-  
+
 $unique_moduleid = true;
 if (isset($_POST['submit'])) {
   // Check for unique moduleID
@@ -71,7 +71,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
   $fullname = $schoolid = $vle_api = $sms_api = '';
   $peer = $stdset = $mapping = false;
-  
+
   if (isset($_POST['fullname']))  $fullname = trim($_POST['fullname']);
   if (isset($_POST['peer']))      $peer = true;
   if (isset($_POST['external']))  $external = true;
@@ -80,14 +80,14 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['schoolid']))  $schoolid = $_POST['schoolid'];
   if (isset($_POST['vle_api']))   $vle_api = $_POST['vle_api'];
   if (isset($_POST['sms_api']))   $sms_api = $_POST['sms_api'];
-  
+
   $ebel_grid_template = $_POST['ebel_grid_template'];
-  
+
   module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli);
-  
+
   if (isset($_POST['sms_api']) and $_POST['sms_api'] != '') {
     $enrolements = 0;
-      
+
     // Get the current academic session
     $session = date_utils::get_current_academic_year();
     $session_parts = explode('/',$session);
@@ -98,7 +98,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $replaced_module = str_replace('_UNMC','',$module);
     $replaced_module = str_replace('_UNNC','',$replaced_module);
     //------------------------------------
-    
+
     $url = $_POST['sms_api'] . "&code=$replaced_module&year=" . $session_parts[0];
     $returned_data = @file_get_contents($url);
     if ($returned_data !== false) {
@@ -117,7 +117,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
           $student->Gender = trim($student->Gender);
           $student->YearofStudy = trim($student->YearofStudy);
           $student->Faculty = trim($student->Faculty);
-          
+
           // Create new account for the user
           $names = explode(' ',$student->Forename);
           $initials = '';
@@ -130,7 +130,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
           }
           // Add student onto the module
           UserUtils::add_student_to_module($tmp_userID, $module, 1, $session, $mysqli, 1);
-          
+
           $enrolements++;
           if ($enrolement_details == '') {
             $enrolement_details = $student->Username;
@@ -150,7 +150,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       } else {
         $import_type = 'SATURN UK';
       }
-      
+
       $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, 0, '', ?)");
       $result->bind_param('siss', $module, $enrolements, $enrolement_details, $import_type);
       $result->execute();
@@ -166,9 +166,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <html>
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo {$configObject->get('cfg_page_charset')} ?>" />
 
-  <title>Create new Module<?php echo " $configObject->get('cfg_install_type')"; ?></title>
+  <title>Create new Module<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -199,7 +199,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
   </script>
   </head>
-  
+
   <body>
   <?php
     require '../include/module_options.inc';
@@ -221,7 +221,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     ?>
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" /></td></tr>
-    
+
 <?php
   $old_faculty = '';
   echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select name=\"schoolid\">\n<option value=\"\"></option>\n";
@@ -242,7 +242,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
   $result->close();
   echo "</optgroup>\n</select></td></tr>\n";
-  
+
   echo '<tr><td class="field">' . $string['smsapi'] . '</td><td><select name="sms_api">';
   echo '<option value="">' . $string['nolookup'] . '</option>';
   foreach ($cfg_sms_sources as $key=>$value) {

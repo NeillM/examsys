@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Display a list of the papers that are currently available to a student
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -106,12 +106,12 @@ for ($i = 0; $i < count($modules); $i++) {
 	  	$lab_arr = (empty($labs)) ? array() : explode(',', $labs);
 	  	if (empty($lab_arr) or ($lab != -1 and in_array($lab, $lab_arr))) {
 	  		$screens = (empty($screens)) ? 0 : $screens;
-	  		
+
 	  		// Don't show if 0 screens
 	  		if ($screens > 0) {
 					$modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
 					$papers++;
-					
+
 					if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
 						$sessions_with_papers[] = $modules[$i]['year'];
 					}
@@ -132,7 +132,7 @@ $stmt->bind_result($q_paper);
 while ($stmt->fetch()) {
   $papers_taken[] = $q_paper;
 }
-$stmt->close(); 
+$stmt->close();
 
 // Get any objectives-based feedback released.
 $feedback_query = <<< QUERY
@@ -157,13 +157,13 @@ for ($i = 0; $i < count($modules); $i++) {
       if (in_array($paper_id, $papers_taken)) {
         $modules[$i]['papers'][] = array('title' =>$paper_title, 'type' => $feedback_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name);
         $papers++;
-        
+
         if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
           $sessions_with_papers[] = $modules[$i]['year'];
         }
       }
 	  }
-	
+
     $stmt->close();
   }
 }
@@ -174,9 +174,9 @@ for ($i = 0; $i < count($modules); $i++) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Rogō<?php echo " $configObject->get('cfg_install_type')"; ?></title>
-  
+
+  <title>Rogō<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
@@ -241,15 +241,15 @@ if ($student_msg != '') {
   $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
   echo "<br /><div class=\"announcement\"><div style=\"padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$student_msg</div></div>\n<br />\n";
 }
-  
+
 if ($papers > 0) {
 	$last_session = '';
-	
+
 	foreach($modules as $module) {
 	  $mod_id = $module['id'];
 		if (!empty($module['papers'])) {
-    
-    
+
+
 			if ($module['year'] != $last_session) {
 				$visibility = 'style="display: none"';
 				if ($module['year'] == $default_session) {
@@ -296,7 +296,7 @@ if (isset($paper['password']) and $paper['password'] != '') {
 ?>
                 <br />
 	    					<span style="color:#808080">
-	    						<?php 
+	    						<?php
 
                     if ($paper['type'] == 'objectives') {
                       echo $string['objectivesbased'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start']));

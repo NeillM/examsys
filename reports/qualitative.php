@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -28,7 +28,7 @@
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Qualitative Analysis<?php echo " $configObject->get('cfg_install_type')"; ?></title>
+  <title>Qualitative Analysis<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 </head>
   <frameset rows="75,*" frameborder="no" border="0">
     <frame marginwidth="0" src="qualitative_options.php?paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>&module=<?php echo $_GET['module']; ?>&repcourse=<?php echo $_GET['repcourse']; ?>&repyear=<?php echo $_GET['repyear']; ?>&folder=<?php echo $_GET['folder']; ?>" name="options">

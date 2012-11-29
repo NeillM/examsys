@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Displays the results of a question search.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -34,9 +34,9 @@ set_time_limit(0);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Rogō: <?php echo $string['questionsearch'] . " $configObject->get('cfg_install_type')"; ?></title>
-  
+
+  <title>Rogō: <?php echo $string['questionsearch'] . " " . $configObject->get('cfg_install_type') ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -48,7 +48,7 @@ set_time_limit(0);
     .qline:hover {background-color:#eee}
     .qline.highlight {background-color:#B3C8E8}
   </style>
-  
+
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript">
@@ -114,15 +114,15 @@ set_time_limit(0);
 <?php
   if (isset($_POST['submit'])) {
     echo "<body onselectstart=\"return false\">\n";
-    
+
     require '../include/question_search_options.inc';
-    
+
     echo "<div id=\"content\" class=\"content\">\n";
   } else {
     echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
-    
+
     require '../include/question_search_options.inc';
-    
+
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
     echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th></tr>";
@@ -143,11 +143,11 @@ if (isset($_POST['submit'])) {
   if (!isset($_POST['theme']) and !isset($_POST['scenario']) and !isset($_POST['leadin']) and !isset($_POST['options']) and !isset($_POST['keywords'])) {
     $error = $string['notickedfields'];
   }
-  
+
   if ($_POST['searchterm'] == '' and $_POST['owner'] == '' and  $_POST['status'] == '%' and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['status'] == '%' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
     $error = $string['narrowyoursearch'];
   }
-  
+
   if ($error != '') {
     echo "<table class=\"header\" style=\"table-layout:fixed\">\n";
     echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></th></tr>";
@@ -163,12 +163,12 @@ if (isset($_POST['submit'])) {
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;$error.</td></tr></table>\n";
     exit;
   }
-  
+
   echo "<table class=\"header fixed\">\n";
 
   $params = '';
   $variables = array();
-  
+
   $keywordsSQL = '';
   if ($_POST['keywordID'] != '') {
     $keywordsSQL = 'AND keywordID=?';
@@ -187,7 +187,7 @@ if (isset($_POST['submit'])) {
     } else {
       $themeSQL = '';
     }
-    
+
     if (isset($_POST['scenario']) and $_POST['scenario']) {
       $scenarioSQL = ' OR scenario_plain LIKE ?';
       $variables[] = '%' . $searchterm . '%';
@@ -195,7 +195,7 @@ if (isset($_POST['submit'])) {
     } else {
       $scenarioSQL = '';
     }
-    
+
     if (isset($_POST['leadin']) and $_POST['leadin']) {
       $leadinSQL = ' OR leadin_plain LIKE ?';
       $variables[] = '%' . $searchterm . '%';
@@ -203,7 +203,7 @@ if (isset($_POST['submit'])) {
     } else {
       $leadinSQL = '';
     }
-    
+
     if (isset($_POST['options']) and $_POST['options']) {
       $stemsSQL = ' OR option_text LIKE ?';
       $variables[] = '%' . $searchterm . '%';
@@ -211,11 +211,11 @@ if (isset($_POST['submit'])) {
     } else {
       $stemsSQL = '';
     }
-    
+
     $search_string = $themeSQL . $scenarioSQL . $leadinSQL . $stemsSQL;
     $search_string = 'AND (' . substr($search_string, 4) . ')';
   }
-  
+
   if ($_POST['module'] != '') {
     $module_string = ' AND idMod = ?';
     $variables[] = $_POST['module'];
@@ -223,7 +223,7 @@ if (isset($_POST['submit'])) {
   } else {
     $module_string = '';
   }
-  
+
   if ($_POST['owner'] != '' or count($staff_modules) == 0) {
     $user_string = ' AND questions.ownerID=?';
     $variables[] = $_POST['owner'];
@@ -237,7 +237,7 @@ if (isset($_POST['submit'])) {
       $user_string = '';
     }
   }
-  
+
   if (isset($_POST['status']) and $_POST['status'] != '%') {
     if ($_POST['status'] == 'nonretired') {
       $status_string = " AND questions.status != 'retired'";
@@ -282,7 +282,7 @@ if (isset($_POST['submit'])) {
     $variables[] = $to_date;
     $params .= 'ss';
   }
-  
+
   if ($_POST['searchtype'] == '%') {
     $q_type = '';
   } else {
@@ -290,7 +290,7 @@ if (isset($_POST['submit'])) {
     $variables[] = $_POST['searchtype'];
     $params .= 's';
   }
-  
+
   if ($_POST['bloom'] == '%') {
     $bloom ='';
   } else {
@@ -298,7 +298,7 @@ if (isset($_POST['submit'])) {
     $variables[] = $_POST['bloom'];
     $params .= 's';
   }
-  
+
   if ($keywordsSQL == '') {
     $sql = "SELECT DISTINCT title, initials, surname, q_type, questions.q_id, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, ownerID, locked, status FROM (questions, users, options, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = options.o_id AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom AND deleted IS NULL ORDER BY leadin_plain";
   } else {
@@ -351,18 +351,18 @@ if (isset($_POST['submit'])) {
 
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
-    
-    echo "<td class=\"l\">$tmp_leadin <span class=\"o\">($title $initials $surname)</span></td>";   
+
+    echo "<td class=\"l\">$tmp_leadin <span class=\"o\">($title $initials $surname)</span></td>";
     echo '<td class="l"><nobr>' . $string[$q_type] . '</nobr></td>';
     echo '<td class="l">' . $last_edited . '</td></tr>';
   }
   $result->close();
 
   echo "</table>\n";
-  
+
   if ($hits == 0) {
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['noquestionsfound'] . "</td></tr></table>\n";
-  }  
+  }
 
   $mysqli->close();
 }

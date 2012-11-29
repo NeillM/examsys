@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -29,9 +29,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Help and Support Center<?php echo " $configObject->get('cfg_install_type')"; ?></title>
-  
+
+  <title>Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
     html {width:100%; height:100%; overflow:hidden}
@@ -68,7 +68,7 @@
     $help_section++;
   }
   $result->close();
-  
+
   $expand_id = 0;
   if (isset($_GET['id'])) {
     $slash_pos = strpos($help_toc_titles[$_GET['id']], '/');
@@ -93,7 +93,7 @@
         echo "</div>\n";
       }
       $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
-      
+
       if ($parent != $old_parent) {
         if ($expand_id == $id) {
           $icon = 'open_book.png';
@@ -106,7 +106,7 @@
         }
       }
       $old_parent = $parent;
-      $icon = 'single_page.png';      
+      $icon = 'single_page.png';
     } else {
       if ($old_parent != '') {
         echo "</div>\n";
@@ -116,7 +116,7 @@
       $parent = '';
       $old_parent = $parent;
     }
-    
+
     echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
   }
 

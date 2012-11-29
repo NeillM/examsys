@@ -36,7 +36,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['importusers'] . " $configObject->get('cfg_install_type')"; ?></title>
+  <title><?php echo $string['importusers'] . " " . $configObject->get('cfg_install_type') ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -23,7 +23,7 @@
 */
 
   require '../../include/staff_student_auth.inc';
-  
+
   if(isset($_POST['startday'])) {
 	$start_date = $_POST['startyear'] . $_POST['startmonth'] . $_POST['startday'] .  '000000';
 	$end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000';
@@ -31,17 +31,17 @@
     $start_date = date('Ymd',time() - 31536000) . '000000';
     $end_date = date('Ymd') . '000000';
   }
-  
-  
+
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Help and Support Center<?php echo " $configObject->get('cfg_install_type')"; ?></title>
-  
+
+  <title>Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
     body {font-size:80%; margin:4px}
@@ -54,7 +54,7 @@
     .num {text-align:right; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2}
     .txt {border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2}
   </style>
-  
+
   <script type="text/javascript">
     function displayPage(targetID, page_no) {
       for (page=1; page<=page_no; page++) {
@@ -68,9 +68,9 @@
 <body>
 
 <?php
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n"; 
-  
-  echo "<tr><td colspan=\"3\" style=\"margin-bottom:5px\">\n<form action=\"\" method=\"post\">\n" . $string['dates'] . "\n"; 
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
+
+  echo "<tr><td colspan=\"3\" style=\"margin-bottom:5px\">\n<form action=\"\" method=\"post\">\n" . $string['dates'] . "\n";
     // Split the end date
     $split_year = substr($start_date,0,4);
     $split_month = substr($start_date,4,2);
@@ -179,10 +179,10 @@
      }
 	 echo "</select>\n";
   echo " <input type=\"submit\" value=\" " . $string['filter'] . " \" name=\"Filter\" /></form></td></tr>\n";
-  
+
   echo "<tr style=\"width:49%; font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\"><td>" . $string['pagehits'] . "</td><td style=\"width:2%\"></td><td width=\"49%\">" . $string['searches'] . "</td></tr>\n";
   echo "<tr ><td>&nbsp;</td><td></td><td>&nbsp;</td></tr>\n";
-  
+
   echo "<tr><td style=\"vertical-align:top\">";
   $search_results = $mysqli->prepare("SELECT count(pageID) AS hits, title FROM help_log, student_help WHERE help_log.pageID=student_help.id AND help_log.type='student' AND accessed > '$start_date' AND accessed < '$end_date' GROUP BY pageID ORDER BY hits DESC, title");
   $search_results->execute();
@@ -201,9 +201,9 @@
   }
   $search_results->free_result();
   $search_results->close();
-  
+
   echo "\n</td><td style=\"width:20px\">&nbsp;</td><td style=\"vertical-align:top\">\n";
-  
+
   $search_results = $mysqli->prepare("SELECT COUNT(id) AS search_no, searchstring, hits FROM help_searches WHERE type='student' AND searched > '$start_date' AND searched < '$end_date' GROUP BY searchstring ORDER BY search_no DESC");
   $search_results->execute();
   $search_results->store_result();
@@ -243,7 +243,7 @@
   }
   $tutorial_results->free_result();
   $tutorial_results->close();
-  
+
   echo "</td></tr></table>\n";
 
   $mysqli->close();

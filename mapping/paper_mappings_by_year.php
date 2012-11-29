@@ -16,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -49,7 +49,7 @@ function getPaper($paperID) {
      $temp_array['session'] = $session;
   }
   $result->close();
- 
+
  // Get any questions to exclude.
   $excluded = array();
   $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper=?");
@@ -103,9 +103,9 @@ function getPaper($paperID) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Rogō: <?php echo $string['mappingbyyear'] . " $configObject->get('cfg_install_type')"; ?></title>
-  
+
+  <title>Rogō: <?php echo $string['mappingbyyear'] . " " . $configObject->get('cfg_install_type') ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -150,7 +150,7 @@ function getPaper($paperID) {
     $result->fetch();
     $result->close();
   }
-    
+
   $result = $mysqli->prepare("SELECT paper_title,  calendar_year, start_date, end_date, paper_type FROM properties WHERE property_id=? LIMIT 1");
   $result->bind_param('i', $paperID);
   $result->execute();
@@ -169,7 +169,7 @@ function getPaper($paperID) {
     echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(147); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n</table>\n";
   }
   $result->close();
-  
+
 ?>
 <table class="header">
 <tr><th style="padding-top:1px">
@@ -223,7 +223,7 @@ foreach ($objsBySession as $p_id => $module) {
           $allsession[$moduleID][$id] = $session;
           unset($allsession[$moduleID][$id]['objectives']);
         }
-        
+
         foreach($objbuffer as $obj) {
           $allsession[$moduleID][$id]['objectives'][$obj['id']] = $obj;
           $allsession[$moduleID][$id]['objectives'][$obj['id']]['session'] = $papers[$p_id]['session'];

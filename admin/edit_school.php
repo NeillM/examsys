@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['editschool']." $configObject->get('cfg_install_type')"; ?></title>
+  <title><?php echo $string['editschool'] . " " . $configObject->get('cfg_install_type') ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -74,25 +74,25 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
   require '../include/school_options.inc';
-  
+
   $result = $mysqli->prepare("SELECT school, facultyID FROM schools WHERE id=?");
   $result->bind_param('i', $_GET['schoolid']);
   $result->execute();
   $result->bind_result($school, $curr_faculty);
   $result->fetch();
   $result->close();
- 
+
 ?>
 <div id="content" class="content">
-  
+
 <table class="header">
 <tr>
 <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools'] ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_schools.php"><?php echo $string['schools'] ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editschool'] ?></th>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th>
 </tr>
 <tr><th colspan="2" class="bevel"></th></tr>
-</table>  
-  
+</table>
+
   <br />
   <div align="center">
   <form name="add_school" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $_GET['schoolid']; ?>">

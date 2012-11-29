@@ -15,11 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* The Frequency & Discimination Analysis is used to look at the number of students that have selected each option in a question 
-* and how well it disciminates between the upper and lower 27% of students.  These values help to identify how well the question 
+*
+* The Frequency & Discimination Analysis is used to look at the number of students that have selected each option in a question
+* and how well it disciminates between the upper and lower 27% of students.  These values help to identify how well the question
 * is working.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -31,7 +31,7 @@ require '../include/media.inc';
 require '../include/errors.inc';
 require '../include/sort.inc';
 require_once '../classes/paperutils.class.php';
-  
+
 set_time_limit(0);
 check_var('paperID', 'GET', true, false);
 
@@ -46,9 +46,9 @@ $dstats = array('highest'=>0,'high'=>0,'intermediate'=>0,'low'=>0);
 
 function pStats($value, $qid, $part_no) {
   global $pstats, $string, $pstats_array;
-  
+
   $html = '';
-  
+
   if ($value >= 0.8) {
       $pstats['ve']++;
     } elseif ($value >= 0.6 and $value < 0.8) {
@@ -76,15 +76,15 @@ function pStats($value, $qid, $part_no) {
   } else {
     $html = 'p=' . number_format($value,2);
   }
-  
+
   $pstats_array[$qid][$part_no] = round($value, 2) * 100;
-  
+
   return $html;
 }
 
 function dStats($value, $qid, $part_no) {
   global $dstats, $string, $dstats_array;
-  
+
   if ($value >= 0.35) {
     $dstats['highest']++;
   } elseif ($value >= 0.25 and $value < 0.35) {
@@ -109,21 +109,21 @@ function dStats($value, $qid, $part_no) {
   } else {
     $html = 'd=' . number_format($value,2);
   }
-  
+
   $dstats_array[$qid][$part_no] = round($value, 2) * 100;
-  
+
   return $html;
 }
-  
+
 function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i, $keys) {
   global $q_id;
-  
+
   $top_key_value = 0;
   $bottom_key_value = 0;
-  
+
   if (!is_array($keys)) $keys = array($keys);
-  
-  foreach($keys as $key) {  
+
+  foreach($keys as $key) {
     if (isset($top_log_q_id[$i][$key])) {
       $top_key_value += $top_log_q_id[$i][$key];
     }
@@ -131,16 +131,16 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
       $bottom_key_value += $bottom_log_q_id[$i][$key];
     }
   }
-  
+
   $top_ratio = $top_key_value / $no_students;
   $bottem_ratio = $bottom_key_value / $no_students;
-  
+
   return number_format($top_ratio - $bottem_ratio,2);
 }
 
 function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mark, $totalpos, $opt_order, $analysis_type) {
   global $stop_words;
-  
+
   if (!isset($log_array[$qID]['mark'])) $log_array[$qID]['mark'] = 0;
   if (!isset($log_array[$qID]['totalpos'])) $log_array[$qID]['totalpos'] = 0;
 
@@ -168,7 +168,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
       $log_array[$qID]['mark'] += $mark;
       $log_array[$qID]['totalpos'] += $totalpos;
       break;
-    case 'blank':      
+    case 'blank':
       $tmp_answer_parts = array();
       $tmp_answer_parts = explode('|',$answer);
       $i = 0;
@@ -257,7 +257,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
       break;
     case 'hotspot':
       $layer_answers = explode('|', $answer);
-      
+
       $layer = 1;
       foreach ($layer_answers as $layer_answer) {
         if (substr($layer_answer,0,1) == '1') {
@@ -334,10 +334,10 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
       break;
     case 'matrix':
       $tmp_answer_parts = explode('|',$answer);
-      $count_tmp_answer_parts = count($tmp_answer_parts);        
+      $count_tmp_answer_parts = count($tmp_answer_parts);
       for ($i=0; $i<$count_tmp_answer_parts; $i++) {
         $tmp_individual_answer = $tmp_answer_parts[$i];
-        
+
         if ($tmp_individual_answer == 'u' or $tmp_individual_answer == '') {
           if (isset($log_array[$qID][$i+1]['u'])) {
             $log_array[$qID][$i+1]['u']++;
@@ -398,7 +398,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $scoring, $display, $mar
           }
         }
       }
-      
+
       if (isset($user_words)) {
         if (isset($log_array[$qID]['word_count'])){
           $log_array[$qID]['word_count'] += count($user_words);
@@ -444,7 +444,7 @@ if (isset($_POST['submit'])) {
 
   $old_q_id = 0;
   $old_status = '';
-  
+
   for ($i=1; $i<=$_POST['question_no']; $i++) {
     $current_id = $_POST['id_' . $i];
     if ($current_id != $old_q_id) {
@@ -471,7 +471,7 @@ if (isset($_POST['submit'])) {
       display_error("Question_exclude Insert Error 2", $mysqli->error);
     }
   }
-      
+
   header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
 }
 
@@ -486,7 +486,7 @@ function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
     for ($i=0; $i<$marks; $i++) $html .= '0';
     $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" class=\"in-exclusion\" />";
   }
-  
+
   return $html;
 }
 
@@ -501,7 +501,7 @@ function count_labels($correct) {
       $label_no++;
     }
   }
-  
+
   return $label_no;
 }
 
@@ -546,11 +546,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = 0;
         if (!isset($freq_log[$q_id][1]['partial'])) $freq_log[$q_id][1]['partial'] = 0;
         if (!isset($freq_log[$q_id][1]['incorrect'])) $freq_log[$q_id][1]['incorrect'] = 0;
-        
+
         if (!isset($top_log[$q_id][1]['correct'])) $top_log[$q_id][1]['correct'] = 0;
         if (!isset($top_log[$q_id][1]['partial'])) $top_log[$q_id][1]['partial'] = 0;
         if (!isset($top_log[$q_id][1]['incorrect'])) $top_log[$q_id][1]['incorrect'] = 0;
-        
+
         if (!isset($bottom_log[$q_id][1]['correct'])) $bottom_log[$q_id][1]['correct'] = 0;
         if (!isset($bottom_log[$q_id][1]['partial'])) $bottom_log[$q_id][1]['partial'] = 0;
         if (!isset($bottom_log[$q_id][1]['incorrect'])) $bottom_log[$q_id][1]['incorrect'] = 0;
@@ -562,27 +562,27 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
         $l = number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0);
         echo "<tr style=\"font-weight:bold\"><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td><td>Full marks</td></tr>\n";
-        
+
         $partial_t = number_format(($freq_log[$q_id][1]['partial']/$user_total)*100,0);
         $partial_u = number_format(($top_log[$q_id][1]['partial']/$candidate_no)*100,0);
         $partial_l = number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0);
         echo "<tr><td>t=$partial_t%</td><td>u=$partial_u%</td><td>l=$partial_l%</td><td>Partial marks</td></tr>\n";
-        
+
         $incorrect_t = number_format(($freq_log[$q_id][1]['partial']/$user_total)*100,0);
         $incorrect_u = number_format(($top_log[$q_id][1]['partial']/$candidate_no)*100,0);
         $incorrect_l = number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0);
         echo "<tr><td>t=$incorrect_t%</td><td>u=$incorrect_u%</td><td>l=$incorrect_l%</td><td>Incorrect</td></tr>\n";
         echo "</table>\n";
-        
+
         echo "<table>\n";
         if ($freq_log[$q_id]['totalpos'] == 0) {
           $p = 0;
         } else {
           $p = $freq_log[$q_id]['mark'] / $freq_log[$q_id]['totalpos'];
         }
-        
+
         $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], 1, 'correct');
-        
+
         echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1)  . "</td></tr>\n";
         break;
       case 'blank':
@@ -613,7 +613,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             } else {
               $tmp_exclude = '';
             }
-            
+
             if ($display_method == 'dropdown') {
               $options_array = explode(',', $blank_options);
               $i = 0;
@@ -634,7 +634,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
           $blank_count++;
         }
-        
+
         echo "<table cellspacing=\"0\" cellpadding=\"4\" border=\"0\" style=\"margin-left:20px\">\n";
         for ($i=1; $i<count($blank_details); $i++) {
           $end_start_tag = strpos($blank_details[$i],']');
@@ -642,17 +642,17 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
 
           $blank_options = explode(',', $blank_options);
-          
+
           $tmp_correct_no = 0;
           $tmp_top_no = 0;
           $tmp_bottom_no = 0;
-          
+
           if ($display_method == 'dropdown') {
             $blank_word = strtolower(trim($blank_options[0]));
             if (isset($freq_log[$q_id][$i+1][$blank_word])) $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_word];
             if (isset($top_log[$q_id][$i+1][$blank_word])) $tmp_top_no += $top_log[$q_id][$i+1][$blank_word];
             if (isset($bottom_log[$q_id][$i+1][$blank_word])) $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_word];
-            
+
             $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_word);
           } else {
             foreach ($blank_options as $blank_option) {
@@ -668,17 +668,17 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
               }
             }
             $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_options);
-            
+
           }
           $t = number_format(($tmp_correct_no/$user_total)*100,0);
-          
+
           $d_no++;
           $d_total += $d;
           $html = '';
-          
+
           $u = number_format(($tmp_top_no/$candidate_no)*100,0);
           $l = number_format(($tmp_bottom_no/$candidate_no)*100,0);
-          
+
           echo "<tr><td>" . chr($i+64) . ".</td>";
           if ($score_method == 'Mark per Option') {
             if (isset($excluded[$q_id])) {
@@ -688,7 +688,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
           }
           echo "<td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td>";
-          
+
           if (isset($tmp_std_array[$blank_count-1])) {
             echo '<td class="std">' . $tmp_std_array[$blank_count-1] . '</td>';
           }
@@ -716,7 +716,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         break;
       case 'calculation':
         if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
-        
+
         echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'correct');
         if (isset($freq_log[$q_id][1]['correct'])) {
@@ -739,7 +739,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         } else {
           $tmp_exclude = '';
         }
-        
+
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
         echo ">$leadin</td></tr>\n";
@@ -767,14 +767,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if (!isset($top_log[$q_id][$i]['t'])) $top_log[$q_id][$i]['t'] = 0;
           if (!isset($top_log[$q_id][$i]['f'])) $top_log[$q_id][$i]['f'] = 0;
           if (!isset($tmp_std_array[$std_part])) $tmp_std_array[$std_part] = '';
-          
+
           if (isset($excluded[$q_id])) {
             $tmp_exclude = substr($excluded[$q_id],$i-1,1);
           } else {
             $tmp_exclude = '';
           }
           echo "<tr><td>";
-          if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1); 
+          if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1);
           echo "</td>";
           if ($correct_buf[$i-1] == 't') {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,'t');
@@ -798,7 +798,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if (!isset($bottom_log[$q_id][1]['f'])) $bottom_log[$q_id][1]['f'] = 0;
         if (!isset($top_log[$q_id][1]['t'])) $top_log[$q_id][1]['t'] = 0;
         if (!isset($top_log[$q_id][1]['f'])) $top_log[$q_id][1]['f'] = 0;
-        
+
         if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '11', 2, 2) . "</td></tr>\n";
         } else {
@@ -838,7 +838,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo excludeButton($ex_no, $q_id, str_repeat('0', count_labels($correct)), 1, count_labels($correct));
           }
         }
-        $std_part = 0;         
+        $std_part = 0;
         $max_col1 = 0;
         $max_col2 = 0;
         $tmp_first_split = explode(';', $correct);
@@ -854,7 +854,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
         }
         $max_col2-=10;
-        
+
         $max_label = max($max_col1, $max_col2);
 
         $tmp_height = $q_media_height;
@@ -981,17 +981,17 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo excludeButton($ex_no, $q_id, str_repeat('0', count($layers)), 1, count($layers));
           }
         }
-        
+
         $layers = explode('|', $correct);
         $coords = '';
         for ($i = 1; $i <= count($layers); $i++) {
           $coords .= $freq_log[$q_id][$i]['coords'] . '|';
         }
         $coords = rtrim($coords, '|');
-        
+
         $tmp_correct = str_replace("'", "\'", trim($correct));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct); 
+        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
         ?>
         <div align="center">
         <script language="JavaScript">
@@ -1009,14 +1009,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         </script>
         </div>
         <?php
-        
+
         echo "<p><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         for ($i = 1; $i <= count($layers); $i++) {
           echo "<tr><td>" . chr($i + 64) . ".</td>";
           $label = substr($layers[$i - 1], 0, strpos($layers[$i - 1], '~'));
-          
+
           $std_rating = (isset($std_parts[$i - 1])) ? $std_parts[$i - 1] : '';
-        
+
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,1);
           $tmp_correct_no = (isset($freq_log[$q_id][$i][1])) ? $freq_log[$q_id][$i][1] : 0;
           $tmp_top_no = (isset($top_log[$q_id][$i][1])) ? $top_log[$q_id][$i][1] : 0;
@@ -1139,7 +1139,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             } else {
               $tmp_std = '';
             }
-        
+
             echo "<tr style=\"font-weight:bold\"><td>t=" . $t . "%</td><td>u=" . $u . "%</td><td>l=" . $l . "%</td><td><span class=\"std\">" . $tmp_std . "</span></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
             if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
             $std_part++;
@@ -1197,7 +1197,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             } else {
               $l = 0;
             }
-    
+
             if (!isset($log[$q_id][$i][$rank_position])) $log[$q_id][$i][$rank_position] = 0;
             if ($correct_buf[$i] == $rank_position) {
               if (isset($tmp_std_array[$i])) {
@@ -1205,7 +1205,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
               } else {
                 $tmp_std = '';
               }
-      
+
               echo "<tr><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $tmp_std . "</span></td><td style=\"font-weight:bold\">$rank_position";
 
               if ($rank_position == 1) {
@@ -1255,7 +1255,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $tmp_correct_no = (isset($freq_log[$q_id][1][$i])) ? $freq_log[$q_id][1][$i] : 0;
           $tmp_top_no = (isset($top_log[$q_id][1][$i])) ? $top_log[$q_id][1][$i] : 0;
           $tmp_bottom_no = (isset($bottom_log[$q_id][1][$i])) ? $bottom_log[$q_id][1][$i] : 0;
-          
+
           $max_correct = 0;
           $correct_answer_no = 0;
           $answer_no = 1;
@@ -1294,10 +1294,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     echo "id=\"q_" . ($ex_no + 1) . "_1\">" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "&nbsp;$leadin</p>";
     echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">";
-    
+
     $sortby = 'used';
     $ordering = 'ASC';
-        
+
     $top_words = array();
     if (isset($top_log[$q_id]['words'])) {
       $i = 0;
@@ -1308,7 +1308,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
     }
     $top_words = array_csort($top_words,$sortby,$ordering);
-        
+
     $bottom_words = array();
     if (isset($bottom_log[$q_id]['words'])) {
       $i = 0;
@@ -1319,7 +1319,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
     }
     $bottom_words = array_csort($bottom_words,$sortby,$ordering);
-        
+
     echo "<tr><td colspan=\"2\"><strong>Top Group:</strong></td><td colspan=\"2\"><strong>Bottom Group:</strong></td></tr>\n";
     echo "<tr><td colspan=\"2\">(mean word count = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(mean word count = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
     for ($i=0; $i<40; $i++) {
@@ -1338,7 +1338,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "</tr>";
       }
     }
-    
+
     if ($top_log[$q_id]['totalpos'] == 0 or $bottom_log[$q_id]['totalpos'] == 0) {
       $d = 0;
     } else {
@@ -1362,7 +1362,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     $tmp_media_height_array = explode('|',$q_media_height);
     $tmp_ext_scenarios = explode('|',$scenario);
     $tmp_answers_array = explode('|',$correct_buf[0]);
-    
+
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><div";
     if ($score_method == 'Mark per Question') {
       echo ' id="q_' . ($ex_no + 1) . '_1"';
@@ -1379,7 +1379,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo excludeButton($ex_no, $q_id, str_repeat('0', count($options)), 1, count($options));
       }
     }
-    
+
     echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
     $cols = 5;
     if ($score_method == 'Mark per Option') $cols++;
@@ -1388,7 +1388,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       if (isset($tmp_std_array[$i])) $std_on = true;
     }
     if ($std_on) $cols++;
-    
+
     echo "<tr><td colspan=\"$cols\">&nbsp;</td><td>&nbsp;</td>";
     for ($i=0; $i<count($options); $i++) {
       echo '<td>' . $options[$i] . '</td>';
@@ -1418,7 +1418,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "<td style=\"font-weight:bold\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td>";
             echo "<td style=\"font-weight:bold\">u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td>";
             echo "<td style=\"font-weight:bold\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td>";
-            
+
             if (isset($tmp_std_array[$i-1])) {
               echo '<td class="std"><strong>' . $tmp_std_array[$i-1] . '</strong></td>';
             }
@@ -1486,7 +1486,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<p>" . display_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</p>\n";
       }
       if (isset($tmp_ext_scenarios[$i-1])) echo "<div>" . $tmp_ext_scenarios[$i-1] . "</div>\n";
-      
+
       $option_no = 1;
       foreach ($options as $individual_option) {
         $specific_answers = array();
@@ -1499,7 +1499,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($answer_match == true) $correct_stems++;
         $option_no++;
       }
-  
+
       if (isset($excluded[$q_id])) {
         $tmp_exclude = substr($excluded[$q_id],$section,1);
       } else {
@@ -1575,7 +1575,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           } else {
             $l = 0;
           }
-    
+
           echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td";
           if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' class="excluded"';
           if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
@@ -1605,7 +1605,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title><?php echo $string['frequencydiscrimination'] . " $configObject->get('cfg_install_type')"; ?></title>
+<title><?php echo $string['frequencydiscrimination'] . " " . $configObject->get('cfg_install_type') ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -1668,10 +1668,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $('#button_' + qID).attr('src', '../artwork/exclude_on.gif');
       }
     }
-    
+
     function manCorrect(q_id, part_no) {
       window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-      
+
       return false;
     }
   </script>
@@ -1699,15 +1699,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $result->bind_result($paper_title, $paper_type, $labelcolor, $themecolor, $marking, $pass_mark);
   $result->fetch();
   $result->close();
-  
+
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
 
   // Get the standards setting
   if (substr($marking,0,1) == '2') {
     $tmp_parts = explode(',', $marking);
-    
+
     $std_set_array = array();
-  
+
     $result = $mysqli->prepare("SELECT questionID, rating FROM standards_setting WHERE setterID=? AND std_set=?");
     $result->bind_param('is', $tmp_parts[1], $tmp_parts[2]);
     $result->execute();
@@ -1717,7 +1717,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     $result->close();
   }
-  
+
   // Get all the users on the module(s) the paper is on.
   $users_on_modules = '';
   if (is_array($moduleIDs)) {
@@ -1742,8 +1742,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $student_modules_sql = '';
   if ($users_on_modules != '' and isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $student_modules_sql = " AND log$paper_type.userID IN ($users_on_modules)";
-  } 
-  
+  }
+
   if ($_GET['studentsonly'] == 1) {
     $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
   } else {
@@ -1775,7 +1775,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     $student_no++;
   }
   $result->close();
-    
+
   // Capture the log data first.
   $freq_array = array();
   $bottom_log_array = array();
@@ -1789,7 +1789,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   }
   $result->execute();
   $result->bind_result($username, $tmp_userID, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, $started);
-  
+
   while ($result->fetch()) {
     storeData($freq_array, $question_ID, $tmp_answer, $q_type, $score_method, $display_method, $mark, $totalpos, $option_order, 'all');
     if (isset($bottom_cohort[$started][$username])) {
@@ -1800,7 +1800,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
   }
   $result->close();
-  
+
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];
@@ -1815,7 +1815,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   if ($user_total == 0) {
     // No one has taken the paper yet.
     echo '<tr><th>';
-    
+
     echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
     if ($folder != '') {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
@@ -1823,14 +1823,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
     }
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
-    
+
     echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
     echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been attempted by anyone.</td></tr></table>\n";  
+    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been attempted by anyone.</td></tr></table>\n";
   } elseif ($user_no == 0) {
     // Not enough data for relevant cohort at selected percentage
     echo '<tr><th>';
-    
+
     echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
     if ($folder != '') {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
@@ -1838,10 +1838,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
     }
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
-    
+
     echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
     echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;Not enough data to calculate upper and lower groups. Please select a higher percentage.</td></tr></table>\n";  
+    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;Not enough data to calculate upper and lower groups. Please select a higher percentage.</td></tr></table>\n";
   } else {
   	// Capture the paper makeup.
     $display_header = true;
@@ -1870,7 +1870,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . $_GET['module'] . '</a>';
         }
         echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
-        
+
         echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
         echo "<tr><th colspan=\"2\" class=\"bevel\"></th></tr>\n</table>\n";
 
@@ -1897,9 +1897,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
         $question_no++;
         if ($old_q_type == 'info') $question_no--;
-        
+
         if (isset($std_set_array[$old_q_id])) $old_std = $std_set_array[$old_q_id];
-        
+
         displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
         $options_buffer = array();
         $correct_buffer = array();
@@ -1970,17 +1970,17 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       $old_screen = $screen;
     }
     $result->close();
-    
+
     $question_no++;
     if ($old_q_type == 'info') $question_no--;
-    
+
     if (isset($std_set_array[$old_q_id])) $old_std = $std_set_array[$old_q_id];
-    
+
     displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
   ?>
   </table>
   <br />
-  
+
   <table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><?php echo $string['summary']; ?></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
 
   <table cellpadding="0" cellspacing="0" border="0" style="width:650px; font-size:100%; margin-left:40px">
@@ -2010,9 +2010,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   </td>
   </tr>
   </table>
-  
+
   <?php
-  
+
     // Clear previous performance stats
     $id_list = array();
     $result = $mysqli->prepare("SELECT id FROM performance_main WHERE paperID=?");
@@ -2024,28 +2024,28 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       $id_list[] = $id;
     }
     $result->close();
-    
+
     // Remove records from performance_main
-    $date_started = substr($started, 0, 10);    
+    $date_started = substr($started, 0, 10);
     $remove = $mysqli->prepare("DELETE FROM performance_main WHERE paperID=? AND taken=?");
     $remove->bind_param('is', $_GET['paperID'], $date_started);
     $remove->execute();
     $remove->close();
-    
+
     // Remove records from performance_details
     if (count($id_list) > 0) {
       $remove = $mysqli->prepare("DELETE FROM performance_details WHERE perform_id IN (" . implode(',', $id_list) . ")");
       $remove->execute();
       $remove->close();
     }
-    
+
     if ($_GET['percent'] == 100) {
       $tmp_percent = 27;  // The default for U/L analysis
     } else {
       $tmp_percent = $_GET['percent'];
     }
-    
-    
+
+
     // Write records into performance_main
     //----------------------------------------------------------------------------------------------
     $sql = '';
@@ -2073,10 +2073,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       $tmp[$key] = &$variables[$key];
     }
     call_user_func_array(array($record,'bind_param'), $tmp);
-    
+
     $record->execute();
     $record->close();
-    
+
     // Write records into performance_details
     //----------------------------------------------------------------------------------------------
     $q_rec_ids = array();
@@ -2094,7 +2094,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     $params = '';
     $variables = array();
     $tmp = array();
-    foreach ($dstats_array as $qid=>$question_data) {     
+    foreach ($dstats_array as $qid=>$question_data) {
       foreach ($question_data as $part_no=>$d_value) {
         if ($sql == '') {
           $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
@@ -2110,13 +2110,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
 
     $record = $mysqli->prepare($sql);
-    
+
     array_unshift($variables, $params);
     foreach ($variables as $key => $value) {
       $tmp[$key] = &$variables[$key];
     }
     call_user_func_array(array($record,'bind_param'), $tmp);
-    
+
     $record->execute();
     $record->close();
   ?>

@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -47,15 +47,15 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Email Template<?php echo " $configObject->get('cfg_install_type')"; ?></title>
+
+  <title>Email Template<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F0F0F0; margin-top:2px}
     .heading {background-color:#EBEADB; border-left:solid white 1px; border-right:solid #D8D2BD 1px; border-top:solid white 1px; border-bottom: solid #D8D2BD 1px}
   </style>
-  
+
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_email.js"></script>
@@ -98,11 +98,11 @@
 <?php
   $result = $mysqli->prepare("SELECT email FROM users WHERE id=?");
   $result->bind_param('i',$userObject->get_user_ID());
-  $result->execute();  
+  $result->execute();
   $result->bind_result($from);
   $result->fetch();
   $result->close();
-  
+
   $mysqli->close();
 ?>
 <input type="hidden" name="from" value="<?php echo $from; ?>" /></td>
