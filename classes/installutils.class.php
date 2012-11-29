@@ -99,7 +99,7 @@ Class InstallUtils {
       });
     </script>
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-    
+
       <?php
         if (!defined('PHP_VERSION_ID')) {
           $version = explode('.', PHP_VERSION);
@@ -246,12 +246,12 @@ Class InstallUtils {
     }
     self::$emergency_support_numbers = rtrim(self::$emergency_support_numbers, ', ');
     self::$emergency_support_numbers .= ')';
-    
+
     // Check we can write to the config file first if not passwords will be lost!
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
 
-    if (file_exists($rogo_path . '/include/load_config.php')) {
-      if (!is_writable($rogo_path . '/include/load_config.php')) {
+    if (file_exists($rogo_path . '/config/config.inc.php')) {
+      if (!is_writable($rogo_path . '/config/config.inc.php')) {
         self::displayError(array(300=>'Could not write config file!'));
       }
     } elseif (!is_writable($rogo_path . '/config')) {
@@ -508,7 +508,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT,INSERT,UPDATE ON " . $dbname . ".temp_users TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
-    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".announcements TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";    
+    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".announcements TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".standards_setting TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".state TO '". self::$cfg_db_student_user . "'@'". self::$cfg_db_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_resource TO '". self::$cfg_db_student_user . "'@'".self::$cfg_db_host . "'";
@@ -811,8 +811,8 @@ Class InstallUtils {
     global $string;
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
-    if (file_exists($rogo_path . '/include/load_config.php')) {
-      $errors['90'] =  "<p>" . sprintf($string['errors1'],$rogo_path."/include/load_config.php") . "</p>";
+    if (file_exists($rogo_path . '/config/config.inc.php')) {
+      $errors['90'] =  "<p>" . sprintf($string['errors1'],$rogo_path."/config/config.inc.php") . "</p>";
       $errors['90'] .= "<p>" . sprintf($string['errors2'],"<a href=\"/staff\">") . "</a></p>";
       self::displayError($errors);
     }
@@ -827,7 +827,7 @@ Class InstallUtils {
     $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
     $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
     $errors = array();
-    if (is_writable($rogo_path . '/include/load_config.php')) {
+    if (is_writable($rogo_path . '/config/config.inc.php')) {
       return true;
     } else {
       return false;
@@ -854,7 +854,7 @@ Class InstallUtils {
     if (!is_writable(self::$rogo_path . '/qti/exports')) {
       $errors['104'] = sprintf($string['errors6'], self::$rogo_path);
     }
-    if (!is_writable(self::$rogo_path . '/include/load_config.php')) {
+    if (!is_writable(self::$rogo_path . '/config/config.inc.php')) {
       if (!is_writable(self::$rogo_path . '/config')) {
         $errors['901'] = sprintf($string['errors16'], self::$rogo_path);
       }
@@ -984,16 +984,16 @@ Class InstallUtils {
   */
   static function displayHeader() {
     global $string, $version;
-    
+
     ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html>
     <head>
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-      
+
       <title>Rog&#333; Install script</title>
-      
+
       <link rel="stylesheet" type="text/css" href="../css/body.css" />
       <link rel="stylesheet" type="text/css" href="../css/header.css" />
       <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
@@ -1012,7 +1012,7 @@ Class InstallUtils {
         form {padding:1em}
         form div {padding-left:2em}
       </style>
-      
+
       <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
       <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
       <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
@@ -1222,7 +1222,7 @@ CONFIG;
     $config = str_replace('{cfg_ldap_bind_password}', self::$cfg_ldap_bind_password, $config);
     $config = str_replace('{cfg_ldap_user_prefix}', self::$cfg_ldap_user_prefix, $config);
     $config = str_replace('{cfg_use_ldap}', self::$cfg_use_ldap, $config);
-    
+
 
 
     global $cfg_encrypt_salt;
@@ -1232,11 +1232,11 @@ CONFIG;
 
     $config = str_replace('{SERVER_NAME}', $_SERVER['HTTP_HOST'], $config);
 
-    if (file_exists(self::$rogo_path . '/include/load_config.php')) {
-      rename(self::$rogo_path . '/include/load_config.php', self::$rogo_path . '/config/config.inc.old.php');
+    if (file_exists(self::$rogo_path . '/config/config.inc.php')) {
+      rename(self::$rogo_path . '/config/config.inc.php', self::$rogo_path . '/config/config.inc.old.php');
     }
 
-    if (file_put_contents(self::$rogo_path . '/include/load_config.php', $config) === false) {
+    if (file_put_contents(self::$rogo_path . '/config/config.inc.php', $config) === false) {
       self::displayError(array(300=>'Could not write config file!'));
     }
   }
