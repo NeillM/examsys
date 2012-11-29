@@ -47,13 +47,13 @@ function access_denied($message, $output_header = false, $output_footer = true) 
   display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
 
   if ($output_header == true) {
-print <<<END
+    print <<<END
 
 <div>
 <form method="POST">
-<p>Username:<input type="text" size="20" name="PHP_USER"><br /></p>
-<p>Password:<input type="password" size="20" name="PHP_PW"><br /></p>
-<p><input type="submit" name="submit-UserPW" value="Login"><br /></p>
+<p>Username:<input type="text" size="20" name="ROGO_USER"><br /></p>
+<p>Password:<input type="password" size="20" name="ROGO_PW"><br /></p>
+<p><input type="submit" name="rogo-login-form-std" value="Login"><br /></p>
 </form>
 </div>
 END;

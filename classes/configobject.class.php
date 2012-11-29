@@ -39,6 +39,11 @@ class Config {
   private function __construct() {
     include __DIR__ . '/../config/config.inc.php';
     $this->data = get_defined_vars();
+
+    //fudge to display the next 2 nicely
+    $this->data['cfg_js_root']=base64_encode($this->data['cfg_js_root']);
+    $this->data['cfg_editor_javascript']=base64_encode($this->data['cfg_editor_javascript']);
+
   }
 
   function export_all() {

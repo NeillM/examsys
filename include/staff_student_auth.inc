@@ -66,6 +66,8 @@ require_once $cfg_web_root . 'classes/lti_integration.class.php';
 
 require_once $cfg_web_root . 'classes/userobject.class.php';
 
+require_once $cfg_web_root . 'classes/authentication.class.php';
+
 // Check to see if the update script has been run.
 if ($configObject->get('rogo_version') != '4.4') {
   display_notice('Update Required', 'System needs configuring before use. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
@@ -143,11 +145,65 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
     exit;
   }
 
-  if (isset($_POST['submit-UserPW'])) {
-    $_SERVER['PHP_AUTH_USER'] = $_POST['PHP_USER'];
-    $_SERVER['PHP_AUTH_PW'] = $_POST['PHP_PW'];
-    $_SESSION['PHP_USER'] = $_POST['PHP_USER'];
-    $_SESSION['PHP_PW'] = $_POST['PHP_PW'];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  error_reporting(E_ALL);
+
+  ini_set("display_errors", 1);
+  ini_set('xdebug.var_display_max_childrren',-1);
+  ini_set('xdebug.var_display_max_data',-1);
+  ini_set('xdebug.var_display_max_depth',-1);
+
+  $authentication=new authentication($configObject, $mysqli);
+
+  $authentication->do_authentication();
+
+  //$uID=$authentication->get_userID();
+
+  // at this point I have an auth object with a userid
+
+  $uID=$userObject->get_user_ID();
+  $userObject->load($uID);
+  $userObject->db_user_change();
+
+
+
+
+
+
+
+
+
+var_dump($authentication);
+
+
+
+exit();
+exit();
+
+
+
+
+
+  if (isset($_POST['rogo-login-form-std'])) {
+    $_SERVER['PHP_AUTH_USER'] = $_POST['ROGO_USER'];
+    $_SERVER['PHP_AUTH_PW'] = $_POST['ROGO_PW'];
+    $_SESSION['PHP_USER'] = $_POST['ROGO_USER'];
+    $_SESSION['PHP_PW'] = $_POST['ROGO_PW'];
   } elseif (isset($_SESSION['PHP_USER'])) {
     $_SERVER['PHP_AUTH_USER'] = $_SESSION['PHP_USER'];
     $_SERVER['PHP_AUTH_PW'] = $_SESSION['PHP_PW'];
@@ -237,15 +293,6 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   echo "\n</body>\n</html>\n";
   exit;
 }
-
-// at this point I have an auth object with a userid
-
-//$uID=$authentication->get_userID();
-
-$uID=$userObject->get_user_ID();
-$userObject->load($uID);
-$userObject->db_user_change();
-
 
 
 
