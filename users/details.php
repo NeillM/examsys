@@ -371,11 +371,11 @@ if (isset($_POST['update']) and $demo == false) {
     } else {
       if ($configObject->get('cfg_use_ldap') == true and strpos($grade,'University') !== false) {
         // Try and get the telephone number from LDAP.
-        $ldap = ldap_connect($cfg_ldap_server);
+        $ldap = ldap_connect($configObject->get('cfg_ldap_server'));
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
-        if (ldap_bind($ldap, $cfg_ldap_bind_rdn, $cfg_ldap_bind_password)) {
-          if (!($search=@ldap_search($ldap, $cfg_ldap_search_dn, 'cn=' . $username))) {
+        if (ldap_bind($ldap, $configObject->get('cfg_ldap_bind_rdn'), $configObject->get('cfg_ldap_bind_password'))) {
+          if (!($search=@ldap_search($ldap, $configObject->get('cfg_ldap_search_dn'), 'cn=' . $username))) {
             echo "<td>&nbsp;" . $string['telephone'] . "</td><td>" . $string['ldapunavailable'] .  "</td></tr>\n";
             return false;
           } else {
