@@ -1,24 +1,25 @@
-tinyMCE.init({ 
+tinyMCE.init({
     mode : "specific_textareas",
     forced_root_block : 'div',
     force_br_newlines : false,
     force_p_newlines : false,
     //language : window.navigator.language,
     editor_selector : "mceEditor",
-    theme : "advanced", 
+    theme : "advanced",
     skin : "default",
-    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor",
+    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste",
+//  plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor"
     // Theme options
-    theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,tablecontrols,|,code,|,insertimagequestioneditor", 
-    theme_advanced_buttons2 : "", 
+    theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,tablecontrols,|,code,|,insertimagequestioneditor",
+    theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
-    theme_advanced_toolbar_location : "top", 
+    theme_advanced_toolbar_location : "top",
     theme_advanced_toolbar_align : "left",
 
-    // Example content CSS (should be your site CSS) 
+    // Example content CSS (should be your site CSS)
     content_css : cfgRootPath + "/css/editor.css",
     entity_encoding : "named",
-  
+
       setup : function(ed) {
         ed.onInit.add(function(ed, evt) {
 
@@ -26,7 +27,7 @@ tinyMCE.init({
         tinymce.dom.Event.add(dom.getRoot(), 'blur', function(e) {
           // Do something when the editor window is blured.
           tinyMCE.triggerSave();
-          
+
           if (typeof jQuery != 'undefined') {
             if (typeof $("#" + ed.id).valid != 'undefined') {
               if ($("#" + ed.id).valid() == 1) {
@@ -39,5 +40,5 @@ tinyMCE.init({
         });
       });
     }
-}); 
+});
 
