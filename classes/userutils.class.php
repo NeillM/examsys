@@ -27,7 +27,7 @@
 Class UserUtils {
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db) {
-    global $cfg_encrypt_salt;
+    $configObj = Config::Instance();
 
     if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
       $initial = explode(' ', $forname);
@@ -51,7 +51,7 @@ Class UserUtils {
 
       //add new users
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?, NULL)");
-      $encrypt_password = encpw($cfg_encrypt_salt, $username, $password);
+      $encrypt_password = encpw($configObj->get('cfg_encrypt_salt'), $username, $password);
 
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
