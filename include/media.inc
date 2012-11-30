@@ -22,7 +22,9 @@
 * @package
 */
 
-include_once $configObject->get('cfg_web_root') . 'tools/getid3/getid3.php';
+require 'load_config.php';
+
+include_once $cfg_web_root . 'tools/getid3/getid3.php';
 
 /**
  * Function takes a filename with the width and height and returns appropriate HTML to display the media type.
@@ -34,7 +36,8 @@ include_once $configObject->get('cfg_web_root') . 'tools/getid3/getid3.php';
  *
  */
 function display_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false) {
-  global $configObject;
+
+  $configObject = Config::Instance();
 
   $html = '';
 
@@ -102,8 +105,10 @@ DELETE;
  * @param mixed $filename
  *
  */
-function unique_filename($filename) {
-  global $configObject;
+function unique_filename( $filename ) {
+
+  $configObject = Config::Instance();
+  $cfg_web_root = $configObject->get( 'cfg_web_root' );
 
   $ext = substr($filename, strrpos($filename, '.'));
   $fileno = date('U');
@@ -126,7 +131,6 @@ function unique_filename($filename) {
  *
  */
 function uploadFile($fileID) {
-  global $configObject;
 
   $file_width = 0;
   $file_height = 0;
@@ -146,148 +150,162 @@ function uploadFile($fileID) {
     }
   }
 
-  if (!$bad_file and $unique_name != 'none' and $unique_name != '') {
-    if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "media/$unique_name")) {
-      echo uploadError($_FILES[$fileID]['error']);
-      return false;
-    } else {
-      chmod($cfg_web_root . "media/$unique_name", 0664);
-      $getID3 = new getID3;
-      $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
+  if ( $bad_file or $unique_name == 'none' or $unique_name == '') {
+    return false;
+  }
 
-      switch ($_FILES[$fileID]['type']) {
-        case 'application/msword':
-        case 'application/vnd.ms-powerpoint':
-        case 'application/vnd.ms-excel':
-          if (!isset($file_info['fileformat'])) {
-            $bad_file = true;
-          } elseif ($file_info['fileformat'] != 'msoffice') {
-            $bad_file = true;
-          }
-          $file_width = '100%';
-          $file_height = '350';
-          break;
-        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        case 'application/x-mspublisher':
-        case 'text/plain':
-          $file_width = '100%';
-          $file_height = '350';
-          break;
-        case 'application/pdf':
-          if (!isset($file_info['fileformat'])) {
-            $bad_file = true;
-          } elseif ($file_info['fileformat'] != 'pdf') {
-            $bad_file = true;
-          }
-          $file_width = '100%';
-          $file_height = '350';
-          break;
-        case 'image/gif':
-        case 'image/jpg':
-        case 'image/jpeg':
-        case 'image/pjpeg':
-        case 'image/x-png':
-        case 'image/png':
-          // Image formats
-          $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
-          $file_width = $identifier_size[0];
-          $file_height = $identifier_size[1];
-          if ($file_width == 0 or $file_height == 0) {
-            $bad_file = true;
-          }
-          break;
-        case 'application/x-shockwave-flash':
-          //ShockWave
-          $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
-          $file_width = $identifier_size[0];
-          $file_height = $identifier_size[1];
-          if ($file_width == 0 or $file_height == 0) {
-            $bad_file = true;
-          }
-          break;
-        case 'video/mpeg':
-        case 'video/x-ms-wmv':
-        case 'video/avi':
-        case 'video/quicktime':
-        case 'video/x-flv':
+  $configObject = Config::Instance();
+  $cfg_web_root = $configObject->get( 'cfg_web_root' );
+
+  if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "media/$unique_name")) {
+    echo uploadError($_FILES[$fileID]['error']);
+    return false;
+  }
+
+  chmod( $cfg_web_root . "media/$unique_name", 0664);
+  $getID3 = new getID3;
+  $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
+
+  switch ($_FILES[$fileID]['type']) {
+    case 'application/msword':
+    case 'application/vnd.ms-powerpoint':
+    case 'application/vnd.ms-excel':
+      if (!isset($file_info['fileformat'])) {
+        $bad_file = true;
+      } elseif ($file_info['fileformat'] != 'msoffice') {
+        $bad_file = true;
+      }
+      $file_width = '100%';
+      $file_height = '350';
+      break;
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    case 'application/x-mspublisher':
+    case 'text/plain':
+      $file_width = '100%';
+      $file_height = '350';
+      break;
+    case 'application/pdf':
+      if (!isset($file_info['fileformat'])) {
+        $bad_file = true;
+      } elseif ($file_info['fileformat'] != 'pdf') {
+        $bad_file = true;
+      }
+      $file_width = '100%';
+      $file_height = '350';
+      break;
+    case 'image/gif':
+    case 'image/jpg':
+    case 'image/jpeg':
+    case 'image/pjpeg':
+    case 'image/x-png':
+    case 'image/png':
+      // Image formats
+      $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
+      $file_width = $identifier_size[0];
+      $file_height = $identifier_size[1];
+      if ($file_width == 0 or $file_height == 0) {
+        $bad_file = true;
+      }
+      break;
+    case 'application/x-shockwave-flash':
+      //ShockWave
+      $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
+      $file_width = $identifier_size[0];
+      $file_height = $identifier_size[1];
+      if ($file_width == 0 or $file_height == 0) {
+        $bad_file = true;
+      }
+      break;
+    case 'video/mpeg':
+    case 'video/x-ms-wmv':
+    case 'video/avi':
+    case 'video/quicktime':
+    case 'video/x-flv':
+      $file_width = $file_info['video']['resolution_x'];
+      $file_height = $file_info['video']['resolution_y'];
+      if ($file_width == 0 or $file_height == 0) {
+        $bad_file = true;
+      }
+      break;
+    case 'audio/wav':
+    case 'audio/x-wav':
+    case 'audio/mid':
+    case 'audio/x-pn-realaudio':
+    case 'audio/mpeg3':
+    case 'audio/x-mpeg-3':
+      if (!isset($file_info['playtime_seconds'])) {
+        $bad_file = true;
+      } elseif ($file_info['playtime_seconds'] == 0) {
+        $bad_file = true;
+      }
+      break;
+    default:
+      // Can't get mimetype, trying extension types
+      $path_parts = pathinfo($cfg_web_root . "media/$unique_name");
+      switch (strtolower($path_parts['extension'])) {
+        case 'mpg':
+        case 'mpeg':
+        case 'avi':
+        case 'mov':
+        case 'flv':
           $file_width = $file_info['video']['resolution_x'];
           $file_height = $file_info['video']['resolution_y'];
           if ($file_width == 0 or $file_height == 0) {
             $bad_file = true;
           }
           break;
-        case 'audio/wav':
-        case 'audio/x-wav':
-        case 'audio/mid':
-        case 'audio/x-pn-realaudio':
-        case 'audio/mpeg3':
-        case 'audio/x-mpeg-3':
+        case 'wav':
+        case 'mid':
+        case 'ram':
+        case 'mp3':
           if (!isset($file_info['playtime_seconds'])) {
             $bad_file = true;
           } elseif ($file_info['playtime_seconds'] == 0) {
             $bad_file = true;
           }
           break;
+        case 'docx':
+        case 'pptx':
+        case 'xlsx':
+          $file_width = '100%';
+          $file_height = '350';
+          break;
         default:
-          // Can't get mimetype, trying extension types
-          $path_parts = pathinfo($cfg_web_root . "media/$unique_name");
-          switch (strtolower($path_parts['extension'])) {
-            case 'mpg':
-            case 'mpeg':
-            case 'avi':
-            case 'mov':
-            case 'flv':
-              $file_width = $file_info['video']['resolution_x'];
-              $file_height = $file_info['video']['resolution_y'];
-              if ($file_width == 0 or $file_height == 0) {
-                $bad_file = true;
-              }
-              break;
-            case 'wav':
-            case 'mid':
-            case 'ram':
-            case 'mp3':
-              if (!isset($file_info['playtime_seconds'])) {
-                $bad_file = true;
-              } elseif ($file_info['playtime_seconds'] == 0) {
-                $bad_file = true;
-              }
-              break;
-            case 'docx':
-            case 'pptx':
-            case 'xlsx':
-              $file_width = '100%';
-              $file_height = '350';
-              break;
-            default:
-              $file_width = 0;
-              $file_height = 0;
-              break;
-          }
+          $file_width = 0;
+          $file_height = 0;
           break;
       }
-    }
+      break;
   }
+
+
+
   if ($bad_file) {
     deleteMedia($unique_name);    // Remove the file from the server.
     return array('filename'=>'', 'width'=>0, 'height'=>0, 'rejected_file'=>$unique_name);
-  } else {
-    return array('filename'=>$unique_name, 'width'=>$file_width, 'height'=>$file_height, 'rejected_file'=>false);
   }
+
+  return array('filename'=>$unique_name, 'width'=>$file_width, 'height'=>$file_height, 'rejected_file'=>false);
+
 }
 
-function deleteMedia($filename) {
-  global $configObject;
+function deleteMedia( $filename ) {
 
-  if ($filename != '') {
-    $file = $cfg_web_root . 'media/' . $filename;
-    if (file_exists($file)) {
-      if (@!unlink($file)) {
-        //display_error("Failed to delete " . $filename, '', false, true);
-      }
-    }
+  $configObject = Config::Instance();
+  $cfg_web_root = $configObject->get( 'cfg_web_root' );
+  $file         = $cfg_web_root . 'media/' . $filename;
+
+  if ( $filename == '' or !file_exists( $file ) ) {
+     return false;
   }
+
+
+  if ( @!unlink( $file ) ) {
+    //display_error("Failed to delete " . $filename, '', false, true);
+  }
+
+  return true;
 }
 ?>
