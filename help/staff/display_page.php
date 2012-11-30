@@ -150,8 +150,8 @@
   $offset = 0;
   
   // Perform replacement on certain strings.
-  $tmp_body = str_replace('$support_email', '<a href="mailto:' . $support_email . '">' . $support_email . '</a>', $tmp_body);
-  $tmp_body = str_replace('$local_server', $protocol . $_SERVER['HTTP_HOST'], $tmp_body);
+  $tmp_body = str_replace('$support_email', '<a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</a>', $tmp_body);
+  $tmp_body = str_replace('$local_server', $configObject->get('protocol') . $_SERVER['HTTP_HOST'], $tmp_body);
   
   if (isset($_GET['highlight'])) {
     do {
