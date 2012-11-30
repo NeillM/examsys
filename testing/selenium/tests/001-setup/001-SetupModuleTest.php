@@ -1,5 +1,7 @@
 <?php
-class Example extends PHPUnit_Extensions_SeleniumTestCase
+require_once 'shared.inc.php';
+
+class SetupModuleTest extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected $install_type = ' \(local\)';
 
@@ -11,7 +13,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
 
   public function testCreateFaculty()
   {
-    $this->do_login();
+    do_admin_login($this);
 
     $this->open("/staff/index.php");
     $this->click("link=Administrative Tools");
@@ -39,7 +41,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
    */
   public function testTestCreateSchool()
   {
-    $this->do_login();
+    do_admin_login($this);
 
     $this->open("/admin/index.php");
     $this->click("css=#13 > tbody > tr > td > img");
@@ -62,7 +64,7 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
    */
   public function testTestCreateModule()
   {
-    $this->do_login();
+    do_admin_login($this);
 
     $this->open("/admin/index.php");
     $this->click("css=#10 > tbody > tr > td > img");
@@ -79,15 +81,6 @@ class Example extends PHPUnit_Extensions_SeleniumTestCase
     $this->click("name=submit");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('S01SET');
-  }
-
-
-  private function do_login() {
-    $this->open("/staff/");
-    $this->type("name=PHP_USER", "selenium");
-    $this->type("name=PHP_PW", "srh*63Hh");
-    $this->click("name=submit-UserPW");
-    $this->waitForPageToLoad("30000");
   }
 }
 ?>
