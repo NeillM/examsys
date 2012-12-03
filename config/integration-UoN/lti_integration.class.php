@@ -263,7 +263,7 @@ var_dump(array($c_internal_id,$course_title));
   }
 
   function invalid_module_code($c_internal_id,$data,$location='') {
-    display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
+    UserNotices::display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
 
     echo '<p>Incoming Module Code: ' . $c_internal_id .'</p>';
     echo '<p><pre>';

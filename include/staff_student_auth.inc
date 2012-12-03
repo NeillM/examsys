@@ -48,7 +48,7 @@ require_once $root . 'include/auth.inc';
 try {
   include_once $root . 'include/load_config.php';
 } catch (Exception $e) {
-   display_notice('Install Required', 'Rogō needs installing before use. The Installer is avalable <a href="./install/index.php">here</a>.', '../artwork/software_64.png', $title_color = '#C00000');
+   UserNotices::display_notice('Install Required', 'Rogō needs installing before use. The Installer is avalable <a href="./install/index.php">here</a>.', '../artwork/software_64.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
 }
@@ -68,7 +68,7 @@ require_once $cfg_web_root . 'classes/userobject.class.php';
 
 // Check to see if the update script has been run.
 if ($configObject->get('rogo_version') != '4.4') {
-  display_notice('Update Required', 'System needs configuring before use. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
+  UserNotices::display_notice('Update Required', 'System needs configuring before use. Please contact your local system administrator.', '../artwork/software_64.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
 }
@@ -83,7 +83,7 @@ $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_roo
 
 if ($configObject->get('protocol') == 'https://' and $_SERVER['SERVER_PORT'] != 443 and $_SERVER['SERVER_PORT'] != 8080) {
   $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';
-  display_notice($string['secureconnection'], $msg, '../artwork/secure_connection.png', $title_color = '#C00000');
+  UserNotices::display_notice($string['secureconnection'], $msg, '../artwork/secure_connection.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
 }
@@ -106,7 +106,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
       $datareturned=db_userlookup($check[0], $mysqli, true);
 
       if ($datareturned === false) {
-        display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
+        UserNotices::display_notice($string['UserMissing'], $string['UserMissingDesc'], '/artwork/access_denied.png', '#C00000');
         exit();
       }
 
@@ -124,7 +124,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
         $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>\n</ul>";
       }
       $message .= $fp_link;
-      access_denied($message, true);
+      UserNotices::access_denied($message, true);
     }
   }
 
@@ -138,7 +138,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
     if (!isset($string[$lti->message])) {
       $string[$lti->message] = $lti->message;
     }
-    display_notice($string['LTIFAILURE'], $string[$tempvar], '/artwork/access_denied.png', '#C00000');
+    UserNotices::display_notice($string['LTIFAILURE'], $string[$tempvar], '/artwork/access_denied.png', '#C00000');
     $mysqli->close();
     exit;
   }
@@ -166,7 +166,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
       }
       $message .= "</ul>";
       if ($configObject->get('cfg_use_ldap') != true) $message .= $fp_link;
-      access_denied($message, true);
+      UserNotices::access_denied($message, true);
     } else {
       //
       //  MAIN AUTHENTICATION ROUTINES
@@ -191,7 +191,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
               }
               $message .= "</ul>";
 
-              access_denied($message, true);
+              UserNotices::access_denied($message, true);
             }
             $stmt->close();
             db_auth($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $mysqli, true, $userObject);
@@ -209,7 +209,7 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
             if (!array_reduce($configObject->get('cfg_institutional_domains'), 'NetworkUtils::check_email_domain')) {
               $message .= $fp_link;
             }
-            access_denied($message, true);
+            UserNotices::access_denied($message, true);
           }
         } else {
           // Internal DB authentication failed.
@@ -226,14 +226,14 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
               $message .= "<li>" . $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a></li>\n</ul>";
             }
             $message .= $fp_link;
-            access_denied($message, true);
+            UserNotices::access_denied($message, true);
           }
         }
       }
     }
   }
 } else {
-  display_notice('Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', '../artwork/browser.png', $title_color = '#C00000');
+  UserNotices::display_notice('Browser Incompatibility', 'Rogo currently requires MS Internet Explorer 7 (or above) or Firefox 4 (or above).', '../artwork/browser.png', $title_color = '#C00000');
   echo "\n</body>\n</html>\n";
   exit;
 }

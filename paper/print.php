@@ -231,7 +231,7 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calendar_year, $latex_needed, $password);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
-  access_denied($string['error_paper'], $output_header = false);
+  UserNotices::access_denied($string['error_paper'], $output_header = false);
 }
 while ($stmt->fetch()) {
   $row_no++;

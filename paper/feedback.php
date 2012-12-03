@@ -75,7 +75,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
       $stmt->store_result();
       $stmt->fetch();
       if ($stmt->num_rows == 0) {
-        access_denied($string['nofeedback'], false);
+        UserNotices::access_denied($string['nofeedback'], false);
       }
       $stmt->close();
       
@@ -87,7 +87,7 @@ if ($paper_properties = $mysqli->prepare("SELECT property_id, labs, calendar_yea
       $stmt->store_result();
       $stmt->fetch();
       if ($stmt->num_rows == 0) {
-        access_denied($string['nottaken'], false);
+        UserNotices::access_denied($string['nottaken'], false);
       }
       $stmt->close();
       

@@ -109,7 +109,7 @@ if (!$lti->valid) {
     $string[$tempvar] = $lti->message;
   }
   $message = $string[$tempvar];
-  display_notice($string['LTIFAILURE'], $message, '/artwork/access_denied.png', '#C00000');
+  UserNotices::display_notice($string['LTIFAILURE'], $message, '/artwork/access_denied.png', '#C00000');
   $mysqli->close();
   exit;
 }
@@ -136,7 +136,7 @@ if (!$lti->isInstructor()) {
   //student
   if ($returned === false) {
     // no data selected for this
-    display_notice($string['warning'], $string['ltinotconfigured'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', $title_color = '#C00000');
+    UserNotices::display_notice($string['warning'], $string['ltinotconfigured'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', $title_color = '#C00000');
     echo "\n</body>\n</html>\n";
     exit();
   } else {
@@ -228,13 +228,13 @@ if (!$lti->isInstructor()) {
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
           $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1);
         } elseif (!module_utils::module_exists($v[1], $mysqli) and  !$lti_i::allow_module_create($v)) {
-          display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png');
+          UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png');
           exit();
         }
         if (!UserUtils::staff_on_team($v[1], $mysqli) and $lti_i::allow_staff_module_register($v)) {
           UserUtils::add_staff_to_team($userObject->get_user_ID(), $v[1], $mysqli);
         } elseif (!UserUtils::staff_on_team($v[1], $mysqli) and !$lti_i::allow_staff_module_register($v)) {
-          display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png');
+          UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png');
           exit();
 
         }
@@ -337,7 +337,7 @@ END;
       @ob_clean();
       unset($_SESSION['_lti_context']);
       unset($_SESSION['lti']);
-      display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
+      UserNotices::display_notice($string['NoPapers'], $string['NoPapersDesc'], '/artwork/access_denied.png', '#C00000');
 
       echo '<p>Module(s): ' . $modinfo .'</p>';
 

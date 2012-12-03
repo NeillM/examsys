@@ -24,14 +24,18 @@
  * @package
  */
 
+$path = '';
+if(isset($cfg_web_root)) {
+  $path = $cfg_web_root;
+} else {
+  $path = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
+}
+require_once $path . '/classes/usernotices.class.php';
 
 function display_notice($title, $msg, $icon, $title_color = 'black') {
   global $configObject;
-
-  echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>$title</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"" . $configObject->get('cfg_root_path') . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
-  echo "<h1 style=\"color:$title_color\">$title</h1>\n";
-  echo "<hr />\n<p>$msg</p>";
+  //This function has been replaced by usernotices.class.php
+  throw new Exception("This function has been replaced by usernotices.class.php");
 }
 
 /**
@@ -43,31 +47,10 @@ function display_notice($title, $msg, $icon, $title_color = 'black') {
  */
 function access_denied($message, $output_header = false, $output_footer = true) {
   global $mysqli, $string, $configObject;
-
-  display_notice($string['accessdenied'], $message, '/artwork/access_denied.png', '#C00000');
-
-  if ($output_header == true) {
-print <<<END
-
-<div>
-<form method="POST">
-<p>Username:<input type="text" size="20" name="PHP_USER"><br /></p>
-<p>Password:<input type="password" size="20" name="PHP_PW"><br /></p>
-<p><input type="submit" name="submit-UserPW" value="Login"><br /></p>
-</form>
-</div>
-END;
-
-
-
-  }
-
-  if ($output_footer) {
-    echo "\n</body>\n</html>";
-
-    $mysqli->close();
-    exit;
-  }
+  //This function has been replaced by usernotices.class.php
+  throw new Exception("This function has been replaced by usernotices.class.php");
+  exit;
+  
 }
 
 

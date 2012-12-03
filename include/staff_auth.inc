@@ -32,7 +32,7 @@ require_once $cfg_web_root . 'classes/moduleutils.class.php';
 global $userObject;
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
-  access_denied('You are attempting to access a <strong>Staff Only</strong> page.', true);
+  UserNotices::access_denied('You are attempting to access a <strong>Staff Only</strong> page.', true);
 }
 
 // Redirect External Examiners if they are straying
@@ -143,7 +143,7 @@ if ($userObject->has_role('SysAdmin')) {
     // Override access for the system training module.
     if ($on_staff_module == false and strpos($_GET['module'], 'SYSTEM') === false) {
       $message = ($failed_paper) ? $string['denied_paper'] : $string['denied_folder'];
-      access_denied($message, false);
+      UserNotices::access_denied($message, false);
     }
   }
 
@@ -181,7 +181,7 @@ if ($userObject->has_role('SysAdmin')) {
 
           if (!$is_admin) {
             $result->close();
-            access_denied($string['denied_question'], false);
+            UserNotices::access_denied($string['denied_question'], false);
           }
         }
         $result->close();
@@ -204,7 +204,7 @@ if ($userObject->has_role('SysAdmin')) {
     }
     if ($staff_module_match == false) {
       
-      access_denied(str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
+      UserNotices::access_denied(str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
       //access_denied(str_replace('%s', $_GET['module'], $string['denied_team']), false);
     }
   }
@@ -227,7 +227,7 @@ if ($userObject->has_role('SysAdmin')) {
       }
 
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-        access_denied($string['denied_paper'], false);
+        UserNotices::access_denied($string['denied_paper'], false);
       }
     }
   }
@@ -255,7 +255,7 @@ if ($userObject->has_role('SysAdmin')) {
 
         //allow acsess to the TRAIN module for training!
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
-          access_denied($string['denied_question'], false);
+          UserNotices::access_denied($string['denied_question'], false);
         }
       }
     }

@@ -22,9 +22,13 @@
 * @package
 */
 
-function check_labs($paper_type, $labs, $pword, $mysqlidb) {
+function check_labs($paper_type, $labs, $pword, $mysqlidb, $notice = NULL) {
   global $string;
-  
+
+  if(is_null($notice)) {
+    $notice = UserNotices::get_instance();
+  }
+
   $low_bandwidth = 0;
   
   if ($labs != '') {
@@ -35,7 +39,7 @@ function check_labs($paper_type, $labs, $pword, $mysqlidb) {
     $stmt->store_result();
     $stmt->fetch();
     if ($stmt->num_rows == 0) {
-      access_denied($string['denied_location'], $output_header = false);
+      $notice->display_access_denied($string['denied_location'], $output_header = false);
     }
     $stmt->close();
   } else {
@@ -46,16 +50,20 @@ function check_labs($paper_type, $labs, $pword, $mysqlidb) {
   return $low_bandwidth;
 }
 
-function check_paper_password($password, $show_form=false) {
+function check_paper_password($password, $show_form=false, $notice = NULL) {
   global $string;
   
+  if(is_null($notice)) {
+    $notice = UserNotices::get_instance();
+  }
+
   if ($password != '') {
     if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
       if ($show_form) {
         if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $password) {
           setcookie('paperpwd', $_POST['paperpwd']);
         } else {
-          display_notice($string['passwordrequired'], '', '/artwork/key_48.png', '#C00000');
+          UserNotices::display_notice($string['passwordrequired'], '', '/artwork/key_48.png', '#C00000');
 
           $html = render_password_form($string);
 
@@ -63,24 +71,32 @@ function check_paper_password($password, $show_form=false) {
           exit;
         }
       } else {
-        access_denied($string['specificpassword'], false);
+        $notice->display_access_denied($string['specificpassword'], false);
       }
     }
   }
 }
 
-function check_datetime($start_date, $end_date) {
+function check_datetime($start_date, $end_date, $notice = NULL) {
   global $string;
+  
+  if(is_null($notice)) {
+    $notice = UserNotices::get_instance();
+  }
 
   if ((time()+120) < $start_date or (time()-3600) > $end_date) {
     $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-    access_denied($tmp_string, $output_header = false);
+    $notice->display_access_denied($tmp_string, $output_header = false);
   }
 }
 
-function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
+function check_modules($userObj, $moduleIDs, $calendar_year, $db, $notice = NULL) {
   global $string;
   
+  if(is_null($notice)) {
+    $notice = UserNotices::get_instance();
+  }
+
   $attempt = 1;
   $usern = $userObj->get_username();
   if (isset($_SERVER['PHP_AUTH_USER'])) {
@@ -109,13 +125,13 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
           }
         }
         $tmp_string = sprintf($string['notregistered'], $userObj->get_title(), $userObj->get_surname(), $userObj->get_username(), $html, $calendar_year);
-        access_denied($tmp_string, $output_header = false);
+        $notice->display_access_denied($tmp_string, $output_header = false);
       } else {
         $stmt->fetch();
       }
       $stmt->close();
     } else {
-      access_denied($string['error_module'], false);
+      $notice->display_access_denied($string['error_module'], false);
     }
   }
   
@@ -123,8 +139,12 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
 }
 
 // Needs fixing
-function check_metadata($property_id, $userObj, $moduleIDs, $db) {
+function check_metadata($property_id, $userObj, $moduleIDs, $db, $notice = NULL) {
   global $string;
+  
+  if(is_null($notice)) {
+    $notice = UserNotices::get_instance();
+  }
 
   $stmt = $db->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ?");
   $stmt->bind_param('i', $property_id);
@@ -138,7 +158,7 @@ function check_metadata($property_id, $userObj, $moduleIDs, $db) {
     $check_security->store_result();
     if ($check_security->num_rows == 0) {
       $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-      access_denied($tmp_string, $output_header = false);
+      $notice->display_access_denied($tmp_string, $output_header = false);
     }
     $check_security->close();
   }      
@@ -151,7 +171,7 @@ function render_password_form($string) {
     $url .= '?' . $_SERVER['QUERY_STRING'];
   }
 
-  $html = <<< FORM
+  /*$html = <<< FORM
     <form action="{$url}" method="post">
       <p style="margin-left:60px">
         <label for="paperpwd">{$string['enterpw']}</label><br />
@@ -161,7 +181,7 @@ function render_password_form($string) {
     </form>
   </body>
 </html>
-FORM;
+FORM;*/
 
   return $html;
 }

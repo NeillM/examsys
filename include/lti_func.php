@@ -56,14 +56,14 @@ function usercheck($db, $lti) {
     $message .= "</ul>";
     if ($cfg_use_ldap != true) $message .= $fp_link;
     $_SESSION['lti']['track'] = 'reauth2';
-    access_denied($message, true);
+    UserNotices::access_denied($message, true);
 
     exit();
   }
   $returned = $lti->lookup_lti_user();
   if ($returned === false) {
     if (!isset($_SERVER['PHP_AUTH_USER']) and $_SESSION['lti']['track']=='') {
-      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
+      UserNotices::display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
       $_SESSION['lti']['track'] = 'logon';
       $db->close();
       exit;
@@ -104,7 +104,7 @@ function usercheck($db, $lti) {
       $message .= '<li>' . $string['pressf5'] . '</li>';
       $message .= "</ul>";
       if ($cfg_use_ldap != true) $message .= $fp_link;
-      access_denied($message, true);
+      UserNotices::access_denied($message, true);
       $_SESSION['lti']['track'] == 'logon1';
       exit();
     }
@@ -112,7 +112,7 @@ function usercheck($db, $lti) {
   } else {
     $authneeded = $lti_i->user_time_check($returned[1], $username);
     if ($authneeded === true) {
-      display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
+      UserNotices::display_notice($string['ltifirstlogin'], $string['ltifirstlogindesc'], '/artwork/user_info_48.png', $title_color = '#C00000');
 
       $_SESSION['lti']['track'] = 'reauth';
       //TODO as all the rest of the reauth needs finishing

@@ -100,7 +100,7 @@ $paper_info->fetch();
 
 if ($paper_info->num_rows == 0) {
   $tmp_string = sprintf($string['papernotfound']);
-  access_denied($tmp_string, false);
+  UserNotices::access_denied($tmp_string, false);
 }
 $paper_info->free_result();
 $paper_info->close();
