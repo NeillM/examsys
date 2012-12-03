@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Allows the properties of a paper to be edited.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -27,6 +27,7 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
+require_once '../include/load_config.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
@@ -52,9 +53,9 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
     $disabled = '';
     $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #7F9DB9; font-size:90%\">";
   }
-  
+
   $current_labs = explode(',',$labs);
-  
+
   $result = $db->prepare("SELECT labs.id, name, campus, COUNT(ip_addresses.id) FROM labs, ip_addresses WHERE labs.id=ip_addresses.lab GROUP BY ip_addresses.lab ORDER BY campus, name");
   $result->execute();
   $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
@@ -78,7 +79,7 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, $db) 
   }
   $result->close();
   $html .= "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div>";
-  
+
   return $html;
 }
 
@@ -86,7 +87,7 @@ function getSchools($staff_modules, $db) {
   $schools = array();
 
   $staff_modules_list = implode("','", $staff_modules);
-  
+
   $result = $db->prepare("SELECT DISTINCT schools.id FROM schools, modules WHERE modules.schoolid=schools.id AND modules.moduleid IN ('$staff_modules_list')");
   $result->execute();
   $result->bind_result($schoolID);
@@ -94,7 +95,7 @@ function getSchools($staff_modules, $db) {
     $schools[] = $schoolID;
   }
   $result->close();
-  
+
   return $schools;
 }
 
@@ -142,16 +143,16 @@ if (isset($_POST['Submit'])) {
     } else {
       $display_feedback = 0;
     }
-    
+
     if (isset($_POST['hide_if_unanswered'])) {
       $hide_if_unanswered = '1';
     } else {
       $hide_if_unanswered = '0';
     }
-    
-        if (($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or!$configObject->get('cfg_summative_mgmt') or  $paper_type != '2') {
-  $local_time = new DateTimeZone($configObject->get('cfg_timezone'));      $target_timezone = new DateTimeZone($_POST['timezone']);
-      
+
+      if (($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or!$configObject->get('cfg_summative_mgmt') or  $paper_type != '2') {
+  		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));      $target_timezone = new DateTimeZone($_POST['timezone']);
+
       $null_start_date = false;
       if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
         $null_start_date = true;
@@ -161,23 +162,23 @@ if (isset($_POST['Submit'])) {
           $leap = true;
         } else {
           $leap = false;
-        }   
+        }
         if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '29';
         if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
         if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
-        
+
         $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'], $target_timezone);
         $start_date->setTimezone($local_time);
-        
+
         if ($_POST['timezone'] < 0) {
           $start_date->modify("+" . abs($_POST['timezone']) . " hour");
         } elseif ($_POST['timezone'] > 0) {
           $start_date->modify("-" . $_POST['timezone'] . " hour");
         }
-        
+
         $tmp_start_date = $start_date->format("YmdHis");
       }
-      
+
       $null_end_date = false;
       if ($_POST['tyear'] == '' and $_POST['tmonth'] == '' and $_POST['tday'] == '' and $_POST['ttime'] == '') {
         $null_end_date = true;
@@ -187,14 +188,14 @@ if (isset($_POST['Submit'])) {
           $leap = true;
         } else {
           $leap = false;
-        }   
+        }
         if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
         if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
         if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
-        
+
         $end_date = new dateTime($_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'], $target_timezone);
         $end_date->setTimezone($local_time);
-        
+
         if ($_POST['timezone'] < 0) {
           $end_date->modify("+" . abs($_POST['timezone']) . " hour");
         } elseif ($_POST['timezone'] > 0) {
@@ -208,19 +209,19 @@ if (isset($_POST['Submit'])) {
       $leap = true;
     } else {
       $leap = false;
-    }   
+    }
     if ($leap == true and $_POST['ext_tmonth'] == '02' and ($_POST['ext_tday'] == '30' or $_POST['ext_tday'] == '31')) $_POST['ext_tday'] = '29';
     if ($leap == false and $_POST['ext_tmonth'] == '02' and ($_POST['ext_tday'] == '29' or $_POST['ext_tday'] == '30' or $_POST['ext_tday'] == '31')) $_POST['ext_tday'] = '28';
     if (($_POST['ext_tmonth'] == '04' or $_POST['ext_tmonth'] == '06' or $_POST['ext_tmonth'] == '09' or $_POST['ext_tmonth'] == '11') and $_POST['ext_tday'] == '31') $_POST['ext_tday'] = '30';
 
     $external_review_deadline = $_POST['ext_tyear'] . $_POST['ext_tmonth'] . $_POST['ext_tday'];
     if ($external_review_deadline == '') $external_review_deadline = NULL;
-    
+
    if ((modulo($_POST['int_tyear'],4) == 0 and modulo($_POST['int_tyear'],100) != 0) or modulo($_POST['int_tyear'],400) == 0) {
       $leap = true;
     } else {
       $leap = false;
-    }   
+    }
     if ($leap == true and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '29';
     if ($leap == false and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '29' or $_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '28';
     if (($_POST['int_tmonth'] == '04' or $_POST['int_tmonth'] == '06' or $_POST['int_tmonth'] == '09' or $_POST['int_tmonth'] == '11') and $_POST['int_tday'] == '31') $_POST['int_tday'] = '30';
@@ -241,11 +242,11 @@ if (isset($_POST['Submit'])) {
         }
       }
     }
-    
+
     if (isset($_POST['cal_mod']) and $_POST['cal_mod'] != '') {    // If set override the module ID with what the dialog box was called with.
       $first_module_id = $_POST['cal_mod'];
     }
-    
+
     $lab_string = '';
     for ($i=0; $i<$_POST['lab_no']; $i++) {
       if (isset($_POST["lab$i"])) {
@@ -256,7 +257,7 @@ if (isset($_POST['Submit'])) {
         }
       }
     }
-    
+
     $external_string = '';
     for ($i=0; $i<$_POST['examiner_no']; $i++) {
       if (isset($_POST["examiner$i"])) {
@@ -267,7 +268,7 @@ if (isset($_POST['Submit'])) {
         }
       }
     }
-    
+
     $internal_string = '';
     for ($i=0; $i<$_POST['internal_no']; $i++) {
       if (isset($_POST["internal$i"])) {
@@ -278,10 +279,10 @@ if (isset($_POST['Submit'])) {
         }
       }
     }
-    
+
     $tmp_prologue = $_POST['paper_prologue'];
     $tmp_prologue = clearMSOtags($tmp_prologue);
-    
+
     if (isset($_POST['osce_marking_guidance'])) {
       $tmp_postscript = $_POST['osce_marking_guidance'];
       $tmp_postscript = clearMSOtags($tmp_postscript);
@@ -289,21 +290,21 @@ if (isset($_POST['Submit'])) {
       $tmp_postscript = $_POST['paper_postscript'];
       $tmp_postscript = clearMSOtags($tmp_postscript);
     }
-    
+
     $tmp_rubric = $_POST['rubric_text'];
     $tmp_rubric = clearMSOtags($tmp_rubric);
-    
+
     $tmp_marking = $_POST['marking'];
     if ($tmp_marking == '') $tmp_marking = '0';
     if ($tmp_marking == '2') $tmp_marking = $_POST['std_set'];
-        
+
     $tmp_pass_mark = (isset($_POST['pass_mark'])) ? $_POST['pass_mark'] : 0;
     if ($tmp_pass_mark == '') $tmp_pass_mark = 40;
 
     $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
     $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
 
-    
+
     if (isset($_POST['sound_demo'])) {
       $tmp_sound_demo = 1;
     } else {
@@ -320,7 +321,7 @@ if (isset($_POST['Submit'])) {
     $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
     $password = trim($_POST['password']);
     $paperID = $_POST['paperID'];
-    
+
     if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
       $editProperties = $mysqli->prepare("UPDATE properties SET paper_title=?, paper_prologue=?, paper_postscript=?, bgcolor=?, fgcolor=?, themecolor=?, labelcolor=?, fullscreen=?, marking=?, bidirectional=?, pass_mark=?, distinction_mark=?, folder=?, rubric=?, calculator=?, externals=?, display_correct_answer=?, display_students_response=?, display_question_mark=?, display_feedback=?, hide_if_unanswered=?, internal_reviewers=?, external_review_deadline=?, internal_review_deadline=?, sound_demo=?, password=? WHERE property_id=?");
       $editProperties->bind_param('ssssssssssiississsssssssssi', $paper_title, $tmp_prologue, $tmp_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $tmp_marking, $bidirectional, $tmp_pass_mark, $tmp_distinction_mark, $folderID, $tmp_rubric, $tmp_calculator, $external_string, $display_correct_answer, $display_students_response, $display_question_mark, $display_feedback, $hide_if_unanswered, $internal_string, $external_review_deadline, $internal_review_deadline, $tmp_sound_demo, $password, $paperID);
@@ -337,7 +338,7 @@ if (isset($_POST['Submit'])) {
 
       Paper_utils::update_modules($paper_modules,$paperID,$mysqli,$userObject);
     }
-    
+
     // Release objectives-based feedback
     $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id=? AND type='objectives'");
     $editProperties->bind_param('i', $_POST['paperID']);
@@ -372,12 +373,12 @@ if (isset($_POST['Submit'])) {
       QuestionUtils::update_modules_from_papers($q_id,$mysqli);
     }
     $result->close();
-    
+
     // Set any metadata security
     for ($i=0; $i<$_POST['meta_dropdown_no']; $i++) {
       $meta_type = $_POST['meta_type' . $i];
       $meta_value = $_POST['meta_value' . $i];
-      
+
       $editProperties = $mysqli->prepare("DELETE FROM paper_metadata_security WHERE paperID=? AND name=?");
       $editProperties->bind_param('is', $paperID, $meta_type);
       $editProperties->execute();
@@ -390,7 +391,7 @@ if (isset($_POST['Submit'])) {
         $editProperties->close();
       }
     }
-    
+
     // Get existing Reference Materials
     $existing_refs = array();
     $result = $mysqli->prepare("SELECT refID FROM reference_papers WHERE paperID=?");
@@ -402,14 +403,14 @@ if (isset($_POST['Submit'])) {
       $existing_refs[$refID] = $refID;
     }
     $result->close();
-    
+
     $new_refs = array();
     for ($i=0; $i<$_POST['reference_no']; $i++) {
       if (isset($_POST["ref$i"])) {
         $new_refs[$_POST["ref$i"]] = $_POST["ref$i"];
       }
     }
-    
+
     foreach ($new_refs as $new_ref) {
       if (isset($existing_refs[$new_ref])) {
         unset($existing_refs[$new_ref]);
@@ -425,16 +426,16 @@ if (isset($_POST['Submit'])) {
       $editProperties->bind_param('ii', $paperID, $existing_ref);
       $editProperties->execute();
       $editProperties->close();
-    }    
+    }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-    
+
     <title><?php echo $string['edittitle']; ?></title>
-    
+
     <meta http-equiv="pragma" content="no-cache" />
     <script type="text/javascript">
       function closeWindow() {
@@ -475,7 +476,7 @@ if (isset($_POST['Submit'])) {
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-    
+
     <title><?php echo $string['edittitle']; ?></title>
   </head>
   <body>
@@ -486,7 +487,7 @@ if (isset($_POST['Submit'])) {
   }
 } else {
   $option_no = 1;
-  
+
   // Work out if any negative marking is used
   $neg_marking = false;
   $result = $mysqli->prepare("SELECT marks_incorrect FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND paper=?");
@@ -499,7 +500,7 @@ if (isset($_POST['Submit'])) {
     }
   }
   $result->close();
-  
+
   // Get the main properties of the paper
   $result = $mysqli->prepare("SELECT display_students_response, display_correct_answer, display_question_mark, display_feedback, hide_if_unanswered, paper_title, paper_type, start_date, end_date, timezone, paper_prologue, paper_postscript, bgcolor, fgcolor, themecolor, labelcolor, fullscreen, marking, bidirectional, pass_mark, distinction_mark, folder, labs, rubric, calculator, externals, exam_duration, calendar_year, internal_reviewers, external_review_deadline, internal_review_deadline, sound_demo, password, crypt_name FROM properties WHERE property_id=?");
   $result->bind_param('i', $_GET['paperID']);
@@ -509,23 +510,23 @@ if (isset($_POST['Submit'])) {
   $result->close();
   $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   $target_timezone = new DateTimeZone($timezone);
-  
+
   if ($start_date != '') {
     $start_date = new dateTime($start_date, $local_time);
     $start_date->setTimezone($target_timezone);
     $start_date = $start_date->format("Y/m/d H:i:s");
   }
-  
+
   if ($end_date != '') {
     $end_date = new dateTime($end_date, $local_time);
     $end_date->setTimezone($target_timezone);
     $end_date = $end_date->format("Y/m/d H:i:s");
   }
-  
+
 if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role(array('Admin','SysAdmin'))) {
-  $sum_disabled = ' disabled'; 
+  $sum_disabled = ' disabled';
 } else {
-  $sum_disabled = ''; 
+  $sum_disabled = '';
 }
 
 ?>
@@ -534,7 +535,7 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
@@ -552,11 +553,11 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script language="JavaScript">
     $(getMeta);
-  
+
     function getMeta() {
       var mod_codes = '';
       var module_no = document.getElementById('module_no').value;
-      
+
       for (i=0; i<module_no; i++) {
         if (document.getElementById('module' + i).checked == true) {
           if (mod_codes == '') {
@@ -569,7 +570,7 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
       $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>&session=' + $('#session').val() );
       $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=<?php echo $_GET['paperID']; ?>');
     }
-  
+
     function objreportURL() {
       if (document.getElementById('objectives_report').checked == true) {
         document.getElementById('objreport').style.display = 'block';
@@ -577,7 +578,7 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
         document.getElementById('objreport').style.display = 'none';
       }
     }
-  
+
     function toggle(objectID) {
       if (document.getElementById(objectID).className == 'r2') {
         document.getElementById(objectID).className = 'r1';
@@ -597,11 +598,11 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
         alert ("<?php echo $string['availablefromday']; ?>");
         return false;
       }
-      
+
       var module_no = document.getElementById('module_no').value;
       var moduleList = '';
       for (var i = 0; i < module_no; i++) {
-        objectID = 'module' + i;        
+        objectID = 'module' + i;
         if (document.getElementById(objectID).checked == true) {
           if (moduleList == '') {
             moduleList = document.getElementById(objectID).value;
@@ -620,24 +621,24 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
           alert ("<?php echo $string['msg2']; ?>");
           return false;
         }
-        
+
         if (document.edit_form.exam_duration.options[document.edit_form.exam_duration.selectedIndex].value == 'NULL') {
           alert ("<?php echo $string['msg3']; ?>");
           return false;
         }
-        
+
         if (document.edit_form.calendar_year.options[document.edit_form.calendar_year.selectedIndex].value == '') {
           alert ("<?php echo $string['msg4']; ?>");
           return false;
         }
       }
-    
+
       if (document.edit_form.paper_type.options[document.edit_form.paper_type.selectedIndex].value == '4') {
         var module_no = document.getElementById('module_no').value;
 
         var moduleList = '';
         for (var i = 0; i < module_no; i++) {
-          objectID = 'module' + i;        
+          objectID = 'module' + i;
           if (document.getElementById(objectID).checked == true) {
             if (moduleList == '') {
               moduleList = document.getElementById(objectID).value;
@@ -651,7 +652,7 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
           return false;
         }
       }
-      
+
       var external_set = false;
       for (var i = 0; i < document.getElementById('examiner_no').value; i++) {
         objectID = 'examiner' + i;
@@ -669,9 +670,9 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
         } else if (document.edit_form.ext_tyear.options[document.edit_form.ext_tyear.selectedIndex].value == '') {
           alert("<?php echo $string['msg6']; ?>");
           return false;
-        }        
+        }
       }
-     
+
       var internal_set = false;
       for (var i = 0; i < document.getElementById('internal_no').value; i++) {
         objectID = 'internal' + i;
@@ -689,13 +690,13 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
         } else if (document.edit_form.int_tyear.options[document.edit_form.int_tyear.selectedIndex].value == '') {
           alert("<?php echo $string['msg6a']; ?>");
           return false;
-        }        
+        }
       }
-     
+
       if (document.edit_form.paper_title.value == '') {
         alert ("<?php echo $string['msg7']; ?>");
         return false;
-      }    
+      }
     }
 
     function changeType() {
@@ -740,7 +741,7 @@ if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userOb
         }
       ?>
       document.getElementById(sectionID).style.display='';
-      
+
       document.getElementById('tab1').style.background='';
       document.getElementById('tab2').style.background='';
       document.getElementById('tab3').style.background='';
@@ -843,6 +844,9 @@ if ($paper_type != '4' and $paper_type != '5') {
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      echo "<tr><td colspan=\"4\" style=\"background-color:#E5EFFA; color:#00156E; border-bottom: 1px solid #CFDBEB\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+
+     $protocol = $configObject->get( 'protocol' );
+
      if ($paper_type == '2') {
        echo "<tr><td align=\"right\" valign=\"top\">" . $string['url'] . "&nbsp;</td><td colspan=\"3\"><a href=\"" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "\" target=\"_blank\" style=\"color:blue\">" . $protocol . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "</a> " . $string['onlyonexamday'] . "</td></tr>\n";
      } elseif ($paper_type == '4') {
@@ -867,11 +871,11 @@ if ($paper_type != '4' and $paper_type != '5') {
        $tmp_types = array('formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper');
        echo "<option value=\"0\" selected=\"selected\" />" . $string[$tmp_types[$paper_type]] . "</option>\n";
      }
-   
+
      echo "<td align=\"right\" valign=\"top\">" . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
      echo "<option value=\"\"></option>";
      $additional = '';
-     
+
      if(is_array($staff_modules)) {
       $additional = ' OR idMod IN ("' . implode("','",array_keys($staff_modules)) . '")';
      }
@@ -894,7 +898,7 @@ if ($paper_type != '4' and $paper_type != '5') {
      }
      $folder_details->close();
      echo "</select>\n</td></tr>\n";
-     
+
      echo "<tr><td align=\"right\" valign=\"top\">";
      if ($paper_type != '4') echo $string['feedback'] . '&nbsp';
      echo "</td><td colspan=\"3\">";
@@ -912,7 +916,7 @@ if ($paper_type != '4' and $paper_type != '5') {
          echo "<div><input type=\"checkbox\" value=\"1\" name=\"objectives_report\" checked />";
        }
        $feedback_details->close();
-     
+
        echo $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/mapping/user_feedback.php?id=$crypt_name</a></div>\n";
      }
      if (in_array($paper_type, array('1', '2', '5'))) {
@@ -929,7 +933,7 @@ if ($paper_type != '4' and $paper_type != '5') {
          echo "<br /><div><input type=\"checkbox\" value=\"1\" name=\"questions_report\" checked />";
        }
        $feedback_details->close();
-     
+
        echo $string['questionfeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name\" style=\"color:blue\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/paper/feedback.php?id=$crypt_name</a></div>\n";
      }
      if ($paper_type == '0') {
@@ -951,9 +955,9 @@ if ($paper_type != '4' and $paper_type != '5') {
        echo '<div id="feedback_off" style="display:none">';
      }
      echo "<br />&nbsp;</div>";
-     
+
      echo "<tr>\n";
-     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";     
+     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      if ($paper_type == '4') {
        echo '<input type="hidden" name="bgcolor" value="' . $bgcolor . '" />';
        echo '<input type="hidden" name="fgcolor" value="' . $fgcolor . '" />';
@@ -973,12 +977,12 @@ if ($paper_type != '4' and $paper_type != '5') {
        } else {
          echo "<td align=\"right\">" . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\"><option value=\"0\" selected>" . $string['unidirectional'] ."</option><option value=\"1\">" . $string['bidirectional'] ."</option></select></td></tr>\n";
        }
-       
+
        echo "<tr>\n";
        echo "<td align=\"right\">" . $string['background'] . "&nbsp;</td><td><div onclick=\"showPicker('bgcolor',event)\" id=\"span_bgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$bgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"bgcolor\" name=\"bgcolor\" value=\"$bgcolor\" /></td>";
        echo "<td align=\"right\">" . $string['foreground'] . "&nbsp;</td><td><div onclick=\"showPicker('fgcolor',event)\" id=\"span_fgcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$fgcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"fgcolor\" name=\"fgcolor\" value=\"$fgcolor\" /></td>";
        echo "</tr>\n";
-   
+
        echo "<tr>\n";
        echo "<td align=\"right\">" . $string['theme'] . "&nbsp;</td><td><div onclick=\"showPicker('themecolor',event)\" id=\"span_themecolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" /></td>";
        echo "<td align=\"right\">" . $string['labelsnotes'] . "&nbsp;</td><td><div onclick=\"showPicker('labelcolor',event)\" id=\"span_labelcolor\" style=\"border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" /></td>";
@@ -1037,7 +1041,7 @@ if ($paper_type != '4' and $paper_type != '5') {
        } else {
         echo '>' . $string['calculatrrandommark'] . '<br />';
        }
-     
+
       // Look for any Standard Setting reviews for the paper.
       $std_set_details = $mysqli->prepare("SELECT DISTINCT title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, group_review FROM standards_setting, users WHERE standards_setting.setterID=users.id AND paperID=? ORDER BY std_set DESC");
       $std_set_details->bind_param('i', $_GET['paperID']);
@@ -1118,9 +1122,9 @@ if ($paper_type != '4' and $paper_type != '5') {
 <td style="text-align:center; vertical-align:top" colspan="2">
 <?php
     if ($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and !$userObject->has_role('Admin') and !$userObject->has_role('SysAdmin')) {
-      $sum_disabled = ' disabled'; 
+      $sum_disabled = ' disabled';
     } else {
-      $sum_disabled = ''; 
+      $sum_disabled = '';
     }
 
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
@@ -1131,7 +1135,7 @@ if ($paper_type != '4' and $paper_type != '5') {
       if ($calendar_year == $value) echo 'selected';
       echo ">";
       echo $value . "</option>\n";
-    }    
+    }
     echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"$password\" /></td></tr>\n";
 
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
@@ -1160,7 +1164,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_day = substr($start_date,8,2);
     $split_hour = substr($start_date,11,2);
     $split_minute = substr($start_date,14,2);
-    
+
     // Available from Day
     echo "<select name=\"fday\" id=\"fday\" onchange=\"dateCopy('fday')\"$sum_disabled>\n";
     if ($start_date == '') {
@@ -1242,7 +1246,7 @@ if ($paper_type != '4' and $paper_type != '5') {
     $split_minute = substr($end_date,14,2);
 
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
-    
+
      // Available from Day
     echo "<select name=\"tday\" id=\"tday\" onchange=\"dateCopy('tday')\"$sum_disabled>\n";
     if ($end_date == '') {
@@ -1319,15 +1323,15 @@ if ($paper_type != '4' and $paper_type != '5') {
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
     echo "<tr><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px; width:400px\">&nbsp;" . $string['modules'] . "</td><td style=\"background-color:#E5EFFA; color:#00156E; border-bottom:1px solid #CFDBEB; padding:2px\">&nbsp;" . $string['restricttolabs'] . "</td></tr>";
     echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
-    
+
     echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
-    
+
     $modules_array = Paper_utils::get_modules($_GET['paperID'], $mysqli);
     $total_modules = array_merge($staff_modules, $modules_array);
-    
+
     $module_sql = implode("','", $total_modules);
     if ($module_sql != '') $module_sql = "'$module_sql'";
-    
+
     if ($module_sql == '') {
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"0\" /></div>\n";
     } else {
@@ -1351,13 +1355,13 @@ if ($paper_type != '4' and $paper_type != '5') {
         } else {
           echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
         }
-        $module_no++;  
-        $old_school = $module['school'];        
+        $module_no++;
+        $old_school = $module['school'];
       }
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
     }
     echo "</td>\n";
-    
+
     echo "<td>" . output_labs($labs, $configObject->get('cfg_summative_mgmt'), $paper_type, $userObject, $mysqli) . "</td></tr>\n";
 
   ?>
@@ -1518,13 +1522,13 @@ if ($paper_type != '4' and $paper_type != '5') {
     }
 ?>
 </td></tr>
-  <?php  
+  <?php
   echo "<tr><td><div style=\"width:345px; height:450px; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
-  
+
   $schools = getSchools($staff_modules, $mysqli);
   $school_sql = (count($schools) > 0) ? 'AND schoolid IN (' . implode(',', $schools) . ')' : '';
   $current_internals = explode(',',$internal_reviewers);
-     
+
   $internal_details = $mysqli->prepare("SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE users.id=modules_staff.memberID and modules.id=modules_staff.idMod $school_sql ORDER BY surname, initials");
   echo $mysqli->error;
   $internal_details->execute();
