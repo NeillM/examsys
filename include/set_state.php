@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -23,11 +23,11 @@
 */
 
   require '../include/staff_auth.inc';
-  
-  $prefix = $protocol . $_SERVER['HTTP_HOST'];
+
+  $prefix = $configObject->get( 'protocol' ) . $_SERVER['HTTP_HOST'];
   $page = str_replace($prefix , '', $_REQUEST['page']);
   $page = str_replace('#', '', $page);
-  
+
   $parts = explode('?', $page);
   $page = $parts[0];
 
