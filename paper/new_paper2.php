@@ -522,7 +522,7 @@ if ($_POST['paper_type'] == 'summative') {
   $result->execute();
   $result->bind_result($idMod, $module_id, $module_name);
   while ($result->fetch()) {
-    if (isset($_POST['module']) and $_POST['module'] == $module_id) {
+    if (isset($_POST['module']) and $_POST['module'] == $idMod) {
       echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $idMod . "\" checked />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
     } else {
       echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $idMod . "\" />&nbsp;" . $module_id . " - " . substr($module_name,0,60) . "</div>\n";
