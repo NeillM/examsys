@@ -26,11 +26,11 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertTitle('Add Schools' . $this->install_type);
 
-    $this->type("id=school", "School of Selenium Testing");
-    $this->select("name=facultyID", "label=Faculty of Selenium Testing");
-    $this->click("name=submit");
-    $this->waitForPageToLoad("30000");
-    $this->assertTextPresent('School of Selenium Testing');
+    $this->type('id=school', 'School of Short Lived');
+    $this->select('name=facultyID', 'label=Faculty of Selenium Testing');
+    $this->click('name=submit');
+    $this->waitForPageToLoad('30000');
+    $this->assertTextPresent('School of Short Lived');
   }
 
   // TODO: Edit School

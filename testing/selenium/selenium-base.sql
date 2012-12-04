@@ -202,7 +202,7 @@ CREATE TABLE `faculty` (
   `name` varchar(80) DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +211,7 @@ CREATE TABLE `faculty` (
 
 LOCK TABLES `faculty` WRITE;
 /*!40000 ALTER TABLE `faculty` DISABLE KEYS */;
-INSERT INTO `faculty` VALUES (1,'UNKNOWN Faculty',NULL),(2,'Administrative and Support Units',NULL);
+INSERT INTO `faculty` VALUES (1,'UNKNOWN Faculty',NULL),(2,'Administrative and Support Units',NULL),(3,'Faculty of Selenium Testing',NULL);
 /*!40000 ALTER TABLE `faculty` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -947,7 +947,7 @@ CREATE TABLE `modules` (
   `ebel_grid_template` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `guideid` (`moduleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 PACK_KEYS=1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 PACK_KEYS=1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -956,7 +956,7 @@ CREATE TABLE `modules` (
 
 LOCK TABLES `modules` WRITE;
 /*!40000 ALTER TABLE `modules` DISABLE KEYS */;
-INSERT INTO `modules` VALUES (1,'TRAIN','Training Module',1,'','mapping','',0,2,NULL,NULL),(2,'SYSTEM','Online Help',1,'','peer,external,stdset,mapping','',0,2,NULL,NULL);
+INSERT INTO `modules` VALUES (1,'TRAIN','Training Module',1,'','mapping','',0,2,NULL,NULL),(2,'SYSTEM','Online Help',1,'','peer,external,stdset,mapping','',0,2,NULL,NULL),(3,'S01SET','Selenium Testing',1,'','peer,external','',0,3,1,0);
 /*!40000 ALTER TABLE `modules` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1656,7 +1656,7 @@ CREATE TABLE `schools` (
   `deleted` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_facultyID` (`facultyID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1665,7 +1665,7 @@ CREATE TABLE `schools` (
 
 LOCK TABLES `schools` WRITE;
 /*!40000 ALTER TABLE `schools` DISABLE KEYS */;
-INSERT INTO `schools` VALUES (1,'UNKNOWN School',1,NULL),(2,'Training',2,NULL);
+INSERT INTO `schools` VALUES (1,'UNKNOWN School',1,NULL),(2,'Training',2,NULL),(3,'School of Selenium Testing',3,NULL);
 /*!40000 ALTER TABLE `schools` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2185,4 +2185,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-11-29 15:52:15
+-- Dump completed on 2012-12-04 11:58:16

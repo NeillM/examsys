@@ -15,18 +15,11 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
   {
     do_admin_login($this);
 
-    $this->create_faculty('Faculty of Selenium Testing');
+    $this->create_faculty('Faculty of Short Lived');
   }
 
   // TODO: Can't create faculty with same name
   // NOTE: not possible with current implementation
-
-  public function testCreateFacultyForDeletion()
-  {
-    do_admin_login($this);
-
-    $this->create_faculty('Faculty of Short Lived');
-  }
 
   public function testEditFaculty() {
     do_admin_login($this);
