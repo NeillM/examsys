@@ -83,5 +83,7 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent($name);
   }
+
+  //TODO: Can't create faculty without name
 }
 ?>

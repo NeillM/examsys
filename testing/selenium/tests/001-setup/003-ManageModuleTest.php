@@ -34,5 +34,8 @@ class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
 
   // TODO: Edit Module
   // TODO: Delete Module
+  // TODO: Can't create module without code
+  // TODO: Can't create module without name
+  // TODO: Can't create module without school
 }
 ?>

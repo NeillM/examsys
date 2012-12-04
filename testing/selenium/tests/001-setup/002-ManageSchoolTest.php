@@ -89,5 +89,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('School names must be unique within a faculty');
     $this->assertLocation($this->page_root . '/admin/add_school.php');
   }
+
+  // TODO: Can't create school without name
 }
 ?>
