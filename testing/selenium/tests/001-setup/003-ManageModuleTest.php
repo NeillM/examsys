@@ -1,6 +1,4 @@
 <?php
-/* DEPENDS ON ManageFacultyTest, ManageSchoolTest */
-
 require_once 'shared.inc.php';
 
 class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
