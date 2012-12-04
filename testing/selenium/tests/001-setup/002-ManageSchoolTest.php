@@ -90,6 +90,18 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertLocation($this->page_root . '/admin/add_school.php');
   }
 
-  // TODO: Can't create school without name
+  public function testCantCreateSchoolWithoutName() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_schools.php");
+    $this->click("link=Create new School");
+    $this->waitForPageToLoad("30000");
+    $this->click("name=submit");
+    $this->assertEquals("Please enter name for the school.", $this->getAlert());
+
+    $this->type("id=school", "");
+    $this->click("name=submit");
+    $this->assertEquals("Please enter name for the school.", $this->getAlert());
+  }
 }
 ?>
