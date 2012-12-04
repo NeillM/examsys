@@ -84,6 +84,19 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent($name);
   }
 
-  //TODO: Can't create faculty without name
+  public function testCantCreateFacultyWithoutName() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_faculties.php");
+    $this->click("link=Create new Faculty");
+    $this->waitForPopUp("faculties", "30000");
+    $this->selectWindow("name=faculties");
+    $this->click("name=ok");
+    $this->selectWindow('null');
+
+    $this->open("/admin/list_faculties.php");
+    $this->waitForPageToLoad("30000");
+    $this->assertCssCount('css=tr.l', 3);
+  }
 }
 ?>
