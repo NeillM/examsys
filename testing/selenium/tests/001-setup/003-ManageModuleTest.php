@@ -11,7 +11,7 @@ class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl("https://rogo.local/");
   }
 
-  public function testTestCreateModule()
+  public function testCreateModule()
   {
     do_admin_login($this);
 
@@ -32,10 +32,56 @@ class ManageModuleTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('S02SHL');
   }
 
-  // TODO: Edit Module
-  // TODO: Delete Module
-  // TODO: Can't create module without code
-  // TODO: Can't create module without name
+  /**
+   * @depends testCreateModule
+   */
+  public function testEditModule() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_modules.php");
+    $this->click("//tr[@id='4']/td[2]/div");
+    $this->click("link=Edit Module");
+    $this->waitForPageToLoad("30000");
+    $this->type("name=fullname", "Short Lived2");
+    $this->type("name=modulecode", "S02SHL2");
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertTextPresent('S02SHL2');
+    $this->assertTextPresent('Short Lived2');
+    // TODO: test change of faculty
+  }
+
+  public function testCantCreateModuleWithoutCode() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_modules.php");
+    $this->click("link=Create new Module");
+    $this->waitForPageToLoad("30000");
+    $this->type("name=fullname", "Should Not Exist");
+    $this->select("name=schoolid", "label=School of Selenium Testing");
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertTextNotPresent('Should Not Exist');
+  }
+
+
+  public function testCantCreateModuleWithoutName() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_modules.php");
+    $this->click("link=Create new Module");
+    $this->waitForPageToLoad("30000");
+    $this->type("name=modulecode", "S01SNE");
+    $this->select("name=schoolid", "label=School of Selenium Testing");
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertTextNotPresent('S01SNE');
+  }
+
   // TODO: Can't create module without school
+  // NOTE: Not possible - even if module is created without a valid school ID it will not appear in modules list
 }
 ?>
