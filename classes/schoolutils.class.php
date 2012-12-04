@@ -116,4 +116,21 @@ Class SchoolUtils {
 
     return $school_list;
   }
+
+/**
+ * Check if a school name exists in a given Faculty
+ * @param  int $facultyID ID of faculty to check
+ * @param  string $school    School name to check
+ * @param  object $db        Link to mysqli
+ * @return bool            True if school name already exists for the faculty
+ */
+  static function school_exists_in_faculty($facultyID, $school, $db) {
+    $query = 'SELECT id FROM schools WHERE school=? AND facultyID=?';
+    $stmt = $db->prepare($query);
+    $stmt->bind_param('si', $school, $facultyID);
+    $stmt->execute();
+    $stmt->store_result();
+
+    return $stmt->num_rows > 0;
+  }
 }
