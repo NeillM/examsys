@@ -21,6 +21,9 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
   // TODO: Can't create faculty with same name
   // NOTE: not possible with current implementation
 
+  /**
+   * @depends testCreateFaculty
+   */
   public function testEditFaculty() {
     do_admin_login($this);
 
@@ -36,6 +39,25 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->open("/admin/list_faculties.php");
     $this->waitForPageToLoad("30000");
     $this->assertTextPresent('Faculty of Short Lived2');
+  }
+
+  /**
+   * @depends testCreateFaculty
+   */
+  public function testDeleteFaculty() {
+    do_admin_login($this);
+
+    $this->open("/admin/list_faculties.php");
+    $this->click("css=#4 > td > div.col10");
+    $this->click("link=Delete Faculty");
+    $this->waitForPopUp("faculties", "30000");
+    $this->selectWindow("name=faculties");
+    $this->click("name=submit");
+    $this->selectWindow('null');
+
+    $this->open("/admin/list_faculties.php");
+    $this->waitForPageToLoad("30000");
+    $this->assertTextNotPresent('Faculty of Short Lived2');
   }
 
   // TODO: Delete Faculty
