@@ -36,7 +36,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('New account created for Mr Staff');
   }
 
-  // TODO: Can this actually be done?
+  // TODO: Can this actually be done?  Don't think Selenium can cope with alerts generated on page load
   // /**
   //  * @depends testCreateUser
   //  */
