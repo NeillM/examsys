@@ -28,6 +28,8 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     do_admin_login($this);
 
     $this->open("/admin/list_faculties.php");
+    // TODO: investigate why double click doesn't work in Selenium but using the 'Edit Faculty' link does
+    // $this->doubleClick("css=#4 > td > div.col10");
     $this->click("css=#4 > td > div.col10");
     $this->click("link=Edit Faculty");
     $this->waitForPopUp("faculties", "30000");
@@ -59,8 +61,6 @@ class ManageFacultyTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->waitForPageToLoad("30000");
     $this->assertTextNotPresent('Faculty of Short Lived2');
   }
-
-  // TODO: Delete Faculty
 
   private function create_faculty($name) {
     $this->open("/staff/index.php");

@@ -11,7 +11,7 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->setBrowserUrl("https://rogo.local/");
   }
 
-  public function testTestCreateSchool()
+  public function testCreateSchool()
   {
     do_admin_login($this);
 
@@ -31,7 +31,41 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->assertTextPresent('School of Short Lived');
   }
 
-  // TODO: Edit School
-  // TODO: Delete School
+  /**
+   * @depends testCreateSchool
+   */
+  public function testEditSchool()
+  {
+    do_admin_login($this);
+
+    $this->open("/admin/list_schools.php");
+    $this->doubleClick("css=#4 > td > div.col30");
+    $this->waitForPageToLoad("30000");
+    $this->type("id=school", "School of Short Lived2");
+    $this->click("name=submit");
+    $this->waitForPageToLoad("30000");
+
+    $this->assertTextPresent('School of Short Lived2');
+  }
+
+  /**
+   * @depends testCreateSchool
+   */
+  public function testDeleteSchool()
+  {
+    do_admin_login($this);
+
+    $this->open("/admin/list_schools.php");
+    $this->click("css=#4 > td > div.col30");
+    $this->click("link=Delete School");
+    $this->waitForPopUp("schools", "30000");
+    $this->selectWindow("name=schools");
+    $this->click("name=submit");
+    $this->selectWindow('null');
+
+    $this->open("/admin/list_schools.php");
+    $this->waitForPageToLoad("30000");
+    $this->assertTextNotPresent('School of Short Lived2');
+  }
 }
 ?>
