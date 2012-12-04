@@ -4,11 +4,12 @@ require_once 'shared.inc.php';
 class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
 {
   protected $install_type = ' \(local\)';
+  protected $page_root = 'https://rogo.local';
 
   protected function setUp()
   {
     $this->setBrowser("*firefox");
-    $this->setBrowserUrl("https://rogo.local/");
+    $this->setBrowserUrl($this->page_root . '/');
   }
 
   public function testCreateSchool()
@@ -66,6 +67,27 @@ class ManageSchoolTest extends PHPUnit_Extensions_SeleniumTestCase
     $this->open("/admin/list_schools.php");
     $this->waitForPageToLoad("30000");
     $this->assertTextNotPresent('School of Short Lived2');
+  }
+
+  public function testCantCreateDuplicateSchool()
+  {
+    do_admin_login($this);
+
+    $this->open("/admin/index.php");
+    $this->click("css=#13 > tbody > tr > td > img");
+    $this->waitForPageToLoad("30000");
+    $this->assertTitle('Schools' . $this->install_type);
+
+    $this->click("link=Create new School");
+    $this->waitForPageToLoad("30000");
+    $this->assertTitle('Add Schools' . $this->install_type);
+
+    $this->type('id=school', 'School of Selenium Testing');
+    $this->select('name=facultyID', 'label=Faculty of Selenium Testing');
+    $this->click('name=submit');
+    $this->waitForPageToLoad('30000');
+    $this->assertTextPresent('School names must be unique within a faculty');
+    $this->assertLocation($this->page_root . '/admin/add_school.php');
   }
 }
 ?>
