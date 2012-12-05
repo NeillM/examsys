@@ -30,7 +30,7 @@ require './include/paper_security.inc';
 
 require './classes/paperutils.class.php';
 require './classes/moduleutils.class.php';
-require './classes/logduration.class.php';
+require '../classes/logstarttime.class.php';
 require './classes/logmetadata.class.php';
 
 check_var('id', 'GET', true, false);
@@ -153,7 +153,7 @@ if( $exam_duration !== null ){
 
   $userID = $userObject->get_user_ID();
 
-  $log_duration  = new LogDuration( $userID, $property_id, $mysqli );
+  $log_duration  = new LogStartTime( $userID, $property_id, $mysqli );
   $log_metadata  = new LogMetadata( $userID, $property_id, $mysqli );
 
   $display_remaining_time = true;

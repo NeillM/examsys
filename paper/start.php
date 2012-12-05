@@ -30,7 +30,7 @@ require '../include/display_functions.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
-require '../classes/logduration.class.php';
+require '../classes/logstarttime.class.php';
 require '../include/paper_security.inc';
 
 global $userObject;
@@ -678,7 +678,7 @@ if ($css != '') {
 <?php
 
 //BP If the duration is set then show timer
-//BP NOTE: A record is created in log_duration even if sysadmin and in preview mode
+//BP NOTE: A record is created in log_start_time even if sysadmin and in preview mode
 
 $method = 'StartClock()';
 
@@ -688,8 +688,8 @@ if( $exam_duration != NULL){
     $exam_duration          = $exam_duration * 60;
     $new_remaining_duration = $exam_duration;
     $userID                 = $userObject->get_user_ID();
-    $log_duration           = new LogDuration( $userID, $property_id, $mysqli );
-    $start_time             = $log_duration->get_start_time() or $log_duration->save(); ;
+    $log_start_time           = new LogStartTime( $userID, $property_id, $mysqli );
+    $start_time             = $log_start_time->get_start_time() or $log_start_time->save(); ;
 
     // If there is an existing record in log duration
 

@@ -894,15 +894,15 @@ if ($_GET['absent'] == 1) {
                        , grade
                        , moduleid
                        , gender
-                       , log_duration.id
+                       , log_start_time.id
           FROM
-                ( student_modules, users, sid, log_duration )
+                ( student_modules, users, sid, log_start_time )
           WHERE
                 student_modules.userID = sid.userID
           AND
                 student_modules.userID = users.id
           AND
-                users.id = log_duration.userID
+                users.id = log_start_time.userID
           AND
                 users.roles
           LIKE
@@ -917,7 +917,7 @@ if ($_GET['absent'] == 1) {
   $result = $mysqli->prepare( $sql );
   $result->bind_param('s', $calendar_year);
   $result->execute();
-  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender, $log_duration_id );
+  $result->bind_result($tmp_userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender, $log_log_start_time_id );
   while ($result->fetch()) {
     $student_cohort[$cohort_size]['username']    = $tmp_username;
     $student_cohort[$cohort_size]['tmp_userID']  = $tmp_userID;
@@ -934,7 +934,7 @@ if ($_GET['absent'] == 1) {
 
     $student_cohort[$cohort_size]['timer_started'] = false;
 
-    if( $log_duration_id != null){
+    if( $log_log_start_time_id != null){
       $student_cohort[$cohort_size]['timer_started'] = true;
     }
 
@@ -1020,9 +1020,9 @@ if ($paper_type == '0') {
                           , mark
                           , status
                           , attempt
-                          , log_duration.id
+                          , log_start_time.id
               FROM
-                  log0, log_metadata, questions,  log_duration, users
+                  log0, log_metadata, questions,  log_start_time, users
               LEFT JOIN
                   sid
               ON
@@ -1036,7 +1036,7 @@ if ($paper_type == '0') {
               AND
                   log0.q_id    = questions.q_id
               AND
-                  users.id     = log_duration.userID
+                  users.id     = log_start_time.userID
               AND
                   q_paper=?
               AND
@@ -1075,9 +1075,9 @@ if ($paper_type == '0') {
                     , mark
                     , status
                     , attempt
-                    , log_duration.id
+                    , log_start_time.id
                   FROM
-                    (log1, log_metadata, questions, log_duration, users )
+                    (log1, log_metadata, questions, log_start_time, users )
                   LEFT JOIN
                         sid
                   ON
@@ -1091,7 +1091,7 @@ if ($paper_type == '0') {
                   AND
                         log1.q_id    = questions.q_id
                   AND
-                        users.id     = log_duration.userID
+                        users.id     = log_start_time.userID
                   AND
                         q_paper=?
                   AND
@@ -1117,17 +1117,17 @@ if ($paper_type == '0') {
 
 
 } elseif ($paper_type == '2') {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log2.userID, mark, status, attempt, log_duration.id FROM (log2, log_metadata, questions, log_duration, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=? AND users.id=log2.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=? AND log2.started<=? AND users.id = log_duration.userID ORDER BY userID, log2.started, screen");
+  $log_query = $mysqli->prepare("SELECT DISTINCT log2.q_id, 2 AS paper_type, grade, roles, screen, duration, log2.started, user_answer, DATE_FORMAT(log2.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log2.userID, mark, status, attempt, log_start_time.id FROM (log2, log_metadata, questions, log_start_time, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log2.q_paper=log_metadata.paperID AND log2.userID=log_metadata.userID AND log2.started=log_metadata.started AND log2.q_id=questions.q_id AND q_paper=? AND users.id=log2.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log2.started, INTERVAL 2 MINUTE)>=? AND log2.started<=? AND users.id = log_start_time.userID ORDER BY userID, log2.started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } elseif ($paper_type == '5') {
-  $log_query =   $mysqli->prepare("SELECT DISTINCT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, log5.started, NULL AS user_answer, DATE_FORMAT(log5.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, username, users.id, student_id, NULL AS user_answer, q_type, log5.userID, mark, status, 1 AS attempt, log_duration.id FROM (log5, log_metadata, questions, log_duration, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log5.q_paper=log_metadata.paperID AND log5.userID=log_metadata.userID AND log5.started=log_metadata.started AND log5.q_id=questions.q_id AND q_paper=? AND users.id=log5.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log5.started, INTERVAL 2 MINUTE)>=? AND log5.started<=? AND users.id = log_duration.userID ORDER BY userID, log5.started, screen");
+  $log_query =   $mysqli->prepare("SELECT DISTINCT log5.q_id, 5 AS paper_type, grade, roles, 1 AS screen, 0 AS duration, log5.started, NULL AS user_answer, DATE_FORMAT(log5.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, NULL AS ipaddress, username, users.id, student_id, NULL AS user_answer, q_type, log5.userID, mark, status, 1 AS attempt, log_start_time.id FROM (log5, log_metadata, questions, log_start_time, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log5.q_paper=log_metadata.paperID AND log5.userID=log_metadata.userID AND log5.started=log_metadata.started AND log5.q_id=questions.q_id AND q_paper=? AND users.id=log5.userID AND grade LIKE ? $roles_sql AND DATE_ADD(log5.started, INTERVAL 2 MINUTE)>=? AND log5.started<=? AND users.id = log_start_time.userID ORDER BY userID, log5.started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 } else {
-  $log_query = $mysqli->prepare("SELECT DISTINCT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, log$paper_type.started, user_answer, DATE_FORMAT(log$paper_type.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log$paper_type.userID, mark, status, attempt, log_duration.id FROM (log$paper_type, log_metadata, questions, log_duration, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND grade LIKE ? $roles_sql AND log$paper_type.started>=? AND log$paper_type.started<=? AND users.id = log_duration.userID ORDER BY userID, started, screen");
+  $log_query = $mysqli->prepare("SELECT DISTINCT log$paper_type.q_id, $paper_type AS paper_type, grade, roles, screen, duration, log$paper_type.started, user_answer, DATE_FORMAT(log$paper_type.started, '{$configObject->get('cfg_long_date_time')}') AS display_started, log_metadata.year, title, surname, initials, first_names, gender, ipaddress, username, users.id, student_id, REPLACE(user_answer,'\"',\"'\") AS user_answer, q_type, log$paper_type.userID, mark, status, attempt, log_start_time.id FROM (log$paper_type, log_metadata, questions, log_start_time, users ) LEFT JOIN sid ON users.id=sid.userID WHERE log$paper_type.q_paper=log_metadata.paperID AND log$paper_type.userID=log_metadata.userID AND log$paper_type.started=log_metadata.started AND log$paper_type.q_id=questions.q_id AND q_paper=? AND users.id=log$paper_type.userID AND grade LIKE ? $roles_sql AND log$paper_type.started>=? AND log$paper_type.started<=? AND users.id = log_start_time.userID ORDER BY userID, started, screen");
   $log_query->bind_param('isss', $_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
 }
 $log_query->execute();
-$log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt, $log_duration_id );
+$log_query->bind_result($q_id, $paper_type, $grade, $tmp_roles, $screen, $duration, $started, $user_answer, $display_started, $year, $title, $surname, $initials, $first_names, $gender, $ipaddress, $username, $tmp_userID, $student_id, $user_answer, $q_type, $tmp_userID, $mark, $status, $attempt, $log_start_time_id );
 
 $user_no    = 0;
 $display_no = 0;
@@ -1213,7 +1213,7 @@ while ($log_query->fetch() !== null) {
 
     $tmp_array['timer_started'] = false;
 
-    if( $log_duration_id != null){
+    if( $log_start_time_id != null){
        $tmp_array['timer_started'] = true;
     }
 

@@ -4921,22 +4921,23 @@ QUERY;
 
   $mysqli->query( 'FLUSH PRIVILEGES' );
 
+
   // 30/11/2012
-  // Adding a new table log_duration
+  // Adding a new table log_start_time
 
   $updater_utils = new UpdaterUtils( $mysqli, $cfg_db_database );
 
-  $does_table_exist = $updater_utils->does_table_exist( 'log_duration' );
+  $does_table_exist = $updater_utils->does_table_exist( 'log_start_time' );
 
   if ( $does_table_exist === false ){
 
     $sql    = 'CREATE TABLE
-                 log_duration(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
-                               , userID       int(10)        unsigned NOT NULL
-                               , paperID      int(10)        unsigned NOT NULL
-                               , started      datetime       NOT NULL
-                               , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
-                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+                 log_start_time(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
+                                 , userID       int(10)        unsigned NOT NULL
+                                 , paperID      int(10)        unsigned NOT NULL
+                                 , start_time   datetime       NOT NULL
+                                 , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
+                               ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
 
 
     $result = $mysqli->query( $sql );
@@ -4946,12 +4947,13 @@ QUERY;
     }
 
 
-    echo '<li>CREATE TABLE log_duration ( id, userID, paperID, started )</li>';
+    echo '<li>CREATE TABLE log_start_time ( id, userID, paperID, start_time )</li>';
   }
+
+
 
   $does_column_exist = $updater_utils->does_column_exist( 'log_metadata'
                                                         , 'completed' );
-
   if( $does_column_exist === false ){
 
     $sql = "ALTER TABLE log_metadata ADD completed DATETIME NULL";
@@ -4965,14 +4967,19 @@ QUERY;
     echo '<li>' . $sql . '</li>' . ".\n";
   }
 
-  $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.log_duration TO \'' . $cfg_db_student_user . '\'@\'' .  $cfg_db_host . '\'';
+
+
+  $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_student_user . '\'@\'' .  $cfg_db_host . '\'';
   $mysqli->query( $sql );
   echo '<li>' . $sql  . '</li>' . "\n";
 
-  $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_duration TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
+  $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_start_time TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
   $mysqli->query( $sql );
   echo '<li>' . $sql  . '</li>' . "\n";
   $mysqli->query( 'FLUSH PRIVILEGES' );
+
+
+
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

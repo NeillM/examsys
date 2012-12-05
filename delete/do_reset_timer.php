@@ -25,7 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/load_config.php';
-require '../classes/logduration.class.php';
+require '../classes/logstarttime.class.php';
 
 check_var( 'paperID', 'POST', true, false);
 check_var( 'userID', 'POST', true, false);
@@ -33,8 +33,8 @@ check_var( 'userID', 'POST', true, false);
 $userID  = $_POST[ 'userID' ];
 $paperID = $_POST[ 'paperID' ];
 
-$log_duration = new LogDuration( $userID, $paperID, $mysqli );
-$start_time   = $log_duration->delete();
+$log_start_time = new LogStartTime( $userID, $paperID, $mysqli );
+$start_time     = $log_start_time->delete();
 
 
 ?>

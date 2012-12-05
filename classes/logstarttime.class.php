@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Contains
+* CRUD operations on the log_start_time table
 * @author Ben Parish
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
 
-class LogDuration {
+class LogStartTime {
 
   private $user_id;
   private $paper_id;
@@ -40,7 +40,7 @@ class LogDuration {
   }
 
   /**
-   * Gets the time the user started the paper
+   * Gets the time the user start_time the paper
    * @param int $user_id
    * @param int $paper_id
    * @return string
@@ -48,9 +48,9 @@ class LogDuration {
   public function get_start_time() {
 
     $query = 'SELECT
-                  started
+                  start_time
               FROM
-                log_duration
+                log_start_time
               WHERE
                 userID = ?
               AND
@@ -67,12 +67,12 @@ class LogDuration {
       return false;
     }
 
-    $bindResult = $stmt->bind_result( $started );
+    $bindResult = $stmt->bind_result( $start_time );
 
     $stmt->fetch();
     $stmt->close();
 
-    return $started;
+    return $start_time;
 
   }
 
@@ -83,10 +83,10 @@ class LogDuration {
 
 
     $query    = 'INSERT INTO
-                  log_duration
+                  log_start_time
                           ( userID
                           , paperID
-                          , started
+                          , start_time
                           )
                  VALUES
                     ( ?
@@ -94,20 +94,20 @@ class LogDuration {
                     , ? )';
 
     $stmt     = $this->db->prepare( $query );
-    $started  = date ( 'Y-m-d H:i:s' );
+    $start_time  = date ( 'Y-m-d H:i:s' );
 
-    $stmt->bind_param('iis', $this->user_id, $this->paper_id, $started );
+    $stmt->bind_param('iis', $this->user_id, $this->paper_id, $start_time );
     $stmt->execute();
     $stmt->close();
 
-    return $started;
+    return $start_time;
 
   }
 
   public function delete() {
 
     $query    = 'DELETE FROM
-                   log_duration
+                   log_start_time
                  WHERE
                    userID  = ?
                  AND
