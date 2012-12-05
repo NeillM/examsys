@@ -79,7 +79,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
     // Query may fail if we try to insert while another statement is open.
     // Since we don't have a handle on the original statement, create another DB link
-    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $dbclass);
+    $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $configObject->get('dbclass'));
 
     $paperID = NULL;
     if (isset($_GET['paperID'])) {
