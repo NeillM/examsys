@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -27,7 +27,7 @@ require_once $cfg_web_root . 'classes/mathsutils.class.php';
 function calcPreParse($inputVal, $user_answers, $tmp_vars) {
   global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
   if (substr($inputVal,0,3) == 'ans') {
-    //its a question refrance get previous user answer          
+    //its a question refrance get previous user answer
     $find_qid = intval(substr($inputVal,3));
     $pre_user_answers = '';
     foreach ($user_answers as $screen => $answers) {
@@ -79,9 +79,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   foreach ($question['options'] as $tmp_option) {
     if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
   }
-   
+
   // Process the order
-  $question['option_order'] = array(); 
+  $question['option_order'] = array();
   if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
     if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
       if ($question['q_option_order'] == 'random') {
@@ -121,9 +121,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       $question['option_order'][$i] = $i;
     }
   }
-  
+
   $question_no++;
-  
+
   $li_set = 0;
   if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
     echo "</table>\n<br />\n<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
@@ -337,7 +337,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $tmp_user_answer = '';
         }
         ?>
-        <br />        
+        <br />
         <?php
         if (isset($user_answers[$current_screen][$q_id]) and $tmp_user_answer == '' and  $screen_pre_submitted == 1) {
           echo "<div align=\"left\" class=\"unans\" style=\"padding:2px\">";
@@ -381,9 +381,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           write_string('</object>');
           write_string('<!--<![endif]-->');
           write_string('</object>');
-          
+
           sendTextToAS3('<?php echo $language; ?>','q<?php echo $question_no; ?>', 1, '<?php echo $configObject->get('cfg_root_path') . '/media/' . $question['q_media']; ?>', '<?php echo $display_option['correct']; ?>', '<?php echo $tmp_user_answer; ?>');
-          
+
         </script>
         </div>
         <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" />
@@ -653,10 +653,10 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         } else {
           echo '<blockquote style="line-height:175%">';
         }
-        
+
         $true_checked = '';
         $false_checked = '';
-        
+
         if ($question['display_method'] == 'dropdown') {
           echo "<select name=\"q" . $question_no . "\">\n";
           echo "<option value=\"\"></option>\n";
@@ -674,7 +674,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         } else {
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') $true_checked = ' checked="checked"';
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') $false_checked = ' checked="checked"';
-          
+
           echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked />&nbsp;" . $string['true'];
           if ($question['display_method'] == 'horizontal') {
             echo '&nbsp;&nbsp;&nbsp;';
@@ -683,7 +683,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           }
           echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked />&nbsp;" . $string['false'];
         }
-        
+
         echo '</blockquote>';
         break;
       case 'blank':
@@ -805,11 +805,18 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           if (isset($user_answers[$current_screen][$q_id])) {
             $ans = $user_answers[$current_screen][$q_id];
           }
+
+          $textbox_width  = ( 40 + ( $textbox_size[0] * 8 ) );
+          $textbox_height = ( $textbox_size[1] * 28 );
+
+          $background_colour = '';
+
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-            echo "<textarea class=\"mceEditor\" style=\"background-color:red\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($textbox_size[0] * 8)) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
-          } else {
-            echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($textbox_size[0] * 8)) . "px; height:" . ($textbox_size[1] * 28) . "px\">$ans</textarea>\n";
+            $background_colour = 'background-color:red;';
           }
+          ?>
+          <textarea class="mceEditor" id="q<?php echo $question_no ?>" name="q<?php echo $question_no ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
+          <?php
         }
         $marks += $display_option['marks_correct'];
         break;
@@ -1049,7 +1056,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($matching_media[$part_id] != '') $media_scenarios++;
     }
     $scenario_no = max($text_scenarios, $media_scenarios);
-    
+
     $col1_no = ceil(count($matching_options) / 2);
     echo "<table class=\"extmatch_opt_table\">\n<tr><td><ol>\n";
     for ($i=0; $i<count($matching_options); $i++) {
@@ -1060,7 +1067,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       }
     }
     echo "</ol></td></tr>\n</table>\n";
-    
+
     echo '<ol class="extmatch">';
     for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
       $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
@@ -1091,12 +1098,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
         }
       }
-      
+
       $multi_answers = array();
       if (isset($matching_users_answers[$part_id - 1])) {
         $multi_answers = explode('$', $matching_users_answers[$part_id - 1]);
-      } 
-	    
+      }
+
       $tmp_option_no = 0;
       for ($option_no=0; $option_no<count($matching_options); $option_no++) {
         $tmp_answer_match = false;
@@ -1160,7 +1167,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   } elseif ($question['q_type'] == 'sct') {
     echo '</table>';
   }
-   
+
   // Write out the hidden field for the dismiss facility.
   if ($question['q_type'] == 'mcq' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
