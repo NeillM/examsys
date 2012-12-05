@@ -1,4 +1,4 @@
-<?php
-$string['timerreset'] = 'Timer reset'; //NIKO
-$string['msg']        = 'The timer was successfully reset.'; //NIKO
+﻿<?php
+$string['timerreset'] = 'Resetowanie czasomierza'; 
+$string['msg']         = 'Czasomierz został pomyślnie zresetowany.';
 ?>

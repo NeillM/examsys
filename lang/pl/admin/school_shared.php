@@ -8,4 +8,5 @@ $string['school'] = 'Katedra';
 $string['faculty'] = 'Wydział';
 $string['prompt'] = 'Katedra';
 $string['enternameofschool'] = 'Podaj nazwę dla katedry.';
+$string['duplicateerror'] = 'Nazwa katedry musi być unikalna w obszarze wydziału';
 ?>
