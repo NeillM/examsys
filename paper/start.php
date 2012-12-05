@@ -30,6 +30,7 @@ require '../include/display_functions.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
+require '../classes/logduration.class.php';
 require '../include/paper_security.inc';
 
 global $userObject;
@@ -183,17 +184,17 @@ if ($userObject->is_special_needs()) {
 $screen_data = array();
 
 if (isset($_GET['q_id'])) {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
   $stmt->bind_param('si', $_GET['id'], $_GET['q_id']);
 } else {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
   $stmt->bind_param('s', $_GET['id']);
 }
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $calendar_year, $latex_needed, $password, $q_type);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
-  UserNotices::access_denied($string['error_paper'], $output_header = false);
+   UserNotices::access_denied($string['error_paper'], $output_header = false);
 }
 while ($stmt->fetch()) {
   $no_screens = $screen;
@@ -675,11 +676,46 @@ if ($css != '') {
 </script>
 </head>
 <?php
-if ($userObject->has_role('Student')) {
-  echo '<body oncontextmenu="return false;" onload="StartClock();" onunload="KillClock()">';
-} else {
-  echo '<body onload="StartClock();" onunload="KillClock()">';
+
+//BP If the duration is set then show timer
+//BP NOTE: A record is created in log_duration even if sysadmin and in preview mode
+
+$method = 'StartClock()';
+
+if( $exam_duration != NULL){
+
+    $method                 = '';
+    $exam_duration          = $exam_duration * 60;
+    $new_remaining_duration = $exam_duration;
+    $userID                 = $userObject->get_user_ID();
+    $log_duration           = new LogDuration( $userID, $property_id, $mysqli );
+    $start_time             = $log_duration->get_start_time() or $log_duration->save(); ;
+
+    // If there is an existing record in log duration
+
+    if( $start_time !== false){
+
+      $start_time              = strtotime( $start_time );
+      $now                     = time();
+      $time_elapsed            = $now - $start_time;
+      $new_remaining_duration  = $exam_duration - $time_elapsed;
+
+
+      if( $new_remaining_duration < 1 ){
+        $new_remaining_duration = 0;
+      }
+
+    }
+
+    $method = 'StartTimer(' . $new_remaining_duration . ')';
 }
+
+if ($userObject->has_role('Student')) {
+  echo '<body oncontextmenu="return false;"onload="' . $method . ';" onclose="KillClock();">';
+} else {
+  echo '<body onload="' . $method . ';" onunload="KillClock();">';
+}
+
 $show_ref_material = false;
 echo "<div id=\"maincontent\">\n";
 
@@ -881,13 +917,25 @@ if (!isset($_GET['q_id'])) {
     printf($string['pleasecomplete'], $current_screen);
     echo "</div>\n<br >\n";
   }
-  
+
   //echo '<div id="mymsg">Hi</div>';  // Remove when working.
 
   echo '<div id="saveError"><img alt="Warning" src="/artwork/no_save.png" /> <div><strong>' .  $string['savefailed'] . '</strong><br />' . $string['tryagain'] . '</div></div>';
 
   echo $bottom_html;
-  echo '<input type="text" style="background-color:transparent;text-align:center;font-size:80%;color:white;border:0px" id="theTime" size="8" /></td><td align="right">';
+  ?>
+  <span>
+  <?php
+  if( $exam_duration != NULL ){
+      echo $string['timeremaining'] . ':';
+  }
+
+  ?>
+  <input id="theTime" name="theTime" type="text" style="width:60px;background-color:transparent;text-align:center;font-size:100%;color:white;border:0px" size="8" />
+  </span>
+  <?php
+  echo '</td><td align="right">';
+
   echo '<span id="savemsg"></span>';
   if ($bidirectional == 1 and $no_screens > 1) {
     if ($current_screen > 2) echo "<input input id=\"prevous\" type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous';\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
