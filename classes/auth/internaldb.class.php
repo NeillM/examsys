@@ -14,17 +14,25 @@ class internaldb {
   private $form;
   private $settings;
   private $db;
+  private $calling_object;
 
 
-  function __construct($configObj, $settings, $db, &$returndata, $number, $form) {
+  function __construct($calling_object, $settings, $db, &$returndata, $number, $form) {
     $this->db = new mysqli();
-    $this->configObj = $configObj;
+    $this->calling_object = $calling_object;
     $this->returndata = $returndata;
     $this->number = $number;
     $this->retdata = $returndata[$number];
     $this->form = $form;
     $this->db = $db;
     $this->settings = $settings;
+  }
+
+
+  function register_callback_routines() {
+
+    $this->calling_object->register_callback(array($this,'auth'), 'auth');
+
   }
 
   function set_fail() {
@@ -36,10 +44,10 @@ class internaldb {
 
   function auth() {
     $this->retdata->debug[] = 'Authing';
-/*
-    foreach ($this->settings as $key => $value) {
-      ${$key} = $value;
-    }*/
+    /*
+        foreach ($this->settings as $key => $value) {
+          ${$key} = $value;
+        }*/
 
     extract($this->settings);
 
@@ -104,7 +112,7 @@ class internaldb {
 
       return true;
     }
-    $this->retdata->debug[]='Password not matching';
+    $this->retdata->debug[] = 'Password not matching';
     $this->set_fail();
     return false;
   }

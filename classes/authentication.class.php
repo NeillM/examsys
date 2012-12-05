@@ -15,6 +15,7 @@ class Authentication {
   public $debug;
   public $success;
 
+  private $callbackregister;
 
   function __construct($configObj, $db) {
     $this->db = $db;
@@ -29,6 +30,19 @@ class Authentication {
     $this->config = $this->configObj->get('authentication');
 
     $this->debug[] = 'Loaded Config for authentication';
+  }
+
+  function register_callback($callback, $section, $insert = false) {
+    if (!in_array(array('preauth','auth','postauth','postauthsucess','postauthfail'), $section)) {
+      //attempting to register callback to invalid section
+      return false;
+    }
+    if ($insert == true) {
+      array_unshift($this->callbackregister[$section], $callback);
+    } else {
+      $this->callbackregister[$section][] = $callback;
+    }
+    return true;
   }
 
   function do_authentication() {
@@ -47,13 +61,29 @@ class Authentication {
       $settings = $auth[1];
       $this->debug[] = "Starting auth #$number with Type:$authtype Settings:" . var_export($settings, TRUE);
       require_once $this->configObj->get('cfg_web_root') . 'classes/auth/' . $authtype . '.class.php';
+
+
+
+
+
       $this->returndata[$number] = new authtypereturn();
       /*      $this->returndata[$number]->success = FALSE;
             $this->returndata[$number]->rogoid = 0;
             $this->returndata[$number]->url = '';
             $this->returndata[$number]->message = '';*/
-$this->authObj[$number] = new $authtype($this->configObj, $settings, $this->db, $this->returndata, $number, $form);
+$this->authObj[$number] = new $authtype($this, $settings, $this->db, $this->returndata, $number, $form);
 
+      $this->debug[]='Running Registering callback routines';
+    $this->authObj[$number]->register_callback_routines();
+
+    }
+
+
+
+
+
+/*
+    // old bitz
       $returned = $this->authObj[$number]->auth();
 
       foreach ($this->returndata[$number]->debug as $value) {
@@ -75,7 +105,7 @@ $this->debug[]='Breaking out of loop ' . var_export(isset($settings['dont_break_
     }
     $this->debug[]='end do auth loop';
     var_dump($this->returndata);
-    print "done dump";
+    print "done dump";*/
 
   }
 
