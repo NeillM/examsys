@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Function used to mark questions used in ../start.php and ../finsh.php
-* 
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -41,9 +41,9 @@ function time_to_seconds($seconds) {
 }
 
 /**
- * This is function returns an array of database id q_id mappings for a user on a paper 
+ * This is function returns an array of database id q_id mappings for a user on a paper
  *
- * @param int $u_id rogo user id 
+ * @param int $u_id rogo user id
  * @param int $p_id rogo paper id
  * @param mixed $paper_log_type the current type of the paper 1,2,3,4,5,6 or _late
  * @param int $sreen_no the screen of interest
@@ -66,9 +66,9 @@ function get_log_ids($u_id, $p_id, $paper_log_type, $sreen_no, $sessionid, $db) 
 }
 
 /**
- * This is function returns the log_metadata id associated with a users/paper/session 
+ * This is function returns the log_metadata id associated with a users/paper/session
  *
- * @param int $u_id rogo user id 
+ * @param int $u_id rogo user id
  * @param int $p_id rogo paper id
  * @param string $sessionid the id of the session of interest
  * @param MySQLi $db an open database connection
@@ -87,16 +87,16 @@ function get_log_metadata_record_id($u_id, $p_id, $sessionid, $db) {
 }
 
 /**
- * This is function record_marks, is used to mark the users answer, and record it in the database for all question types. 
+ * This is function record_marks, is used to mark the users answer, and record it in the database for all question types.
  *
- * @param mixed $paper_id 
- * @param mixed $screen_no 
- * @param mixed $dblink 
- * @param mixed $userid 
+ * @param mixed $paper_id
+ * @param mixed $screen_no
+ * @param mixed $dblink
+ * @param mixed $userid
  * @param mixed $paper_type T
- * @param mixed $student_grade 
+ * @param mixed $student_grade
  * @param mixed $student_year
- * @param mixed $userroles 
+ * @param mixed $userroles
  *
  */
 function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $student_year, $attempt, $userroles, $preview_q_id=null) {
@@ -146,7 +146,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         foreach ($selected_q_id as &$used_qid) {
 	        // Look up database.
           $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, score_method, marks_correct FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
-          $random_data->bind_param('i', $used_qid); 
+          $random_data->bind_param('i', $used_qid);
           $random_data->execute();
           $random_data->store_result();
           $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $score_method, $marks_correct);
@@ -157,7 +157,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
             $paper_array[] = array('q_id'=>0,'scenario'=>'','q_type'=>'','option_text'=>'','q_media'=>'','correct'=>'','display_method'=>'','score_method'=>'','marks_correct'=>0,'marks_incorrect'=>0,'marks_partial'=>0,'question_no'=>$tmp_question_no,'display_pos'=>$display_pos);
           }
           $random_data->close();
-          
+
         }
 	      $selected_q_id = array();
         $random_on = true;
@@ -170,19 +170,19 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     $old_display_pos = $display_pos;
   }
   $questions->close();
-  
+
   $log_ids = get_log_ids($userid, $paper_id, $paper_type, $screen_no, $_POST['sessionid'], $db);
-  
+
   if (count($log_ids) > 0) {
     // prepare to update old records
     $save_answers = $db->prepare("UPDATE log$paper_type SET mark=?, user_answer=?, duration=?, updated=NOW(), dismiss=? WHERE id=?");
     $save_answers->bind_param('dsisi', $mark, $saved_response, $tmp_duration, $dismiss, $q_log_id);
   } else {
     // Set up new insert query ready.
-    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$db) === false) {       
+    if (get_log_metadata_record_id($userid, $paper_id, $_POST['sessionid'],$db) === false) {
       // Write log_metadata first on screen 1 only
       $tmp_ip_address = NetworkUtils::get_ipaddress();
-      $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+      $save_metadata = $db->prepare("INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, NULL)");
       $save_metadata->bind_param('iisssii', $userid, $paper_id, $_POST['sessionid'], $tmp_ip_address, $student_grade, $student_year, $attempt);
       $save_metadata->execute();
       $save_metadata->close();
@@ -190,16 +190,16 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
     $save_answers = $db->prepare("INSERT INTO log$paper_type VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)");
     $save_answers->bind_param('isiidisiiss', $userid, $_POST['sessionid'], $paper_id, $log_id, $mark, $totalpos, $saved_response, $screen_no, $tmp_duration, $dismiss, $option_order);
   }
-    
+
   // Use the new structure to look for posted responses.
   $old_type = '';
   $old_score_method = '';
   $old_display_method = '';
   $correct_rank = true;
-  
+
   $no_correct = 0;
   $no_incorrect = 0;
-  
+
   $question_no = 0;
   $q_type = '';
   $question_part = 0;
@@ -253,10 +253,10 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           $q_log_id = $log_ids[$old_q_id];
         }
         $save_answers->execute();     // Save to the database.
-     
+
         $saved_response = '';
         $dismiss = '';
-      }      
+      }
       if ($q_type != 'info') $question_no++;
       $question_part = 0;
       $old_q_id = $q_id;
@@ -264,7 +264,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
       $old_score_method = $score_method;
       $old_display_method = $display_method;
       $old_display_pos = $display_pos;
-      
+
       $old_marks_correct = $marks_correct;
       $old_marks_incorrect = $marks_incorrect;
       $old_marks_partial = $marks_partial;
@@ -276,7 +276,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
       $mark = 0;
       $totalpos = 0;
       $saved_response = '';
-    }  
+    }
 
     $log_id = $q_id;
     if (isset($_POST["order$question_no"])) {
@@ -292,9 +292,9 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         $qid = 'q' . $question_no;
         if (isset($_POST[$qid])) {
           $saved_response = $_POST[$qid];
-          
+
           $subparts = explode(';', $saved_response);
-          
+
           $parts = explode(',', $saved_response);
           $tolerances = explode(',', $old_display_method);
           if ($parts[1] >= $tolerances[0] and $parts[2] <= $tolerances[1]) {
@@ -308,13 +308,13 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           $saved_response = '';
         }
         $totalpos = $marks_correct;
-        
+
         break;
       case 'calculation':
         $mark = 0;
         // Log format is 'users answer', 'correct answer', 'variable values used'.
         $score_array = explode(',', $old_display_method);
-      
+
         $qid = 'q' . $question_no;
         if (isset($_POST[$qid])) {
           $saved_response = $_POST[$qid];
@@ -331,7 +331,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         }
 
         $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-        
+
         $variable_array = explode(',',$question_variables);
         $var_no = 1;
         foreach ($variable_array as $individual_variable) {
@@ -436,7 +436,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         } else {
           $user_response = '';
         }
-        
+
         if ($user_response == '') {
           $saved_response .= 'u';
         } else {
@@ -520,7 +520,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           foreach ($correct_options as $individual_correct) {
             if (trim($individual_correct) != '') $part_no++;
           }
-        
+
           $option_no = 1;
           for ($scenario_no=0; $scenario_no<$part_no; $scenario_no++) {
             if ($option_no > 1) {
@@ -533,7 +533,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
             } else {
               $answer_count = 0;
             }
-              
+
             for ($i=0; $i<$answer_count; $i++) {
               if ($i == 0) {
                 if (count($correct_answers) == 1) {
@@ -544,8 +544,8 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
               } else {
                 $saved_response .= '$' . $_POST[$qid][$i];
               }
-              
-              
+
+
               if ($answer_count == 1) {
                 if ($_POST[$qid] == $correct_answers[0]) {
                   $mark += $marks_correct;
@@ -687,7 +687,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           $saved_response = '';
         }
         if ($saved_response == '') $saved_response = '0';
-        
+
         if ($saved_response == $question_part) {
           $max = 0;
           foreach ($paper_array as $tmp_row) {
@@ -703,29 +703,29 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         break;
       case 'true_false':
         $dismiss = '';
- 
+
         $qid = 'q' . $question_no;
         if (isset($_POST[$qid])) {
           $saved_response = $_POST[$qid];
         } else {
           $saved_response = '';
         }
-        
+
         if ($saved_response == '') $saved_response = 'u';
-        
+
         if ($saved_response == $correct) {
           $mark += $marks_correct;
         } elseif ($saved_response != 'u') {
           $mark += $marks_incorrect;
         }
         $totalpos += $marks_correct;
-        
+
         break;
       case 'blank':
         $blank_details = explode("[blank",$option_text);
         $no_answers = count($blank_details) - 1;
         $have_answer = false;
-       
+
         $saved_response = '';
         for ($i=1; $i<=$no_answers; $i++) {
           $qid = 'q' . $question_no . '_' . $i;
@@ -736,7 +736,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
               $saved_response .= '|' . $_POST[$qid];
             }
           }
-          
+
           if (preg_match("|mark=\"([0-9]{1,3})\"|", $blank_details[$i], $mark_matches)) {
             $totalpos += $mark_matches[1];
             $individual_q_mark = $mark_matches[1];
@@ -770,7 +770,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
             }
           }
         }
-        
+
         // Recalculate if mark per question
         if ($score_method == 'Mark per Question') {
           if ($have_answer) {
@@ -830,7 +830,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
         } else {
           $saved_response = '';
         }
-        if ($saved_response != '') {        
+        if ($saved_response != '') {
           $tmp_first_split = explode(';',$saved_response);
           $tmp_second_split = explode('$',$tmp_first_split[0]);
           if ($tmp_first_split[1] != '') {
@@ -839,7 +839,7 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
           $mark += $tmp_second_split[0];
           $totalpos += $tmp_second_split[1];
         }
-        
+
         if ($all_items_abstain) {
           $mark = 0;
         } elseif ($score_method == 'Mark per Question') {   // Override marks if 'Mark per Question' is set.
@@ -887,11 +887,11 @@ function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $stu
       $q_log_id = $log_ids[$old_q_id];
     }
     $save_answers->execute();     // Save to the database.
- 
+
     $saved_response = '';
     $dismiss = '';
-  }      
-        
+  }
+
   // Close still open database prepared queries
   $save_answers->close();
 }

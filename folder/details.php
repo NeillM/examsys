@@ -36,7 +36,7 @@ require_once '../classes/paperutils.class.php';
 function getLastFolder($path) {
   $parts = explode(';' , $path);
   $part_no = count($parts);
-  
+
   if ($part_no > 0) {
     return $parts[$part_no-1];
   } else {
@@ -70,9 +70,9 @@ if ($folder != '') {
   $result->bind_result($folder_ownerID, $orig_folder_name);
   $result->fetch();
   $result->close();
-  
+
   //var_dump($orig_folder_name);
-  
+
   //if (isset($staff_module) and $staff_module != '' and $staff_module == '') $module = $staff_module;
 
   $parent_list = array();
@@ -114,7 +114,7 @@ if (isset($_POST['submit'])) {
 
   $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
   $duplicate_name = 0;
-  
+
   $folder_details = $mysqli->prepare("SELECT name FROM folders WHERE ownerID=? AND name=?");
   $folder_details->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
   $folder_details->execute();
@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
     $duplicate_name = 1;
   }
   $folder_details->close();
-  
+
   if ($duplicate_name == 0) {
     if ($folder_query = $mysqli->prepare("INSERT INTO folders VALUES (NULL, ?, ?, NOW(), 'yellow', NULL)")) {
       $folder_query->bind_param('is', $userObject->get_user_ID(), $new_folder_name);
@@ -147,9 +147,9 @@ if ($folder != '') {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rogō<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -162,7 +162,7 @@ if ($folder != '') {
   }
   ?>
   </style>
-  
+
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -194,14 +194,14 @@ if ($folder != '') {
         notice.focus();
       }
     }
-    
+
     function addTeamMember() {
       notice = window.open("edit_team_popup.php?teamID=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }
     }
-    
+
     function refreshPage() {
       $('.retired').toggle();
     }
@@ -286,7 +286,7 @@ if ($folder != '') {
   if (count($staff_modules) > 0) {
     $tmp_string = " OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
   }
-  
+
   $tmp_folder_name = $orig_folder_name . ';%';
   $folder_details = $mysqli->prepare("SELECT folders.id, name, color FROM folders WHERE (ownerID=?) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
   $folder_details->bind_param('is', $userObject->get_user_ID(), $tmp_folder_name);
@@ -316,7 +316,7 @@ if ($folder != '') {
   $results = $mysqli->prepare($query_string);
 } elseif ($_GET['module'] != '') {
   $paper_types = array();
-  
+
   $results = $mysqli->prepare("SELECT DISTINCT paper_type, COUNT(paper_type) AS no_papers FROM properties, modules, properties_modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND modules.id = ? AND deleted IS NULL GROUP BY paper_type");
   $results->bind_param('i', $_GET['module']);
   $results->execute();
@@ -325,7 +325,7 @@ if ($folder != '') {
     $paper_types[$paper_type] = $no_papers;
   }
   $results->close();
-  
+
   $query_string = "SELECT DISTINCT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND modules.id = properties_modules.idMod AND properties.paper_ownerID=users.id AND modules.id = ? AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
   $results = $mysqli->prepare($query_string);
   $results->bind_param('i', $_GET['module']);
@@ -343,7 +343,7 @@ if ($display_papers) {
           echo "<br clear=\"all\" />";
         }
         $sent_clear_all = true;
-        
+
         echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string[strtolower($types_array[$paper_type])] . " (" . $paper_types[$paper_type] . ")";
         if ($paper_type == 2) {
           echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" alt=\"Calendar\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";

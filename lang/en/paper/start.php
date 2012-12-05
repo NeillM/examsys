@@ -21,6 +21,7 @@ $string['unansweredquestion'] = '= unanswered question';
 $string['negmarking'] = 'negative marking';
 $string['bonusmark'] = 'for correct options, plus %d bonus %s for fully correct order';
 $string['calculator'] = 'Calculator';
+$string['timeremaining'] = 'Time remaining';
 $string['finishnote'] = '<strong>NOTE:</strong> Please complete all questions before clicking &#145;Finish&#146;, you will not be able to go back.';
 $string['gobackpink'] = 'When you go back unanswered questions will be highlighted in pink.';
 $string['fireexit'] = 'Fire Exit';

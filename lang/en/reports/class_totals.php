@@ -62,6 +62,7 @@ $string['summary'] = 'Summary';
 $string['examscript'] = 'Exam Script';
 $string['feedback'] = 'Feedback';
 $string['studentprofile'] = 'Student Profile';
+$string['resettimer'] = 'Reset Timer';
 $string['newnote'] = 'New Note...';
 $string['reassigntouser'] = 'Re-assign to User...';
 $string['latesubmissions'] = 'Late Submissions';

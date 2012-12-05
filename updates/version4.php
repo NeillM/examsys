@@ -25,6 +25,7 @@
 require_once '../include/load_config.php';
 
 require_once '../classes/installutils.class.php';
+require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
@@ -4920,6 +4921,58 @@ QUERY;
 
   $mysqli->query( 'FLUSH PRIVILEGES' );
 
+  // 30/11/2012
+  // Adding a new table log_duration
+
+  $updater_utils = new UpdaterUtils( $mysqli, $cfg_db_database );
+
+  $does_table_exist = $updater_utils->does_table_exist( 'log_duration' );
+
+  if ( $does_table_exist === false ){
+
+    $sql    = 'CREATE TABLE
+                 log_duration(   id           int            PRIMARY KEY NOT NULL AUTO_INCREMENT
+                               , userID       int(10)        unsigned NOT NULL
+                               , paperID      int(10)        unsigned NOT NULL
+                               , started      datetime       NOT NULL
+                               , CONSTRAINT   key_user_paper UNIQUE (userID, paperID )
+                             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1 AUTO_INCREMENT=1;';
+
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
+
+
+    echo '<li>CREATE TABLE log_duration ( id, userID, paperID, started )</li>';
+  }
+
+  $does_column_exist = $updater_utils->does_column_exist( 'log_metadata'
+                                                        , 'completed' );
+
+  if( $does_column_exist === false ){
+
+    $sql = "ALTER TABLE log_metadata ADD completed DATETIME NULL";
+
+    $result = $mysqli->query( $sql );
+
+    if ( $result !== TRUE ) {
+      printf( "Error: %s\n", $mysqli->error );
+    }
+
+    echo '<li>' . $sql . '</li>' . ".\n";
+  }
+
+  $sql = 'GRANT SELECT, INSERT ON ' . $cfg_db_database . '.log_duration TO \'' . $cfg_db_student_user . '\'@\'' .  $cfg_db_host . '\'';
+  $mysqli->query( $sql );
+  echo '<li>' . $sql  . '</li>' . "\n";
+
+  $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.log_duration TO \'' . $cfg_db_staff_user . '\'@\''. $cfg_db_host . "'";
+  $mysqli->query( $sql );
+  echo '<li>' . $sql  . '</li>' . "\n";
+  $mysqli->query( 'FLUSH PRIVILEGES' );
 
   // End ------------------------------------------------------------------
   echo "</ol>\n";

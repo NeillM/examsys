@@ -15,9 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Class total report
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -97,7 +97,7 @@ ob_start();
     document.getElementById('item3b').style.backgroundColor='#FFFFFF';
     document.getElementById('item4b').style.backgroundColor='#FFFFFF';
     document.getElementById('item5b').style.backgroundColor='#FFFFFF';
-    
+
     if (tmpStarted == '') {
       document.getElementById('item1b').style.color='#C0C0C0';
       document.getElementById('item2b').style.color='#C0C0C0';
@@ -107,16 +107,16 @@ ob_start();
     }
 
     if (tmpReassign == 'y') {
-      document.getElementById('item5b').style.color='#000000';
+      document.getElementById('item6b').style.color='#000000';
     } else {
-      document.getElementById('item5b').style.color='#C0C0C0';
+      document.getElementById('item6b').style.color='#C0C0C0';
     }
 
     if (tmpLogLate == 'y') {
-      document.getElementById('item6b').style.color='#000000';
+      document.getElementById('item7b').style.color='#000000';
       document.getElementById('log_late_icon').style.display = 'block';
     } else {
-      document.getElementById('item6b').style.color='#C0C0C0';
+      document.getElementById('item7b').style.color='#C0C0C0';
       document.getElementById('log_late_icon').style.display = 'none';
     }
 
@@ -230,7 +230,7 @@ ob_start();
       }
     }
   }
-  
+
   function reassignLogLate() {
     document.getElementById('menudiv').style.display = 'none';
     if (document.getElementById('loglate').value == 'n') {
@@ -250,8 +250,8 @@ ob_start();
 	  var currentY = e.clientY;
     var scrOfX = getScrollX();
 	  var scrOfY = getScrollY();
-	
-	  var XMLHttpRequestObject = false; 
+
+	  var XMLHttpRequestObject = false;
 
     if (window.XMLHttpRequest) {
       XMLHttpRequestObject = new XMLHttpRequest();
@@ -261,10 +261,10 @@ ob_start();
 
     if (XMLHttpRequestObject) {
       dataSource = "getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
-      XMLHttpRequestObject.open("GET", dataSource); 
+      XMLHttpRequestObject.open("GET", dataSource);
 
-      XMLHttpRequestObject.onreadystatechange = function() { 
-        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) { 
+      XMLHttpRequestObject.onreadystatechange = function() {
+        if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
           document.getElementById('noteMsg').innerHTML = XMLHttpRequestObject.responseText;
           document.getElementById('noteDiv').style.display="block";
           document.getElementById('noteDiv').style.left = currentX+scrOfX+16 + 'px';
@@ -272,11 +272,11 @@ ob_start();
           delete XMLHttpRequestObject;
           XMLHttpRequestObject = null;
         }
-      } 
-      XMLHttpRequestObject.send(null); 
+      }
+      XMLHttpRequestObject.send(null);
     }
   }
-  
+
   function getScrollX() {
     var scrollOfX = 0;
     if( typeof( window.pageYOffset ) == 'number' ) {
@@ -291,7 +291,7 @@ ob_start();
     }
     return scrollOfX;
   }
-  
+
   function getScrollY() {
     var scrollOfY = 0;
     if( typeof( window.pageYOffset ) == 'number' ) {
@@ -306,6 +306,24 @@ ob_start();
     }
     return scrollOfY;
   }
+
+  function resetTimer() {
+    document.getElementById('menudiv').style.display = 'none';
+    notice=window.open("<?php echo $configObject->get( 'cfg_root_path' ); ?>/delete/check_reset_timer.php?paperID=<?php echo $_GET['paperID']; ?>&userID=" + document.getElementById('userID').value + "","notice","width=350,height=130,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    if (window.focus) {
+      notice.focus();
+    }
+  }
+
+  function hideTimerReset(){
+    document.getElementById( 'reset_timer' ).style.display = 'none';
+  }
+
+  function showTimerReset(){
+    document.getElementById( 'reset_timer' ).style.display = '';
+  }
+
 
   document.onmousedown = mouseSelect;
 </script>
@@ -338,19 +356,46 @@ if ($language != 'en') {
         <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
       </tr>
       <tr>
-        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><?php echo $string['studentprofile']; ?></td>
+        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">
+          <img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" />
+          </td>
+          <td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">
+          <?php echo $string['studentprofile']; ?>
+          </td>
+      </tr>
+      <tr id="reset_timer">
+        <td id="item4a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="resetTimer();">
+        <img src="../artwork/log_late_16.gif" width="16" height="16" alt="" border="0" />
+        </td>
+        <td id="item4b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="resetTimer();">
+        <?php echo $string['resettimer']; ?>
+        </td>
+      </tr>
+
+      <tr>
+        <td id="item5a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="newStudentNote();">
+        <img src="../artwork/notes_icon.gif" width="14" height="14" alt="" border="0" />
+        </td>
+        <td id="item5b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="newStudentNote();">
+        <?php echo $string['newnote']; ?>
+        </td>
       </tr>
       <tr>
-        <td id="item4a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="" border="0" /></td><td id="item4b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();"><?php echo $string['newnote']; ?></td>
+        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right">
+        <img src="../artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
       </tr>
       <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
+        <td id="item6a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignScript();">
+        &nbsp;</td>
+        <td id="item6b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignScript();">
+        <?php echo $string['reassigntouser']; ?></td>
       </tr>
       <tr>
-        <td id="item5a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">&nbsp;</td><td id="item5b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();"><?php echo $string['reassigntouser']; ?></td>
-      </tr>
-      <tr>
-        <td id="item6a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();"><img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item6b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="reassignLogLate();"><?php echo $string['latesubmissions']; ?></td>
+        <td id="item7a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
+        <img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" border="0" /></td>
+        <td id="item7b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
+        <?php echo $string['latesubmissions']; ?>
+        </td>
       </tr>
     </table>
   </td></tr>
@@ -358,7 +403,7 @@ if ($language != 'en') {
 </div>
 <?php
   for ($i=1; $i<=100; $i++) $distribution[$i] = 0;
-  
+
   $notes = array();
   // Query any student notes for the current paper
   $result = $mysqli->prepare("SELECT userID FROM student_notes WHERE paper_id=?");
@@ -392,7 +437,7 @@ if ($language != 'en') {
     $log_late[$tmp_userID] = $title . ' ' .  $surname . ', ' . $first_names;
   }
   $result->close();
-  
+
   if ($marking == '0') {
     $marking_label = $string['%'];
     $marking_key = 'percent';
@@ -400,7 +445,7 @@ if ($language != 'en') {
     $marking_label = $string['adjusted%'];
     $marking_key = 'adj_percent';
   }
-  
+
   //output table heading
   $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'mark', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
   if ($paper_type == 2) $table_order[$string['room']] = 'room';
@@ -414,9 +459,9 @@ if ($language != 'en') {
       }
     }
   }
-  
+
   $cols = count($table_order);
- 
+
   echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
   if ($paper_type == '2') {
     echo "<tr><th class=\"h\" colspan=\"" . ($cols - 1) . "\">";
@@ -428,7 +473,7 @@ if ($language != 'en') {
   } else {
     $report_title = $string['classtotals'];
   }
-  
+
   $folder = '';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $folder = $_GET['folder'];
@@ -440,15 +485,16 @@ if ($language != 'en') {
     $result->close();
   }
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+
   if ($folder != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+  } elseif ( isset( $_GET['module'] ) and $_GET['module'] != '' ) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-  
+
   echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
-  
+
   // output table header
   if (isset($user_results[0])){
     echo "<tr style=\"font-size:110%\">\n";
@@ -468,7 +514,7 @@ if ($language != 'en') {
     }
     echo "</tr>\n";
   }
-  
+
   echo '<tr><th colspan="' . ($cols) . '" class="bevel"></th></tr>';
 
   // Check for any temporary accounts and if so display warning banner
@@ -492,7 +538,7 @@ if ($language != 'en') {
     </tr>
 <?php
   }
-  
+
   if (count($log_late) > 0) {
 ?>
     <tr>
@@ -514,21 +560,33 @@ if ($language != 'en') {
     }
     echo "$html.</td></tr></table></td></tr>\n";
   }
-  
+
   $xmean_total = 0;
   $absent_no = 0;
   $scatter_data = '';
   for ($i=0; $i<$user_no; $i++) {
+
+    extract( $user_results[$i] );
+
     if ($user_results[$i]['visible'] == 1) {
       if (strpos($user_results[$i]['username'], 'user') !== 0) {
         $reassign = 'n';
       } else {
         $reassign = 'y';
       }
+
+      if ( $timer_started == null ){
+        $onclick = 'hideTimerReset();';
+      }
+
       if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
         $bg_color = '#FFC0C0';
-        echo "<tr class=\"nonattend\"><td>&nbsp;</td>";
-        echo "<td onclick=\"popMenu('', " . $user_results[$i]['tmp_userID'] . ", '" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions', '" . $user_results[$i]['adj_percent'] . "', event);\" />&nbsp;" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span>";
+        ?>
+        <tr class="nonattend"><td>&nbsp;</td>
+        <td onclick="popMenu('', '<?php echo $tmp_userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $adj_percent; ?>', event);<?php echo $onclick; ?>" />
+        &nbsp;<?php echo title; ?>&nbsp;<?php echo $surname ?>,&nbsp;
+        <span class="grey"><?php echo $first_names ?></span>
+        <?php
         if ($user_results[$i]['student_id'] == '') {
           echo "<td class=\"padl grey\">" . $string['unknown'] . "</td>";
         } else {
@@ -665,7 +723,7 @@ if ($language != 'en') {
           echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="16" height="16" border="0" />';
         }
         echo "</td>";
-        
+
         if ($_GET['sortby'] == 'ipaddress') {
          $ordered = ' ordered';
         } else {
@@ -680,7 +738,7 @@ if ($language != 'en') {
           }
           echo "<td class=\"$class$ordered padl $role_css\">" . $user_results[$i]['room'] . "</td>";
         }
-        
+
         // Display any associated metadata
         if (count($metadata_cols) > 0) {
           foreach ( $metadata_cols as $type) {
@@ -711,7 +769,7 @@ if ($language != 'en') {
   $scatter_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
   fwrite($scatter_file,$scatter_data . "\n");
   fclose($scatter_file);
-  
+
   $distribution_file = fopen( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');         // Distribution data
   fwrite($distribution_file, serialize($distribution) . "\n");
   fclose($distribution_file);
@@ -742,7 +800,7 @@ if ($language != 'en') {
     }
     echo "</td></tr>";
     $result->close();
-  
+
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
     echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
@@ -782,11 +840,11 @@ if ($language != 'en') {
       echo '</td><td>&nbsp;</td>';
     }
     echo "</tr>\n";
-    
+
     echo "<tr><td class=\"field\">" . $string['failureno'] . "</td><td class=\"r\">$failures</td><td>(" . round(($failures / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['passno'] . "</td><td class=\"r\">$passes</td><td>(" . round(($passes / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['distinctionno'] . "</td><td class=\"r\">$honours</td><td>(" . round(($honours / $cohort_size) * 100) . $string['percentofcohort'] . ")</td><td>&nbsp;</td></tr>\n";
-    
+
     echo "<tr><td class=\"field\">" . $string['totalmarks'] . "</td><td class=\"r\">";
     if ($total_marks < $orig_total_marks) echo "<span class=\"exclude\">$orig_total_marks</span>&nbsp;&nbsp;";
     echo "$total_marks</td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";

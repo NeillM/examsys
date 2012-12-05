@@ -8,6 +8,7 @@ $string['screens'] = 'Screens';
 $string['marks'] = 'Marks';
 $string['adjusted'] = 'Adjusted using random mark of ';
 $string['currentuser'] = 'Current User';
+$string['timeremaining'] = 'Time remaining';
 $string['navigation'] = 'Navigation';
 $string['bidirectional'] = 'Bidirectional';
 $string['unidirectional'] = 'Unidirectional';

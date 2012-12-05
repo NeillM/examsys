@@ -18,29 +18,74 @@ function onoff(questionID, itemID) {
   document.getElementById(objID).value = new_value;
 }
 
-// please keep these lines on when you copy the source
-// made by: Nicolas - http://www.javascript-page.com
-var clockID = 0;
-function UpdateClock() {
-  if(clockID) {
-    clearTimeout(clockID);
-    clockID  = 0;
+function UpdateClock( hours, minutes, seconds) {
+  KillClock();
+  
+  if( hours == 0 ){
+    hours   = '';
+    minutes = ( ( minutes  < 10 ) ? "0" : "" ) + minutes;
+  }else{
+    hours   = (( hours < 10 ) ? "0" : "" ) + hours;
+    minutes = ( ( minutes  < 10 ) ? ":0" : ":" ) + minutes;
   }
-  var tDate = new Date();
-  document.getElementById('theTime').value = "" + ((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
-    ((tDate.getMinutes()  < 10) ? ":0" : ":") + tDate.getMinutes() +
-    ((tDate.getSeconds() < 10) ? ":0" : ":") + tDate.getSeconds();
-    clockID = setTimeout("UpdateClock()", 1000);
+
+  document.getElementById('theTime').value = "" + hours +
+                                             minutes +
+                                             ( ( seconds < 10 ) ? ":0" : ":" ) + seconds;
 }
+
+//BP Performs countdown. Saves if counter has reached 0
+
+function UpdateTimerWithRemainingTime( remaining_time ) {
+  
+  
+  minutes = Math.floor( remaining_time / 60 );
+  minutes = Math.round( minutes );
+  seconds = remaining_time % 60;
+  
+  UpdateClock( 0, minutes, seconds);
+  
+  if( remaining_time == 0 ){
+    KillClock();
+    autoSave();
+    alert( 'Your time has expired and your application form has been saved' );
+    this.window.close();
+    return;
+  }
+  
+  remaining_time = remaining_time -1;
+  clockID        = setTimeout( "UpdateTimerWithRemainingTime( " + remaining_time + ")", 1000);
+}
+
+function UpdateClockWithCurrentTime() {
+
+  var tDate   = new Date();
+  
+  var hours   = tDate.getHours();
+  var minutes = tDate.getMinutes();
+  var seconds = tDate.getSeconds();
+  
+  UpdateClock( hours, minutes, seconds);
+  
+  clockID = setTimeout( "UpdateClockWithCurrentTime()", 1000);
+}
+
+function StartTimer( remaining_time ){
+  
+  clockID = setTimeout( "UpdateTimerWithRemainingTime(" + remaining_time + ");", 500);
+}
+
 function StartClock() {
-  clockID = setTimeout("UpdateClock()", 500);
+  clockID = setTimeout( "UpdateClockWithCurrentTime()", 500);
 }
+
 function KillClock() {
   if(clockID) {
     clearTimeout(clockID);
     clockID  = 0;
   }
 }
+
 function MRQ(questionid, part_id, options_total, selectable) {
   checked_total = 0;
   for (i=1; i<=options_total; i++) {

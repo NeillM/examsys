@@ -15,12 +15,27 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
 * @package
 */
+
+function check_whether_student_has_finished( LogMetadata $log_metadata ){
+  global $string;
+
+  $has_finished_paper = $log_metadata->is_users_paper_completed();
+
+  if( $has_finished_paper ){
+
+    $notice = UserNotices::get_instance();
+
+    $notice->display_access_denied( $string['paper_completed'], $output_header = false);
+
+  }
+
+}
 
 function check_labs($paper_type, $labs, $pword, $mysqlidb, $notice = NULL) {
   global $string;
@@ -30,7 +45,7 @@ function check_labs($paper_type, $labs, $pword, $mysqlidb, $notice = NULL) {
   }
 
   $low_bandwidth = 0;
-  
+
   if ($labs != '') {
     $stmt = $mysqlidb->prepare("SELECT low_bandwidth FROM ip_addresses WHERE address=? AND lab IN ($labs)");
     $stmt->bind_param('s', $_SERVER['REMOTE_ADDR']);
@@ -46,13 +61,13 @@ function check_labs($paper_type, $labs, $pword, $mysqlidb, $notice = NULL) {
     // Exit if a summative exam is on no labs and no password.
     if ($paper_type == '2' and trim($pword) == '') exit;
   }
-  
+
   return $low_bandwidth;
 }
 
 function check_paper_password($password, $show_form=false, $notice = NULL) {
   global $string;
-  
+
   if(is_null($notice)) {
     $notice = UserNotices::get_instance();
   }
@@ -79,7 +94,7 @@ function check_paper_password($password, $show_form=false, $notice = NULL) {
 
 function check_datetime($start_date, $end_date, $notice = NULL) {
   global $string;
-  
+
   if(is_null($notice)) {
     $notice = UserNotices::get_instance();
   }
@@ -92,7 +107,7 @@ function check_datetime($start_date, $end_date, $notice = NULL) {
 
 function check_modules($userObj, $moduleIDs, $calendar_year, $db, $notice = NULL) {
   global $string;
-  
+
   if(is_null($notice)) {
     $notice = UserNotices::get_instance();
   }
@@ -107,7 +122,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db, $notice = NULL
      if (count($moduleIDs) > 0) {
       $cal_year_sql = '';
       if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
-      
+
       $stmt = $db->prepare("SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND idMod IN (" . implode(',', $moduleIDs) . ") $cal_year_sql");
       $stmt->bind_param('i', $userObj->get_user_ID());
       $stmt->execute();
@@ -134,14 +149,14 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db, $notice = NULL
       $notice->display_access_denied($string['error_module'], false);
     }
   }
-  
+
   return $attempt;
 }
 
 // Needs fixing
 function check_metadata($property_id, $userObj, $moduleIDs, $db, $notice = NULL) {
   global $string;
-  
+
   if(is_null($notice)) {
     $notice = UserNotices::get_instance();
   }
@@ -161,7 +176,7 @@ function check_metadata($property_id, $userObj, $moduleIDs, $db, $notice = NULL)
       $notice->display_access_denied($tmp_string, $output_header = false);
     }
     $check_security->close();
-  }      
+  }
   $stmt->close();
 }
 
