@@ -9,6 +9,6 @@ $string['msg1'] = "Plik CSV powinien być w formacie eksportowym SATURN. Każdy 
 $string['msg2'] = "Wskaż plik CSV, który chcesz załadować";
 $string['addingmodules'] = 'Dodawanie modułów z...';
 $string['missingusers'] = 'Brakujący użytkownicy';
-$string['missingmodules'] = 'Missing modules';
+$string['missingmodules'] = 'Brakujące moduły';
 $string['enrolementsperformed'] = 'Dodane moduły';
 ?>
