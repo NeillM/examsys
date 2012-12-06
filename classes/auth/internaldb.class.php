@@ -8,9 +8,10 @@
  */
 class internaldb {
 
+  private $name;
+  private $number;
   private $returndata;
   private $retdata;
-  private $number;
   private $form;
   private $settings;
   private $db;
@@ -31,7 +32,7 @@ class internaldb {
 
   function register_callback_routines() {
 
-    $this->calling_object->register_callback(array($this,'auth'), 'auth');
+    $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
 
   }
 
@@ -117,10 +118,10 @@ class internaldb {
     return false;
   }
 
-  function display_form() {
-
-    return 'std';
-
+  function form() {
+    $retdata = new stdClass();
+    $retdata->form = 'std';
+    return $retdata;
   }
 
 }
