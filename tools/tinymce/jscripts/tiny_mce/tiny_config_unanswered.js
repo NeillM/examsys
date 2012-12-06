@@ -10,6 +10,8 @@
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top", 
     theme_advanced_toolbar_align : "left",
-    // Example content CSS (should be your site CSS) 
+    extended_valid_elements : '-div,-p',
+
+    // Example content CSS (should be your site CSS)
     content_css : cfgRootPath + "/css/editor_pink.css"
 }); 
