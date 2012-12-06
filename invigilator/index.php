@@ -42,15 +42,32 @@ function get_students($modules, $session, $paperID, $exam_length) {
 
   echo "<div class=\"cohortlist\">\n<table style=\"font-size:100%\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
 
-  $sql = "SELECT DISTINCT extra_time, modules_students.userID, surname, first_names, title FROM modules_students, users LEFT JOIN special_needs ON users.id=special_needs.userID WHERE moduleid IN ( " . $modules . ") AND calendar_year=? AND modules_students.userID=users.id ORDER BY surname, initials";
+  $sql = "SELECT DISTINCT
+                          extra_time
+                        , modules_student.userID
+                        , surname
+                        , first_names
+                        , title
+          FROM
+              modules_student
+            , users
+          LEFT JOIN
+              special_needs
+          ON
+              users.id = special_needs.userID
+          WHERE
+              idMod
+          IN
+              ( " . $modules . ")
+          AND
+              calendar_year = ?
+          AND
+              modules_student.userID = users.id
+          ORDER
+               BY surname, initials";
 
-  echo $sql;
 
   $results = $mysqli->prepare( $sql );
-
-  //echo $sql;
-
-  echo $mysqli->error;
 
   $results->bind_param('s', $session);
   $results->execute();
@@ -287,7 +304,7 @@ function emergencyNumbers($support_numbers) {
     <br />
 
     <?php
-    emergencyNumbers($emergency_support_numbers);
+    emergencyNumbers( $configObject->get( 'emergency_support_numbers' ));
     echo "</td></tr>\n</table>\n";
   } else {
     echo "<p style=\"font-weight:bold; color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['nopapersfound'] . "</p>";
