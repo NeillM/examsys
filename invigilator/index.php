@@ -291,7 +291,7 @@ function emergencyNumbers($support_numbers) {
     echo "</td></tr>\n</table>\n";
   } else {
     echo "<p style=\"font-weight:bold; color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"!\" />&nbsp;" . $string['nopapersfound'] . "</p>";
-    emergencyNumbers($emergency_support_numbers);
+    emergencyNumbers( $configObject->get( 'emergency_support_numbers' ) );
   }
 
   $mysqli->close();
