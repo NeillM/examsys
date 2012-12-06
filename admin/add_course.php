@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2012 The University of Nottingham
@@ -28,7 +28,7 @@ $unique_course = true;
 if (isset($_POST['submit'])) {
   // Check for unique username
   $tmp_course = trim($_POST['course']);
-  
+
   $result = $mysqli->prepare("SELECT name FROM courses WHERE name=?");
   $result->bind_param('s', $tmp_course);
   $result->execute();
@@ -44,10 +44,10 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_school = $_POST['school'];
   $tmp_course = trim($_POST['course']);
   $tmp_description = trim($_POST['description']);
-  
+
   $result = $mysqli->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
   $result->bind_param('ssi', $tmp_course, $tmp_description, $tmp_school);
-  $result->execute();  
+  $result->execute();
   $result->close();
   $mysqli->close();
   header("location: list_courses.php");
@@ -64,6 +64,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .field {font-weight:bold; text-align:right; padding-right:10px}
+    .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000}
   </style>
 
   <script language="JavaScript">
@@ -79,7 +80,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   }
   </script>
   </head>
-  
+
   <body>
   <?php
     require '../include/course_options.inc';
@@ -95,7 +96,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_course == false) {
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" name=\"course\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_course\" /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" name=\"course\" class=\"warn\" value=\"$tmp_course\" /></td></tr>\n";
     } else {
     ?>
       <tr><td class="field"><?php echo $string['code']; ?></td><td><input type="text" size="10" name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" /></td></tr>
@@ -109,7 +110,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
       $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY name, school");
       $result->execute();
       $result->bind_result($schoolid, $school, $faculty);
-      
+
       $old_faculty = '';
       while ($result->fetch()) {
         if ($faculty != $old_faculty) {
