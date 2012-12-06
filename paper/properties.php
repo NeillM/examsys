@@ -151,7 +151,8 @@ if (isset($_POST['Submit'])) {
     }
 
       if (($configObject->get('cfg_summative_mgmt') and $paper_type == '2' and $userObject->has_role(array('Admin','SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or!$configObject->get('cfg_summative_mgmt') or  $paper_type != '2') {
-  		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));      $target_timezone = new DateTimeZone($_POST['timezone']);
+  		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
+  		$target_timezone = new DateTimeZone($_POST['timezone']);
 
       $null_start_date = false;
       if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['ftime'] == '') {
