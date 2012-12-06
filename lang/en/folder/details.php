@@ -36,5 +36,5 @@ $string['author'] = 'Author';
 $string['create'] = 'Create';
 $string['newfolder'] = 'New Folder';
 $string['modulenotfound'] = 'Module not Found';
-$string['modulenotfoundmsg'] = "Unable to find module with code <strong>%s</strong>.";
+$string['modulenotfoundmsg'] = "Unable to find specified module.";
 ?>

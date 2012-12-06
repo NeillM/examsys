@@ -24,11 +24,11 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/sidebar_menu.inc';
-require '../include/errors.inc';
-require '../classes/dateutils.class.php';
-require '../classes/moduleutils.class.php';
+require_once '../include/staff_auth.inc';
+require_once '../include/sidebar_menu.inc';
+require_once '../include/errors.inc';
+require_once '../classes/dateutils.class.php';
+require_once '../classes/moduleutils.class.php';
 
 check_var('module', 'GET', true, false);
 set_time_limit(0);
@@ -37,10 +37,13 @@ ob_start();
 
 // Folder security checks
 $folder = '';
-$module = $_GET['module'];
+$idMod = $_GET['module'];
 
-if (module_utils::module_exists($module, $mysqli) === false) {
-  display_error($string['modulenotfound'], sprintf($string['modulenotfoundmsg'], $module), false, true);
+// Get the moduleid
+$module = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+
+if ($module === false) {
+  display_error($string['modulenotfound'], $string['modulenotfoundmsg'], false, true);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -87,9 +90,6 @@ if (module_utils::module_exists($module, $mysqli) === false) {
     ob_flush();
     flush();
 
-    // Get the moduleid
-    $idMod = module_utils::get_idMod($_GET['module'], $mysqli);
-
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv"))  {
         echo 'Problem - ';
@@ -110,7 +110,7 @@ if (module_utils::module_exists($module, $mysqli) === false) {
       } else {
         // Load the IDs for all students in the module
         $student_id_array = array();
-        $stmt = $mysqli->prepare("SELECT users.id, username, student_id FROM (users, modules_student, modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID AND modules_student.idMod = modules.id AND moduleid=? AND calendar_year=? ORDER BY username");
+        $stmt = $mysqli->prepare("SELECT users.id, username, student_id FROM (users, modules_student, modules) LEFT JOIN sid ON users.id=sid.userID WHERE users.id=modules_student.userID AND modules_student.idMod = modules.id AND idMod=? AND calendar_year=? ORDER BY username");
         $stmt->bind_param('ss', $_GET['module'], $_POST['session']);
         $stmt->execute();
         $stmt->bind_result($id, $username, $student_id);
