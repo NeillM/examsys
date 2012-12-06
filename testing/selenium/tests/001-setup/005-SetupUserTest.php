@@ -13,6 +13,7 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
 
   public function testCreateUser()
   {
+    // TODO: this should be different user to standard staff user
     do_admin_login($this);
 
     $this->open("/staff/");
@@ -143,5 +144,13 @@ class SetupUserTest extends PHPUnit_Extensions_SeleniumTestCase
     do_staff_login($this);
     $this->assertTextPresent('My Modules');
   }
+
+  // TODO: edit user
+  // TODO: remove user from team
+  // TODO: delete user
+  // TODO: create student user
+  // TODO: add student to module
+  // TODO: remove student from module
+  // TODO: delete student
 }
 ?>
