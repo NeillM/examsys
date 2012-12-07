@@ -187,7 +187,7 @@ if (isset($_GET['q_id'])) {
   $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
   $stmt->bind_param('si', $_GET['id'], $_GET['q_id']);
 } else {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('s', $_GET['id']);
 }
 $stmt->execute();
@@ -198,12 +198,17 @@ if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
 }
 while ($stmt->fetch()) {
   $no_screens = $screen;
+  if ($q_type != 'info') {
+    $screen_data[$no_screens][] = $q_type;
+  }
+  /*
   $add_q = ($q_type == 'info') ? 0 : 1;
   if (!isset($screen_data[$no_screens])) {
     $screen_data[$no_screens] = $add_q;
   } else {
     $screen_data[$no_screens] += $add_q;
   }
+  */
 }
 $stmt->free_result();
 $stmt->close();
@@ -727,47 +732,10 @@ if ($current_screen < $no_screens) {
 ?>
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <?php
-if (!isset($_GET['q_id'])) {
-?>
-  <tr><td valign="top">
-<?php
+  if (!isset($_GET['q_id'])) {
     if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
       record_marks($property_id, $mysqli, $userObject->get_user_ID(), $paper_type, $grade, $year, $attempt, $userroles);
     }
-    echo $top_table_html;
-    echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-    $question_offset = 0;
-    if ($no_screens > 1) {
-      echo '<table cellspacing="1" cellpadding="1" border="0" class="screens"><tr>';
-      for ($i=1; $i<=$no_screens; $i++) {
-        echo "<td title=\"";
-        if (isset($screen_data[$i])) {
-          echo $screen_data[$i];
-        } else {
-          echo '0';
-        }
-        if ($i == $current_screen) {
-          if (isset($screen_data[$i]) and $screen_data[$i] == 1) {
-            echo " question\" class=\"s1\">";
-          } else {
-            echo " questions\" class=\"s1\">";
-          }
-        } else {
-          if (isset($screen_data[$i]) and $screen_data[$i] == 1) {
-            echo " question\" class=\"s0\">";
-          } else {
-            echo " questions\" class=\"s0\">";
-          }
-          if ($i < $current_screen and isset($screen_data[$i])) $question_offset += $screen_data[$i];
-        }
-        echo "$i</td>\n";
-      }
-      echo '</tr></table>';
-    }
-    echo '</td>';
-    echo $logo_html;
-  } else {
-    echo '<tr><td>';
   }
 
   $user_answers = array();
@@ -815,7 +783,7 @@ if (!isset($_GET['q_id'])) {
     }
     $log_data->close();
   }
-
+  
   $old_leadin = '';
   $old_q_type = '';
   $old_q_id = 0;
@@ -836,8 +804,6 @@ if (!isset($_GET['q_id'])) {
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
   $num_rows = $question_data->num_rows;
-  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
-  echo "<col width=\"40\"><col>\n";
   $q_no = 0;
   //build the questions_array
   $tmp_questions_array = array();
@@ -882,7 +848,67 @@ if (!isset($_GET['q_id'])) {
   unset($tmp_questions_array);
 
   $unanswered = false;
+  
+  $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array);
 
+  if (!isset($_GET['q_id'])) {
+    echo "<tr><td valign=\"top\">\n";
+    echo $top_table_html;
+    echo '<tr><td><div class="paper">' . $paper_title . '</div>';
+    $question_offset = 0;
+    if ($no_screens > 1) {
+      echo '<table cellspacing="1" cellpadding="1" border="0" class="screens"><tr>';
+      for ($i=1; $i<=$no_screens; $i++) {
+        if ($incomplete_screens[$i] == 1) {
+          echo '<td class="scr_un">';
+        } else {
+          echo '<td class="scr_ans">';
+        }
+        /*
+        echo "<td title=\"";
+        if (isset($screen_data[$i])) {
+          echo count($screen_data[$i]);
+        } else {
+          echo '0';
+        }
+
+        if ($i == $current_screen) {
+          if (isset($screen_data[$i]) and count($screen_data[$i]) == 1) {
+            echo " question\" class=\"s1\">";
+          } else {
+            echo " questions\" class=\"s1\">";
+          }
+        } else {
+          if (isset($screen_data[$i]) and $screen_data[$i] == 1) {
+            echo " question\" class=\"s0\">";
+          } else {
+            echo " questions\" class=\"s0\">";
+          }
+          if ($i < $current_screen and isset($screen_data[$i])) $question_offset += count($screen_data[$i]);
+        }
+        */
+        
+        if ($i < $current_screen and isset($screen_data[$i])) $question_offset += count($screen_data[$i]);
+        echo "$i</td>\n";
+      }
+      echo '</tr><tr>';
+      for ($i=1; $i<=$no_screens; $i++) {
+        if ($i == $current_screen) {
+          echo '<td class="scr_cur"></td>';
+        } else {
+          echo '<td></td>';
+        }
+      }
+      echo '</tr></table>';
+    }
+    echo '</td>';
+    echo $logo_html;
+  } else {
+    echo '<tr><td>';
+  }
+
+  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
+  echo "<col width=\"40\"><col>\n";
   //display the questions
   foreach($questions_array as &$question) {
     if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";

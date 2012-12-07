@@ -24,6 +24,116 @@
 
 require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
+function get_unanswered_screens($screen_data, $user_answers, $questions) {
+  $screen_no = count($screen_data);  
+  
+  $incomplete_screens = array_fill(1, $screen_no, 0);  // Set all screens to be initinally complete
+  
+  for ($i=1; $i<=$screen_no; $i++) {
+    if (!isset($user_answers[$i])) {                            // No user answers exist for that screen
+      $incomplete_screens[$i] = 1;
+    } elseif (count($user_answers[$i]) < count($screen_data[$i]) ) {   // Fewer answers than questions on that screen
+      $incomplete_screens[$i] = 1;
+    } else {                                                    // Right number of records but need to check if any are unanswered
+      $tmp_answer_no = count($screen_data[$i]);
+      
+      $answers = array();
+      $a = 1;
+      foreach ($user_answers[$i] as $individual_answer) {
+        $answers[$a] = $individual_answer;
+        $a++;
+      }
+      
+      for ($a=1; $a<=$tmp_answer_no; $a++) {
+        switch ($screen_data[$i][$a-1]) {
+          case 'area':
+            $parts = explode(';', $answers[$a]);
+            if ($parts[1] == '') {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'blank':
+            $parts = explode('|', $answers[$a]);
+            foreach ($parts as $part) {
+              if ($part == 'u') {
+                $incomplete_screens[$i] = 1;
+              }
+            }
+            break;
+          case 'calculation':
+            $parts = explode('|', $answers[$a]);
+            if ($parts[0] == '') {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'dichotomous':
+            if (strpos($answers[$a], 'u') !== false) {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'extmatch':
+            if (strpos($answers[$a], 'u') !== false) {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'hotspot':
+            if (strpos($answers[$a], 'u') !== false or strpos($answers[$a], 'false') !== false) {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'labelling':
+            $parts = explode(';', $answers[$a]);
+            if ($parts[1] == '') {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'matrix':
+            $parts = explode('|', $answers[$a]);
+            foreach ($parts as $part) {
+              if ($part == '') {
+                $incomplete_screens[$i] = 1;
+              }
+            }
+            break;
+          case 'mcq':
+            if ($answers[$a] == '0') {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'mrq':
+            if (strpos($answers[$a], 'y') === false) {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'rank':
+            if (strpos($answers[$a], 'u') !== false) {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'sct':
+            if ($answers[$a] == '0') {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'textbox':
+            if ($answers[$a] == '') {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+          case 'true_false':
+            if (strpos($answers[$a], 'u') !== false) {
+              $incomplete_screens[$i] = 1;
+            }
+            break;
+        }
+        
+      }
+    }
+  } 
+  
+  return $incomplete_screens;
+}
+
 function calcPreParse($inputVal, $user_answers, $tmp_vars) {
   global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
   if (substr($inputVal,0,3) == 'ans') {

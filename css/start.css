@@ -5,7 +5,7 @@ table {table-layout:fixed}
 p {margin-top:0px;padding-top:0px}
 pre {font-family:Arial,sans-serif;font-size:100%}
 .paper {margin-left:5px;font-size:180%;color:white;font-weight:bold}
-.screens {margin-left:5px;font-weight:bold;color:white}
+.screens {margin-left:5px;color:white;font-weight:bold}
 .q_no {width:40px; text-align:right;vertical-align:top}
 .theme {font-size:150%;padding-left:4px;font-weight:bold;color:#316AC5}
 .note {color:#C00000}
@@ -14,6 +14,9 @@ pre {font-family:Arial,sans-serif;font-size:100%}
 .inact {color:#A5A5A5;text-decoration:line-through}
 .s0 {width:18px;text-align:center;background-color:#003366;font-size:80%}
 .s1 {width:18px;text-align:center;background-color:#C00000;font-size:80%}
+.scr_ans {width:18px;text-align:center;background-color:#003366;font-size:80%}
+.scr_un {width:18px;text-align:center;background-color:#FFC0C0;color:#800000;font-size:80%}
+.scr_cur {background-color:white; height:4px}
 .unans {background-color:#FFC0C0}
 .matrix {border:1px solid #808080; border-collapse:collapse;margin-left:35px;margin-bottom:15px}
 .matrix td {border:1px solid #808080}
