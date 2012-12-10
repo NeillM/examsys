@@ -145,26 +145,27 @@ $total_marks = 0;
 $results = $mysqli->prepare("SELECT paper_title, total_mark FROM properties WHERE property_id=? LIMIT 1");
 $results->bind_param('i', $paperID);
 $results->execute();
+$results->store_result();
 $results->bind_result($paper_title, $total_mark);
 while ($results->fetch()) {
-  $reviews_html .= <<< PAGEHEADING
-<table class="header">
-  <tr><th><div class="breadcrumb"><a href="../staff/index.php">{$string['home']}</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID={$_GET['paperID']}&folder={$_GET['folder']}&module={$_GET['module']}">{$paper_title}</a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">{$string['standardssetting']}</div></th><th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th></tr>
-</table>\n\n
-PAGEHEADING;
+  $reviews_html .= '<table class="header"><tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  if (isset($_GET['module']) and $_GET['module'] != '') {
+    $reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  $reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">' . $string['standardssetting'] . '</div></th><th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(97); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="Help" border="0" /></a></th></tr></table>';
 
   $reviews_html .= <<< TABLEHEADER
 <table class="header">
   <tr>
   	<th style="width:18px">&nbsp;</td>
-  	<th style="width:18%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['standardsetter']}&nbsp;</th>
-  	<th style="width:13%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['date']}&nbsp;</th>
-  	<th style="width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['passscore']}</th>
-  	<th style="width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['distinction']}</th>
-  	<th style="width:12%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['reviewmarks']}</th>
-  	<th style="width:10%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['papertotal']}</th>
-  	<th style="width:14%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;{$string['method']}</th>
-  	<th width="25%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp</th>
+  	<th class="vert_div" style="width:18%">&nbsp;{$string['standardsetter']}&nbsp;</th>
+  	<th class="vert_div" style="width:13%">&nbsp;{$string['date']}&nbsp;</th>
+  	<th class="vert_div" style="width:10%">&nbsp;{$string['passscore']}</th>
+  	<th class="vert_div" style="width:10%">&nbsp;{$string['distinction']}</th>
+  	<th class="vert_div" style="width:12%">&nbsp;{$string['reviewmarks']}</th>
+  	<th class="vert_div" style="width:10%">&nbsp;{$string['papertotal']}</th>
+  	<th class="vert_div" style="width:14%">&nbsp;{$string['method']}</th>
+  	<th class="vert_div" width="25%">&nbsp;</th>
  </tr>
  <tr><th colspan="9" class="bevel"></th></tr>
 TABLEHEADER;

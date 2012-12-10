@@ -176,11 +176,11 @@ if (isset($_GET['checked'])) {
   if ($state_checked == 'true') echo ' checked="checked"';
   echo " />&nbsp;<nobr>" . $string['myquestionsonly'] . "</nobr>&nbsp;</th></tr>\n";
 
-  echo "<tr onclick=\"qOff();\"><th style=\"text-align:right; width:15px\">&nbsp;<img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" /></th>\n";
-  echo "<th>&nbsp;" . $string['question'] . "&nbsp;</td>\n";
-  echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['type'] . "&nbsp;</th>\n";
-  echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['modified'] . "&nbsp;</th>\n";
-  echo "<th><img src=\"../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;" . $string['status'] . "&nbsp;</th></tr>\n";
+  echo "<tr onclick=\"qOff();\"><th style=\"text-align:right; width:15px\">&nbsp;</th>\n";
+  echo "<th class=\"vert_div\">&nbsp;" . $string['question'] . "&nbsp;</td>\n";
+  echo "<th class=\"vert_div\">&nbsp;" . $string['type'] . "&nbsp;</th>\n";
+  echo "<th class=\"vert_div\">&nbsp;" . $string['modified'] . "&nbsp;</th>\n";
+  echo "<th class=\"vert_div\">&nbsp;" . $string['status'] . "&nbsp;</th></tr>\n";
   echo "<tr><th class=\"bevel\" colspan=\"5\"></th></tr>\n";
 
   while ($search_results->fetch()) {

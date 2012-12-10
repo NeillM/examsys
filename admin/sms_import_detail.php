@@ -49,6 +49,7 @@ function get_list($list, $db) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
   tr {vertical-align:top}
   .no {text-align:right}
@@ -63,10 +64,10 @@ function get_list($list, $db) {
 <div id="content" class="content" style="font-size:80%">
 <table class="header">
 <tr>
-<th colspan="6"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['smsimportson']; ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4); ?></th>
+<th colspan="5"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['smsimportson']; ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4); ?></th>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
-<tr><th><div style="padding-left:10px"><?php echo $string['moduleid']; ?></div></th><th><?php echo $string['enrolements']; ?></th><th><?php echo $string['enrolementdetails']; ?></th><th><?php echo $string['deletions']; ?></th><th><?php echo $string['deletiondetails']; ?></th><th><?php echo $string['importtype']; ?></th><th style="width:20%">&nbsp;</th></tr>
+<tr><th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th><th class="vert_div">&nbsp;<?php echo $string['enrolements']; ?></th><th class="vert_div">&nbsp;<?php echo $string['enrolementdetails']; ?></th><th class="vert_div">&nbsp;<?php echo $string['deletions']; ?></th><th class="vert_div">&nbsp;<?php echo $string['deletiondetails']; ?></th><th class="vert_div">&nbsp;<?php echo $string['importtype']; ?></th></tr>
 <tr><th colspan="7" class="bevel"></th></tr>
 
 <?php
@@ -86,7 +87,7 @@ function get_list($list, $db) {
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
   while ($result->fetch()) {
-    echo "<tr><td style=\"padding-left:10px\"><a href=\"../folder/details.php?module=$idMod\">$moduleid</a></td><td class=\"no\">$enrolements</td><td>" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>" . $import_type . "</td><td></td></tr>\n";
+    echo "<tr><td class=\"col10\"><a href=\"../folder/details.php?module=$idMod\">$moduleid</a></td><td class=\"no\">$enrolements</td><td>&nbsp;" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>&nbsp;" . $import_type . "</td></tr>\n";
   }
 
 ?>

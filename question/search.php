@@ -128,11 +128,14 @@ set_time_limit(0);
     echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th></tr>";
 ?>
   <tr>
-  <th align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th>
-  <th>&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
-  <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-  <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</th></tr>
-  <tr><th colspan="4" class="bevel"></th></tr>
+    <th>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
+  </tr>
+  <tr>
+    <th colspan="4" class="bevel"></th>
+  </tr>
   </table>
 <?php
   }
@@ -153,10 +156,10 @@ if (isset($_POST['submit'])) {
     echo "<tr><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></th></tr>";
     ?>
     <tr>
-    <th align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th>
-    <th>&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
-    <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-    <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</th></tr>
+    <th>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th></tr>
     <tr><th colspan="4" class="bevel"></td></tr>
     </table>
     <?php
@@ -332,11 +335,14 @@ if (isset($_POST['submit'])) {
   echo "</div></th></tr>";
 ?>
   <tr>
-  <th align="right">&nbsp;<img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th>
-  <th>&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
-  <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-  <th><nobr><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?> </nobr></th></tr>
-  <tr><th colspan="4" class="bevel"></th></tr>
+    <th>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['question']; ?>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+    <th class="vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
+  </tr>
+  <tr>
+    <th colspan="4" class="bevel"></th>
+  </tr>
 <?php
   while ($result->fetch()) {
     echo '<tr class="qline';

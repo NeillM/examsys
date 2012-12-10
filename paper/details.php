@@ -820,9 +820,9 @@ function check_latex_random($q_ids, $mysqli) {
     <th class="icon">&nbsp;</th>
     <th>&nbsp;</th>
     <th class="q-cell"><?php echo $string['question']; ?></th>
-    <th class="t"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
-    <th class="m"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
-    <th class="d"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
+    <th class="t vert_div">&nbsp;<?php echo $string['type']; ?>&nbsp;</th>
+    <th class="m vert_div">&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
+    <th class="d vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
     <tr><th colspan="6" class="bevel"></th></tr>
   <?php

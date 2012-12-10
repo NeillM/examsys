@@ -54,8 +54,8 @@
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
 <tr>
-<th><div class="col10"><?php echo $string['name']; ?>&nbsp;</div></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['schoolno']; ?></th><th style="width:50%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" /></th></tr>
-<tr><td colspan="3" class="bevel"></th></tr>
+<th><div class="col10"><?php echo $string['name']; ?>&nbsp;</div></th><th class="vert_div">&nbsp;<?php echo $string['schoolno']; ?></th><th style="width:50%" class="vert_div"></th></tr>
+<tr><th colspan="3" class="bevel"></th></tr>
 <?php
 $old_faculty = '';
 $id = 0;

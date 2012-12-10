@@ -52,7 +52,7 @@
 <th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['smsimportsummary']; ?></th>
 <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
 </tr>
-<tr><th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['modules']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['enroled']; ?></th><th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['deleted']; ?></th><th style="width:50%">&nbsp;</th></tr>
+<tr><th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th><th class="vert_div">&nbsp;<?php echo $string['modules']; ?></th><th class="vert_div">&nbsp;<?php echo $string['enroled']; ?></th><th class="vert_div">&nbsp;<?php echo $string['deleted']; ?></th><th style="width:50%">&nbsp;</th></tr>
 <tr><th colspan="5" class="bevel"></th></tr>
 
 <?php

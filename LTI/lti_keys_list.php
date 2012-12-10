@@ -68,9 +68,9 @@ require '../include/lti_keys_options.inc';
       <th>
         <div class="col10"><?php echo $string['name']; ?>&nbsp;</div>
       </th>
-      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['oauth_consume_key']; ?>&nbsp;</th>
-      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['oauth_secret']; ?>&nbsp;</th>
-      <th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['oauth_context_id']; ?>&nbsp;</th>
+      <th class="vert_div">&nbsp;<?php echo $string['oauth_consume_key']; ?>&nbsp;</th>
+      <th class="vert_div">&nbsp;<?php echo $string['oauth_secret']; ?>&nbsp;</th>
+      <th class="vert_div">&nbsp;<?php echo $string['oauth_context_id']; ?>&nbsp;</th>
     </tr>
     <tr>
       <th colspan="4" class="bevel"></th>

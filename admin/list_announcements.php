@@ -65,68 +65,54 @@ require '../include/sysadmin_auth.inc';
     $ordering = $_GET['ordering'];
   } else {
     $sortby = 'startdate';
-    $ordering = 'asc';
+    $ordering = 'desc';
   }
 
   // output table header
   $table_order = array($string['title']=>'title', $string['startdate']=>'startdate', $string['enddate']=>'enddate');
   foreach($table_order as $display => $key) {
-    echo '<th>';
     if ($key == 'title') {
-      echo '<div class="col10">';
+      echo '<th class="vert_div col10">';
     } else {
-      echo '<div><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;';
+      echo '<th class="vert_div">&nbsp;';
     }
     if ($sortby == $key and $ordering == 'asc') {
-      echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div></th>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div></th>";
     } elseif ($sortby == $key and $ordering == 'desc') {
-      echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div></th>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" />&nbsp;</div></th>";
     } else {
-      echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;</div></th>";
+      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;</div></th>";
     }
   }
 ?>
 </tr>
 <tr><th colspan="4" class="bevel"></th></tr>
 <?php
-$announcements_no = 0;
+$announce_no = 0;
 $announcements = array();
 
-$result = $mysqli->prepare("SELECT id, title, icon, startdate, enddate, deleted FROM announcements ORDER BY startdate DESC");
+$result = $mysqli->prepare("SELECT id, title, icon, startdate, DATE_FORMAT(startdate, '" . $configObject->get('cfg_long_date_time') . "') AS startdate_display, DATE_FORMAT(enddate, '" . $configObject->get('cfg_long_date_time') . "') AS enddate_display, deleted FROM announcements ORDER BY $sortby $ordering");
 $result->execute();
-$result->bind_result($announcementid, $title, $icon, $startdate, $enddate, $deleted);
+$result->bind_result($announcementid, $title, $icon, $startdate, $startdate_display, $enddate_display, $deleted);
 while ($result->fetch()) {
-  $announcements[$announcements_no]['announcementid'] = $announcementid;
-  $announcements[$announcements_no]['title'] = $title;
-  $announcements[$announcements_no]['icon'] = $icon;
-  $announcements[$announcements_no]['startdate'] = $startdate;
-  $announcements[$announcements_no]['enddate'] = $enddate;
-  $announcements[$announcements_no]['deleted'] = $deleted;
+  $announcements[$announce_no]['announcementid'] = $announcementid;
+  $announcements[$announce_no]['title'] = $title;
+  $announcements[$announce_no]['icon'] = $icon;
+  $announcements[$announce_no]['startdate_display'] = $startdate_display;
+  $announcements[$announce_no]['enddate_display'] = $startdate_display;
+  $announcements[$announce_no]['deleted'] = $deleted;
   
-  $announcements_no++;
+  $announce_no++;
 }
 $result->close();
 
-for ($i=0; $i<$announcements_no; $i++) {
-  /*
-  if ($sortby == 'school' and $old_school != $modules[$i]['school']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $modules[$i]['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'moduleid' and $old_moduleid_letter != substr($modules[$i]['moduleid'], 0, 1)) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . substr($modules[$i]['moduleid'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'name' and $old_name_letter != substr($modules[$i]['name'], 0, 1)) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . substr($modules[$i]['name'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'school' and $old_school != $modules[$i]['school']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . substr($modules[$i]['school'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'active' and $old_active != $modules[$i]['active']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $tmp_active . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  }
-  */
+for ($i=0; $i<$announce_no; $i++) {
   if ($announcements[$i]['deleted'] != '') {
     $deleted = ' deleted';
   } else {
     $deleted = '';
   }
-  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td><div class=\"col10$deleted\">" . $announcements[$i]['title'] . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['startdate']  . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['enddate']  . "</div></td></tr>\n";
+  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td><div class=\"col10$deleted\">" . $announcements[$i]['title'] . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['startdate_display']  . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['enddate_display']  . "</div></td></tr>\n";
 }
 
 $mysqli->close();
