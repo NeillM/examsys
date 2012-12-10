@@ -33,6 +33,7 @@ class internaldb {
   function register_callback_routines() {
 
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
 
   }
 
@@ -41,6 +42,26 @@ class internaldb {
     $this->retdata->form = 'std';
     $this->retdata->rogoid = 0;
     $this->retdata->url = '';
+  }
+
+  function failauth(&$postauthfailreturn) {
+    $this->retdata->debug[] = 'Fail function passed ' . var_export($postauthfailreturn, TRUE);
+
+    //   $this->retdata->debug[]='info:' . var_export($this->settings,TRUE);
+
+//default behaviour is to display username/password form
+    $postauthfailreturn->form = 'std';
+    $postauthfailreturn->exit = TRUE;
+
+    if (isset($this->settings['continueonfail'])) {
+      $this->retdata->debug[] = 'Setting to carry on despite setting things';
+      $postauthfailreturn->exit = FALSE;
+      $postauthfailreturn->stop = FALSE;
+    }
+    $this->retdata->debug[] = 'post run ' . var_export($postauthfailreturn, TRUE);
+
+    return;
+
   }
 
   function auth() {
@@ -52,7 +73,7 @@ class internaldb {
 
     extract($this->settings);
 
-    if ($this->form['std']->username == '' or $this->form['std']->password == '') {
+    if (!isset($this->form['std']->username) or !isset($this->form['std']->username) or $this->form['std']->username == '' or $this->form['std']->password == '') {
       //return not sucessfull do not try
       $this->retdata->debug[] = 'Check 1 blank entries';
 

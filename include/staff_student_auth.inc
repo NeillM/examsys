@@ -180,10 +180,13 @@ if (preg_match('|MSIE ([7-9].[0-9]{1,2})|', $_SERVER['HTTP_USER_AGENT'], $log_ve
   $userObject->load($uID);
   $userObject->db_user_change();
 
+  print "<br />DEBUG OP:<br />";
+var_dump($authentication->debug);
 
 
 
 
+print "<br />FULL OBJECT DUMP:<br />";
 
 
 
