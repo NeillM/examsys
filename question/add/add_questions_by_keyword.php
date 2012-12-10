@@ -39,9 +39,6 @@ require_once '../../classes/questionutils.class.php';
   <style type="text/css">
     html {height:100%; border-left:1px solid #95AEC8}
     body {font-size:80%}
-    a:link {color:black}
-    a:visited {color:black}
-    a:hover {color:black}
     .f {padding-left:2px}
     .n {text-align:right; padding-right:2px}
   </style>
@@ -49,8 +46,8 @@ require_once '../../classes/questionutils.class.php';
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript">
     function orderTable(order_val, direction_val) {
-      document.keywordsform.order.value = order_val;
-      document.keywordsform.direction.value = direction_val;
+      document.getElementById('order.value').value = order_val;
+      document.getElementById('direction').value = direction_val;
       document.keywordsform.submit();
     }
 
@@ -59,7 +56,7 @@ require_once '../../classes/questionutils.class.php';
     }
 
     function populateTicks() {
-      q_array = parent.top.controls.document.theform.questions_to_add.value.split(",");
+      q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
       for (i=0; i<q_array.length; i++) {
         var obj = document.getElementById(q_array[i]);
         if (obj != null) {
@@ -86,17 +83,17 @@ require_once '../../classes/questionutils.class.php';
   echo "<tr><th valign=\"top\" colspan=\"5\" style=\"font-size:160%; font-weight:bold\">&nbsp;" . $string['bykeywords'] . "</th></tr>\n";
 
   if ($order == 'leadin' and $direction == 'asc') {
-    echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','desc'); return false;\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
+    echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('leadin','desc'); return false;\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
   } elseif ($order == 'leadin' and $direction == 'desc') {
-    echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
+    echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
   } elseif ($order == 'q_type' and $direction == 'asc') {
-    echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','desc'); return false;\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
+    echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('q_type','desc'); return false;\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
   } elseif ($order == 'q_type' and $direction == 'desc') {
-    echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
+    echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;</th></tr>\n";
   } elseif ($order == 'last_edited' and $direction == 'asc') {
-    echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','desc'); return false;\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
+    echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('last_edited','desc'); return false;\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   } elseif ($order == 'last_edited' and $direction == 'desc') {
-    echo "<tr><th colspan=\"2\">&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th><img src=\"../../artwork/header_vertical_line.gif\" width=\"2\" height=\"15\" alt=\"line\" border=\"0\" />&nbsp;<a style=\"color:black\" onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
+    echo "<tr><th colspan=\"2\">&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('leadin','asc'); return false;\">" . $string['question'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('q_type','asc'); return false;\">" . $string['type'] . "</a>&nbsp;</th><th class=\"vert_div\">&nbsp;<a onclick=\"orderTable('last_edited','asc'); return false;\">" . $string['modified'] . "</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" border=\"0\" /></th></tr>\n";
   }
 
   echo "<tr><th colspan=\"5\" class=\"bevel\"></th></tr>\n";
@@ -171,9 +168,9 @@ foreach ($_POST as $key=>$value) {
 }
 $key_no = (isset($_POST['keyword_no'])) ? $_POST['keyword_no'] : 0;
 ?>
-<input type="hidden" name="keyword_no" value="<?php echo $key_no ?>" />
-<input type="hidden" name="order" value="" />
-<input type="hidden" name="direction" value="" />
+<input type="hidden" name="keyword_no" id="keyword_no" value="<?php echo $key_no ?>" />
+<input type="hidden" name="order" id="order" value="" />
+<input type="hidden" name="direction" id="direction" value="" />
 </form>
 </body>
 </html>

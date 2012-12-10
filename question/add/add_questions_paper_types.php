@@ -62,7 +62,7 @@ require '../../include/staff_auth.inc';
 <br />
 <?php
 
-  foreach($teams as $teamID=>$team_name) {
+  foreach ($teams as $teamID=>$team_name) {
     echo '<div class="f"><a href="add_questions_paper_list.php?teamID=' . $teamID . '"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" border="0" align="middle" /></a>&nbsp;<a href="add_questions_paper_list.php?teamID=' . $teamID . '">' . $team_name .  '</a></div>';
   }
 ?>

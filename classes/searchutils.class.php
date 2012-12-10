@@ -132,18 +132,18 @@ Class search_utils {
    * @param string $type used to control wording - whether dealing with papers or questions
    * @return string HTML of the dropdown menu
    */
-  static function display_owners_dropdown($userObj, $db, $type) {
+  static function display_owners_dropdown($userObj, $db, $type, $font_size = 90) {
     global $string, $state;
     $owners = self::get_owners($userObj, $db);
     
-    echo "<select style=\"width:175px; font-size:90%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
+    echo "<select style=\"width:175px; font-size:$font_size%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
     echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
     if ($type == 'questions') {
       echo "<option value=\"{$userObj->get_user_ID()}\">" . $string['myquestionsonly']. "</option>\n";
     } else {
       echo "<option value=\"{$userObj->get_user_ID()}\">" . $string['mypaperssonly']. "</option>\n";
     }
-    echo "<option value=\"%\" style=\"background-color:#ECE9D8\"></option>\n";
+    //echo "<option value=\"%\" style=\"background-color:#ECE9D8\"></option>\n";
     
     $old_letter = '';
     foreach ($owners as $ownerID=>$details) {

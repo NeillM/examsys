@@ -80,7 +80,7 @@ require '../../include/staff_auth.inc';
         selected_q.push(q_id);
       }
       
-      document.theform.questions_to_add.value = myToString(selected_q);
+      document.getElementById('questions_to_add').value = myToString(selected_q);
     }
   </script>
 </head>
@@ -100,7 +100,7 @@ require '../../include/staff_auth.inc';
   }
 ?>
 </select>&nbsp;
-<input type="hidden" name="questions_to_add" size="100" value="" /><input type="submit" name="submit" value="<?php echo $string['addquestions']; ?>" /></div>
+<input type="hidden" name="questions_to_add" id="questions_to_add" size="100" value="" /><input type="submit" name="submit" value="<?php echo $string['addquestions']; ?>" /></div>
 
 </form>
 </body>
