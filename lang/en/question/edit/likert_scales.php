@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- *
- * @author Rob Ingram
- * @version 1.0
- * @copyright Copyright (c) 2012 The University of Nottingham
- * @package
- */
-
 // Likert Scales data - this is how the settings are saved, separate columns with vertical bars (<br /> tages can be used for break lines)
 $string['failpass3'] = 'Fail|Borderline|Pass';
 $string['lowhigh3'] = 'Low||High';
@@ -62,3 +54,4 @@ $string['qmpsatisfied5'] = 'Very Satisfied|Satisfied|Neutral|Dissatisfied|Very D
 // True/false (OK, not strictly likert scale)
 $string['qmptf'] = 'True|False';
 $string['qmpyn'] = 'Yes|No';
+?>
