@@ -184,22 +184,22 @@ if ($userObject->is_special_needs()) {
 $screen_data = array();
 
 if (isset($_GET['q_id'])) {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND questions.q_id=? ORDER BY screen");
   $stmt->bind_param('si', $_GET['id'], $_GET['q_id']);
 } else {
-  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, exam_duration, calendar_year, latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('s', $_GET['id']);
 }
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $exam_duration, $calendar_year, $latex_needed, $password, $q_type, $q_id);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
    UserNotices::access_denied($string['error_paper'], $output_header = false);
 }
 while ($stmt->fetch()) {
   $no_screens = $screen;
   if ($q_type != 'info') {
-    $screen_data[$no_screens][] = $q_type;
+    $screen_data[$no_screens][] = array($q_type, $q_id);
   }
   /*
   $add_q = ($q_type == 'info') ? 0 : 1;
@@ -849,7 +849,7 @@ if ($current_screen < $no_screens) {
 
   $unanswered = false;
   
-  $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array);
+  $incomplete_screens = get_unanswered_screens($screen_data, $user_answers, $questions_array, $property_id, $mysqli);
 
   if (!isset($_GET['q_id'])) {
     echo "<tr><td valign=\"top\">\n";

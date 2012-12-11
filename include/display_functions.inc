@@ -24,10 +24,23 @@
 
 require_once $cfg_web_root . 'classes/mathsutils.class.php';
 
-function get_unanswered_screens($screen_data, $user_answers, $questions) {
+function get_unanswered_screens($screen_data, $user_answers, $questions, $paperID, $db) {
   $screen_no = count($screen_data);  
   
   $incomplete_screens = array_fill(1, $screen_no, 0);  // Set all screens to be initinally complete
+  
+  // Get some extra details for labelling type questions
+  $label_data = array();
+  
+  $stmt = $db->prepare("SELECT o_id, correct FROM options, papers WHERE papers.paper = ? AND papers.question = options.o_id");
+  $stmt->bind_param('i', $paperID);
+  $stmt->execute();
+  $stmt->store_result();
+  $stmt->bind_result($o_id, $correct);
+  while ($stmt->fetch()) {
+    $label_data[$o_id] = $correct;
+  }
+  $stmt->close();
   
   for ($i=1; $i<=$screen_no; $i++) {
     if (!isset($user_answers[$i])) {                            // No user answers exist for that screen
@@ -39,21 +52,23 @@ function get_unanswered_screens($screen_data, $user_answers, $questions) {
       
       $answers = array();
       $a = 1;
-      foreach ($user_answers[$i] as $individual_answer) {
-        $answers[$a] = $individual_answer;
+      foreach ($user_answers[$i] as $q_id=>$individual_answer) {
+        $answers[$q_id] = $individual_answer;
         $a++;
       }
       
       for ($a=1; $a<=$tmp_answer_no; $a++) {
-        switch ($screen_data[$i][$a-1]) {
+        $current_q_id = $screen_data[$i][$a-1][1];
+        $current_answer = $answers[$current_q_id];
+        switch ($screen_data[$i][$a-1][0]) {
           case 'area':
-            $parts = explode(';', $answers[$a]);
+            $parts = explode(';', $current_answer);
             if ($parts[1] == '') {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'blank':
-            $parts = explode('|', $answers[$a]);
+            $parts = explode('|', $current_answer);
             foreach ($parts as $part) {
               if ($part == 'u') {
                 $incomplete_screens[$i] = 1;
@@ -61,34 +76,51 @@ function get_unanswered_screens($screen_data, $user_answers, $questions) {
             }
             break;
           case 'calculation':
-            $parts = explode('|', $answers[$a]);
+            $parts = explode('|', $current_answer);
             if ($parts[0] == '') {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'dichotomous':
-            if (strpos($answers[$a], 'u') !== false) {
+            if (strpos($current_answer, 'u') !== false) {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'extmatch':
-            if (strpos($answers[$a], 'u') !== false) {
+            if (strpos($current_answer, 'u') !== false) {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'hotspot':
-            if (strpos($answers[$a], 'u') !== false or strpos($answers[$a], 'false') !== false) {
+            if (strpos($current_answer, 'u') !== false or strpos($current_answer, 'false') !== false) {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'labelling':
-            $parts = explode(';', $answers[$a]);
-            if ($parts[1] == '') {
+            $tmp_first_split = explode(';', $label_data[$current_q_id]);
+            $tmp_second_split = explode('$', $tmp_first_split[11]);
+
+            $placeholders = 0;
+            $count_tmp_second_split = count($tmp_second_split);
+            for ($label_no = 4; $label_no <= $count_tmp_second_split; $label_no += 4) {
+              if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
+                $x = $tmp_second_split[$label_no-2];
+                $y = $tmp_second_split[$label_no-1] - 25;
+                $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'));
+                $placeholders++;
+              }
+            }           
+            
+            $user_parts = explode(';', $current_answer);
+            $user_parts2 = explode('$', $user_parts[1]);
+            $user_answer_no = (count($user_parts2) - 1) / 4;
+            
+            if ($user_answer_no < $placeholders) {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'matrix':
-            $parts = explode('|', $answers[$a]);
+            $parts = explode('|', $current_answer);
             foreach ($parts as $part) {
               if ($part == '') {
                 $incomplete_screens[$i] = 1;
@@ -96,32 +128,32 @@ function get_unanswered_screens($screen_data, $user_answers, $questions) {
             }
             break;
           case 'mcq':
-            if ($answers[$a] == '0') {
+            if ($current_answer == '0') {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'mrq':
-            if (strpos($answers[$a], 'y') === false) {
+            if (strpos($current_answer, 'y') === false) {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'rank':
-            if (strpos($answers[$a], 'u') !== false) {
+            if (strpos($current_answer, 'u') !== false) {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'sct':
-            if ($answers[$a] == '0') {
+            if ($current_answer == '0') {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'textbox':
-            if ($answers[$a] == '') {
+            if ($current_answer == '') {
               $incomplete_screens[$i] = 1;
             }
             break;
           case 'true_false':
-            if (strpos($answers[$a], 'u') !== false) {
+            if (strpos($current_answer, 'u') !== false) {
               $incomplete_screens[$i] = 1;
             }
             break;
