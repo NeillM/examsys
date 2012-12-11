@@ -6,6 +6,17 @@
  * Time: 10:34
  * To change this template use File | Settings | File Templates.
  */
+
+/**
+ *
+ * Authentication routine which permits staff and student access to a page.
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
+
 class Authentication {
 
   private $userid;
@@ -32,13 +43,13 @@ class Authentication {
 
       $this->form['std']->username = $_REQUEST['ROGO_USER'];
       $this->form['std']->password = $_REQUEST['ROGO_PW'];
-      $this->debug[] = 'Standard form data found - Storing in object ' . var_export($this->form,TRUE);
+      $this->debug[] = 'Standard form data found - Storing in object ' . var_export($this->form, TRUE);
 
     }
     //make sure session is started
-    $this->debug[]= 'DEBUG1:' . session_id();
+    $this->debug[] = 'DEBUG1:' . session_id();
     if (session_id() == '') {
-      $this->debug[]='SESSION NOT FOUND';
+      $this->debug[] = 'SESSION NOT FOUND';
       session_name('RogoAuthentication');
       $return = session_start();
       if ($return === FALSE) {
@@ -48,10 +59,10 @@ class Authentication {
       }
     }
 
-      if (!isset($_SESSION['authenticationObj']['attempt'])) {
-        $_SESSION['authenticationObj']['attempt'] = 0;
-        $this->debug[]= 'Creating SESSION attempt data';
-      }
+    if (!isset($_SESSION['authenticationObj']['attempt'])) {
+      $_SESSION['authenticationObj']['attempt'] = 0;
+      $this->debug[] = 'Creating SESSION attempt data';
+    }
 
 
     foreach ($this->config as $number => $auth) {
@@ -94,24 +105,29 @@ class Authentication {
   }
 
   function display_form() {
-    $this->debug[]= 'Display form';
-    echo <<<END
-<div>
-<form method="POST">
-<p>Username:<input type="text" size="20" name="ROGO_USER"><br /></p>
-<p>Password:<input type="password" size="20" name="ROGO_PW"><br /></p>
-<p><input type="submit" name="rogo-login-form-std" value="Login"><br /></p>
-</form>
-</div>
-END;
+    $override=$this->configObj->get('cfg_web_root') . '/config/login_form.php';
+    $this->debug[] = 'Display form';
+    if(file_exists($override)) {
+      include $override;
+    } else {
+      include $this->configObj->get('cfg_web_root') . '/include/login_form.php';
+    }
+  }
 
+  function display_form_error() {
+    $override=$this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
+    $this->debug[] = 'Display error form & reset attempt count';
+    $_SESSION['authenticationObj']['attempt']=0;
+    if(file_exists($override)) {
+      include $override;
+    } else {
+      include $this->configObj->get('cfg_web_root') . '/include/login_error_form.php';
+    }
   }
 
   function do_authentication() {
     $this->success = FALSE;
     $this->debug[] = 'Starting authentication';
-
-
 
 
     foreach ($this->config as $number => $auth) {
@@ -173,18 +189,44 @@ END;
           call_user_func_array($callback, array(&$postauthfailobj));
           $this->append_auth_object_debug($number);
 
-          if($postauthfailobj->form=='std') {
-
-            $this->display_form();
-
-            if($postauthfailobj->exit===TRUE)
-            {
+          if (isset($postauthfailobj->callback)) {
+            call_user_func_array($postauthfailobj->callback, $postauthfailobj);
+            if ($postauthfailobj->exit === TRUE) {
               var_dump($this->debug);
               exit();
             }
           }
 
-          if($postauthfailobj->stop===TRUE) {
+          if ($postauthfailobj->form == 'err') {
+
+            $this->display_form_error();
+
+            if ($postauthfailobj->exit === TRUE) {
+              var_dump($this->debug);
+              exit();
+            }
+          }
+
+          if ($postauthfailobj->form == 'std') {
+
+            $this->display_form();
+
+            if ($postauthfailobj->exit === TRUE) {
+              var_dump($this->debug);
+              exit();
+            }
+          }
+
+          if (isset($postauthfailobj->url)) {
+            header("Location: {$postauthfailobj->url}");
+            if ($postauthfailobj->exit === TRUE) {
+              var_dump($this->debug);
+              exit();
+            }
+          }
+
+
+          if ($postauthfailobj->stop === TRUE) {
             break;
           }
         }
@@ -246,7 +288,7 @@ END;
     return $this->userid;
   }
 
-  function append_auth_object_debug($number,$desc='') {
+  function append_auth_object_debug($number, $desc = '') {
     $new_messages = $this->returndata[$number]->get_new_debug_messages();
     foreach ($new_messages as $value) {
       $this->debug[] = "authObj[$number]:$desc: $value";

@@ -6,6 +6,15 @@
  * Time: 10:42
  * To change this template use File | Settings | File Templates.
  */
+/**
+ *
+ * The internaldb authentication function.
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2012 The University of Nottingham
+ * @package
+ */
 class internaldb {
 
   private $name;
@@ -16,16 +25,17 @@ class internaldb {
   private $settings;
   private $db;
   private $calling_object;
+  private $updatable = FALSE;
 
 
   function __construct($calling_object, $settings, $db, &$returndata, $number, $form) {
     $this->db = new mysqli();
+    $this->db = $db;
     $this->calling_object = $calling_object;
     $this->returndata = $returndata;
     $this->number = $number;
     $this->retdata = $returndata[$number];
     $this->form = $form;
-    $this->db = $db;
     $this->settings = $settings;
   }
 
@@ -34,6 +44,8 @@ class internaldb {
 
     $this->calling_object->register_callback(array($this, 'auth'), 'auth', $this->number, $this->name);
     $this->calling_object->register_callback(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $this->calling_object->register_callback(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
+
 
   }
 
@@ -52,6 +64,12 @@ class internaldb {
 //default behaviour is to display username/password form
     $postauthfailreturn->form = 'std';
     $postauthfailreturn->exit = TRUE;
+
+    if ((isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt >= $this->settings['displayfailuremessagenumber']) or (!isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt > 3)) {
+      $this->retdata->debug[] = 'Requisite number of fail attempts so display error form';
+      $postauthfailreturn->form = 'err';
+      $postauthfailreturn->exit = TRUE;
+    }
 
     if (isset($this->settings['continueonfail'])) {
       $this->retdata->debug[] = 'Setting to carry on despite setting things';
@@ -79,7 +97,8 @@ class internaldb {
 
       $this->set_fail();
       $this->retdata->message = 'Not valid entry for username or password';
-      return false;
+
+      return FALSE;
     }
 
     $sql = "SELECT $username_col as username, $passwd_col as passwd, $id_col as id FROM $table WHERE $username_col=?";
@@ -97,7 +116,8 @@ class internaldb {
 
       $this->set_fail();
       $this->retdata->message = 'Incorrect number of records returned';
-      return false;
+
+      return FALSE;
 
     }
     $result->fetch();
@@ -109,19 +129,18 @@ class internaldb {
       $old_encrypt_type = 'SHA-512';
     }
 
-
+    $this->updatable = TRUE;
     $encrypt_password = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password, $old_encrypt_type);
 
-    $this->retdata->debug[] = $encrypt_password . ':::' . $pass;
+    $this->retdata->debug[] = 'encrypted password strings' . $encrypt_password . ':::' . $pass;
+
     if ($encrypt_password == $pass) {
+      $this->updatable = FALSE;
       if ($old_encrypt_type == 'MD5') { // Re-encrypt MD5 passwords using SHA-512.
         $this->retdata->debug[] = 'Re Encrypting PW';
+        $this->update_password();
 
-        $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
-        $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ? WHERE $username_col = ?");
-        $stmt->bind_param('ss', $encpw_details, $this->form['std']->username);
-        $stmt->execute();
-        $stmt->close();
+
       }
       $this->retdata->debug[] = 'Success point';
 
@@ -132,16 +151,29 @@ class internaldb {
       $this->retdata->url = '';
       $this->retdata->message = 'Internal DB Correctly Authenticated';
 
-      return true;
+      return TRUE;
     }
     $this->retdata->debug[] = 'Password not matching';
     $this->set_fail();
-    return false;
+
+    return FALSE;
+  }
+
+  function update_password($postauthsuccessobj = '') {
+    if ($this->updateable === TRUE) {
+      $this->debug[] = 'Updating Password';
+      $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
+      $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ? WHERE $username_col = ?");
+      $stmt->bind_param('ss', $encpw_details, $this->form['std']->username);
+      $stmt->execute();
+      $stmt->close();
+    }
   }
 
   function form() {
     $retdata = new stdClass();
     $retdata->form = 'std';
+
     return $retdata;
   }
 

@@ -23,6 +23,7 @@
  * @copyright Copyright (c) 2012 The University of Nottingham
  * @package
  */
+
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
 
 class UserObject {
