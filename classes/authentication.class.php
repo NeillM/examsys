@@ -36,6 +36,9 @@ class Authentication {
 
     $this->load_config();
 
+    if($this->config[0][0]!=='alreadyloggedin') {
+      array_unshift($this->config,array('alreadyloggedin', array('timeout'=>0),'Internal Authentication'));
+    }
 
     // get form data here?
     $this->form['std'] = new stdClass();
@@ -88,7 +91,7 @@ class Authentication {
   }
 
   function register_callback($callback, $section, $number, $name, $insert = false) {
-    if (!in_array($section, array('preauth', 'auth', 'postauth', 'postauthsucess', 'postauthfail')) or !is_callable($callback)) {
+    if (!in_array($section, array('preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail')) or !is_callable($callback)) {
       //attempting to register callback to invalid section
       $this->debug[] = 'register_callback failed ' . $section . ' from ' . get_class($callback[0]); // . var_export($callback,TRUE);
       return false;
@@ -160,9 +163,11 @@ class Authentication {
     $authobj = new stdClass();
     if (isset($this->callbackregister['auth'])) {
       foreach ($this->callbackregister['auth'] as $number => $callback) {
-        $returned = call_user_func_array($callback, array($authobj));
+        $returned = call_user_func_array($callback, array(&$authobj));
         if ($returned !== FALSE) {
           $this->success = TRUE;
+          $this->debug[]='Rogo ID is:: ' . $authobj->rogoid;
+          $this->userid=$this->authObj->rogoid;
         }
         $this->append_auth_object_debug($number);
         if (($this->success and (!isset($settings['dont_break_on_success']) or (isset($settings['dont_break_on_success']) and !$settings['dont_break_on_success'])))) {
@@ -249,13 +254,19 @@ class Authentication {
 
     }
 
+
     $postauthsuccessobj = new stdClass();
     if (isset($this->callbackregister['postauthsuccess'])) {
       foreach ($this->callbackregister['postauthsuccess'] as $number => $callback) {
+        $this->debug[]='run authsuccess callback ' . get_class($callback[0]) .':' . $callback[1];
         call_user_func_array($callback, array($postauthsuccessobj));
         $this->append_auth_object_debug($number);
       }
     }
+
+
+    // need to save some data for allready logged in authentication
+    $this->store_data_in_session();
 
     /*
         // old bitz
@@ -284,14 +295,20 @@ class Authentication {
 
   }
 
+  function store_data_in_session() {
+    $_SESSION['authenticationObj']['loggedin']['userid']=$this->get_userid();
+    $_SESSION['authenticationObj']['loggedin']['time']=time();
+  }
+
+
   function get_userid() {
     return $this->userid;
   }
 
   function append_auth_object_debug($number, $desc = '') {
     $new_messages = $this->returndata[$number]->get_new_debug_messages();
-    foreach ($new_messages as $value) {
-      $this->debug[] = "authObj[$number]:$desc: $value";
+    foreach ($new_messages as $key => $value) {
+      $this->debug[] = "authObj[$number:$key]:$desc: $value";
     }
   }
 
@@ -312,7 +329,7 @@ class authtypereturn {
   function get_new_debug_messages() {
     $returnarray = array();
     while (isset($this->debug[$this->debugpointer])) {
-      $returnarray[] = $this->debug[$this->debugpointer++];
+      $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
     }
     return $returnarray;
   }

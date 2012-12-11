@@ -82,7 +82,7 @@ class internaldb {
 
   }
 
-  function auth() {
+  function auth($authobj) {
     $this->retdata->debug[] = 'Authing';
     /*
         foreach ($this->settings as $key => $value) {
@@ -140,15 +140,15 @@ class internaldb {
         $this->retdata->debug[] = 'Re Encrypting PW';
         $this->update_password();
 
-
       }
-      $this->retdata->debug[] = 'Success point';
+      $this->retdata->debug[] = 'Successfully authenticated on this module';
 
       //sucessfull internaldb authentication
       $this->retdata->success = TRUE;
       $this->retdata->form = 'std';
       $this->retdata->rogoid = $id;
       $this->retdata->url = '';
+      $authobj->retdata=$this->retdata;
       $this->retdata->message = 'Internal DB Correctly Authenticated';
 
       return TRUE;
@@ -160,13 +160,17 @@ class internaldb {
   }
 
   function update_password($postauthsuccessobj = '') {
-    if ($this->updateable === TRUE) {
-      $this->debug[] = 'Updating Password';
+    $this->retdata->debug[] = 'Called update_password';
+    if ($this->updatable === TRUE and (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== TRUE)) {
+      $this->retdata->debug[] = 'Updating Password';
+      extract($this->settings);
       $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
       $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ? WHERE $username_col = ?");
       $stmt->bind_param('ss', $encpw_details, $this->form['std']->username);
       $stmt->execute();
       $stmt->close();
+    } elseif ((isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] === TRUE)) {
+      $this->retdata->debug[] = 'Not updating password due to settings flag';
     }
   }
 
