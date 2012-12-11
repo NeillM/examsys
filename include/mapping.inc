@@ -516,7 +516,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
 /**
  * This is function getObjectivesByMapping it gets a list of objectives with session information.
  *
- * @param syring $thisModuleid module code
+ * @param array $thisModuleid module code
  * @param string $session A session in the format yyyy/yy
  * @param int $paperID 
  * @param int $questionID 
